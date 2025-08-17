@@ -1,96 +1,241 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@layer reset, base, layout, explorer-menu, explorer, utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+@layer reset {
+  /* 1. Use a more-intuitive box-sizing model */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* Remove default margin in favour of better control in authored CSS */
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  figure,
+  blockquote,
+  dl,
+  dd {
+    margin: 0;
+  }
+
+  body {
+    /* 4. Add accessible line-height */
+    line-height: 1.5;
+    /* 5. Improve text rendering */
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Set shorter line heights on headings and interactive elements */
+  h1,
+  h2,
+  h3,
+  h4,
+  button,
+  input,
+  label {
+    line-height: 1.1;
+  }
+
+  /* 6. Improve media defaults */
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  /* 7. Inherit fonts for form controls */
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  /* 8. Avoid text overflows */
+  /* p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+} */
+
+  /* 9. Improve line wrapping */
+  p {
+    text-wrap: pretty;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+  }
+
+  /*
+  10. Create a root stacking context
+*/
+  /* #root, #__next {
+  isolation: isolate;
+} */
+  /* ================ */
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vanilla:hover {
-  filter: drop-shadow(0 0 2em #3178c6aa);
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
+@layer base {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    /* colors */
+    --clr-white: #ffffff;
+    --clr-black: #333;
+    --clr-gray-300: #eee;
+    --clr-gray-400: #ddd;
+    --clr-gray-500: #ccc;
+
+    --clr-orange-300: hsl(25, 45%, 77%);
+    --clr-orange-400: hsl(25, 45%, 62%);
+    --clr-orange-500: hsl(25, 51%, 43%);
+    --clr-green-300: hsl(143, 19%, 69%);
+    --clr-green-400: hsl(143, 19%, 49%);
+    --clr-green-500: hsl(143, 38%, 37%);
+
+    /* typography */
+    --ff-heading: sans-serif;
+    --ff-body: sans-serif;
+
+    --fs-300: 0.875rem;
+    /* 400 is body font size */
+    --fs-400: 1rem;
+    --fs-500: 1.125rem;
+    --fs-600: 1.25rem;
+    --fs-700: 1.5rem;
+    --fs-800: 2rem;
+    --fs-900: 3.75rem;
+    --fs-1000: 3.75rem;
+
+    --text-main: var(--clr-black);
+    --background-main: var(--clr-white);
+    --brand-main: var(--clr-green-500);
+    --accent-main: var(--clr-orange-500);
+
+    --font-size-sm: var(--fs-300);
+    --font-size-regular: var(--fs-400);
+    --font-size-md: var(--fs-500);
+    --font-size-lg: var(--fs-600);
+
+    --font-size-heading-sm: var(--fs-700);
+    --font-size-heading-regular: var(--fs-800);
+    --font-size-heading-lg: var(--fs-900);
+    --font-size-heading-xl: var(--fs-1000);
+
+    /* @media (prefers-color-scheme: light) {
+      --text-main: var(--clr-brown-700);
+      --text-high-contrast: var(--clr-brown-900);
+
+      --background-extra-light: var(--clr-brown-100);
+      --background-light: var(--clr-brown-200);
+      --background-main: var(--clr-brown-100);
+      --background-dark: var(--clr-brown-400);
+      --background-extra-dark: var(--clr-brown-500);
+
+      --accent-light: var(--clr-green-600);
+      --accent-main: var(--clr-green-500);
+      --background-accent-dark: var(--clr-green-300);
+    } */
   }
-  a:hover {
-    color: #747bff;
+
+  html {
+    font-family: var(--ff-body);
+    line-height: 1.6;
+    /* for jump anchors,  */
+    scroll-padding: 3rem;
   }
-  button {
-    background-color: #f9f9f9;
+
+  /* only apply these rules if person has not specified a preference for motion */
+  @media (prefers-reduced-motion: no-preference) {
+    /* when thre is an anchor tag in the middle of page, scroll to element  */
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    font-size: var(--font-size-regular);
+    color: var(--text-main);
+    background-color: var(--background-main);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--ff-heading);
+    color: var(--text-main);
+  }
+
+  a {
+    color: var(--brand-main);
+  }
+
+  /* browsers now use focus-visible instead of focus */
+  a:hover,
+  a:focus-visible {
+    color: var(--accent-main);
+  }
+
+  .form-group {
+    margin: 1rem 0;
+  }
+}
+
+@layer layout {
+  .flow > * + * {
+    margin-top: var(--flow-space, 1em);
+  }
+
+  main.two-columns {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+  }
+
+  .wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+}
+
+@layer explorer-menu {
+  .sv_dropdown.is-open {
+    z-index: 500 !important;
+  }
+
+  .taxa-ac-option {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 5px;
+
+    & .taxon-name {
+      display: grid;
+    }
+    & .common-name {
+      font-weight: 510;
+    }
+    & .scientific-name {
+      font-style: italic;
+    }
+  }
+
+  .menu {
+    padding: 0 1rem;
+  }
+}
+
+@layer explorer {
+  .explorer {
+    width: 100%;
+    height: 90vh;
+    background-color: var(--clr-gray-300);
   }
 }

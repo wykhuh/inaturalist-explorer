@@ -1,13 +1,31 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + TS</title>
+    <link rel="stylesheet" href="/src/style.css" />
+    <title>iNaturalist Explorer</title>
+    <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="/src/components/Header/main.js"></script>
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
+    <x-header></x-header>
+    <main class="two-columns">
+      <div class="menu">
+        <div class="form-group">
+          <label>Search species <input /> </label>
+        </div>
+
+        <div class="form-group">
+          <label>Search location<input /></label>
+        </div>
+
+        <div class="form-group">
+          <label>Search project<input /></label>
+        </div>
+      </div>
+      <div class="explorer"></div>
+    </main>
   </body>
 </html>
