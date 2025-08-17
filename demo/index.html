@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="/src/components/demos/header_1_ok.js" type="module"></script>
+    <script src="/src/components/demos/header_4_ok.js" type="module"></script>
+    <script type="module">
+      import MyComponent from "../src/components/demos/header_5_ok.js";
+
+      if (!customElements.get("x-header5")) {
+        customElements.define("x-header5", MyComponent);
+      }
+    </script>
+
+    <link rel="stylesheet" href="/demo/demo.css" />
+    <title>Vite + TS</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/demo/demo.js"></script>
+    <h1 class="class-one">index <span class="class-two">page</span></h1>
+
+    <h1>header 1</h1>
+    <x-header1> </x-header1>
+
+    <h1>header 2</h1>
+    <object
+      data="/src/components/demos/header_2_ok.html"
+      type="text/html"
+    ></object>
+
+    <h1>header 3</h1>
+    <object
+      data="/src/components/demos/header_3.html"
+      type="text/html"
+    ></object>
+    <x-header3> </x-header3>
+
+    <h1>header 4</h1>
+    <x-header4></x-header4>
+
+    <h1>header 5</h1>
+    <x-header5></x-header5>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+.class-one {
+  font-size: 2rem;
+  color: aqua;
+}
+.class-two {
+  font-size: 4rem;
+  color: lightcoral;
+}
+
+p {
+  font-size: 2rem;
+}
