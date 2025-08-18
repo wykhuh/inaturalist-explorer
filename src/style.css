@@ -230,6 +230,13 @@
   .menu {
     padding: 0 1rem;
   }
+
+  #display-json {
+    z-index: 1000;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.5);
+    font-size: var(--font-size-sm);
+  }
 }
 
 @layer explorer {

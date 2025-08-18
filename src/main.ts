@@ -16,12 +16,15 @@ import {
   formatTaxonName,
 } from "./lib/inat_utils";
 import type { NormalizediNatTaxon } from "./types.d.ts";
+import { displayJson } from "./lib/utils.ts";
 
 let api = "https://api.inaturalist.org/v1/taxa/autocomplete?q=";
 
 let selectedTaxa = [];
 let currentTaxon = {};
 let inatTilesParams = {};
+
+let displayJsonEl = document.getElementById("display-json");
 
 const autoCompleteJS = new autoComplete({
   selector: "#inatTaxaAutoComplete",
@@ -67,6 +70,8 @@ document
   .addEventListener("selection", function (event) {
     let selection = event.detail.selection.value;
 
+    selectedTaxa.push(selection);
+    displayJson(selectedTaxa, displayJsonEl);
     let bbValues = getBoundingBoxValues(map.getBounds());
     inatTilesParams = {
       ...inatTilesParams,
