@@ -11,180 +11,113 @@ export type TileSettings = {
   };
 };
 
-// https://personal.sron.nl/~pault/#sec:qualitative
-export let colorsSixTolBright = [
-  "#4477aa",
-  "#66ccee",
-  "#228833",
-  "#ccbb44",
-  "#ee6677",
-  "#aa3377",
-];
-export let colorsSixTolVibrant = [
-  "#0077bb",
-  "#33bbee",
-  "#009988",
-  "#ee7733",
-  "#cc3311",
-  "#ee3377",
-];
+// https://api.inaturalist.org/v1/docs/#!/Observation_Tiles/get_grid_zoom_x_y_png
+type TilesAPIParams = {
+  color?: string;
+  captive?: boolean;
+  endemic?: boolean;
+  identified?: boolean;
+  introduced?: boolean;
+  native?: boolean;
+  out_of_range?: boolean;
+  photos?: boolean;
+  sounds?: boolean;
+  threatened?: boolean;
+  verifiable?: boolean;
+  license?: CCLicense;
+  photo_license?: CCLicense;
+  place_id?: string;
+  project_id?: string;
+  rank?: TaxonRanks;
+  sound_license?: CCLicense;
+  taxon_id?: string;
+  without_taxon_id?: string;
+  taxon_name?: string;
+  user_id?: string;
+  user_login?: string;
+  ident_user_id?: string;
+  hour?: string;
+  day?: string;
+  month?: string;
+  year?: string;
+  annotation_user_id?: string;
+  acc_above?: string;
+  acc_below?: string;
+  acc_below_or_unknown?: string;
+  d1?: string;
+  d2?: string;
+  observed_on?: string;
+  csi?: IUCNStatus;
+  geoprivacy?: PrivacyStatus;
+  taxon_geoprivacy?: PrivacyStatus;
+  obscuration?: "obscured" | "private" | "none";
+  hrank?: TaxonRanks;
+  lrank?: TaxonRanks;
+  iconic_taxa?: IconicTaxa;
+  identifications?: "most_agree" | "most_disagree" | "some_agree";
+  lat?: number;
+  lng?: number;
+  radius?: number;
+  nelat?: number;
+  nelng?: number;
+  swlat?: number;
+  swlng?: number;
+  quality_grade?: "casual" | "needs_id" | "research";
+};
 
-// sequential: orange - red
-export let colorsSix = [
-  "#fed976",
-  "#feb24c",
-  "#fd8d3c",
-  "#fc4e2a",
-  "#e31a1c",
-  "#b10026",
-];
+type CCLicense =
+  | "cc-by"
+  | "cc-by-nc"
+  | "cc-by-nd"
+  | "cc-by-sa"
+  | "cc-by-nc-nd"
+  | "cc-by-nc-sa"
+  | "cc0";
 
-export let sixMonths = [
-  "#fc4e2a",
-  "#e31a1c",
-  "#b10026",
-  "#fed976",
-  "#feb24c",
-  "#fd8d3c",
-];
-export let twelveMonths = sixMonths.concat(sixMonths);
+type TaxonRanks =
+  | "kingdom"
+  | "phylum"
+  | "subphylum"
+  | "superclass"
+  | "class"
+  | "subclass"
+  | "superorder"
+  | "order"
+  | "suborder"
+  | "infraorder"
+  | "superfamily"
+  | "epifamily"
+  | "family"
+  | "subfamily"
+  | "supertribe"
+  | "tribe"
+  | "subtribe"
+  | "genus"
+  | "genushybrid"
+  | "species"
+  | "hybrid"
+  | "subspecies"
+  | "variety"
+  | "form";
 
-export let colorsEightDivergeGroup = [
-  // brown - green
-  [
-    "#8c510a",
-    "#bf812d",
-    "#dfc27d",
-    "#f6e8c3",
-    "#c7eae5",
-    "#80cdc1",
-    "#35978f",
-    "#01665e",
-  ],
-  // magenta - green
-  [
-    "#c51b7d",
-    "#de77ae",
-    "#f1b6da",
-    "#fde0ef",
-    "#e6f5d0",
-    "#b8e186",
-    "#7fbc41",
-    "#4d9221",
-  ],
-  // purple - green
-  [
-    "#762a83",
-    "#9970ab",
-    "#c2a5cf",
-    "#e7d4e8",
-    "#d9f0d3",
-    "#a6dba0",
-    "#5aae61",
-    "#1b7837",
-  ],
-  // orange - purple
-  [
-    "#b35806",
-    "#e08214",
-    "#fdb863",
-    "#fee0b6",
-    "#d8daeb",
-    "#b2abd2",
-    "#8073ac",
-    "#542788",
-  ],
-  // red - blue
-  [
-    "#b2182b",
-    "#d6604d",
-    "#f4a582",
-    "#fddbc7",
-    "#d1e5f0",
-    "#92c5de",
-    "#4393c3",
-    "#2166ac",
-  ],
-  // bright red - bright blue
-  [
-    "#d73027",
-    "#f46d43",
-    "#fdae61",
-    "#fee090",
-    "#e0f3f8",
-    "#abd9e9",
-    "#74add1",
-    "#4575b4",
-  ],
-];
-export let colorsEightDiverge = colorsEightDivergeGroup[0];
+type IUCNStatus = "LC" | "NT" | "VU" | "EN" | "CR" | "EW" | "EX";
+type PrivacyStatus = "obscured" | "obscured_private" | "open" | "private";
+type IconicTaxa =
+  | "Actinopterygii"
+  | "Animalia"
+  | "Amphibia"
+  | "Arachnida"
+  | "Aves"
+  | "Chromista"
+  | "Fungi"
+  | "Insecta"
+  | "Mammalia"
+  | "Mollusca"
+  | "Reptilia"
+  | "Plantae"
+  | "Protozoa"
+  | "unknown";
 
-let colorsSixBlueSingleHue = [
-  "#c6dbef",
-  "#9ecae1",
-  "#6baed6",
-  "#4292c6",
-  "#2171b5",
-  "#084594",
-];
-let colorsSixRedSingleHue = [
-  "#fcbba1",
-  "#fc9272",
-  "#fb6a4a",
-  "#ef3b2c",
-  "#cb181d",
-  "#99000d",
-];
-export let colorsTwelveDiverge = [...colorsSixBlueSingleHue]
-  .reverse()
-  .concat(colorsSixRedSingleHue);
-
-export let colorsSixDivergeGroup = [
-  // brown - green
-  ["#8c510a", "#d8b365", "#f6e8c3", "#c7eae5", "#5ab4ac", "#01665e"],
-  // magenta - green
-  ["#c51b7d", "#e9a3c9", "#fde0ef", "#e6f5d0", "#a1d76a", "#4d9221"],
-  // purple - green
-  ["#762a83", "#af8dc3", "#e7d4e8", "#d9f0d3", "#7fbf7b", "#1b7837"],
-  // orange - purple
-  ["#b35806", "#f1a340", "#fee0b6", "#d8daeb", "#998ec3", "#542788"],
-  // red - blue
-  ["#b2182b", "#ef8a62", "#fddbc7", "#d1e5f0", "#67a9cf", "#2166ac"],
-  // bright red - bright blue
-  ["#d73027", "#fc8d59", "#fee090", "#e0f3f8", "#91bfdb", "#4575b4"],
-];
-export let colorsSixDiverge = colorsSixDivergeGroup[0];
-
-export let colorsFiveSingleHue = [
-  ["#c6dbef", "#9ecae1", "#6baed6", "#3182bd", "#08519c"],
-  ["#c7e9c0", "#a1d99b", "#74c476", "#31a354", "#006d2c"],
-  ["#d9d9d9", "#bdbdbd", "#969696", "#636363", "#252525"],
-  ["#fdd0a2", "#fdae6b", "#fd8d3c", "#e6550d", "#a63603"],
-  ["#dadaeb", "#bcbddc", "#9e9ac8", "#756bb1", "#54278f"],
-  ["#fcbba1", "#fc9272", "#fb6a4a", "#de2d26", "#a50f15"],
-];
-
-export let colorsFourDivergeGroup = [
-  // brown - green
-  ["#a6611a", "#dfc27d", "#80cdc1", "#018571"],
-  // magenta - green
-  ["#d01c8b", "#f1b6da", "#b8e186", "#4dac26"],
-  // purple - green
-  ["#7b3294", "#c2a5cf", "#a6dba0", "#008837"],
-  // orange - purple
-  ["#e66101", "#fdb863", "#b2abd2", "#5e3c99"],
-  // red - blue
-  ["#ca0020", "#f4a582", "#92c5de", "#0571b0"],
-  // bright red - bright blue
-  ["#d7191c", "#fdae61", "#abd9e9", "#2c7bb6"],
-];
-export let colorsFourDiverge = colorsFourDivergeGroup[0];
-
-export let coldMonths = [10, 11, 12, 1, 2, 3];
-export let warmMonths = [4, 5, 6, 7, 8, 9];
-
-export let blue = "#3388ff";
-export let darkGray = "#525252";
 
 export function getMonthName(month) {
   // https://reactgo.com/convert-month-number-to-name-js/
@@ -409,25 +342,8 @@ export const getMapTiles = (): { [name: string]: TileSettings } => {
 
 export const getiNatMapTiles = (
   taxonID: number,
-  projectId = null,
-  userId = null,
-  month = null,
-  year = null
+  params: string
 ): { [name: string]: TileSettings } => {
-  let params = `taxon_id=${taxonID}`;
-  if (projectId) {
-    params += `&project_id=${projectId}`;
-  }
-  if (userId) {
-    params += `&user_id=${userId}`;
-  }
-  if (month) {
-    params += `&month=${month}`;
-  }
-  if (year) {
-    params += `&year=${year}`;
-  }
-
   return {
     iNatGrid: {
       name: "Grid",
@@ -476,30 +392,36 @@ export const getiNatMapTiles = (
   };
 };
 
-export let defaultColorScheme = {
-  colorSchemeMonth: twelveMonths,
-  colorSchemeYear: colorsSix,
-  defaultColor: blue,
-  colorScheme: colorsSixTolBright,
-  monthSeasonalMarkers: true,
-};
-
 export let scaleControlOptions = {
   maxWidth: 200,
 };
 
-export function addLayerToMap(tileObj: TileSettings, map: any) {
+export function addLayerToMap(
+  tileObj: TileSettings,
+  map: any,
+  layerControl: any,
+  checked = false
+) {
   let layer = L.tileLayer(tileObj.url, tileObj.options);
-  layer.addTo(map);
+  if (checked) {
+    layer.addTo(map);
+  }
+  layerControl.addBaseLayer(layer, tileObj.name);
+
   return layer;
 }
 
 export function addOverlayToLayerControl(
   tileObj: TileSettings,
-  title: string,
-  layerControl: any
+  map: any,
+  layerControl: any,
+  taxon: string,
+  checked = false
 ) {
   let layer = L.tileLayer(tileObj.url, tileObj.options);
-  layerControl.addOverlay(layer, `${title} ${tileObj.name}`);
+  if (checked) {
+    layer.addTo(map);
+  }
+  layerControl.addOverlay(layer, `${taxon} ${tileObj.name}`);
   return layer;
 }

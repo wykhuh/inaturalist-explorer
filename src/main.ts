@@ -5,11 +5,14 @@ import "leaflet/dist/leaflet.css";
 
 import {
   getMapTiles,
+  getiNatMapTiles,
   addLayerToMap,
+  addOverlayToLayerControl,
 } from "./lib/map_utils";
 import {
   processAutocompleteTaxa,
   renderAutocompleteTaxon,
+  formatTaxonName,
 } from "./lib/inat_utils";
 import type { NormalizediNatTaxon } from "./lib/inat_utils";
 
@@ -47,27 +50,51 @@ const autoCompleteJS = new autoComplete({
 
 let { OpenStreetMap, OpenTopo } = getMapTiles();
 
-var map = L.map("map", {
+let map = L.map("map", {
   center: [0, 0],
   zoom: 2,
   maxZoom: 19,
 });
+var layerControl = L.control.layers().addTo(map);
 
-const osmLayer = addLayerToMap(OpenStreetMap, map);
-const openTopoLayer = addLayerToMap(OpenTopo, map);
 
-var baseMaps = {
-  OpenStreetMap: osmLayer,
-  OpenTopo: openTopoLayer,
-};
-
-var layerControl = L.control.layers(baseMaps).addTo(map);
+addLayerToMap(OpenStreetMap, map, layerControl, true);
+addLayerToMap(OpenTopo, map, layerControl);
 
 document
   .querySelector("#inatTaxaAutoComplete")
   .addEventListener("selection", function (event) {
     let selection = event.detail.selection.value;
-    selectedTaxa.push(selection);
-    currentTaxon = selection;
-    console.log(">>>", selection);
+    let { iNatGrid, iNatHeatmap, iNatTaxonRange, iNatPoint } = getiNatMapTiles(
+      selection.id,
+      `taxon_id=${selection.id}`
+    );
+
+    let { title } = formatTaxonName(selection, event.detail.query, false);
+
+    let iNatGridLayer = addOverlayToLayerControl(
+      iNatGrid,
+      map,
+      layerControl,
+      title,
+      true
+    );
+    let iNatPointLayer = addOverlayToLayerControl(
+      iNatPoint,
+      map,
+      layerControl,
+      title
+    );
+    let iNatHeatmapLayer = addOverlayToLayerControl(
+      iNatHeatmap,
+      map,
+      layerControl,
+      title
+    );
+    let iNatTaxonRangeLayer = addOverlayToLayerControl(
+      iNatTaxonRange,
+      map,
+      layerControl,
+      title
+    );
   });
