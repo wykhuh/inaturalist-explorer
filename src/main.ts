@@ -8,6 +8,7 @@ import {
   getiNatMapTiles,
   addLayerToMap,
   addOverlayToLayerControl,
+  getBoundingBoxValues,
 } from "./lib/map_utils";
 import {
   processAutocompleteTaxa,
@@ -20,6 +21,7 @@ let api = "https://api.inaturalist.org/v1/taxa/autocomplete?q=";
 
 let selectedTaxa = [];
 let currentTaxon = {};
+let inatTilesParams = {};
 
 const autoCompleteJS = new autoComplete({
   selector: "#inatTaxaAutoComplete",
@@ -57,7 +59,6 @@ let map = L.map("map", {
 });
 var layerControl = L.control.layers().addTo(map);
 
-
 addLayerToMap(OpenStreetMap, map, layerControl, true);
 addLayerToMap(OpenTopo, map, layerControl);
 
@@ -65,9 +66,18 @@ document
   .querySelector("#inatTaxaAutoComplete")
   .addEventListener("selection", function (event) {
     let selection = event.detail.selection.value;
+
+    let bbValues = getBoundingBoxValues(map.getBounds());
+    inatTilesParams = {
+      ...inatTilesParams,
+      ...bbValues,
+      taxon_id: selection.id,
+    };
+    let paramsString = new URLSearchParams(inatTilesParams).toString();
+
     let { iNatGrid, iNatHeatmap, iNatTaxonRange, iNatPoint } = getiNatMapTiles(
       selection.id,
-      `taxon_id=${selection.id}`
+      paramsString
     );
 
     let { title } = formatTaxonName(selection, event.detail.query, false);

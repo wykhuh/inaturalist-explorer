@@ -118,6 +118,10 @@ type IconicTaxa =
   | "Protozoa"
   | "unknown";
 
+type LeafletBounds = {
+  _southWest: { lat: number; lng: number };
+  _northEast: { lat: number; lng: number };
+};
 
 export function getMonthName(month) {
   // https://reactgo.com/convert-month-number-to-name-js/
@@ -424,4 +428,13 @@ export function addOverlayToLayerControl(
   }
   layerControl.addOverlay(layer, `${taxon} ${tileObj.name}`);
   return layer;
+}
+
+export function getBoundingBoxValues(bounds: LeafletBounds) {
+  return {
+    nelat: bounds._northEast.lat,
+    nelng: bounds._northEast.lng,
+    swlat: bounds._southWest.lat,
+    swlng: bounds._southWest.lng,
+  };
 }
