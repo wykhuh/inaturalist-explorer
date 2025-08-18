@@ -1,133 +1,13 @@
 import L from "leaflet";
+import type { Map, LatLngExpression, LatLngBounds } from "leaflet";
 
-export type TileSettings = {
-  name: string;
-  type: "overlay" | "basemap";
-  url: string;
-  options: {
-    attribution: string;
-    minZoom: number;
-    maxZoom: number;
-  };
-};
+import type { TileSettings } from "../types.d.ts";
 
-// https://api.inaturalist.org/v1/docs/#!/Observation_Tiles/get_grid_zoom_x_y_png
-type TilesAPIParams = {
-  color?: string;
-  captive?: boolean;
-  endemic?: boolean;
-  identified?: boolean;
-  introduced?: boolean;
-  native?: boolean;
-  out_of_range?: boolean;
-  photos?: boolean;
-  sounds?: boolean;
-  threatened?: boolean;
-  verifiable?: boolean;
-  license?: CCLicense;
-  photo_license?: CCLicense;
-  place_id?: string;
-  project_id?: string;
-  rank?: TaxonRanks;
-  sound_license?: CCLicense;
-  taxon_id?: string;
-  without_taxon_id?: string;
-  taxon_name?: string;
-  user_id?: string;
-  user_login?: string;
-  ident_user_id?: string;
-  hour?: string;
-  day?: string;
-  month?: string;
-  year?: string;
-  annotation_user_id?: string;
-  acc_above?: string;
-  acc_below?: string;
-  acc_below_or_unknown?: string;
-  d1?: string;
-  d2?: string;
-  observed_on?: string;
-  csi?: IUCNStatus;
-  geoprivacy?: PrivacyStatus;
-  taxon_geoprivacy?: PrivacyStatus;
-  obscuration?: "obscured" | "private" | "none";
-  hrank?: TaxonRanks;
-  lrank?: TaxonRanks;
-  iconic_taxa?: IconicTaxa;
-  identifications?: "most_agree" | "most_disagree" | "some_agree";
-  lat?: number;
-  lng?: number;
-  radius?: number;
-  nelat?: number;
-  nelng?: number;
-  swlat?: number;
-  swlng?: number;
-  quality_grade?: "casual" | "needs_id" | "research";
-};
-
-type CCLicense =
-  | "cc-by"
-  | "cc-by-nc"
-  | "cc-by-nd"
-  | "cc-by-sa"
-  | "cc-by-nc-nd"
-  | "cc-by-nc-sa"
-  | "cc0";
-
-type TaxonRanks =
-  | "kingdom"
-  | "phylum"
-  | "subphylum"
-  | "superclass"
-  | "class"
-  | "subclass"
-  | "superorder"
-  | "order"
-  | "suborder"
-  | "infraorder"
-  | "superfamily"
-  | "epifamily"
-  | "family"
-  | "subfamily"
-  | "supertribe"
-  | "tribe"
-  | "subtribe"
-  | "genus"
-  | "genushybrid"
-  | "species"
-  | "hybrid"
-  | "subspecies"
-  | "variety"
-  | "form";
-
-type IUCNStatus = "LC" | "NT" | "VU" | "EN" | "CR" | "EW" | "EX";
-type PrivacyStatus = "obscured" | "obscured_private" | "open" | "private";
-type IconicTaxa =
-  | "Actinopterygii"
-  | "Animalia"
-  | "Amphibia"
-  | "Arachnida"
-  | "Aves"
-  | "Chromista"
-  | "Fungi"
-  | "Insecta"
-  | "Mammalia"
-  | "Mollusca"
-  | "Reptilia"
-  | "Plantae"
-  | "Protozoa"
-  | "unknown";
-
-type LeafletBounds = {
-  _southWest: { lat: number; lng: number };
-  _northEast: { lat: number; lng: number };
-};
-
-export function getMonthName(month) {
+export function getMonthName(month: number) {
   // https://reactgo.com/convert-month-number-to-name-js/
 
   // this regex handles both numbers string numbers
-  if (/^[0-9]+$/.test(month)) {
+  if (/^[0-9]+$/.test(month.toString())) {
     const date = new Date();
     // set date to middle of the month to avoid weird conversion for start/end
     // of the month
@@ -139,32 +19,32 @@ export function getMonthName(month) {
   }
 }
 
-export function radiusZoom(zoomLevel) {
+export function radiusZoom(zoomLevel: number) {
   return 800000 / 2 ** zoomLevel;
 }
 
-export function rectangleLatitudeZoom(zoomLevel) {
+export function rectangleLatitudeZoom(zoomLevel: number) {
   return 7 / 2 ** zoomLevel;
 }
 
-export function rectangleLongitudeZoom(zoomLevel) {
+export function rectangleLongitudeZoom(zoomLevel: number) {
   return 10 / 2 ** zoomLevel;
 }
 
-export function fitPointsInMap(coordinates, map) {
+export function fitPointsInMap(coordinates: any, map: Map) {
   if (coordinates.length > 0) {
     map.fitBounds(coordinates);
   }
 }
 
-export function isObservationInMap(observation, map, L) {
+export function isObservationInMap(observation: any, map: Map) {
   let currentBounds = map.getBounds();
   return currentBounds.contains(
     L.latLng(observation.latitude, observation.longitude)
   );
 }
 
-export function areAllPointsInMap(coordinates, map, L) {
+export function areAllPointsInMap(coordinates: LatLngExpression[], map: Map) {
   // determine if all the markers are inside the map bounding box
   if (coordinates.length > 0) {
     let currentBounds = map.getBounds();
@@ -430,7 +310,7 @@ export function addOverlayToLayerControl(
   return layer;
 }
 
-export function getBoundingBoxValues(bounds: LeafletBounds) {
+export function getBoundingBoxValues(bounds: LatLngBounds) {
   return {
     nelat: bounds._northEast.lat,
     nelng: bounds._northEast.lng,

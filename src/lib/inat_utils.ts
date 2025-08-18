@@ -1,72 +1,7 @@
-export type NormalizediNatTaxon = {
-  name: string;
-  default_photo?: string;
-  preferred_common_name?: string;
-  matched_term: string;
-  rank: string;
-  id: number;
-};
-
-type iNatAutocompleteTaxaAPI = {
-  total_results: number;
-  page: number;
-  per_page: number;
-  results: iNatAutocompleteResult[];
-};
-
-type iNatAutocompleteResult = {
-  id: number;
-  rank: string;
-  rank_level: number;
-  iconic_taxon_id: number;
-  ancestor_ids: number[];
-  is_active: boolean;
-  name: string;
-  parent_id: number;
-  ancestry: string;
-  extinct: boolean;
-  default_photo: DefaultPhoto | null;
-  taxon_changes_count: number;
-  taxon_schemes_count: number;
-  observations_count: number;
-  flag_counts: {
-    resolved: number;
-    unresolved: number;
-  };
-  current_synonymous_taxon_ids: number | null;
-  atlas_id: number | null;
-  complete_species_count: number | null;
-  wikipedia_url: string | null;
-  matched_term: string;
-  iconic_taxon_name: string;
-  preferred_common_name?: string;
-  conservation_status?: {
-    id: number;
-    place_id: number | null;
-    source_id: number | null;
-    user_id: number;
-    authority: string;
-    status: string;
-    status_name: string;
-    geoprivacy: string;
-    iucn: number;
-  };
-};
-
-type DefaultPhoto = {
-  id: number;
-  license_code: string | null;
-  attribution: string;
-  url: string;
-  original_dimensions: {
-    height: number;
-    width: number;
-  };
-  flags: string[];
-  attribution_name: string;
-  square_url: string;
-  medium_url: string;
-};
+import type {
+  NormalizediNatTaxon,
+  iNatAutocompleteTaxaAPI,
+} from "../types.d.ts";
 
 const speciesRanks = ["species", "hybrid", "subspecies", "variety", "form"];
 
