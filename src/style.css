@@ -238,4 +238,8 @@
     height: 90vh;
     background-color: var(--clr-gray-300);
   }
+
+  #map {
+    height: 100%;
+  }
 }
