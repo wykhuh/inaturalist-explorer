@@ -97,6 +97,7 @@
     --clr-orange-300: hsl(25, 45%, 77%);
     --clr-orange-400: hsl(25, 45%, 62%);
     --clr-orange-500: hsl(25, 51%, 43%);
+    --clr-green-200: hsl(143, 19%, 89%);
     --clr-green-300: hsl(143, 19%, 69%);
     --clr-green-400: hsl(143, 19%, 49%);
     --clr-green-500: hsl(143, 38%, 37%);
@@ -236,6 +237,20 @@
     position: absolute;
     background-color: rgba(255, 255, 255, 0.5);
     font-size: var(--font-size-sm);
+  }
+
+  .taxon-tag {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+
+    background-color: var(--clr-green-200);
+  }
+
+  .taxon-tag-close {
+    background-color: aqua;
+    padding: 0.25rem;
+    margin-left: 0.25rem;
   }
 }
 
