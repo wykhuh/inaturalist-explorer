@@ -28,17 +28,11 @@
   -webkit-transition: all -webkit-transform 0.3s ease;
 }
 
-.autoComplete_wrapper > input:hover::placeholder {
-  color: var(--clr-ac-600);
-  transition: all 0.3s ease;
-  -webkit-transition: all -webkit-transform 0.3s ease;
+.autoComplete_wrapper > input:focus-visible::placeholder {
+  color: var(--clr-ac-800);
 }
 
-.autoComplete_wrapper > input:focus::placeholder {
-  color: var(--clr-ac-400);
-}
-
-.autoComplete_wrapper > input:focus::selection {
+.autoComplete_wrapper > input:focus-visible::selection {
   background-color: var(--clr-ac-150);
 }
 
@@ -46,27 +40,20 @@
   background-color: var(--clr-ac-150);
 }
 
-.autoComplete_wrapper > input:hover {
-  color: var(--clr-ac-800);
-  transition: all 0.3s ease;
-  -webkit-transition: all -webkit-transform 0.3s ease;
-}
-
-.autoComplete_wrapper > input:focus {
+.autoComplete_wrapper > input:focus-visible {
   color: var(--clr-ac-1000);
-  border: 0.06rem solid var(--clr-ac-800);
 }
 
 .autoComplete_wrapper > ul {
   width: 30rem;
   position: absolute;
-  max-height: 226px;
+  max-height: 300px;
   overflow-y: scroll;
   left: 0;
   right: 0;
   margin: 0.5rem 0 0 0;
   padding: 0;
-  z-index: 1;
+  z-index: 401;
   list-style: none;
   border-radius: 0.6rem;
   background-color: var(--clr-ac-white);
