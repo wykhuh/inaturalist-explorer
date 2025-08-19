@@ -15,16 +15,14 @@ import {
   renderAutocompleteTaxon,
   formatTaxonName,
 } from "./lib/inat_utils";
-import type { NormalizediNatTaxon } from "./types.d.ts";
-import { displayJson } from "./lib/utils.ts";
+import type { NormalizediNatTaxon, AutoCompleteEvent } from "./types.d.ts";
+import { displayJson, renderTaxaList } from "./lib/utils.ts";
+import { mapStore } from "./lib/store.ts";
 
 let api = "https://api.inaturalist.org/v1/taxa/autocomplete?q=";
 
-let selectedTaxa: NormalizediNatTaxon[] = [];
-let inatTilesParams = {};
-
-let displayJsonEl = document.getElementById("display-json");
-let taxaListEl = document.getElementById("taxa-list-container");
+mapStore.displayJsonEl = document.getElementById("display-json");
+mapStore.taxaListEl = document.getElementById("taxa-list-container");
 
 // =====================
 // taxa search
@@ -49,7 +47,7 @@ const autoCompleteJS = new autoComplete({
   },
   events: {
     input: {
-      selection: (event) => {
+      selection: (event: AutoCompleteEvent) => {
         const selection = event.detail.selection.value;
         autoCompleteJS.input.value = selection.preferred_common_name;
       },
@@ -58,7 +56,7 @@ const autoCompleteJS = new autoComplete({
 });
 
 // =====================
-// taxa search
+// map
 // =====================
 
 let map = L.map("map", {
@@ -74,63 +72,34 @@ addLayerToMap(OpenTopo, map, layerControl);
 
 document
   .querySelector("#inatTaxaAutoComplete")!
-  .addEventListener("selection", function (event) {
+  .addEventListener("selection", function (event: any) {
     let selection = event.detail.selection.value;
 
-    taxonSelectedHandler(selection, event.detail.query);
+    taxonSelectedHandler(selection, event.detail.query, map, layerControl);
   });
 
 // =====================
 // misc
 // =====================
 
-function removeTaxon(e) {
-  let taxonId = e.target.dataset.taxonId;
-  selectedTaxa = selectedTaxa.filter((taxon) => taxon.id !== Number(taxonId));
-  // document.querySelector(`.taxon-tag[data-taxon-id='${taxonId}']`)!.remove();
-  displayJson(selectedTaxa, displayJsonEl);
-  renderTaxaList(selectedTaxa, taxaListEl);
-}
-
-function renderTaxaList(
-  taxalist: NormalizediNatTaxon[],
-  containerEl: HTMLElement | null
-) {
-  if (!containerEl) return;
-  containerEl.innerHTML = "";
-
-  taxalist.forEach((taxon) => {
-    let spanEl = document.createElement("span");
-    spanEl.className = "taxon-tag";
-    spanEl.innerText = taxon.preferred_common_name || taxon.name;
-    spanEl.dataset.taxonId = taxon.id.toString();
-
-    let closeSpanEl = document.createElement("span");
-    closeSpanEl.innerText = "x";
-    closeSpanEl.className = "taxon-tag-close";
-    closeSpanEl.dataset.taxonId = taxon.id.toString();
-    closeSpanEl.addEventListener("click", removeTaxon);
-
-    spanEl.appendChild(closeSpanEl);
-    containerEl.appendChild(spanEl);
-  });
-}
-
 function taxonSelectedHandler(
   taxonObj: NormalizediNatTaxon,
-  searchTerm: string
+  searchTerm: string,
+  map: L.Map,
+  layerControl: L.Control.Layers
 ) {
-  selectedTaxa.push(taxonObj);
-  displayJson(selectedTaxa, displayJsonEl);
-  renderTaxaList(selectedTaxa, taxaListEl);
+  mapStore.selectedTaxa.push(taxonObj);
+  displayJson(mapStore.selectedTaxa, mapStore.displayJsonEl);
+  renderTaxaList(mapStore, layerControl);
 
+  // create iNaturalist map layers
   let bbValues = getBoundingBoxValues(map.getBounds());
-  inatTilesParams = {
-    ...inatTilesParams,
+  mapStore.inatTilesParams = {
+    ...mapStore.inatTilesParams,
     ...bbValues,
     taxon_id: taxonObj.id,
   };
-  let paramsString = new URLSearchParams(inatTilesParams).toString();
+  let paramsString = new URLSearchParams(mapStore.inatTilesParams).toString();
 
   let { iNatGrid, iNatHeatmap, iNatTaxonRange, iNatPoint } = getiNatMapTiles(
     taxonObj.id,
@@ -164,4 +133,11 @@ function taxonSelectedHandler(
     layerControl,
     title
   );
+
+  mapStore.taxaMapLayers[taxonObj.id] = [
+    iNatGridLayer,
+    iNatPointLayer,
+    iNatHeatmapLayer,
+    iNatTaxonRangeLayer,
+  ];
 }

@@ -18,7 +18,9 @@
   figure,
   blockquote,
   dl,
-  dd {
+  dd,
+  ul,
+  li {
     margin: 0;
   }
 
@@ -90,9 +92,10 @@
     /* colors */
     --clr-white: #ffffff;
     --clr-black: #333;
-    --clr-gray-300: #eee;
-    --clr-gray-400: #ddd;
-    --clr-gray-500: #ccc;
+    --clr-gray-200: hsl(0, 0%, 96%);
+    --clr-gray-300: hsl(0, 0%, 93%);
+    --clr-gray-400: hsl(0, 0%, 87%);
+    --clr-gray-500: hsl(0, 0%, 80%);
 
     --clr-orange-300: hsl(25, 45%, 77%);
     --clr-orange-400: hsl(25, 45%, 62%);
@@ -130,6 +133,10 @@
     --font-size-heading-regular: var(--fs-800);
     --font-size-heading-lg: var(--fs-900);
     --font-size-heading-xl: var(--fs-1000);
+
+    --border-radius-1: 0.25rem;
+    --border-radius-2: 0.5rem;
+    --border-radius-3: 0.75rem;
 
     /* @media (prefers-color-scheme: light) {
       --text-main: var(--clr-brown-700);
@@ -239,18 +246,34 @@
     font-size: var(--font-size-sm);
   }
 
-  .taxon-tag {
-    display: inline-block;
-    padding: 0.25rem 0.5rem;
-    border-radius: 1rem;
+  ul#taxa-list-container {
+    padding: 0;
+    list-style: none;
+  }
 
-    background-color: var(--clr-green-200);
+  ul#taxa-list-container li {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid var(--clr-gray-500);
+    border-width: 0 1px 1px 1px;
+    padding: 0.25rem 0.5rem;
+    align-items: center;
+  }
+  ul#taxa-list-container li:first-child {
+    border-top-width: 1px;
+  }
+
+  .taxon-list-item-close {
+    background-color: var(--clr-gray-200);
+    border: 1px solid var(--clr-gray-500);
+    border-radius: var(--border-radius-1);
+    cursor: pointer;
   }
 
   .taxon-tag-close {
-    background-color: aqua;
-    padding: 0.25rem;
-    margin-left: 0.25rem;
+    /* background-color: aqua; */
+    /* padding: 0.25rem; */
+    /* margin-left: 0.25rem; */
   }
 }
 

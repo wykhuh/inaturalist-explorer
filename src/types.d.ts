@@ -1,4 +1,5 @@
 declare module "@tarekraafat/autocomplete.js";
+import type { TileLayer } from "leaflet";
 
 export type TileSettings = {
   name: string;
@@ -186,4 +187,26 @@ type DefaultPhoto = {
   attribution_name: string;
   square_url: string;
   medium_url: string;
+};
+
+export interface MapStore {
+  selectedTaxa: NormalizediNatTaxon[];
+  taxaMapLayers: { [index: string]: TileLayer[] };
+  inatTilesParams: {
+    [index: string]: string | number;
+  };
+  displayJsonEl: HTMLElement | null;
+  taxaListEl: HTMLElement | null;
+}
+
+export interface AutoCompleteEvent {
+  detail: {
+    query: string;
+    selection: { index: number; match: string; value: NormalizediNatTaxon };
+  };
+}
+
+// https://freshman.tech/snippets/typescript/fix-value-not-exist-eventtarget/
+type ButtonEvent = Event & {
+  target: HTMLButtonElement;
 };
