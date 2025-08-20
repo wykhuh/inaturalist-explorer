@@ -1,5 +1,6 @@
 import { removeTaxon } from "../../lib/data_utils.ts";
-import type { NormalizediNatTaxon } from "../../types/app.d.ts";
+import { pluralize } from "../../lib/utils.ts";
+import type { NormalizediNatTaxon } from "../../types/app";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -27,9 +28,23 @@ class MyComponent extends HTMLElement {
       swatchEl.style.backgroundColor = taxon.color || "";
     }
 
-    let nameEl = this.querySelector(".taxon-name");
-    if (nameEl) {
-      nameEl.textContent = taxon.preferred_common_name || taxon.name || "";
+    let titleEl = this.querySelector(".title");
+    if (titleEl) {
+      titleEl.textContent = taxon.preferred_common_name + "";
+    }
+
+    let subtitleEl = this.querySelector(".subtitle");
+    if (subtitleEl) {
+      subtitleEl.textContent = taxon.name;
+    }
+
+    let countEl = this.querySelector(".count");
+    if (countEl && taxon.observations_count) {
+      countEl.textContent = pluralize(
+        taxon.observations_count,
+        "observation",
+        true,
+      );
     }
 
     let butttonEl = this.querySelector(".close-button");

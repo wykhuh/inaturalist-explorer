@@ -1,0 +1,11 @@
+.leaflet-control-layers-overlays label:nth-child(4n) {
+  border-bottom: 1px solid var(--clr-gray-400);
+  margin-bottom: 0.3rem;
+  padding-bottom: 0.3rem;
+}
+
+.leaflet-control-layers-overlays label:last-child {
+  border-bottom: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}

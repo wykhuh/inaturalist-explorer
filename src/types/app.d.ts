@@ -132,6 +132,7 @@ export type NormalizediNatTaxon = {
   rank: string;
   id: number;
   color?: string;
+  observations_count?: number;
 };
 
 type iNatAutocompleteTaxaAPI = {
@@ -195,10 +196,31 @@ type DefaultPhoto = {
   medium_url: string;
 };
 
+export type ObservationsSpeciesCountAPI = {
+  total_results: number;
+  page: number;
+  per_page: number;
+  results: {
+    count: number;
+    taxon: {
+      id: number;
+    };
+  }[];
+};
+
+export type ObservationsAPI = {
+  total_results: number;
+  page: number;
+  per_page: number;
+  results: {
+    uuid: string;
+  }[];
+};
+
 export interface MapStore {
   selectedTaxa: NormalizediNatTaxon[];
   taxaMapLayers: { [index: string]: TileLayer[] };
-  inatTilesParams: {
+  inatApiParams: {
     [index: string]: any;
   };
   displayJsonEl: HTMLElement | null;

@@ -243,18 +243,18 @@ export function addLayerToMap(
   return layer;
 }
 
-export function addOverlayToLayerControl(
+export function addOverlayToMap(
   tileObj: TileSettings,
   map: any,
   layerControl: any,
-  taxon: string,
+  taxonName: string,
   checked = false,
 ) {
   let layer = L.tileLayer(tileObj.url, tileObj.options);
   if (checked) {
     layer.addTo(map);
   }
-  layerControl.addOverlay(layer, `${taxon} ${tileObj.name}`);
+  layerControl.addOverlay(layer, `${taxonName} ${tileObj.name}`);
   return layer;
 }
 

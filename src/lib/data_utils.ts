@@ -3,10 +3,10 @@ import type {
   iNatAutocompleteTaxaAPI,
   MapStore,
 } from "../types/app";
-import { addOverlayToLayerControl, getBoundingBoxValues } from "./map_utils.ts";
+import { addOverlayToMap } from "./map_utils.ts";
 import { colorsSixTolBright, getColor } from "./map_colors_utils.ts";
 import { displayJson } from "./utils.ts";
-import { getiNatMapTiles } from "./inat_api.ts";
+import { getiNatMapTiles, getiNatObservationsTotal } from "./inat_api.ts";
 
 const speciesRanks = ["species", "hybrid", "subspecies", "variety", "form"];
 
@@ -94,7 +94,7 @@ export function processAutocompleteTaxa(
   return taxa;
 }
 
-export function taxonSelectedHandler(
+export async function taxonSelectedHandler(
   taxonObj: NormalizediNatTaxon,
   searchTerm: string,
   appStore: MapStore,
@@ -104,51 +104,38 @@ export function taxonSelectedHandler(
   if (map == null) return;
   if (layerControl == null) return;
 
+  // get color for taxon
   let color = getColor(appStore, colorsSixTolBright);
   taxonObj.color = color;
+
+  // create params for the iNat map tiles API
+  appStore.inatApiParams = {
+    ...appStore.inatApiParams,
+    taxon_id: taxonObj.id,
+    color: color,
+    spam: false,
+    verifiable: true,
+  };
+
+  // get observations count
+  let count = await getiNatObservationsTotal(appStore.inatApiParams);
+  taxonObj.observations_count = count;
 
   appStore.selectedTaxa.push(taxonObj);
   displayJson(appStore.selectedTaxa, appStore.displayJsonEl);
   renderTaxaList(appStore);
 
-  let bbValues = getBoundingBoxValues(map.getBounds());
-
-  // create params for the iNat map tiles API
-  appStore.inatTilesParams = {
-    ...appStore.inatTilesParams,
-    ...bbValues,
-    taxon_id: taxonObj.id,
-    color: color,
-  };
-
   // fetch iNaturalist map layers
   let { iNatGrid, iNatHeatmap, iNatTaxonRange, iNatPoint } = getiNatMapTiles(
     taxonObj.id,
-    appStore.inatTilesParams,
+    appStore.inatApiParams,
   );
 
   let { title } = formatTaxonName(taxonObj, searchTerm, false);
-
-  let iNatGridLayer = addOverlayToLayerControl(
-    iNatGrid,
-    map,
-    layerControl,
-    title,
-    true,
-  );
-  let iNatPointLayer = addOverlayToLayerControl(
-    iNatPoint,
-    map,
-    layerControl,
-    title,
-  );
-  let iNatHeatmapLayer = addOverlayToLayerControl(
-    iNatHeatmap,
-    map,
-    layerControl,
-    title,
-  );
-  let iNatTaxonRangeLayer = addOverlayToLayerControl(
+  let iNatGridLayer = addOverlayToMap(iNatGrid, map, layerControl, title, true);
+  let iNatPointLayer = addOverlayToMap(iNatPoint, map, layerControl, title);
+  let iNatHeatmapLayer = addOverlayToMap(iNatHeatmap, map, layerControl, title);
+  let iNatTaxonRangeLayer = addOverlayToMap(
     iNatTaxonRange,
     map,
     layerControl,

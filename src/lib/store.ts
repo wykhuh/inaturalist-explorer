@@ -3,7 +3,7 @@ import type { MapStore } from "../types/app.d.ts";
 export const mapStore: MapStore = {
   selectedTaxa: [],
   taxaMapLayers: {},
-  inatTilesParams: {},
+  inatApiParams: {},
   displayJsonEl: null,
   taxaListEl: null,
   color: "",

@@ -79,16 +79,24 @@
   color: var(--clr-ac-black);
   border-radius: 0.35rem;
   background-color: var(--clr-ac-white);
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   transition: all 0.2s ease;
 }
 
-.autoComplete_wrapper > ul > li mark {
-  background-color: transparent;
-  color: var(--clr-ac-1000);
-  font-weight: bold;
+.autoComplete_wrapper > ul > li {
+  & .title {
+    font-weight: 550;
+  }
+
+  & .rank {
+    font-size: var(--font-size-sm);
+  }
+
+  & .subtitle {
+    font-style: italic;
+    font-size: var(--font-size-sm);
+  }
 }
 
 .autoComplete_wrapper > ul > li:hover {

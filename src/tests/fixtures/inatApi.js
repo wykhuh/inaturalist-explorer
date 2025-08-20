@@ -866,3 +866,1061 @@ export let canisTaxaAutocomplete = [
     preferred_common_name: "Southern Black-backed Jackal",
   },
 ];
+
+export let redOaksSpeciesCount = {
+  total_results: 175,
+  page: 1,
+  per_page: 200,
+  results: [
+    {
+      count: 97894,
+      taxon: {
+        id: 49005,
+      },
+    },
+    {
+      count: 54185,
+      taxon: {
+        id: 47850,
+      },
+    },
+    {
+      count: 26473,
+      taxon: {
+        id: 49006,
+      },
+    },
+    {
+      count: 25749,
+      taxon: {
+        id: 53640,
+      },
+    },
+    {
+      count: 25210,
+      taxon: {
+        id: 54785,
+      },
+    },
+    {
+      count: 25196,
+      taxon: {
+        id: 119983,
+      },
+    },
+    {
+      count: 15000,
+      taxon: {
+        id: 49919,
+      },
+    },
+    {
+      count: 13918,
+      taxon: {
+        id: 61324,
+      },
+    },
+    {
+      count: 13738,
+      taxon: {
+        id: 82329,
+      },
+    },
+    {
+      count: 12799,
+      taxon: {
+        id: 54786,
+      },
+    },
+    {
+      count: 9054,
+      taxon: {
+        id: 54784,
+      },
+    },
+    {
+      count: 8518,
+      taxon: {
+        id: 51089,
+      },
+    },
+    {
+      count: 7641,
+      taxon: {
+        id: 117428,
+      },
+    },
+    {
+      count: 6468,
+      taxon: {
+        id: 130737,
+      },
+    },
+    {
+      count: 5765,
+      taxon: {
+        id: 167640,
+      },
+    },
+    {
+      count: 5671,
+      taxon: {
+        id: 69845,
+      },
+    },
+    {
+      count: 5191,
+      taxon: {
+        id: 128752,
+      },
+    },
+    {
+      count: 3954,
+      taxon: {
+        id: 167660,
+      },
+    },
+    {
+      count: 3841,
+      taxon: {
+        id: 144029,
+      },
+    },
+    {
+      count: 3485,
+      taxon: {
+        id: 167646,
+      },
+    },
+    {
+      count: 3291,
+      taxon: {
+        id: 167652,
+      },
+    },
+    {
+      count: 3196,
+      taxon: {
+        id: 121690,
+      },
+    },
+    {
+      count: 2253,
+      taxon: {
+        id: 167654,
+      },
+    },
+    {
+      count: 1915,
+      taxon: {
+        id: 125847,
+      },
+    },
+    {
+      count: 1525,
+      taxon: {
+        id: 133176,
+      },
+    },
+    {
+      count: 1117,
+      taxon: {
+        id: 78808,
+      },
+    },
+    {
+      count: 924,
+      taxon: {
+        id: 167663,
+      },
+    },
+    {
+      count: 905,
+      taxon: {
+        id: 275462,
+      },
+    },
+    {
+      count: 811,
+      taxon: {
+        id: 171031,
+      },
+    },
+    {
+      count: 761,
+      taxon: {
+        id: 282380,
+      },
+    },
+    {
+      count: 628,
+      taxon: {
+        id: 167650,
+      },
+    },
+    {
+      count: 490,
+      taxon: {
+        id: 167670,
+      },
+    },
+    {
+      count: 438,
+      taxon: {
+        id: 282406,
+      },
+    },
+    {
+      count: 386,
+      taxon: {
+        id: 275460,
+      },
+    },
+    {
+      count: 379,
+      taxon: {
+        id: 282411,
+      },
+    },
+    {
+      count: 322,
+      taxon: {
+        id: 132052,
+      },
+    },
+    {
+      count: 295,
+      taxon: {
+        id: 167648,
+      },
+    },
+    {
+      count: 290,
+      taxon: {
+        id: 209422,
+      },
+    },
+    {
+      count: 267,
+      taxon: {
+        id: 209275,
+      },
+    },
+    {
+      count: 267,
+      taxon: {
+        id: 1558918,
+      },
+    },
+    {
+      count: 253,
+      taxon: {
+        id: 212109,
+      },
+    },
+    {
+      count: 215,
+      taxon: {
+        id: 567260,
+      },
+    },
+    {
+      count: 200,
+      taxon: {
+        id: 282407,
+      },
+    },
+    {
+      count: 180,
+      taxon: {
+        id: 167637,
+      },
+    },
+    {
+      count: 180,
+      taxon: {
+        id: 181844,
+      },
+    },
+    {
+      count: 174,
+      taxon: {
+        id: 638309,
+      },
+    },
+    {
+      count: 155,
+      taxon: {
+        id: 282386,
+      },
+    },
+    {
+      count: 155,
+      taxon: {
+        id: 1473163,
+      },
+    },
+    {
+      count: 151,
+      taxon: {
+        id: 275459,
+      },
+    },
+    {
+      count: 132,
+      taxon: {
+        id: 167673,
+      },
+    },
+    {
+      count: 120,
+      taxon: {
+        id: 275479,
+      },
+    },
+    {
+      count: 100,
+      taxon: {
+        id: 275465,
+      },
+    },
+    {
+      count: 95,
+      taxon: {
+        id: 275467,
+      },
+    },
+    {
+      count: 94,
+      taxon: {
+        id: 1596407,
+      },
+    },
+    {
+      count: 74,
+      taxon: {
+        id: 275507,
+      },
+    },
+    {
+      count: 72,
+      taxon: {
+        id: 282400,
+      },
+    },
+    {
+      count: 71,
+      taxon: {
+        id: 171026,
+      },
+    },
+    {
+      count: 71,
+      taxon: {
+        id: 282374,
+      },
+    },
+    {
+      count: 71,
+      taxon: {
+        id: 442874,
+      },
+    },
+    {
+      count: 70,
+      taxon: {
+        id: 275496,
+      },
+    },
+    {
+      count: 70,
+      taxon: {
+        id: 275526,
+      },
+    },
+    {
+      count: 70,
+      taxon: {
+        id: 548296,
+      },
+    },
+    {
+      count: 68,
+      taxon: {
+        id: 167633,
+      },
+    },
+    {
+      count: 65,
+      taxon: {
+        id: 282383,
+      },
+    },
+    {
+      count: 61,
+      taxon: {
+        id: 1551929,
+      },
+    },
+    {
+      count: 49,
+      taxon: {
+        id: 282387,
+      },
+    },
+    {
+      count: 48,
+      taxon: {
+        id: 167649,
+      },
+    },
+    {
+      count: 45,
+      taxon: {
+        id: 167665,
+      },
+    },
+    {
+      count: 45,
+      taxon: {
+        id: 275524,
+      },
+    },
+    {
+      count: 45,
+      taxon: {
+        id: 282398,
+      },
+    },
+    {
+      count: 44,
+      taxon: {
+        id: 282409,
+      },
+    },
+    {
+      count: 42,
+      taxon: {
+        id: 282391,
+      },
+    },
+    {
+      count: 39,
+      taxon: {
+        id: 170988,
+      },
+    },
+    {
+      count: 38,
+      taxon: {
+        id: 275469,
+      },
+    },
+    {
+      count: 37,
+      taxon: {
+        id: 275477,
+      },
+    },
+    {
+      count: 35,
+      taxon: {
+        id: 275489,
+      },
+    },
+    {
+      count: 35,
+      taxon: {
+        id: 1199821,
+      },
+    },
+    {
+      count: 35,
+      taxon: {
+        id: 1549941,
+      },
+    },
+    {
+      count: 33,
+      taxon: {
+        id: 171017,
+      },
+    },
+    {
+      count: 33,
+      taxon: {
+        id: 275484,
+      },
+    },
+    {
+      count: 33,
+      taxon: {
+        id: 282402,
+      },
+    },
+    {
+      count: 32,
+      taxon: {
+        id: 171016,
+      },
+    },
+    {
+      count: 31,
+      taxon: {
+        id: 275501,
+      },
+    },
+    {
+      count: 31,
+      taxon: {
+        id: 282384,
+      },
+    },
+    {
+      count: 29,
+      taxon: {
+        id: 282375,
+      },
+    },
+    {
+      count: 26,
+      taxon: {
+        id: 275466,
+      },
+    },
+    {
+      count: 25,
+      taxon: {
+        id: 275511,
+      },
+    },
+    {
+      count: 24,
+      taxon: {
+        id: 282377,
+      },
+    },
+    {
+      count: 24,
+      taxon: {
+        id: 282378,
+      },
+    },
+    {
+      count: 23,
+      taxon: {
+        id: 275463,
+      },
+    },
+    {
+      count: 23,
+      taxon: {
+        id: 275494,
+      },
+    },
+    {
+      count: 23,
+      taxon: {
+        id: 275503,
+      },
+    },
+    {
+      count: 22,
+      taxon: {
+        id: 275517,
+      },
+    },
+    {
+      count: 19,
+      taxon: {
+        id: 1198456,
+      },
+    },
+    {
+      count: 15,
+      taxon: {
+        id: 170976,
+      },
+    },
+    {
+      count: 15,
+      taxon: {
+        id: 275522,
+      },
+    },
+    {
+      count: 15,
+      taxon: {
+        id: 962098,
+      },
+    },
+    {
+      count: 14,
+      taxon: {
+        id: 171059,
+      },
+    },
+    {
+      count: 14,
+      taxon: {
+        id: 171070,
+      },
+    },
+    {
+      count: 13,
+      taxon: {
+        id: 170992,
+      },
+    },
+    {
+      count: 13,
+      taxon: {
+        id: 170996,
+      },
+    },
+    {
+      count: 13,
+      taxon: {
+        id: 171007,
+      },
+    },
+    {
+      count: 13,
+      taxon: {
+        id: 273732,
+      },
+    },
+    {
+      count: 12,
+      taxon: {
+        id: 171015,
+      },
+    },
+    {
+      count: 12,
+      taxon: {
+        id: 171069,
+      },
+    },
+    {
+      count: 12,
+      taxon: {
+        id: 275508,
+      },
+    },
+    {
+      count: 12,
+      taxon: {
+        id: 282393,
+      },
+    },
+    {
+      count: 12,
+      taxon: {
+        id: 1555935,
+      },
+    },
+    {
+      count: 11,
+      taxon: {
+        id: 282388,
+      },
+    },
+    {
+      count: 10,
+      taxon: {
+        id: 171040,
+      },
+    },
+    {
+      count: 10,
+      taxon: {
+        id: 171048,
+      },
+    },
+    {
+      count: 10,
+      taxon: {
+        id: 275492,
+      },
+    },
+    {
+      count: 9,
+      taxon: {
+        id: 275473,
+      },
+    },
+    {
+      count: 8,
+      taxon: {
+        id: 171027,
+      },
+    },
+    {
+      count: 8,
+      taxon: {
+        id: 171045,
+      },
+    },
+    {
+      count: 8,
+      taxon: {
+        id: 171049,
+      },
+    },
+    {
+      count: 8,
+      taxon: {
+        id: 487058,
+      },
+    },
+    {
+      count: 8,
+      taxon: {
+        id: 867019,
+      },
+    },
+    {
+      count: 7,
+      taxon: {
+        id: 275456,
+      },
+    },
+    {
+      count: 7,
+      taxon: {
+        id: 275493,
+      },
+    },
+    {
+      count: 7,
+      taxon: {
+        id: 275497,
+      },
+    },
+    {
+      count: 7,
+      taxon: {
+        id: 883524,
+      },
+    },
+    {
+      count: 7,
+      taxon: {
+        id: 1503245,
+      },
+    },
+    {
+      count: 6,
+      taxon: {
+        id: 171052,
+      },
+    },
+    {
+      count: 6,
+      taxon: {
+        id: 275476,
+      },
+    },
+    {
+      count: 6,
+      taxon: {
+        id: 1498387,
+      },
+    },
+    {
+      count: 5,
+      taxon: {
+        id: 170994,
+      },
+    },
+    {
+      count: 5,
+      taxon: {
+        id: 171005,
+      },
+    },
+    {
+      count: 5,
+      taxon: {
+        id: 209423,
+      },
+    },
+    {
+      count: 5,
+      taxon: {
+        id: 275490,
+      },
+    },
+    {
+      count: 5,
+      taxon: {
+        id: 282415,
+      },
+    },
+    {
+      count: 5,
+      taxon: {
+        id: 879870,
+      },
+    },
+    {
+      count: 5,
+      taxon: {
+        id: 1118355,
+      },
+    },
+    {
+      count: 5,
+      taxon: {
+        id: 1471166,
+      },
+    },
+    {
+      count: 4,
+      taxon: {
+        id: 170977,
+      },
+    },
+    {
+      count: 4,
+      taxon: {
+        id: 170986,
+      },
+    },
+    {
+      count: 4,
+      taxon: {
+        id: 170990,
+      },
+    },
+    {
+      count: 4,
+      taxon: {
+        id: 171020,
+      },
+    },
+    {
+      count: 4,
+      taxon: {
+        id: 171034,
+      },
+    },
+    {
+      count: 4,
+      taxon: {
+        id: 275464,
+      },
+    },
+    {
+      count: 4,
+      taxon: {
+        id: 275504,
+      },
+    },
+    {
+      count: 3,
+      taxon: {
+        id: 170982,
+      },
+    },
+    {
+      count: 3,
+      taxon: {
+        id: 171021,
+      },
+    },
+    {
+      count: 3,
+      taxon: {
+        id: 171066,
+      },
+    },
+    {
+      count: 3,
+      taxon: {
+        id: 275480,
+      },
+    },
+    {
+      count: 3,
+      taxon: {
+        id: 275510,
+      },
+    },
+    {
+      count: 3,
+      taxon: {
+        id: 907168,
+      },
+    },
+    {
+      count: 3,
+      taxon: {
+        id: 1240694,
+      },
+    },
+    {
+      count: 3,
+      taxon: {
+        id: 1480290,
+      },
+    },
+    {
+      count: 3,
+      taxon: {
+        id: 1567688,
+      },
+    },
+    {
+      count: 2,
+      taxon: {
+        id: 167669,
+      },
+    },
+    {
+      count: 2,
+      taxon: {
+        id: 170991,
+      },
+    },
+    {
+      count: 2,
+      taxon: {
+        id: 171003,
+      },
+    },
+    {
+      count: 2,
+      taxon: {
+        id: 171008,
+      },
+    },
+    {
+      count: 2,
+      taxon: {
+        id: 171010,
+      },
+    },
+    {
+      count: 2,
+      taxon: {
+        id: 171044,
+      },
+    },
+    {
+      count: 2,
+      taxon: {
+        id: 171060,
+      },
+    },
+    {
+      count: 2,
+      taxon: {
+        id: 275458,
+      },
+    },
+    {
+      count: 2,
+      taxon: {
+        id: 275474,
+      },
+    },
+    {
+      count: 1,
+      taxon: {
+        id: 170999,
+      },
+    },
+    {
+      count: 1,
+      taxon: {
+        id: 171011,
+      },
+    },
+    {
+      count: 1,
+      taxon: {
+        id: 171032,
+      },
+    },
+    {
+      count: 1,
+      taxon: {
+        id: 171035,
+      },
+    },
+    {
+      count: 1,
+      taxon: {
+        id: 171056,
+      },
+    },
+    {
+      count: 1,
+      taxon: {
+        id: 275457,
+      },
+    },
+    {
+      count: 1,
+      taxon: {
+        id: 275468,
+      },
+    },
+    {
+      count: 1,
+      taxon: {
+        id: 275475,
+      },
+    },
+    {
+      count: 1,
+      taxon: {
+        id: 275481,
+      },
+    },
+    {
+      count: 1,
+      taxon: {
+        id: 275500,
+      },
+    },
+    {
+      count: 1,
+      taxon: {
+        id: 282379,
+      },
+    },
+    {
+      count: 1,
+      taxon: {
+        id: 282390,
+      },
+    },
+    {
+      count: 1,
+      taxon: {
+        id: 442871,
+      },
+    },
+    {
+      count: 1,
+      taxon: {
+        id: 1365015,
+      },
+    },
+    {
+      count: 1,
+      taxon: {
+        id: 1542142,
+      },
+    },
+    {
+      count: 1,
+      taxon: {
+        id: 1639412,
+      },
+    },
+  ],
+};

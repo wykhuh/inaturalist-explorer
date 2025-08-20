@@ -1,9 +1,10 @@
 import autoComplete from "@tarekraafat/autocomplete.js";
-import "./assets/autocomplete.css";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-import "./components/TaxaListItem/main.ts";
+import "./assets/leaflet.css";
+import "./assets/autocomplete.css";
+import "./components/TaxaListItem/component.ts";
 import { getMapTiles, addLayerToMap } from "./lib/map_utils.ts";
 import {
   processAutocompleteTaxa,
@@ -53,9 +54,9 @@ const autoCompleteJS = new autoComplete({
 
 document
   .querySelector("#inatTaxaAutoComplete")!
-  .addEventListener("selection", function (event: any) {
+  .addEventListener("selection", async function (event: any) {
     let selection = event.detail.selection.value;
-    taxonSelectedHandler(selection, event.detail.query, window.app.store);
+    await taxonSelectedHandler(selection, event.detail.query, window.app.store);
   });
 
 // =====================
@@ -68,6 +69,7 @@ let map = L.map("map", {
   maxZoom: 19,
 });
 var layerControl = L.control.layers().addTo(map);
+// var layerControl = L.control.layers({}, {}, { collapsed: false }).addTo(map);
 
 let { OpenStreetMap, OpenTopo } = getMapTiles();
 addLayerToMap(OpenStreetMap, map, layerControl, true);
