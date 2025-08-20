@@ -1,5 +1,10 @@
-declare module "@tarekraafat/autocomplete.js";
-import type { TileLayer } from "leaflet";
+import type { TileLayer, Map, Control } from "leaflet";
+
+declare global {
+  interface Window {
+    app: { store: MapStore };
+  }
+}
 
 export type TileSettings = {
   name: string;
@@ -126,6 +131,7 @@ export type NormalizediNatTaxon = {
   matched_term: string;
   rank: string;
   id: number;
+  color?: string;
 };
 
 type iNatAutocompleteTaxaAPI = {
@@ -193,10 +199,12 @@ export interface MapStore {
   selectedTaxa: NormalizediNatTaxon[];
   taxaMapLayers: { [index: string]: TileLayer[] };
   inatTilesParams: {
-    [index: string]: string | number;
+    [index: string]: any;
   };
   displayJsonEl: HTMLElement | null;
   taxaListEl: HTMLElement | null;
+  color: string;
+  map: { map: Map | null; layerControl: Control.Layers | null };
 }
 
 export interface AutoCompleteEvent {

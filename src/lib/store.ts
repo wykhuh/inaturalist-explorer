@@ -6,4 +6,6 @@ export const mapStore: MapStore = {
   inatTilesParams: {},
   displayJsonEl: null,
   taxaListEl: null,
+  color: "",
+  map: { map: null, layerControl: null },
 };

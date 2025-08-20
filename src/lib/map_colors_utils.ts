@@ -1,3 +1,5 @@
+import type { MapStore } from "../types/app.d.ts";
+
 // https://personal.sron.nl/~pault/#sec:qualitative
 export let colorsSixTolBright = [
   "#4477aa",
@@ -180,3 +182,16 @@ export let defaultColorScheme = {
   colorScheme: colorsSixTolBright,
   monthSeasonalMarkers: true,
 };
+
+export function getColor(appStore: MapStore, colorArray: string[]) {
+  let color;
+  if (appStore.color === "") {
+    color = colorArray[0];
+  } else {
+    let index = colorArray.indexOf(appStore.color);
+    color = colorArray[(index + 1) % colorArray.length];
+  }
+  appStore.color = color;
+
+  return color;
+}

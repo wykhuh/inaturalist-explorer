@@ -1,9 +1,11 @@
+// @vitest-environment jsdom
+
 import { expect, test, describe } from "vitest";
 import {
   processAutocompleteTaxa,
   renderAutocompleteTaxon,
   formatTaxonName,
-} from "../lib/inat_utils.ts";
+} from "../lib/data_utils.ts";
 
 describe("processAutocompleteTaxa", () => {
   test("formats iNat api response", () => {

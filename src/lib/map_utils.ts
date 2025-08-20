@@ -1,5 +1,5 @@
 import L from "leaflet";
-import type { Map, LatLngExpression, LatLngBounds } from "leaflet";
+import type { Map, LatLngExpression } from "leaflet";
 
 import type { TileSettings } from "../types/app.d.ts";
 
@@ -40,7 +40,7 @@ export function fitPointsInMap(coordinates: any, map: Map) {
 export function isObservationInMap(observation: any, map: Map) {
   let currentBounds = map.getBounds();
   return currentBounds.contains(
-    L.latLng(observation.latitude, observation.longitude)
+    L.latLng(observation.latitude, observation.longitude),
   );
 }
 
@@ -224,58 +224,6 @@ export const getMapTiles = (): { [name: string]: TileSettings } => {
   };
 };
 
-export const getiNatMapTiles = (
-  taxonID: number,
-  params: string
-): { [name: string]: TileSettings } => {
-  return {
-    iNatGrid: {
-      name: "Grid",
-      type: "overlay",
-      url: `https://api.inaturalist.org/v1/grid/{z}/{x}/{y}.png?${params}`,
-      options: {
-        attribution:
-          'Observation data by <a href="https://www.inaturalist.org/">iNaturalist</a>.',
-        minZoom: 0,
-        maxZoom: 21,
-      },
-    },
-    iNatPoint: {
-      name: "Points",
-      type: "overlay",
-      url: `https://api.inaturalist.org/v1/points/{z}/{x}/{y}.png?${params}`,
-      options: {
-        attribution:
-          'Observation data by <a href="https://www.inaturalist.org/">iNaturalist</a>.',
-        minZoom: 0,
-        maxZoom: 21,
-      },
-    },
-    iNatTaxonRange: {
-      name: "Taxon Range",
-      type: "overlay",
-      url: `https://api.inaturalist.org/v1/taxon_ranges/${taxonID}/{z}/{x}/{y}.png`,
-      options: {
-        attribution:
-          'Taxon range by <a href="https://www.inaturalist.org/">iNaturalist</a>.',
-        minZoom: 0,
-        maxZoom: 21,
-      },
-    },
-    iNatHeatmap: {
-      name: "Heatmap",
-      type: "overlay",
-      url: `https://api.inaturalist.org/v1/heatmap/{z}/{x}/{y}.png?${params}`,
-      options: {
-        attribution:
-          'Observation data by <a href="https://www.inaturalist.org/">iNaturalist</a>.',
-        minZoom: 0,
-        maxZoom: 21,
-      },
-    },
-  };
-};
-
 export let scaleControlOptions = {
   maxWidth: 200,
 };
@@ -284,7 +232,7 @@ export function addLayerToMap(
   tileObj: TileSettings,
   map: any,
   layerControl: any,
-  checked = false
+  checked = false,
 ) {
   let layer = L.tileLayer(tileObj.url, tileObj.options);
   if (checked) {
@@ -300,7 +248,7 @@ export function addOverlayToLayerControl(
   map: any,
   layerControl: any,
   taxon: string,
-  checked = false
+  checked = false,
 ) {
   let layer = L.tileLayer(tileObj.url, tileObj.options);
   if (checked) {
@@ -310,7 +258,7 @@ export function addOverlayToLayerControl(
   return layer;
 }
 
-export function getBoundingBoxValues(bounds: LatLngBounds) {
+export function getBoundingBoxValues(bounds: any) {
   return {
     nelat: bounds._northEast.lat,
     nelng: bounds._northEast.lng,
