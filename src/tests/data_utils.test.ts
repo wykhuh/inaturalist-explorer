@@ -270,7 +270,7 @@ describe("renderAutocompleteTaxon", () => {
     };
 
     let expected = `
-  <div class="taxa-ac-option">
+  <div class="taxa-ac-option" data-testid="taxa-ac-option">
     <div class="thumbnail">
       <img class="thumbnail" src="https://inat.com/photos/101327658/square.jpg" alt="">
     </div>
@@ -298,7 +298,7 @@ describe("renderAutocompleteTaxon", () => {
     };
 
     let expected = `
-  <div class="taxa-ac-option">
+  <div class="taxa-ac-option" data-testid="taxa-ac-option">
     <div class="thumbnail">
       <img class="thumbnail" src="https://inat.com/photos/11484396/square.jpg" alt="">
     </div>
@@ -326,7 +326,7 @@ describe("renderAutocompleteTaxon", () => {
     };
 
     let expected = `
-  <div class="taxa-ac-option">
+  <div class="taxa-ac-option" data-testid="taxa-ac-option">
     <div class="thumbnail">
     </div>
     <div class="taxon-name">
@@ -354,7 +354,7 @@ describe("renderAutocompleteTaxon", () => {
     };
 
     let expected = `
-  <div class="taxa-ac-option">
+  <div class="taxa-ac-option" data-testid="taxa-ac-option">
     <div class="thumbnail">
       <img class="thumbnail" src="https://inat.com/photos/34859026/square.jpg" alt="">
     </div>
@@ -382,7 +382,7 @@ describe("renderAutocompleteTaxon", () => {
     };
 
     let expected = `
-  <div class="taxa-ac-option">
+  <div class="taxa-ac-option" data-testid="taxa-ac-option">
     <div class="thumbnail">
       <img class="thumbnail" src="https://inat.com/photos/8518661/square.jpg" alt="">
     </div>
@@ -410,7 +410,7 @@ describe("renderAutocompleteTaxon", () => {
     };
 
     let expected = `
-  <div class="taxa-ac-option">
+  <div class="taxa-ac-option" data-testid="taxa-ac-option">
     <div class="thumbnail">
       <img class="thumbnail" src="https://inat.com/photos/26078891/square.jpg" alt="">
     </div>

@@ -52,3 +52,13 @@ https://github.com/TarekRaafat/autoComplete.js/issues/400
 ==
 
 https://typescriptcenter.substack.com/p/how-to-fix-could-not-find-declaration
+
+==
+
+https://medium.com/geoman-blog/testing-maps-e2e-with-cypress-ba9e5d903b2b
+
+==
+
+Ideas for a revamped Explore/Observations Search Page
+
+https://forum.inaturalist.org/t/ideas-for-a-revamped-explore-observations-search-page/8439/378

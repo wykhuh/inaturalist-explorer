@@ -48,7 +48,7 @@ export function renderAutocompleteTaxon(
     formatTaxonName(item, inputValue);
 
   let html = `
-  <div class="taxa-ac-option">
+  <div class="taxa-ac-option" data-testid="taxa-ac-option">
     <div class="thumbnail">`;
 
   if (item.default_photo) {
