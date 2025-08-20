@@ -5,7 +5,7 @@ import type {
 } from "../types/app";
 import { addOverlayToMap } from "./map_utils.ts";
 import { colorsSixTolBright, getColor } from "./map_colors_utils.ts";
-import { displayJson } from "./utils.ts";
+// import { displayJson } from "./utils.ts";
 import { getiNatMapTiles, getiNatObservationsTotal } from "./inat_api.ts";
 
 const speciesRanks = ["species", "hybrid", "subspecies", "variety", "form"];
@@ -122,7 +122,7 @@ export async function taxonSelectedHandler(
   taxonObj.observations_count = count;
 
   appStore.selectedTaxa.push(taxonObj);
-  displayJson(appStore.selectedTaxa, appStore.displayJsonEl);
+  // displayJson(appStore.selectedTaxa, appStore.displayJsonEl);
   renderTaxaList(appStore);
 
   // fetch iNaturalist map layers
@@ -169,7 +169,7 @@ export function removeTaxon(taxonId: number, appStore: MapStore) {
   appStore.selectedTaxa = appStore.selectedTaxa.filter(
     (taxon) => taxon.id !== taxonId,
   );
-  displayJson(appStore.selectedTaxa, appStore.displayJsonEl);
+  // displayJson(appStore.selectedTaxa, appStore.displayJsonEl);
   renderTaxaList(appStore);
 
   let mapLayers = appStore.taxaMapLayers[taxonId];
