@@ -7,10 +7,14 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "type": "tsc",
+    "format": "prettier --write ./src",
+    "cleanup": "npm run type & npm run format"
   },
   "devDependencies": {
     "@types/leaflet": "^1.9.20",
+    "prettier": "^3.6.2",
     "typescript": "~5.8.3",
     "vite": "^7.1.2",
     "vitest": "^3.2.4"
