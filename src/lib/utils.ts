@@ -29,11 +29,16 @@ export function hexToRgb(hex: string, alpha = 1) {
     g: parseInt(result[2], 16),
     b: parseInt(result[3], 16),
   };
-  console.log("....", rgb);
-
   let str = `${rgb.r},${rgb.g},${rgb.b},${alpha}`;
 
-  console.log("hexToRgb", hex, str);
-
   return str;
+}
+
+export function pluralize(number: number, text: string, useComma = false) {
+  let displayNumber = useComma ? number.toLocaleString() : number;
+  if (number === 1) {
+    return `${displayNumber} ${text}`;
+  } else {
+    return `${displayNumber} ${text}s`;
+  }
 }
