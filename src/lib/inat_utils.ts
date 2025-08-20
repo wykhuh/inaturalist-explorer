@@ -1,7 +1,7 @@
 import type {
   NormalizediNatTaxon,
   iNatAutocompleteTaxaAPI,
-} from "../types.d.ts";
+} from "../types/app.d.ts";
 
 const speciesRanks = ["species", "hybrid", "subspecies", "variety", "form"];
 

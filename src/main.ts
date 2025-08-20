@@ -15,8 +15,8 @@ import {
   renderAutocompleteTaxon,
   formatTaxonName,
 } from "./lib/inat_utils";
-import type { NormalizediNatTaxon, AutoCompleteEvent } from "./types.d.ts";
 import { displayJson, renderTaxaList } from "./lib/utils.ts";
+import type { NormalizediNatTaxon, AutoCompleteEvent } from "./types/app.d.ts";
 import { mapStore } from "./lib/store.ts";
 
 let api = "https://api.inaturalist.org/v1/taxa/autocomplete?q=";

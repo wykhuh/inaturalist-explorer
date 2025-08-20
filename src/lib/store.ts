@@ -1,4 +1,4 @@
-import type { MapStore } from "../types.d.ts";
+import type { MapStore } from "../types/app.d.ts";
 
 export const mapStore: MapStore = {
   selectedTaxa: [],

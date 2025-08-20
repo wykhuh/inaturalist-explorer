@@ -1,5 +1,9 @@
 import { map } from "leaflet";
-import type { NormalizediNatTaxon, MapStore, ButtonEvent } from "../types.d.ts";
+import type {
+  NormalizediNatTaxon,
+  MapStore,
+  ButtonEvent,
+} from "../types/app.d.ts";
 
 export function displayJson(json: any, el: HTMLElement | null) {
   if (el) {

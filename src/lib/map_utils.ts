@@ -1,7 +1,7 @@
 import L from "leaflet";
 import type { Map, LatLngExpression, LatLngBounds } from "leaflet";
 
-import type { TileSettings } from "../types.d.ts";
+import type { TileSettings } from "../types/app.d.ts";
 
 export function getMonthName(month: number) {
   // https://reactgo.com/convert-month-number-to-name-js/
