@@ -12,7 +12,7 @@ import {
   taxonSelectedHandler,
 } from "./lib/data_utils.ts";
 import type { NormalizediNatTaxon, AutoCompleteEvent } from "./types/app.d.ts";
-import { displayJson } from "./lib/utils.ts";
+// import { displayJson } from "./lib/utils.ts";
 import { mapStore } from "./lib/store.ts";
 
 let api = "https://api.inaturalist.org/v1/taxa/autocomplete?q=";
@@ -82,3 +82,44 @@ window.app.store.map.layerControl = layerControl;
 // misc
 // =====================
 
+// =====================
+// dev
+// =====================
+
+// let temp: NormalizediNatTaxon[] = [
+//   {
+//     name: "Lobatae",
+//     default_photo:
+//       "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
+//     preferred_common_name: "red oaks",
+//     matched_term: "red oaks",
+//     rank: "section",
+//     id: 861036,
+//   },
+//   {
+//     name: "Turdus migratorius",
+//     default_photo:
+//       "https://inaturalist-open-data.s3.amazonaws.com/photos/34859026/square.jpg",
+//     preferred_common_name: "American Robin",
+//     matched_term: "American Robin",
+//     rank: "species",
+//     id: 12727,
+//   },
+//   {
+//     name: "Cardinalis cardinalis",
+//     default_photo:
+//       "https://inaturalist-open-data.s3.amazonaws.com/photos/189434971/square.jpg",
+//     preferred_common_name: "Northern Cardinal",
+//     matched_term: "Northern Cardinal",
+//     rank: "species",
+//     id: 9083,
+//   },
+// ];
+
+// (async () => {
+//   await taxonSelectedHandler(temp[0], "red", window.app.store);
+//   await taxonSelectedHandler(temp[1], "red", window.app.store);
+//   await taxonSelectedHandler(temp[2], "red", window.app.store);
+// })();
+
+// displayJson(window.app.store.selectedTaxa, window.app.store.displayJsonEl);
