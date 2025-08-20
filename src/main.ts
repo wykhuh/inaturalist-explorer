@@ -6,14 +6,14 @@ import "./assets/leaflet.css";
 import "./assets/autocomplete.css";
 import "./components/TaxaListItem/component.ts";
 import { getMapTiles, addLayerToMap } from "./lib/map_utils.ts";
-import {
-  processAutocompleteTaxa,
-  renderAutocompleteTaxon,
-  taxonSelectedHandler,
-} from "./lib/data_utils.ts";
+import { taxonSelectedHandler } from "./lib/data_utils.ts";
 import type { NormalizediNatTaxon, AutoCompleteEvent } from "./types/app.d.ts";
 // import { displayJson } from "./lib/utils.ts";
 import { mapStore } from "./lib/store.ts";
+import {
+  renderAutocompleteTaxon,
+  processAutocompleteTaxa,
+} from "./lib/autocomplete_utils.ts";
 
 let api = "https://api.inaturalist.org/v1/taxa/autocomplete?q=";
 
