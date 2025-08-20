@@ -6,8 +6,22 @@ import type {
 } from "../types/app.d.ts";
 
 export function displayJson(json: any, el: HTMLElement | null) {
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Cyclic_object_value#Examples
+  const getCircularReplacer = () => {
+    const seen = new WeakSet();
+    return (_key: string, value: any) => {
+      if (typeof value === "object" && value !== null) {
+        if (seen.has(value)) {
+          return;
+        }
+        seen.add(value);
+      }
+      return value;
+    };
+  };
+
   if (el) {
-    el.innerText = JSON.stringify(json, null, 2);
+    el.innerText = JSON.stringify(json, getCircularReplacer(), 2);
   }
 }
 
