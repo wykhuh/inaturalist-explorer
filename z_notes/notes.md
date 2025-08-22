@@ -62,3 +62,13 @@ https://medium.com/geoman-blog/testing-maps-e2e-with-cypress-ba9e5d903b2b
 Ideas for a revamped Explore/Observations Search Page
 
 https://forum.inaturalist.org/t/ideas-for-a-revamped-explore-observations-search-page/8439/378
+
+==
+
+```js
+if (import.meta.env.MODE !== "development") {
+  return;
+}
+if (process.env.npm_lifecycle_event === "e2e") return;
+let ua = navigator.userAgent;
+```

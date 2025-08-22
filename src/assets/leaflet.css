@@ -9,3 +9,12 @@
   margin-bottom: 0;
   padding-bottom: 0;
 }
+
+.leaflet-control-refresh-map {
+  background-color: white;
+  padding: 0.25rem 0.4rem;
+  position: absolute;
+  /* top: 100; */
+  left: 40px;
+  text-wrap: nowrap;
+}

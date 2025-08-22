@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
 
 import { expect, test, describe } from "vitest";
-import { formatTaxonName } from "../lib/data_utils.ts";
+import { formatTaxonName, updateSelectedTaxaProxy } from "../lib/data_utils.ts";
+import type { MapStore, NormalizediNatTaxon } from "../types/app.d.ts";
 
 describe("formatTaxonName", () => {
   describe("query matches common name", () => {
@@ -122,5 +123,69 @@ describe("formatTaxonName", () => {
 
       expect(results).toStrictEqual(expected);
     });
+  });
+});
+
+describe("updateSelectedTaxaProxy", () => {
+  let defaultStore: MapStore = {
+    selectedTaxa: [],
+    taxaMapLayers: {},
+    inatApiParams: {},
+    displayJsonEl: null,
+    taxaListEl: null,
+    color: "",
+    map: { map: null, layerControl: null },
+    refreshMap: { refreshMapButtonEl: null, showRefreshMapButton: false },
+  };
+  let taxon1: NormalizediNatTaxon = {
+    name: "name 1",
+    matched_term: "matched_term 1",
+    rank: "rank 1",
+    observations_count: 10,
+    id: 111,
+  };
+
+  let taxon2: NormalizediNatTaxon = {
+    name: "name 2",
+    matched_term: "matched_term 2",
+    rank: "rank 2",
+    observations_count: 20,
+    id: 222,
+  };
+
+  test("add new taxon to empty store.selectedTaxa", () => {
+    let store = { ...defaultStore, selectedTaxa: [] };
+    let taxon = taxon1;
+    let expected = [taxon1];
+
+    updateSelectedTaxaProxy(store, taxon);
+
+    expect(store.selectedTaxa).toStrictEqual(expected);
+  });
+
+  test("add new taxon to store.selectedTaxa that has taxa", () => {
+    let store = {
+      ...defaultStore,
+      selectedTaxa: [taxon1],
+    };
+    let taxon = taxon2;
+    let expected = [taxon1, taxon2];
+
+    updateSelectedTaxaProxy(store, taxon);
+
+    expect(store.selectedTaxa).toStrictEqual(expected);
+  });
+
+  test("update existing taxon in store.selectedTaxa", () => {
+    let store = {
+      ...defaultStore,
+      selectedTaxa: [taxon1, { ...taxon2 }],
+    };
+    let taxon = { ...taxon2, observations_count: 33 };
+    let expected = [taxon1, { ...taxon2, observations_count: 33 }];
+
+    updateSelectedTaxaProxy(store, taxon);
+
+    expect(store.selectedTaxa).toStrictEqual(expected);
   });
 });

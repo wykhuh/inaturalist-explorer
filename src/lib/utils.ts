@@ -1,4 +1,7 @@
+let debug = false;
+
 export function displayJson(json: any, el: HTMLElement | null) {
+  if (!debug) return;
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Cyclic_object_value#Examples
   const getCircularReplacer = () => {
     const seen = new WeakSet();

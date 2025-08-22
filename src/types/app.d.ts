@@ -133,6 +133,7 @@ export type NormalizediNatTaxon = {
   id: number;
   color?: string;
   observations_count?: number;
+  display_name?: string;
 };
 
 type iNatAutocompleteTaxaAPI = {
@@ -227,6 +228,11 @@ export interface MapStore {
   taxaListEl: HTMLElement | null;
   color: string;
   map: { map: Map | null; layerControl: Control.Layers | null };
+  boundingBox?: { nelat: number; nelng: number; swlat: number; swlng: number };
+  refreshMap: {
+    refreshMapButtonEl: HTMLElement | null;
+    showRefreshMapButton: boolean;
+  };
 }
 
 export interface AutoCompleteEvent {

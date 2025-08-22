@@ -1,7 +1,8 @@
 import L from "leaflet";
 import type { Map, LatLngExpression } from "leaflet";
 
-import type { TileSettings } from "../types/app.d.ts";
+import type { TileSettings, MapStore } from "../types/app.d.ts";
+import { refreshiNatMapLayers } from "./data_utils.ts";
 
 export function getMonthName(month: number) {
   // https://reactgo.com/convert-month-number-to-name-js/
@@ -265,4 +266,45 @@ export function getBoundingBoxValues(bounds: any) {
     swlat: bounds._southWest.lat,
     swlng: bounds._southWest.lng,
   };
+}
+
+export function createRefreshMapButton(
+  appStore: MapStore,
+): HTMLButtonElement | null {
+  let buttonEl: HTMLButtonElement = null as unknown as HTMLButtonElement;
+  let map = appStore.map.map;
+  if (!map) return null;
+
+  const RefreshMap = L.Control.extend({
+    onAdd: function (_map: Map) {
+      buttonEl = L.DomUtil.create(
+        "button",
+        "leaflet-bar leaflet-control leaflet-control-refresh-map",
+      );
+
+      buttonEl.textContent = "Redo search in map";
+      buttonEl.hidden = true;
+
+      buttonEl.onclick = function () {
+        appStore.refreshMap.showRefreshMapButton = false;
+        if (buttonEl) {
+          buttonEl.hidden = true;
+        }
+
+        refreshiNatMapLayers(appStore);
+      };
+
+      return buttonEl;
+    },
+    onRemove: function (_map: Map) {
+      console.log("button onRemove");
+    },
+  });
+
+  let refreshmap = function (opts: any) {
+    return new RefreshMap(opts);
+  };
+  refreshmap({ position: "topleft" }).addTo(map);
+
+  return buttonEl;
 }

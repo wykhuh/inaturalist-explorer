@@ -1,3 +1,5 @@
+// @vitest-environment jsdom
+
 import { expect, test, describe } from "vitest";
 
 import { colorsSixTolBright } from "../lib/map_colors_utils.ts";

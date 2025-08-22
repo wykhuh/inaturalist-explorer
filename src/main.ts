@@ -5,11 +5,14 @@ import "leaflet/dist/leaflet.css";
 import "./assets/leaflet.css";
 import "./assets/autocomplete.css";
 import "./components/TaxaListItem/component.ts";
-import { getMapTiles, addLayerToMap } from "./lib/map_utils.ts";
+import {
+  getMapTiles,
+  addLayerToMap,
+  createRefreshMapButton,
+} from "./lib/map_utils.ts";
 import { taxonSelectedHandler } from "./lib/data_utils.ts";
 import type { NormalizediNatTaxon, AutoCompleteEvent } from "./types/app.d.ts";
-// import { displayJson } from "./lib/utils.ts";
-import { mapStore } from "./lib/store.ts";
+import mapStore from "./lib/store.ts";
 import {
   renderAutocompleteTaxon,
   processAutocompleteTaxa,
@@ -34,9 +37,13 @@ const autoCompleteJS = new autoComplete({
   },
   data: {
     src: async (query: string) => {
-      let res = await fetch(api + query);
-      let data = await res.json();
-      return processAutocompleteTaxa(data);
+      try {
+        let res = await fetch(api + query);
+        let data = await res.json();
+        return processAutocompleteTaxa(data);
+      } catch (error) {
+        console.error(error);
+      }
     },
   },
   resultsList: {
@@ -78,6 +85,24 @@ addLayerToMap(OpenTopo, map, layerControl);
 window.app.store.map.map = map;
 window.app.store.map.layerControl = layerControl;
 
+window.app.store.refreshMap.showRefreshMapButton = false;
+let button = createRefreshMapButton(window.app.store);
+window.app.store.refreshMap.refreshMapButtonEl = button;
+
+map.on("zoomend", function () {
+  let store = window.app.store;
+  const { refreshMap } = store;
+
+  if (
+    refreshMap.refreshMapButtonEl &&
+    refreshMap.showRefreshMapButton === false
+  ) {
+    refreshMap.refreshMapButtonEl.hidden = false;
+    refreshMap.showRefreshMapButton = true;
+    // displayUserData(store, "zoomed event");
+  }
+});
+
 // =====================
 // misc
 // =====================
@@ -86,40 +111,39 @@ window.app.store.map.layerControl = layerControl;
 // dev
 // =====================
 
-// let temp: NormalizediNatTaxon[] = [
-//   {
-//     name: "Lobatae",
-//     default_photo:
-//       "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
-//     preferred_common_name: "red oaks",
-//     matched_term: "red oaks",
-//     rank: "section",
-//     id: 861036,
-//   },
-//   {
-//     name: "Turdus migratorius",
-//     default_photo:
-//       "https://inaturalist-open-data.s3.amazonaws.com/photos/34859026/square.jpg",
-//     preferred_common_name: "American Robin",
-//     matched_term: "American Robin",
-//     rank: "species",
-//     id: 12727,
-//   },
-//   {
-//     name: "Cardinalis cardinalis",
-//     default_photo:
-//       "https://inaturalist-open-data.s3.amazonaws.com/photos/189434971/square.jpg",
-//     preferred_common_name: "Northern Cardinal",
-//     matched_term: "Northern Cardinal",
-//     rank: "species",
-//     id: 9083,
-//   },
-// ];
+async function initData() {
+  let temp: NormalizediNatTaxon[] = [
+    {
+      name: "Lobatae",
+      default_photo:
+        "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
+      preferred_common_name: "red oaks",
+      matched_term: "red oaks",
+      rank: "section",
+      id: 861036,
+    },
+    {
+      name: "Turdus migratorius",
+      default_photo:
+        "https://inaturalist-open-data.s3.amazonaws.com/photos/34859026/square.jpg",
+      preferred_common_name: "American Robin",
+      matched_term: "American Robin",
+      rank: "species",
+      id: 12727,
+    },
+    {
+      name: "Cardinalis cardinalis",
+      default_photo:
+        "https://inaturalist-open-data.s3.amazonaws.com/photos/189434971/square.jpg",
+      preferred_common_name: "Northern Cardinal",
+      matched_term: "Northern Cardinal",
+      rank: "species",
+      id: 9083,
+    },
+  ];
 
-// (async () => {
-//   await taxonSelectedHandler(temp[0], "red", window.app.store);
-//   await taxonSelectedHandler(temp[1], "red", window.app.store);
-//   await taxonSelectedHandler(temp[2], "red", window.app.store);
-// })();
-
-// displayJson(window.app.store.selectedTaxa, window.app.store.displayJsonEl);
+  await taxonSelectedHandler(temp[0], "red", window.app.store);
+  await taxonSelectedHandler(temp[1], "red", window.app.store);
+  await taxonSelectedHandler(temp[2], "red", window.app.store);
+}
+initData;
