@@ -18,6 +18,7 @@ export async function taxonSelectedHandler(
   let layerControl = appStore.map.layerControl;
   if (map == null) return;
   if (layerControl == null) return;
+  console.log(">> taxonSelectedHandler");
 
   // get color for taxon
   let color = getColor(appStore, colorsSixTolBright);
@@ -45,6 +46,7 @@ export async function refreshiNatMapLayers(appStore: MapStore) {
   let layerControl = appStore.map.layerControl;
   if (map == null) return;
   if (layerControl == null) return;
+  console.log(">> refreshiNatMapLayers");
 
   let bbox = map.getBounds();
   let inatBbox = getBoundingBoxValues(bbox);
@@ -63,6 +65,7 @@ export async function refreshiNatMapLayers(appStore: MapStore) {
 // called when user deletes a taxon
 export function removeTaxon(taxonId: number, appStore: MapStore) {
   if (appStore.map.layerControl == null) return;
+  console.log(">> removeTaxon");
 
   removeSelectedTaxaProxy(appStore, taxonId);
   removeLayerFromLayerControl(appStore, taxonId);
@@ -78,6 +81,7 @@ async function fetchiNatMapData(
   let layerControl = appStore.map.layerControl;
   if (map == null) return;
   if (layerControl == null) return;
+  console.log(">> fetchiNatMapData", taxonObj.id);
 
   // get observations count
   let params: iNatApiParams = {
@@ -128,6 +132,7 @@ export function updateSelectedTaxaProxy(
   appStore: MapStore,
   taxonObj: NormalizediNatTaxon,
 ) {
+  console.log(">> updateSelectedTaxaProxy", taxonObj.id);
 
   let temp = [];
   let ids: number[] = [];
@@ -152,6 +157,7 @@ export function updateSelectedTaxaProxy(
 }
 
 function removeSelectedTaxaProxy(appStore: MapStore, taxonId: number) {
+  console.log(">> removeSelectedTaxaProxy");
 
   appStore.selectedTaxa = appStore.selectedTaxa.filter(
     (taxon) => taxon.id !== taxonId,
@@ -159,6 +165,8 @@ function removeSelectedTaxaProxy(appStore: MapStore, taxonId: number) {
 }
 
 function removeTaxaMapLayersProxy(appStore: MapStore, taxonId: number) {
+  console.log(">> removeMapLayerFromStoreProxy");
+
   // NOTE: can't use delete appStore.taxaMapLayers[taxonId] because Proxy won't
   // recognize the change.
   let temp: any = {};
@@ -175,6 +183,7 @@ function removeLayerFromLayerControl(appStore: MapStore, taxonId: number) {
   let layerControl = appStore.map.layerControl;
   if (!layerControl) return;
   if (!mapLayers) return;
+  console.log(">> removeLayerFromLayerControl");
 
   mapLayers.forEach((layer) => {
     // remove layer from layer control
@@ -228,6 +237,7 @@ export function formatTaxonName(
 
 export function displayUserData(appStore: MapStore, source: string) {
   let temp: any = {};
+  console.log(">> displayUserData", source);
   Object.entries(appStore.taxaMapLayers).forEach(([key, val]) => {
     temp[key] = val.map((v: any) =>
       v._url.replace("https://api.inaturalist.org/v1/", ""),
