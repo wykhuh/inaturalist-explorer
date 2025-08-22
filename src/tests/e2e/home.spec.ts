@@ -32,23 +32,20 @@ test("display autocomplete taxa list, selected taxon, map tiles", async ({
 
   await expect(page).toHaveScreenshot();
 
-  await expect(page.getByText("Reduncines")).toBeVisible();
-  await expect(page.getByText("American Robin")).toBeVisible();
-  await expect(page.getByText("Northern Cardinal")).toBeVisible();
-  await expect(page.getByText("Red-tailed Hawk")).toBeVisible();
-  await expect(page.getByText("Agelaius Blackbirds")).toBeVisible();
-  await expect(page.getByText("Red-winged Blackbird")).toBeVisible();
-  await expect(page.getByText("Red Admiral")).toBeVisible();
-  await expect(page.getByText("Red and Bordered Plant Bugs")).toBeVisible();
-  await expect(page.getByText("Red Algae")).toBeVisible();
-  await page.getByText("red oaks").click();
+  let names = redTaxaAutocomplete.map((record) => record.preferred_common_name);
+  for await (const name of names) {
+    await expect(page.getByText(name)).toBeVisible();
+  }
+
+  let selectedTaxon = redTaxaAutocomplete[1];
+  await page.getByText(selectedTaxon.preferred_common_name).click();
 
   const [response] = await Promise.all([
     page.waitForResponse((res) => {
-      return (
-        /api.inaturalist.org\/v1\/grid.*?taxon_id=861036/.test(res.url()) &&
-        res.status() === 200
+      const regex = new RegExp(
+        `api.inaturalist.org\/v1\/grid.*?taxon_id=${selectedTaxon.id}`,
       );
+      return regex.test(res.url()) && res.status() === 200;
     }),
   ]);
   expect(response.status()).toBe(200);
