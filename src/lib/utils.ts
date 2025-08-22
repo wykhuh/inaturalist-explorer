@@ -1,7 +1,8 @@
-let debug = false;
-
 export function displayJson(json: any, el: HTMLElement | null) {
-  if (!debug) return;
+  const debug = import.meta.env.VITE_DEBUG;
+  if (!debug || debug === "false") return;
+
+  // fix cyclic object errors
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Cyclic_object_value#Examples
   const getCircularReplacer = () => {
     const seen = new WeakSet();

@@ -30,3 +30,4 @@ dist-ssr
 /playwright/.cache/
 /coverage/
 /src/tests/e2e/*-snapshots
+.env
