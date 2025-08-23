@@ -26,18 +26,6 @@ export function getMonthName(month: number) {
   }
 }
 
-export function radiusZoom(zoomLevel: number) {
-  return 800000 / 2 ** zoomLevel;
-}
-
-export function rectangleLatitudeZoom(zoomLevel: number) {
-  return 7 / 2 ** zoomLevel;
-}
-
-export function rectangleLongitudeZoom(zoomLevel: number) {
-  return 10 / 2 ** zoomLevel;
-}
-
 export function fitPointsInMap(coordinates: any, map: Map) {
   if (coordinates.length > 0) {
     map.fitBounds(coordinates);
@@ -229,10 +217,6 @@ export const getMapTiles = (): { [name: string]: TileSettings } => {
       },
     },
   };
-};
-
-export let scaleControlOptions = {
-  maxWidth: 200,
 };
 
 export function addLayerToMap(
