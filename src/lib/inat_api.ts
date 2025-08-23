@@ -3,6 +3,7 @@ import type {
   ObservationsSpeciesCountAPI,
   ObservationsAPI,
 } from "../types/inat_api.d.ts";
+import { colorsSixTolBright } from "./map_colors_utils.ts";
 
 const search_api = "https://api.inaturalist.org/v1/search";
 export const search_places_api = `${search_api}?sources=places&per_page=10&q=`;
@@ -11,6 +12,18 @@ export const autocomplete_taxa_api =
 const observations_api = "https://api.inaturalist.org/v2/observations";
 const observations_count_api =
   "https://api.inaturalist.org/v2/observations/species_counts";
+
+export const lifeTaxon: NormalizediNatTaxon = {
+  name: "Life",
+  default_photo:
+    "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
+  preferred_common_name: "life",
+  matched_term: "Life",
+  rank: "stateofmatter",
+  id: 48460,
+  display_name: "life",
+  color: colorsSixTolBright[0],
+};
 
 type Params = {
   [index: string]: any;

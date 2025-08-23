@@ -16,6 +16,7 @@ import {
 } from "./data_utils.ts";
 import { colorsSixTolBright, getColor } from "./map_colors_utils.ts";
 import { getBoundingBox } from "./map_utils.ts";
+import { lifeTaxon } from "./inat_api.ts";
 
 // =====================
 // taxa search
@@ -160,7 +161,9 @@ export async function placeSelectedHandler(
   // get iNat map tiles for selected place
   // refreshiNatMapLayers(appStore, selection.id);
 
-  for await (const taxon of appStore.selectedTaxa.length) {
+  let taxa =
+    appStore.selectedTaxa.length > 0 ? appStore.selectedTaxa : [lifeTaxon];
+  for await (const taxon of taxa) {
     appStore.inatApiParams = {
       ...appStore.inatApiParams,
       taxon_id: taxon.id,
