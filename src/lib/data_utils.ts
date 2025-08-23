@@ -8,51 +8,21 @@ import {
   formatiNatAPIBoundingBoxParams,
   getAndDrawMapBoundingBox,
 } from "./map_utils.ts";
-import { colorsSixTolBright, getColor } from "./map_colors_utils.ts";
 import { displayJson } from "./utils.ts";
 import { getiNatMapTiles, getiNatObservationsTotal } from "./inat_api.ts";
 
-// called by autocomplete search when an option is selected
-export async function taxonSelectedHandler(
-  taxonObj: NormalizediNatTaxon,
-  searchTerm: string,
+// called when user clicks refresh map button
+export async function refreshiNatMapLayers(
   appStore: MapStore,
+  placeId: number | undefined = undefined,
 ) {
   let map = appStore.map.map;
   let layerControl = appStore.map.layerControl;
   if (map == null) return;
   if (layerControl == null) return;
-  // console.log(">> taxonSelectedHandler");
+  console.log(">> refreshiNatMapLayers");
 
-  // get color for taxon
-  let color = getColor(appStore, colorsSixTolBright);
-  taxonObj.color = color;
-
-  // get display name for taxon
-  let { title } = formatTaxonName(taxonObj, searchTerm, false);
-  taxonObj.display_name = title;
-
-  // create params for the iNat map tiles API
-  appStore.inatApiParams = {
-    ...appStore.inatApiParams,
-    taxon_id: taxonObj.id,
-    color: color,
-    spam: false,
-    verifiable: true,
-  };
-
-  await fetchiNatMapData(taxonObj, appStore);
-}
-
-// called when user clicks refresh map button
-export async function refreshiNatMapLayers(appStore: MapStore) {
-  let map = appStore.map.map;
-  let layerControl = appStore.map.layerControl;
-  if (map == null) return;
-  if (layerControl == null) return;
-  // console.log(">> refreshiNatMapLayers");
-
-  getAndDrawMapBoundingBox(map);
+  // getAndDrawMapBoundingBox(map);
 
   let bbox = map.getBounds();
   let inatBbox = formatiNatAPIBoundingBoxParams(bbox);
@@ -63,6 +33,10 @@ export async function refreshiNatMapLayers(appStore: MapStore) {
       taxon_id: taxon.id,
       color: taxon.color,
     };
+    if (placeId) {
+      appStore.inatApiParams.place_id = placeId;
+    }
+
     await fetchiNatMapData(taxon, appStore);
   }
 }
@@ -78,7 +52,7 @@ export function removeTaxon(taxonId: number, appStore: MapStore) {
   renderTaxaList(appStore);
 }
 
-async function fetchiNatMapData(
+export async function fetchiNatMapData(
   taxonObj: NormalizediNatTaxon,
   appStore: MapStore,
 ) {
@@ -240,9 +214,9 @@ export function formatTaxonName(
   return { title, titleAriaLabel, subtitle, subtitleAriaLabel, hasCommonName };
 }
 
-export function displayUserData(appStore: MapStore, source: string) {
+export function displayUserData(appStore: MapStore, _source: string) {
   let temp: any = {};
-  // console.log(">> displayUserData", source);
+  // console.log(">> displayUserData", _source);
   Object.entries(appStore.taxaMapLayers).forEach(([key, val]) => {
     temp[key] = val.map((v: any) =>
       v._url.replace("https://api.inaturalist.org/v1/", ""),

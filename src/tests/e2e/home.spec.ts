@@ -34,11 +34,11 @@ test("display autocomplete taxa list, selected taxon, map tiles", async ({
 
   let names = redTaxaAutocomplete.map((record) => record.preferred_common_name);
   for await (const name of names) {
-    await expect(page.getByText(name)).toBeVisible();
+    await expect(page.getByText(name as string)).toBeVisible();
   }
 
   let selectedTaxon = redTaxaAutocomplete[1];
-  await page.getByText(selectedTaxon.preferred_common_name).click();
+  await page.getByText(selectedTaxon.preferred_common_name as string).click();
 
   const [response] = await Promise.all([
     page.waitForResponse((res) => {

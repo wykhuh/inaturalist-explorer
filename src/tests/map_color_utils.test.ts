@@ -2,9 +2,8 @@
 
 import { expect, test, describe } from "vitest";
 
-import { colorsSixTolBright } from "../lib/map_colors_utils.ts";
 import { mapStore } from "../lib/store.ts";
-import { getColor } from "../lib/map_colors_utils.ts";
+import { getColor, colorsSixTolBright } from "../lib/map_colors_utils.ts";
 
 describe("getColor", () => {
   test("returns first color in color array if color not set in store", () => {

@@ -1,3 +1,5 @@
+// @vitest-environment jsdom
+
 import { expect, test, describe } from "vitest";
 
 import { hexToRgb, pluralize } from "../lib/utils.ts";

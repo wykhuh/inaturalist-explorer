@@ -10,15 +10,23 @@ import {
   addLayerToMap,
   createRefreshMapButton,
 } from "./lib/map_utils.ts";
-import { taxonSelectedHandler } from "./lib/data_utils.ts";
-import type { NormalizediNatTaxon, AutoCompleteEvent } from "./types/app.d.ts";
+import {} from "./lib/autocomplete_utils.ts";
+import type {
+  NormalizediNatTaxon,
+  AutoCompleteEvent,
+  NormalizediNatPlace,
+} from "./types/app.d.ts";
 import mapStore from "./lib/store.ts";
 import {
-  renderAutocompleteTaxon,
   processAutocompleteTaxa,
+  renderAutocompleteTaxon,
+  taxonSelectedHandler,
+  processAutocompletePlaces,
+  renderAutocompletePlace,
+  placeSelectedHandler,
 } from "./lib/autocomplete_utils.ts";
-
-let api = "https://api.inaturalist.org/v1/taxa/autocomplete?q=";
+import { autocomplete_taxa_api, search_places_api } from "./lib/inat_api.ts";
+import type { iNatAutocompleteTaxaAPI, iNatSearchAPI } from "./types/inat_api";
 
 window.app = { store: mapStore };
 window.app.store.displayJsonEl = document.getElementById("display-json");
@@ -28,7 +36,8 @@ window.app.store.taxaListEl = document.getElementById("taxa-list-container");
 // taxa search
 // =====================
 
-const autoCompleteJS = new autoComplete({
+const autoCompleteTaxaJS = new autoComplete({
+  autocomplete: "off",
   selector: "#inatTaxaAutoComplete",
   placeHolder: "Enter species name",
   threshold: 3,
@@ -38,8 +47,8 @@ const autoCompleteJS = new autoComplete({
   data: {
     src: async (query: string) => {
       try {
-        let res = await fetch(api + query);
-        let data = await res.json();
+        let res = await fetch(`${autocomplete_taxa_api}?q=${query}`);
+        let data = (await res.json()) as iNatAutocompleteTaxaAPI;
         return processAutocompleteTaxa(data);
       } catch (error) {
         console.error(error);
@@ -53,7 +62,7 @@ const autoCompleteJS = new autoComplete({
     input: {
       selection: (event: AutoCompleteEvent) => {
         const selection = event.detail.selection.value;
-        autoCompleteJS.input.value = selection.preferred_common_name;
+        autoCompleteTaxaJS.input.value = selection.preferred_common_name;
       },
     },
   },
@@ -62,9 +71,55 @@ const autoCompleteJS = new autoComplete({
 document
   .querySelector("#inatTaxaAutoComplete")!
   .addEventListener("selection", async function (event: any) {
+    console.log("inatTaxaAutoComplete");
     let selection = event.detail.selection.value;
     await taxonSelectedHandler(selection, event.detail.query, window.app.store);
   });
+
+// =====================
+// places search
+// =====================
+
+const autoCompletePlacesJS = new autoComplete({
+  autocomplete: "off",
+  selector: "#inatPlacesSearch",
+  placeHolder: "Enter species name",
+  threshold: 3,
+  searchEngine: (_query: string, record: NormalizediNatPlace) => {
+    return renderAutocompletePlace(record);
+  },
+  data: {
+    src: async (query: string) => {
+      try {
+        let res = await fetch(`${search_places_api}${query}`);
+        let data = (await res.json()) as iNatSearchAPI;
+        return processAutocompletePlaces(data);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
+  resultsList: {
+    maxResults: 10,
+  },
+  events: {
+    input: {
+      selection: (event: AutoCompleteEvent) => {
+        const selection = event.detail.selection.value;
+        autoCompletePlacesJS.input.value = selection.display_name;
+      },
+    },
+  },
+});
+
+let placesEl = document.querySelector("#inatPlacesSearch");
+
+if (placesEl) {
+  placesEl.addEventListener("selection", async function (event: any) {
+    let selection = event.detail.selection.value;
+    await placeSelectedHandler(selection, event.detail.query, window.app.store);
+  });
+}
 
 // =====================
 // map

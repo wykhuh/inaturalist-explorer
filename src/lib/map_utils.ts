@@ -1,7 +1,13 @@
 import L from "leaflet";
 import type { Map, LatLngExpression } from "leaflet";
 
-import type { TileSettings, MapStore, LeafletBounds } from "../types/app.d.ts";
+import type {
+  TileSettings,
+  MapStore,
+  LeafletBounds,
+  LngLat,
+  Coordinates,
+} from "../types/app.d.ts";
 import { refreshiNatMapLayers } from "./data_utils.ts";
 
 export function getMonthName(month: number) {
@@ -259,7 +265,8 @@ export function addOverlayToMap(
   return layer;
 }
 
-export function getBoundingBoxValues(bounds: any) {
+// convert Leaflet bounds Object into format that works with iNaturalist API
+export function formatiNatAPIBoundingBoxParams(bounds: any) {
   return {
     nelat: bounds._northEast.lat,
     nelng: bounds._northEast.lng,
@@ -309,21 +316,26 @@ export function createRefreshMapButton(
   return buttonEl;
 }
 
-export function flipLatLng(coordinates: number[]): number[] {
+export function flipLatLng(coordinates: Coordinates): Coordinates {
   return [coordinates[1], coordinates[0]];
+}
+
+export function getBoundingBox(coordinates: LngLat[]) {
+  let latLngCoors = coordinates.map(flipLatLng);
+  return L.latLngBounds(latLngCoors);
 }
 
 export function getAndDrawMapBoundingBox(
   map: Map,
   options = { fillColor: "none", weight: 1 },
 ) {
-  let bounds = map.getBounds();
-  let polygon = convertBoundsObjectToPolygon(bounds);
-  let fixedPolygon = polygon.map(flipLatLng);
-  L.polygon(fixedPolygon, options).addTo(map);
+  let bounds = map.getBounds() as unknown as LeafletBounds;
+  let lngLatPolygon = convertBoundsObjectToPolygon(bounds);
+  let latLngPolygon = lngLatPolygon.map(flipLatLng);
+  L.polygon(latLngPolygon, options).addTo(map);
 }
 
-export function convertBoundsObjectToPolygon(bounds: LeafletBounds) {
+export function convertBoundsObjectToPolygon(bounds: LeafletBounds): LngLat[] {
   return [
     [bounds._northEast.lng, bounds._northEast.lat],
     [bounds._northEast.lng, bounds._southWest.lat],

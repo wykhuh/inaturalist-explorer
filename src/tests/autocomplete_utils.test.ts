@@ -4,7 +4,10 @@ import { expect, test, describe } from "vitest";
 import {
   processAutocompleteTaxa,
   renderAutocompleteTaxon,
+  processAutocompletePlaces,
+  renderAutocompletePlace,
 } from "../lib/autocomplete_utils.js";
+import { losAngelesSearchPlaces } from "./fixtures/inatApi.js";
 
 describe("processAutocompleteTaxa", () => {
   test("formats iNat api response", () => {
@@ -424,5 +427,66 @@ describe("renderAutocompleteTaxon", () => {
     let results = renderAutocompleteTaxon(data, "red");
 
     expect(results).toStrictEqual(expected);
+  });
+});
+
+describe("processAutocompletePlaces", () => {
+  test("formats api response", () => {
+    let apiResponse = losAngelesSearchPlaces;
+    let results = processAutocompletePlaces(apiResponse);
+    let expected = [
+      {
+        display_name: "Los Angeles County, US, CA",
+        name: "Los Angeles",
+        id: losAngelesSearchPlaces.results[0].record.id,
+        geometry: losAngelesSearchPlaces.results[0].record.geometry_geojson,
+        bounding_box:
+          losAngelesSearchPlaces.results[0].record.bounding_box_geojson
+            .coordinates[0],
+      },
+      {
+        display_name: "Los Angeles Area (custom), CA, US",
+        name: "Los Angeles Area (custom)",
+        id: losAngelesSearchPlaces.results[1].record.id,
+        geometry: losAngelesSearchPlaces.results[1].record.geometry_geojson,
+        bounding_box:
+          losAngelesSearchPlaces.results[1].record.bounding_box_geojson
+            .coordinates[0],
+      },
+      {
+        display_name: "Los Angeles & Ventura Metropolitan Areas",
+        name: "Los Angeles & Ventura Metropolitan Areas",
+        id: losAngelesSearchPlaces.results[2].record.id,
+        geometry: losAngelesSearchPlaces.results[2].record.geometry_geojson,
+        bounding_box:
+          losAngelesSearchPlaces.results[2].record.bounding_box_geojson
+            .coordinates[0],
+      },
+    ];
+    expect(results).toStrictEqual(expected);
+  });
+});
+
+describe("renderAutocompletePlace", () => {
+  test("returns html string that has place info", () => {
+    let record = {
+      name: "Los Angeles",
+      display_name: "Los Angeles County, US, CA",
+      id: losAngelesSearchPlaces.results[0].record.id,
+      geometry: losAngelesSearchPlaces.results[0].record.geometry_geojson,
+      bounding_box:
+        losAngelesSearchPlaces.results[0].record.bounding_box_geojson
+          .coordinates[0],
+    };
+    let expected = `
+  <div class="places-ac-option" data-testid="places-ac-option">
+    <div class="place-name">
+    Los Angeles County, US, CA
+    </div>
+  </div>`;
+
+    let results = renderAutocompletePlace(record);
+
+    expect(results).toBe(expected);
   });
 });
