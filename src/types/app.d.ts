@@ -33,17 +33,20 @@ export type NormalizediNatTaxon = {
 export type NormalizediNatPlace = {
   display_name: string;
   name: string;
-  geometry: Polygon | MultiPolygon;
-  bounding_box: LngLat[];
+  geometry?: Polygon | MultiPolygon;
+  bounding_box?: LngLat[];
   id: number;
 };
 
 export interface MapStore {
   selectedTaxa: NormalizediNatTaxon[];
   taxaMapLayers: { [index: string]: TileLayer[] };
+  taxaListEl: HTMLElement | null;
+  selectedPlaces?: NormalizediNatPlace;
+  placesMapLayers?: L.GeoJSON;
+  placesListEl: HTMLElement | null;
   inatApiParams: iNatApiParams;
   displayJsonEl: HTMLElement | null;
-  taxaListEl: HTMLElement | null;
   color: string;
   map: { map: Map | null; layerControl: Control.Layers | null };
   boundingBox?: { nelat: number; nelng: number; swlat: number; swlng: number };

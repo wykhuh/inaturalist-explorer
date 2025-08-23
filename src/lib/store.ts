@@ -4,9 +4,12 @@ import { displayUserData } from "./data_utils.ts";
 export const mapStore: MapStore = {
   selectedTaxa: [],
   taxaMapLayers: {},
+  taxaListEl: null,
+  selectedPlaces: undefined,
+  placesMapLayers: undefined,
+  placesListEl: null,
   inatApiParams: {},
   displayJsonEl: null,
-  taxaListEl: null,
   color: "",
   map: { map: null, layerControl: null },
   refreshMap: { refreshMapButtonEl: null, showRefreshMapButton: false },
@@ -24,6 +27,13 @@ const proxiedStore = new Proxy(mapStore, {
     if (property == "taxaMapLayers") {
       console.log("proxy store.taxaMapLayers changed", Object.keys(value));
       displayUserData(proxiedStore, "proxiedStore taxaMapLayers");
+    }
+    if (property == "selectedPlaces") {
+      console.log(
+        "proxy store.selectedPlaces changed",
+        value ? value.name : "",
+      );
+      displayUserData(proxiedStore, "proxiedStore selectedPlaces");
     }
     return true;
   },

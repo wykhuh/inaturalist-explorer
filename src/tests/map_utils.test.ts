@@ -1,7 +1,11 @@
 // @vitest-environment jsdom
 
 import { expect, test, describe } from "vitest";
-import { getBoundingBox, convertBoundsObjectToPolygon } from "../lib/map_utils";
+import {
+  getBoundingBox,
+  convertBoundsObjectToPolygon,
+  flipLatLng,
+} from "../lib/map_utils";
 import type { LngLat } from "../types/app";
 
 describe("getBoundingBox", () => {
@@ -35,5 +39,16 @@ describe("convertLeafletBoundsToPolygon", () => {
     let result = convertBoundsObjectToPolygon(bounds);
 
     expect(result).toStrictEqual(expected);
+  });
+});
+
+describe("flipLatLng", () => {
+  test("flips the values array with two values", () => {
+    let values: LngLat = [34, 100];
+    let expected = [100, 34];
+
+    let results = flipLatLng(values);
+
+    expect(results).toStrictEqual(expected);
   });
 });

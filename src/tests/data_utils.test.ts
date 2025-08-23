@@ -130,9 +130,12 @@ describe("updateSelectedTaxaProxy", () => {
   let defaultStore: MapStore = {
     selectedTaxa: [],
     taxaMapLayers: {},
+    taxaListEl: null,
+    selectedPlaces: undefined,
+    placesMapLayers: undefined,
+    placesListEl: null,
     inatApiParams: {},
     displayJsonEl: null,
-    taxaListEl: null,
     color: "",
     map: { map: null, layerControl: null },
     refreshMap: { refreshMapButtonEl: null, showRefreshMapButton: false },

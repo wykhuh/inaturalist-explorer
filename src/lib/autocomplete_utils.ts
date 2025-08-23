@@ -9,11 +9,7 @@ import type {
   iNatAutocompleteTaxaAPI,
   iNatSearchAPI,
 } from "../types/inat_api.d.ts";
-import {
-  formatTaxonName,
-  fetchiNatMapData,
-  refreshiNatMapLayers,
-} from "./data_utils.ts";
+import { formatTaxonName, fetchiNatMapData } from "./data_utils.ts";
 import { colorsSixTolBright, getColor } from "./map_colors_utils.ts";
 import { getBoundingBox } from "./map_utils.ts";
 import { lifeTaxon } from "./inat_api.ts";
@@ -109,6 +105,17 @@ export async function taxonSelectedHandler(
   await fetchiNatMapData(taxonObj, appStore);
 }
 
+export function renderTaxaList(appStore: MapStore) {
+  if (!appStore.taxaListEl) return;
+
+  appStore.taxaListEl.innerHTML = "";
+
+  appStore.selectedTaxa.forEach((taxon) => {
+    let templateEl = document.createElement("x-taxa-list-item");
+    templateEl.dataset.taxon = JSON.stringify(taxon);
+    appStore.taxaListEl!.appendChild(templateEl);
+  });
+}
 // =====================
 // places search
 // =====================
@@ -147,19 +154,34 @@ export async function placeSelectedHandler(
   if (!map) return;
 
   console.log("placeSelectedHandler");
+
   // zoom to map using bounding box
-  let bounds = getBoundingBox(selection.bounding_box);
-  map.fitBounds(bounds);
+  if (selection.bounding_box) {
+    let bounds = getBoundingBox(selection.bounding_box);
+    map.fitBounds(bounds);
+  }
 
   // draw boundaries of selected place
-  let myStyle: any = {
+  let options: any = {
     color: "red",
     fillColor: "none",
   };
-  L.geoJSON(selection.geometry, myStyle).addTo(map);
+  let layer = L.geoJSON(selection.geometry, options).addTo(map);
+
+  // remove selected place layer from map
+  if (appStore.placesMapLayers) {
+    appStore.placesMapLayers.removeFrom(map);
+  }
+
+  // save place to store
+  appStore.selectedPlaces = {
+    id: selection.id,
+    name: selection.name,
+    display_name: selection.display_name,
+  };
+  appStore.placesMapLayers = layer;
 
   // get iNat map tiles for selected place
-  // refreshiNatMapLayers(appStore, selection.id);
 
   let taxa =
     appStore.selectedTaxa.length > 0 ? appStore.selectedTaxa : [lifeTaxon];
@@ -173,4 +195,19 @@ export async function placeSelectedHandler(
 
     await fetchiNatMapData(taxon, appStore);
   }
+}
+
+export function renderPlacesList(appStore: MapStore) {
+  if (!appStore.placesListEl) return;
+
+  appStore.placesListEl.innerHTML = "";
+  if (!appStore.selectedPlaces) return;
+
+  let templateEl = document.createElement("x-places-list-item");
+  templateEl.dataset.place = JSON.stringify({
+    id: appStore.selectedPlaces.id,
+    name: appStore.selectedPlaces.name,
+    display_name: appStore.selectedPlaces.display_name,
+  });
+  appStore.placesListEl.appendChild(templateEl);
 }

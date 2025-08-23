@@ -289,9 +289,32 @@
     }
 
     & .close-button {
-      background-color: var(--clr-gray-200);
+      padding: 0;
+      font-size: var(--font-size-md);
+      background-color: transparent;
+      border: 0;
+      cursor: pointer;
+    }
+  }
+
+  ul#places-list-container {
+    padding: 0;
+    list-style: none;
+
+    & li {
+      display: grid;
+      gap: 0.5rem;
+      grid-template-columns: 1fr auto;
       border: 1px solid var(--clr-gray-500);
-      border-radius: var(--border-radius-1);
+      padding: 0.25rem 0.5rem;
+      align-items: center;
+    }
+
+    & .close-button {
+      padding: 0;
+      font-size: var(--font-size-md);
+      background-color: transparent;
+      border: 0;
       cursor: pointer;
     }
   }
