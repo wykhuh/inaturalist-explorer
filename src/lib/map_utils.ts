@@ -1,7 +1,7 @@
 import L from "leaflet";
 import type { Map, LatLngExpression } from "leaflet";
 
-import type { TileSettings, MapStore } from "../types/app.d.ts";
+import type { TileSettings, MapStore, LeafletBounds } from "../types/app.d.ts";
 import { refreshiNatMapLayers } from "./data_utils.ts";
 
 export function getMonthName(month: number) {
@@ -307,4 +307,27 @@ export function createRefreshMapButton(
   refreshmap({ position: "topleft" }).addTo(map);
 
   return buttonEl;
+}
+
+export function flipLatLng(coordinates: number[]): number[] {
+  return [coordinates[1], coordinates[0]];
+}
+
+export function getAndDrawMapBoundingBox(
+  map: Map,
+  options = { fillColor: "none", weight: 1 },
+) {
+  let bounds = map.getBounds();
+  let polygon = convertBoundsObjectToPolygon(bounds);
+  let fixedPolygon = polygon.map(flipLatLng);
+  L.polygon(fixedPolygon, options).addTo(map);
+}
+
+export function convertBoundsObjectToPolygon(bounds: LeafletBounds) {
+  return [
+    [bounds._northEast.lng, bounds._northEast.lat],
+    [bounds._northEast.lng, bounds._southWest.lat],
+    [bounds._southWest.lng, bounds._southWest.lat],
+    [bounds._southWest.lng, bounds._northEast.lat],
+  ];
 }

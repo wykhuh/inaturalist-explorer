@@ -3,7 +3,11 @@ import type {
   MapStore,
   iNatApiParams,
 } from "../types/app";
-import { addOverlayToMap, getBoundingBoxValues } from "./map_utils.ts";
+import {
+  addOverlayToMap,
+  formatiNatAPIBoundingBoxParams,
+  getAndDrawMapBoundingBox,
+} from "./map_utils.ts";
 import { colorsSixTolBright, getColor } from "./map_colors_utils.ts";
 import { displayJson } from "./utils.ts";
 import { getiNatMapTiles, getiNatObservationsTotal } from "./inat_api.ts";
@@ -48,9 +52,11 @@ export async function refreshiNatMapLayers(appStore: MapStore) {
   if (layerControl == null) return;
   console.log(">> refreshiNatMapLayers");
 
-  let bbox = map.getBounds();
-  let inatBbox = getBoundingBoxValues(bbox);
 
+  getAndDrawMapBoundingBox(map);
+
+  let bbox = map.getBounds();
+  let inatBbox = formatiNatAPIBoundingBoxParams(bbox);
   for await (const taxon of appStore.selectedTaxa) {
     appStore.inatApiParams = {
       ...appStore.inatApiParams,
