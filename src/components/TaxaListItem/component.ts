@@ -29,13 +29,13 @@ class MyComponent extends HTMLElement {
     }
 
     let titleEl = this.querySelector(".title");
-    if (titleEl) {
-      titleEl.textContent = taxon.preferred_common_name + "";
+    if (titleEl && taxon.title) {
+      titleEl.textContent = taxon.title;
     }
 
     let subtitleEl = this.querySelector(".subtitle");
-    if (subtitleEl) {
-      subtitleEl.textContent = taxon.name;
+    if (subtitleEl && taxon.subtitle) {
+      subtitleEl.textContent = taxon.subtitle;
     }
 
     let countEl = this.querySelector(".count");

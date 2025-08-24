@@ -58,9 +58,10 @@ export function renderAutocompleteTaxon(
 
 export function processAutocompleteTaxa(
   response: iNatAutocompleteTaxaAPI,
+  query: string,
 ): NormalizediNatTaxon[] {
   let taxa = response.results.map((result) => {
-    return {
+    let data: NormalizediNatTaxon = {
       name: result.name,
       default_photo: result.default_photo?.square_url,
       preferred_common_name: result.preferred_common_name,
@@ -68,6 +69,11 @@ export function processAutocompleteTaxa(
       rank: result.rank,
       id: result.id,
     };
+    let { title, subtitle } = formatTaxonName(data, query);
+    data.title = title;
+    data.subtitle = subtitle;
+
+    return data;
   });
 
   return taxa;
@@ -90,8 +96,10 @@ export async function taxonSelectedHandler(
   taxonObj.color = color;
 
   // get display name for taxon
-  let { title } = formatTaxonName(taxonObj, searchTerm, false);
+  let { title, subtitle } = formatTaxonName(taxonObj, searchTerm, false);
   taxonObj.display_name = title;
+  taxonObj.title = title;
+  taxonObj.subtitle = subtitle;
 
   // create params for the iNat map tiles API
   appStore.inatApiParams = {

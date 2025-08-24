@@ -123,6 +123,8 @@ describe("processAutocompleteTaxa", () => {
         name: "Danaus plexippus",
         preferred_common_name: "Monarch",
         rank: "species",
+        title: "Monarch",
+        subtitle: "Danaus plexippus",
       },
       {
         default_photo: "https://inat.com/photos/23108/square.jpg",
@@ -131,10 +133,12 @@ describe("processAutocompleteTaxa", () => {
         name: "Monarchidae",
         preferred_common_name: "Monarch Flycatchers",
         rank: "family",
+        title: "Monarch Flycatchers",
+        subtitle: "Monarchidae",
       },
     ];
 
-    let results = processAutocompleteTaxa(response);
+    let results = processAutocompleteTaxa(response, "mon");
 
     expect(results).toStrictEqual(expected);
   });
@@ -197,10 +201,12 @@ describe("processAutocompleteTaxa", () => {
         matched_term: "Prorocentrum",
         rank: "genus",
         id: 339072,
+        title: "Prorocentrum",
+        subtitle: undefined,
       },
     ];
 
-    let results = processAutocompleteTaxa(response);
+    let results = processAutocompleteTaxa(response, "pro");
 
     expect(results).toStrictEqual(expected);
   });
@@ -251,10 +257,12 @@ describe("processAutocompleteTaxa", () => {
         name: "Macaria juglandata",
         preferred_common_name: "California Walnut Angle",
         rank: "species",
+        title: "California Walnut Angle",
+        subtitle: "Macaria juglandata",
       },
     ];
 
-    let results = processAutocompleteTaxa(response);
+    let results = processAutocompleteTaxa(response, "cal");
 
     expect(results).toStrictEqual(expected);
   });
@@ -392,6 +400,36 @@ describe("renderAutocompleteTaxon", () => {
       <span class="title" aria-label="taxon scientific name">Prorocentrum</span>
       <span>
         <span class="rank" aria-label="taxon rank">genus</span>
+      </span>
+    </div>
+  </div>`;
+
+    let results = renderAutocompleteTaxon(data, "red");
+
+    expect(results).toStrictEqual(expected);
+  });
+
+  test("returns scientific name and rank if no common name and higher taxa 2", () => {
+    let data = {
+      name: "Speciosae",
+      default_photo: "https://inat.com/photos/8518661/square.jpg",
+      matched_term: "Speciosae",
+      rank: "section",
+      id: 1441533,
+      color: "#228833",
+      display_name: "Speciosae",
+      observations_count: 30239,
+    };
+
+    let expected = `
+  <div class="taxa-ac-option" data-testid="taxa-ac-option">
+    <div class="thumbnail">
+      <img class="thumbnail" src="https://inat.com/photos/8518661/square.jpg" alt="">
+    </div>
+    <div class="taxon-name">
+      <span class="title" aria-label="taxon scientific name">Speciosae</span>
+      <span>
+        <span class="rank" aria-label="taxon rank">section</span>
       </span>
     </div>
   </div>`;

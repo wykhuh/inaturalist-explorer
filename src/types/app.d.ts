@@ -28,6 +28,8 @@ export type NormalizediNatTaxon = {
   color?: string;
   observations_count?: number;
   display_name?: string;
+  title?: string;
+  subtitle?: string;
 };
 
 export type NormalizediNatPlace = {

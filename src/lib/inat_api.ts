@@ -23,6 +23,8 @@ export const lifeTaxon: NormalizediNatTaxon = {
   id: 48460,
   display_name: "life",
   color: colorsSixTolBright[0],
+  title: "Life",
+  subtitle: "Life",
 };
 
 type Params = {

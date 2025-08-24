@@ -53,7 +53,7 @@ const autoCompleteTaxaJS = new autoComplete({
       try {
         let res = await fetch(`${autocomplete_taxa_api}?q=${query}`);
         let data = (await res.json()) as iNatAutocompleteTaxaAPI;
-        return processAutocompleteTaxa(data);
+        return processAutocompleteTaxa(data, query);
       } catch (error) {
         console.error(error);
       }
@@ -66,7 +66,7 @@ const autoCompleteTaxaJS = new autoComplete({
     input: {
       selection: (event: AutoCompleteEvent) => {
         const selection = event.detail.selection.value;
-        autoCompleteTaxaJS.input.value = selection.preferred_common_name;
+        autoCompleteTaxaJS.input.value = selection.title;
       },
     },
   },
