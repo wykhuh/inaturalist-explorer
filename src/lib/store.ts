@@ -24,25 +24,10 @@ type ValidProperties = keyof MapStore;
 const proxiedStore = new Proxy(mapStore, {
   set(target, property: ValidProperties, value) {
     target[property] = value;
-    if (property == "selectedTaxa") {
-      console.log("proxy store.selectedTaxa changed", value);
-      displayUserData(proxiedStore, "proxiedStore selectedTaxa");
-    }
-    if (property == "taxaMapLayers") {
-      console.log("proxy store.taxaMapLayers changed", Object.keys(value));
-      displayUserData(proxiedStore, "proxiedStore taxaMapLayers");
-    }
-    if (property == "selectedPlaces") {
-      console.log(
-        "proxy store.selectedPlaces changed",
-        value ? value.name : "",
-      );
-      displayUserData(proxiedStore, "proxiedStore selectedPlaces");
-    }
-    if (property == "refreshMap") {
-      console.log("proxy store.refreshMap changed", value);
-      displayUserData(proxiedStore, "proxiedStore refreshMap");
-    }
+
+    console.log(`proxy store.${property} changed`);
+    displayUserData(proxiedStore, `proxiedStore ${property}`);
+
     return true;
   },
 });
