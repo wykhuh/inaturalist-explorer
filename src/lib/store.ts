@@ -12,7 +12,11 @@ export const mapStore: MapStore = {
   displayJsonEl: null,
   color: "",
   map: { map: null, layerControl: null },
-  refreshMap: { refreshMapButtonEl: null, showRefreshMapButton: false },
+  refreshMap: {
+    refreshMapButtonEl: null,
+    showRefreshMapButton: false,
+    layer: null,
+  },
 };
 
 type ValidProperties = keyof MapStore;
@@ -34,6 +38,10 @@ const proxiedStore = new Proxy(mapStore, {
         value ? value.name : "",
       );
       displayUserData(proxiedStore, "proxiedStore selectedPlaces");
+    }
+    if (property == "refreshMap") {
+      console.log("proxy store.refreshMap changed", value);
+      displayUserData(proxiedStore, "proxiedStore refreshMap");
     }
     return true;
   },

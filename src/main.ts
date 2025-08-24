@@ -150,15 +150,17 @@ window.app.store.refreshMap.refreshMapButtonEl = button;
 
 map.on("zoomend", function () {
   let store = window.app.store;
-  const { refreshMap } = store;
 
   if (
-    refreshMap.refreshMapButtonEl &&
-    refreshMap.showRefreshMapButton === false
+    store.refreshMap.refreshMapButtonEl &&
+    store.refreshMap.showRefreshMapButton === false
   ) {
-    refreshMap.refreshMapButtonEl.hidden = false;
-    refreshMap.showRefreshMapButton = true;
-    // displayUserData(store, "zoomed event");
+    store.refreshMap.refreshMapButtonEl.hidden = false;
+    // refreshMap.showRefreshMapButton = true;
+    store.refreshMap = {
+      ...store.refreshMap,
+      showRefreshMapButton: true,
+    };
   }
 });
 

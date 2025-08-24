@@ -316,7 +316,9 @@ export function getAndDrawMapBoundingBox(
   let bounds = map.getBounds() as unknown as LeafletBounds;
   let lngLatPolygon = convertBoundsObjectToPolygon(bounds);
   let latLngPolygon = lngLatPolygon.map(flipLatLng);
-  L.polygon(latLngPolygon, options).addTo(map);
+  let layer = L.polygon(latLngPolygon, options);
+  layer.addTo(map);
+  return layer;
 }
 
 export function convertBoundsObjectToPolygon(bounds: LeafletBounds): LngLat[] {

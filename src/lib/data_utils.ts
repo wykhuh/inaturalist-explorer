@@ -21,9 +21,17 @@ export async function refreshiNatMapLayers(
   let layerControl = appStore.map.layerControl;
   if (map == null) return;
   if (layerControl == null) return;
-  console.log(">> refreshiNatMapLayers");
+  // console.log(">> refreshiNatMapLayers");
 
-  getAndDrawMapBoundingBox(map);
+  if (appStore.refreshMap.layer) {
+    appStore.refreshMap.layer.removeFrom(map);
+  }
+
+  let refreshLayer = getAndDrawMapBoundingBox(map);
+  appStore.refreshMap = {
+    ...appStore.refreshMap,
+    layer: refreshLayer,
+  };
 
   let bbox = map.getBounds();
   let inatBbox = formatiNatAPIBoundingBoxParams(bbox);
@@ -253,7 +261,14 @@ export function displayUserData(appStore: MapStore, _source: string) {
     );
   });
   let data = {
-    refreshMap: appStore.refreshMap,
+    refreshMap: {
+      refreshMapButtonEl: appStore.refreshMap.refreshMapButtonEl,
+      showRefreshMapButton: appStore.refreshMap.showRefreshMapButton,
+      layer: {
+        options: appStore.refreshMap.layer?.options,
+        bounds: appStore.refreshMap.layer?._bounds,
+      },
+    },
     inatApiParams: appStore.inatApiParams,
     selectedTaxa: appStore.selectedTaxa,
     taxaMapLayers: temp,

@@ -1,4 +1,4 @@
-import type { TileLayer, Map, Control } from "leaflet";
+import type { TileLayer, Map, Control, Polygon } from "leaflet";
 import { Polygon, MultiPolygon } from "./inat_api";
 
 declare global {
@@ -53,6 +53,7 @@ export interface MapStore {
   refreshMap: {
     refreshMapButtonEl: HTMLElement | null;
     showRefreshMapButton: boolean;
+    layer: Polygon | null;
   };
 }
 
