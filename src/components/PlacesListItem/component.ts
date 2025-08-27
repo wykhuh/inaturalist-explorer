@@ -33,7 +33,7 @@ class MyComponent extends HTMLElement {
         console.log("click", place);
         console.log("click2", window.app.store.selectedPlaces);
 
-        if (place.id) {
+        if (place.id !== undefined) {
           removePlace(window.app.store);
         }
       });

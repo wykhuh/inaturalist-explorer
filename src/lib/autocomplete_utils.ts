@@ -200,8 +200,7 @@ export async function placeSelectedHandler(
   };
   appStore.placesMapLayers = layer as CustomGeoJSON;
 
-  // get iNat map tiles for selected place
-
+  // set taxa to existing taxa or use Life.
   let taxa = [];
   if (appStore.selectedTaxa.length > 0) {
     taxa = appStore.selectedTaxa;
@@ -213,6 +212,7 @@ export async function placeSelectedHandler(
     taxa = [lifeTaxon];
   }
 
+  // get iNat map tiles for selected place
   for await (const taxon of taxa) {
     // remove existing taxon layers from map
     if (taxon.id in appStore.taxaMapLayers) {

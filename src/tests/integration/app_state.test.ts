@@ -79,8 +79,15 @@ let sandiego = {
   display_name: "San Diego County, CA, US",
 };
 
+let refreshPlace = {
+  id: 0,
+  name: "Custom Boundary",
+  display_name: "Custom Boundary",
+};
+
 let placeLabel_la = "place layer: Los Angeles, 962";
 let placeLabel_sd = "place layer: San Diego, 829";
+let placeLabel_refresh = "place layer: Custom Boundary, 0";
 
 let gridLabel_life = "overlay: iNat grid, taxon_id 48460";
 let gridLabel_oaks = "overlay: iNat grid, taxon_id 861036";
@@ -147,9 +154,11 @@ function expectSanDiegoPlace(store: MapStore) {
   expect(store.placesMapLayers).not.toBeUndefined();
 }
 
-function expectResfresh(store: MapStore) {
+function expectRefresh(store: MapStore) {
   expect(store.refreshMap.layer).toBeDefined();
   expect(store.refreshMap.showRefreshMapButton).toBeFalsy();
+  expect(store.selectedPlaces).toEqual(refreshPlace);
+  expect(store.placesMapLayers).not.toBeUndefined();
 }
 
 function expectLifeTaxa(store: MapStore, color = colors[0]) {
@@ -350,8 +359,7 @@ describe("refreshiNatMapLayers", () => {
       refreshBBoxLabel,
     ]);
     expectNoTaxa(store);
-    expectNoPlaces(store);
-    expectResfresh(store);
+    expectRefresh(store);
     let expectedParams = { nelat: 0, nelng: 0, swlat: 0, swlng: 0 };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
   });
@@ -368,8 +376,7 @@ describe("refreshiNatMapLayers", () => {
       refreshBBoxLabel,
     ]);
     expectNoTaxa(store);
-    expectNoPlaces(store);
-    expectResfresh(store);
+    expectRefresh(store);
     let expectedParams = { nelat: 0, nelng: 0, swlat: 0, swlng: 0 };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
     let refreshlayer1 = store.refreshMap.layer;
@@ -381,8 +388,7 @@ describe("refreshiNatMapLayers", () => {
       refreshBBoxLabel,
     ]);
     expectNoTaxa(store);
-    expectNoPlaces(store);
-    expectResfresh(store);
+    expectRefresh(store);
     expect(store.inatApiParams).toStrictEqual(expectedParams);
     let refreshlayer2 = store.refreshMap.layer;
     expect(refreshlayer1).not.toStrictEqual(refreshlayer2);
@@ -418,7 +424,7 @@ describe("combos", () => {
       gridLabel_oaks,
     ]);
     expectOakTaxa(store, colors[0]);
-    expectResfresh(store);
+    expectRefresh(store);
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: redOak(colors[0]).id,
       color: colors[0],
@@ -463,8 +469,7 @@ describe("combos", () => {
       gridLabel_life,
     ]);
     expectLifeTaxa(store);
-    expectNoPlaces(store);
-    expectResfresh(store);
+    expectRefresh(store);
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: life().id,
       color: colors[0],
@@ -506,8 +511,7 @@ describe("combos", () => {
       gridLabel_life,
     ]);
     expectLifeTaxa(store);
-    expectNoPlaces(store);
-    expectResfresh(store);
+    expectRefresh(store);
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: life().id,
       color: colors[0],
@@ -592,8 +596,7 @@ describe("combos", () => {
       gridLabel_life,
     ]);
     expectLifeTaxa(store);
-    expectNoPlaces(store);
-    expectResfresh(store);
+    expectRefresh(store);
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: life().id,
       color: colors[0],

@@ -5,6 +5,7 @@ import type {
   CustomLayerOptions,
   CustomPolygon,
   CustomLayer,
+  CustomGeoJSON,
 } from "../types/app";
 import {
   addOverlayToMap,
@@ -27,16 +28,30 @@ export async function refreshiNatMapLayers(
   if (map == null) return;
   if (layerControl == null) return;
 
+  // remove old refresh box
   removeRefreshBBox(appStore, map);
 
-  // removeTaxaFromStoreAndMap(appStore);
+  // remove old places
   removePlacesFromStoreAndMap(appStore);
 
+  // create bounding box using the boundaries of the map
   let refreshLayer = getAndDrawMapBoundingBox(map);
   appStore.refreshMap = {
     ...appStore.refreshMap,
     layer: refreshLayer as CustomPolygon,
   };
+
+  // create place using the boundaries of the map
+
+  // save place to store
+  appStore.selectedPlaces = {
+    id: 0,
+    name: "Custom Boundary",
+    display_name: "Custom Boundary",
+  };
+  appStore.placesMapLayers = refreshLayer;
+
+  renderPlacesList(appStore);
 
   let bbox = map.getBounds();
   let inatBbox = formatiNatAPIBoundingBoxParams(bbox);
