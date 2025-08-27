@@ -97,3 +97,57 @@ https://api.inaturalist.org/v2/observations/species_counts?spam=false&taxon_id=8
 https://api.inaturalist.org/v2/observations/species_counts?spam=false&taxon_id=861036&per_page=200&verifiable=true
 "total_results": 172,
 358059
+
+-==
+
+Vitest: can't fetch a local file
+https://stackoverflow.com/questions/75588945/vitest-cant-fetch-a-local-file
+
+```js
+import { readFile } from "fs/promises"
+
+const load = async (fileName: string) => {
+    try {
+      const yamlString = await readFile(`${__dirname}/${fileName}`, "utf8")
+
+      const data = YAML.parse(yamlString)
+      ...
+    } catch (error) {
+      console.error("Failed to read style config: ", error)
+    }
+}
+```
+
+Binary responses
+https://mswjs.io/docs/http/mocking-responses/binary
+
+```js
+http.get("/images/:imageId", async ({ params }) => {
+  // Get an ArrayBuffer from reading the file from disk or fetching it.
+  const buffer = await fetch(`/static/images/${params.imageId}`).then(
+    (response) => response.arrayBuffer(),
+  );
+
+  return HttpResponse.arrayBuffer(buffer, {
+    headers: {
+      "content-type": "image/png",
+    },
+  });
+});
+```
+
+==
+
+https://pokeapi.co/api/v2/pokemon/ditto
+
+https://a.tile.openstreetmap.org/1/1/1.png
+
+https://api.inaturalist.org/v1/grid/1/1/1.png
+
+==
+
+```js
+  http.get("https://*.tile.openstreetmap.org*", () => {
+    return HttpResponse.json({ id: "abc-123" });
+  }),
+```

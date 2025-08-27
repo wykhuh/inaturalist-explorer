@@ -15,6 +15,8 @@ import type { MapStore, NormalizediNatTaxon } from "../../types/app";
 import {
   leafletVisibleLayers,
   refreshiNatMapLayers,
+  removePlace,
+  removeTaxon,
 } from "../../lib/data_utils.ts";
 import { mapStore } from "../../lib/store.ts";
 import {
@@ -130,7 +132,6 @@ function expectEmpytMap(store: MapStore) {
 function expectNoTaxa(store: MapStore) {
   expect(store.selectedTaxa).toStrictEqual([]);
   expect(store.taxaMapLayers).toStrictEqual({});
-  expect(store.color).toEqual("");
 }
 
 function expectNoPlaces(store: MapStore) {
@@ -154,7 +155,7 @@ function expectSanDiegoPlace(store: MapStore) {
   expect(store.placesMapLayers).not.toBeUndefined();
 }
 
-function expectRefresh(store: MapStore) {
+function expectRefreshPlace(store: MapStore) {
   expect(store.refreshMap.layer).toBeDefined();
   expect(store.refreshMap.showRefreshMapButton).toBeFalsy();
   expect(store.selectedPlaces).toEqual(refreshPlace);
@@ -359,7 +360,8 @@ describe("refreshiNatMapLayers", () => {
       refreshBBoxLabel,
     ]);
     expectNoTaxa(store);
-    expectRefresh(store);
+    expectRefreshPlace(store);
+    expect(store.color).toEqual("");
     let expectedParams = { nelat: 0, nelng: 0, swlat: 0, swlng: 0 };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
   });
@@ -376,7 +378,8 @@ describe("refreshiNatMapLayers", () => {
       refreshBBoxLabel,
     ]);
     expectNoTaxa(store);
-    expectRefresh(store);
+    expectRefreshPlace(store);
+    expect(store.color).toEqual("");
     let expectedParams = { nelat: 0, nelng: 0, swlat: 0, swlng: 0 };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
     let refreshlayer1 = store.refreshMap.layer;
@@ -388,7 +391,8 @@ describe("refreshiNatMapLayers", () => {
       refreshBBoxLabel,
     ]);
     expectNoTaxa(store);
-    expectRefresh(store);
+    expectRefreshPlace(store);
+    expect(store.color).toEqual("");
     expect(store.inatApiParams).toStrictEqual(expectedParams);
     let refreshlayer2 = store.refreshMap.layer;
     expect(refreshlayer1).not.toStrictEqual(refreshlayer2);
@@ -424,7 +428,7 @@ describe("combos", () => {
       gridLabel_oaks,
     ]);
     expectOakTaxa(store, colors[0]);
-    expectRefresh(store);
+    expectRefreshPlace(store);
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: redOak(colors[0]).id,
       color: colors[0],
@@ -469,7 +473,7 @@ describe("combos", () => {
       gridLabel_life,
     ]);
     expectLifeTaxa(store);
-    expectRefresh(store);
+    expectRefreshPlace(store);
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: life().id,
       color: colors[0],
@@ -511,7 +515,7 @@ describe("combos", () => {
       gridLabel_life,
     ]);
     expectLifeTaxa(store);
-    expectRefresh(store);
+    expectRefreshPlace(store);
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: life().id,
       color: colors[0],
@@ -596,7 +600,7 @@ describe("combos", () => {
       gridLabel_life,
     ]);
     expectLifeTaxa(store);
-    expectRefresh(store);
+    expectRefreshPlace(store);
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: life().id,
       color: colors[0],
@@ -624,6 +628,430 @@ describe("combos", () => {
       taxon_id: life().id,
       spam: false,
       verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params2);
+  });
+});
+
+describe("removePlace", () => {
+  test("add place; remove place", async () => {
+    let { store } = setup();
+
+    expectEmpytMap(store);
+
+    await placeSelectedHandler(losangeles, "los", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      gridLabel_life_la,
+    ]);
+    expectLifeTaxa(store);
+    expect(store.selectedPlaces).toStrictEqual(losangeles);
+    let params1 = {
+      color: colors[0],
+      place_id: losangeles.id,
+      taxon_id: life().id,
+      spam: false,
+      verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params1);
+
+    await removePlace(store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
+    expectNoTaxa(store);
+    expectNoPlaces(store);
+    expect(store.color).toEqual(colors[0]);
+    let params2 = {
+      color: colors[0],
+      spam: false,
+      verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params2);
+  });
+
+  test("add refresh bounding box; remove place", async () => {
+    let { store } = setup();
+
+    expectEmpytMap(store);
+
+    await refreshiNatMapLayers(store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      refreshBBoxLabel,
+    ]);
+    expectNoTaxa(store);
+    expectRefreshPlace(store);
+    expect(store.inatApiParams).toStrictEqual({
+      nelat: 0,
+      nelng: 0,
+      swlat: 0,
+      swlng: 0,
+    });
+
+    await removePlace(store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
+    expectNoTaxa(store);
+    expectNoPlaces(store);
+    let params2 = {};
+    expect(store.inatApiParams).toStrictEqual(params2);
+  });
+
+  test("add taxon; add place; remove place", async () => {
+    let { store } = setup();
+
+    expectEmpytMap(store);
+
+    await taxonSelectedHandler(lifeBasic, "life", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
+    ]);
+    expectLifeTaxa(store);
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id,
+      color: colors[0],
+      verifiable: true,
+      spam: false,
+    });
+
+    await placeSelectedHandler(losangeles, "los", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      gridLabel_life_la,
+    ]);
+    expectLifeTaxa(store);
+    expect(store.selectedPlaces).toStrictEqual(losangeles);
+    let params1 = {
+      color: colors[0],
+      place_id: losangeles.id,
+      taxon_id: life().id,
+      spam: false,
+      verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params1);
+
+    await removePlace(store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
+    expectNoTaxa(store);
+    expectNoPlaces(store);
+    let params2 = { color: colors[0], spam: false, verifiable: true };
+    expect(store.inatApiParams).toStrictEqual(params2);
+  });
+
+  test("add taxon; add refresh; remove place", async () => {
+    let { store } = setup();
+
+    expectEmpytMap(store);
+
+    await taxonSelectedHandler(lifeBasic, "life", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
+    ]);
+    expectLifeTaxa(store);
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id,
+      color: colors[0],
+      verifiable: true,
+      spam: false,
+    });
+
+    await refreshiNatMapLayers(store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      refreshBBoxLabel,
+      gridLabel_life,
+    ]);
+    expectLifeTaxa(store);
+    expect(store.selectedPlaces).toStrictEqual(refreshPlace);
+    let params1 = {
+      color: colors[0],
+      taxon_id: life().id,
+      nelat: 0,
+      nelng: 0,
+      swlat: 0,
+      swlng: 0,
+      spam: false,
+      verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params1);
+
+    await removePlace(store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
+    expectNoTaxa(store);
+    expectNoPlaces(store);
+    let params2 = { color: colors[0], spam: false, verifiable: true };
+    expect(store.inatApiParams).toStrictEqual(params2);
+  });
+});
+
+describe("removeTaxon", () => {
+  test("add taxon; remove taxon", async () => {
+    let { store } = setup();
+
+    expectEmpytMap(store);
+
+    await taxonSelectedHandler(lifeBasic, "life", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
+    ]);
+    expectLifeTaxa(store);
+    expectNoPlaces(store);
+    let params1 = {
+      color: colors[0],
+      taxon_id: life().id,
+      spam: false,
+      verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params1);
+
+    await removeTaxon(life().id, store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
+    expectNoTaxa(store);
+    expectNoPlaces(store);
+    expect(store.color).toEqual(colors[0]);
+    let params2 = {
+      color: colors[0],
+      spam: false,
+      verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params2);
+  });
+
+  test("add taxon; add taxon; remove taxon", async () => {
+    let { store } = setup();
+
+    expectEmpytMap(store);
+
+    await taxonSelectedHandler(lifeBasic, "life", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
+    ]);
+    expectLifeTaxa(store);
+    expectNoPlaces(store);
+    let params1 = {
+      color: colors[0],
+      taxon_id: life().id,
+      spam: false,
+      verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params1);
+
+    await taxonSelectedHandler(redOakBasic, "red", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
+      gridLabel_oaks,
+    ]);
+    expect(store.selectedTaxa).toStrictEqual([life(), redOak()]);
+    expect(Object.keys(store.taxaMapLayers)).toEqual([
+      life().id.toString(),
+      redOak().id.toString(),
+    ]);
+    expect(store.taxaMapLayers[life().id].length).toBe(4);
+    expect(store.taxaMapLayers[redOak().id].length).toBe(4);
+    expect(store.color).toBe(colors[1]);
+    expectNoPlaces(store);
+    let params2 = {
+      color: colors[1],
+      taxon_id: redOak().id,
+      spam: false,
+      verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params2);
+
+    await removeTaxon(lifeBasic.id, store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_oaks,
+    ]);
+    expect(store.selectedTaxa).toStrictEqual([redOak()]);
+    expect(Object.keys(store.taxaMapLayers)).toEqual([redOak().id.toString()]);
+    expect(store.taxaMapLayers[redOak().id].length).toBe(4);
+    expectNoPlaces(store);
+    let params3 = {
+      color: colors[1],
+      spam: false,
+      verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params3);
+  });
+
+  test("add place; remove taxon", async () => {
+    let { store } = setup();
+
+    expectEmpytMap(store);
+
+    await placeSelectedHandler(losangeles, "los", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      gridLabel_life_la,
+    ]);
+    expectLifeTaxa(store);
+    expect(store.selectedPlaces).toStrictEqual(losangeles);
+    let params1 = {
+      color: colors[0],
+      place_id: losangeles.id,
+      taxon_id: life().id,
+      spam: false,
+      verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params1);
+
+    await removeTaxon(life().id, store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+    ]);
+    expectNoTaxa(store);
+    expectLosAngelesPlace(store);
+    let params2 = {
+      color: colors[0],
+      place_id: losangeles.id,
+      spam: false,
+      verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params2);
+  });
+
+  test("add taxon; add place; remove taxon", async () => {
+    let { store } = setup();
+
+    expectEmpytMap(store);
+
+    await taxonSelectedHandler(lifeBasic, "life", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
+    ]);
+    expectLifeTaxa(store);
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id,
+      color: colors[0],
+      verifiable: true,
+      spam: false,
+    });
+
+    await placeSelectedHandler(losangeles, "los", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      gridLabel_life_la,
+    ]);
+    expectLifeTaxa(store);
+    expect(store.selectedPlaces).toStrictEqual(losangeles);
+    let params1 = {
+      color: colors[0],
+      place_id: losangeles.id,
+      taxon_id: life().id,
+      spam: false,
+      verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params1);
+
+    await removeTaxon(life().id, store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+    ]);
+    expectNoTaxa(store);
+    expectLosAngelesPlace(store);
+    let params2 = {
+      color: colors[0],
+      place_id: losangeles.id,
+      spam: false,
+      verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params2);
+  });
+
+  test("add taxon; add refresh; remove taxon", async () => {
+    let { store } = setup();
+
+    expectEmpytMap(store);
+
+    await taxonSelectedHandler(lifeBasic, "life", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
+    ]);
+    expectLifeTaxa(store);
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id,
+      color: colors[0],
+      verifiable: true,
+      spam: false,
+    });
+
+    await refreshiNatMapLayers(store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      refreshBBoxLabel,
+      gridLabel_life,
+    ]);
+    expectLifeTaxa(store);
+    expectRefreshPlace(store);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id,
+      color: colors[0],
+      verifiable: true,
+      spam: false,
+      nelat: 0,
+      nelng: 0,
+      swlat: 0,
+      swlng: 0,
+    });
+
+    await removeTaxon(life().id, store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      refreshBBoxLabel,
+    ]);
+    expectNoTaxa(store);
+    expectRefreshPlace(store);
+    let params2 = {
+      color: colors[0],
+      spam: false,
+      verifiable: true,
+      nelat: 0,
+      nelng: 0,
+      swlat: 0,
+      swlng: 0,
     };
     expect(store.inatApiParams).toStrictEqual(params2);
   });

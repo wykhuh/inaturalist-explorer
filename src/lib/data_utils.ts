@@ -5,7 +5,6 @@ import type {
   CustomLayerOptions,
   CustomPolygon,
   CustomLayer,
-  CustomGeoJSON,
 } from "../types/app";
 import {
   addOverlayToMap,
@@ -201,6 +200,8 @@ export function updateSelectedTaxaProxy(
 function removeOneTaxonFromStoreAndMap(appStore: MapStore, taxonId: number) {
   removeOneTaxonFromMap(appStore, taxonId);
 
+  delete appStore.inatApiParams.taxon_id;
+
   appStore.selectedTaxa = appStore.selectedTaxa.filter(
     (taxon) => taxon.id !== taxonId,
   );
@@ -253,6 +254,10 @@ function removePlacesFromStoreAndMap(appStore: MapStore) {
 
   // remove from store
   delete appStore.inatApiParams.place_id;
+  delete appStore.inatApiParams.nelat;
+  delete appStore.inatApiParams.nelng;
+  delete appStore.inatApiParams.swlat;
+  delete appStore.inatApiParams.swlng;
   appStore.selectedPlaces = undefined;
   appStore.placesMapLayers = undefined;
 }
@@ -339,6 +344,7 @@ export function displayUserData(appStore: MapStore, _source: string) {
       },
     },
     inatApiParams: appStore.inatApiParams,
+    color: appStore.color,
     selectedTaxa: appStore.selectedTaxa,
     taxaMapLayers: temp,
     selectedPlaces: appStore.selectedPlaces,
