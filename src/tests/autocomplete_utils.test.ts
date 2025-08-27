@@ -8,6 +8,7 @@ import {
   renderAutocompletePlace,
 } from "../lib/autocomplete_utils.js";
 import { losAngelesSearchPlaces } from "./fixtures/inatApi.js";
+import type { NormalizediNatPlace } from "../types/app.js";
 
 describe("processAutocompleteTaxa", () => {
   test("formats iNat api response", () => {
@@ -507,11 +508,12 @@ describe("processAutocompletePlaces", () => {
 
 describe("renderAutocompletePlace", () => {
   test("returns html string that has place info", () => {
-    let record = {
+    let record: NormalizediNatPlace = {
       name: "Los Angeles",
       display_name: "Los Angeles County, US, CA",
       id: losAngelesSearchPlaces.results[0].record.id,
-      geometry: losAngelesSearchPlaces.results[0].record.geometry_geojson,
+      geometry: losAngelesSearchPlaces.results[0].record
+        .geometry_geojson as any,
       bounding_box:
         losAngelesSearchPlaces.results[0].record.bounding_box_geojson
           .coordinates[0],

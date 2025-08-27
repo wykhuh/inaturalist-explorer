@@ -1,4 +1,13 @@
-import type { TileLayer, Map, Control, Polygon } from "leaflet";
+import type {
+  TileLayer,
+  Map,
+  Control,
+  Polygon,
+  LayerOptions,
+  PolylineOptions,
+  GeoJSONOptions,
+  GeoJSON,
+} from "leaflet";
 import { Polygon, MultiPolygon } from "./inat_api";
 
 declare global {
@@ -12,6 +21,7 @@ export type TileSettings = {
   type: "overlay" | "basemap";
   url: string;
   options: {
+    layer_description: string;
     attribution: string;
     minZoom: number;
     maxZoom: number;
@@ -45,7 +55,7 @@ export interface MapStore {
   taxaMapLayers: { [index: string]: TileLayer[] };
   taxaListEl: HTMLElement | null;
   selectedPlaces?: NormalizediNatPlace;
-  placesMapLayers?: L.GeoJSON;
+  placesMapLayers?: CustomGeoJSON;
   placesListEl: HTMLElement | null;
   inatApiParams: iNatApiParams;
   displayJsonEl: HTMLElement | null;
@@ -55,7 +65,7 @@ export interface MapStore {
   refreshMap: {
     refreshMapButtonEl: HTMLElement | null;
     showRefreshMapButton: boolean;
-    layer: Polygon | null;
+    layer: CustomPolygon | null;
   };
 }
 
@@ -94,3 +104,31 @@ type Lat = number;
 export type LngLat = [Lng, Lat];
 export type LatLng = [Lat, Lng];
 export type Coordinates = LngLat | LatLng;
+
+export interface CustomLayer extends LayerOptions {
+  options: CustomLayerOptions;
+  _bounds: LeafletBounds;
+  _path: string;
+  _container: string;
+}
+
+export interface CustomLayerOptions extends LayerOptions {
+  layer_description?: string;
+}
+
+export interface CustomPolygon extends Polygon {
+  _bounds: { nelat?: number; nelng?: number; swlat?: number; swlng?: number };
+  options: CustomPolygonOptions;
+}
+
+export interface CustomPolygonOptions extends PolylineOptions {
+  layer_description: string;
+}
+
+export interface CustomGeoJSON extends GeoJSON {
+  options: CustomGeoJSONOptions;
+}
+
+export interface CustomGeoJSONOptions extends GeoJSONOptions {
+  layer_description: string;
+}

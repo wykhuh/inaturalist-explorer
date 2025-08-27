@@ -55,6 +55,7 @@ export const getMapTiles = (): { [name: string]: TileSettings } => {
       type: "basemap",
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       options: {
+        layer_description: "basemap: Open Street Map",
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors.',
         minZoom: 0,
@@ -66,6 +67,7 @@ export const getMapTiles = (): { [name: string]: TileSettings } => {
       type: "basemap",
       url: "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png",
       options: {
+        layer_description: "basemap: Alidade Smooth",
         attribution:
           '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
         minZoom: 0,
@@ -77,6 +79,7 @@ export const getMapTiles = (): { [name: string]: TileSettings } => {
       type: "basemap",
       url: "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png",
       options: {
+        layer_description: "basemap: Alidade Smooth Dark",
         attribution:
           '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
         minZoom: 0,
@@ -88,6 +91,7 @@ export const getMapTiles = (): { [name: string]: TileSettings } => {
       type: "basemap",
       url: "https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png",
       options: {
+        layer_description: "basemap: Stadia Outdoors",
         attribution:
           '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
         minZoom: 0,
@@ -99,6 +103,7 @@ export const getMapTiles = (): { [name: string]: TileSettings } => {
       type: "basemap",
       url: "https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png",
       options: {
+        layer_description: "basemap: Stamen Terrain",
         attribution:
           '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
         minZoom: 0,
@@ -110,6 +115,7 @@ export const getMapTiles = (): { [name: string]: TileSettings } => {
       type: "basemap",
       url: "https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg",
       options: {
+        layer_description: "basemap: Stamen Watercolor",
         attribution:
           '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
         minZoom: 0,
@@ -121,6 +127,7 @@ export const getMapTiles = (): { [name: string]: TileSettings } => {
       type: "basemap",
       url: "https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}.jpg",
       options: {
+        layer_description: "basemap: OSM Bright",
         attribution:
           '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
         minZoom: 0,
@@ -133,6 +140,7 @@ export const getMapTiles = (): { [name: string]: TileSettings } => {
       type: "basemap",
       url: "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}",
       options: {
+        layer_description: "basemap: USGS Topo",
         attribution:
           'Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>',
         minZoom: 0,
@@ -144,6 +152,7 @@ export const getMapTiles = (): { [name: string]: TileSettings } => {
       type: "basemap",
       url: "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}",
       options: {
+        layer_description: "basemap: USGS Imagery",
         attribution:
           'Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>',
         minZoom: 0,
@@ -155,6 +164,7 @@ export const getMapTiles = (): { [name: string]: TileSettings } => {
       type: "basemap",
       url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
       options: {
+        layer_description: "basemap: Open Topo",
         attribution:
           'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
         minZoom: 0,
@@ -166,6 +176,7 @@ export const getMapTiles = (): { [name: string]: TileSettings } => {
       type: "basemap",
       url: "https://tile.gbif.org/3857/omt/{z}/{x}/{y}@1x.png?style=gbif-classic",
       options: {
+        layer_description: "basemap: GBIF Classic",
         attribution:
           '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://www.openmaptiles.org/copyright">OpenMapTiles</a>.',
         minZoom: 0,
@@ -177,6 +188,7 @@ export const getMapTiles = (): { [name: string]: TileSettings } => {
       type: "basemap",
       url: "https://tile.gbif.org/3857/omt/{z}/{x}/{y}@1x.png?style=gbif-light",
       options: {
+        layer_description: "basemap: GBIF light",
         attribution:
           '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://www.openmaptiles.org/copyright">OpenMapTiles</a>.',
         minZoom: 0,
@@ -188,6 +200,7 @@ export const getMapTiles = (): { [name: string]: TileSettings } => {
       type: "basemap",
       url: "https://tile.gbif.org/3857/omt/{z}/{x}/{y}@1x.png?style=gbif-geyser",
       options: {
+        layer_description: "basemap: GBIF Geyser",
         attribution:
           '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://www.openmaptiles.org/copyright">OpenMapTiles</a>.',
         minZoom: 0,
@@ -199,6 +212,7 @@ export const getMapTiles = (): { [name: string]: TileSettings } => {
       type: "basemap",
       url: "https://tile.gbif.org/3857/omt/{z}/{x}/{y}@1x.png?style=osm-bright",
       options: {
+        layer_description: "basemap: GBIF Bright",
         attribution:
           '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://www.openmaptiles.org/copyright">OpenMapTiles</a>.',
         minZoom: 0,
@@ -210,6 +224,7 @@ export const getMapTiles = (): { [name: string]: TileSettings } => {
       type: "basemap",
       url: "https://tile.gbif.org/3857/omt/{z}/{x}/{y}@1x.png?style=gbif-natural",
       options: {
+        layer_description: "basemap: GBIF Natural",
         attribution:
           '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://www.openmaptiles.org/copyright">OpenMapTiles</a>.',
         minZoom: 0,
@@ -311,7 +326,11 @@ export function getBoundingBox(coordinates: LngLat[]) {
 
 export function getAndDrawMapBoundingBox(
   map: Map,
-  options = { fillColor: "none", weight: 1 },
+  options = {
+    fillColor: "none",
+    weight: 1,
+    layer_description: "refresh bounding box",
+  },
 ) {
   let bounds = map.getBounds() as unknown as LeafletBounds;
   let lngLatPolygon = convertBoundsObjectToPolygon(bounds);

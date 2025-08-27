@@ -138,7 +138,11 @@ describe("updateSelectedTaxaProxy", () => {
     displayJsonEl: null,
     color: "",
     map: { map: null, layerControl: null },
-    refreshMap: { refreshMapButtonEl: null, showRefreshMapButton: false },
+    refreshMap: {
+      refreshMapButtonEl: null,
+      showRefreshMapButton: false,
+      layer: null,
+    },
   };
   let taxon1: NormalizediNatTaxon = {
     name: "name 1",

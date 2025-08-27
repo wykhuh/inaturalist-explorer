@@ -12,6 +12,7 @@ export const autocomplete_taxa_api =
 const observations_api = "https://api.inaturalist.org/v2/observations";
 const observations_count_api =
   "https://api.inaturalist.org/v2/observations/species_counts";
+export const api_base = "https://api.inaturalist.org/v1/";
 
 export const lifeTaxon: NormalizediNatTaxon = {
   name: "Life",
@@ -44,6 +45,14 @@ export const getiNatMapTiles = (
   delete dupParams.color;
   let noColorParamsString = new URLSearchParams(dupParams).toString();
 
+  function formatDescription(params: Params, type: string) {
+    let text = `overlay: iNat ${type}, taxon_id ${params.taxon_id}`;
+    if (params.place_id) {
+      text += `, place_id ${params.place_id}`;
+    }
+
+    return text;
+  }
   return {
     iNatGrid: {
       name: "Grid",
@@ -54,6 +63,7 @@ export const getiNatMapTiles = (
           'Observation data by <a href="https://www.inaturalist.org/">iNaturalist</a>.',
         minZoom: 0,
         maxZoom: 21,
+        layer_description: formatDescription(params, "grid"),
       },
     },
     iNatPoint: {
@@ -65,6 +75,7 @@ export const getiNatMapTiles = (
           'Observation data by <a href="https://www.inaturalist.org/">iNaturalist</a>.',
         minZoom: 0,
         maxZoom: 21,
+        layer_description: formatDescription(params, "points"),
       },
     },
     iNatTaxonRange: {
@@ -76,6 +87,7 @@ export const getiNatMapTiles = (
           'Taxon range by <a href="https://www.inaturalist.org/">iNaturalist</a>.',
         minZoom: 0,
         maxZoom: 21,
+        layer_description: formatDescription(params, "taxon range"),
       },
     },
     iNatHeatmap: {
@@ -87,6 +99,7 @@ export const getiNatMapTiles = (
           'Observation data by <a href="https://www.inaturalist.org/">iNaturalist</a>.',
         minZoom: 0,
         maxZoom: 21,
+        layer_description: formatDescription(params, "heatmap"),
       },
     },
   };

@@ -4,6 +4,7 @@ import type {
   NormalizediNatTaxon,
   NormalizediNatPlace,
   MapStore,
+  CustomGeoJSON,
 } from "../types/app";
 import type {
   iNatAutocompleteTaxaAPI,
@@ -135,7 +136,7 @@ export function processAutocompletePlaces(
     return {
       name: item.record.name,
       display_name: item.record.display_name,
-      geometry: item.record.geometry_geojson,
+      geometry: item.record.geometry_geojson as any,
       bounding_box: item.record.bounding_box_geojson.coordinates[0],
       id: item.record.id,
     };
@@ -161,8 +162,6 @@ export async function placeSelectedHandler(
   let map = appStore.map.map;
   if (!map) return;
 
-  console.log("placeSelectedHandler");
-
   // zoom to map using bounding box
   if (selection.bounding_box) {
     let bounds = getBoundingBox(selection.bounding_box);
@@ -173,12 +172,24 @@ export async function placeSelectedHandler(
   let options: any = {
     color: "red",
     fillColor: "none",
+    layer_description: `place layer: ${selection.name}, ${selection.id}`,
   };
-  let layer = L.geoJSON(selection.geometry, options).addTo(map);
+  let layer = L.geoJSON(selection.geometry as any, options);
+  layer.addTo(map);
 
   // remove selected place layer from map
   if (appStore.placesMapLayers) {
     appStore.placesMapLayers.removeFrom(map);
+  }
+
+  // remove refresh bound box from map
+  if (appStore.refreshMap.layer) {
+    appStore.refreshMap.layer.removeFrom(map);
+    appStore.refreshMap.layer = null;
+    delete appStore.inatApiParams.swlat;
+    delete appStore.inatApiParams.swlng;
+    delete appStore.inatApiParams.nelat;
+    delete appStore.inatApiParams.nelng;
   }
 
   // save place to store
@@ -187,18 +198,40 @@ export async function placeSelectedHandler(
     name: selection.name,
     display_name: selection.display_name,
   };
-  appStore.placesMapLayers = layer;
+  appStore.placesMapLayers = layer as CustomGeoJSON;
 
   // get iNat map tiles for selected place
 
-  let taxa =
-    appStore.selectedTaxa.length > 0 ? appStore.selectedTaxa : [lifeTaxon];
+  let taxa = [];
+  if (appStore.selectedTaxa.length > 0) {
+    taxa = appStore.selectedTaxa;
+  } else {
+    let { title, subtitle } = formatTaxonName(lifeTaxon, "life");
+    lifeTaxon.title = title;
+    lifeTaxon.subtitle = subtitle;
+    lifeTaxon.color = getColor(appStore, colorsSixTolBright);
+    taxa = [lifeTaxon];
+  }
+
   for await (const taxon of taxa) {
+    // remove existing taxon layers from map
+    if (taxon.id in appStore.taxaMapLayers) {
+      appStore.taxaMapLayers[taxon.id].forEach((layer) => {
+        layer.removeFrom(map);
+        let layerControl = appStore.map.layerControl;
+        if (layerControl) {
+          layerControl.removeLayer(layer);
+        }
+      });
+      delete appStore.taxaMapLayers[taxon.id];
+    }
     appStore.inatApiParams = {
       ...appStore.inatApiParams,
       taxon_id: taxon.id,
       color: taxon.color,
       place_id: selection.id,
+      spam: false,
+      verifiable: true,
     };
 
     await fetchiNatMapData(taxon, appStore);
