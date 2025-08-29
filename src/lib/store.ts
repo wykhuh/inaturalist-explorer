@@ -1,4 +1,4 @@
-import type { MapStore } from "../types/app.d.ts";
+import type { MapStore, MapStoreKeys } from "../types/app.d.ts";
 import { displayUserData } from "./data_utils.ts";
 
 export const mapStore: MapStore = {
@@ -19,10 +19,8 @@ export const mapStore: MapStore = {
   },
 };
 
-type ValidProperties = keyof MapStore;
-
 const proxiedStore = new Proxy(mapStore, {
-  set(target, property: ValidProperties, value) {
+  set(target, property: MapStoreKeys, value) {
     target[property] = value;
 
     console.log(`proxy store.${property} changed`);

@@ -89,7 +89,6 @@ let refreshPlace = {
 
 let placeLabel_la = "place layer: Los Angeles, 962";
 let placeLabel_sd = "place layer: San Diego, 829";
-let placeLabel_refresh = "place layer: Custom Boundary, 0";
 
 let gridLabel_life = "overlay: iNat grid, taxon_id 48460";
 let gridLabel_oaks = "overlay: iNat grid, taxon_id 861036";
@@ -225,6 +224,10 @@ describe("taxonSelectedHandler", () => {
       spam: false,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
+
+    expect(window.location.search).toBe(
+      `?taxa_id=${life().id}&colors=%234477aa&spam=false&verifiable=true`,
+    );
   });
 
   test(`add life; add red oak`, async () => {
@@ -300,6 +303,10 @@ describe("placeSelectedHandler", () => {
       verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
+
+    expect(window.location.search).toBe(
+      `?taxa_id=${life().id}&places_id=${losangeles.id}&colors=%234477aa&spam=false&verifiable=true`,
+    );
   });
 
   test(`add los angeles; add san diego`, async () => {
@@ -364,6 +371,10 @@ describe("refreshiNatMapLayers", () => {
     expect(store.color).toEqual("");
     let expectedParams = { nelat: 0, nelng: 0, swlat: 0, swlng: 0 };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
+
+    expect(window.location.search).toBe(
+      `?places_id=${refreshPlace.id}&nelat=0&nelng=0&swlat=0&swlng=0`,
+    );
   });
 
   test(`refresh map; refresh map;`, async () => {
@@ -669,6 +680,8 @@ describe("removePlace", () => {
       verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params2);
+
+    expect(window.location.search).toBe(`?spam=false&verifiable=true`);
   });
 
   test("add refresh bounding box; remove place", async () => {
@@ -834,6 +847,8 @@ describe("removeTaxon", () => {
       verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params2);
+
+    expect(window.location.search).toBe(`?spam=false&verifiable=true`);
   });
 
   test("add taxon; add taxon; remove taxon", async () => {

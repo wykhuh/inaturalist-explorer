@@ -14,6 +14,7 @@ import { formatTaxonName, fetchiNatMapData } from "./data_utils.ts";
 import { colorsSixTolBright, getColor } from "./map_colors_utils.ts";
 import { getBoundingBox } from "./map_utils.ts";
 import { lifeTaxon } from "./inat_api.ts";
+import { updateUrl } from "./utils.ts";
 
 // =====================
 // taxa search
@@ -112,6 +113,8 @@ export async function taxonSelectedHandler(
   };
 
   await fetchiNatMapData(taxonObj, appStore);
+
+  updateUrl(window.location, appStore);
 }
 
 export function renderTaxaList(appStore: MapStore) {
@@ -236,6 +239,8 @@ export async function placeSelectedHandler(
 
     await fetchiNatMapData(taxon, appStore);
   }
+
+  updateUrl(window.location, appStore);
 }
 
 export function renderPlacesList(appStore: MapStore) {

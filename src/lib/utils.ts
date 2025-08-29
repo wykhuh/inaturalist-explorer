@@ -1,3 +1,5 @@
+import type { MapStore, AppUrlParams, AppUrlParamsKeys } from "../types/app";
+
 export function displayJson(json: any, el: HTMLElement | null) {
   const debug = import.meta.env.VITE_DEBUG;
   if (!debug || debug === "false") return;
@@ -45,4 +47,39 @@ export function pluralize(number: number, text: string, useComma = false) {
   } else {
     return `${displayNumber} ${text}s`;
   }
+}
+
+export function formatAppUrl(appStore: MapStore) {
+  let taxaIds = appStore.selectedTaxa.map((t) => t.id).join(",");
+  let placesIds = appStore.selectedPlaces?.id.toString();
+  let colors = appStore.selectedTaxa.map((t) => t.color).join(",");
+
+  let params: AppUrlParams = {};
+  if (taxaIds.length > 0) {
+    params.taxa_id = taxaIds;
+  }
+  if (placesIds) {
+    params.places_id = placesIds;
+  }
+  if (colors.length > 0) {
+    params.colors = colors;
+  }
+
+  Object.entries(appStore.inatApiParams).forEach(([key, value]) => {
+    if (!["taxon_id", "place_id", "color"].includes(key)) {
+      if (params) {
+        params[key as AppUrlParamsKeys] = value as any;
+      }
+    }
+  });
+
+  return new URLSearchParams(params as any).toString();
+}
+
+export function updateUrl(url_location: Location, appStore: MapStore) {
+  let paramsString = formatAppUrl(appStore);
+  let url = paramsString
+    ? `${url_location.origin}?${paramsString}`
+    : url_location.origin;
+  window.history.pushState({}, "", url);
 }

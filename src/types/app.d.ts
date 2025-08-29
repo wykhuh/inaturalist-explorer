@@ -69,18 +69,34 @@ export interface MapStore {
   };
 }
 
+export type MapStoreKeys = keyof MapStore;
+
 type iNatApiParams = {
   nelat?: number;
   nelng?: number;
   swlat?: number;
   swlng?: number;
   per_page?: number;
-  color?: string;
   taxon_id?: number;
+  place_id?: number;
+  color?: string;
   spam?: boolean;
   verifiable?: boolean;
-  place_id?: number;
 };
+
+export type AppUrlParams = {
+  nelat?: number;
+  nelng?: number;
+  swlat?: number;
+  swlng?: number;
+  taxa_id?: string;
+  places_id?: string;
+  colors?: string;
+  spam?: boolean;
+  verifiable?: boolean;
+};
+
+export type AppUrlParamsKeys = keyof AppUrlParams;
 
 export interface AutoCompleteEvent {
   detail: {

@@ -72,3 +72,18 @@ if (import.meta.env.MODE !== "development") {
 if (process.env.npm_lifecycle_event === "e2e") return;
 let ua = navigator.userAgent;
 ```
+
+==
+What's a good way to mock window.location? #2213
+
+https://github.com/vitest-dev/vitest/discussions/2213
+
+==
+
+Testing history.pushState with spies in Vitest
+https://www.yellowduck.be/posts/testing-history-pushstate-with-spies-in-vitest
+
+==
+
+Encode URL in JavaScript
+https://stackoverflow.com/questions/332872/encode-url-in-javascript/58879100

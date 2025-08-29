@@ -5,13 +5,14 @@ import type {
   CustomLayerOptions,
   CustomPolygon,
   CustomLayer,
+  CustomGeoJSON,
 } from "../types/app";
 import {
   addOverlayToMap,
   formatiNatAPIBoundingBoxParams,
   getAndDrawMapBoundingBox,
 } from "./map_utils.ts";
-import { displayJson } from "./utils.ts";
+import { displayJson, updateUrl } from "./utils.ts";
 import { getiNatMapTiles, getiNatObservationsTotal } from "./inat_api.ts";
 import { renderTaxaList, renderPlacesList } from "./autocomplete_utils.ts";
 import type { Map } from "leaflet";
@@ -48,7 +49,7 @@ export async function refreshiNatMapLayers(
     name: "Custom Boundary",
     display_name: "Custom Boundary",
   };
-  appStore.placesMapLayers = refreshLayer;
+  appStore.placesMapLayers = refreshLayer as unknown as CustomGeoJSON;
 
   renderPlacesList(appStore);
 
@@ -79,6 +80,7 @@ export async function refreshiNatMapLayers(
       ...inatBbox,
     };
   }
+  updateUrl(window.location, appStore);
 }
 
 // called when user deletes a taxon
@@ -86,6 +88,7 @@ export function removeTaxon(taxonId: number, appStore: MapStore) {
   removeOneTaxonFromStoreAndMap(appStore, taxonId);
 
   renderTaxaList(appStore);
+  updateUrl(window.location, appStore);
 }
 
 // called when user deletes a place
@@ -95,6 +98,7 @@ export function removePlace(appStore: MapStore) {
 
   renderTaxaList(appStore);
   renderPlacesList(appStore);
+  updateUrl(window.location, appStore);
 }
 
 // called when user select taxa or place

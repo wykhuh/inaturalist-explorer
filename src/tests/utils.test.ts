@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
 
-import { expect, test, describe } from "vitest";
+import { expect, test, describe, vi } from "vitest";
 
-import { hexToRgb, pluralize } from "../lib/utils.ts";
+import { hexToRgb, pluralize, formatAppUrl, updateUrl } from "../lib/utils.ts";
+import { mapStore } from "../lib/store.ts";
 
 describe("hexToRgb", () => {
   test("converts 6 character hex to rgb", () => {
@@ -47,5 +48,92 @@ describe("pluralize", () => {
   test("adds comma to large number if useComma is true", () => {
     let results = pluralize(1000, "dog", true);
     expect(results).toBe("1,000 dogs");
+  });
+});
+
+let life = {
+  name: "Life",
+  matched_term: "life",
+  rank: "stateofmatter",
+  id: 48460,
+  color: "#4477aa",
+};
+let redOaks = {
+  name: "Lobatae",
+  matched_term: "red oaks",
+  rank: "section",
+  id: 861036,
+  color: "#66ccee",
+};
+
+describe("formatAppUrl", () => {
+  test("format parameters for one taxon", () => {
+    let appStore = {
+      ...mapStore,
+      inatApiParams: {
+        taxon_id: life.id,
+        color: life.color,
+        spam: false,
+      },
+      selectedTaxa: [life],
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe(`taxa_id=48460&colors=%234477aa&spam=false`);
+  });
+
+  test("format parameters for multiple taxon", () => {
+    let appStore = {
+      ...mapStore,
+      inatApiParams: {
+        taxon_id: redOaks.id,
+        color: redOaks.color,
+        spam: false,
+      },
+      selectedTaxa: [life, redOaks],
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe(
+      "taxa_id=48460%2C861036&colors=%234477aa%2C%2366ccee&spam=false",
+    );
+  });
+});
+
+describe("updateUrl", () => {
+  test("uses push state to change location url with default store", () => {
+    const pushSpy = vi.spyOn(history, "pushState");
+    let appStore = mapStore;
+
+    updateUrl(global.window.location, appStore);
+
+    expect(pushSpy).toHaveBeenCalledWith({}, "", "http://localhost:3000");
+
+    pushSpy.mockRestore();
+  });
+
+  test("uses push state to change location url with store data", () => {
+    const pushSpy = vi.spyOn(history, "pushState");
+    let appStore = {
+      ...mapStore,
+      inatApiParams: {
+        taxon_id: life.id,
+        color: life.color,
+        spam: false,
+      },
+      selectedTaxa: [life],
+    };
+
+    updateUrl(global.window.location, appStore);
+
+    expect(pushSpy).toHaveBeenCalledWith(
+      {},
+      "",
+      "http://localhost:3000?taxa_id=48460&colors=%234477aa&spam=false",
+    );
+
+    pushSpy.mockRestore();
   });
 });
