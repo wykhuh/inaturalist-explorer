@@ -126,24 +126,6 @@ export async function fetchiNatMapData(
     appStore.inatApiParams,
   );
 
-  // remove layers from layer control
-  // console.log(">>>!!!");
-
-  if (taxonObj.id in appStore.taxaMapLayers) {
-    // console.log(
-    //   ">>>!!!",
-    //   // appStore.taxaMapLayers.map((l) => l.options.custom_id),
-    // );
-    // appStore.taxaMapLayers[taxonObj.id].forEach((layer) => {
-    //   layer.removeFrom(map);
-    // });
-    // removeOneTaxonFromStoreAndMap(appStore, taxonObj.id);
-  }
-  // if (taxonObj.id in appStore.taxaMapLayers) {
-  //   console.log(">>>!!!");
-  //   // removeOneTaxonFromStoreAndMap(appStore, taxonObj.id);
-  // }
-
   // add layers to layer control
   let title = taxonObj.display_name;
   if (!title) return;
@@ -315,10 +297,10 @@ export function leafletVisibleLayers(
             console.log(">>>", Object.keys(layer));
           }
           layer_descriptions.push(options.layer_description);
-        } else {
+        } else if (log) {
           console.log("?????", Object.keys(layer));
         }
-      } else {
+      } else if (log) {
         console.log("???", Object.keys(layer));
       }
     });
