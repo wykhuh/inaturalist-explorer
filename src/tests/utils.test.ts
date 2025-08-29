@@ -2,7 +2,13 @@
 
 import { expect, test, describe, vi } from "vitest";
 
-import { hexToRgb, pluralize, formatAppUrl, updateUrl } from "../lib/utils.ts";
+import {
+  hexToRgb,
+  pluralize,
+  formatAppUrl,
+  updateUrl,
+  decodeAppUrl,
+} from "../lib/utils.ts";
 import { mapStore } from "../lib/store.ts";
 
 describe("hexToRgb", () => {
@@ -135,5 +141,80 @@ describe("updateUrl", () => {
     );
 
     pushSpy.mockRestore();
+  });
+});
+
+describe("decodeAppUrl", () => {
+  test("returns object with taxa data if taxa_id is present", () => {
+    let searchParams =
+      "?taxa_id=123%2C456&colors=%23ffffff%2C%23eeeeee&spam=false&verifiable=true";
+    let expected = {
+      color: "#eeeeee",
+      selectedTaxa: [
+        {
+          taxon_id: 123,
+          color: "#ffffff",
+          verifiable: true,
+          spam: false,
+        },
+        {
+          taxon_id: 456,
+          color: "#eeeeee",
+          verifiable: true,
+          spam: false,
+        },
+      ],
+    };
+
+    let result = decodeAppUrl(searchParams);
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("returns object with taxa and place data if place_id is present", () => {
+    let searchParams =
+      "?taxa_id=123&places_id=987&colors=%23ffffff&spam=false&verifiable=true";
+
+    let expected = {
+      color: "#ffffff",
+      selectedTaxa: [
+        {
+          taxon_id: 123,
+          color: "#ffffff",
+          verifiable: true,
+          spam: false,
+        },
+      ],
+      selectedPlaces: {
+        id: 987,
+      },
+    };
+
+    let result = decodeAppUrl(searchParams);
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("returns object with bounding box if nelat is present", () => {
+    let searchParams = "?places_id=0&nelat=0&nelng=-1&swlat=2&swlng=-3";
+
+    let expected = {
+      selectedTaxa: [],
+      selectedPlaces: {
+        id: 0,
+        name: "Custom Boundary",
+        display_name: "Custom Boundary",
+      },
+      inatApiParams: {
+        nelat: 0,
+        nelng: -1,
+        swlat: 2,
+        swlng: -3,
+      },
+    };
+
+    let result = decodeAppUrl(searchParams);
+
+    expect(result).toStrictEqual(expected);
   });
 });

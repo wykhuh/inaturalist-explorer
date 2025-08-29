@@ -1,4 +1,12 @@
-import type { MapStore, AppUrlParams, AppUrlParamsKeys } from "../types/app";
+import type { TileLayer } from "leaflet";
+
+import type {
+  MapStore,
+  AppUrlParams,
+  AppUrlParamsKeys,
+  NormalizediNatTaxon,
+  iNatApiParams,
+} from "../types/app";
 
 export function displayJson(json: any, el: HTMLElement | null) {
   const debug = import.meta.env.VITE_DEBUG;
@@ -82,4 +90,43 @@ export function updateUrl(url_location: Location, appStore: MapStore) {
     ? `${url_location.origin}?${paramsString}`
     : url_location.origin;
   window.history.pushState({}, "", url);
+}
+
+export function decodeAppUrl(searchParams: string) {
+  const urlParams = Object.fromEntries(new URLSearchParams(searchParams));
+  let apiParams = {} as MapStore;
+
+  let taxa: iNatApiParams[] = [];
+  if ("taxa_id" in urlParams) {
+    let ids = urlParams.taxa_id.split(",");
+    let colors = urlParams.colors.split(",");
+    ids.forEach((id, i) => {
+      taxa.push({
+        taxon_id: Number(id),
+        color: colors[i],
+        verifiable: urlParams.verifiable === "true",
+        spam: urlParams.spam === "true",
+      });
+      if (i === ids.length - 1) {
+        apiParams.color = colors[i];
+      }
+    });
+  }
+  if ("places_id" in urlParams) {
+    apiParams.selectedPlaces = { id: Number(urlParams.places_id) };
+    if (urlParams.places_id === "0") {
+      apiParams.selectedPlaces.display_name = "Custom Boundary";
+      apiParams.selectedPlaces.name = "Custom Boundary";
+    }
+  }
+  if ("nelat" in urlParams) {
+    apiParams.inatApiParams = {
+      nelat: Number(urlParams.nelat),
+      nelng: Number(urlParams.nelng),
+      swlat: Number(urlParams.swlat),
+      swlng: Number(urlParams.swlng),
+    };
+  }
+  apiParams.selectedTaxa = taxa as unknown as NormalizediNatTaxon[];
+  return apiParams;
 }

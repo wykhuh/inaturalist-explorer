@@ -43,8 +43,8 @@ export type NormalizediNatTaxon = {
 };
 
 export type NormalizediNatPlace = {
-  display_name: string;
-  name: string;
+  display_name?: string;
+  name?: string;
   geometry?: Polygon | MultiPolygon;
   bounding_box?: LngLat[];
   id: number;
