@@ -5,10 +5,10 @@ import type {
   MapStore,
   iNatApiParams,
   CustomLayerOptions,
-  CustomPolygon,
   CustomLayer,
   CustomGeoJSON,
-  LatLng,
+  NormalizediNatPlace,
+  LngLat,
 } from "../types/app";
 import {
   addOverlayToMap,
@@ -16,8 +16,8 @@ import {
   drawMapBoundingBox,
   formatiNatAPIBoundingBoxParams,
   getAndDrawMapBoundingBox,
-  getBoundingBox,
-  zoomBBox,
+  fitBoundsBBox,
+  fitBoundsPlaces,
 } from "./map_utils.ts";
 import { displayJson, updateUrl } from "./utils.ts";
 import {
@@ -27,14 +27,17 @@ import {
   getTaxonById,
 } from "./inat_api.ts";
 import { renderTaxaList, renderPlacesList } from "./autocomplete_utils.ts";
-import type { Map } from "leaflet";
+import type { LatLng, Map } from "leaflet";
 import type { PlacesResult, TaxaResult } from "../types/inat_api";
 
-let bboxPlace = {
-  id: 0,
-  name: "Custom Boundary",
-  display_name: "Custom Boundary",
-};
+export function bboxPlace(bbox: LngLat[]): NormalizediNatPlace {
+  return {
+    id: 0,
+    name: "Custom Boundary",
+    display_name: "Custom Boundary",
+    bounding_box: { type: "Polygon", coordinates: [bbox] },
+  };
+}
 
 // called when user clicks refresh map button
 export async function refreshiNatMapLayers(
@@ -54,15 +57,15 @@ export async function refreshiNatMapLayers(
   removePlacesFromStoreAndMap(appStore);
 
   // create bounding box using the boundaries of the map
-  let refreshLayer = getAndDrawMapBoundingBox(map);
+  let { layer, lngLatCoors } = getAndDrawMapBoundingBox(map);
   appStore.refreshMap = {
     ...appStore.refreshMap,
-    layer: refreshLayer as CustomPolygon,
+    layer: layer as any,
   };
 
   // save place to store
-  appStore.selectedPlaces = bboxPlace;
-  appStore.placesMapLayers = refreshLayer as unknown as CustomGeoJSON;
+  appStore.selectedPlaces = [bboxPlace(lngLatCoors)];
+  appStore.placesMapLayers = { "0": layer as unknown as CustomGeoJSON };
 
   renderPlacesList(appStore);
 
@@ -242,24 +245,26 @@ function removeTaxaFromStoreAndMap(appStore: MapStore) {
 }
 
 function removePlacesFromStoreAndMap(appStore: MapStore) {
-  let placesMapLayers = appStore.placesMapLayers;
-  if (!placesMapLayers) return;
+  let layerControl = appStore.map.layerControl;
+  if (!layerControl) return;
 
-  appStore.map.layerControl?.removeLayer(placesMapLayers);
-
-  // remove from map
-  placesMapLayers.remove();
+  Object.values(appStore.placesMapLayers).forEach((layer) => {
+    // remove layer from layer control
+    layerControl.removeLayer(layer);
+    // remove layer from map
+    layer.remove();
+  });
 
   appStore.refreshMap.layer = null;
 
   // remove from store
-  appStore.placesMapLayers = undefined;
+  appStore.placesMapLayers = {};
   delete appStore.inatApiParams.place_id;
   delete appStore.inatApiParams.nelat;
   delete appStore.inatApiParams.nelng;
   delete appStore.inatApiParams.swlat;
   delete appStore.inatApiParams.swlng;
-  appStore.selectedPlaces = undefined;
+  appStore.selectedPlaces = [];
 }
 
 function removeRefreshBBox(appStore: MapStore, map: Map) {
@@ -342,18 +347,29 @@ export async function initApp(appStore: MapStore, urlData: MapStore) {
     }
     renderTaxaList(appStore);
     renderPlacesList(appStore);
+    fitBoundsPlaces(appStore);
+
     // get place data only
-  } else if (urlData.selectedPlaces && urlData.selectedPlaces.id !== 0) {
-    appStore.inatApiParams.place_id = urlData.selectedPlaces.id;
-    let placeData = await getPlaceById(urlData.selectedPlaces.id);
-    if (placeData) {
-      processPlaceData(placeData, appStore);
-      renderPlacesList(appStore);
+  } else if (
+    urlData.selectedPlaces &&
+    urlData.selectedPlaces.length > 0 &&
+    urlData.inatApiParams.nelat === undefined
+  ) {
+    for await (const urlDataPlace of urlData.selectedPlaces) {
+      let placeData = await getPlaceById(urlDataPlace.id);
+      if (!placeData) {
+        continue;
+      }
+      await processPlaceData(placeData, appStore);
     }
+    renderPlacesList(appStore);
+    fitBoundsPlaces(appStore);
+
     // get bounding box only
-  } else {
+  } else if (urlData.inatApiParams.nelat !== undefined) {
     processBBoxData(appStore, urlData);
     renderPlacesList(appStore);
+    fitBoundsPlaces(appStore);
   }
 }
 
@@ -396,11 +412,17 @@ export async function processTaxonData(
   }
 
   // handle selected places
-  if (urlData.selectedPlaces && urlData.selectedPlaces.id !== 0) {
-    appStore.inatApiParams.place_id = urlData.selectedPlaces.id;
-    let placeData = await getPlaceById(urlData.selectedPlaces.id);
-    if (placeData) {
-      processPlaceData(placeData, appStore);
+  if (
+    urlData.selectedPlaces &&
+    urlData.selectedPlaces.length > 0 &&
+    urlData.inatApiParams.nelat === undefined
+  ) {
+    for await (const urlDataPlace of urlData.selectedPlaces) {
+      let placeData = await getPlaceById(urlDataPlace.id);
+      if (!placeData) {
+        continue;
+      }
+      await processPlaceData(placeData, appStore);
     }
     // handle bounding box
   } else if (urlData.inatApiParams.nelat !== undefined) {
@@ -413,14 +435,6 @@ export function processPlaceData(placeData: PlacesResult, appStore: MapStore) {
   let map = appStore.map.map;
   if (!map) return;
 
-  // zoom to map using bounding box
-  if (placeData.bounding_box_geojson) {
-    let coord = placeData.bounding_box_geojson.coordinates[0] as LatLng[];
-    let bounds = getBoundingBox(coord);
-
-    map.fitBounds(bounds);
-  }
-
   // draw boundaries of selected place
   let options: any = {
     color: "red",
@@ -431,12 +445,36 @@ export function processPlaceData(placeData: PlacesResult, appStore: MapStore) {
   layer.addTo(map);
 
   // save place to store
-  appStore.selectedPlaces = {
-    id: placeData.id,
-    name: placeData.name,
-    display_name: placeData.display_name,
-  };
-  appStore.placesMapLayers = layer as CustomGeoJSON;
+  appStore.placesMapLayers[placeData.id] = layer as CustomGeoJSON;
+
+  let bbox = placeData.bounding_box_geojson;
+  appStore.selectedPlaces = [
+    ...appStore.selectedPlaces,
+    {
+      id: placeData.id,
+      name: placeData.name,
+      display_name: placeData.display_name,
+      bounding_box: bbox,
+    },
+  ];
+
+  // create comma seperated place_id
+  appStore.inatApiParams.place_id = multiIdString(
+    placeData.id,
+    appStore.inatApiParams.place_id,
+  );
+}
+
+export function multiIdString(id: number, appStoreIdField?: string) {
+  if (id === undefined) return;
+
+  if (appStoreIdField === undefined) {
+    appStoreIdField = id.toString();
+  } else {
+    appStoreIdField = appStoreIdField + "," + id;
+  }
+
+  return appStoreIdField;
 }
 
 export function processBBoxData(appStore: MapStore, urlData: MapStore) {
@@ -445,29 +483,36 @@ export function processBBoxData(appStore: MapStore, urlData: MapStore) {
   let lngLatCoors = convertParamsBBoxToLngLat(urlData.inatApiParams);
   if (!lngLatCoors) return;
 
-  let layer = drawMapBoundingBox(map, lngLatCoors);
+  let layer = drawMapBoundingBox(map, lngLatCoors) as any;
   appStore.refreshMap = {
     ...appStore.refreshMap,
-    layer: layer as CustomPolygon,
+    layer: layer,
   };
-
-  zoomBBox(map, lngLatCoors);
 
   appStore.inatApiParams.nelat = urlData.inatApiParams.nelat;
   appStore.inatApiParams.nelng = urlData.inatApiParams.nelng;
   appStore.inatApiParams.swlat = urlData.inatApiParams.swlat;
   appStore.inatApiParams.swlng = urlData.inatApiParams.swlng;
 
-  appStore.selectedPlaces = bboxPlace;
-  appStore.placesMapLayers = layer as unknown as CustomGeoJSON;
+  appStore.selectedPlaces = [bboxPlace(lngLatCoors)];
+  appStore.placesMapLayers["0"] = layer as unknown as CustomGeoJSON;
 }
 
 export function displayUserData(appStore: MapStore, _source: string) {
-  let temp: any = {};
-  // console.log(">> displayUserData", _source);
-  Object.entries(appStore.taxaMapLayers).forEach(([key, val]) => {
-    temp[key] = val.map((v: any) => v.options.layer_description);
-  });
+  function formatTaxaMapLayers() {
+    let temp: any = {};
+    Object.entries(appStore.taxaMapLayers).forEach(([key, val]) => {
+      temp[key] = val.map((v: any) => v.options.layer_description);
+    });
+    return temp;
+  }
+  function formatPlacesMapLayers() {
+    let temp: any = {};
+    Object.entries(appStore.placesMapLayers).forEach(([key, val]) => {
+      temp[key] = val.options.layer_description;
+    });
+    return temp;
+  }
 
   let data = {
     refreshMap: {
@@ -481,9 +526,9 @@ export function displayUserData(appStore: MapStore, _source: string) {
     inatApiParams: appStore.inatApiParams,
     color: appStore.color,
     selectedTaxa: appStore.selectedTaxa,
-    taxaMapLayers: temp,
+    taxaMapLayers: formatTaxaMapLayers(),
     selectedPlaces: appStore.selectedPlaces,
-    placesMapLayers: appStore.placesMapLayers?.options.layer_description,
+    placesMapLayers: formatPlacesMapLayers(),
     mapLayerDescriptions: leafletVisibleLayers(appStore),
   };
   displayJson(data, appStore.displayJsonEl);

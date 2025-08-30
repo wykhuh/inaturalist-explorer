@@ -30,9 +30,6 @@ class MyComponent extends HTMLElement {
     let butttonEl = this.querySelector(".close-button");
     if (butttonEl) {
       butttonEl.addEventListener("click", function () {
-        console.log("click", place);
-        console.log("click2", window.app.store.selectedPlaces);
-
         if (place.id !== undefined) {
           removePlace(window.app.store);
         }

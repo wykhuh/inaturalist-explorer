@@ -27,10 +27,37 @@ export function getMonthName(month: number) {
   }
 }
 
-export function fitPointsInMap(coordinates: any, map: Map) {
+export function fitBoundsPoints(coordinates: any, map: Map) {
   if (coordinates.length > 0) {
     map.fitBounds(coordinates);
   }
+}
+
+export function fitBoundsPlaces(appStore: MapStore) {
+  let map = appStore.map.map;
+  if (!map) return;
+  if (appStore.selectedPlaces.length === 0) return;
+
+  let layers = appStore.selectedPlaces
+    .filter((p) => p.bounding_box !== undefined)
+    .map((place) => {
+      return L.geoJSON(place.bounding_box);
+    });
+  if (layers.length > 0) {
+    map.fitBounds(L.featureGroup(layers).getBounds());
+  }
+}
+/*
+ coordinates: [[[-118, 32], [-118, 34], [-117, 34], [-117, 32], [-118, 32]]]
+
+type: "Polygon"
+*/
+
+export function fitBoundsBBox(map: Map, lngLatCoors: LngLat[]) {
+  let latLngCoors = lngLatCoors.map(flipLatLng);
+  let bounds = L.latLngBounds(latLngCoors);
+
+  map.fitBounds(bounds);
 }
 
 export function isObservationInMap(observation: any, map: Map) {
@@ -336,7 +363,7 @@ export function getAndDrawMapBoundingBox(
   let bounds = map.getBounds() as unknown as LeafletBounds;
   let lngLatCoors = convertBoundsObjectToLngLat(bounds);
   let layer = drawMapBoundingBox(map, lngLatCoors, options);
-  return layer;
+  return { layer, lngLatCoors };
 }
 
 export function drawMapBoundingBox(
@@ -352,12 +379,6 @@ export function drawMapBoundingBox(
   let layer = L.polygon(latLngCoors, options);
   layer.addTo(map);
   return layer;
-}
-
-export function zoomBBox(map: Map, lngLatCoors: LngLat[]) {
-  let latLngCoors = lngLatCoors.map(flipLatLng);
-  let bounds = L.latLngBounds(latLngCoors);
-  map.fitBounds(bounds);
 }
 
 export function convertBoundsObjectToLngLat(bounds: LeafletBounds): LngLat[] {
@@ -378,7 +399,12 @@ export function convertParamsBBoxToLngLat(
   if (swlng === undefined) return;
   if (swlat === undefined) return;
 
-  return formatBoundingBox(nelng, nelat, swlng, swlat);
+  return formatBoundingBox(
+    Number(nelng),
+    Number(nelat),
+    Number(swlng),
+    Number(swlat),
+  );
 }
 
 function formatBoundingBox(

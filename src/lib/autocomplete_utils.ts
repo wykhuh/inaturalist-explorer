@@ -16,10 +16,11 @@ import {
   removeOneTaxonFromMap,
 } from "./data_utils.ts";
 import { colorsSixTolBright, getColor } from "./map_colors_utils.ts";
-import { getBoundingBox } from "./map_utils.ts";
+import { fitBoundsBBox, fitBoundsPlaces, getBoundingBox } from "./map_utils.ts";
 import { lifeTaxon } from "./inat_api.ts";
 import { updateUrl } from "./utils.ts";
-//
+
+//=====================
 // taxa search
 // =====================
 const speciesRanks = ["species", "hybrid", "subspecies", "variety", "form"];
@@ -144,7 +145,7 @@ export function processAutocompletePlaces(
       name: item.record.name,
       display_name: item.record.display_name,
       geometry: item.record.geometry_geojson as any,
-      bounding_box: item.record.bounding_box_geojson.coordinates[0],
+      bounding_box: item.record.bounding_box_geojson,
       id: item.record.id,
     };
   });
@@ -169,12 +170,6 @@ export async function placeSelectedHandler(
   let map = appStore.map.map;
   if (!map) return;
 
-  // zoom to map using bounding box
-  if (selection.bounding_box) {
-    let bounds = getBoundingBox(selection.bounding_box);
-    map.fitBounds(bounds);
-  }
-
   // draw boundaries of selected place
   let options: any = {
     color: "red",
@@ -186,7 +181,10 @@ export async function placeSelectedHandler(
 
   // remove selected place layer from map
   if (appStore.placesMapLayers) {
-    appStore.placesMapLayers.removeFrom(map);
+    let layer = appStore.placesMapLayers[selection.id.toString()];
+    if (layer) {
+      layer.removeFrom(map);
+    }
   }
 
   // remove refresh bound box from map
@@ -197,15 +195,20 @@ export async function placeSelectedHandler(
     delete appStore.inatApiParams.swlng;
     delete appStore.inatApiParams.nelat;
     delete appStore.inatApiParams.nelng;
+    appStore.selectedPlaces = appStore.selectedPlaces.filter((p) => p.id !== 0);
   }
 
   // save place to store
-  appStore.selectedPlaces = {
-    id: selection.id,
-    name: selection.name,
-    display_name: selection.display_name,
-  };
-  appStore.placesMapLayers = layer as CustomGeoJSON;
+  appStore.selectedPlaces = [
+    ...appStore.selectedPlaces,
+    {
+      id: selection.id,
+      name: selection.name,
+      display_name: selection.display_name,
+      bounding_box: selection.bounding_box,
+    },
+  ];
+  appStore.placesMapLayers = { [selection.id]: layer as CustomGeoJSON };
 
   // set taxa to existing taxa or use Life.
   let taxa = [];
@@ -235,21 +238,25 @@ export async function placeSelectedHandler(
     await fetchiNatMapData(taxon, appStore);
     renderTaxaList(appStore);
     renderPlacesList(appStore);
+    fitBoundsPlaces(appStore);
   }
 
+  // zoom to map to fit all selected places
+  fitBoundsPlaces(appStore);
   updateUrl(window.location, appStore);
 }
 
 export function renderPlacesList(appStore: MapStore) {
   if (!appStore.placesListEl) return;
   appStore.placesListEl.innerHTML = "";
-  if (!appStore.selectedPlaces) return;
 
-  let templateEl = document.createElement("x-places-list-item");
-  templateEl.dataset.place = JSON.stringify({
-    id: appStore.selectedPlaces.id,
-    name: appStore.selectedPlaces.name,
-    display_name: appStore.selectedPlaces.display_name,
+  appStore.selectedPlaces.forEach((place) => {
+    let templateEl = document.createElement("x-places-list-item");
+    templateEl.dataset.place = JSON.stringify({
+      id: place.id,
+      name: place.name,
+      display_name: place.display_name,
+    });
+    appStore.placesListEl!.appendChild(templateEl);
   });
-  appStore.placesListEl.appendChild(templateEl);
 }

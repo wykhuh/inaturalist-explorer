@@ -4,7 +4,11 @@ import L from "leaflet";
 import { expect } from "vitest";
 
 import { addLayerToMap, getMapTiles } from "../lib/map_utils";
-import type { MapStore, NormalizediNatTaxon } from "../types/app";
+import type {
+  MapStore,
+  NormalizediNatPlace,
+  NormalizediNatTaxon,
+} from "../types/app";
 import { mapStore } from "../lib/store.ts";
 import { losAngelesSearchPlaces } from "./fixtures/inatApi.ts";
 
@@ -120,22 +124,73 @@ export function redOak(color = colors[1]) {
   };
 }
 
-export let losangeles = {
+export let losangeles: NormalizediNatPlace = {
   display_name: "Los Angeles County, US, CA",
   id: 962,
   name: "Los Angeles",
+  bounding_box: {
+    type: "Polygon",
+    coordinates: [
+      [
+        [-118.951721, 32.75004],
+        [-118.951721, 34.823302],
+        [-117.646374, 34.823302],
+        [-117.646374, 32.75004],
+        [-118.951721, 32.75004],
+      ],
+    ],
+  },
 };
 
 export let sandiego = {
   id: 829,
   name: "San Diego",
   display_name: "San Diego County, CA, US",
+  bounding_box: {
+    type: "Polygon",
+    coordinates: [
+      [
+        [-117.611081, 32.528832],
+        [-117.611081, 33.505025],
+        [-116.08094, 33.505025],
+        [-116.08094, 32.528832],
+      ],
+    ],
+  },
 };
 
 export let refreshPlace = {
   id: 0,
   name: "Custom Boundary",
   display_name: "Custom Boundary",
+  bounding_box: {
+    type: "Polygon",
+    coordinates: [
+      [
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0],
+      ],
+    ],
+  },
+};
+
+export let refreshPlaceLA = {
+  id: 0,
+  name: "Custom Boundary",
+  display_name: "Custom Boundary",
+  bounding_box: {
+    type: "Polygon",
+    coordinates: [
+      [
+        [-118.12500000000001, 34.30714385628804],
+        [-118.12500000000001, 34.30714385628804],
+        [-118.12500000000001, 34.30714385628804],
+        [-118.12500000000001, 34.30714385628804],
+      ],
+    ],
+  },
 };
 
 export function setupMapAndStore() {
@@ -161,8 +216,8 @@ export function expectEmpytMap(store: MapStore) {
   expect(store.inatApiParams).toStrictEqual({});
   expect(store.selectedTaxa).toStrictEqual([]);
   expect(store.taxaMapLayers).toStrictEqual({});
-  expect(store.selectedPlaces).toBeUndefined();
-  expect(store.placesMapLayers).toBeUndefined();
+  expect(store.selectedPlaces).toStrictEqual([]);
+  expect(store.placesMapLayers).toStrictEqual({});
   expect(store.refreshMap.refreshMapButtonEl).toBeNull();
   expect(store.refreshMap.showRefreshMapButton).toBeFalsy();
   expect(store.refreshMap.layer).toBeNull();
@@ -175,8 +230,8 @@ export function expectNoTaxa(store: MapStore) {
 }
 
 export function expectNoPlaces(store: MapStore) {
-  expect(store.selectedPlaces).toBeUndefined();
-  expect(store.placesMapLayers).toBeUndefined();
+  expect(store.selectedPlaces).toStrictEqual([]);
+  expect(store.placesMapLayers).toStrictEqual({});
 }
 
 export function expectNoRefresh(store: MapStore) {
@@ -186,19 +241,23 @@ export function expectNoRefresh(store: MapStore) {
 }
 
 export function expectLosAngelesPlace(store: MapStore) {
-  expect(store.selectedPlaces).toEqual(losangeles);
+  expect(store.selectedPlaces).toEqual([losangeles]);
   expect(store.placesMapLayers).not.toBeUndefined();
 }
 
 export function expectSanDiegoPlace(store: MapStore) {
-  expect(store.selectedPlaces).toEqual(sandiego);
+  expect(store.selectedPlaces).toEqual([sandiego]);
   expect(store.placesMapLayers).not.toBeUndefined();
 }
 
-export function expectRefreshPlace(store: MapStore) {
+export function expectRefreshPlace(store: MapStore, type = "zero") {
+  let place: any = refreshPlace;
+  if (type !== "zero") {
+    place = refreshPlaceLA;
+  }
   expect(store.refreshMap.layer).toBeDefined();
   expect(store.refreshMap.showRefreshMapButton).toBeFalsy();
-  expect(store.selectedPlaces).toEqual(refreshPlace);
+  expect(store.selectedPlaces).toEqual([place]);
   expect(store.placesMapLayers).not.toBeUndefined();
 }
 

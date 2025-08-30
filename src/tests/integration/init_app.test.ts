@@ -108,7 +108,7 @@ describe("initApp", () => {
     expectLosAngelesPlace(store);
     let expectedParams = {
       color: colors[0],
-      place_id: losangeles.id,
+      place_id: losangeles.id.toString(),
       taxon_id: life().id,
       verifiable: true,
       spam: false,
@@ -166,7 +166,7 @@ describe("initApp", () => {
     expectNoTaxa(store);
     expectLosAngelesPlace(store);
     let expectedParams = {
-      place_id: losangeles.id,
+      place_id: losangeles.id.toString(),
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
   });

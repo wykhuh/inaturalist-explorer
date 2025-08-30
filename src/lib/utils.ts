@@ -4,6 +4,8 @@ import type {
   AppUrlParamsKeys,
   NormalizediNatTaxon,
 } from "../types/app";
+import { bboxPlace } from "./data_utils";
+import { convertParamsBBoxToLngLat } from "./map_utils";
 
 export function displayJson(json: any, el: HTMLElement | null) {
   const debug = import.meta.env.VITE_DEBUG;
@@ -56,7 +58,7 @@ export function pluralize(number: number, text: string, useComma = false) {
 
 export function formatAppUrl(appStore: MapStore) {
   let taxaIds = appStore.selectedTaxa.map((t) => t.id).join(",");
-  let placesIds = appStore.selectedPlaces?.id.toString();
+  let placesIds = appStore.selectedPlaces.map((t) => t.id).join(",");
   let colors = appStore.selectedTaxa.map((t) => t.color).join(",");
 
   let params: AppUrlParams = {};
@@ -110,10 +112,23 @@ export function decodeAppUrl(searchParams: string) {
   apiParams.selectedTaxa = taxa;
 
   if ("place_id" in urlParams) {
-    apiParams.selectedPlaces = { id: Number(urlParams.place_id) };
-    if (urlParams.place_id === "0") {
-      apiParams.selectedPlaces.display_name = "Custom Boundary";
-      apiParams.selectedPlaces.name = "Custom Boundary";
+    let ids = urlParams.place_id.split(",");
+
+    let places = ids
+      .map((id) => {
+        if (id === "0") {
+          let lngLatCoors = convertParamsBBoxToLngLat(urlParams);
+          if (lngLatCoors) {
+            return bboxPlace(lngLatCoors);
+          }
+        } else {
+          return { id: Number(id) };
+        }
+      })
+      .filter((p) => p);
+
+    if (places) {
+      apiParams.selectedPlaces = places;
     }
   }
   if ("nelat" in urlParams) {

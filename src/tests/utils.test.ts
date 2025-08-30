@@ -183,9 +183,7 @@ describe("decodeAppUrl", () => {
           color: "#ffffff",
         },
       ],
-      selectedPlaces: {
-        id: 987,
-      },
+      selectedPlaces: [{ id: 987 }],
       inatApiParams: {
         verifiable: true,
         spam: false,
@@ -202,11 +200,24 @@ describe("decodeAppUrl", () => {
 
     let expected = {
       selectedTaxa: [],
-      selectedPlaces: {
-        id: 0,
-        name: "Custom Boundary",
-        display_name: "Custom Boundary",
-      },
+      selectedPlaces: [
+        {
+          id: 0,
+          name: "Custom Boundary",
+          display_name: "Custom Boundary",
+          bounding_box: {
+            coordinates: [
+              [
+                [-1, 0],
+                [-1, 2],
+                [-3, 2],
+                [-3, 0],
+              ],
+            ],
+            type: "Polygon",
+          },
+        },
+      ],
       inatApiParams: {
         nelat: 0,
         nelng: -1,

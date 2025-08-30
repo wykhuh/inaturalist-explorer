@@ -31,7 +31,6 @@ import {
   expectNoTaxa,
   expectOakTaxa,
   expectRefreshPlace,
-  expectSanDiegoPlace,
   losangeles,
   sandiego,
   life,
@@ -210,12 +209,14 @@ describe("placeSelectedHandler", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
+      placeLabel_la,
       placeLabel_sd,
       gridLabel_life_sd,
     ]);
     expectNoRefresh(store);
     expectLifeTaxa(store);
-    expectSanDiegoPlace(store);
+    expect(store.selectedPlaces).toEqual([losangeles, sandiego]);
+    expect(store.placesMapLayers).not.toBeUndefined();
     let expectedParams2 = {
       color: colors[0],
       place_id: sandiego.id,
@@ -339,7 +340,7 @@ describe("combos", () => {
     ]);
     expectLifeTaxa(store);
     expectNoRefresh(store);
-    expect(store.selectedPlaces).toStrictEqual(losangeles);
+    expect(store.selectedPlaces).toStrictEqual([losangeles]);
     let params = {
       color: colors[0],
       place_id: losangeles.id,
@@ -357,14 +358,14 @@ describe("combos", () => {
       gridLabel_life,
     ]);
     expectLifeTaxa(store);
-    expectRefreshPlace(store);
+    expectRefreshPlace(store, "LA");
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: life().id,
       color: colors[0],
-      nelat: 0,
-      nelng: 0,
-      swlat: 0,
-      swlng: 0,
+      nelat: 34.30714385628804,
+      nelng: -118.12500000000001,
+      swlat: 34.30714385628804,
+      swlng: -118.12500000000001,
       verifiable: true,
       spam: false,
     });
@@ -466,7 +467,7 @@ describe("combos", () => {
     ]);
     expectLifeTaxa(store);
     expectNoRefresh(store);
-    expect(store.selectedPlaces).toStrictEqual(losangeles);
+    expect(store.selectedPlaces).toStrictEqual([losangeles]);
     let params = {
       color: colors[0],
       place_id: losangeles.id,
@@ -484,14 +485,14 @@ describe("combos", () => {
       gridLabel_life,
     ]);
     expectLifeTaxa(store);
-    expectRefreshPlace(store);
+    expectRefreshPlace(store, "LA");
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: life().id,
       color: colors[0],
-      nelat: 0,
-      nelng: 0,
-      swlat: 0,
-      swlng: 0,
+      nelat: 34.30714385628804,
+      nelng: -118.12500000000001,
+      swlat: 34.30714385628804,
+      swlng: -118.12500000000001,
       verifiable: true,
       spam: false,
     });
@@ -505,7 +506,7 @@ describe("combos", () => {
     ]);
     expectLifeTaxa(store);
     expectNoRefresh(store);
-    expect(store.selectedPlaces).toStrictEqual(sandiego);
+    expect(store.selectedPlaces).toStrictEqual([sandiego]);
     let params2 = {
       color: colors[0],
       place_id: sandiego.id,
@@ -531,7 +532,7 @@ describe("removePlace", () => {
       gridLabel_life_la,
     ]);
     expectLifeTaxa(store);
-    expect(store.selectedPlaces).toStrictEqual(losangeles);
+    expect(store.selectedPlaces).toStrictEqual([losangeles]);
     let params1 = {
       color: colors[0],
       place_id: losangeles.id,
@@ -615,7 +616,7 @@ describe("removePlace", () => {
       gridLabel_life_la,
     ]);
     expectLifeTaxa(store);
-    expect(store.selectedPlaces).toStrictEqual(losangeles);
+    expect(store.selectedPlaces).toStrictEqual([losangeles]);
     let params1 = {
       color: colors[0],
       place_id: losangeles.id,
@@ -663,7 +664,7 @@ describe("removePlace", () => {
       gridLabel_life,
     ]);
     expectLifeTaxa(store);
-    expect(store.selectedPlaces).toStrictEqual(refreshPlace);
+    expect(store.selectedPlaces).toStrictEqual([refreshPlace]);
     let params1 = {
       color: colors[0],
       taxon_id: life().id,
@@ -800,7 +801,7 @@ describe("removeTaxon", () => {
       gridLabel_life_la,
     ]);
     expectLifeTaxa(store);
-    expect(store.selectedPlaces).toStrictEqual(losangeles);
+    expect(store.selectedPlaces).toStrictEqual([losangeles]);
     let params1 = {
       color: colors[0],
       place_id: losangeles.id,
@@ -856,7 +857,7 @@ describe("removeTaxon", () => {
       gridLabel_life_la,
     ]);
     expectLifeTaxa(store);
-    expect(store.selectedPlaces).toStrictEqual(losangeles);
+    expect(store.selectedPlaces).toStrictEqual([losangeles]);
     let params1 = {
       color: colors[0],
       place_id: losangeles.id,

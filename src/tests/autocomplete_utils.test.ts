@@ -480,8 +480,7 @@ describe("processAutocompletePlaces", () => {
         id: losAngelesSearchPlaces.results[0].record.id,
         geometry: losAngelesSearchPlaces.results[0].record.geometry_geojson,
         bounding_box:
-          losAngelesSearchPlaces.results[0].record.bounding_box_geojson
-            .coordinates[0],
+          losAngelesSearchPlaces.results[0].record.bounding_box_geojson,
       },
       {
         display_name: "Los Angeles Area (custom), CA, US",
@@ -489,8 +488,7 @@ describe("processAutocompletePlaces", () => {
         id: losAngelesSearchPlaces.results[1].record.id,
         geometry: losAngelesSearchPlaces.results[1].record.geometry_geojson,
         bounding_box:
-          losAngelesSearchPlaces.results[1].record.bounding_box_geojson
-            .coordinates[0],
+          losAngelesSearchPlaces.results[1].record.bounding_box_geojson,
       },
       {
         display_name: "Los Angeles & Ventura Metropolitan Areas",
@@ -498,8 +496,7 @@ describe("processAutocompletePlaces", () => {
         id: losAngelesSearchPlaces.results[2].record.id,
         geometry: losAngelesSearchPlaces.results[2].record.geometry_geojson,
         bounding_box:
-          losAngelesSearchPlaces.results[2].record.bounding_box_geojson
-            .coordinates[0],
+          losAngelesSearchPlaces.results[2].record.bounding_box_geojson,
       },
     ];
     expect(results).toStrictEqual(expected);
@@ -514,9 +511,8 @@ describe("renderAutocompletePlace", () => {
       id: losAngelesSearchPlaces.results[0].record.id,
       geometry: losAngelesSearchPlaces.results[0].record
         .geometry_geojson as any,
-      bounding_box:
-        losAngelesSearchPlaces.results[0].record.bounding_box_geojson
-          .coordinates[0],
+      bounding_box: losAngelesSearchPlaces.results[0].record
+        .bounding_box_geojson as any,
     };
     let expected = `
   <div class="places-ac-option" data-testid="places-ac-option">

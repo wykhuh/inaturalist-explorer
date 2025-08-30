@@ -30,8 +30,8 @@ export interface SearchRecord {
   bbox_area: number;
   ancestor_place_ids: number[] | null;
   user: User | null;
-  geometry_geojson: MultiPolygon | Polygon;
-  bounding_box_geojson: Polygon;
+  geometry_geojson: MultiPolygonJson | PolygonJson;
+  bounding_box_geojson: PolygonJson;
   location: string;
   point_geojson: Point;
   without_check_list: boolean | null;
@@ -49,12 +49,12 @@ export interface User {
   created_at: string;
 }
 
-interface MultiPolygon {
+interface MultiPolygonJson {
   type: "MultiPolygon";
   coordinates: LngLat[][][];
 }
 
-export interface Polygon {
+export interface PolygonJson {
   type: "Polygon";
   coordinates: LngLat[][];
 }
@@ -477,17 +477,7 @@ export interface PlacesResult {
   admin_level: number;
   bbox_area: number;
   ancestor_place_ids: number[];
-  geometry_geojson: GeometryGeojson;
-  bounding_box_geojson: BoundingBoxGeojson;
+  geometry_geojson: MultiPolygonJson | PolygonJson;
+  bounding_box_geojson: PolygonJson;
   location: string;
-}
-
-export interface GeometryGeojson {
-  type: string;
-  coordinates: number[][][][];
-}
-
-export interface BoundingBoxGeojson {
-  type: string;
-  coordinates: number[][][];
 }
