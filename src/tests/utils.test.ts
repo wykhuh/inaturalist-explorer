@@ -86,7 +86,7 @@ describe("formatAppUrl", () => {
 
     let result = formatAppUrl(appStore);
 
-    expect(result).toBe(`taxa_id=48460&colors=%234477aa&spam=false`);
+    expect(result).toBe(`taxon_ids=48460&colors=%234477aa&spam=false`);
   });
 
   test("format parameters for multiple taxon", () => {
@@ -103,7 +103,7 @@ describe("formatAppUrl", () => {
     let result = formatAppUrl(appStore);
 
     expect(result).toBe(
-      "taxa_id=48460%2C861036&colors=%234477aa%2C%2366ccee&spam=false",
+      "taxon_ids=48460,861036&colors=%234477aa,%2366ccee&spam=false",
     );
   });
 });
@@ -137,7 +137,7 @@ describe("updateUrl", () => {
     expect(pushSpy).toHaveBeenCalledWith(
       {},
       "",
-      "http://localhost:3000?taxa_id=48460&colors=%234477aa&spam=false",
+      "http://localhost:3000?taxon_ids=48460&colors=%234477aa&spam=false",
     );
 
     pushSpy.mockRestore();
@@ -145,9 +145,9 @@ describe("updateUrl", () => {
 });
 
 describe("decodeAppUrl", () => {
-  test("returns object with taxa data if taxa_id is present", () => {
+  test("returns object with taxa data if taxon_ids is present", () => {
     let searchParams =
-      "?taxa_id=123%2C456&colors=%23ffffff%2C%23eeeeee&spam=false&verifiable=true";
+      "?taxon_ids=123,456&colors=%23ffffff,%23eeeeee&spam=false&verifiable=true";
     let expected = {
       color: "#eeeeee",
       selectedTaxa: [
@@ -173,7 +173,7 @@ describe("decodeAppUrl", () => {
 
   test("returns object with taxa and place data if place_id is present", () => {
     let searchParams =
-      "?taxa_id=123&places_id=987&colors=%23ffffff&spam=false&verifiable=true";
+      "?taxon_ids=123&place_id=987&colors=%23ffffff&spam=false&verifiable=true";
 
     let expected = {
       color: "#ffffff",
@@ -198,7 +198,7 @@ describe("decodeAppUrl", () => {
   });
 
   test("returns object with bounding box if nelat is present", () => {
-    let searchParams = "?places_id=0&nelat=0&nelng=-1&swlat=2&swlng=-3";
+    let searchParams = "?place_id=0&nelat=0&nelng=-1&swlat=2&swlng=-3";
 
     let expected = {
       selectedTaxa: [],

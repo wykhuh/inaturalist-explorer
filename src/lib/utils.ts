@@ -61,10 +61,10 @@ export function formatAppUrl(appStore: MapStore) {
 
   let params: AppUrlParams = {};
   if (taxaIds.length > 0) {
-    params.taxa_id = taxaIds;
+    params.taxon_ids = taxaIds;
   }
   if (placesIds) {
-    params.places_id = placesIds;
+    params.place_id = placesIds;
   }
   if (colors.length > 0) {
     params.colors = colors;
@@ -78,7 +78,7 @@ export function formatAppUrl(appStore: MapStore) {
     }
   });
 
-  return new URLSearchParams(params as any).toString();
+  return new URLSearchParams(params as any).toString().replaceAll("%2C", ",");
 }
 
 export function updateUrl(url_location: Location, appStore: MapStore) {
@@ -94,8 +94,8 @@ export function decodeAppUrl(searchParams: string) {
   let apiParams = { inatApiParams: {} } as MapStore;
 
   let taxa: NormalizediNatTaxon[] = [];
-  if ("taxa_id" in urlParams) {
-    let ids = urlParams.taxa_id.split(",");
+  if ("taxon_ids" in urlParams) {
+    let ids = urlParams.taxon_ids.split(",");
     let colors = urlParams.colors.split(",");
     ids.forEach((id, i) => {
       taxa.push({
@@ -109,9 +109,9 @@ export function decodeAppUrl(searchParams: string) {
   }
   apiParams.selectedTaxa = taxa;
 
-  if ("places_id" in urlParams) {
-    apiParams.selectedPlaces = { id: Number(urlParams.places_id) };
-    if (urlParams.places_id === "0") {
+  if ("place_id" in urlParams) {
+    apiParams.selectedPlaces = { id: Number(urlParams.place_id) };
+    if (urlParams.place_id === "0") {
       apiParams.selectedPlaces.display_name = "Custom Boundary";
       apiParams.selectedPlaces.name = "Custom Boundary";
     }

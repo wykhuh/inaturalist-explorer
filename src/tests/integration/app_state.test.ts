@@ -99,7 +99,7 @@ describe("taxonSelectedHandler", () => {
     expect(store.inatApiParams).toStrictEqual(expectedParams);
 
     expect(window.location.search).toBe(
-      `?taxa_id=${life().id}&colors=%234477aa&spam=false&verifiable=true`,
+      `?taxon_ids=${life().id}&colors=%234477aa&spam=false&verifiable=true`,
     );
   });
 
@@ -178,7 +178,7 @@ describe("placeSelectedHandler", () => {
     expect(store.inatApiParams).toStrictEqual(expectedParams);
 
     expect(window.location.search).toBe(
-      `?taxa_id=${life().id}&places_id=${losangeles.id}&colors=%234477aa&spam=false&verifiable=true`,
+      `?taxon_ids=${life().id}&place_id=${losangeles.id}&colors=%234477aa&spam=false&verifiable=true`,
     );
   });
 
@@ -246,7 +246,7 @@ describe("refreshiNatMapLayers", () => {
     expect(store.inatApiParams).toStrictEqual(expectedParams);
 
     expect(window.location.search).toBe(
-      `?places_id=${refreshPlace.id}&nelat=0&nelng=0&swlat=0&swlng=0`,
+      `?place_id=${refreshPlace.id}&nelat=0&nelng=0&swlat=0&swlng=0`,
     );
   });
 

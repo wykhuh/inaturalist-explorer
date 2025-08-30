@@ -64,7 +64,7 @@ describe("initApp", () => {
     expectEmpytMap(store);
 
     let searchparams =
-      "?taxa_id=48460&colors=%234477aa&spam=false&verifiable=true";
+      "?taxon_ids=48460&colors=%234477aa&spam=false&verifiable=true";
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);
@@ -92,7 +92,7 @@ describe("initApp", () => {
     expectEmpytMap(store);
 
     let searchparams =
-      "?taxa_id=48460&places_id=962&colors=%234477aa&spam=false&verifiable=true";
+      "?taxon_ids=48460&place_id=962&colors=%234477aa&spam=false&verifiable=true";
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);
@@ -122,7 +122,7 @@ describe("initApp", () => {
     expectEmpytMap(store);
 
     let searchparams =
-      "?taxa_id=48460&places_id=0&colors=%234477aa&spam=false&verifiable=true&nelat=0&nelng=0&swlat=0&swlng=0";
+      "?taxon_ids=48460&place_id=0&colors=%234477aa&spam=false&verifiable=true&nelat=0&nelng=0&swlat=0&swlng=0";
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);
@@ -152,7 +152,7 @@ describe("initApp", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = "?places_id=962&verifiable=true&spam=false";
+    let searchparams = "?place_id=962&verifiable=true&spam=false";
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);
@@ -177,7 +177,7 @@ describe("initApp", () => {
     expectEmpytMap(store);
 
     let searchparams =
-      "?places_id=0&spam=false&verifiable=true&nelat=0&nelng=0&swlat=0&swlng=0";
+      "?place_id=0&spam=false&verifiable=true&nelat=0&nelng=0&swlat=0&swlng=0";
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);

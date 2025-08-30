@@ -89,8 +89,8 @@ export type AppUrlParams = {
   nelng?: number;
   swlat?: number;
   swlng?: number;
-  taxa_id?: string;
-  places_id?: string;
+  taxon_ids?: string;
+  place_id?: string;
   colors?: string;
   spam?: boolean;
   verifiable?: boolean;
