@@ -16,7 +16,6 @@ import {
   drawMapBoundingBox,
   formatiNatAPIBoundingBoxParams,
   getAndDrawMapBoundingBox,
-  fitBoundsBBox,
   fitBoundsPlaces,
 } from "./map_utils.ts";
 import { displayJson, updateUrl } from "./utils.ts";
@@ -27,7 +26,7 @@ import {
   getTaxonById,
 } from "./inat_api.ts";
 import { renderTaxaList, renderPlacesList } from "./autocomplete_utils.ts";
-import type { LatLng, Map } from "leaflet";
+import type { Map } from "leaflet";
 import type { PlacesResult, TaxaResult } from "../types/inat_api";
 
 export function bboxPlace(bbox: LngLat[]): NormalizediNatPlace {
@@ -65,7 +64,7 @@ export async function refreshiNatMapLayers(
 
   // save place to store
   appStore.selectedPlaces = [bboxPlace(lngLatCoors)];
-  appStore.placesMapLayers = { "0": layer as unknown as CustomGeoJSON };
+  appStore.placesMapLayers = { "0": [layer as unknown as CustomGeoJSON] };
 
   renderPlacesList(appStore);
 
@@ -84,7 +83,7 @@ export async function refreshiNatMapLayers(
         color: taxon.color,
       };
       if (placeId) {
-        appStore.inatApiParams.place_id = placeId;
+        appStore.inatApiParams.place_id = placeId.toString();
       }
 
       await fetchiNatMapData(taxon, appStore);
@@ -104,13 +103,22 @@ export function removeTaxon(taxonId: number, appStore: MapStore) {
   removeOneTaxonFromStoreAndMap(appStore, taxonId);
 
   renderTaxaList(appStore);
+  renderPlacesList(appStore);
   updateUrl(window.location, appStore);
 }
 
 // called when user deletes a place
-export function removePlace(appStore: MapStore) {
-  removeTaxaFromStoreAndMap(appStore);
-  removePlacesFromStoreAndMap(appStore);
+export async function removePlace(placeId: number, appStore: MapStore) {
+  if (!appStore.selectedPlaces) return;
+
+  // remove place
+  removeOnePlaceFromStoreAndMap(appStore, placeId);
+
+  // remove existing taxa tiles, and refetch taxa tiles
+  for await (const taxon of appStore.selectedTaxa) {
+    removeOneTaxonFromMap(appStore, taxon.id);
+    await fetchiNatMapData(taxon, appStore);
+  }
 
   renderTaxaList(appStore);
   renderPlacesList(appStore);
@@ -207,6 +215,31 @@ function removeOneTaxonFromStoreAndMap(appStore: MapStore, taxonId: number) {
   );
 }
 
+function removeOnePlaceFromStoreAndMap(appStore: MapStore, placeId: number) {
+  removeOnePlaceFromMap(appStore, placeId);
+
+  if (placeId === 0) {
+    delete appStore.inatApiParams.nelat;
+    delete appStore.inatApiParams.nelng;
+    delete appStore.inatApiParams.swlat;
+    delete appStore.inatApiParams.swlng;
+  } else {
+    let ids = idStringRemoveId(placeId, appStore.inatApiParams.place_id);
+    if (ids) {
+      appStore.inatApiParams.place_id = ids;
+    } else {
+      delete appStore.inatApiParams.place_id;
+    }
+  }
+
+  appStore.selectedPlaces = appStore.selectedPlaces.filter(
+    (place) => place.id !== placeId,
+  );
+  if (appStore.selectedPlaces.length === 0) {
+    removeTaxaFromStoreAndMap(appStore);
+  }
+}
+
 export function removeOneTaxonFromMap(appStore: MapStore, taxonId: number) {
   if (!appStore.taxaMapLayers) return;
   let mapLayers = appStore.taxaMapLayers[taxonId];
@@ -224,13 +257,23 @@ export function removeOneTaxonFromMap(appStore: MapStore, taxonId: number) {
   delete appStore.taxaMapLayers[taxonId];
 }
 
+export function removeOnePlaceFromMap(appStore: MapStore, placeId: number) {
+  if (!appStore.placesMapLayers) return;
+  let mapLayers = appStore.placesMapLayers[placeId];
+  if (!mapLayers) return;
+
+  mapLayers.forEach((layer) => layer.remove());
+
+  delete appStore.placesMapLayers[placeId];
+}
+
 function removeTaxaFromStoreAndMap(appStore: MapStore) {
   let layerControl = appStore.map.layerControl;
   if (!layerControl) return;
 
   // remove from map
-  Object.values(appStore.taxaMapLayers).forEach((taxaLayers) => {
-    taxaLayers.forEach((layer) => {
+  Object.values(appStore.taxaMapLayers).forEach((layers) => {
+    layers.forEach((layer) => {
       // remove layer from layer control
       layerControl.removeLayer(layer);
       // remove layer from map
@@ -245,14 +288,12 @@ function removeTaxaFromStoreAndMap(appStore: MapStore) {
 }
 
 function removePlacesFromStoreAndMap(appStore: MapStore) {
-  let layerControl = appStore.map.layerControl;
-  if (!layerControl) return;
-
-  Object.values(appStore.placesMapLayers).forEach((layer) => {
-    // remove layer from layer control
-    layerControl.removeLayer(layer);
-    // remove layer from map
-    layer.remove();
+  // remove from map
+  Object.values(appStore.placesMapLayers).forEach((layers) => {
+    layers.forEach((layer) => {
+      // remove layer from map
+      layer.remove();
+    });
   });
 
   appStore.refreshMap.layer = null;
@@ -445,7 +486,7 @@ export function processPlaceData(placeData: PlacesResult, appStore: MapStore) {
   layer.addTo(map);
 
   // save place to store
-  appStore.placesMapLayers[placeData.id] = layer as CustomGeoJSON;
+  appStore.placesMapLayers[placeData.id] = [layer as CustomGeoJSON];
 
   let bbox = placeData.bounding_box_geojson;
   appStore.selectedPlaces = [
@@ -459,22 +500,34 @@ export function processPlaceData(placeData: PlacesResult, appStore: MapStore) {
   ];
 
   // create comma seperated place_id
-  appStore.inatApiParams.place_id = multiIdString(
+  appStore.inatApiParams.place_id = idStringAddId(
     placeData.id,
     appStore.inatApiParams.place_id,
   );
 }
 
-export function multiIdString(id: number, appStoreIdField?: string) {
-  if (id === undefined) return;
+export function idStringAddId(newId?: number, currentId?: string) {
+  if (newId === undefined) return;
 
-  if (appStoreIdField === undefined) {
-    appStoreIdField = id.toString();
+  if (currentId === undefined) {
+    currentId = newId.toString();
   } else {
-    appStoreIdField = appStoreIdField + "," + id;
+    currentId = currentId + "," + newId;
   }
 
-  return appStoreIdField;
+  return currentId;
+}
+
+export function idStringRemoveId(newId?: number, currentId?: string) {
+  if (newId === undefined) return;
+  if (currentId === undefined) return;
+
+  let ids = currentId
+    .split(",")
+    .filter((id) => Number(id) !== newId)
+    .join(",");
+  if (ids === "") return;
+  return ids;
 }
 
 export function processBBoxData(appStore: MapStore, urlData: MapStore) {
@@ -495,7 +548,7 @@ export function processBBoxData(appStore: MapStore, urlData: MapStore) {
   appStore.inatApiParams.swlng = urlData.inatApiParams.swlng;
 
   appStore.selectedPlaces = [bboxPlace(lngLatCoors)];
-  appStore.placesMapLayers["0"] = layer as unknown as CustomGeoJSON;
+  appStore.placesMapLayers["0"] = [layer as unknown as CustomGeoJSON];
 }
 
 export function displayUserData(appStore: MapStore, _source: string) {
@@ -509,7 +562,7 @@ export function displayUserData(appStore: MapStore, _source: string) {
   function formatPlacesMapLayers() {
     let temp: any = {};
     Object.entries(appStore.placesMapLayers).forEach(([key, val]) => {
-      temp[key] = val.options.layer_description;
+      temp[key] = val.map((v: any) => v.options.layer_description);
     });
     return temp;
   }

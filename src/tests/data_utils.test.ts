@@ -1,7 +1,12 @@
 // @vitest-environment jsdom
 
 import { expect, test, describe } from "vitest";
-import { formatTaxonName, updateSelectedTaxaProxy } from "../lib/data_utils.ts";
+import {
+  formatTaxonName,
+  updateSelectedTaxaProxy,
+  idStringAddId,
+  idStringRemoveId,
+} from "../lib/data_utils.ts";
 import type { MapStore, NormalizediNatTaxon } from "../types/app.d.ts";
 
 describe("formatTaxonName", () => {
@@ -194,5 +199,81 @@ describe("updateSelectedTaxaProxy", () => {
     updateSelectedTaxaProxy(store, taxon);
 
     expect(store.selectedTaxa).toStrictEqual(expected);
+  });
+});
+
+describe("idStringAddId", () => {
+  test("returns id as string if no current id", () => {
+    let newId = 10;
+    let currentId = undefined;
+
+    let result = idStringAddId(newId, currentId);
+
+    expect(result).toBe("10");
+  });
+
+  test("appends id to current id string", () => {
+    let newId = 10;
+    let currentId = "20";
+
+    let result = idStringAddId(newId, currentId);
+
+    expect(result).toBe("20,10");
+  });
+
+  test("appends id to current id string 2", () => {
+    let newId = 10;
+    let currentId = "20,15";
+
+    let result = idStringAddId(newId, currentId);
+
+    expect(result).toBe("20,15,10");
+  });
+
+  test("returns undefined if no id and current id", () => {
+    let newId = undefined;
+    let currentId = undefined;
+
+    let result = idStringAddId(newId, currentId);
+
+    expect(result).toBe(undefined);
+  });
+});
+
+describe("idStringRemoveId", () => {
+  test("returns undefined if new id equals current id", () => {
+    let newId = 10;
+    let currentId = "10";
+
+    let result = idStringRemoveId(newId, currentId);
+
+    expect(result).toBe(undefined);
+  });
+
+  test("removes id from current id string", () => {
+    let newId = 10;
+    let currentId = "20,10";
+
+    let result = idStringRemoveId(newId, currentId);
+
+    expect(result).toBe("20");
+  });
+
+  test("removes id from current id string 2", () => {
+    let newId = 10;
+    let currentId = "20,10,15";
+
+    let result = idStringRemoveId(newId, currentId);
+
+    expect(result).toBe("20,15");
+  });
+
+  test("returns undefined if no id and current id", () => {
+    let newId = undefined;
+    let currentId = undefined;
+
+    let result = idStringRemoveId(newId, currentId);
+
+    expect(result).toBe(undefined);
   });
 });

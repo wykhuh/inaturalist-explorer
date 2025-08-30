@@ -55,7 +55,7 @@ export interface MapStore {
   taxaMapLayers: { [index: string]: TileLayer[] };
   taxaListEl: HTMLElement | null;
   selectedPlaces: NormalizediNatPlace[];
-  placesMapLayers: { [index: string]: CustomGeoJSON };
+  placesMapLayers: { [index: string]: CustomGeoJSON[] };
   placesListEl: HTMLElement | null;
   inatApiParams: iNatApiParams;
   displayJsonEl: HTMLElement | null;

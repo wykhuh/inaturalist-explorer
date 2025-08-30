@@ -29,9 +29,9 @@ class MyComponent extends HTMLElement {
 
     let butttonEl = this.querySelector(".close-button");
     if (butttonEl) {
-      butttonEl.addEventListener("click", function () {
+      butttonEl.addEventListener("click", async function () {
         if (place.id !== undefined) {
-          removePlace(window.app.store);
+          await removePlace(place.id, window.app.store);
         }
       });
     }

@@ -79,6 +79,8 @@ export let gridLabel_life_la =
   "overlay: iNat grid, taxon_id 48460, place_id 962";
 export let gridLabel_life_sd =
   "overlay: iNat grid, taxon_id 48460, place_id 829";
+export let gridLabel_life_la_sd =
+  "overlay: iNat grid, taxon_id 48460, place_id 962,829";
 
 export let refreshBBoxLabel = "refresh bounding box";
 export let basemapLabel_osm = "basemap: Open Street Map";
@@ -142,7 +144,7 @@ export let losangeles: NormalizediNatPlace = {
   },
 };
 
-export let sandiego = {
+export let sandiego: NormalizediNatPlace = {
   id: 829,
   name: "San Diego",
   display_name: "San Diego County, CA, US",

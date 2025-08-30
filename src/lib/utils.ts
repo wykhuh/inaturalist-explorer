@@ -128,7 +128,7 @@ export function decodeAppUrl(searchParams: string) {
       .filter((p) => p);
 
     if (places) {
-      apiParams.selectedPlaces = places;
+      apiParams.selectedPlaces = places as any;
     }
   }
   if ("nelat" in urlParams) {

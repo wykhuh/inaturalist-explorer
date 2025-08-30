@@ -14,9 +14,10 @@ import {
   formatTaxonName,
   fetchiNatMapData,
   removeOneTaxonFromMap,
+  idStringAddId,
 } from "./data_utils.ts";
 import { colorsSixTolBright, getColor } from "./map_colors_utils.ts";
-import { fitBoundsBBox, fitBoundsPlaces, getBoundingBox } from "./map_utils.ts";
+import { fitBoundsPlaces } from "./map_utils.ts";
 import { lifeTaxon } from "./inat_api.ts";
 import { updateUrl } from "./utils.ts";
 
@@ -180,10 +181,13 @@ export async function placeSelectedHandler(
   layer.addTo(map);
 
   // remove selected place layer from map
+
   if (appStore.placesMapLayers) {
-    let layer = appStore.placesMapLayers[selection.id.toString()];
-    if (layer) {
-      layer.removeFrom(map);
+    let layers = appStore.placesMapLayers[selection.id.toString()];
+    if (layers) {
+      layers.forEach((layer) => {
+        layer.removeFrom(map);
+      });
     }
   }
 
@@ -208,7 +212,7 @@ export async function placeSelectedHandler(
       bounding_box: selection.bounding_box,
     },
   ];
-  appStore.placesMapLayers = { [selection.id]: layer as CustomGeoJSON };
+  appStore.placesMapLayers = { [selection.id]: [layer as CustomGeoJSON] };
 
   // set taxa to existing taxa or use Life.
   let taxa = [];
@@ -230,7 +234,7 @@ export async function placeSelectedHandler(
       ...appStore.inatApiParams,
       taxon_id: taxon.id,
       color: taxon.color,
-      place_id: selection.id,
+      place_id: idStringAddId(selection.id, appStore.inatApiParams.place_id),
       spam: false,
       verifiable: true,
     };
