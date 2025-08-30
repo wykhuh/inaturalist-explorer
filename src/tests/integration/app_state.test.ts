@@ -8,174 +8,47 @@ import {
   afterAll,
   afterEach,
 } from "vitest";
-import L from "leaflet";
 import jsdom from "jsdom";
 
-import type { MapStore, NormalizediNatTaxon } from "../../types/app";
 import {
   leafletVisibleLayers,
   refreshiNatMapLayers,
   removePlace,
   removeTaxon,
 } from "../../lib/data_utils.ts";
-import { mapStore } from "../../lib/store.ts";
 import {
   taxonSelectedHandler,
   placeSelectedHandler,
 } from "../../lib/autocomplete_utils.ts";
-import { getMapTiles, addLayerToMap } from "../../lib/map_utils.ts";
-import { createMockServer } from "../test_helpers.ts";
-
-let colors = ["#4477aa", "#66ccee"];
-
-let lifeBasic: NormalizediNatTaxon = {
-  name: "Life",
-  default_photo:
-    "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
-  preferred_common_name: "life",
-  matched_term: "Life",
-  rank: "stateofmatter",
-  id: 48460,
-};
-
-function life(color = colors[0]) {
-  return {
-    ...lifeBasic,
-    display_name: "life",
-    title: "life",
-    subtitle: "Life",
-    color: color,
-    observations_count: 123,
-  };
-}
-
-let redOakBasic: NormalizediNatTaxon = {
-  name: "Lobatae",
-  default_photo: "https://inat.com/photos/149586607/square.jpg",
-  preferred_common_name: "red oaks",
-  matched_term: "red oaks",
-  rank: "section",
-  id: 861036,
-};
-
-function redOak(color = colors[1]) {
-  return {
-    ...redOakBasic,
-    display_name: "red oaks",
-    title: "red oaks",
-    subtitle: "Lobatae",
-    color: color,
-    observations_count: 123,
-  };
-}
-
-let losangeles = {
-  display_name: "Los Angeles County, US, CA",
-  id: 962,
-  name: "Los Angeles",
-};
-
-let sandiego = {
-  id: 829,
-  name: "San Diego",
-  display_name: "San Diego County, CA, US",
-};
-
-let refreshPlace = {
-  id: 0,
-  name: "Custom Boundary",
-  display_name: "Custom Boundary",
-};
-
-let placeLabel_la = "place layer: Los Angeles, 962";
-let placeLabel_sd = "place layer: San Diego, 829";
-
-let gridLabel_life = "overlay: iNat grid, taxon_id 48460";
-let gridLabel_oaks = "overlay: iNat grid, taxon_id 861036";
-let gridLabel_life_la = "overlay: iNat grid, taxon_id 48460, place_id 962";
-let gridLabel_life_sd = "overlay: iNat grid, taxon_id 48460, place_id 829";
-
-let refreshBBoxLabel = "refresh bounding box";
-let basemapLabel_osm = "basemap: Open Street Map";
-
-function setup() {
-  let map = L.map("map", {
-    center: [0, 0],
-    zoom: 2,
-    maxZoom: 19,
-  });
-  var layerControl = L.control.layers().addTo(map);
-  let { OpenStreetMap } = getMapTiles();
-  addLayerToMap(OpenStreetMap, map, layerControl, true);
-
-  let store: MapStore = {
-    ...mapStore,
-    map: { map: map, layerControl: layerControl },
-  };
-
-  return { map, layerControl, store };
-}
-
-function expectEmpytMap(store: MapStore) {
-  expect(store.inatApiParams).toStrictEqual({});
-  expect(store.selectedTaxa).toStrictEqual([]);
-  expect(store.taxaMapLayers).toStrictEqual({});
-  expect(store.selectedPlaces).toBeUndefined();
-  expect(store.placesMapLayers).toBeUndefined();
-  expect(store.refreshMap.refreshMapButtonEl).toBeNull();
-  expect(store.refreshMap.showRefreshMapButton).toBeFalsy();
-  expect(store.refreshMap.layer).toBeNull();
-  expect(store.color).toEqual("");
-}
-
-function expectNoTaxa(store: MapStore) {
-  expect(store.selectedTaxa).toStrictEqual([]);
-  expect(store.taxaMapLayers).toStrictEqual({});
-}
-
-function expectNoPlaces(store: MapStore) {
-  expect(store.selectedPlaces).toBeUndefined();
-  expect(store.placesMapLayers).toBeUndefined();
-}
-
-function expectNoRefresh(store: MapStore) {
-  expect(store.refreshMap.refreshMapButtonEl).toBeNull();
-  expect(store.refreshMap.showRefreshMapButton).toBeFalsy();
-  expect(store.refreshMap.layer).toBeNull();
-}
-
-function expectLosAngelesPlace(store: MapStore) {
-  expect(store.selectedPlaces).toEqual(losangeles);
-  expect(store.placesMapLayers).not.toBeUndefined();
-}
-
-function expectSanDiegoPlace(store: MapStore) {
-  expect(store.selectedPlaces).toEqual(sandiego);
-  expect(store.placesMapLayers).not.toBeUndefined();
-}
-
-function expectRefreshPlace(store: MapStore) {
-  expect(store.refreshMap.layer).toBeDefined();
-  expect(store.refreshMap.showRefreshMapButton).toBeFalsy();
-  expect(store.selectedPlaces).toEqual(refreshPlace);
-  expect(store.placesMapLayers).not.toBeUndefined();
-}
-
-function expectLifeTaxa(store: MapStore, color = colors[0]) {
-  let lifeTemp = life(color);
-  expect(store.selectedTaxa).toStrictEqual([lifeTemp]);
-  expect(Object.keys(store.taxaMapLayers)).toEqual([lifeTemp.id.toString()]);
-  expect(store.taxaMapLayers[lifeTemp.id].length).toBe(4);
-  expect(store.color).toBe(color);
-}
-
-function expectOakTaxa(store: MapStore, color = colors[1]) {
-  let oak = redOak(color);
-  expect(store.selectedTaxa).toStrictEqual([oak]);
-  expect(Object.keys(store.taxaMapLayers)).toEqual([oak.id.toString()]);
-  expect(store.taxaMapLayers[oak.id].length).toBe(4);
-  expect(store.color).toBe(color);
-}
+import {
+  createMockServer,
+  setupMapAndStore,
+  expectEmpytMap,
+  expectLifeTaxa,
+  expectLosAngelesPlace,
+  expectNoPlaces,
+  expectNoRefresh,
+  expectNoTaxa,
+  expectOakTaxa,
+  expectRefreshPlace,
+  expectSanDiegoPlace,
+  losangeles,
+  sandiego,
+  life,
+  lifeBasic,
+  redOak,
+  redOakBasic,
+  colors,
+  refreshPlace,
+  placeLabel_la,
+  placeLabel_sd,
+  gridLabel_life,
+  gridLabel_oaks,
+  gridLabel_life_sd,
+  gridLabel_life_la,
+  refreshBBoxLabel,
+  basemapLabel_osm,
+} from "../test_helpers.ts";
 
 beforeEach(() => {
   const { JSDOM } = jsdom;
@@ -204,7 +77,7 @@ afterAll(() => {
 
 describe("taxonSelectedHandler", () => {
   test(`add life`, async () => {
-    let { store } = setup();
+    let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
@@ -231,7 +104,7 @@ describe("taxonSelectedHandler", () => {
   });
 
   test(`add life; add red oak`, async () => {
-    let { store } = setup();
+    let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
@@ -281,7 +154,7 @@ describe("taxonSelectedHandler", () => {
 
 describe("placeSelectedHandler", () => {
   test(` add los angeles`, async () => {
-    let { store } = setup();
+    let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
@@ -310,7 +183,7 @@ describe("placeSelectedHandler", () => {
   });
 
   test(`add los angeles; add san diego`, async () => {
-    let { store } = setup();
+    let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
@@ -356,7 +229,7 @@ describe("placeSelectedHandler", () => {
 
 describe("refreshiNatMapLayers", () => {
   test(`refresh map;`, async () => {
-    let { store } = setup();
+    let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
@@ -378,7 +251,7 @@ describe("refreshiNatMapLayers", () => {
   });
 
   test(`refresh map; refresh map;`, async () => {
-    let { store } = setup();
+    let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
@@ -412,7 +285,7 @@ describe("refreshiNatMapLayers", () => {
 
 describe("combos", () => {
   test(`add taxon; refresh map;`, async () => {
-    let { store } = setup();
+    let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
@@ -453,7 +326,7 @@ describe("combos", () => {
   });
 
   test(`add place; refresh map;`, async () => {
-    let { store } = setup();
+    let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
@@ -498,7 +371,7 @@ describe("combos", () => {
   });
 
   test(`add taxon; refresh map;`, async () => {
-    let { store } = setup();
+    let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
@@ -540,7 +413,7 @@ describe("combos", () => {
   });
 
   test(`add life; add los angeles`, async () => {
-    let { store } = setup();
+    let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
@@ -580,7 +453,7 @@ describe("combos", () => {
   });
 
   test(`add place; refresh map; add place`, async () => {
-    let { store } = setup();
+    let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
@@ -646,7 +519,7 @@ describe("combos", () => {
 
 describe("removePlace", () => {
   test("add place; remove place", async () => {
-    let { store } = setup();
+    let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
@@ -685,7 +558,7 @@ describe("removePlace", () => {
   });
 
   test("add refresh bounding box; remove place", async () => {
-    let { store } = setup();
+    let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
@@ -714,7 +587,7 @@ describe("removePlace", () => {
   });
 
   test("add taxon; add place; remove place", async () => {
-    let { store } = setup();
+    let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
@@ -762,7 +635,7 @@ describe("removePlace", () => {
   });
 
   test("add taxon; add refresh; remove place", async () => {
-    let { store } = setup();
+    let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
@@ -815,7 +688,7 @@ describe("removePlace", () => {
 
 describe("removeTaxon", () => {
   test("add taxon; remove taxon", async () => {
-    let { store } = setup();
+    let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
@@ -852,7 +725,7 @@ describe("removeTaxon", () => {
   });
 
   test("add taxon; add taxon; remove taxon", async () => {
-    let { store } = setup();
+    let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
@@ -915,7 +788,7 @@ describe("removeTaxon", () => {
   });
 
   test("add place; remove taxon", async () => {
-    let { store } = setup();
+    let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
@@ -955,7 +828,7 @@ describe("removeTaxon", () => {
   });
 
   test("add taxon; add place; remove taxon", async () => {
-    let { store } = setup();
+    let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
@@ -1011,7 +884,7 @@ describe("removeTaxon", () => {
   });
 
   test("add taxon; add refresh; remove taxon", async () => {
-    let { store } = setup();
+    let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 

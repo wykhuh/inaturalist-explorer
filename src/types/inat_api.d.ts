@@ -270,3 +270,224 @@ type IconicTaxa =
   | "Plantae"
   | "Protozoa"
   | "unknown";
+
+// ==================
+// taxa api
+// ==================
+
+export interface iNatTaxaAPI {
+  total_results: number;
+  page: number;
+  per_page: number;
+  results: TaxaResult[];
+}
+
+export interface TaxaResult {
+  id: number;
+  rank: string;
+  rank_level: number;
+  iconic_taxon_id: number;
+  ancestor_ids: number[];
+  is_active: boolean;
+  name: string;
+  parent_id: number;
+  ancestry: string;
+  extinct: boolean;
+  default_photo: DefaultPhoto;
+  taxon_changes_count: number;
+  taxon_schemes_count: number;
+  observations_count: number;
+  photos_locked: boolean;
+  flag_counts: FlagCounts;
+  current_synonymous_taxon_ids: any;
+  taxon_photos: TaxonPhoto[];
+  atlas_id: any;
+  complete_species_count: any;
+  wikipedia_url: string;
+  iconic_taxon_name: string;
+  preferred_common_name: string;
+  ancestors: Ancestor[];
+  children: Children[];
+  conservation_statuses: any[];
+  listed_taxa_count: number;
+  listed_taxa: ListedTaxa[];
+  wikipedia_summary: string;
+  vision: boolean;
+}
+
+export interface DefaultPhoto {
+  id: number;
+  license_code: string;
+  attribution: string;
+  url: string;
+  original_dimensions: OriginalDimensions;
+  flags: any[];
+  attribution_name: string;
+  square_url: string;
+  medium_url: string;
+}
+
+export interface OriginalDimensions {
+  height: number;
+  width: number;
+}
+
+export interface FlagCounts {
+  resolved: number;
+  unresolved: number;
+}
+
+export interface TaxonPhoto {
+  taxon_id: number;
+  photo: Photo;
+  taxon: Taxon;
+}
+
+export interface Photo {
+  id: number;
+  license_code?: string;
+  attribution: string;
+  url: string;
+  original_dimensions: OriginalDimensions;
+  flags: any[];
+  native_page_url?: string;
+  native_photo_id?: string;
+  type: string;
+  attribution_name: string;
+  square_url: string;
+  small_url: string;
+  medium_url: string;
+  large_url: string;
+  original_url: string;
+}
+
+export interface Taxon {
+  id: number;
+  rank: string;
+  rank_level: number;
+  iconic_taxon_id: number;
+  ancestor_ids: number[];
+  is_active: boolean;
+  name: string;
+  parent_id: number;
+  ancestry: string;
+  extinct: boolean;
+  default_photo: DefaultPhoto;
+  taxon_changes_count: number;
+  taxon_schemes_count: number;
+  observations_count: number;
+  photos_locked: boolean;
+  flag_counts: FlagCounts;
+  current_synonymous_taxon_ids: any;
+  atlas_id: any;
+  complete_species_count: any;
+  wikipedia_url: string;
+  iconic_taxon_name: string;
+  preferred_common_name: string;
+}
+
+export interface Ancestor {
+  id: number;
+  rank: string;
+  rank_level: number;
+  iconic_taxon_id: number;
+  ancestor_ids: number[];
+  is_active: boolean;
+  name: string;
+  parent_id: number;
+  ancestry: string;
+  extinct: boolean;
+  default_photo: DefaultPhoto;
+  taxon_changes_count: number;
+  taxon_schemes_count: number;
+  observations_count: number;
+  flag_counts: FlagCounts;
+  current_synonymous_taxon_ids: any;
+  atlas_id: any;
+  complete_species_count: any;
+  wikipedia_url: string;
+  complete_rank?: string;
+  iconic_taxon_name: string;
+  preferred_common_name: string;
+}
+
+export interface Children {
+  id: number;
+  rank: string;
+  rank_level: number;
+  iconic_taxon_id: number;
+  ancestor_ids: number[];
+  is_active: boolean;
+  name: string;
+  parent_id: number;
+  ancestry: string;
+  extinct: boolean;
+  default_photo: DefaultPhoto;
+  taxon_changes_count: number;
+  taxon_schemes_count: number;
+  observations_count: number;
+  flag_counts: FlagCounts;
+  current_synonymous_taxon_ids: any;
+  atlas_id: any;
+  complete_species_count: any;
+  wikipedia_url: string;
+  iconic_taxon_name: string;
+  preferred_common_name?: string;
+}
+
+export interface ListedTaxa {
+  id: number;
+  taxon_id: number;
+  establishment_means: string;
+  place: Place;
+  list: List;
+}
+
+export interface Place {
+  id: number;
+  name: string;
+  display_name: string;
+  admin_level?: number;
+  ancestor_place_ids: number[];
+}
+
+export interface List {
+  id: number;
+  title: string;
+}
+
+// ==================
+// places api
+// ==================
+
+export interface iNatPlacesAPI {
+  total_results: number;
+  page: number;
+  per_page: number;
+  results: PlacesResult[];
+}
+
+export interface PlacesResult {
+  id: number;
+  uuid: string;
+  slug: string;
+  name: string;
+  display_name: string;
+  place_type: number;
+  admin_level: number;
+  bbox_area: number;
+  ancestor_place_ids: number[];
+  geometry_geojson: GeometryGeojson;
+  bounding_box_geojson: BoundingBoxGeojson;
+  location: string;
+}
+
+export interface GeometryGeojson {
+  type: string;
+  coordinates: number[][][][];
+}
+
+export interface BoundingBoxGeojson {
+  type: string;
+  coordinates: number[][][];
+}

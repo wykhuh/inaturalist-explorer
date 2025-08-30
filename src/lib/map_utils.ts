@@ -7,6 +7,7 @@ import type {
   LeafletBounds,
   LngLat,
   Coordinates,
+  iNatApiParams,
 } from "../types/app.d.ts";
 import { refreshiNatMapLayers } from "./data_utils.ts";
 
@@ -333,18 +334,63 @@ export function getAndDrawMapBoundingBox(
   },
 ) {
   let bounds = map.getBounds() as unknown as LeafletBounds;
-  let lngLatPolygon = convertBoundsObjectToPolygon(bounds);
-  let latLngPolygon = lngLatPolygon.map(flipLatLng);
-  let layer = L.polygon(latLngPolygon, options);
+  let lngLatCoors = convertBoundsObjectToLngLat(bounds);
+  let layer = drawMapBoundingBox(map, lngLatCoors, options);
+  return layer;
+}
+
+export function drawMapBoundingBox(
+  map: Map,
+  lngLatCoors: LngLat[],
+  options = {
+    fillColor: "none",
+    weight: 1,
+    layer_description: "refresh bounding box",
+  },
+) {
+  let latLngCoors = lngLatCoors.map(flipLatLng);
+  let layer = L.polygon(latLngCoors, options);
   layer.addTo(map);
   return layer;
 }
 
-export function convertBoundsObjectToPolygon(bounds: LeafletBounds): LngLat[] {
+export function zoomBBox(map: Map, lngLatCoors: LngLat[]) {
+  let latLngCoors = lngLatCoors.map(flipLatLng);
+  let bounds = L.latLngBounds(latLngCoors);
+  map.fitBounds(bounds);
+}
+
+export function convertBoundsObjectToLngLat(bounds: LeafletBounds): LngLat[] {
+  return formatBoundingBox(
+    bounds._northEast.lng,
+    bounds._northEast.lat,
+    bounds._southWest.lng,
+    bounds._southWest.lat,
+  );
+}
+
+export function convertParamsBBoxToLngLat(
+  params: iNatApiParams,
+): LngLat[] | undefined {
+  const { nelng, nelat, swlng, swlat } = params;
+  if (nelng === undefined) return;
+  if (nelat === undefined) return;
+  if (swlng === undefined) return;
+  if (swlat === undefined) return;
+
+  return formatBoundingBox(nelng, nelat, swlng, swlat);
+}
+
+function formatBoundingBox(
+  nelng: number,
+  nelat: number,
+  swlng: number,
+  swlat: number,
+): LngLat[] {
   return [
-    [bounds._northEast.lng, bounds._northEast.lat],
-    [bounds._northEast.lng, bounds._southWest.lat],
-    [bounds._southWest.lng, bounds._southWest.lat],
-    [bounds._southWest.lng, bounds._northEast.lat],
+    [nelng, nelat],
+    [nelng, swlat],
+    [swlng, swlat],
+    [swlng, nelat],
   ];
 }

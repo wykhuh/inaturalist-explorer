@@ -1,11 +1,8 @@
-import type { TileLayer } from "leaflet";
-
 import type {
   MapStore,
   AppUrlParams,
   AppUrlParamsKeys,
   NormalizediNatTaxon,
-  iNatApiParams,
 } from "../types/app";
 
 export function displayJson(json: any, el: HTMLElement | null) {
@@ -94,24 +91,24 @@ export function updateUrl(url_location: Location, appStore: MapStore) {
 
 export function decodeAppUrl(searchParams: string) {
   const urlParams = Object.fromEntries(new URLSearchParams(searchParams));
-  let apiParams = {} as MapStore;
+  let apiParams = { inatApiParams: {} } as MapStore;
 
-  let taxa: iNatApiParams[] = [];
+  let taxa: NormalizediNatTaxon[] = [];
   if ("taxa_id" in urlParams) {
     let ids = urlParams.taxa_id.split(",");
     let colors = urlParams.colors.split(",");
     ids.forEach((id, i) => {
       taxa.push({
-        taxon_id: Number(id),
+        id: Number(id),
         color: colors[i],
-        verifiable: urlParams.verifiable === "true",
-        spam: urlParams.spam === "true",
       });
       if (i === ids.length - 1) {
         apiParams.color = colors[i];
       }
     });
   }
+  apiParams.selectedTaxa = taxa;
+
   if ("places_id" in urlParams) {
     apiParams.selectedPlaces = { id: Number(urlParams.places_id) };
     if (urlParams.places_id === "0") {
@@ -127,6 +124,12 @@ export function decodeAppUrl(searchParams: string) {
       swlng: Number(urlParams.swlng),
     };
   }
-  apiParams.selectedTaxa = taxa as unknown as NormalizediNatTaxon[];
+  if ("verifiable" in urlParams) {
+    apiParams.inatApiParams.verifiable = urlParams.verifiable === "true";
+  }
+  if ("spam" in urlParams) {
+    apiParams.inatApiParams.spam = urlParams.spam === "true";
+  }
+
   return apiParams;
 }

@@ -2,6 +2,8 @@ import type { NormalizediNatTaxon, TileSettings } from "../types/app.d.ts";
 import type {
   ObservationsSpeciesCountAPI,
   ObservationsAPI,
+  iNatTaxaAPI,
+  iNatPlacesAPI,
 } from "../types/inat_api.d.ts";
 import { colorsSixTolBright } from "./map_colors_utils.ts";
 
@@ -13,6 +15,8 @@ const observations_api = "https://api.inaturalist.org/v2/observations";
 const observations_count_api =
   "https://api.inaturalist.org/v2/observations/species_counts";
 export const api_base = "https://api.inaturalist.org/v1/";
+const taxa_api = "https://api.inaturalist.org/v1/taxa/";
+const places_api = "https://api.inaturalist.org/v1/places/";
 
 export const lifeTaxon: NormalizediNatTaxon = {
   name: "Life",
@@ -140,6 +144,26 @@ export async function searchPlaces(placename: string) {
     let response = await fetch(`${search_places_api}${paramsString}`);
     let data = (await response.json()) as ObservationsSpeciesCountAPI;
     return data.results.reduce((prev, current) => prev + current.count, 0);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getTaxonById(id: number) {
+  try {
+    let resp = await fetch(taxa_api + id);
+    let data = (await resp.json()) as iNatTaxaAPI;
+    return data.results[0];
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getPlaceById(id: number) {
+  try {
+    let resp = await fetch(places_api + id);
+    let data = (await resp.json()) as iNatPlacesAPI;
+    return data.results[0];
   } catch (error) {
     console.error(error);
   }

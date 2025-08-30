@@ -11,7 +11,6 @@ import {
   addLayerToMap,
   createRefreshMapButton,
 } from "./lib/map_utils.ts";
-import {} from "./lib/autocomplete_utils.ts";
 import type {
   NormalizediNatTaxon,
   AutoCompleteEvent,
@@ -28,6 +27,8 @@ import {
 } from "./lib/autocomplete_utils.ts";
 import { autocomplete_taxa_api, search_places_api } from "./lib/inat_api.ts";
 import type { iNatAutocompleteTaxaAPI, iNatSearchAPI } from "./types/inat_api";
+import { decodeAppUrl } from "./lib/utils.ts";
+import { initApp } from "./lib/data_utils.ts";
 
 window.app = { store: mapStore };
 window.app.store.displayJsonEl = document.getElementById("display-json");
@@ -35,6 +36,52 @@ window.app.store.taxaListEl = document.getElementById("taxa-list-container");
 window.app.store.placesListEl = document.getElementById(
   "places-list-container",
 );
+
+// =====================
+// map
+// =====================
+
+let map = L.map("map", {
+  center: [0, 0],
+  zoom: 2,
+  maxZoom: 19,
+});
+var layerControl = L.control.layers().addTo(map);
+// var layerControl = L.control.layers({}, {}, { collapsed: false }).addTo(map);
+
+let { OpenStreetMap, OpenTopo } = getMapTiles();
+addLayerToMap(OpenStreetMap, map, layerControl, true);
+addLayerToMap(OpenTopo, map, layerControl);
+
+window.app.store.map.map = map;
+window.app.store.map.layerControl = layerControl;
+
+window.app.store.refreshMap.showRefreshMapButton = false;
+let button = createRefreshMapButton(window.app.store);
+window.app.store.refreshMap.refreshMapButtonEl = button;
+
+map.on("zoomend", function () {
+  let store = window.app.store;
+
+  if (
+    store.refreshMap.refreshMapButtonEl &&
+    store.refreshMap.showRefreshMapButton === false
+  ) {
+    store.refreshMap.refreshMapButtonEl.hidden = false;
+    // refreshMap.showRefreshMapButton = true;
+    store.refreshMap = {
+      ...store.refreshMap,
+      showRefreshMapButton: true,
+    };
+  }
+});
+
+// =====================
+// initialize app based on url params
+// =====================
+
+let urlData = decodeAppUrl(window.location.search);
+initApp(window.app.store, urlData);
 
 // =====================
 // taxa search
@@ -124,45 +171,6 @@ if (placesEl) {
     await placeSelectedHandler(selection, event.detail.query, window.app.store);
   });
 }
-
-// =====================
-// map
-// =====================
-
-let map = L.map("map", {
-  center: [0, 0],
-  zoom: 2,
-  maxZoom: 19,
-});
-var layerControl = L.control.layers().addTo(map);
-// var layerControl = L.control.layers({}, {}, { collapsed: false }).addTo(map);
-
-let { OpenStreetMap, OpenTopo } = getMapTiles();
-addLayerToMap(OpenStreetMap, map, layerControl, true);
-addLayerToMap(OpenTopo, map, layerControl);
-
-window.app.store.map.map = map;
-window.app.store.map.layerControl = layerControl;
-
-window.app.store.refreshMap.showRefreshMapButton = false;
-let button = createRefreshMapButton(window.app.store);
-window.app.store.refreshMap.refreshMapButtonEl = button;
-
-map.on("zoomend", function () {
-  let store = window.app.store;
-
-  if (
-    store.refreshMap.refreshMapButtonEl &&
-    store.refreshMap.showRefreshMapButton === false
-  ) {
-    store.refreshMap.refreshMapButtonEl.hidden = false;
-    // refreshMap.showRefreshMapButton = true;
-    store.refreshMap = {
-      ...store.refreshMap,
-      showRefreshMapButton: true,
-    };
-  }
-});
 
 // =====================
 // misc

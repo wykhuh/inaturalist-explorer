@@ -1,3 +1,5 @@
+import L from "leaflet";
+
 import type {
   NormalizediNatTaxon,
   MapStore,
@@ -6,16 +8,33 @@ import type {
   CustomPolygon,
   CustomLayer,
   CustomGeoJSON,
+  LatLng,
 } from "../types/app";
 import {
   addOverlayToMap,
+  convertParamsBBoxToLngLat,
+  drawMapBoundingBox,
   formatiNatAPIBoundingBoxParams,
   getAndDrawMapBoundingBox,
+  getBoundingBox,
+  zoomBBox,
 } from "./map_utils.ts";
 import { displayJson, updateUrl } from "./utils.ts";
-import { getiNatMapTiles, getiNatObservationsTotal } from "./inat_api.ts";
+import {
+  getiNatMapTiles,
+  getiNatObservationsTotal,
+  getPlaceById,
+  getTaxonById,
+} from "./inat_api.ts";
 import { renderTaxaList, renderPlacesList } from "./autocomplete_utils.ts";
 import type { Map } from "leaflet";
+import type { PlacesResult, TaxaResult } from "../types/inat_api";
+
+let bboxPlace = {
+  id: 0,
+  name: "Custom Boundary",
+  display_name: "Custom Boundary",
+};
 
 // called when user clicks refresh map button
 export async function refreshiNatMapLayers(
@@ -41,14 +60,8 @@ export async function refreshiNatMapLayers(
     layer: refreshLayer as CustomPolygon,
   };
 
-  // create place using the boundaries of the map
-
   // save place to store
-  appStore.selectedPlaces = {
-    id: 0,
-    name: "Custom Boundary",
-    display_name: "Custom Boundary",
-  };
+  appStore.selectedPlaces = bboxPlace;
   appStore.placesMapLayers = refreshLayer as unknown as CustomGeoJSON;
 
   renderPlacesList(appStore);
@@ -121,8 +134,6 @@ export async function fetchiNatMapData(
   taxonObj.observations_count = count;
 
   updateSelectedTaxaProxy(appStore, taxonObj);
-  renderTaxaList(appStore);
-  renderPlacesList(appStore);
 
   // fetch iNaturalist map layers
   let { iNatGrid, iNatHeatmap, iNatTaxonRange, iNatPoint } = getiNatMapTiles(
@@ -193,7 +204,8 @@ function removeOneTaxonFromStoreAndMap(appStore: MapStore, taxonId: number) {
   );
 }
 
-function removeOneTaxonFromMap(appStore: MapStore, taxonId: number) {
+export function removeOneTaxonFromMap(appStore: MapStore, taxonId: number) {
+  if (!appStore.taxaMapLayers) return;
   let mapLayers = appStore.taxaMapLayers[taxonId];
   let layerControl = appStore.map.layerControl;
   if (!layerControl) return;
@@ -238,14 +250,16 @@ function removePlacesFromStoreAndMap(appStore: MapStore) {
   // remove from map
   placesMapLayers.remove();
 
+  appStore.refreshMap.layer = null;
+
   // remove from store
+  appStore.placesMapLayers = undefined;
   delete appStore.inatApiParams.place_id;
   delete appStore.inatApiParams.nelat;
   delete appStore.inatApiParams.nelng;
   delete appStore.inatApiParams.swlat;
   delete appStore.inatApiParams.swlng;
   appStore.selectedPlaces = undefined;
-  appStore.placesMapLayers = undefined;
 }
 
 function removeRefreshBBox(appStore: MapStore, map: Map) {
@@ -265,7 +279,7 @@ export function formatTaxonName(
   let subtitle;
   let subtitleAriaLabel;
 
-  if (title) {
+  if (title && item.name) {
     subtitle = item.name;
     subtitleAriaLabel = "taxon scientific name";
     if (
@@ -313,6 +327,141 @@ export function leafletVisibleLayers(
   return layer_descriptions;
 }
 
+export async function initApp(appStore: MapStore, urlData: MapStore) {
+  let map = appStore.map.map;
+  if (!map) return;
+
+  // get taxa data, optional place data, optional bounding box
+  if (urlData.selectedTaxa && urlData.selectedTaxa.length > 0) {
+    for await (const urlDataTaxon of urlData.selectedTaxa) {
+      let taxonData = await getTaxonById(urlDataTaxon.id);
+      if (!taxonData) {
+        continue;
+      }
+      await processTaxonData(taxonData, appStore, urlData);
+    }
+    renderTaxaList(appStore);
+    renderPlacesList(appStore);
+    // get place data only
+  } else if (urlData.selectedPlaces && urlData.selectedPlaces.id !== 0) {
+    appStore.inatApiParams.place_id = urlData.selectedPlaces.id;
+    let placeData = await getPlaceById(urlData.selectedPlaces.id);
+    if (placeData) {
+      processPlaceData(placeData, appStore);
+      renderPlacesList(appStore);
+    }
+    // get bounding box only
+  } else {
+    processBBoxData(appStore, urlData);
+    renderPlacesList(appStore);
+  }
+}
+
+export async function processTaxonData(
+  taxonData: TaxaResult,
+  appStore: MapStore,
+  urlData: MapStore,
+) {
+  let map = appStore.map.map;
+  if (map == null) return;
+  let urlDataTaxon = urlData.selectedTaxa.find((t) => t.id === taxonData.id);
+  if (!urlDataTaxon) return;
+
+  // create taxon object
+  let taxon: NormalizediNatTaxon = {
+    name: taxonData.name,
+    default_photo: taxonData.default_photo?.square_url,
+    preferred_common_name: taxonData.preferred_common_name,
+    matched_term: taxonData.name,
+    rank: taxonData.rank,
+    id: taxonData.id,
+    color: urlDataTaxon.color,
+  };
+
+  let { title, subtitle } = formatTaxonName(taxon, taxon.name as string, false);
+  taxon.display_name = title;
+  taxon.title = title;
+  taxon.subtitle = subtitle;
+
+  // update appStore
+  appStore.inatApiParams = {
+    ...appStore.inatApiParams,
+    taxon_id: taxon.id,
+    color: urlDataTaxon.color,
+    verifiable: urlData.inatApiParams.verifiable,
+    spam: urlData.inatApiParams.spam,
+  };
+  if (urlDataTaxon.color) {
+    appStore.color = urlDataTaxon.color;
+  }
+
+  // handle selected places
+  if (urlData.selectedPlaces && urlData.selectedPlaces.id !== 0) {
+    appStore.inatApiParams.place_id = urlData.selectedPlaces.id;
+    let placeData = await getPlaceById(urlData.selectedPlaces.id);
+    if (placeData) {
+      processPlaceData(placeData, appStore);
+    }
+    // handle bounding box
+  } else if (urlData.inatApiParams.nelat !== undefined) {
+    processBBoxData(appStore, urlData);
+  }
+  await fetchiNatMapData(taxon, appStore);
+}
+
+export function processPlaceData(placeData: PlacesResult, appStore: MapStore) {
+  let map = appStore.map.map;
+  if (!map) return;
+
+  // zoom to map using bounding box
+  if (placeData.bounding_box_geojson) {
+    let coord = placeData.bounding_box_geojson.coordinates[0] as LatLng[];
+    let bounds = getBoundingBox(coord);
+
+    map.fitBounds(bounds);
+  }
+
+  // draw boundaries of selected place
+  let options: any = {
+    color: "red",
+    fillColor: "none",
+    layer_description: `place layer: ${placeData.name}, ${placeData.id}`,
+  };
+  let layer = L.geoJSON(placeData.geometry_geojson as any, options);
+  layer.addTo(map);
+
+  // save place to store
+  appStore.selectedPlaces = {
+    id: placeData.id,
+    name: placeData.name,
+    display_name: placeData.display_name,
+  };
+  appStore.placesMapLayers = layer as CustomGeoJSON;
+}
+
+export function processBBoxData(appStore: MapStore, urlData: MapStore) {
+  let map = appStore.map.map;
+  if (!map) return;
+  let lngLatCoors = convertParamsBBoxToLngLat(urlData.inatApiParams);
+  if (!lngLatCoors) return;
+
+  let layer = drawMapBoundingBox(map, lngLatCoors);
+  appStore.refreshMap = {
+    ...appStore.refreshMap,
+    layer: layer as CustomPolygon,
+  };
+
+  zoomBBox(map, lngLatCoors);
+
+  appStore.inatApiParams.nelat = urlData.inatApiParams.nelat;
+  appStore.inatApiParams.nelng = urlData.inatApiParams.nelng;
+  appStore.inatApiParams.swlat = urlData.inatApiParams.swlat;
+  appStore.inatApiParams.swlng = urlData.inatApiParams.swlng;
+
+  appStore.selectedPlaces = bboxPlace;
+  appStore.placesMapLayers = layer as unknown as CustomGeoJSON;
+}
+
 export function displayUserData(appStore: MapStore, _source: string) {
   let temp: any = {};
   // console.log(">> displayUserData", _source);
@@ -335,7 +484,7 @@ export function displayUserData(appStore: MapStore, _source: string) {
     taxaMapLayers: temp,
     selectedPlaces: appStore.selectedPlaces,
     placesMapLayers: appStore.placesMapLayers?.options.layer_description,
-    mapLayerDescriptions: leafletVisibleLayers(appStore, true),
+    mapLayerDescriptions: leafletVisibleLayers(appStore),
   };
   displayJson(data, appStore.displayJsonEl);
 }

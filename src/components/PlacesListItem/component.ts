@@ -23,7 +23,7 @@ class MyComponent extends HTMLElement {
     let place = JSON.parse(this.dataset.place) as NormalizediNatPlace;
 
     let titleEl = this.querySelector(".title");
-    if (titleEl) {
+    if (titleEl && place.name) {
       titleEl.textContent = place.name;
     }
 

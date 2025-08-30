@@ -29,11 +29,11 @@ export type TileSettings = {
 };
 
 export type NormalizediNatTaxon = {
-  name: string;
+  name?: string;
   default_photo?: string;
   preferred_common_name?: string;
-  matched_term: string;
-  rank: string;
+  matched_term?: string;
+  rank?: string;
   id: number;
   color?: string;
   observations_count?: number;

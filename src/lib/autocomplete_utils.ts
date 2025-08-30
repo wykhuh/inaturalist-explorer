@@ -10,13 +10,16 @@ import type {
   iNatAutocompleteTaxaAPI,
   iNatSearchAPI,
 } from "../types/inat_api.d.ts";
-import { formatTaxonName, fetchiNatMapData } from "./data_utils.ts";
+import {
+  formatTaxonName,
+  fetchiNatMapData,
+  removeOneTaxonFromMap,
+} from "./data_utils.ts";
 import { colorsSixTolBright, getColor } from "./map_colors_utils.ts";
 import { getBoundingBox } from "./map_utils.ts";
 import { lifeTaxon } from "./inat_api.ts";
 import { updateUrl } from "./utils.ts";
-
-// =====================
+//
 // taxa search
 // =====================
 const speciesRanks = ["species", "hybrid", "subspecies", "variety", "form"];
@@ -42,7 +45,7 @@ export function renderAutocompleteTaxon(
     <div class="taxon-name">
       <span class="title" aria-label="${titleAriaLabel}">${title}</span>
       <span>`;
-  if (!speciesRanks.includes(item.rank) || !hasCommonName) {
+  if ((item.rank && !speciesRanks.includes(item.rank)) || !hasCommonName) {
     html += `
         <span class="rank" aria-label="taxon rank">${item.rank}</span>`;
   }
@@ -113,7 +116,8 @@ export async function taxonSelectedHandler(
   };
 
   await fetchiNatMapData(taxonObj, appStore);
-
+  renderTaxaList(appStore);
+  renderPlacesList(appStore);
   updateUrl(window.location, appStore);
 }
 
@@ -218,16 +222,7 @@ export async function placeSelectedHandler(
   // get iNat map tiles for selected place
   for await (const taxon of taxa) {
     // remove existing taxon layers from map
-    if (taxon.id in appStore.taxaMapLayers) {
-      appStore.taxaMapLayers[taxon.id].forEach((layer) => {
-        layer.removeFrom(map);
-        let layerControl = appStore.map.layerControl;
-        if (layerControl) {
-          layerControl.removeLayer(layer);
-        }
-      });
-      delete appStore.taxaMapLayers[taxon.id];
-    }
+    removeOneTaxonFromMap(appStore, taxon.id);
     appStore.inatApiParams = {
       ...appStore.inatApiParams,
       taxon_id: taxon.id,
@@ -238,6 +233,8 @@ export async function placeSelectedHandler(
     };
 
     await fetchiNatMapData(taxon, appStore);
+    renderTaxaList(appStore);
+    renderPlacesList(appStore);
   }
 
   updateUrl(window.location, appStore);
@@ -245,7 +242,6 @@ export async function placeSelectedHandler(
 
 export function renderPlacesList(appStore: MapStore) {
   if (!appStore.placesListEl) return;
-
   appStore.placesListEl.innerHTML = "";
   if (!appStore.selectedPlaces) return;
 

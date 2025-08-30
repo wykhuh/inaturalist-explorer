@@ -3,7 +3,7 @@
 import { expect, test, describe } from "vitest";
 import {
   getBoundingBox,
-  convertBoundsObjectToPolygon,
+  convertBoundsObjectToLngLat,
   flipLatLng,
 } from "../lib/map_utils";
 import type { LngLat } from "../types/app";
@@ -36,7 +36,7 @@ describe("convertLeafletBoundsToPolygon", () => {
       [-118.2610169697, 34.1980014782],
     ];
 
-    let result = convertBoundsObjectToPolygon(bounds);
+    let result = convertBoundsObjectToLngLat(bounds);
 
     expect(result).toStrictEqual(expected);
   });

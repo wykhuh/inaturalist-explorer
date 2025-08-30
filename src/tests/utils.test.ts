@@ -152,18 +152,18 @@ describe("decodeAppUrl", () => {
       color: "#eeeeee",
       selectedTaxa: [
         {
-          taxon_id: 123,
+          id: 123,
           color: "#ffffff",
-          verifiable: true,
-          spam: false,
         },
         {
-          taxon_id: 456,
+          id: 456,
           color: "#eeeeee",
-          verifiable: true,
-          spam: false,
         },
       ],
+      inatApiParams: {
+        verifiable: true,
+        spam: false,
+      },
     };
 
     let result = decodeAppUrl(searchParams);
@@ -179,14 +179,16 @@ describe("decodeAppUrl", () => {
       color: "#ffffff",
       selectedTaxa: [
         {
-          taxon_id: 123,
+          id: 123,
           color: "#ffffff",
-          verifiable: true,
-          spam: false,
         },
       ],
       selectedPlaces: {
         id: 987,
+      },
+      inatApiParams: {
+        verifiable: true,
+        spam: false,
       },
     };
 
