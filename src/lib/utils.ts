@@ -60,6 +60,9 @@ export function formatAppUrl(appStore: MapStore) {
   let taxaIds = appStore.selectedTaxa.map((t) => t.id).join(",");
   let placesIds = appStore.selectedPlaces.map((t) => t.id).join(",");
   let colors = appStore.selectedTaxa.map((t) => t.color).join(",");
+  if (taxaIds.length === 0 && placesIds.length === 0) {
+    return "";
+  }
 
   let params: AppUrlParams = {};
   if (taxaIds.length > 0) {

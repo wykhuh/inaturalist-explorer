@@ -10,6 +10,7 @@ import {
   decodeAppUrl,
 } from "../lib/utils.ts";
 import { mapStore } from "../lib/store.ts";
+import { losangeles, sandiego } from "./test_helpers.ts";
 
 describe("hexToRgb", () => {
   test("converts 6 character hex to rgb", () => {
@@ -89,7 +90,7 @@ describe("formatAppUrl", () => {
     expect(result).toBe(`taxon_ids=48460&colors=%234477aa&spam=false`);
   });
 
-  test("format parameters for multiple taxon", () => {
+  test("format parameters for multiple taxa", () => {
     let appStore = {
       ...mapStore,
       inatApiParams: {
@@ -105,6 +106,62 @@ describe("formatAppUrl", () => {
     expect(result).toBe(
       "taxon_ids=48460,861036&colors=%234477aa,%2366ccee&spam=false",
     );
+  });
+
+  test("format parameters for one place", () => {
+    let appStore = {
+      ...mapStore,
+      inatApiParams: {
+        taxon_id: life.id,
+        color: life.color,
+        spam: false,
+        place_id: losangeles.id.toString(),
+      },
+      selectedTaxa: [life],
+      selectedPlaces: [losangeles],
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe(
+      `taxon_ids=48460&place_id=962&colors=%234477aa&spam=false`,
+    );
+  });
+
+  test("format parameters for multiple places", () => {
+    let appStore = {
+      ...mapStore,
+      inatApiParams: {
+        taxon_id: life.id,
+        color: life.color,
+        spam: false,
+        place_id: `${losangeles.id},${sandiego.id}`,
+      },
+      selectedTaxa: [life],
+      selectedPlaces: [losangeles, sandiego],
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe(
+      "taxon_ids=48460&place_id=962,829&colors=%234477aa&spam=false",
+    );
+  });
+
+  test("return empty string if no taxa or place", () => {
+    let appStore = {
+      ...mapStore,
+      inatApiParams: {
+        color: life.color,
+        spam: false,
+      },
+      selectedTaxa: [],
+      selectedPlaces: [],
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe("");
   });
 });
 

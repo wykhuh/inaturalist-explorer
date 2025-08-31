@@ -556,7 +556,7 @@ describe("removePlace", () => {
     };
     expect(store.inatApiParams).toStrictEqual(params2);
 
-    expect(window.location.search).toBe(`?spam=false&verifiable=true`);
+    expect(window.location.search).toBe("");
   });
 
   test("add place; add place; remove place", async () => {
@@ -790,7 +790,7 @@ describe("removeTaxon", () => {
     };
     expect(store.inatApiParams).toStrictEqual(params2);
 
-    expect(window.location.search).toBe(`?spam=false&verifiable=true`);
+    expect(window.location.search).toBe("");
   });
 
   test("add taxon; add taxon; remove taxon", async () => {
