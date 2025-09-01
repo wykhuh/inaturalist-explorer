@@ -63,7 +63,8 @@ describe("initApp", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = "?taxon_ids=48460&colors=%234477aa&spam=false";
+    let searchparams =
+      "?taxon_ids=48460&colors=%234477aa&spam=false&verifiable=true";
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);
@@ -79,6 +80,7 @@ describe("initApp", () => {
     let expectedParams = {
       color: colors[0],
       taxon_id: life().id,
+      verifiable: true,
       spam: false,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
@@ -90,7 +92,7 @@ describe("initApp", () => {
     expectEmpytMap(store);
 
     let searchparams =
-      "?taxon_ids=48460&place_id=962&colors=%234477aa&spam=false";
+      "?taxon_ids=48460&place_id=962&colors=%234477aa&spam=false&verifiable=true";
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);
@@ -108,6 +110,7 @@ describe("initApp", () => {
       color: colors[0],
       place_id: losangeles.id.toString(),
       taxon_id: life().id,
+      verifiable: true,
       spam: false,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
@@ -119,7 +122,7 @@ describe("initApp", () => {
     expectEmpytMap(store);
 
     let searchparams =
-      "?taxon_ids=48460&place_id=0&colors=%234477aa&spam=false&nelat=0&nelng=0&swlat=0&swlng=0";
+      "?taxon_ids=48460&place_id=0&colors=%234477aa&spam=false&verifiable=true&nelat=0&nelng=0&swlat=0&swlng=0";
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);
@@ -138,6 +141,7 @@ describe("initApp", () => {
       nelng: 0,
       swlat: 0,
       swlng: 0,
+      verifiable: true,
       spam: false,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
@@ -148,7 +152,7 @@ describe("initApp", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = "?place_id=962&spam=false";
+    let searchparams = "?place_id=962&verifiable=true&spam=false";
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);
@@ -172,7 +176,8 @@ describe("initApp", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = "?place_id=0&spam=false&nelat=0&nelng=0&swlat=0&swlng=0";
+    let searchparams =
+      "?place_id=0&spam=false&verifiable=true&nelat=0&nelng=0&swlat=0&swlng=0";
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);
