@@ -82,7 +82,6 @@ type iNatApiParams = {
   place_id?: string;
   color?: string;
   spam?: boolean;
-  verifiable?: boolean;
 };
 
 export type AppUrlParams = {

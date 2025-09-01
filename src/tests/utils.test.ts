@@ -204,7 +204,7 @@ describe("updateUrl", () => {
 describe("decodeAppUrl", () => {
   test("returns object with taxa data if taxon_ids is present", () => {
     let searchParams =
-      "?taxon_ids=123,456&colors=%23ffffff,%23eeeeee&spam=false&verifiable=true";
+      "?taxon_ids=123,456&colors=%23ffffff,%23eeeeee&spam=false";
     let expected = {
       color: "#eeeeee",
       selectedTaxa: [
@@ -218,7 +218,6 @@ describe("decodeAppUrl", () => {
         },
       ],
       inatApiParams: {
-        verifiable: true,
         spam: false,
       },
     };
@@ -230,7 +229,7 @@ describe("decodeAppUrl", () => {
 
   test("returns object with taxa and place data if place_id is present", () => {
     let searchParams =
-      "?taxon_ids=123&place_id=987&colors=%23ffffff&spam=false&verifiable=true";
+      "?taxon_ids=123&place_id=987&colors=%23ffffff&spam=false";
 
     let expected = {
       color: "#ffffff",
@@ -242,7 +241,6 @@ describe("decodeAppUrl", () => {
       ],
       selectedPlaces: [{ id: 987 }],
       inatApiParams: {
-        verifiable: true,
         spam: false,
       },
     };

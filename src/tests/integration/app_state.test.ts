@@ -93,13 +93,12 @@ describe("taxonSelectedHandler", () => {
     let expectedParams = {
       color: colors[0],
       taxon_id: life().id,
-      verifiable: true,
       spam: false,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
 
     expect(window.location.search).toBe(
-      `?taxon_ids=${life().id}&colors=%234477aa&spam=false&verifiable=true`,
+      `?taxon_ids=${life().id}&colors=%234477aa&spam=false`,
     );
   });
 
@@ -121,7 +120,6 @@ describe("taxonSelectedHandler", () => {
       taxon_id: life().id,
       color: colors[0],
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams1);
 
@@ -146,7 +144,6 @@ describe("taxonSelectedHandler", () => {
       taxon_id: redOakBasic.id,
       color: colors[1],
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams2);
   });
@@ -173,12 +170,11 @@ describe("placeSelectedHandler", () => {
       place_id: losangeles.id.toString(),
       taxon_id: life().id,
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
 
     expect(window.location.search).toBe(
-      `?taxon_ids=${life().id}&place_id=${losangeles.id}&colors=%234477aa&spam=false&verifiable=true`,
+      `?taxon_ids=${life().id}&place_id=${losangeles.id}&colors=%234477aa&spam=false`,
     );
   });
 
@@ -202,7 +198,6 @@ describe("placeSelectedHandler", () => {
       place_id: losangeles.id.toString(),
       taxon_id: life().id,
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams1);
 
@@ -223,7 +218,6 @@ describe("placeSelectedHandler", () => {
       place_id: `${losangeles.id},${sandiego.id}`,
       taxon_id: life().id,
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams2);
   });
@@ -302,7 +296,6 @@ describe("combos", () => {
       color: colors[0],
       taxon_id: redOak(colors[0]).id,
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params1);
 
@@ -323,7 +316,6 @@ describe("combos", () => {
       swlat: 0,
       swlng: 0,
       spam: false,
-      verifiable: true,
     });
   });
 
@@ -347,7 +339,6 @@ describe("combos", () => {
       place_id: losangeles.id.toString(),
       taxon_id: life().id,
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params);
 
@@ -367,7 +358,6 @@ describe("combos", () => {
       nelng: -118.12500000000001,
       swlat: 34.30714385628804,
       swlng: -118.12500000000001,
-      verifiable: true,
       spam: false,
     });
   });
@@ -389,7 +379,6 @@ describe("combos", () => {
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: life().id,
       color: colors[0],
-      verifiable: true,
       spam: false,
     });
 
@@ -409,7 +398,6 @@ describe("combos", () => {
       nelng: 0,
       swlat: 0,
       swlng: 0,
-      verifiable: true,
       spam: false,
     });
   });
@@ -431,7 +419,6 @@ describe("combos", () => {
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: life().id,
       color: colors[0],
-      verifiable: true,
       spam: false,
     });
 
@@ -449,7 +436,6 @@ describe("combos", () => {
       taxon_id: life().id,
       color: colors[0],
       place_id: losangeles.id.toString(),
-      verifiable: true,
       spam: false,
     });
   });
@@ -474,7 +460,6 @@ describe("combos", () => {
       place_id: losangeles.id.toString(),
       taxon_id: life().id,
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params);
 
@@ -494,7 +479,6 @@ describe("combos", () => {
       nelng: -118.12500000000001,
       swlat: 34.30714385628804,
       swlng: -118.12500000000001,
-      verifiable: true,
       spam: false,
     });
 
@@ -513,7 +497,6 @@ describe("combos", () => {
       place_id: sandiego.id.toString(),
       taxon_id: life().id,
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params2);
   });
@@ -539,7 +522,6 @@ describe("removePlace", () => {
       place_id: losangeles.id.toString(),
       taxon_id: life().id,
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params1);
 
@@ -552,7 +534,6 @@ describe("removePlace", () => {
     let params2 = {
       color: colors[0],
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params2);
 
@@ -578,7 +559,6 @@ describe("removePlace", () => {
       place_id: losangeles.id.toString(),
       taxon_id: life().id,
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params1);
 
@@ -597,7 +577,6 @@ describe("removePlace", () => {
       place_id: `${losangeles.id},${sandiego.id}`,
       taxon_id: life().id,
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params2);
 
@@ -617,12 +596,11 @@ describe("removePlace", () => {
       place_id: sandiego.id.toString(),
       taxon_id: life().id,
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params3);
 
     let searchParams =
-      "?taxon_ids=48460&place_id=829&colors=%234477aa&spam=false&verifiable=true";
+      "?taxon_ids=48460&place_id=829&colors=%234477aa&spam=false";
     expect(window.location.search).toBe(searchParams);
   });
 
@@ -672,7 +650,6 @@ describe("removePlace", () => {
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: life().id,
       color: colors[0],
-      verifiable: true,
       spam: false,
     });
 
@@ -690,7 +667,6 @@ describe("removePlace", () => {
       place_id: losangeles.id.toString(),
       taxon_id: life().id,
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params1);
 
@@ -699,7 +675,7 @@ describe("removePlace", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
     expectNoTaxa(store);
     expectNoPlaces(store);
-    let params2 = { color: colors[0], spam: false, verifiable: true };
+    let params2 = { color: colors[0], spam: false };
     expect(store.inatApiParams).toStrictEqual(params2);
   });
 
@@ -720,7 +696,6 @@ describe("removePlace", () => {
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: life().id,
       color: colors[0],
-      verifiable: true,
       spam: false,
     });
 
@@ -741,7 +716,6 @@ describe("removePlace", () => {
       swlat: 0,
       swlng: 0,
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params1);
 
@@ -750,7 +724,7 @@ describe("removePlace", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
     expectNoTaxa(store);
     expectNoPlaces(store);
-    let params2 = { color: colors[0], spam: false, verifiable: true };
+    let params2 = { color: colors[0], spam: false };
     expect(store.inatApiParams).toStrictEqual(params2);
   });
 });
@@ -773,7 +747,6 @@ describe("removeTaxon", () => {
       color: colors[0],
       taxon_id: life().id,
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params1);
 
@@ -786,7 +759,6 @@ describe("removeTaxon", () => {
     let params2 = {
       color: colors[0],
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params2);
 
@@ -810,7 +782,6 @@ describe("removeTaxon", () => {
       color: colors[0],
       taxon_id: life().id,
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params1);
 
@@ -834,7 +805,6 @@ describe("removeTaxon", () => {
       color: colors[1],
       taxon_id: redOak().id,
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params2);
 
@@ -851,7 +821,6 @@ describe("removeTaxon", () => {
     let params3 = {
       color: colors[1],
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params3);
   });
@@ -875,7 +844,6 @@ describe("removeTaxon", () => {
       place_id: losangeles.id.toString(),
       taxon_id: life().id,
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params1);
 
@@ -891,7 +859,6 @@ describe("removeTaxon", () => {
       color: colors[0],
       place_id: losangeles.id.toString(),
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params2);
   });
@@ -913,7 +880,6 @@ describe("removeTaxon", () => {
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: life().id,
       color: colors[0],
-      verifiable: true,
       spam: false,
     });
 
@@ -931,7 +897,6 @@ describe("removeTaxon", () => {
       place_id: losangeles.id.toString(),
       taxon_id: life().id,
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params1);
 
@@ -947,7 +912,6 @@ describe("removeTaxon", () => {
       color: colors[0],
       place_id: losangeles.id.toString(),
       spam: false,
-      verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(params2);
   });
@@ -969,7 +933,6 @@ describe("removeTaxon", () => {
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: life().id,
       color: colors[0],
-      verifiable: true,
       spam: false,
     });
 
@@ -985,7 +948,6 @@ describe("removeTaxon", () => {
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: life().id,
       color: colors[0],
-      verifiable: true,
       spam: false,
       nelat: 0,
       nelng: 0,
@@ -1004,7 +966,6 @@ describe("removeTaxon", () => {
     let params2 = {
       color: colors[0],
       spam: false,
-      verifiable: true,
       nelat: 0,
       nelng: 0,
       swlat: 0,

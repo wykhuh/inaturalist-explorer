@@ -142,9 +142,6 @@ export function decodeAppUrl(searchParams: string) {
       swlng: Number(urlParams.swlng),
     };
   }
-  if ("verifiable" in urlParams) {
-    apiParams.inatApiParams.verifiable = urlParams.verifiable === "true";
-  }
   if ("spam" in urlParams) {
     apiParams.inatApiParams.spam = urlParams.spam === "true";
   }

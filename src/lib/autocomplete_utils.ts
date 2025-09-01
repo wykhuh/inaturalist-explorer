@@ -113,7 +113,6 @@ export async function taxonSelectedHandler(
     taxon_id: taxonObj.id,
     color: color,
     spam: false,
-    verifiable: true,
   };
 
   await fetchiNatMapData(taxonObj, appStore);
@@ -235,7 +234,6 @@ export async function placeSelectedHandler(
       color: taxon.color,
       place_id: idStringAddId(selection.id, appStore.inatApiParams.place_id),
       spam: false,
-      verifiable: true,
     };
 
     await fetchiNatMapData(taxon, appStore);
