@@ -64,7 +64,7 @@ describe("initApp", () => {
     expectEmpytMap(store);
 
     let searchparams =
-      "?taxon_ids=48460&colors=%234477aa&spam=false&verifiable=true";
+      "?taxon_ids=48460&colors=%234477aa&verifiable=true&spam=false";
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);
@@ -167,6 +167,8 @@ describe("initApp", () => {
     expectLosAngelesPlace(store);
     let expectedParams = {
       place_id: losangeles.id.toString(),
+      verifiable: true,
+      spam: false,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
   });
@@ -193,6 +195,8 @@ describe("initApp", () => {
       nelng: 0,
       swlat: 0,
       swlng: 0,
+      verifiable: true,
+      spam: false,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
   });

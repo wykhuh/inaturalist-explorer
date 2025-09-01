@@ -215,7 +215,7 @@ export function setupMapAndStore() {
 }
 
 export function expectEmpytMap(store: MapStore) {
-  expect(store.inatApiParams).toStrictEqual({});
+  expect(store.inatApiParams).toStrictEqual({ verifiable: true, spam: false });
   expect(store.selectedTaxa).toStrictEqual([]);
   expect(store.taxaMapLayers).toStrictEqual({});
   expect(store.selectedPlaces).toStrictEqual([]);

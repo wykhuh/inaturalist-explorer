@@ -99,7 +99,7 @@ describe("taxonSelectedHandler", () => {
     expect(store.inatApiParams).toStrictEqual(expectedParams);
 
     expect(window.location.search).toBe(
-      `?taxon_ids=${life().id}&colors=%234477aa&spam=false&verifiable=true`,
+      `?taxon_ids=${life().id}&colors=%234477aa&verifiable=true&spam=false`,
     );
   });
 
@@ -178,7 +178,7 @@ describe("placeSelectedHandler", () => {
     expect(store.inatApiParams).toStrictEqual(expectedParams);
 
     expect(window.location.search).toBe(
-      `?taxon_ids=${life().id}&place_id=${losangeles.id}&colors=%234477aa&spam=false&verifiable=true`,
+      `?taxon_ids=${life().id}&place_id=${losangeles.id}&colors=%234477aa&verifiable=true&spam=false`,
     );
   });
 
@@ -244,11 +244,18 @@ describe("refreshiNatMapLayers", () => {
     expectNoTaxa(store);
     expectRefreshPlace(store);
     expect(store.color).toEqual("");
-    let expectedParams = { nelat: 0, nelng: 0, swlat: 0, swlng: 0 };
+    let expectedParams = {
+      nelat: 0,
+      nelng: 0,
+      swlat: 0,
+      swlng: 0,
+      verifiable: true,
+      spam: false,
+    };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
 
     expect(window.location.search).toBe(
-      `?place_id=${refreshPlace.id}&nelat=0&nelng=0&swlat=0&swlng=0`,
+      `?place_id=${refreshPlace.id}&verifiable=true&spam=false&nelat=0&nelng=0&swlat=0&swlng=0`,
     );
   });
 
@@ -266,7 +273,14 @@ describe("refreshiNatMapLayers", () => {
     expectNoTaxa(store);
     expectRefreshPlace(store);
     expect(store.color).toEqual("");
-    let expectedParams = { nelat: 0, nelng: 0, swlat: 0, swlng: 0 };
+    let expectedParams = {
+      nelat: 0,
+      nelng: 0,
+      swlat: 0,
+      swlng: 0,
+      verifiable: true,
+      spam: false,
+    };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
     let refreshlayer1 = store.refreshMap.layer;
 
@@ -616,13 +630,13 @@ describe("removePlace", () => {
       color: colors[0],
       place_id: sandiego.id.toString(),
       taxon_id: life().id,
-      spam: false,
       verifiable: true,
+      spam: false,
     };
     expect(store.inatApiParams).toStrictEqual(params3);
 
     let searchParams =
-      "?taxon_ids=48460&place_id=829&colors=%234477aa&spam=false&verifiable=true";
+      "?taxon_ids=48460&place_id=829&colors=%234477aa&verifiable=true&spam=false";
     expect(window.location.search).toBe(searchParams);
   });
 
@@ -644,6 +658,8 @@ describe("removePlace", () => {
       nelng: 0,
       swlat: 0,
       swlng: 0,
+      verifiable: true,
+      spam: false,
     });
 
     await removePlace(0, store);
@@ -651,7 +667,7 @@ describe("removePlace", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
     expectNoTaxa(store);
     expectNoPlaces(store);
-    let params2 = {};
+    let params2 = { verifiable: true, spam: false };
     expect(store.inatApiParams).toStrictEqual(params2);
   });
 
