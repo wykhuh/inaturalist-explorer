@@ -442,8 +442,6 @@ export async function processTaxonData(
     ...appStore.inatApiParams,
     taxon_id: taxon.id,
     color: urlDataTaxon.color,
-    verifiable: urlData.inatApiParams.verifiable,
-    spam: urlData.inatApiParams.spam,
   };
   if (urlDataTaxon.color) {
     appStore.color = urlDataTaxon.color;

@@ -11,6 +11,7 @@ import {
 } from "../lib/utils.ts";
 import { mapStore } from "../lib/store.ts";
 import { losangeles, sandiego } from "./test_helpers.ts";
+import type { MapStore } from "../types/app";
 
 describe("hexToRgb", () => {
   test("converts 6 character hex to rgb", () => {
@@ -75,7 +76,7 @@ let redOaks = {
 
 describe("formatAppUrl", () => {
   test("format parameters for one taxon", () => {
-    let appStore = {
+    let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
         taxon_id: life.id,
@@ -109,7 +110,7 @@ describe("formatAppUrl", () => {
   });
 
   test("format parameters for one place", () => {
-    let appStore = {
+    let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
         taxon_id: life.id,
@@ -129,7 +130,7 @@ describe("formatAppUrl", () => {
   });
 
   test("format parameters for multiple places", () => {
-    let appStore = {
+    let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
         taxon_id: life.id,
@@ -149,7 +150,7 @@ describe("formatAppUrl", () => {
   });
 
   test("return empty string if no taxa or place", () => {
-    let appStore = {
+    let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
         color: life.color,
@@ -164,32 +165,13 @@ describe("formatAppUrl", () => {
     expect(result).toBe("");
   });
 
-  test("format parameters for formFilters", () => {
-    let appStore = {
-      ...mapStore,
-      inatApiParams: {
-        taxon_id: redOaks.id,
-        color: redOaks.color,
-        spam: false,
-      },
-      formFilters: { params: "verifiable=any&sounds" },
-      selectedTaxa: [life, redOaks],
-    };
-
-    let result = formatAppUrl(appStore);
-
-    expect(result).toBe(
-      "taxon_ids=48460,861036&colors=%234477aa,%2366ccee&spam=false&verifiable=any&sounds",
-    );
-  });
-
   test("ignore formFilters if no taxa or places", () => {
-    let appStore = {
+    let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
         spam: false,
       },
-      formFilters: { params: "verifiable=any&sounds" },
+      formFilters: { params: { verifiable: "any" }, string: "verifiable=any" },
     };
 
     let result = formatAppUrl(appStore);

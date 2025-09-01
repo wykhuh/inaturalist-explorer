@@ -1,5 +1,7 @@
 import { taxonRanks } from "../../lib/inat_api";
+import { mapStore } from "../../lib/store";
 import { processFiltersForm } from "./utils";
+
 const setup = async () => {
   const parser = new DOMParser();
   const resp = await fetch("/src/components/ObservationsFilters/template.html");
@@ -111,7 +113,7 @@ const setup = async () => {
           event.preventDefault();
 
           const data = new FormData(form);
-          window.app.store.formFilters = { params: processFiltersForm(data) };
+          window.app.store.formFilters = processFiltersForm(data);
         });
         form;
 
@@ -121,17 +123,19 @@ const setup = async () => {
           event.preventDefault();
 
           const data = new FormData(form);
-          let params = processFiltersForm(data);
-          if (params !== "") {
-            window.app.store.formFilters = { params };
-            if (logEl) {
-              logEl.innerText = params;
-            }
+          let results = processFiltersForm(data);
+          window.app.store.formFilters = results;
+          window.app.store.inatApiParams = {
+            ...window.app.store.inatApiParams,
+            ...results.params,
+          };
+          if (logEl) {
+            logEl.innerText = results.string;
           }
         });
 
         form.addEventListener("reset", () => {
-          window.app.store.formFilters.params = "";
+          window.app.store.formFilters = mapStore.formFilters;
         });
       }
     }

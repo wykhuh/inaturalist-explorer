@@ -43,11 +43,11 @@
           <fieldset>
             <legend>Media</legend>
             <div class="form-group">
-              <input type="checkbox" id="sounds" name="sounds" />
+              <input type="checkbox" id="sounds" name="sounds" value="true" />
               <label for="sounds">Has Sounds</label>
             </div>
             <div class="form-group">
-              <input type="checkbox" id="photos" name="photos" />
+              <input type="checkbox" id="photos" name="photos" value="true" />
               <label for="photos">Has Photos</label>
             </div>
           </fieldset>
@@ -56,22 +56,36 @@
               type="checkbox"
               id="verifiable"
               name="verifiable"
-              value="any"
+              value="true"
               checked
             />
             <label for="verifiable">Verifiable</label>
           </div>
           <div class="form-group">
-            <input type="checkbox" id="threatened" name="threatened" />
+            <input
+              type="checkbox"
+              id="threatened"
+              name="threatened"
+              value="true"
+            />
             <label for="threatened">Threatened</label>
           </div>
           <div class="form-group">
-            <input type="checkbox" id="introduced" name="introduced" />
+            <input
+              type="checkbox"
+              id="introduced"
+              name="introduced"
+              value="true"
+            />
             <label for="introduced">Introduced</label>
           </div>
           <div class="form-group">
-            <input type="checkbox" id="popular" name="popular" />
+            <input type="checkbox" id="popular" name="popular" value="true" />
             <label for="popular">Popular</label>
+          </div>
+          <div class="form-group">
+            <input type="checkbox" id="spam" name="spam" value="true" />
+            <label for="spam">Spam</label>
           </div>
         </div>
         <!-- column 2 -->

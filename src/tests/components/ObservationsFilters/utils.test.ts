@@ -15,16 +15,24 @@ describe("processFiltersForm", () => {
 
     let result = processFiltersForm(data);
 
-    expect(result).toBe("");
+    let expected = {
+      params: {},
+      string: "",
+    };
+    expect(result).toStrictEqual(expected);
   });
 
   test("returns search params when one field has a value", () => {
     let data = createFormData();
-    data.append("verifiable", "any");
+    data.append("verifiable", "true");
 
     let result = processFiltersForm(data);
 
-    expect(result).toBe("verifiable=any");
+    let expected = {
+      params: { verifiable: true },
+      string: "verifiable=true",
+    };
+    expect(result).toStrictEqual(expected);
   });
 
   test("returns search params when multiple fields have a value", () => {
@@ -35,10 +43,14 @@ describe("processFiltersForm", () => {
 
     let result = processFiltersForm(data);
 
-    expect(result).toBe("verifiable=any&quality_grade=research");
+    let expected = {
+      params: { verifiable: "any", quality_grade: "research" },
+      string: "verifiable=any&quality_grade=research",
+    };
+    expect(result).toStrictEqual(expected);
   });
 
-  test("returns field name if value is 'on'", () => {
+  test("ignore field name if value is 'on'", () => {
     let data = createFormData();
     data.append("verifiable", "any");
     processFiltersForm(data);
@@ -46,7 +58,11 @@ describe("processFiltersForm", () => {
 
     let result = processFiltersForm(data);
 
-    expect(result).toBe("verifiable=any&sounds");
+    let expected = {
+      params: { verifiable: "any" },
+      string: "verifiable=any",
+    };
+    expect(result).toStrictEqual(expected);
   });
 
   test("returns iconic_taxa  if there is one iconic_taxa", () => {
@@ -55,7 +71,13 @@ describe("processFiltersForm", () => {
 
     let result = processFiltersForm(data);
 
-    expect(result).toBe("iconic_taxa=Aves");
+    let expected = {
+      params: {
+        iconic_taxa: "Aves",
+      },
+      string: "iconic_taxa=Aves",
+    };
+    expect(result).toStrictEqual(expected);
   });
 
   test("returns iconic_taxa as comma-separated string if multiple iconic_taxa", () => {
@@ -66,7 +88,11 @@ describe("processFiltersForm", () => {
 
     let result = processFiltersForm(data);
 
-    expect(result).toBe("iconic_taxa=Aves,Amphibia");
+    let expected = {
+      params: { iconic_taxa: "Aves,Amphibia" },
+      string: "iconic_taxa=Aves,Amphibia",
+    };
+    expect(result).toStrictEqual(expected);
   });
 
   test("returns month if month is current field and only one month is set", () => {
@@ -78,7 +104,11 @@ describe("processFiltersForm", () => {
 
     let result = processFiltersForm(data);
 
-    expect(result).toBe("month=1");
+    let expected = {
+      params: { month: "1" },
+      string: "month=1",
+    };
+    expect(result).toStrictEqual(expected);
   });
 
   test("returns month as comma-separated string if month is current field and multiple months", () => {
@@ -92,7 +122,11 @@ describe("processFiltersForm", () => {
 
     let result = processFiltersForm(data);
 
-    expect(result).toBe("month=1,3");
+    let expected = {
+      params: { month: "1,3" },
+      string: "month=1,3",
+    };
+    expect(result).toStrictEqual(expected);
   });
 
   test("returns on if on is current field", () => {
@@ -104,7 +138,11 @@ describe("processFiltersForm", () => {
 
     let result = processFiltersForm(data);
 
-    expect(result).toBe("on=2021-01-01");
+    let expected = {
+      params: { on: "2021-01-01" },
+      string: "on=2021-01-01",
+    };
+    expect(result).toStrictEqual(expected);
   });
 
   test("returns d1 if d1 is current field", () => {
@@ -116,7 +154,11 @@ describe("processFiltersForm", () => {
 
     let result = processFiltersForm(data);
 
-    expect(result).toBe("d1=2022-02-02");
+    let expected = {
+      params: { d1: "2022-02-02" },
+      string: "d1=2022-02-02",
+    };
+    expect(result).toStrictEqual(expected);
   });
 
   test("returns d2 if d2 is current field", () => {
@@ -128,7 +170,11 @@ describe("processFiltersForm", () => {
 
     let result = processFiltersForm(data);
 
-    expect(result).toBe("d2=2023-03-03");
+    let expected = {
+      params: { d2: "2023-03-03" },
+      string: "d2=2023-03-03",
+    };
+    expect(result).toStrictEqual(expected);
   });
 
   test("returns d1 and d2 if d1 is current field and both are set", () => {
@@ -142,7 +188,11 @@ describe("processFiltersForm", () => {
 
     let result = processFiltersForm(data);
 
-    expect(result).toBe("d1=2022-02-02&d2=2023-03-03");
+    let expected = {
+      params: { d1: "2022-02-02", d2: "2023-03-03" },
+      string: "d1=2022-02-02&d2=2023-03-03",
+    };
+    expect(result).toStrictEqual(expected);
   });
 
   test("returns d1 and d2 if d2 is current field and both are set", () => {
@@ -156,7 +206,11 @@ describe("processFiltersForm", () => {
 
     let result = processFiltersForm(data);
 
-    expect(result).toBe("d1=2022-02-02&d2=2023-03-03");
+    let expected = {
+      params: { d1: "2022-02-02", d2: "2023-03-03" },
+      string: "d1=2022-02-02&d2=2023-03-03",
+    };
+    expect(result).toStrictEqual(expected);
   });
 
   test("returns the last date format", () => {
@@ -170,7 +224,14 @@ describe("processFiltersForm", () => {
 
     let result = processFiltersForm(data);
 
-    expect(result).toBe("iconic_taxa=Aves&on=2020-01-01");
+    let expected = {
+      params: {
+        iconic_taxa: "Aves",
+        on: "2020-01-01",
+      },
+      string: "iconic_taxa=Aves&on=2020-01-01",
+    };
+    expect(result).toStrictEqual(expected);
   });
 
   test("returns the last date format for multiple months", () => {
@@ -186,6 +247,13 @@ describe("processFiltersForm", () => {
 
     let result = processFiltersForm(data);
 
-    expect(result).toBe("iconic_taxa=Aves&month=1,2");
+    let expected = {
+      params: {
+        iconic_taxa: "Aves",
+        month: "1,2",
+      },
+      string: "iconic_taxa=Aves&month=1,2",
+    };
+    expect(result).toStrictEqual(expected);
   });
 });

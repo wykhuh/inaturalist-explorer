@@ -88,9 +88,6 @@ export function formatAppUrl(appStore: MapStore) {
     .toString()
     .replaceAll("%2C", ",");
 
-  if (appStore.formFilters.params !== "") {
-    searchParams += "&" + appStore.formFilters.params;
-  }
   return searchParams;
 }
 
@@ -152,12 +149,26 @@ export function decodeAppUrl(searchParams: string) {
       swlng: Number(urlParams.swlng),
     };
   }
-  if ("verifiable" in urlParams) {
-    apiParams.inatApiParams.verifiable = urlParams.verifiable === "true";
-  }
-  if ("spam" in urlParams) {
-    apiParams.inatApiParams.spam = urlParams.spam === "true";
-  }
 
+  let ignoreParams = [
+    "taxon_ids",
+    "colors",
+    "place_id",
+    "nelat",
+    "nelng",
+    "swlat",
+    "swlng",
+  ];
+  for (let [key, value] of new URLSearchParams(searchParams)) {
+    if (!ignoreParams.includes(key)) {
+      if (value === "true") {
+        value = true;
+      }
+      if (value === "false") {
+        value = false;
+      }
+      apiParams.inatApiParams[key] = value;
+    }
+  }
   return apiParams;
 }

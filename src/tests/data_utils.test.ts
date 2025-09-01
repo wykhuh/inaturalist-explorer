@@ -148,7 +148,7 @@ describe("updateSelectedTaxaProxy", () => {
       showRefreshMapButton: false,
       layer: null,
     },
-    formFilters: { params: "" },
+    formFilters: { params: {}, string: "" },
   };
   let taxon1: NormalizediNatTaxon = {
     name: "name 1",
