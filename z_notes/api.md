@@ -151,3 +151,47 @@ https://api.inaturalist.org/v1/grid/1/1/1.png
     return HttpResponse.json({ id: "abc-123" });
   }),
 ```
+
+====================
+
+https://www.inaturalist.org/observations?subview=map&taxon_id=861036
+
+& verifiable=false
+39,640
+OBSERVATIONS
+
+&verifiable=true
+391,425
+OBSERVATIONS
+
+&verifiable=any
+431,065
+OBSERVATIONS
+
+no params
+391,425
+OBSERVATIONS
+
+==
+
+https://api.inaturalist.org/v2/observations?verifiable=true&spam=false&taxon_id=861036
+
+& verifiable=false
+39,640
+OBSERVATIONS
+
+&verifiable=true
+391,425
+OBSERVATIONS
+
+no params
+431,065
+OBSERVATIONS
+
+==
+
+filters
+verifiable: checked -> web app: no params, api: &verifiable=true
+verifiable: unchecked -> web app: &verifiable=any, api: no params
+
+====================

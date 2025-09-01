@@ -302,4 +302,86 @@ describe("decodeAppUrl", () => {
 
     expect(result).toStrictEqual(expected);
   });
+
+  test("returns object with if spam and verifiable are false", () => {
+    let searchParams =
+      "?taxon_ids=123&colors=%23ffffff&spam=false&verifiable=false";
+    let expected = {
+      color: "#ffffff",
+      selectedTaxa: [
+        {
+          id: 123,
+          color: "#ffffff",
+        },
+      ],
+      inatApiParams: {
+        verifiable: false,
+        spam: false,
+      },
+    };
+
+    let result = decodeAppUrl(searchParams);
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("returns object with if verifiable is any", () => {
+    let searchParams = "?taxon_ids=123&colors=%23ffffff&verifiable=any";
+    let expected = {
+      color: "#ffffff",
+      selectedTaxa: [
+        {
+          id: 123,
+          color: "#ffffff",
+        },
+      ],
+      inatApiParams: {
+        verifiable: "any",
+      },
+    };
+
+    let result = decodeAppUrl(searchParams);
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("returns object with if spam and verifiable are true", () => {
+    let searchParams =
+      "?taxon_ids=123&colors=%23ffffff&spam=true&verifiable=true";
+    let expected = {
+      color: "#ffffff",
+      selectedTaxa: [
+        {
+          id: 123,
+          color: "#ffffff",
+        },
+      ],
+      inatApiParams: {
+        verifiable: true,
+        spam: true,
+      },
+    };
+
+    let result = decodeAppUrl(searchParams);
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("returns object with if place_id is any", () => {
+    let searchParams = "?taxon_ids=123&colors=%23ffffff&place_id=any";
+    let expected = {
+      color: "#ffffff",
+      selectedTaxa: [
+        {
+          id: 123,
+          color: "#ffffff",
+        },
+      ],
+      inatApiParams: {},
+    };
+
+    let result = decodeAppUrl(searchParams);
+
+    expect(result).toStrictEqual(expected);
+  });
 });

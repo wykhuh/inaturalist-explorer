@@ -9,6 +9,7 @@ import type {
   CustomGeoJSON,
   NormalizediNatPlace,
   LngLat,
+  iNatApiParamsKeys,
 } from "../types/app";
 import {
   addOverlayToMap,
@@ -370,18 +371,41 @@ export function leafletVisibleLayers(
   return layer_descriptions;
 }
 
-export async function initApp(appStore: MapStore, urlData: MapStore) {
+export let fieldsWithAny = [
+  "quality_grade",
+  "reviewed",
+  "verifiable",
+  "place_id",
+  "captive",
+];
+
+export async function initApp(appStore: MapStore, urlStore: MapStore) {
   let map = appStore.map.map;
   if (!map) return;
 
+  // quality_grade, reviewed, verifiable, place_id, captive
+  for (const [key, value] of Object.entries(urlStore.inatApiParams)) {
+    if (fieldsWithAny.includes(key) && value === "any") {
+      delete appStore.inatApiParams[key as iNatApiParamsKeys];
+    } else {
+      delete appStore.inatApiParams[key as iNatApiParamsKeys];
+      (appStore.inatApiParams[key as iNatApiParamsKeys] as any) = value;
+    }
+  }
+
+  // HACK: deleting and setting a property in inatApiParams does not trigger the
+  // an update in proxy store. Need to replace inatApiParams to trigger
+  // an update in proxy store.
+  appStore.inatApiParams = appStore.inatApiParams;
+
   // get taxa data, optional place data, optional bounding box
-  if (urlData.selectedTaxa && urlData.selectedTaxa.length > 0) {
-    for await (const urlDataTaxon of urlData.selectedTaxa) {
-      let taxonData = await getTaxonById(urlDataTaxon.id);
+  if (urlStore.selectedTaxa && urlStore.selectedTaxa.length > 0) {
+    for await (const urlStoreTaxon of urlStore.selectedTaxa) {
+      let taxonData = await getTaxonById(urlStoreTaxon.id);
       if (!taxonData) {
         continue;
       }
-      await processTaxonData(taxonData, appStore, urlData);
+      await processTaxonData(taxonData, appStore, urlStore);
     }
     renderTaxaList(appStore);
     renderPlacesList(appStore);
@@ -389,12 +413,12 @@ export async function initApp(appStore: MapStore, urlData: MapStore) {
 
     // get place data only
   } else if (
-    urlData.selectedPlaces &&
-    urlData.selectedPlaces.length > 0 &&
-    urlData.inatApiParams.nelat === undefined
+    urlStore.selectedPlaces &&
+    urlStore.selectedPlaces.length > 0 &&
+    urlStore.inatApiParams.nelat === undefined
   ) {
-    for await (const urlDataPlace of urlData.selectedPlaces) {
-      let placeData = await getPlaceById(urlDataPlace.id);
+    for await (const urlStorePlace of urlStore.selectedPlaces) {
+      let placeData = await getPlaceById(urlStorePlace.id);
       if (!placeData) {
         continue;
       }
@@ -404,8 +428,8 @@ export async function initApp(appStore: MapStore, urlData: MapStore) {
     fitBoundsPlaces(appStore);
 
     // get bounding box only
-  } else if (urlData.inatApiParams.nelat !== undefined) {
-    processBBoxData(appStore, urlData);
+  } else if (urlStore.inatApiParams.nelat !== undefined) {
+    processBBoxData(appStore, urlStore);
     renderPlacesList(appStore);
     fitBoundsPlaces(appStore);
   }
@@ -414,12 +438,12 @@ export async function initApp(appStore: MapStore, urlData: MapStore) {
 export async function processTaxonData(
   taxonData: TaxaResult,
   appStore: MapStore,
-  urlData: MapStore,
+  urlStore: MapStore,
 ) {
   let map = appStore.map.map;
   if (map == null) return;
-  let urlDataTaxon = urlData.selectedTaxa.find((t) => t.id === taxonData.id);
-  if (!urlDataTaxon) return;
+  let urlStoreTaxon = urlStore.selectedTaxa.find((t) => t.id === taxonData.id);
+  if (!urlStoreTaxon) return;
 
   // create taxon object
   let taxon: NormalizediNatTaxon = {
@@ -429,7 +453,7 @@ export async function processTaxonData(
     matched_term: taxonData.name,
     rank: taxonData.rank,
     id: taxonData.id,
-    color: urlDataTaxon.color,
+    color: urlStoreTaxon.color,
   };
 
   let { title, subtitle } = formatTaxonName(taxon, taxon.name as string, false);
@@ -441,28 +465,28 @@ export async function processTaxonData(
   appStore.inatApiParams = {
     ...appStore.inatApiParams,
     taxon_id: taxon.id,
-    color: urlDataTaxon.color,
+    color: urlStoreTaxon.color,
   };
-  if (urlDataTaxon.color) {
-    appStore.color = urlDataTaxon.color;
+  if (urlStoreTaxon.color) {
+    appStore.color = urlStoreTaxon.color;
   }
 
   // handle selected places
   if (
-    urlData.selectedPlaces &&
-    urlData.selectedPlaces.length > 0 &&
-    urlData.inatApiParams.nelat === undefined
+    urlStore.selectedPlaces &&
+    urlStore.selectedPlaces.length > 0 &&
+    urlStore.inatApiParams.nelat === undefined
   ) {
-    for await (const urlDataPlace of urlData.selectedPlaces) {
-      let placeData = await getPlaceById(urlDataPlace.id);
+    for await (const urlStorePlace of urlStore.selectedPlaces) {
+      let placeData = await getPlaceById(urlStorePlace.id);
       if (!placeData) {
         continue;
       }
       await processPlaceData(placeData, appStore);
     }
     // handle bounding box
-  } else if (urlData.inatApiParams.nelat !== undefined) {
-    processBBoxData(appStore, urlData);
+  } else if (urlStore.inatApiParams.nelat !== undefined) {
+    processBBoxData(appStore, urlStore);
   }
   await fetchiNatMapData(taxon, appStore);
 }
@@ -525,10 +549,10 @@ export function idStringRemoveId(newId?: number, currentId?: string) {
   return ids;
 }
 
-export function processBBoxData(appStore: MapStore, urlData: MapStore) {
+export function processBBoxData(appStore: MapStore, urlStore: MapStore) {
   let map = appStore.map.map;
   if (!map) return;
-  let lngLatCoors = convertParamsBBoxToLngLat(urlData.inatApiParams);
+  let lngLatCoors = convertParamsBBoxToLngLat(urlStore.inatApiParams);
   if (!lngLatCoors) return;
 
   let layer = drawMapBoundingBox(map, lngLatCoors) as any;
@@ -537,10 +561,10 @@ export function processBBoxData(appStore: MapStore, urlData: MapStore) {
     layer: layer,
   };
 
-  appStore.inatApiParams.nelat = urlData.inatApiParams.nelat;
-  appStore.inatApiParams.nelng = urlData.inatApiParams.nelng;
-  appStore.inatApiParams.swlat = urlData.inatApiParams.swlat;
-  appStore.inatApiParams.swlng = urlData.inatApiParams.swlng;
+  appStore.inatApiParams.nelat = urlStore.inatApiParams.nelat;
+  appStore.inatApiParams.nelng = urlStore.inatApiParams.nelng;
+  appStore.inatApiParams.swlat = urlStore.inatApiParams.swlat;
+  appStore.inatApiParams.swlng = urlStore.inatApiParams.swlng;
 
   appStore.selectedPlaces = [bboxPlace(lngLatCoors)];
   appStore.placesMapLayers["0"] = [layer as unknown as CustomGeoJSON];

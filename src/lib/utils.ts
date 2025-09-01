@@ -3,6 +3,7 @@ import type {
   AppUrlParams,
   AppUrlParamsKeys,
   NormalizediNatTaxon,
+  iNatApiParamsKeys,
 } from "../types/app";
 import { bboxPlace } from "./data_utils";
 import { defaultColorScheme } from "./map_colors_utils";
@@ -121,7 +122,7 @@ export function decodeAppUrl(searchParams: string) {
   }
   apiParams.selectedTaxa = taxa;
 
-  if ("place_id" in urlParams) {
+  if ("place_id" in urlParams && urlParams.place_id !== "any") {
     let ids = urlParams.place_id.split(",");
 
     let places = ids
@@ -162,12 +163,12 @@ export function decodeAppUrl(searchParams: string) {
   for (let [key, value] of new URLSearchParams(searchParams)) {
     if (!ignoreParams.includes(key)) {
       if (value === "true") {
-        value = true;
+        value = true as unknown as string;
       }
       if (value === "false") {
-        value = false;
+        value = false as unknown as string;
       }
-      apiParams.inatApiParams[key] = value;
+      (apiParams.inatApiParams[key as iNatApiParamsKeys] as string) = value;
     }
   }
   return apiParams;

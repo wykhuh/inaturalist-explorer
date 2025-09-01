@@ -86,7 +86,14 @@ type iNatApiParams = {
   color?: string;
   spam?: boolean;
   verifiable?: boolean;
+  iconic_taxa?: string;
+  on?: string;
+  d1?: string;
+  d2?: string;
+  month?: string;
 };
+
+export type iNatApiParamsKeys = keyof iNatApiParams;
 
 export type AppUrlParams = {
   nelat?: number;

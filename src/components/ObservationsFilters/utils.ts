@@ -1,19 +1,25 @@
-export function processFiltersForm(data: FormData) {
-  let values: { [key: string]: string | boolean | number } = {};
+import type { iNatApiParams, iNatApiParamsKeys } from "../../types/app";
+
+export function processFiltersForm(data: FormData): {
+  params: iNatApiParams;
+  string: string;
+} {
+  let values: iNatApiParams = {};
 
   for (const [key, value] of data) {
-    console.log(key, value);
+    // console.log(key, value);
+
     // ignore fields
     if (["on", "d1", "d2", "month", "iconic_taxa"].includes(key)) {
       // ignore params with value "on"
     } else if (value === "on") {
       // handle params that have field and value, e.g. verifiable=any
     } else if (value === "true") {
-      values[key] = true;
+      (values[key as iNatApiParamsKeys] as boolean) = true;
     } else if (value === "false") {
-      values[key] = false;
+      (values[key as iNatApiParamsKeys] as boolean) = false;
     } else if (value !== "") {
-      values[key] = value as string;
+      (values[key as iNatApiParamsKeys] as string) = value as string;
     }
   }
 
@@ -24,13 +30,13 @@ export function processFiltersForm(data: FormData) {
 
   // handle observed date
   if (data.get("on")) {
-    values.on = `${data.get("on")}`;
+    values.on = data.get("on") as string;
   }
   if (data.get("d1")) {
-    values.d1 = `${data.get("d1")}`;
+    values.d1 = data.get("d1") as string;
   }
-  if (data.get("d2")) {
-    values.d2 = `${data.get("d2")}`;
+  if (data.get("d2") && data.get("d2")) {
+    values.d2 = data.get("d2") as string;
   }
   if (data.getAll("month").filter((m) => m !== "").length > 0) {
     values.month = data.getAll("month").join(",");
@@ -38,6 +44,8 @@ export function processFiltersForm(data: FormData) {
 
   return {
     params: values,
-    string: new URLSearchParams(values).toString().replaceAll("%2C", ","),
+    string: new URLSearchParams(values as any)
+      .toString()
+      .replaceAll("%2C", ","),
   };
 }
