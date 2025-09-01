@@ -87,3 +87,7 @@ https://www.yellowduck.be/posts/testing-history-pushstate-with-spies-in-vitest
 
 Encode URL in JavaScript
 https://stackoverflow.com/questions/332872/encode-url-in-javascript/58879100
+
+==
+
+https://freshman.tech/snippets/typescript/fix-value-not-exist-eventtarget/

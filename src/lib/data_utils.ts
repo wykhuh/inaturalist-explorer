@@ -134,7 +134,6 @@ export async function fetchiNatMapData(
   let layerControl = appStore.map.layerControl;
   if (map == null) return;
   if (layerControl == null) return;
-  // console.log(">> fetchiNatMapData", taxonObj.id);
 
   // get observations count
   let params: iNatApiParams = {
@@ -181,8 +180,6 @@ export function updateSelectedTaxaProxy(
   appStore: MapStore,
   taxonObj: NormalizediNatTaxon,
 ) {
-  // console.log(">> updateSelectedTaxaProxy", taxonObj.id);
-
   let temp = [];
   let ids: number[] = [];
 
@@ -568,20 +565,20 @@ export function displayUserData(appStore: MapStore, _source: string) {
   }
 
   let data = {
-    refreshMap: {
-      refreshMapButtonEl: appStore.refreshMap.refreshMapButtonEl,
-      showRefreshMapButton: appStore.refreshMap.showRefreshMapButton,
-      layer: {
-        layer_description: appStore.refreshMap.layer?.options.layer_description,
-        bounds: appStore.refreshMap.layer?._bounds,
-      },
-    },
     inatApiParams: appStore.inatApiParams,
     color: appStore.color,
+    formFilters: appStore.formFilters.params,
     selectedTaxa: appStore.selectedTaxa,
     taxaMapLayers: formatTaxaMapLayers(),
     selectedPlaces: appStore.selectedPlaces,
     placesMapLayers: formatPlacesMapLayers(),
+    refreshMap: {
+      showRefreshMapButton: appStore.refreshMap.showRefreshMapButton,
+      layer: {
+        layer_description: appStore.refreshMap.layer?.options.layer_description,
+        // bounds: appStore.refreshMap.layer?._bounds,
+      },
+    },
     mapLayerDescriptions: leafletVisibleLayers(appStore),
   };
   displayJson(data, appStore.displayJsonEl);

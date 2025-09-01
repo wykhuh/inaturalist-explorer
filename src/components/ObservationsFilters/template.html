@@ -1,0 +1,269 @@
+<template>
+  <button id="filters-btn">Filters</button>
+
+  <dialog class="filters-modal">
+    <button class="close-btn">Close</button>
+
+    <form id="filters-form">
+      <div class="fields">
+        <!-- column 1 -->
+        <div>
+          <fieldset>
+            <legend>Captive</legend>
+            <div class="form-group">
+              <input type="checkbox" id="wild" name="captive" value="false" />
+              <label for="wild">Wild</label>
+            </div>
+            <div class="form-group">
+              <input type="checkbox" id="captive" name="captive" value="true" />
+              <label for="captive">Captive</label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Quality Grade</legend>
+            <div class="form-group">
+              <input
+                type="checkbox"
+                id="research"
+                name="quality_grade"
+                value="research"
+              />
+              <label for="research">Research Grade</label>
+            </div>
+            <div class="form-group">
+              <input
+                type="checkbox"
+                id="needs_id"
+                name="quality_grade"
+                value="needs_id"
+              />
+              <label for="needs_id">Needs Id</label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Media</legend>
+            <div class="form-group">
+              <input type="checkbox" id="sounds" name="sounds" />
+              <label for="sounds">Has Sounds</label>
+            </div>
+            <div class="form-group">
+              <input type="checkbox" id="photos" name="photos" />
+              <label for="photos">Has Photos</label>
+            </div>
+          </fieldset>
+          <div class="form-group">
+            <input
+              type="checkbox"
+              id="verifiable"
+              name="verifiable"
+              value="any"
+              checked
+            />
+            <label for="verifiable">Verifiable</label>
+          </div>
+          <div class="form-group">
+            <input type="checkbox" id="threatened" name="threatened" />
+            <label for="threatened">Threatened</label>
+          </div>
+          <div class="form-group">
+            <input type="checkbox" id="introduced" name="introduced" />
+            <label for="introduced">Introduced</label>
+          </div>
+          <div class="form-group">
+            <input type="checkbox" id="popular" name="popular" />
+            <label for="popular">Popular</label>
+          </div>
+        </div>
+        <!-- column 2 -->
+        <div>
+          <fieldset>
+            <legend>Categories</legend>
+            <div class="form-group">
+              <input
+                type="checkbox"
+                id="Aves"
+                value="Aves"
+                name="iconic_taxa"
+              />
+              <label for="Aves">Aves</label>
+            </div>
+            <div class="form-group">
+              <input
+                type="checkbox"
+                id="Amphibia"
+                value="Amphibia"
+                name="iconic_taxa"
+              />
+              <label for="Amphibia">Amphibia</label>
+            </div>
+            <div class="form-group">
+              <input
+                type="checkbox"
+                id="Reptilia"
+                value="Reptilia"
+                name="iconic_taxa"
+              />
+              <label for="Reptilia">Reptilia</label>
+            </div>
+            <div class="form-group">
+              <input
+                type="checkbox"
+                id="Mammalia"
+                value="Mammalia"
+                name="iconic_taxa"
+              />
+              <label for="Mammalia">Mammalia</label>
+            </div>
+            <div class="form-group">
+              <input
+                type="checkbox"
+                id="Actinopterygii"
+                value="Actinopterygii"
+                name="iconic_taxa"
+              />
+              <label for="Actinopterygii">Actinopterygii</label>
+            </div>
+            <div class="form-group">
+              <input
+                type="checkbox"
+                id="Mollusca"
+                value="Mollusca"
+                name="iconic_taxa"
+              />
+              <label for="Mollusca">Mollusca</label>
+            </div>
+            <div class="form-group">
+              <input
+                type="checkbox"
+                id="Arachnida"
+                value="Arachnida"
+                name="iconic_taxa"
+              />
+              <label for="Arachnida">Arachnida</label>
+            </div>
+            <div class="form-group">
+              <input
+                type="checkbox"
+                id="Insecta"
+                value="Insecta"
+                name="iconic_taxa"
+              />
+              <label for="Insecta">Insecta</label>
+            </div>
+            <div class="form-group">
+              <input
+                type="checkbox"
+                id="Plantae"
+                value="Plantae"
+                name="iconic_taxa"
+              />
+              <label for="Plantae">Plantae</label>
+            </div>
+            <div class="form-group">
+              <input
+                type="checkbox"
+                id="Fungi"
+                value="Fungi"
+                name="iconic_taxa"
+              />
+              <label for="Fungi">Fungi</label>
+            </div>
+            <div class="form-group">
+              <input
+                type="checkbox"
+                id="Protozoa"
+                value="Protozoa"
+                name="iconic_taxa"
+              />
+              <label for="Protozoa">Protozoa</label>
+            </div>
+            <div class="form-group">
+              <input
+                type="checkbox"
+                id="unknown"
+                value="unknown"
+                name="iconic_taxa"
+              />
+              <label for="unknown">unknown</label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Rank</legend>
+            <select id="taxon-rank-high" name="hrank"></select>
+            <select id="taxon-rank-low" name="lrank"></select>
+          </fieldset>
+        </div>
+        <!-- column 3 -->
+        <div>
+          <fieldset>
+            <legend>Date Observed</legend>
+            <div class="form-group">
+              <input type="radio" name="date_observed" id="any_date" />
+              <label for="any_date">Any</label>
+            </div>
+            <div class="form-group">
+              <input type="radio" name="date_observed" id="exact_date" />
+              <label for="exact_date">Exact Date</label>
+              <input type="date" name="on" id="on" disabled />
+            </div>
+            <div class="form-group">
+              <input type="radio" name="date_observed" id="range_date" />
+              <label for="range_date">Range</label>
+
+              <div class="form-group">
+                <label for="start_date">Start Date</label>
+                <input id="start_date" type="date" name="d1" id="d1" disabled />
+              </div>
+              <div class="form-group">
+                <label for="end_date">End Date</label>
+                <input id="end_date" type="date" name="d2" id="d2" disabled />
+              </div>
+            </div>
+            <div class="form-group">
+              <input type="radio" name="date_observed" id="months_date" />
+              <label for="months_date">Months</label>
+              <select name="month" id="month" multiple disabled>
+                <option value="">Select month</option>
+                <option value="1">Janurary</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+              </select>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div class="controls">
+        <button type="submit">Update Search</button>
+        <button type="reset">Reset</button>
+        <p id="log"></p>
+      </div>
+    </form>
+  </dialog>
+</template>
+
+<style>
+  input[type="date"]::before {
+    color: #999999;
+    content: attr(placeholder);
+  }
+  input[type="date"] {
+    color: #ffffff;
+  }
+  input[type="date"]:focus,
+  input[type="date"]:valid {
+    color: #666666;
+  }
+  input[type="date"]:focus::before,
+  input[type="date"]:valid::before {
+    content: "" !important;
+  }
+</style>

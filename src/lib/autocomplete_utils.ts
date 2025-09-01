@@ -96,7 +96,6 @@ export async function taxonSelectedHandler(
   let layerControl = appStore.map.layerControl;
   if (map == null) return;
   if (layerControl == null) return;
-  // console.log(">> taxonSelectedHandler");
 
   // get color for taxon
   let color = getColor(appStore, colorsSixTolBright);

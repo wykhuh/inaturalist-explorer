@@ -17,6 +17,7 @@ export const mapStore: MapStore = {
     showRefreshMapButton: false,
     layer: null,
   },
+  formFilters: { params: "" },
 };
 
 const proxiedStore = new Proxy(mapStore, {

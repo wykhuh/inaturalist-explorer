@@ -1,4 +1,4 @@
-@layer reset, base, layout, explorer-menu, explorer, utilities;
+@layer reset, base, layout, explorer-menu, filters, explorer, utilities;
 
 @layer reset {
   /* 1. Use a more-intuitive box-sizing model */
@@ -195,6 +195,11 @@
   .form-group {
     margin: 1rem 0;
   }
+
+  ::backdrop {
+    background-color: var(--clr-black);
+    opacity: 0.5;
+  }
 }
 
 @layer layout {
@@ -205,6 +210,7 @@
   main.two-columns {
     display: grid;
     grid-template-columns: 250px 1fr;
+    grid-template-rows: 1fr 50px;
   }
 
   .wrapper {
@@ -316,6 +322,38 @@
       background-color: transparent;
       border: 0;
       cursor: pointer;
+    }
+  }
+}
+
+@layer filters {
+  .filters-modal {
+    /* z-index: 2500; */
+    /* position: absolute; */
+    /* top: 0; */
+    width: 90%;
+  }
+  #filters-form {
+    & .fields {
+      display: grid;
+      grid-gap: 10px;
+
+      /* grid-auto-flow: column; */
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      /* grid-template-rows: 1fr 50px; */
+    }
+
+    .form-group {
+      margin: 0 0;
+    }
+
+    fieldset {
+      border: 1px solid var(--clr-gray-400);
+      margin: 0.5rem 0;
+    }
+
+    & div:nth-child(1) {
+      grid-column: 1;
     }
   }
 }

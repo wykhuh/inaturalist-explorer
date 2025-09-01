@@ -13,3 +13,8 @@ https://www.inaturalist.org/taxa/map?taxa=321672,358062
 ==
 
 https://www.inaturalist.org/observations/compare
+
+==
+How to use iNaturalist’s Search URLs - wiki part 1 of 2
+
+https://forum.inaturalist.org/t/how-to-use-inaturalists-search-urls-wiki-part-1-of-2/63

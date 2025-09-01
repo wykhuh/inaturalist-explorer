@@ -67,6 +67,7 @@ export interface MapStore {
     showRefreshMapButton: boolean;
     layer: CustomPolygon | null;
   };
+  formFilters: { params: string };
 }
 
 export type MapStoreKeys = keyof MapStore;

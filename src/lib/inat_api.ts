@@ -18,6 +18,38 @@ export const api_base = "https://api.inaturalist.org/v1/";
 const taxa_api = "https://api.inaturalist.org/v1/taxa/";
 const places_api = "https://api.inaturalist.org/v1/places/";
 
+export const taxonRanks = [
+  "Kingdom",
+  "Phylum",
+  "Subphylum",
+  "Superclass",
+  "Class",
+  "Subclass",
+  "Infraclass",
+  "Subterclass",
+  "Superorder",
+  "Order",
+  "Suborder",
+  "Infraorder",
+  "Parvorder",
+  "Zoosection",
+  "Zoosubsection",
+  "Superfamily",
+  "Epifamily",
+  "Family",
+  "Subfamily",
+  "Supertribe",
+  "Tribe",
+  "Subtribe",
+  "Genus / Genushybrid",
+  "Subgenus",
+  "Section",
+  "Subsection",
+  "Complex",
+  "Species / Hybrid",
+  "Subspecies / Variety / Form",
+];
+
 export const lifeTaxon: NormalizediNatTaxon = {
   name: "Life",
   default_photo:

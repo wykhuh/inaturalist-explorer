@@ -6,6 +6,7 @@ import "./assets/leaflet.css";
 import "./assets/autocomplete.css";
 import "./components/TaxaListItem/component.ts";
 import "./components/PlacesListItem/component.ts";
+import "./components/ObservationsFilters/component.ts";
 import {
   getMapTiles,
   addLayerToMap,
@@ -122,7 +123,6 @@ const autoCompleteTaxaJS = new autoComplete({
 document
   .querySelector("#inatTaxaAutoComplete")!
   .addEventListener("selection", async function (event: any) {
-    console.log("inatTaxaAutoComplete");
     let selection = event.detail.selection.value;
     await taxonSelectedHandler(selection, event.detail.query, window.app.store);
   });
