@@ -86,6 +86,33 @@ describe("initApp", () => {
     expect(store.inatApiParams).toStrictEqual(expectedParams);
   });
 
+  test("loads and renders taxa data if colors not in url", async () => {
+    let { store } = setupMapAndStore();
+
+    expectEmpytMap(store);
+
+    let searchparams = "?taxon_ids=48460&verifiable=true&spam=false";
+    let urlData = decodeAppUrl(searchparams);
+
+    await initApp(store, urlData);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
+    ]);
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expectLifeTaxa(store);
+
+    let expectedParams = {
+      color: colors[0],
+      taxon_id: life().id,
+      verifiable: true,
+      spam: false,
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams);
+  });
+
   test("loads and renders taxa and place data based on url params", async () => {
     let { store } = setupMapAndStore();
 

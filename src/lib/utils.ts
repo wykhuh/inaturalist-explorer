@@ -5,6 +5,7 @@ import type {
   NormalizediNatTaxon,
 } from "../types/app";
 import { bboxPlace } from "./data_utils";
+import { defaultColorScheme } from "./map_colors_utils";
 import { convertParamsBBoxToLngLat } from "./map_utils";
 
 export function displayJson(json: any, el: HTMLElement | null) {
@@ -108,7 +109,9 @@ export function decodeAppUrl(searchParams: string) {
   let taxa: NormalizediNatTaxon[] = [];
   if ("taxon_ids" in urlParams) {
     let ids = urlParams.taxon_ids.split(",");
-    let colors = urlParams.colors.split(",");
+    let colors = urlParams.colors
+      ? urlParams.colors.split(",")
+      : defaultColorScheme;
     ids.forEach((id, i) => {
       taxa.push({
         id: Number(id),
