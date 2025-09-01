@@ -16,7 +16,7 @@ import {
   removeOneTaxonFromMap,
   idStringAddId,
 } from "./data_utils.ts";
-import { colorsSixTolBright, getColor } from "./map_colors_utils.ts";
+import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
 import { lifeTaxon } from "./inat_api.ts";
 import { updateUrl } from "./utils.ts";
@@ -98,7 +98,7 @@ export async function taxonSelectedHandler(
   if (layerControl == null) return;
 
   // get color for taxon
-  let color = getColor(appStore, colorsSixTolBright);
+  let color = getColor(appStore, defaultColorScheme);
   taxonObj.color = color;
 
   // get display name for taxon
@@ -219,7 +219,7 @@ export async function placeSelectedHandler(
     let { title, subtitle } = formatTaxonName(lifeTaxon, "life");
     lifeTaxon.title = title;
     lifeTaxon.subtitle = subtitle;
-    lifeTaxon.color = getColor(appStore, colorsSixTolBright);
+    lifeTaxon.color = getColor(appStore, defaultColorScheme);
     taxa = [lifeTaxon];
   }
 

@@ -175,13 +175,7 @@ export let warmMonths = [4, 5, 6, 7, 8, 9];
 export let blue = "#3388ff";
 export let darkGray = "#525252";
 
-export let defaultColorScheme = {
-  colorSchemeMonth: twelveMonths,
-  colorSchemeYear: colorsSix,
-  defaultColor: blue,
-  colorScheme: colorsSixTolBright,
-  monthSeasonalMarkers: true,
-};
+export let defaultColorScheme = colorsSixTolBright;
 
 export function getColor(appStore: MapStore, colorArray: string[]) {
   let color;

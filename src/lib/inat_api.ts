@@ -5,7 +5,7 @@ import type {
   iNatTaxaAPI,
   iNatPlacesAPI,
 } from "../types/inat_api.d.ts";
-import { colorsSixTolBright } from "./map_colors_utils.ts";
+import { defaultColorScheme } from "./map_colors_utils.ts";
 
 const search_api = "https://api.inaturalist.org/v1/search";
 export const search_places_api = `${search_api}?sources=places&per_page=10&q=`;
@@ -59,7 +59,7 @@ export const lifeTaxon: NormalizediNatTaxon = {
   rank: "stateofmatter",
   id: 48460,
   display_name: "life",
-  color: colorsSixTolBright[0],
+  color: defaultColorScheme[0],
   title: "Life",
   subtitle: "Life",
 };
