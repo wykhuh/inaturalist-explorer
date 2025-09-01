@@ -163,6 +163,39 @@ describe("formatAppUrl", () => {
 
     expect(result).toBe("");
   });
+
+  test("format parameters for formFilters", () => {
+    let appStore = {
+      ...mapStore,
+      inatApiParams: {
+        taxon_id: redOaks.id,
+        color: redOaks.color,
+        spam: false,
+      },
+      formFilters: { params: "verifiable=any&sounds" },
+      selectedTaxa: [life, redOaks],
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe(
+      "taxon_ids=48460,861036&colors=%234477aa,%2366ccee&spam=false&verifiable=any&sounds",
+    );
+  });
+
+  test("ignore formFilters if no taxa or places", () => {
+    let appStore = {
+      ...mapStore,
+      inatApiParams: {
+        spam: false,
+      },
+      formFilters: { params: "verifiable=any&sounds" },
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe("");
+  });
 });
 
 describe("updateUrl", () => {

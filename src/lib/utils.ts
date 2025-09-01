@@ -83,7 +83,14 @@ export function formatAppUrl(appStore: MapStore) {
     }
   });
 
-  return new URLSearchParams(params as any).toString().replaceAll("%2C", ",");
+  let searchParams = new URLSearchParams(params as any)
+    .toString()
+    .replaceAll("%2C", ",");
+
+  if (appStore.formFilters.params !== "") {
+    searchParams += "&" + appStore.formFilters.params;
+  }
+  return searchParams;
 }
 
 export function updateUrl(url_location: Location, appStore: MapStore) {

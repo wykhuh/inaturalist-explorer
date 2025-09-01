@@ -567,7 +567,7 @@ export function displayUserData(appStore: MapStore, _source: string) {
   let data = {
     inatApiParams: appStore.inatApiParams,
     color: appStore.color,
-    formFilters: appStore.formFilters.params,
+    formFilters: appStore.formFilters,
     selectedTaxa: appStore.selectedTaxa,
     taxaMapLayers: formatTaxaMapLayers(),
     selectedPlaces: appStore.selectedPlaces,
