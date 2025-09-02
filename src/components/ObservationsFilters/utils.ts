@@ -4,22 +4,24 @@ export function processFiltersForm(data: FormData): {
   params: iNatApiParams;
   string: string;
 } {
+  // convert form data into object that can be use with URLSearchParams
   let values: iNatApiParams = {};
 
-  for (const [key, value] of data) {
-    // console.log(key, value);
+  for (const [k, value] of data) {
+    // HACK: get rid of typescript errors for values[key]
+    let key = k as iNatApiParamsKeys;
 
     // ignore fields
     if (["on", "d1", "d2", "month", "iconic_taxa"].includes(key)) {
-      // ignore params with value "on"
+      // ignore value "on"
     } else if (value === "on") {
-      // handle params that have field and value, e.g. verifiable=any
+      // convert boolean strings to boolean
     } else if (value === "true") {
-      (values[key as iNatApiParamsKeys] as boolean) = true;
+      values[key] = true;
     } else if (value === "false") {
-      (values[key as iNatApiParamsKeys] as boolean) = false;
+      values[key] = false;
     } else if (value !== "") {
-      (values[key as iNatApiParamsKeys] as string) = value as string;
+      values[key] = value as string;
     }
   }
 

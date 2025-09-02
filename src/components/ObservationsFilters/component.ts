@@ -1,5 +1,9 @@
+import { renderPlacesList, renderTaxaList } from "../../lib/autocomplete_utils";
+import { fetchiNatMapData, removeOneTaxonFromMap } from "../../lib/data_utils";
+import { updateStoreUsingFilters } from "../../lib/data_utils";
 import { taxonRanks } from "../../lib/inat_api";
 import { mapStore } from "../../lib/store";
+import { updateUrl } from "../../lib/utils";
 import { processFiltersForm } from "./utils";
 
 const setup = async () => {
@@ -32,6 +36,8 @@ const setup = async () => {
     }
 
     formEventHandler() {
+      let appStore = window.app.store;
+
       const inputs = document.querySelectorAll(
         "#filters-form input",
       ) as NodeListOf<HTMLInputElement>;
@@ -113,29 +119,39 @@ const setup = async () => {
           event.preventDefault();
 
           const data = new FormData(form);
-          window.app.store.formFilters = processFiltersForm(data);
+          appStore.formFilters = processFiltersForm(data);
         });
         form;
 
-        form.addEventListener("change", (event) => {
+        form.addEventListener("change", async (event) => {
           if (event.target === null) return;
 
           event.preventDefault();
 
           const data = new FormData(form);
           let results = processFiltersForm(data);
-          window.app.store.formFilters = results;
-          window.app.store.inatApiParams = {
-            ...window.app.store.inatApiParams,
-            ...results.params,
-          };
+          updateStoreUsingFilters(appStore, results);
+
+          for await (const taxon of appStore.selectedTaxa) {
+            removeOneTaxonFromMap(appStore, taxon.id);
+
+            appStore.inatApiParams = {
+              ...appStore.inatApiParams,
+              taxon_id: taxon.id,
+              color: taxon.color,
+            };
+            await fetchiNatMapData(taxon, appStore);
+          }
+          renderTaxaList(appStore);
+          renderPlacesList(appStore);
+          updateUrl(window.location, appStore);
           if (logEl) {
             logEl.innerText = results.string;
           }
         });
 
         form.addEventListener("reset", () => {
-          window.app.store.formFilters = mapStore.formFilters;
+          appStore.formFilters = mapStore.formFilters;
         });
       }
     }

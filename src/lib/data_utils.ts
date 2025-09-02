@@ -25,10 +25,12 @@ import {
   getiNatObservationsTotal,
   getPlaceById,
   getTaxonById,
+  iNatApiFilterableParams,
 } from "./inat_api.ts";
 import { renderTaxaList, renderPlacesList } from "./autocomplete_utils.ts";
 import type { Map } from "leaflet";
 import type { PlacesResult, TaxaResult } from "../types/inat_api";
+import { mapStore } from "./store.ts";
 
 export function bboxPlace(bbox: LngLat[]): NormalizediNatPlace {
   return {
@@ -253,6 +255,8 @@ export function removeOneTaxonFromMap(appStore: MapStore, taxonId: number) {
   });
 
   delete appStore.taxaMapLayers[taxonId];
+  // HACK: trigger change in proxy store
+  appStore.taxaMapLayers = appStore.taxaMapLayers;
 }
 
 export function removeOnePlaceFromMap(appStore: MapStore, placeId: number) {
@@ -568,6 +572,46 @@ export function processBBoxData(appStore: MapStore, urlStore: MapStore) {
 
   appStore.selectedPlaces = [bboxPlace(lngLatCoors)];
   appStore.placesMapLayers["0"] = [layer as unknown as CustomGeoJSON];
+}
+
+export function updateStoreUsingFilters(
+  appStore: MapStore,
+  filtersResults: {
+    params: iNatApiParams;
+    string: string;
+  },
+) {
+  // update store formFilters
+  appStore.formFilters = filtersResults;
+
+  for (let [k, _value] of Object.entries(appStore.inatApiParams)) {
+    let key = k as iNatApiParamsKeys;
+
+    // ignore params that can't be changed in the filter modal
+    if (!iNatApiFilterableParams.includes(key)) {
+      continue;
+    }
+
+    let value = appStore.inatApiParams[key];
+
+    // reset params that are in the default mapStore and whose value has changed
+    if (
+      mapStore.inatApiParams[key] !== undefined &&
+      appStore.inatApiParams[key] !== mapStore.inatApiParams[key]
+    ) {
+      appStore.inatApiParams[key] = mapStore.inatApiParams[key];
+    } else if (
+      mapStore.inatApiParams[key] === undefined &&
+      appStore.inatApiParams[key] !== filtersResults.params[key]
+    ) {
+      delete appStore.inatApiParams[key];
+    }
+  }
+
+  appStore.inatApiParams = {
+    ...appStore.inatApiParams,
+    ...filtersResults.params,
+  };
 }
 
 export function displayUserData(appStore: MapStore, _source: string) {

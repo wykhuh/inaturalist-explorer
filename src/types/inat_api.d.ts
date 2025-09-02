@@ -166,48 +166,82 @@ export type ObservationsAPI = {
 
 // https://api.inaturalist.org/v1/docs/#!/Observation_Tiles/get_grid_zoom_x_y_png
 type TilesAPIParams = {
-  color?: string;
+  zoom: number;
+  x: number;
+  y: number;
+  color?: string; // only one value
+  acc?: boolean;
   captive?: boolean;
   endemic?: boolean;
+  geo?: boolean;
+  id_please?: boolean;
   identified?: boolean;
   introduced?: boolean;
+  mappable?: boolean;
   native?: boolean;
   out_of_range?: boolean;
+  pcid?: boolean;
   photos?: boolean;
+  popular?: boolean;
   sounds?: boolean;
+  taxon_is_active?: boolean;
   threatened?: boolean;
   verifiable?: boolean;
-  license?: CCLicense;
-  photo_license?: CCLicense;
-  place_id?: string;
-  project_id?: string;
-  rank?: TaxonRanks;
-  sound_license?: CCLicense;
-  taxon_id?: string;
-  without_taxon_id?: string;
-  taxon_name?: string;
-  user_id?: string;
-  user_login?: string;
-  ident_user_id?: string;
-  hour?: string;
-  day?: string;
-  month?: string;
-  year?: string;
-  annotation_user_id?: string;
-  acc_above?: string;
-  acc_below?: string;
-  acc_below_or_unknown?: string;
-  d1?: string;
-  d2?: string;
-  observed_on?: string;
-  csi?: IUCNStatus;
-  geoprivacy?: PrivacyStatus;
-  taxon_geoprivacy?: PrivacyStatus;
-  obscuration?: "obscured" | "private" | "none";
-  hrank?: TaxonRanks;
-  lrank?: TaxonRanks;
-  iconic_taxa?: IconicTaxa;
-  identifications?: "most_agree" | "most_disagree" | "some_agree";
+  licensed?: boolean;
+  photo_licensed?: boolean;
+  expected_nearby?: boolean;
+  id?: string; // comma-seperated string
+  not_id?: string; // comma-seperated string
+  license?: string; // comma-seperated string, type CCLicense
+  ofv_datatype?: string; // comma-seperated string
+  photo_license?: string; // comma-seperated string, type CCLicense
+  place_id?: string; // comma-seperated string
+  project_id?: string; // comma-seperated string
+  rank?: string; // comma-seperated string, type TaxonRanks
+  site_id?: string; // comma-seperated string, type CCLicense
+  sound_license?: string; // comma-seperated string, type CCLicense
+  taxon_id?: string; // comma-seperated string
+  without_taxon_id?: string; // comma-seperated string
+  taxon_name?: string; // comma-seperated string
+  user_id?: string; // comma-seperated string
+  user_login?: string; // comma-seperated string
+  ident_user_id?: Number;
+  hour?: string; // comma-seperated string
+  day?: string; // comma-seperated string
+  month?: string; // comma-seperated string
+  year?: string; // comma-seperated string
+  created_day?: string; // comma-seperated string
+  created_month?: string; // comma-seperated string
+  created_year?: string; // comma-seperated string
+  term_id?: string; // comma-seperated string
+  term_value_id?: string; // comma-seperated string
+  without_term_id?: number;
+  without_term_value_id?: string; // comma-seperated string
+  term_id_or_unknown?: string; // comma-seperated string
+  annotation_user_id?: string; // comma-seperated string
+  acc_above?: number;
+  acc_below?: number;
+  acc_below_or_unknown?: number | "unknown";
+  d1?: string; // date
+  d2?: string; // date
+  created_d1?: string; // date-time
+  created_d2?: string; // date-time
+  created_on?: string; // date
+  observed_on?: string; // date
+  unobserved_by_user_id?: number;
+  apply_project_rules_for?: string;
+  cs?: string;
+  csa?: string;
+  csi?: string; // comma-seperated string, type IUCNStatus
+  geoprivacy?: string; // comma-seperated string, type PrivacyStatus
+  taxon_geoprivacy?: string; // comma-seperated string, type PrivacyStatus
+  obscuration?: "obscured" | "private" | "none"; // comma-seperated string
+  hrank?: TaxonRanks; // one value
+  lrank?: TaxonRanks; // one value
+  iconic_taxa?: string; // comma-seperated string, type IconicTaxa
+  id_above?: string;
+  id_below?: string;
+  identifications?: "most_agree" | "most_disagree" | "some_agree"; // one value
   lat?: number;
   lng?: number;
   radius?: number;
@@ -215,7 +249,16 @@ type TilesAPIParams = {
   nelng?: number;
   swlat?: number;
   swlng?: number;
+  list_id?: number;
+  not_in_project?: string;
+  not_matching_project_rules_for?: string;
+  observation_accuracy_experiment_id?: string; // comma-seperated string
+  q?: string;
+  search_on?: "names" | "tags" | "description" | "place";
   quality_grade?: "casual" | "needs_id" | "research";
+  updated_since?: string;
+  viewer_id?: string;
+  reviewed?: boolean;
 };
 
 type CCLicense =

@@ -50,6 +50,25 @@ export const taxonRanks = [
   "Subspecies / Variety / Form",
 ];
 
+export const iNatApiFilterableParams = [
+  "captive",
+  "d1",
+  "d2",
+  "hrank",
+  "iconic_taxa",
+  "introduced",
+  "lrank",
+  "month",
+  "on",
+  "photos",
+  "popular",
+  "quality_grade",
+  "spam",
+  "sounds",
+  "threatened",
+  "verifiable",
+];
+
 export const lifeTaxon: NormalizediNatTaxon = {
   name: "Life",
   default_photo:

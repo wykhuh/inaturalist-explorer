@@ -6,8 +6,10 @@ import {
   updateSelectedTaxaProxy,
   idStringAddId,
   idStringRemoveId,
+  updateStoreUsingFilters,
 } from "../lib/data_utils.ts";
 import type { MapStore, NormalizediNatTaxon } from "../types/app.d.ts";
+import { mapStore } from "../lib/store.ts";
 
 describe("formatTaxonName", () => {
   describe("query matches common name", () => {
@@ -276,5 +278,126 @@ describe("idStringRemoveId", () => {
     let result = idStringRemoveId(newId, currentId);
 
     expect(result).toBe(undefined);
+  });
+});
+
+describe("updateStoreUsingFilters", () => {
+  test("store remains the same if filter params has not been changed", () => {
+    let store = structuredClone(mapStore);
+    let filtersData = {
+      params: {},
+      string: "",
+    };
+
+    updateStoreUsingFilters(store, filtersData);
+
+    let expected = structuredClone(mapStore);
+    expect(store).toStrictEqual(expected);
+  });
+
+  test("update store inatApiParams with filter params", () => {
+    let store = structuredClone(mapStore);
+
+    expect(store.inatApiParams).toStrictEqual({
+      spam: false,
+      verifiable: true,
+    });
+
+    let filtersData = {
+      params: { iconic_taxa: "Aves,Fungi", verifiable: false },
+      string: "",
+    };
+
+    updateStoreUsingFilters(store, filtersData);
+
+    let expected: MapStore = {
+      ...store,
+      inatApiParams: {
+        spam: false,
+        verifiable: false,
+        iconic_taxa: "Aves,Fungi",
+      },
+      formFilters: filtersData,
+    };
+    expect(store).toStrictEqual(expected);
+  });
+
+  test(`reset filterable inatApiParams to default values if they have been
+    changed, but they not in filter data`, () => {
+    let store = structuredClone(mapStore);
+
+    expect(store.inatApiParams).toStrictEqual({
+      spam: false,
+      verifiable: true,
+    });
+
+    let filtersData1 = {
+      params: { spam: true, verifiable: false },
+      string: "",
+    };
+
+    updateStoreUsingFilters(store, filtersData1);
+
+    expect(store.inatApiParams).toStrictEqual({
+      spam: true,
+      verifiable: false,
+    });
+
+    let filtersData2 = {
+      params: {},
+      string: "",
+    };
+
+    updateStoreUsingFilters(store, filtersData2);
+
+    let expected: MapStore = {
+      ...store,
+      inatApiParams: {
+        spam: false,
+        verifiable: true,
+      },
+      formFilters: filtersData2,
+    };
+    expect(store).toStrictEqual(expected);
+  });
+
+  test(`remove optional filterable properties if they have been changed,
+    but they are not in filter data`, () => {
+    let store = structuredClone(mapStore);
+
+    expect(store.inatApiParams).toStrictEqual({
+      spam: false,
+      verifiable: true,
+    });
+
+    let filtersData1 = {
+      params: { iconic_taxa: "Aves" },
+      string: "",
+    };
+
+    updateStoreUsingFilters(store, filtersData1);
+
+    expect(store.inatApiParams).toStrictEqual({
+      iconic_taxa: "Aves",
+      spam: false,
+      verifiable: true,
+    });
+
+    let filtersData2 = {
+      params: {},
+      string: "",
+    };
+
+    updateStoreUsingFilters(store, filtersData2);
+
+    let expected: MapStore = {
+      ...store,
+      inatApiParams: {
+        spam: false,
+        verifiable: true,
+      },
+      formFilters: filtersData2,
+    };
+    expect(store).toStrictEqual(expected);
   });
 });
