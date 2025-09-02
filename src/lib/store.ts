@@ -20,7 +20,7 @@ export const mapStore: MapStore = {
   formFilters: { params: {}, string: "" },
 };
 
-const proxiedStore = new Proxy(mapStore, {
+const proxiedStore = new Proxy(structuredClone(mapStore), {
   set(target, property: MapStoreKeys, value) {
     target[property] = value;
 
