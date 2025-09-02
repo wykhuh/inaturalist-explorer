@@ -583,28 +583,39 @@ export function updateStoreUsingFilters(
 ) {
   // update store formFilters
   appStore.formFilters = filtersResults;
+  // console.log("------------ updateStoreUsingFilters");
+  // console.log("default:", mapStore.inatApiParams);
+  // console.log("appStore:", appStore.inatApiParams);
+  // console.log("filtersResults", filtersResults);
 
   for (let [k, _value] of Object.entries(appStore.inatApiParams)) {
     let key = k as iNatApiParamsKeys;
+    // console.log(key, _value);
 
     // ignore params that can't be changed in the filter modal
     if (!iNatApiFilterableParams.includes(key)) {
       continue;
     }
 
-    let value = appStore.inatApiParams[key];
-
-    // reset params that are in the default mapStore and whose value has changed
-    if (
-      mapStore.inatApiParams[key] !== undefined &&
-      appStore.inatApiParams[key] !== mapStore.inatApiParams[key]
-    ) {
-      appStore.inatApiParams[key] = mapStore.inatApiParams[key];
-    } else if (
-      mapStore.inatApiParams[key] === undefined &&
-      appStore.inatApiParams[key] !== filtersResults.params[key]
-    ) {
-      delete appStore.inatApiParams[key];
+    // handle inatApiParams that set in default mapStore
+    if (mapStore.inatApiParams[key] !== undefined) {
+      // field is not set in the form filter
+      if (filtersResults.params[key] === undefined) {
+        if (key === "verifiable") {
+          if (appStore.inatApiParams.verifiable === true) {
+            delete appStore.inatApiParams[key];
+          }
+        } else if (key === "spam") {
+          if (appStore.inatApiParams.spam === true) {
+            appStore.inatApiParams.spam = false;
+          }
+        }
+      }
+      // handle inatApiParams that have been changed by the filtes
+    } else if (appStore.inatApiParams[key] !== filtersResults.params[key]) {
+      if (filtersResults.params[key] === undefined) {
+        delete appStore.inatApiParams[key];
+      }
     }
   }
 

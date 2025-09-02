@@ -6,10 +6,12 @@ export function processFiltersForm(data: FormData): {
 } {
   // convert form data into object that can be use with URLSearchParams
   let values: iNatApiParams = {};
+  // console.log("----------- processFiltersForm");
 
   for (const [k, value] of data) {
     // HACK: get rid of typescript errors for values[key]
     let key = k as iNatApiParamsKeys;
+    // console.log(key, value);
 
     // ignore fields
     if (["on", "d1", "d2", "month", "iconic_taxa"].includes(key)) {
@@ -22,6 +24,8 @@ export function processFiltersForm(data: FormData): {
       values[key] = false;
     } else if (value !== "") {
       values[key] = value as string;
+    } else if (value === "") {
+      delete values[key];
     }
   }
 
