@@ -481,6 +481,7 @@ describe("processAutocompletePlaces", () => {
         geometry: losAngelesSearchPlaces.results[0].record.geometry_geojson,
         bounding_box:
           losAngelesSearchPlaces.results[0].record.bounding_box_geojson,
+        place_type_name: "County",
       },
       {
         display_name: "Los Angeles Area (custom), CA, US",
@@ -489,6 +490,7 @@ describe("processAutocompletePlaces", () => {
         geometry: losAngelesSearchPlaces.results[1].record.geometry_geojson,
         bounding_box:
           losAngelesSearchPlaces.results[1].record.bounding_box_geojson,
+        place_type_name: undefined,
       },
       {
         display_name: "Los Angeles & Ventura Metropolitan Areas",
@@ -497,6 +499,7 @@ describe("processAutocompletePlaces", () => {
         geometry: losAngelesSearchPlaces.results[2].record.geometry_geojson,
         bounding_box:
           losAngelesSearchPlaces.results[2].record.bounding_box_geojson,
+        place_type_name: undefined,
       },
     ];
     expect(results).toStrictEqual(expected);
@@ -513,11 +516,12 @@ describe("renderAutocompletePlace", () => {
         .geometry_geojson as any,
       bounding_box: losAngelesSearchPlaces.results[0].record
         .bounding_box_geojson as any,
+      place_type_name: "County",
     };
     let expected = `
   <div class="places-ac-option" data-testid="places-ac-option">
     <div class="place-name">
-    Los Angeles County, US, CA
+    Los Angeles County, US, CA <span class="place-type">(County)</span>
     </div>
   </div>`;
 

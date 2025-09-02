@@ -91,3 +91,8 @@ https://stackoverflow.com/questions/332872/encode-url-in-javascript/58879100
 ==
 
 https://freshman.tech/snippets/typescript/fix-value-not-exist-eventtarget/
+
+==
+
+CSS native variables not working in media queries
+https://stackoverflow.com/questions/40722882/css-native-variables-not-working-in-media-queries

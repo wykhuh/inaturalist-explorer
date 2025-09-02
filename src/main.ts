@@ -92,14 +92,16 @@ const autoCompleteTaxaJS = new autoComplete({
   autocomplete: "off",
   selector: "#inatTaxaAutoComplete",
   placeHolder: "Enter species name",
-  threshold: 3,
+  threshold: 2,
   searchEngine: (query: string, record: NormalizediNatTaxon) => {
     return renderAutocompleteTaxon(record, query);
   },
   data: {
     src: async (query: string) => {
       try {
-        let res = await fetch(`${autocomplete_taxa_api}?q=${query}`);
+        let res = await fetch(
+          `${autocomplete_taxa_api}&per_page=50&q=${query}`,
+        );
         let data = (await res.json()) as iNatAutocompleteTaxaAPI;
         return processAutocompleteTaxa(data, query);
       } catch (error) {
@@ -108,7 +110,7 @@ const autoCompleteTaxaJS = new autoComplete({
     },
   },
   resultsList: {
-    maxResults: 10,
+    maxResults: 50,
   },
   events: {
     input: {
@@ -134,15 +136,15 @@ document
 const autoCompletePlacesJS = new autoComplete({
   autocomplete: "off",
   selector: "#inatPlacesSearch",
-  placeHolder: "Enter species name",
-  threshold: 3,
+  placeHolder: "Enter place name",
+  threshold: 2,
   searchEngine: (_query: string, record: NormalizediNatPlace) => {
     return renderAutocompletePlace(record);
   },
   data: {
     src: async (query: string) => {
       try {
-        let res = await fetch(`${search_places_api}${query}`);
+        let res = await fetch(`${search_places_api}&per_page=50&q=${query}`);
         let data = (await res.json()) as iNatSearchAPI;
         return processAutocompletePlaces(data);
       } catch (error) {
@@ -151,7 +153,7 @@ const autoCompletePlacesJS = new autoComplete({
     },
   },
   resultsList: {
-    maxResults: 10,
+    maxResults: 50,
   },
   events: {
     input: {

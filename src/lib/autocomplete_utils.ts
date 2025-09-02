@@ -5,6 +5,7 @@ import type {
   NormalizediNatPlace,
   MapStore,
   CustomGeoJSON,
+  PlaceTypesKey,
 } from "../types/app";
 import type {
   iNatAutocompleteTaxaAPI,
@@ -18,7 +19,7 @@ import {
 } from "./data_utils.ts";
 import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
-import { lifeTaxon } from "./inat_api.ts";
+import { lifeTaxon, placeTypes } from "./inat_api.ts";
 import { updateUrl } from "./utils.ts";
 
 //=====================
@@ -139,12 +140,17 @@ export function processAutocompletePlaces(
   data: iNatSearchAPI,
 ): NormalizediNatPlace[] {
   return data.results.map((item) => {
+    let typeName;
+    if (item.record.place_type) {
+      typeName = placeTypes[item.record.place_type.toString() as PlaceTypesKey];
+    }
     return {
       name: item.record.name,
       display_name: item.record.display_name,
       geometry: item.record.geometry_geojson as any,
       bounding_box: item.record.bounding_box_geojson,
       id: item.record.id,
+      place_type_name: typeName,
     };
   });
 }
@@ -153,7 +159,11 @@ export function renderAutocompletePlace(item: NormalizediNatPlace): string {
   let html = `
   <div class="places-ac-option" data-testid="places-ac-option">
     <div class="place-name">
-    ${item.display_name}
+    ${item.display_name}`;
+  if (item.place_type_name) {
+    html += ` <span class="place-type">(${item.place_type_name})</span>`;
+  }
+  html += `
     </div>
   </div>`;
 

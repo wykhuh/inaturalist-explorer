@@ -1,4 +1,8 @@
-import type { NormalizediNatTaxon, TileSettings } from "../types/app.d.ts";
+import type {
+  NormalizediNatTaxon,
+  PlaceTypes,
+  TileSettings,
+} from "../types/app.d.ts";
 import type {
   ObservationsSpeciesCountAPI,
   ObservationsAPI,
@@ -8,9 +12,9 @@ import type {
 import { defaultColorScheme } from "./map_colors_utils.ts";
 
 const search_api = "https://api.inaturalist.org/v1/search";
-export const search_places_api = `${search_api}?sources=places&per_page=10&q=`;
+export const search_places_api = `${search_api}?sources=places`;
 export const autocomplete_taxa_api =
-  "https://api.inaturalist.org/v1/taxa/autocomplete";
+  "https://api.inaturalist.org/v1/taxa/autocomplete?";
 const observations_api = "https://api.inaturalist.org/v2/observations";
 const observations_count_api =
   "https://api.inaturalist.org/v2/observations/species_counts";
@@ -68,6 +72,61 @@ export const iNatApiFilterableParams = [
   "threatened",
   "verifiable",
 ];
+
+//forum.inaturalist.org/t/what-is-places-type-for-the-api-call-for-places-nearby/49446/2?u=wy_bio
+export const placeTypes: PlaceTypes = {
+  "0": "Undefined",
+  "2": "Street Segment",
+  "5": "Intersection",
+  "6": "Street",
+  "7": "Town",
+  "8": "State",
+  "9": "County",
+  "10": "Local Administrative Area",
+  "12": "Country",
+  "13": "Island",
+  "14": "Airport",
+  "15": "Drainage",
+  "16": "Land Feature",
+  "17": "Miscellaneous",
+  "18": "Nationality",
+  "19": "Supername",
+  "20": "Point of Interest",
+  "21": "Region",
+  "24": "Colloquial",
+  "25": "Zone",
+  "26": "Historical State",
+  "27": "Historical County",
+  "29": "Continent",
+  "33": "Estate",
+  "35": "Historical Town",
+  "36": "Aggregate",
+  "100": "Open Space",
+  "101": "Territory",
+  "102": "District",
+  "103": "Province",
+  "1000": "Municipality",
+  "1001": "Parish",
+  "1002": "Department Segment",
+  "1003": "City Building",
+  "1004": "Commune",
+  "1005": "Governorate",
+  "1006": "Prefecture",
+  "1007": "Canton",
+  "1008": "Republic",
+  "1009": "Division",
+  "1010": "Subdivision",
+  "1011": "Village block",
+  "1012": "Sum",
+  "1013": "Unknown",
+  "1014": "Shire",
+  "1015": "Prefecture City",
+  "1016": "Regency",
+  "1017": "Constituency",
+  "1018": "Local Authority",
+  "1019": "Poblacion",
+  "1020": "Delegation",
+};
 
 export const lifeTaxon: NormalizediNatTaxon = {
   name: "Life",

@@ -48,6 +48,8 @@ export type NormalizediNatPlace = {
   geometry?: PolygonJson | MultiPolygonJson;
   bounding_box?: PolygonJson;
   id: number;
+  place_type?: number;
+  place_type_name?: string;
 };
 
 export interface MapStore {
@@ -248,3 +250,8 @@ export interface CustomGeoJSON extends GeoJSON {
 export interface CustomGeoJSONOptions extends GeoJSONOptions {
   layer_description: string;
 }
+
+export type PlaceTypes = {
+  [key: string]: string;
+};
+export type PlaceTypesKey = keyof PlaceTypes;

@@ -96,6 +96,10 @@
     --clr-gray-300: hsl(0, 0%, 93%);
     --clr-gray-400: hsl(0, 0%, 87%);
     --clr-gray-500: hsl(0, 0%, 80%);
+    --clr-gray-600: hsl(0, 0%, 70%);
+    --clr-gray-700: hsl(0, 0%, 60%);
+    --clr-gray-800: hsl(0, 0%, 50%);
+    --clr-gray-900: hsl(0, 0%, 40%);
 
     --clr-orange-300: hsl(25, 45%, 77%);
     --clr-orange-400: hsl(25, 45%, 62%);
@@ -335,6 +339,12 @@
       background-color: transparent;
       border: 0;
       cursor: pointer;
+    }
+  }
+
+  .places-ac-option {
+    & .place-type {
+      color: var(--clr-gray-700);
     }
   }
 }
