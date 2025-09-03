@@ -238,3 +238,4 @@ verifiable: checked -> web app: no params, api: &verifiable=true&spam=false
 verifiable: unchecked -> web app: &verifiable=any, api: &spam=false
 
 ====================
+v2 lets you set the returned fields for observations

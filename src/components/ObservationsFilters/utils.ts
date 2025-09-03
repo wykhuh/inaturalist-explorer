@@ -1,4 +1,18 @@
-import type { iNatApiParams, iNatApiParamsKeys } from "../../types/app";
+import { iNatApiFilterableNames } from "../../lib/inat_api";
+import { mapStore } from "../../lib/store";
+import type {
+  iNatApiFilterableParamsKeys,
+  iNatApiParams,
+  iNatApiParamsKeys,
+  MapStore,
+} from "../../types/app";
+import {
+  fetchiNatMapData,
+  removeOneTaxonFromMap,
+  updateStoreUsingFilters,
+} from "../../lib/data_utils";
+import { renderPlacesList, renderTaxaList } from "../../lib/autocomplete_utils";
+import { updateUrl } from "../../lib/utils";
 
 export function processFiltersForm(data: FormData): {
   params: iNatApiParams;
@@ -58,4 +72,51 @@ export function processFiltersForm(data: FormData): {
       .toString()
       .replaceAll("%2C", ","),
   };
+}
+
+export function resetForm(appStore: MapStore) {
+  appStore.formFilters = mapStore.formFilters;
+
+  // delete filterable fields from appStore.inatApiParams
+  Object.keys(appStore.inatApiParams).forEach((param) => {
+    if (
+      iNatApiFilterableNames.includes(param) &&
+      !Object.keys(mapStore.inatApiParams).includes(param)
+    ) {
+      delete appStore.inatApiParams[param as iNatApiFilterableParamsKeys];
+    }
+  });
+
+  appStore.inatApiParams.spam = false;
+  appStore.inatApiParams.verifiable = true;
+
+  // HACK: trigger change in proxy store
+  appStore.inatApiParams = appStore.inatApiParams;
+}
+
+export async function updateAppWithFilters(
+  data: FormData,
+  appStore: MapStore,
+  logEl: HTMLElement,
+) {
+  let results = processFiltersForm(data);
+  updateStoreUsingFilters(appStore, results);
+
+  for await (const taxon of appStore.selectedTaxa) {
+    removeOneTaxonFromMap(appStore, taxon.id);
+
+    appStore.inatApiParams = {
+      ...appStore.inatApiParams,
+      taxon_id: taxon.id.toString(),
+      colors: taxon.color,
+    };
+    await fetchiNatMapData(taxon, appStore);
+  }
+  renderTaxaList(appStore);
+  renderPlacesList(appStore);
+  updateUrl(window.location, appStore);
+
+  if (logEl) {
+    logEl.innerText = results.string;
+  }
 }

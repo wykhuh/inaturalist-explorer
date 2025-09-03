@@ -2,7 +2,11 @@
 
 import { expect, test, describe } from "vitest";
 
-import { processFiltersForm } from "../../../components/ObservationsFilters/utils";
+import {
+  processFiltersForm,
+  resetForm,
+} from "../../../components/ObservationsFilters/utils";
+import { mapStore } from "../../../lib/store";
 
 function createFormData() {
   const formData = new FormData();
@@ -255,5 +259,72 @@ describe("processFiltersForm", () => {
       string: "iconic_taxa=Aves&month=1,2",
     };
     expect(result).toStrictEqual(expected);
+  });
+});
+
+describe("resetForm", () => {
+  test("returns original store if no changes have been made to store ", () => {
+    let store = structuredClone(mapStore);
+
+    resetForm(store);
+
+    expect(store.inatApiParams).toStrictEqual({
+      spam: false,
+      verifiable: true,
+    });
+    expect(store).toStrictEqual(structuredClone(mapStore));
+  });
+
+  test("removes inatApiParams that are set by the filters form", () => {
+    let store = structuredClone(mapStore);
+    store.inatApiParams.threatened = true;
+    store.inatApiParams.iconic_taxa = "Aves";
+    store.inatApiParams.month = "1,2";
+
+    resetForm(store);
+
+    expect(store.inatApiParams).toStrictEqual({
+      spam: false,
+      verifiable: true,
+    });
+    expect(store).toStrictEqual(structuredClone(mapStore));
+  });
+
+  test("does not change inatApiParams that are in iNatApiNonFilterableNames", () => {
+    let store = structuredClone(mapStore);
+    store.inatApiParams.taxon_id = "123";
+    store.inatApiParams.colors = "#4477aa";
+    store.inatApiParams.place_id = "456";
+    store.inatApiParams.nelat = 1;
+    store.inatApiParams.nelng = 2;
+    store.inatApiParams.swlat = 3;
+    store.inatApiParams.swlng = 4;
+
+    resetForm(store);
+
+    expect(store.inatApiParams).toStrictEqual({
+      spam: false,
+      verifiable: true,
+      taxon_id: "123",
+      colors: "#4477aa",
+      place_id: "456",
+      nelat: 1,
+      nelng: 2,
+      swlat: 3,
+      swlng: 4,
+    });
+  });
+
+  test("reset verify and spam to default values", () => {
+    let store = structuredClone(mapStore);
+    store.inatApiParams.spam = true;
+    store.inatApiParams.verifiable = false;
+
+    resetForm(store);
+
+    expect(store.inatApiParams).toStrictEqual({
+      spam: false,
+      verifiable: true,
+    });
   });
 });

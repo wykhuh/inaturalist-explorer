@@ -1,11 +1,5 @@
-import { renderPlacesList, renderTaxaList } from "../../lib/autocomplete_utils";
-import { fetchiNatMapData, removeOneTaxonFromMap } from "../../lib/data_utils";
-import { updateStoreUsingFilters } from "../../lib/data_utils";
-import { iNatApiFilterableNames, taxonRanks } from "../../lib/inat_api";
-import { mapStore } from "../../lib/store";
-import { updateUrl } from "../../lib/utils";
-import type { iNatApiFilterableParamsKeys, MapStore } from "../../types/app";
-import { processFiltersForm } from "./utils";
+import { taxonRanks } from "../../lib/inat_api";
+import { resetForm, updateAppWithFilters } from "./utils";
 
 const setup = async () => {
   const parser = new DOMParser();
@@ -102,7 +96,7 @@ const setup = async () => {
           event.preventDefault();
 
           const data = new FormData(form);
-          this.updateAppWithFilters(data, window.app.store, logEl);
+          updateAppWithFilters(data, window.app.store, logEl);
         });
 
         form.addEventListener("change", async (event) => {
@@ -111,25 +105,11 @@ const setup = async () => {
           event.preventDefault();
 
           const data = new FormData(form);
-          this.updateAppWithFilters(data, window.app.store, logEl);
+          updateAppWithFilters(data, window.app.store, logEl);
         });
 
         form.addEventListener("reset", () => {
-          appStore.formFilters = mapStore.formFilters;
-
-          // delete filterable fields from appStore.inatApiParams
-          Object.keys(appStore.inatApiParams).forEach((param) => {
-            if (
-              iNatApiFilterableNames.includes(param) &&
-              !Object.keys(mapStore.inatApiParams).includes(param)
-            ) {
-              delete appStore.inatApiParams[
-                param as iNatApiFilterableParamsKeys
-              ];
-            }
-          });
-          // HACK: trigger change in proxy store
-          appStore.inatApiParams = appStore.inatApiParams;
+          resetForm(appStore);
         });
       }
     }
@@ -166,33 +146,6 @@ const setup = async () => {
 
         selectEl.appendChild(optionEl);
       });
-    }
-
-    async updateAppWithFilters(
-      data: FormData,
-      appStore: MapStore,
-      logEl: HTMLElement,
-    ) {
-      let results = processFiltersForm(data);
-      updateStoreUsingFilters(appStore, results);
-
-      for await (const taxon of appStore.selectedTaxa) {
-        removeOneTaxonFromMap(appStore, taxon.id);
-
-        appStore.inatApiParams = {
-          ...appStore.inatApiParams,
-          taxon_id: taxon.id.toString(),
-          colors: taxon.color,
-        };
-        await fetchiNatMapData(taxon, appStore);
-      }
-      renderTaxaList(appStore);
-      renderPlacesList(appStore);
-      updateUrl(window.location, appStore);
-
-      if (logEl) {
-        logEl.innerText = results.string;
-      }
     }
 
     renderYearsSelect() {
