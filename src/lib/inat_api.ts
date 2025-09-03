@@ -167,6 +167,16 @@ export const iNatApiNames = iNatApiNonFilterableNames.concat(
   iNatApiFilterableNames,
 );
 
+export const CCLicenses = [
+  "cc0",
+  "cc-by",
+  "cc-by-nc",
+  "cc-by-sa",
+  "cc-by-nd",
+  "cc-by-nc-sa",
+  "cc-by-nc-nd",
+];
+
 //forum.inaturalist.org/t/what-is-places-type-for-the-api-call-for-places-nearby/49446/2?u=wy_bio
 export const placeTypes: PlaceTypes = {
   "0": "Undefined",

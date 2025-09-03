@@ -436,6 +436,7 @@ export async function initApp(appStore: MapStore, urlStore: MapStore) {
     renderPlacesList(appStore);
     fitBoundsPlaces(appStore);
   }
+  window.dispatchEvent(new Event("appInitialized"));
 }
 
 export async function processTaxonData(

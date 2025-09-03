@@ -1,5 +1,11 @@
-import { taxonRanks } from "../../lib/inat_api";
-import { resetForm, updateAppWithFilters } from "./utils";
+import {
+  initFilters,
+  resetForm,
+  updateAppWithFilters,
+  renderLicenseSelect,
+  renderRankSelect,
+  renderYearsSelect,
+} from "./utils";
 
 const setup = async () => {
   const parser = new DOMParser();
@@ -16,14 +22,12 @@ const setup = async () => {
     }
 
     renderForm() {
-      let selectHighEl = document.querySelector("#hrank") as HTMLSelectElement;
-      if (selectHighEl) {
-        this.renderRankSelect(selectHighEl, "");
-      }
-      let selectLowEl = document.querySelector("#lrank") as HTMLSelectElement;
-      if (selectLowEl) {
-        this.renderRankSelect(selectLowEl, "");
-      }
+      renderRankSelect("#hrank", "");
+      renderRankSelect("#lrank", "");
+
+      renderLicenseSelect("#license", "All");
+      renderLicenseSelect("#photo_license", "All");
+      renderLicenseSelect("#sound_license", "All");
     }
 
     formEventHandler() {
@@ -131,51 +135,19 @@ const setup = async () => {
       });
     }
 
-    renderRankSelect(selectEl: HTMLSelectElement, defaultValue: string) {
-      let optionEl = document.createElement("option");
-      optionEl.textContent = defaultValue;
-      optionEl.value = "";
-      optionEl.selected = true;
-
-      selectEl.appendChild(optionEl);
-
-      taxonRanks.forEach((rank) => {
-        let optionEl = document.createElement("option");
-        optionEl.textContent = rank;
-        optionEl.value = rank;
-
-        selectEl.appendChild(optionEl);
-      });
-    }
-
-    renderYearsSelect() {
-      if (!window.app.store.iNatStats.years) return;
-
-      let selectEl = document.querySelector("#year");
-      if (selectEl) {
-        let optionEl = document.createElement("option");
-        optionEl.innerText = "Select years";
-        selectEl.appendChild(optionEl);
-
-        window.app.store.iNatStats.years.forEach((year) => {
-          let optionEl = document.createElement("option");
-          optionEl.innerText = year.toString();
-          optionEl.value = year.toString();
-          selectEl.appendChild(optionEl);
-        });
-      }
-    }
-
     connectedCallback() {
       if (!template) return;
 
       this.appendChild(template.content.cloneNode(true));
 
-      this.renderForm();
       this.renderModal();
+      this.renderForm();
       this.formEventHandler();
       window.addEventListener("observationYearsLoaded", () => {
-        this.renderYearsSelect();
+        renderYearsSelect();
+      });
+      window.addEventListener("appInitialized", () => {
+        initFilters(window.app.store);
       });
     }
   }

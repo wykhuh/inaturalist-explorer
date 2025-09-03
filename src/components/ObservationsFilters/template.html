@@ -80,42 +80,15 @@
             <legend>Licensing</legend>
             <div class="form-group">
               <label for="license">License</label>
-              <select id="license" name="license">
-                <option value="">All</option>
-                <option value="cc0">CC0</option>
-                <option value="cc-by">CC-BY</option>
-                <option value="cc-by-nc">CC-BY-NC</option>
-                <option value="cc-by-sa">CC-BY-SA</option>
-                <option value="cc-by-nd">CC-BY-ND</option>
-                <option value="cc-by-nc-sa">CC-BY-NC-SA</option>
-                <option value="cc-by-nc-nd">CC-BY-NC-ND</option>
-              </select>
+              <select id="license" name="license"></select>
             </div>
             <div class="form-group">
               <label for="photo_license">Photo License</label>
-              <select id="photo_license" name="photo_license">
-                <option value="">All</option>
-                <option value="cc0">CC0</option>
-                <option value="cc-by">CC-BY</option>
-                <option value="cc-by-nc">CC-BY-NC</option>
-                <option value="cc-by-sa">CC-BY-SA</option>
-                <option value="cc-by-nd">CC-BY-ND</option>
-                <option value="cc-by-nc-sa">CC-BY-NC-SA</option>
-                <option value="cc-by-nc-nd">CC-BY-NC-ND</option>
-              </select>
+              <select id="photo_license" name="photo_license"></select>
             </div>
             <div class="form-group">
               <label for="sound_license">Sound License</label>
-              <select id="sound_license" name="sound_license">
-                <option value="">All</option>
-                <option value="cc0">CC0</option>
-                <option value="cc-by">CC-BY</option>
-                <option value="cc-by-nc">CC-BY-NC</option>
-                <option value="cc-by-sa">CC-BY-SA</option>
-                <option value="cc-by-nd">CC-BY-ND</option>
-                <option value="cc-by-nc-sa">CC-BY-NC-SA</option>
-                <option value="cc-by-nc-nd">CC-BY-NC-ND</option>
-              </select>
+              <select id="sound_license" name="sound_license"></select>
             </div>
           </fieldset>
         </div>
@@ -297,12 +270,12 @@
               <label for="range_date">Range</label>
 
               <div class="form-group">
-                <label for="start_date">Start Date</label>
-                <input id="start_date" type="date" name="d1" id="d1" disabled />
+                <label for="d1">Start Date</label>
+                <input type="date" name="d1" id="d1" disabled />
               </div>
               <div class="form-group">
-                <label for="end_date">End Date</label>
-                <input id="end_date" type="date" name="d2" id="d2" disabled />
+                <label for="d2">End Date</label>
+                <input type="date" name="d2" id="d2" disabled />
               </div>
             </div>
             <div class="form-group multiselect">
@@ -340,21 +313,3 @@
     </form>
   </dialog>
 </template>
-
-<style>
-  input[type="date"]::before {
-    color: #999999;
-    content: attr(placeholder);
-  }
-  input[type="date"] {
-    color: #ffffff;
-  }
-  input[type="date"]:focus,
-  input[type="date"]:valid {
-    color: #666666;
-  }
-  input[type="date"]:focus::before,
-  input[type="date"]:valid::before {
-    content: "" !important;
-  }
-</style>
