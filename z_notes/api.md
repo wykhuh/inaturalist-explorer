@@ -190,8 +190,51 @@ OBSERVATIONS
 
 ==
 
+red oak
+
+https://www.inaturalist.org/observations?subview=table&taxon_id=861036
+
+no params
+391,863
+
+&spam=true
+391,863
+
+&spam=false
+391,863
+
+&verifiable=any
+431,523
+
+&verifiable=any&spam=true
+431,523
+
+&verifiable=any&spam=false
+431,523
+
+https://api.inaturalist.org/v2/observations?verifiable=true&order_by=id&order=desc&page=1&spam=false&taxon_id=861036&locale=en&preferred_place_id=1&per_page=24&return_bounds=true&fields=(comments_count%3A!t%2Ccreated_at%3A!t%2Ccreated_at_details%3Aall%2Ccreated_time_zone%3A!t%2Cfaves_count%3A!t%2Cgeoprivacy%3A!t%2Cid%3A!t%2Cidentifications%3A(current%3A!t)%2Cidentifications_count%3A!t%2Clocation%3A!t%2Cmappable%3A!t%2Cobscured%3A!t%2Cobserved_on%3A!t%2Cobserved_on_details%3Aall%2Cobserved_time_zone%3A!t%2Cphotos%3A(id%3A!t%2Curl%3A!t)%2Cplace_guess%3A!t%2Cprivate_geojson%3A!t%2Cquality_grade%3A!t%2Csounds%3A(id%3A!t)%2Ctaxon%3A(iconic_taxon_id%3A!t%2Cname%3A!t%2Cpreferred_common_name%3A!t%2Cpreferred_common_names%3A(name%3A!t)%2Crank%3A!t%2Crank_level%3A!t)%2Ctime_observed_at%3A!t%2Cuser%3A(icon_url%3A!t%2Cid%3A!t%2Clogin%3A!t))
+
+391,863
+
+https://api.inaturalist.org/v2/observations?verifiable=true&spam=false&taxon_id=861036
+
+verifiable=true&spam=false
+391,863
+
+verifiable=true
+391,868
+
+verifiable=true&spam=true
+4
+
+none
+431536
+
+==
+
 filters
-verifiable: checked -> web app: no params, api: &verifiable=true
-verifiable: unchecked -> web app: &verifiable=any, api: no params
+verifiable: checked -> web app: no params, api: &verifiable=true&spam=false
+
+verifiable: unchecked -> web app: &verifiable=any, api: &spam=false
 
 ====================

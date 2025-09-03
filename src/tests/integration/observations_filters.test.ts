@@ -2,7 +2,6 @@
 
 import { expect, test, describe } from "vitest";
 import { updateStoreUsingFilters } from "../../lib/data_utils.ts";
-import type { MapStore } from "../../types/app.d.ts";
 import { mapStore } from "../../lib/store.ts";
 import { processFiltersForm } from "../../components/ObservationsFilters/utils.ts";
 

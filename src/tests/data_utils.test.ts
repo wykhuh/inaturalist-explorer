@@ -8,6 +8,7 @@ import {
   idStringRemoveId,
 } from "../lib/data_utils.ts";
 import type { MapStore, NormalizediNatTaxon } from "../types/app.d.ts";
+import { mapStore } from "../lib/store.ts";
 
 describe("formatTaxonName", () => {
   describe("query matches common name", () => {
@@ -132,24 +133,7 @@ describe("formatTaxonName", () => {
 });
 
 describe("updateSelectedTaxaProxy", () => {
-  let defaultStore: MapStore = {
-    selectedTaxa: [],
-    taxaMapLayers: {},
-    taxaListEl: null,
-    selectedPlaces: [],
-    placesMapLayers: {},
-    placesListEl: null,
-    inatApiParams: {},
-    displayJsonEl: null,
-    color: "",
-    map: { map: null, layerControl: null },
-    refreshMap: {
-      refreshMapButtonEl: null,
-      showRefreshMapButton: false,
-      layer: null,
-    },
-    formFilters: { params: {}, string: "" },
-  };
+  let defaultStore: MapStore = structuredClone(mapStore);
   let taxon1: NormalizediNatTaxon = {
     name: "name 1",
     matched_term: "matched_term 1",

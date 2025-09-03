@@ -26,3 +26,9 @@ https://forum.inaturalist.org/t/how-to-use-inaturalists-search-urls-wiki-part-2-
 Ideas for a revamped Explore/Observations Search Page
 
 https://forum.inaturalist.org/t/ideas-for-a-revamped-explore-observations-search-page/8439
+
+==
+
+https://forum.inaturalist.org/t/what-is-places-type-for-the-api-call-for-places-nearby/49446/2
+
+What is “places_type” for the API call for `/places/nearby`?

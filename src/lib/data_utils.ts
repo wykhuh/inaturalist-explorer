@@ -30,7 +30,6 @@ import {
 import { renderTaxaList, renderPlacesList } from "./autocomplete_utils.ts";
 import type { Map } from "leaflet";
 import type { PlacesResult, TaxaResult } from "../types/inat_api";
-import { mapStore } from "./store.ts";
 
 export function bboxPlace(bbox: LngLat[]): NormalizediNatPlace {
   return {
@@ -143,6 +142,7 @@ export async function fetchiNatMapData(
     ...appStore.inatApiParams,
     per_page: 0,
   };
+  delete params.color;
   let count = await getiNatObservationsTotal(params);
   taxonObj.observations_count = count;
 
@@ -397,9 +397,7 @@ export async function initApp(appStore: MapStore, urlStore: MapStore) {
     }
   }
 
-  // HACK: deleting and setting a property in inatApiParams does not trigger the
-  // an update in proxy store. Need to replace inatApiParams to trigger
-  // an update in proxy store.
+  // HACK: trigger change in proxy store
   appStore.inatApiParams = appStore.inatApiParams;
 
   // get taxa data, optional place data, optional bounding box
@@ -601,6 +599,7 @@ export function updateStoreUsingFilters(
       if (filtersResults.params.verifiable === undefined) {
         delete appStore.inatApiParams[key];
       }
+    } else if (key === "spam") {
     } else if (appStore.inatApiParams[key] !== filtersResults.params[key]) {
       if (filtersResults.params[key] === undefined) {
         delete appStore.inatApiParams[key];

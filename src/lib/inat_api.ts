@@ -57,6 +57,17 @@ export const taxonRanks = [
   "Subspecies / Variety / Form",
 ];
 
+export const iNatApiNonFilterableParams = [
+  "nelat",
+  "nelng",
+  "swlat",
+  "swlng",
+  "color",
+  "per_page",
+  "place_id",
+  "taxon_id",
+];
+
 export const iNatApiFilterableParams = [
   "captive",
   "d1",
@@ -77,10 +88,79 @@ export const iNatApiFilterableParams = [
   "quality_grade",
   "sound_license",
   "sounds",
-  // "spam",
   "threatened",
   "verifiable",
   "year",
+
+  // TODO: needs to be implemented
+  "acc",
+  "licensed",
+  "out_of_range",
+  "photo_licensed",
+  "project_id",
+  "rank",
+  "without_taxon_id",
+  "taxon_name",
+  "user_id",
+  "ident_user_id",
+  "annotation_user_id",
+  "acc_above",
+  "acc_below",
+  "observed_on",
+  "csi",
+  "geoprivacy",
+  "taxon_geoprivacy",
+  "obscuration",
+  "identifications",
+  "not_in_project",
+
+  // not implemented
+  "geo",
+  "id_please",
+  "mappable",
+  "pcid",
+  "taxon_is_active",
+  "expected_nearby",
+  "id",
+  "not_id",
+  "ofv_datatype",
+  "rank",
+  "site_id",
+  "user_login",
+  "hour",
+  "day",
+  "created_day",
+  "created_month",
+  "created_year",
+  "term_id",
+  "term_value_id",
+  "without_term_id",
+  "without_term_value_id",
+  "term_id_or_unknown",
+  "acc_above",
+  "acc_below",
+  "acc_below_or_unknown",
+  "created_d1",
+  "created_d2",
+  "created_on",
+  "unobserved_by_user_id",
+  "apply_project_rules_for",
+  "cs",
+  "csa",
+  "id_above",
+  "id_below",
+  "lat",
+  "lng",
+  "radius",
+  "list_id",
+  "not_matching_project_rules_for",
+  "observation_accuracy_experiment_id",
+  "q",
+  "search_on",
+  "updated_since",
+  "viewer_id",
+  "reviewed",
+  "spam",
 ];
 
 //forum.inaturalist.org/t/what-is-places-type-for-the-api-call-for-places-nearby/49446/2?u=wy_bio
@@ -237,6 +317,8 @@ export async function getiNatObservationsTotal(
   try {
     let response = await fetch(`${observations_api}?${paramsString}`);
     let data = (await response.json()) as ObservationsAPI;
+    console.log(`${observations_api}?${paramsString}`, data.total_results);
+
     return data.total_results;
   } catch (error) {
     console.error(error);

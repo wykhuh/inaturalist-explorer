@@ -96,3 +96,9 @@ https://freshman.tech/snippets/typescript/fix-value-not-exist-eventtarget/
 
 CSS native variables not working in media queries
 https://stackoverflow.com/questions/40722882/css-native-variables-not-working-in-media-queries
+
+==
+
+deleting and setting a property in inatApiParams does not trigger the
+an update in proxy store. Need to replace inatApiParams to trigger
+an update in proxy store.

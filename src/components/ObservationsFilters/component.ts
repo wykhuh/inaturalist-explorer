@@ -1,10 +1,10 @@
 import { renderPlacesList, renderTaxaList } from "../../lib/autocomplete_utils";
 import { fetchiNatMapData, removeOneTaxonFromMap } from "../../lib/data_utils";
 import { updateStoreUsingFilters } from "../../lib/data_utils";
-import { taxonRanks } from "../../lib/inat_api";
+import { iNatApiFilterableParams, taxonRanks } from "../../lib/inat_api";
 import { mapStore } from "../../lib/store";
 import { updateUrl } from "../../lib/utils";
-import type { MapStore } from "../../types/app";
+import type { iNatApiFilterableParamsKeys, MapStore } from "../../types/app";
 import { processFiltersForm } from "./utils";
 
 const setup = async () => {
@@ -116,6 +116,20 @@ const setup = async () => {
 
         form.addEventListener("reset", () => {
           appStore.formFilters = mapStore.formFilters;
+
+          // delete filterable fields from appStore.inatApiParams
+          Object.keys(appStore.inatApiParams).forEach((param) => {
+            if (
+              iNatApiFilterableParams.includes(param) &&
+              !Object.keys(mapStore.inatApiParams).includes(param)
+            ) {
+              delete appStore.inatApiParams[
+                param as iNatApiFilterableParamsKeys
+              ];
+            }
+          });
+          // HACK: trigger change in proxy store
+          appStore.inatApiParams = appStore.inatApiParams;
         });
       }
     }
