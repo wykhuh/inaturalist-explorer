@@ -5,7 +5,7 @@ import type {
   NormalizediNatTaxon,
 } from "../types/app";
 import { bboxPlace } from "./data_utils";
-import { iNatApiNonFilterableNames } from "./inat_api";
+import { iNatApiNonFilterableNames } from "./inat_data";
 import { defaultColorScheme } from "./map_colors_utils";
 import { convertParamsBBoxToLngLat } from "./map_utils";
 

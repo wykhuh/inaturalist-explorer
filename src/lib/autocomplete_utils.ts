@@ -19,7 +19,7 @@ import {
 } from "./data_utils.ts";
 import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
-import { placeTypes, lifeTaxon } from "./inat_api.ts";
+import { placeTypes, lifeTaxon } from "./inat_data.ts";
 import { updateUrl } from "./utils.ts";
 
 //=====================

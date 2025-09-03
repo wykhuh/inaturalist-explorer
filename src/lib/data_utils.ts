@@ -25,9 +25,13 @@ import {
   getiNatObservationsTotal,
   getPlaceById,
   getTaxonById,
+} from "./inat_api.ts";
+import {
+  fieldsWithAny,
   iNatApiNames,
   iNatApiNonFilterableNames,
-} from "./inat_api.ts";
+} from "./inat_data.ts";
+
 import { renderTaxaList, renderPlacesList } from "./autocomplete_utils.ts";
 import type { Map } from "leaflet";
 import type { PlacesResult, TaxaResult } from "../types/inat_api";
@@ -375,14 +379,6 @@ export function leafletVisibleLayers(
 
   return layer_descriptions;
 }
-
-export let fieldsWithAny = [
-  "quality_grade",
-  "reviewed",
-  "verifiable",
-  "place_id",
-  "captive",
-];
 
 export async function initApp(appStore: MapStore, urlStore: MapStore) {
   let map = appStore.map.map;

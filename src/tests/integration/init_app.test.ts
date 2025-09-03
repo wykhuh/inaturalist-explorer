@@ -10,11 +10,7 @@ import {
 } from "vitest";
 import jsdom from "jsdom";
 
-import {
-  fieldsWithAny,
-  initApp,
-  leafletVisibleLayers,
-} from "../../lib/data_utils";
+import { initApp, leafletVisibleLayers } from "../../lib/data_utils";
 import { decodeAppUrl } from "../../lib/utils";
 import {
   createMockServer,
@@ -36,6 +32,7 @@ import {
   basemapLabel_osm,
 } from "../test_helpers.ts";
 import type { iNatApiParams } from "../../types/app";
+import { fieldsWithAny } from "../../lib/inat_data.ts";
 
 beforeEach(() => {
   const { JSDOM } = jsdom;
