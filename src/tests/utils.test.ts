@@ -79,8 +79,8 @@ describe("formatAppUrl", () => {
     let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
-        taxon_id: life.id,
-        color: life.color,
+        taxon_id: life.id.toString(),
+        colors: life.color,
         spam: false,
       },
       selectedTaxa: [life],
@@ -88,15 +88,15 @@ describe("formatAppUrl", () => {
 
     let result = formatAppUrl(appStore);
 
-    expect(result).toBe(`taxon_ids=48460&colors=%234477aa&spam=false`);
+    expect(result).toBe(`taxon_id=48460&colors=%234477aa&spam=false`);
   });
 
   test("format parameters for multiple taxa", () => {
-    let appStore = {
+    let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
-        taxon_id: redOaks.id,
-        color: redOaks.color,
+        taxon_id: redOaks.id.toString(),
+        colors: redOaks.color,
         spam: false,
       },
       selectedTaxa: [life, redOaks],
@@ -105,7 +105,7 @@ describe("formatAppUrl", () => {
     let result = formatAppUrl(appStore);
 
     expect(result).toBe(
-      "taxon_ids=48460,861036&colors=%234477aa,%2366ccee&spam=false",
+      "taxon_id=48460,861036&colors=%234477aa,%2366ccee&spam=false",
     );
   });
 
@@ -113,8 +113,8 @@ describe("formatAppUrl", () => {
     let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
-        taxon_id: life.id,
-        color: life.color,
+        taxon_id: life.id.toString(),
+        colors: life.color,
         spam: false,
         place_id: losangeles.id.toString(),
       },
@@ -125,7 +125,7 @@ describe("formatAppUrl", () => {
     let result = formatAppUrl(appStore);
 
     expect(result).toBe(
-      `taxon_ids=48460&place_id=962&colors=%234477aa&spam=false`,
+      `taxon_id=48460&place_id=962&colors=%234477aa&spam=false`,
     );
   });
 
@@ -133,8 +133,8 @@ describe("formatAppUrl", () => {
     let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
-        taxon_id: life.id,
-        color: life.color,
+        taxon_id: life.id.toString(),
+        colors: life.color,
         spam: false,
         place_id: `${losangeles.id},${sandiego.id}`,
       },
@@ -145,7 +145,7 @@ describe("formatAppUrl", () => {
     let result = formatAppUrl(appStore);
 
     expect(result).toBe(
-      "taxon_ids=48460&place_id=962,829&colors=%234477aa&spam=false",
+      "taxon_id=48460&place_id=962,829&colors=%234477aa&spam=false",
     );
   });
 
@@ -153,7 +153,7 @@ describe("formatAppUrl", () => {
     let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
-        color: life.color,
+        colors: life.color,
         spam: false,
       },
       selectedTaxa: [],
@@ -197,8 +197,8 @@ describe("updateUrl", () => {
     let appStore = {
       ...mapStore,
       inatApiParams: {
-        taxon_id: life.id,
-        color: life.color,
+        taxon_id: life.id.toString(),
+        colors: life.color,
         spam: false,
       },
       selectedTaxa: [life],
@@ -209,7 +209,7 @@ describe("updateUrl", () => {
     expect(pushSpy).toHaveBeenCalledWith(
       {},
       "",
-      "http://localhost:3000?taxon_ids=48460&colors=%234477aa&spam=false",
+      "http://localhost:3000?taxon_id=48460&colors=%234477aa&spam=false",
     );
 
     pushSpy.mockRestore();
@@ -217,9 +217,9 @@ describe("updateUrl", () => {
 });
 
 describe("decodeAppUrl", () => {
-  test("returns object with taxa data if taxon_ids is present", () => {
+  test("returns object with taxa data if taxon_id is present", () => {
     let searchParams =
-      "?taxon_ids=123,456&colors=%23ffffff,%23eeeeee&spam=false&verifiable=true";
+      "?taxon_id=123,456&colors=%23ffffff,%23eeeeee&spam=false&verifiable=true";
     let expected = {
       color: "#eeeeee",
       selectedTaxa: [
@@ -245,7 +245,7 @@ describe("decodeAppUrl", () => {
 
   test("returns object with taxa and place data if place_id is present", () => {
     let searchParams =
-      "?taxon_ids=123&place_id=987&colors=%23ffffff&spam=false&verifiable=true";
+      "?taxon_id=123&place_id=987&colors=%23ffffff&spam=false&verifiable=true";
 
     let expected = {
       color: "#ffffff",
@@ -305,7 +305,7 @@ describe("decodeAppUrl", () => {
 
   test("returns object with if spam and verifiable are false", () => {
     let searchParams =
-      "?taxon_ids=123&colors=%23ffffff&spam=false&verifiable=false";
+      "?taxon_id=123&colors=%23ffffff&spam=false&verifiable=false";
     let expected = {
       color: "#ffffff",
       selectedTaxa: [
@@ -326,7 +326,7 @@ describe("decodeAppUrl", () => {
   });
 
   test("returns object with if verifiable is any", () => {
-    let searchParams = "?taxon_ids=123&colors=%23ffffff&verifiable=any";
+    let searchParams = "?taxon_id=123&colors=%23ffffff&verifiable=any";
     let expected = {
       color: "#ffffff",
       selectedTaxa: [
@@ -347,7 +347,7 @@ describe("decodeAppUrl", () => {
 
   test("returns object with if spam and verifiable are true", () => {
     let searchParams =
-      "?taxon_ids=123&colors=%23ffffff&spam=true&verifiable=true";
+      "?taxon_id=123&colors=%23ffffff&spam=true&verifiable=true";
     let expected = {
       color: "#ffffff",
       selectedTaxa: [
@@ -368,7 +368,7 @@ describe("decodeAppUrl", () => {
   });
 
   test("returns object with if place_id is any", () => {
-    let searchParams = "?taxon_ids=123&colors=%23ffffff&place_id=any";
+    let searchParams = "?taxon_id=123&colors=%23ffffff&place_id=any";
     let expected = {
       color: "#ffffff",
       selectedTaxa: [

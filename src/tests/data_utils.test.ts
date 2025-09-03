@@ -3,7 +3,7 @@
 import { expect, test, describe } from "vitest";
 import {
   formatTaxonName,
-  updateSelectedTaxaProxy,
+  updateSelectedTaxa,
   idStringAddId,
   idStringRemoveId,
 } from "../lib/data_utils.ts";
@@ -132,7 +132,7 @@ describe("formatTaxonName", () => {
   });
 });
 
-describe("updateSelectedTaxaProxy", () => {
+describe("updateSelectedTaxa", () => {
   let defaultStore: MapStore = structuredClone(mapStore);
   let taxon1: NormalizediNatTaxon = {
     name: "name 1",
@@ -155,7 +155,7 @@ describe("updateSelectedTaxaProxy", () => {
     let taxon = taxon1;
     let expected = [taxon1];
 
-    updateSelectedTaxaProxy(store, taxon);
+    updateSelectedTaxa(store, taxon);
 
     expect(store.selectedTaxa).toStrictEqual(expected);
   });
@@ -168,7 +168,7 @@ describe("updateSelectedTaxaProxy", () => {
     let taxon = taxon2;
     let expected = [taxon1, taxon2];
 
-    updateSelectedTaxaProxy(store, taxon);
+    updateSelectedTaxa(store, taxon);
 
     expect(store.selectedTaxa).toStrictEqual(expected);
   });
@@ -181,7 +181,7 @@ describe("updateSelectedTaxaProxy", () => {
     let taxon = { ...taxon2, observations_count: 33 };
     let expected = [taxon1, { ...taxon2, observations_count: 33 }];
 
-    updateSelectedTaxaProxy(store, taxon);
+    updateSelectedTaxa(store, taxon);
 
     expect(store.selectedTaxa).toStrictEqual(expected);
   });

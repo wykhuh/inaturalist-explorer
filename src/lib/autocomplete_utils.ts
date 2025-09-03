@@ -19,7 +19,7 @@ import {
 } from "./data_utils.ts";
 import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
-import { lifeTaxon, placeTypes } from "./inat_api.ts";
+import { placeTypes, lifeTaxon } from "./inat_api.ts";
 import { updateUrl } from "./utils.ts";
 
 //=====================
@@ -111,8 +111,8 @@ export async function taxonSelectedHandler(
   // create params for the iNat map tiles API
   appStore.inatApiParams = {
     ...appStore.inatApiParams,
-    taxon_id: taxonObj.id,
-    color: color,
+    taxon_id: taxonObj.id.toString(),
+    colors: color,
   };
 
   await fetchiNatMapData(taxonObj, appStore);
@@ -239,8 +239,8 @@ export async function placeSelectedHandler(
     removeOneTaxonFromMap(appStore, taxon.id);
     appStore.inatApiParams = {
       ...appStore.inatApiParams,
-      taxon_id: taxon.id,
-      color: taxon.color,
+      taxon_id: taxon.id.toString(),
+      colors: taxon.color,
       place_id: idStringAddId(selection.id, appStore.inatApiParams.place_id),
     };
 

@@ -1,11 +1,11 @@
 import type {
   MapStore,
-  AppUrlParams,
-  AppUrlParamsKeys,
-  NormalizediNatTaxon,
+  iNatApiParams,
   iNatApiParamsKeys,
+  NormalizediNatTaxon,
 } from "../types/app";
 import { bboxPlace } from "./data_utils";
+import { iNatApiNonFilterableNames } from "./inat_api";
 import { defaultColorScheme } from "./map_colors_utils";
 import { convertParamsBBoxToLngLat } from "./map_utils";
 
@@ -66,9 +66,9 @@ export function formatAppUrl(appStore: MapStore) {
     return "";
   }
 
-  let params: AppUrlParams = {};
+  let params: iNatApiParams = {};
   if (taxaIds.length > 0) {
-    params.taxon_ids = taxaIds;
+    params.taxon_id = taxaIds;
   }
   if (placesIds) {
     params.place_id = placesIds;
@@ -78,9 +78,9 @@ export function formatAppUrl(appStore: MapStore) {
   }
 
   Object.entries(appStore.inatApiParams).forEach(([key, value]) => {
-    if (!["taxon_id", "place_id", "color"].includes(key)) {
+    if (!["taxon_id", "place_id", "colors"].includes(key)) {
       if (params) {
-        params[key as AppUrlParamsKeys] = value as any;
+        params[key as iNatApiParamsKeys] = value as any;
       }
     }
   });
@@ -104,9 +104,10 @@ export function decodeAppUrl(searchParams: string) {
   const urlParams = Object.fromEntries(new URLSearchParams(searchParams));
   let apiParams = { inatApiParams: {} } as MapStore;
 
+  // convert taxon_id into basic selectedTaxa with id and color
   let taxa: NormalizediNatTaxon[] = [];
-  if ("taxon_ids" in urlParams) {
-    let ids = urlParams.taxon_ids.split(",");
+  if ("taxon_id" in urlParams) {
+    let ids = urlParams.taxon_id.split(",");
     let colors = urlParams.colors
       ? urlParams.colors.split(",")
       : defaultColorScheme;
@@ -122,6 +123,7 @@ export function decodeAppUrl(searchParams: string) {
   }
   apiParams.selectedTaxa = taxa;
 
+  // convert place_id in basic selectedPlaces with id or bbox
   if ("place_id" in urlParams && urlParams.place_id !== "any") {
     let ids = urlParams.place_id.split(",");
 
@@ -151,17 +153,8 @@ export function decodeAppUrl(searchParams: string) {
     };
   }
 
-  let ignoreParams = [
-    "taxon_ids",
-    "colors",
-    "place_id",
-    "nelat",
-    "nelng",
-    "swlat",
-    "swlng",
-  ];
   for (let [key, value] of new URLSearchParams(searchParams)) {
-    if (!ignoreParams.includes(key)) {
+    if (!iNatApiNonFilterableNames.includes(key)) {
       if (value === "true") {
         value = true as unknown as string;
       }

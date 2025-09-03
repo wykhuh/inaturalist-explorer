@@ -57,18 +57,18 @@ export const taxonRanks = [
   "Subspecies / Variety / Form",
 ];
 
-export const iNatApiNonFilterableParams = [
+export const iNatApiNonFilterableNames = [
   "nelat",
   "nelng",
   "swlat",
   "swlng",
-  "color",
+  "colors",
   "per_page",
   "place_id",
   "taxon_id",
 ];
 
-export const iNatApiFilterableParams = [
+export const iNatApiFilterableNames = [
   "captive",
   "d1",
   "d2",
@@ -163,6 +163,10 @@ export const iNatApiFilterableParams = [
   "spam",
 ];
 
+export const iNatApiNames = iNatApiNonFilterableNames.concat(
+  iNatApiFilterableNames,
+);
+
 //forum.inaturalist.org/t/what-is-places-type-for-the-api-call-for-places-nearby/49446/2?u=wy_bio
 export const placeTypes: PlaceTypes = {
   "0": "Undefined",
@@ -240,12 +244,16 @@ export const getiNatMapTiles = (
   taxonID: number,
   params: Params,
 ): { [name: string]: TileSettings } => {
-  let paramsString = new URLSearchParams(params).toString();
+  // replace colors with color
+  let dupParams = structuredClone(params);
+  dupParams.color = dupParams.colors;
+  delete dupParams.colors;
+
+  let paramsString = new URLSearchParams(dupParams).toString();
   let taxonRangeParamsString = new URLSearchParams({
-    color: params.color,
+    color: dupParams.color,
   }).toString();
 
-  let dupParams = structuredClone(params);
   delete dupParams.color;
   let noColorParamsString = new URLSearchParams(dupParams).toString();
 

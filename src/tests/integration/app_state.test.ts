@@ -91,15 +91,15 @@ describe("taxonSelectedHandler", () => {
     expectNoRefresh(store);
     expectLifeTaxa(store);
     let expectedParams = {
-      color: colors[0],
-      taxon_id: life().id,
+      colors: colors[0],
+      taxon_id: life().id.toString(),
       verifiable: true,
       spam: false,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
 
     expect(window.location.search).toBe(
-      `?taxon_ids=${life().id}&colors=%234477aa&verifiable=true&spam=false`,
+      `?taxon_id=${life().id}&colors=%234477aa&verifiable=true&spam=false`,
     );
   });
 
@@ -118,8 +118,8 @@ describe("taxonSelectedHandler", () => {
     expectNoRefresh(store);
     expectLifeTaxa(store);
     let expectedParams1 = {
-      taxon_id: life().id,
-      color: colors[0],
+      taxon_id: life().id.toString(),
+      colors: colors[0],
       spam: false,
       verifiable: true,
     };
@@ -143,8 +143,8 @@ describe("taxonSelectedHandler", () => {
     expect(store.taxaMapLayers[redOak().id].length).toBe(4);
     expect(store.color).toBe(colors[1]);
     let expectedParams2 = {
-      taxon_id: redOakBasic.id,
-      color: colors[1],
+      taxon_id: redOakBasic.id.toString(),
+      colors: colors[1],
       spam: false,
       verifiable: true,
     };
@@ -169,16 +169,16 @@ describe("placeSelectedHandler", () => {
     expectLifeTaxa(store);
     expectLosAngelesPlace(store);
     let expectedParams = {
-      color: colors[0],
+      colors: colors[0],
       place_id: losangeles.id.toString(),
-      taxon_id: life().id,
+      taxon_id: life().id.toString(),
       spam: false,
       verifiable: true,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
 
     expect(window.location.search).toBe(
-      `?taxon_ids=${life().id}&place_id=${losangeles.id}&colors=%234477aa&verifiable=true&spam=false`,
+      `?taxon_id=${life().id}&place_id=${losangeles.id}&colors=%234477aa&verifiable=true&spam=false`,
     );
   });
 
@@ -198,9 +198,9 @@ describe("placeSelectedHandler", () => {
     expectLifeTaxa(store);
     expectLosAngelesPlace(store);
     let expectedParams1 = {
-      color: colors[0],
+      colors: colors[0],
       place_id: losangeles.id.toString(),
-      taxon_id: life().id,
+      taxon_id: life().id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -219,9 +219,9 @@ describe("placeSelectedHandler", () => {
     expect(store.selectedPlaces).toEqual([losangeles, sandiego]);
     expect(store.placesMapLayers).not.toBeUndefined();
     let expectedParams2 = {
-      color: colors[0],
+      colors: colors[0],
       place_id: `${losangeles.id},${sandiego.id}`,
-      taxon_id: life().id,
+      taxon_id: life().id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -313,8 +313,8 @@ describe("combos", () => {
     ]);
     expectOakTaxa(store, colors[0]);
     let params1 = {
-      color: colors[0],
-      taxon_id: redOak(colors[0]).id,
+      colors: colors[0],
+      taxon_id: redOak(colors[0]).id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -330,8 +330,8 @@ describe("combos", () => {
     expectOakTaxa(store, colors[0]);
     expectRefreshPlace(store);
     expect(store.inatApiParams).toStrictEqual({
-      taxon_id: redOak(colors[0]).id,
-      color: colors[0],
+      taxon_id: redOak(colors[0]).id.toString(),
+      colors: colors[0],
       nelat: 0,
       nelng: 0,
       swlat: 0,
@@ -357,9 +357,9 @@ describe("combos", () => {
     expectNoRefresh(store);
     expect(store.selectedPlaces).toStrictEqual([losangeles]);
     let params = {
-      color: colors[0],
+      colors: colors[0],
       place_id: losangeles.id.toString(),
-      taxon_id: life().id,
+      taxon_id: life().id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -375,8 +375,8 @@ describe("combos", () => {
     expectLifeTaxa(store);
     expectRefreshPlace(store, "LA");
     expect(store.inatApiParams).toStrictEqual({
-      taxon_id: life().id,
-      color: colors[0],
+      taxon_id: life().id.toString(),
+      colors: colors[0],
       nelat: 34.30714385628804,
       nelng: -118.12500000000001,
       swlat: 34.30714385628804,
@@ -401,8 +401,8 @@ describe("combos", () => {
     expectNoRefresh(store);
     expectNoPlaces(store);
     expect(store.inatApiParams).toStrictEqual({
-      taxon_id: life().id,
-      color: colors[0],
+      taxon_id: life().id.toString(),
+      colors: colors[0],
       verifiable: true,
       spam: false,
     });
@@ -417,8 +417,8 @@ describe("combos", () => {
     expectLifeTaxa(store);
     expectRefreshPlace(store);
     expect(store.inatApiParams).toStrictEqual({
-      taxon_id: life().id,
-      color: colors[0],
+      taxon_id: life().id.toString(),
+      colors: colors[0],
       nelat: 0,
       nelng: 0,
       swlat: 0,
@@ -443,8 +443,8 @@ describe("combos", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expect(store.inatApiParams).toStrictEqual({
-      taxon_id: life().id,
-      color: colors[0],
+      taxon_id: life().id.toString(),
+      colors: colors[0],
       verifiable: true,
       spam: false,
     });
@@ -460,8 +460,8 @@ describe("combos", () => {
     expectLosAngelesPlace(store);
     expectNoRefresh(store);
     expect(store.inatApiParams).toStrictEqual({
-      taxon_id: life().id,
-      color: colors[0],
+      taxon_id: life().id.toString(),
+      colors: colors[0],
       place_id: losangeles.id.toString(),
       verifiable: true,
       spam: false,
@@ -484,9 +484,9 @@ describe("combos", () => {
     expectNoRefresh(store);
     expect(store.selectedPlaces).toStrictEqual([losangeles]);
     let params = {
-      color: colors[0],
+      colors: colors[0],
       place_id: losangeles.id.toString(),
-      taxon_id: life().id,
+      taxon_id: life().id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -502,8 +502,8 @@ describe("combos", () => {
     expectLifeTaxa(store);
     expectRefreshPlace(store, "LA");
     expect(store.inatApiParams).toStrictEqual({
-      taxon_id: life().id,
-      color: colors[0],
+      taxon_id: life().id.toString(),
+      colors: colors[0],
       nelat: 34.30714385628804,
       nelng: -118.12500000000001,
       swlat: 34.30714385628804,
@@ -523,9 +523,9 @@ describe("combos", () => {
     expectNoRefresh(store);
     expect(store.selectedPlaces).toStrictEqual([sandiego]);
     let params2 = {
-      color: colors[0],
+      colors: colors[0],
       place_id: sandiego.id.toString(),
-      taxon_id: life().id,
+      taxon_id: life().id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -549,9 +549,9 @@ describe("removePlace", () => {
     expectLifeTaxa(store);
     expect(store.selectedPlaces).toStrictEqual([losangeles]);
     let params1 = {
-      color: colors[0],
+      colors: colors[0],
       place_id: losangeles.id.toString(),
-      taxon_id: life().id,
+      taxon_id: life().id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -564,7 +564,7 @@ describe("removePlace", () => {
     expectNoPlaces(store);
     expect(store.color).toEqual(colors[0]);
     let params2 = {
-      color: colors[0],
+      colors: colors[0],
       spam: false,
       verifiable: true,
     };
@@ -588,9 +588,9 @@ describe("removePlace", () => {
     expectLifeTaxa(store);
     expect(store.selectedPlaces).toStrictEqual([losangeles]);
     let params1 = {
-      color: colors[0],
+      colors: colors[0],
       place_id: losangeles.id.toString(),
-      taxon_id: life().id,
+      taxon_id: life().id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -607,9 +607,9 @@ describe("removePlace", () => {
     expectLifeTaxa(store);
     expect(store.selectedPlaces).toStrictEqual([losangeles, sandiego]);
     let params2 = {
-      color: colors[0],
+      colors: colors[0],
       place_id: `${losangeles.id},${sandiego.id}`,
-      taxon_id: life().id,
+      taxon_id: life().id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -627,16 +627,16 @@ describe("removePlace", () => {
     expect(store.selectedPlaces).toStrictEqual([sandiego]);
     expect(store.color).toEqual(colors[0]);
     let params3 = {
-      color: colors[0],
+      colors: colors[0],
       place_id: sandiego.id.toString(),
-      taxon_id: life().id,
+      taxon_id: life().id.toString(),
       verifiable: true,
       spam: false,
     };
     expect(store.inatApiParams).toStrictEqual(params3);
 
     let searchParams =
-      "?taxon_ids=48460&place_id=829&colors=%234477aa&verifiable=true&spam=false";
+      "?taxon_id=48460&place_id=829&colors=%234477aa&verifiable=true&spam=false";
     expect(window.location.search).toBe(searchParams);
   });
 
@@ -686,8 +686,8 @@ describe("removePlace", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expect(store.inatApiParams).toStrictEqual({
-      taxon_id: life().id,
-      color: colors[0],
+      taxon_id: life().id.toString(),
+      colors: colors[0],
       verifiable: true,
       spam: false,
     });
@@ -702,9 +702,9 @@ describe("removePlace", () => {
     expectLifeTaxa(store);
     expect(store.selectedPlaces).toStrictEqual([losangeles]);
     let params1 = {
-      color: colors[0],
+      colors: colors[0],
       place_id: losangeles.id.toString(),
-      taxon_id: life().id,
+      taxon_id: life().id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -715,7 +715,7 @@ describe("removePlace", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
     expectNoTaxa(store);
     expectNoPlaces(store);
-    let params2 = { color: colors[0], spam: false, verifiable: true };
+    let params2 = { colors: colors[0], spam: false, verifiable: true };
     expect(store.inatApiParams).toStrictEqual(params2);
   });
 
@@ -734,8 +734,8 @@ describe("removePlace", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expect(store.inatApiParams).toStrictEqual({
-      taxon_id: life().id,
-      color: colors[0],
+      taxon_id: life().id.toString(),
+      colors: colors[0],
       verifiable: true,
       spam: false,
     });
@@ -750,8 +750,8 @@ describe("removePlace", () => {
     expectLifeTaxa(store);
     expect(store.selectedPlaces).toStrictEqual([refreshPlace]);
     let params1 = {
-      color: colors[0],
-      taxon_id: life().id,
+      colors: colors[0],
+      taxon_id: life().id.toString(),
       nelat: 0,
       nelng: 0,
       swlat: 0,
@@ -766,7 +766,7 @@ describe("removePlace", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
     expectNoTaxa(store);
     expectNoPlaces(store);
-    let params2 = { color: colors[0], spam: false, verifiable: true };
+    let params2 = { colors: colors[0], spam: false, verifiable: true };
     expect(store.inatApiParams).toStrictEqual(params2);
   });
 });
@@ -786,8 +786,8 @@ describe("removeTaxon", () => {
     expectLifeTaxa(store);
     expectNoPlaces(store);
     let params1 = {
-      color: colors[0],
-      taxon_id: life().id,
+      colors: colors[0],
+      taxon_id: life().id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -800,7 +800,7 @@ describe("removeTaxon", () => {
     expectNoPlaces(store);
     expect(store.color).toEqual(colors[0]);
     let params2 = {
-      color: colors[0],
+      colors: colors[0],
       spam: false,
       verifiable: true,
     };
@@ -823,8 +823,8 @@ describe("removeTaxon", () => {
     expectLifeTaxa(store);
     expectNoPlaces(store);
     let params1 = {
-      color: colors[0],
-      taxon_id: life().id,
+      colors: colors[0],
+      taxon_id: life().id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -847,8 +847,8 @@ describe("removeTaxon", () => {
     expect(store.color).toBe(colors[1]);
     expectNoPlaces(store);
     let params2 = {
-      color: colors[1],
-      taxon_id: redOak().id,
+      colors: colors[1],
+      taxon_id: redOak().id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -865,7 +865,7 @@ describe("removeTaxon", () => {
     expect(store.taxaMapLayers[redOak().id].length).toBe(4);
     expectNoPlaces(store);
     let params3 = {
-      color: colors[1],
+      colors: colors[1],
       spam: false,
       verifiable: true,
     };
@@ -887,9 +887,9 @@ describe("removeTaxon", () => {
     expectLifeTaxa(store);
     expect(store.selectedPlaces).toStrictEqual([losangeles]);
     let params1 = {
-      color: colors[0],
+      colors: colors[0],
       place_id: losangeles.id.toString(),
-      taxon_id: life().id,
+      taxon_id: life().id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -904,7 +904,7 @@ describe("removeTaxon", () => {
     expectNoTaxa(store);
     expectLosAngelesPlace(store);
     let params2 = {
-      color: colors[0],
+      colors: colors[0],
       place_id: losangeles.id.toString(),
       spam: false,
       verifiable: true,
@@ -927,8 +927,8 @@ describe("removeTaxon", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expect(store.inatApiParams).toStrictEqual({
-      taxon_id: life().id,
-      color: colors[0],
+      taxon_id: life().id.toString(),
+      colors: colors[0],
       verifiable: true,
       spam: false,
     });
@@ -943,9 +943,9 @@ describe("removeTaxon", () => {
     expectLifeTaxa(store);
     expect(store.selectedPlaces).toStrictEqual([losangeles]);
     let params1 = {
-      color: colors[0],
+      colors: colors[0],
       place_id: losangeles.id.toString(),
-      taxon_id: life().id,
+      taxon_id: life().id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -960,7 +960,7 @@ describe("removeTaxon", () => {
     expectNoTaxa(store);
     expectLosAngelesPlace(store);
     let params2 = {
-      color: colors[0],
+      colors: colors[0],
       place_id: losangeles.id.toString(),
       spam: false,
       verifiable: true,
@@ -983,8 +983,8 @@ describe("removeTaxon", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expect(store.inatApiParams).toStrictEqual({
-      taxon_id: life().id,
-      color: colors[0],
+      taxon_id: life().id.toString(),
+      colors: colors[0],
       verifiable: true,
       spam: false,
     });
@@ -999,8 +999,8 @@ describe("removeTaxon", () => {
     expectLifeTaxa(store);
     expectRefreshPlace(store);
     expect(store.inatApiParams).toStrictEqual({
-      taxon_id: life().id,
-      color: colors[0],
+      taxon_id: life().id.toString(),
+      colors: colors[0],
       verifiable: true,
       spam: false,
       nelat: 0,
@@ -1018,7 +1018,7 @@ describe("removeTaxon", () => {
     expectNoTaxa(store);
     expectRefreshPlace(store);
     let params2 = {
-      color: colors[0],
+      colors: colors[0],
       spam: false,
       verifiable: true,
       nelat: 0,

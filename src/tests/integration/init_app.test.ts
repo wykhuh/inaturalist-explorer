@@ -35,6 +35,7 @@ import {
   refreshBBoxLabel,
   basemapLabel_osm,
 } from "../test_helpers.ts";
+import type { iNatApiParams } from "../../types/app";
 
 beforeEach(() => {
   const { JSDOM } = jsdom;
@@ -67,7 +68,7 @@ describe("initApp", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = "?verifiable=123&spam=456&foo=any";
+    let searchparams = "?verifiable=true&spam=false";
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);
@@ -77,10 +78,32 @@ describe("initApp", () => {
     expectNoRefresh(store);
     expectNoTaxa(store);
 
-    let expectedParams = {
-      verifiable: "123",
-      spam: "456",
-      foo: "any",
+    let expectedParams: iNatApiParams = {
+      verifiable: true,
+      spam: false,
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams);
+  });
+
+  test("ignores invalid params ", async () => {
+    let { store } = setupMapAndStore();
+
+    expectEmpytMap(store);
+
+    let searchparams = "?boo=true&photos=false&foo=any";
+    let urlData = decodeAppUrl(searchparams);
+
+    await initApp(store, urlData);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expectNoTaxa(store);
+
+    let expectedParams: iNatApiParams = {
+      spam: false,
+      verifiable: true,
+      photos: false,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
   });
@@ -91,7 +114,7 @@ describe("initApp", () => {
     expectEmpytMap(store);
 
     let searchparams =
-      "?taxon_ids=48460&colors=%234477aa&verifiable=true&spam=false";
+      "?taxon_id=48460&colors=%234477aa&verifiable=true&spam=false";
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);
@@ -104,9 +127,9 @@ describe("initApp", () => {
     expectNoRefresh(store);
     expectLifeTaxa(store);
 
-    let expectedParams = {
-      color: colors[0],
-      taxon_id: life().id,
+    let expectedParams: iNatApiParams = {
+      colors: colors[0],
+      taxon_id: life().id.toString(),
       verifiable: true,
       spam: false,
     };
@@ -118,7 +141,7 @@ describe("initApp", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = "?taxon_ids=48460&verifiable=false&spam=false";
+    let searchparams = "?taxon_id=48460&verifiable=false&spam=false";
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);
@@ -131,9 +154,9 @@ describe("initApp", () => {
     expectNoRefresh(store);
     expectLifeTaxa(store);
 
-    let expectedParams = {
-      color: colors[0],
-      taxon_id: life().id,
+    let expectedParams: iNatApiParams = {
+      colors: colors[0],
+      taxon_id: life().id.toString(),
       verifiable: false,
       spam: false,
     };
@@ -145,7 +168,7 @@ describe("initApp", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = "?taxon_ids=48460&verifiable=true&spam=true";
+    let searchparams = "?taxon_id=48460&verifiable=true&spam=true";
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);
@@ -158,9 +181,9 @@ describe("initApp", () => {
     expectNoRefresh(store);
     expectLifeTaxa(store);
 
-    let expectedParams = {
-      color: colors[0],
-      taxon_id: life().id,
+    let expectedParams: iNatApiParams = {
+      colors: colors[0],
+      taxon_id: life().id.toString(),
       verifiable: true,
       spam: true,
     };
@@ -172,7 +195,7 @@ describe("initApp", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = "?taxon_ids=48460";
+    let searchparams = "?taxon_id=48460";
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);
@@ -185,9 +208,9 @@ describe("initApp", () => {
     expectNoRefresh(store);
     expectLifeTaxa(store);
 
-    let expectedParams = {
-      color: colors[0],
-      taxon_id: life().id,
+    let expectedParams: iNatApiParams = {
+      colors: colors[0],
+      taxon_id: life().id.toString(),
       verifiable: true,
       spam: false,
     };
@@ -201,7 +224,7 @@ describe("initApp", () => {
 
       expectEmpytMap(store);
 
-      let searchparams = `?taxon_ids=48460&${field}=any`;
+      let searchparams = `?taxon_id=48460&${field}=any`;
       let urlData = decodeAppUrl(searchparams);
 
       await initApp(store, urlData);
@@ -215,8 +238,8 @@ describe("initApp", () => {
       expectLifeTaxa(store);
 
       let expectedParams: { [key: string]: any } = {
-        color: colors[0],
-        taxon_id: life().id,
+        colors: colors[0],
+        taxon_id: life().id.toString(),
         spam: false,
       };
       if (field != "verifiable") {
@@ -232,7 +255,7 @@ describe("initApp", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = "?taxon_ids=48460&verifiable=true&spam=false";
+    let searchparams = "?taxon_id=48460&verifiable=true&spam=false";
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);
@@ -245,9 +268,9 @@ describe("initApp", () => {
     expectNoRefresh(store);
     expectLifeTaxa(store);
 
-    let expectedParams = {
-      color: colors[0],
-      taxon_id: life().id,
+    let expectedParams: iNatApiParams = {
+      colors: colors[0],
+      taxon_id: life().id.toString(),
       verifiable: true,
       spam: false,
     };
@@ -260,7 +283,7 @@ describe("initApp", () => {
     expectEmpytMap(store);
 
     let searchparams =
-      "?taxon_ids=48460&place_id=962&colors=%234477aa&spam=false&verifiable=true";
+      "?taxon_id=48460&place_id=962&colors=%234477aa&spam=false&verifiable=true";
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);
@@ -274,10 +297,10 @@ describe("initApp", () => {
     expectNoRefresh(store);
     expectLifeTaxa(store);
     expectLosAngelesPlace(store);
-    let expectedParams = {
-      color: colors[0],
+    let expectedParams: iNatApiParams = {
+      colors: colors[0],
       place_id: losangeles.id.toString(),
-      taxon_id: life().id,
+      taxon_id: life().id.toString(),
       verifiable: true,
       spam: false,
     };
@@ -290,7 +313,7 @@ describe("initApp", () => {
     expectEmpytMap(store);
 
     let searchparams =
-      "?taxon_ids=48460&place_id=0&colors=%234477aa&spam=false&verifiable=true&nelat=0&nelng=0&swlat=0&swlng=0";
+      "?taxon_id=48460&place_id=0&colors=%234477aa&spam=false&verifiable=true&nelat=0&nelng=0&swlat=0&swlng=0";
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);
@@ -302,9 +325,9 @@ describe("initApp", () => {
     ]);
     expectRefreshPlace(store);
     expectLifeTaxa(store);
-    let expectedParams = {
-      color: colors[0],
-      taxon_id: life().id,
+    let expectedParams: iNatApiParams = {
+      colors: colors[0],
+      taxon_id: life().id.toString(),
       nelat: 0,
       nelng: 0,
       swlat: 0,
@@ -333,7 +356,7 @@ describe("initApp", () => {
     expectNoRefresh(store);
     expectNoTaxa(store);
     expectLosAngelesPlace(store);
-    let expectedParams = {
+    let expectedParams: iNatApiParams = {
       place_id: losangeles.id.toString(),
       verifiable: true,
       spam: false,
@@ -358,7 +381,7 @@ describe("initApp", () => {
     ]);
     expectRefreshPlace(store);
     expectNoTaxa(store);
-    let expectedParams = {
+    let expectedParams: iNatApiParams = {
       nelat: 0,
       nelng: 0,
       swlat: 0,

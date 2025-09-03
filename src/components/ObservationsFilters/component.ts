@@ -1,7 +1,7 @@
 import { renderPlacesList, renderTaxaList } from "../../lib/autocomplete_utils";
 import { fetchiNatMapData, removeOneTaxonFromMap } from "../../lib/data_utils";
 import { updateStoreUsingFilters } from "../../lib/data_utils";
-import { iNatApiFilterableParams, taxonRanks } from "../../lib/inat_api";
+import { iNatApiFilterableNames, taxonRanks } from "../../lib/inat_api";
 import { mapStore } from "../../lib/store";
 import { updateUrl } from "../../lib/utils";
 import type { iNatApiFilterableParamsKeys, MapStore } from "../../types/app";
@@ -120,7 +120,7 @@ const setup = async () => {
           // delete filterable fields from appStore.inatApiParams
           Object.keys(appStore.inatApiParams).forEach((param) => {
             if (
-              iNatApiFilterableParams.includes(param) &&
+              iNatApiFilterableNames.includes(param) &&
               !Object.keys(mapStore.inatApiParams).includes(param)
             ) {
               delete appStore.inatApiParams[
@@ -181,8 +181,8 @@ const setup = async () => {
 
         appStore.inatApiParams = {
           ...appStore.inatApiParams,
-          taxon_id: taxon.id,
-          color: taxon.color,
+          taxon_id: taxon.id.toString(),
+          colors: taxon.color,
         };
         await fetchiNatMapData(taxon, appStore);
       }

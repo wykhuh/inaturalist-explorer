@@ -85,10 +85,10 @@ interface iNatApiParams extends iNatApiFilterableParams {
   nelng?: number;
   swlat?: number;
   swlng?: number;
-  color?: string; // only one value allowed
+  colors?: string; // only one value allowed
   per_page?: number;
   place_id?: string; // comma-seperated string
-  taxon_id?: number; // comma-seperated string
+  taxon_id?: string; // comma-seperated string
 }
 
 interface iNatApiFilterableParams {
@@ -148,7 +148,6 @@ interface iNatApiFilterableParams {
   id?: string; // comma-seperated string
   not_id?: string; // comma-seperated string
   ofv_datatype?: string; // comma-seperated string
-  place_id?: string; // comma-seperated string
   rank?: string; // comma-seperated string, type TaxonRanks
   site_id?: string; // comma-seperated string, type CCLicense
   user_login?: string; // comma-seperated string
@@ -189,20 +188,6 @@ interface iNatApiFilterableParams {
 
 export type iNatApiParamsKeys = keyof iNatApiParams;
 export type iNatApiFilterableParamsKeys = keyof iNatApiFilterableParams;
-
-export type AppUrlParams = {
-  nelat?: number;
-  nelng?: number;
-  swlat?: number;
-  swlng?: number;
-  taxon_ids?: string;
-  place_id?: string;
-  colors?: string;
-  spam?: boolean;
-  verifiable?: boolean;
-};
-
-export type AppUrlParamsKeys = keyof AppUrlParams;
 
 export interface AutoCompleteEvent {
   detail: {

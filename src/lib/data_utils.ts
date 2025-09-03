@@ -25,7 +25,8 @@ import {
   getiNatObservationsTotal,
   getPlaceById,
   getTaxonById,
-  iNatApiFilterableParams,
+  iNatApiNames,
+  iNatApiNonFilterableNames,
 } from "./inat_api.ts";
 import { renderTaxaList, renderPlacesList } from "./autocomplete_utils.ts";
 import type { Map } from "leaflet";
@@ -81,8 +82,8 @@ export async function refreshiNatMapLayers(
       appStore.inatApiParams = {
         ...appStore.inatApiParams,
         ...inatBbox,
-        taxon_id: taxon.id,
-        color: taxon.color,
+        taxon_id: taxon.id.toString(),
+        colors: taxon.color,
       };
       if (placeId) {
         appStore.inatApiParams.place_id = placeId.toString();
@@ -138,15 +139,15 @@ export async function fetchiNatMapData(
   if (layerControl == null) return;
 
   // get observations count
-  let params: iNatApiParams = {
+  let observationParams: iNatApiParams = {
     ...appStore.inatApiParams,
     per_page: 0,
   };
-  delete params.color;
-  let count = await getiNatObservationsTotal(params);
+  delete observationParams.colors;
+  let count = await getiNatObservationsTotal(observationParams);
   taxonObj.observations_count = count;
 
-  updateSelectedTaxaProxy(appStore, taxonObj);
+  updateSelectedTaxa(appStore, taxonObj);
 
   // fetch iNaturalist map layers
   let { iNatGrid, iNatHeatmap, iNatTaxonRange, iNatPoint } = getiNatMapTiles(
@@ -179,7 +180,7 @@ export async function fetchiNatMapData(
   };
 }
 
-export function updateSelectedTaxaProxy(
+export function updateSelectedTaxa(
   appStore: MapStore,
   taxonObj: NormalizediNatTaxon,
 ) {
@@ -391,9 +392,9 @@ export async function initApp(appStore: MapStore, urlStore: MapStore) {
   for (const [key, value] of Object.entries(urlStore.inatApiParams)) {
     if (fieldsWithAny.includes(key) && value === "any") {
       delete appStore.inatApiParams[key as iNatApiParamsKeys];
-    } else {
+    } else if (iNatApiNames.includes(key)) {
       delete appStore.inatApiParams[key as iNatApiParamsKeys];
-      (appStore.inatApiParams[key as iNatApiParamsKeys] as any) = value;
+      appStore.inatApiParams[key as iNatApiParamsKeys] = value;
     }
   }
 
@@ -466,8 +467,8 @@ export async function processTaxonData(
   // update appStore
   appStore.inatApiParams = {
     ...appStore.inatApiParams,
-    taxon_id: taxon.id,
-    color: urlStoreTaxon.color,
+    taxon_id: taxon.id.toString(),
+    colors: urlStoreTaxon.color,
   };
   if (urlStoreTaxon.color) {
     appStore.color = urlStoreTaxon.color;
@@ -591,7 +592,7 @@ export function updateStoreUsingFilters(
     // console.log(key, _value);
 
     // ignore params that can't be changed in the filter modal
-    if (!iNatApiFilterableParams.includes(key)) {
+    if (iNatApiNonFilterableNames.includes(key)) {
       continue;
     }
 
