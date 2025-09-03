@@ -14,12 +14,13 @@ export function processFiltersForm(data: FormData): {
     // console.log(key, value);
 
     // ignore fields
-    if (["on", "d1", "d2", "month", "iconic_taxa"].includes(key)) {
+    if (["on", "d1", "d2", "month", "year", "iconic_taxa"].includes(key)) {
       // ignore value "on"
     } else if (value === "on") {
       // convert boolean strings to boolean
     } else if (value === "true") {
       values[key] = true;
+      // convert boolean strings to boolean
     } else if (value === "false") {
       values[key] = false;
     } else if (value !== "") {
@@ -46,6 +47,9 @@ export function processFiltersForm(data: FormData): {
   }
   if (data.getAll("month").filter((m) => m !== "").length > 0) {
     values.month = data.getAll("month").join(",");
+  }
+  if (data.getAll("year").filter((y) => y !== "").length > 0) {
+    values.year = data.getAll("year").join(",");
   }
 
   return {

@@ -8,6 +8,7 @@ import type {
   ObservationsAPI,
   iNatTaxaAPI,
   iNatPlacesAPI,
+  iNatHistogramApi,
 } from "../types/inat_api.d.ts";
 import { defaultColorScheme } from "./map_colors_utils.ts";
 
@@ -21,6 +22,8 @@ const observations_count_api =
 export const api_base = "https://api.inaturalist.org/v1/";
 const taxa_api = "https://api.inaturalist.org/v1/taxa/";
 const places_api = "https://api.inaturalist.org/v1/places/";
+const histogram_year_api =
+  "https://api.inaturalist.org/v1/observations/histogram?date_field=observed&interval=year";
 
 export const taxonRanks = [
   "Kingdom",
@@ -58,19 +61,26 @@ export const iNatApiFilterableParams = [
   "captive",
   "d1",
   "d2",
+  "endemic",
   "hrank",
   "iconic_taxa",
+  "identified",
   "introduced",
+  "license",
   "lrank",
   "month",
+  "native",
   "on",
+  "photo_license",
   "photos",
   "popular",
   "quality_grade",
-  "spam",
+  "sound_license",
   "sounds",
+  // "spam",
   "threatened",
   "verifiable",
+  "year",
 ];
 
 //forum.inaturalist.org/t/what-is-places-type-for-the-api-call-for-places-nearby/49446/2?u=wy_bio
@@ -274,6 +284,16 @@ export async function getPlaceById(id: number) {
     let resp = await fetch(places_api + id);
     let data = (await resp.json()) as iNatPlacesAPI;
     return data.results[0];
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getObservationsYears() {
+  try {
+    let resp = await fetch(histogram_year_api);
+    let data = (await resp.json()) as iNatHistogramApi;
+    return data.results;
   } catch (error) {
     console.error(error);
   }

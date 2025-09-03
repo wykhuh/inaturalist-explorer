@@ -18,6 +18,7 @@ export const mapStore: MapStore = {
     layer: null,
   },
   formFilters: { params: {}, string: "" },
+  iNatStats: {},
 };
 
 const proxiedStore = new Proxy(structuredClone(mapStore), {

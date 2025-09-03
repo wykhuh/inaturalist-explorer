@@ -412,13 +412,22 @@
       /* grid-template-rows: 1fr 50px; */
     }
 
-    .form-group {
-      margin: 0 0;
+    & .form-group {
+      margin: 0.5rem 0;
     }
 
-    fieldset {
+    & fieldset {
       border: 1px solid var(--clr-gray-400);
       margin: 0.5rem 0;
+    }
+
+    & .form-group.multiselect {
+      display: flex;
+      align-items: center;
+    }
+
+    & label {
+      margin-right: 0.5rem;
     }
 
     & div:nth-child(1) {

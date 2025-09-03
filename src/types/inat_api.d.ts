@@ -524,3 +524,18 @@ export interface PlacesResult {
   bounding_box_geojson: PolygonJson;
   location: string;
 }
+
+// ==================
+// histogram api
+// ==================
+
+export type iNatHistogramApi = {
+  total_results: number;
+  page: number;
+  per_page: number;
+  results: {
+    year: {
+      [key: string]: number;
+    };
+  };
+};

@@ -26,7 +26,11 @@ import {
   renderAutocompletePlace,
   placeSelectedHandler,
 } from "./lib/autocomplete_utils.ts";
-import { autocomplete_taxa_api, search_places_api } from "./lib/inat_api.ts";
+import {
+  autocomplete_taxa_api,
+  getObservationsYears,
+  search_places_api,
+} from "./lib/inat_api.ts";
 import type { iNatAutocompleteTaxaAPI, iNatSearchAPI } from "./types/inat_api";
 import { decodeAppUrl } from "./lib/utils.ts";
 import { initApp } from "./lib/data_utils.ts";
@@ -37,6 +41,22 @@ window.app.store.taxaListEl = document.getElementById("taxa-list-container");
 window.app.store.placesListEl = document.getElementById(
   "places-list-container",
 );
+
+// =====================
+// misc
+// =====================
+
+let data = await getObservationsYears();
+if (data) {
+  let years = [];
+  for (let [date, _count] of Object.entries(data.year)) {
+    years.push(Number(date.split("-")[0]));
+  }
+  window.app.store.iNatStats = { years: years.sort().reverse() };
+  console.log("year done");
+
+  window.dispatchEvent(new Event("observationYearsLoaded"));
+}
 
 // =====================
 // map

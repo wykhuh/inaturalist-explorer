@@ -597,27 +597,19 @@ export function updateStoreUsingFilters(
       continue;
     }
 
-    // handle inatApiParams that set in default mapStore
-    if (mapStore.inatApiParams[key] !== undefined) {
-      // field is not set in the form filter
-      if (filtersResults.params[key] === undefined) {
-        if (key === "verifiable") {
-          if (appStore.inatApiParams.verifiable === true) {
-            delete appStore.inatApiParams[key];
-          }
-        } else if (key === "spam") {
-          if (appStore.inatApiParams.spam === true) {
-            appStore.inatApiParams.spam = false;
-          }
-        }
+    if (key === "verifiable") {
+      if (filtersResults.params.verifiable === undefined) {
+        delete appStore.inatApiParams[key];
       }
-      // handle inatApiParams that have been changed by the filtes
     } else if (appStore.inatApiParams[key] !== filtersResults.params[key]) {
       if (filtersResults.params[key] === undefined) {
         delete appStore.inatApiParams[key];
       }
     }
   }
+
+  // console.log("627 appStore:", appStore.inatApiParams);
+  // console.log("628 filtersResults", filtersResults);
 
   appStore.inatApiParams = {
     ...appStore.inatApiParams,
@@ -641,6 +633,12 @@ export function displayUserData(appStore: MapStore, _source: string) {
     return temp;
   }
 
+  let yearString = "";
+  if (appStore.iNatStats.years) {
+    let allYears = appStore.iNatStats.years;
+    yearString = `${allYears[0]}-${allYears[allYears.length - 1]}`;
+  }
+
   let data = {
     inatApiParams: appStore.inatApiParams,
     color: appStore.color,
@@ -657,6 +655,7 @@ export function displayUserData(appStore: MapStore, _source: string) {
       },
     },
     mapLayerDescriptions: leafletVisibleLayers(appStore),
+    iNatStats: { years_summary: yearString },
   };
   displayJson(data, appStore.displayJsonEl);
 }

@@ -73,6 +73,9 @@ export interface MapStore {
     params: iNatApiParams;
     string: string;
   };
+  iNatStats: {
+    years?: number[];
+  };
 }
 
 export type MapStoreKeys = keyof MapStore;
@@ -92,37 +95,38 @@ interface iNatApiFilterableParams {
   captive?: boolean;
   d1?: string; // date
   d2?: string; // date
+  endemic?: boolean;
   hrank?: TaxonRanks; // one value
   iconic_taxa?: string; // comma-seperated string, type IconicTaxa
+  identified?: boolean;
   introduced?: boolean;
+  license?: string; // comma-seperated string, type CCLicense
   lrank?: TaxonRanks; // one value
   month?: string;
+  native?: boolean;
   on?: string;
+  photo_license?: string; // comma-seperated string, type CCLicense
   photos?: boolean;
   popular?: boolean;
   quality_grade?: "casual" | "needs_id" | "research";
   spam?: boolean;
+  sound_license?: string; // comma-seperated string, type CCLicense
   sounds?: boolean;
   threatened?: boolean;
   verifiable?: boolean | "any";
-  // todo implemented
+  year?: string; // comma-seperated string
+
+  // TODO: needs to be implemented
   acc?: boolean;
-  endemic?: boolean;
-  identified?: boolean;
   licensed?: boolean;
-  native?: boolean;
   out_of_range?: boolean;
   photo_licensed?: boolean;
-  license?: string; // comma-seperated string, type CCLicense
-  photo_license?: string; // comma-seperated string, type CCLicense
   project_id?: string; // comma-seperated string
   rank?: string; // comma-seperated string, type TaxonRanks
-  sound_license?: string; // comma-seperated string, type CCLicense
   without_taxon_id?: string; // comma-seperated string
   taxon_name?: string; // comma-seperated string
   user_id?: string; // comma-seperated string
   ident_user_id?: number;
-  year?: string; // comma-seperated string
   annotation_user_id?: string; // comma-seperated string
   acc_above?: number;
   acc_below?: number;

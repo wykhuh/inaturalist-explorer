@@ -37,44 +37,18 @@ describe("updating observation filters", () => {
     expect(store.formFilters).toStrictEqual(filterResults);
   });
 
-  test("verifiable remains checked, set iconic_taxa to Aves", () => {
-    let store = structuredClone(mapStore);
-    let formData = createFormData();
-
-    expect(store.inatApiParams).toStrictEqual(defaultInatApiParams);
-
-    formData.append("verifiable", "true");
-    formData.append("iconic_taxa", "Aves");
-
-    let filterResults = processFiltersForm(formData);
-
-    expect(filterResults).toStrictEqual({
-      params: { iconic_taxa: "Aves", verifiable: true },
-      string: "verifiable=true&iconic_taxa=Aves",
-    });
-
-    updateStoreUsingFilters(store, filterResults);
-
-    expect(store.inatApiParams).toStrictEqual({
-      verifiable: true,
-      spam: false,
-      iconic_taxa: "Aves",
-    });
-    expect(store.formFilters).toStrictEqual(filterResults);
-  });
-
-  test(`verifiable remains checked, check iconic_taxa Aves; uncheck iconic_taxa Aves`, () => {
+  test(`verifiable remains true, set iconic_taxa to Aves,Fungi; uncheck iconic_taxa Aves`, () => {
     let store = structuredClone(mapStore);
     let formData = createFormData();
 
     formData.append("verifiable", "true");
-    formData.append("iconic_taxa", "Aves");
+    formData.append("iconic_taxa", "Aves,Fungi");
 
     let filterResults1 = processFiltersForm(formData);
 
     expect(filterResults1).toStrictEqual({
-      params: { verifiable: true, iconic_taxa: "Aves" },
-      string: "verifiable=true&iconic_taxa=Aves",
+      params: { verifiable: true, iconic_taxa: "Aves,Fungi" },
+      string: "verifiable=true&iconic_taxa=Aves,Fungi",
     });
 
     updateStoreUsingFilters(store, filterResults1);
@@ -82,16 +56,17 @@ describe("updating observation filters", () => {
     expect(store.inatApiParams).toStrictEqual({
       verifiable: true,
       spam: false,
-      iconic_taxa: "Aves",
+      iconic_taxa: "Aves,Fungi",
     });
 
     formData.delete("iconic_taxa");
+    formData.append("iconic_taxa", "Fungi");
 
     let filterResults2 = processFiltersForm(formData);
 
     expect(filterResults2).toStrictEqual({
-      params: { verifiable: true },
-      string: "verifiable=true",
+      params: { verifiable: true, iconic_taxa: "Fungi" },
+      string: "verifiable=true&iconic_taxa=Fungi",
     });
 
     updateStoreUsingFilters(store, filterResults2);
@@ -99,10 +74,11 @@ describe("updating observation filters", () => {
     expect(store.inatApiParams).toStrictEqual({
       verifiable: true,
       spam: false,
+      iconic_taxa: "Fungi",
     });
   });
 
-  test(`verifiable remains checked, set sounds to true; set sounds to false; set sounds to blank`, () => {
+  test(`verifiable remains true, set sounds to true; set sounds to false; set sounds to blank`, () => {
     let store = structuredClone(mapStore);
     let formData = createFormData();
 
@@ -158,43 +134,59 @@ describe("updating observation filters", () => {
     });
   });
 
-  test(`uncheck verifiable, check spam; check verifiable, uncheck spam`, () => {
+  test(`set verifiable false; set verifiable to blank; set verifiable false;`, () => {
     let store = structuredClone(mapStore);
     let formData = createFormData();
 
     expect(store.inatApiParams).toStrictEqual(defaultInatApiParams);
 
-    formData.append("spam", "true");
+    formData.append("verifiable", "false");
 
     let filterResults1 = processFiltersForm(formData);
 
     expect(filterResults1).toStrictEqual({
-      params: { spam: true },
-      string: "spam=true",
+      params: { verifiable: false },
+      string: "verifiable=false",
     });
 
     updateStoreUsingFilters(store, filterResults1);
 
     expect(store.inatApiParams).toStrictEqual({
-      spam: true,
+      verifiable: false,
+      spam: false,
     });
 
-    formData.append("verifiable", "true");
-    formData.delete("spam");
+    formData.append("verifiable", "");
 
     let filterResults2 = processFiltersForm(formData);
 
     expect(filterResults2).toStrictEqual({
-      params: { verifiable: true },
-      string: "verifiable=true",
+      params: {},
+      string: "",
     });
 
     updateStoreUsingFilters(store, filterResults2);
 
     expect(store.inatApiParams).toStrictEqual({
+      spam: false,
+    });
+
+    formData.append("verifiable", "true");
+
+    let filterResults3 = processFiltersForm(formData);
+
+    expect(filterResults3).toStrictEqual({
+      params: { verifiable: true },
+      string: "verifiable=true",
+    });
+
+    updateStoreUsingFilters(store, filterResults3);
+
+    expect(store.inatApiParams).toStrictEqual({
       verifiable: true,
       spam: false,
     });
-    expect(store.formFilters).toStrictEqual(filterResults2);
+
+    expect(store.formFilters).toStrictEqual(filterResults3);
   });
 });

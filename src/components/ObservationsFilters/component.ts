@@ -4,6 +4,7 @@ import { updateStoreUsingFilters } from "../../lib/data_utils";
 import { taxonRanks } from "../../lib/inat_api";
 import { mapStore } from "../../lib/store";
 import { updateUrl } from "../../lib/utils";
+import type { MapStore } from "../../types/app";
 import { processFiltersForm } from "./utils";
 
 const setup = async () => {
@@ -21,17 +22,13 @@ const setup = async () => {
     }
 
     renderForm() {
-      let selectHighEl = document.querySelector(
-        "#taxon-rank-high",
-      ) as HTMLSelectElement;
+      let selectHighEl = document.querySelector("#hrank") as HTMLSelectElement;
       if (selectHighEl) {
-        this.renderRankSelect(selectHighEl, "High");
+        this.renderRankSelect(selectHighEl, "");
       }
-      let selectLowEl = document.querySelector(
-        "#taxon-rank-low",
-      ) as HTMLSelectElement;
+      let selectLowEl = document.querySelector("#lrank") as HTMLSelectElement;
       if (selectLowEl) {
-        this.renderRankSelect(selectLowEl, "Low");
+        this.renderRankSelect(selectLowEl, "");
       }
     }
 
@@ -42,18 +39,6 @@ const setup = async () => {
         "#filters-form input",
       ) as NodeListOf<HTMLInputElement>;
       const form = document.querySelector("#filters-form") as HTMLFormElement;
-      const wildInput = document.querySelector(
-        "#filters-form #wild",
-      ) as HTMLInputElement;
-      const captiveInput = document.querySelector(
-        "#filters-form #captive",
-      ) as HTMLInputElement;
-      const researchInput = document.querySelector(
-        "#filters-form #research",
-      ) as HTMLInputElement;
-      const needs_idInput = document.querySelector(
-        "#filters-form #needs_id",
-      ) as HTMLInputElement;
 
       const onInput = document.querySelector(
         "#filters-form input[name='on']",
@@ -67,27 +52,15 @@ const setup = async () => {
       const monthInput = document.querySelector(
         "#filters-form select[name='month']",
       ) as HTMLInputElement;
+      const yearInput = document.querySelector(
+        "#filters-form select[name='year']",
+      ) as HTMLInputElement;
 
       let logEl = document.querySelector("#log") as HTMLElement;
 
       inputs.forEach((input) => {
         input.addEventListener("change", (event) => {
           let target = event.target as HTMLInputElement;
-          // only allow wild or captive to be checked
-          if (target.id === "wild" && target.checked) {
-            captiveInput.checked = false;
-          }
-          if (target.id === "captive" && target.checked) {
-            wildInput.checked = false;
-          }
-
-          // only allow research or needs_id to be checked
-          if (target.id === "research" && target.checked) {
-            needs_idInput.checked = false;
-          }
-          if (target.id === "needs_id" && target.checked) {
-            researchInput.checked = false;
-          }
 
           // disable/enable date inputs
           if (target.id == "any_date") {
@@ -95,21 +68,31 @@ const setup = async () => {
             d1Input.disabled = true;
             d2Input.disabled = true;
             monthInput.disabled = true;
+            yearInput.disabled = true;
           } else if (target.id == "exact_date") {
             onInput.disabled = false;
             d1Input.disabled = true;
             d2Input.disabled = true;
             monthInput.disabled = true;
+            yearInput.disabled = true;
           } else if (target.id == "range_date") {
             onInput.disabled = true;
             d1Input.disabled = false;
             d2Input.disabled = false;
             monthInput.disabled = true;
+            yearInput.disabled = true;
           } else if (target.id == "months_date") {
             onInput.disabled = true;
             d1Input.disabled = true;
             d2Input.disabled = true;
             monthInput.disabled = false;
+            yearInput.disabled = true;
+          } else if (target.id == "years_date") {
+            onInput.disabled = true;
+            d1Input.disabled = true;
+            d2Input.disabled = true;
+            monthInput.disabled = true;
+            yearInput.disabled = false;
           }
         });
       });
@@ -119,9 +102,8 @@ const setup = async () => {
           event.preventDefault();
 
           const data = new FormData(form);
-          appStore.formFilters = processFiltersForm(data);
+          this.updateAppWithFilters(data, window.app.store, logEl);
         });
-        form;
 
         form.addEventListener("change", async (event) => {
           if (event.target === null) return;
@@ -129,25 +111,7 @@ const setup = async () => {
           event.preventDefault();
 
           const data = new FormData(form);
-          let results = processFiltersForm(data);
-          updateStoreUsingFilters(appStore, results);
-
-          for await (const taxon of appStore.selectedTaxa) {
-            removeOneTaxonFromMap(appStore, taxon.id);
-
-            appStore.inatApiParams = {
-              ...appStore.inatApiParams,
-              taxon_id: taxon.id,
-              color: taxon.color,
-            };
-            await fetchiNatMapData(taxon, appStore);
-          }
-          renderTaxaList(appStore);
-          renderPlacesList(appStore);
-          updateUrl(window.location, appStore);
-          if (logEl) {
-            logEl.innerText = results.string;
-          }
+          this.updateAppWithFilters(data, window.app.store, logEl);
         });
 
         form.addEventListener("reset", () => {
@@ -190,6 +154,51 @@ const setup = async () => {
       });
     }
 
+    async updateAppWithFilters(
+      data: FormData,
+      appStore: MapStore,
+      logEl: HTMLElement,
+    ) {
+      let results = processFiltersForm(data);
+      updateStoreUsingFilters(appStore, results);
+
+      for await (const taxon of appStore.selectedTaxa) {
+        removeOneTaxonFromMap(appStore, taxon.id);
+
+        appStore.inatApiParams = {
+          ...appStore.inatApiParams,
+          taxon_id: taxon.id,
+          color: taxon.color,
+        };
+        await fetchiNatMapData(taxon, appStore);
+      }
+      renderTaxaList(appStore);
+      renderPlacesList(appStore);
+      updateUrl(window.location, appStore);
+
+      if (logEl) {
+        logEl.innerText = results.string;
+      }
+    }
+
+    renderYearsSelect() {
+      if (!window.app.store.iNatStats.years) return;
+
+      let selectEl = document.querySelector("#year");
+      if (selectEl) {
+        let optionEl = document.createElement("option");
+        optionEl.innerText = "Select years";
+        selectEl.appendChild(optionEl);
+
+        window.app.store.iNatStats.years.forEach((year) => {
+          let optionEl = document.createElement("option");
+          optionEl.innerText = year.toString();
+          optionEl.value = year.toString();
+          selectEl.appendChild(optionEl);
+        });
+      }
+    }
+
     connectedCallback() {
       if (!template) return;
 
@@ -198,6 +207,9 @@ const setup = async () => {
       this.renderForm();
       this.renderModal();
       this.formEventHandler();
+      window.addEventListener("observationYearsLoaded", () => {
+        this.renderYearsSelect();
+      });
     }
   }
 

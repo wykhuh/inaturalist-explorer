@@ -3,94 +3,125 @@
 
   <dialog class="filters-modal">
     <button class="close-btn">Close</button>
+    <p id="log">...</p>
 
     <form id="filters-form">
       <div class="fields">
         <!-- column 1 -->
         <div>
-          <fieldset>
-            <legend>Captive</legend>
+          <fieldset class="observation-status">
+            <legend>Observation Status</legend>
             <div class="form-group">
-              <input type="checkbox" id="wild" name="captive" value="false" />
-              <label for="wild">Wild</label>
+              <label for="verifiable">Verifiable</label>
+              <select id="verifiable" name="verifiable">
+                <option></option>
+                <option value="true" selected>True</option>
+                <option value="false">False</option>
+              </select>
             </div>
             <div class="form-group">
-              <input type="checkbox" id="captive" name="captive" value="true" />
               <label for="captive">Captive</label>
+              <select id="captive" name="captive">
+                <option></option>
+                <option value="true">Captive</option>
+                <option value="false">Wild</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="quality_grade">Quality Grade</label>
+              <select id="quality_grade" name="quality_grade">
+                <option></option>
+                <option value="research">Research Grade</option>
+                <option value="needs_id">Needs Id</option>
+                <option value="casual">Casual</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="popular">Popular</label>
+              <select id="popular" name="popular">
+                <option></option>
+                <option value="true">True</option>
+                <option value="false">False</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="identified">Identified</label>
+              <select id="identified" name="identified">
+                <option></option>
+                <option value="true">True</option>
+                <option value="false">False</option>
+              </select>
             </div>
           </fieldset>
-          <fieldset>
-            <legend>Quality Grade</legend>
-            <div class="form-group">
-              <input
-                type="checkbox"
-                id="research"
-                name="quality_grade"
-                value="research"
-              />
-              <label for="research">Research Grade</label>
-            </div>
-            <div class="form-group">
-              <input
-                type="checkbox"
-                id="needs_id"
-                name="quality_grade"
-                value="needs_id"
-              />
-              <label for="needs_id">Needs Id</label>
-            </div>
-          </fieldset>
-          <fieldset>
+
+          <fieldset class="media">
             <legend>Media</legend>
             <div class="form-group">
-              <input type="checkbox" id="sounds" name="sounds" value="true" />
               <label for="sounds">Has Sounds</label>
+              <select id="sounds" name="sounds">
+                <option></option>
+                <option value="true">True</option>
+                <option value="false">False</option>
+              </select>
             </div>
             <div class="form-group">
-              <input type="checkbox" id="photos" name="photos" value="true" />
               <label for="photos">Has Photos</label>
+              <select id="photos" name="photos">
+                <option></option>
+                <option value="true">True</option>
+                <option value="false">False</option>
+              </select>
             </div>
           </fieldset>
-          <div class="form-group">
-            <input
-              type="checkbox"
-              id="verifiable"
-              name="verifiable"
-              value="true"
-              checked
-            />
-            <label for="verifiable">Verifiable</label>
-          </div>
-          <div class="form-group">
-            <input
-              type="checkbox"
-              id="threatened"
-              name="threatened"
-              value="true"
-            />
-            <label for="threatened">Threatened</label>
-          </div>
-          <div class="form-group">
-            <input
-              type="checkbox"
-              id="introduced"
-              name="introduced"
-              value="true"
-            />
-            <label for="introduced">Introduced</label>
-          </div>
-          <div class="form-group">
-            <input type="checkbox" id="popular" name="popular" value="true" />
-            <label for="popular">Popular</label>
-          </div>
-          <div class="form-group">
-            <input type="checkbox" id="spam" name="spam" value="true" />
-            <label for="spam">Spam</label>
-          </div>
+
+          <fieldset class="licensing">
+            <legend>Licensing</legend>
+            <div class="form-group">
+              <label for="license">License</label>
+              <select id="license" name="license">
+                <option value="">All</option>
+                <option value="cc0">CC0</option>
+                <option value="cc-by">CC-BY</option>
+                <option value="cc-by-nc">CC-BY-NC</option>
+                <option value="cc-by-sa">CC-BY-SA</option>
+                <option value="cc-by-nd">CC-BY-ND</option>
+                <option value="cc-by-nc-sa">CC-BY-NC-SA</option>
+                <option value="cc-by-nc-nd">CC-BY-NC-ND</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="photo_license">Photo License</label>
+              <select id="photo_license" name="photo_license">
+                <option value="">All</option>
+                <option value="cc0">CC0</option>
+                <option value="cc-by">CC-BY</option>
+                <option value="cc-by-nc">CC-BY-NC</option>
+                <option value="cc-by-sa">CC-BY-SA</option>
+                <option value="cc-by-nd">CC-BY-ND</option>
+                <option value="cc-by-nc-sa">CC-BY-NC-SA</option>
+                <option value="cc-by-nc-nd">CC-BY-NC-ND</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="sound_license">Sound License</label>
+              <select id="sound_license" name="sound_license">
+                <option value="">All</option>
+                <option value="cc0">CC0</option>
+                <option value="cc-by">CC-BY</option>
+                <option value="cc-by-nc">CC-BY-NC</option>
+                <option value="cc-by-sa">CC-BY-SA</option>
+                <option value="cc-by-nd">CC-BY-ND</option>
+                <option value="cc-by-nc-sa">CC-BY-NC-SA</option>
+                <option value="cc-by-nc-nd">CC-BY-NC-ND</option>
+              </select>
+            </div>
+          </fieldset>
         </div>
         <!-- column 2 -->
         <div>
-          <fieldset>
+          <fieldset class="iconic_taxa">
             <legend>Categories</legend>
             <div class="form-group">
               <input
@@ -201,15 +232,56 @@
               <label for="unknown">unknown</label>
             </div>
           </fieldset>
-          <fieldset>
+          <fieldset class="rank">
             <legend>Rank</legend>
-            <select id="taxon-rank-high" name="hrank"></select>
-            <select id="taxon-rank-low" name="lrank"></select>
+            <div class="form-group">
+              <label for="hrank">High Rank</label>
+              <select id="hrank" name="hrank"></select>
+            </div>
+            <div class="form-group">
+              <label for="lrank">Low Rank</label>
+              <select id="lrank" name="lrank"></select>
+            </div>
+          </fieldset>
+          <fieldset class="species-status">
+            <legend>Species Status</legend>
+            <div class="form-group">
+              <label for="threatened">Threatened</label>
+              <select id="threatened" name="threatened">
+                <option></option>
+                <option value="true">True</option>
+                <option value="false">False</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="introduced">Introduced</label>
+              <select id="introduced" name="introduced">
+                <option></option>
+                <option value="true">True</option>
+                <option value="false">False</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="native">Native</label>
+              <select id="native" name="native">
+                <option></option>
+                <option value="true">True</option>
+                <option value="false">False</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="endemic">Endemic</label>
+              <select id="endemic" name="endemic">
+                <option></option>
+                <option value="true">True</option>
+                <option value="false">False</option>
+              </select>
+            </div>
           </fieldset>
         </div>
         <!-- column 3 -->
         <div>
-          <fieldset>
+          <fieldset class="date-observed">
             <legend>Date Observed</legend>
             <div class="form-group">
               <input type="radio" name="date_observed" id="any_date" />
@@ -233,11 +305,11 @@
                 <input id="end_date" type="date" name="d2" id="d2" disabled />
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group multiselect">
               <input type="radio" name="date_observed" id="months_date" />
               <label for="months_date">Months</label>
               <select name="month" id="month" multiple disabled>
-                <option value="">Select month</option>
+                <option value="">Select months</option>
                 <option value="1">Janurary</option>
                 <option value="2">February</option>
                 <option value="3">March</option>
@@ -252,13 +324,18 @@
                 <option value="12">December</option>
               </select>
             </div>
+
+            <div class="form-group multiselect">
+              <input type="radio" name="date_observed" id="years_date" />
+              <label for="years_date">Years</label>
+              <select name="year" id="year" multiple disabled></select>
+            </div>
           </fieldset>
         </div>
       </div>
       <div class="controls">
         <button type="submit">Update Search</button>
         <button type="reset">Reset</button>
-        <p id="log"></p>
       </div>
     </form>
   </dialog>
