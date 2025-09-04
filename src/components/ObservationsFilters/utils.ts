@@ -33,7 +33,19 @@ export function processFiltersForm(data: FormData): {
     // console.log(key, value); // keep
 
     // ignore fields
-    if (["on", "d1", "d2", "month", "year", "iconic_taxa"].includes(key)) {
+    if (
+      [
+        "on",
+        "d1",
+        "d2",
+        "month",
+        "year",
+        "iconic_taxa",
+        "license",
+        "photo_license",
+        "sound_license",
+      ].includes(key)
+    ) {
       // ignore value "on"
     } else if (value === "on") {
       // convert boolean strings to boolean
@@ -49,9 +61,21 @@ export function processFiltersForm(data: FormData): {
     }
   }
 
-  // returns iconic_taxa=Aves,Amphibia
+  // handle comma-separated params
   if (data.getAll("iconic_taxa").length > 0) {
     values.iconic_taxa = data.getAll("iconic_taxa").join(",");
+  }
+  let licenses = data.getAll("license");
+  if (licenses.length > 0 && licenses[0] != "") {
+    values.license = licenses.join(",");
+  }
+  let photo_licenses = data.getAll("photo_license");
+  if (photo_licenses.length > 0 && photo_licenses[0] != "") {
+    values.photo_license = photo_licenses.join(",");
+  }
+  let sound_licenses = data.getAll("sound_license");
+  if (sound_licenses.length > 0 && sound_licenses[0] != "") {
+    values.sound_license = sound_licenses.join(",");
   }
 
   // handle observed date
@@ -219,9 +243,11 @@ export function initFilters(appStore: MapStore) {
   }
 
   if (inatApiParams.license !== undefined) {
-    setSelectedOption(
-      `#filters-form select#license option[value='${inatApiParams.license}']`,
-    );
+    inatApiParams.license.split(",").forEach((value) => {
+      setSelectedOption(
+        `#filters-form select#license option[value='${value}']`,
+      );
+    });
   }
 
   if (inatApiParams.lrank !== undefined) {
@@ -249,9 +275,11 @@ export function initFilters(appStore: MapStore) {
   }
 
   if (inatApiParams.photo_license !== undefined) {
-    setSelectedOption(
-      `#filters-form select#photo_license option[value='${inatApiParams.photo_license}']`,
-    );
+    inatApiParams.photo_license.split(",").forEach((value) => {
+      setSelectedOption(
+        `#filters-form select#photo_license option[value='${value}']`,
+      );
+    });
   }
 
   if (inatApiParams.photos !== undefined) {
@@ -269,9 +297,11 @@ export function initFilters(appStore: MapStore) {
   }
 
   if (inatApiParams.sound_license !== undefined) {
-    setSelectedOption(
-      `#filters-form select#sound_license option[value='${inatApiParams.sound_license}']`,
-    );
+    inatApiParams.sound_license.split(",").forEach((value) => {
+      setSelectedOption(
+        `#filters-form select#sound_license option[value='${value}']`,
+      );
+    });
   }
 
   if (inatApiParams.sounds !== undefined) {
