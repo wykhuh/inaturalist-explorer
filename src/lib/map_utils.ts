@@ -268,6 +268,8 @@ export function addLayerToMap(
   layerControl: any,
   checked = false,
 ) {
+  console.log(tileObj.url);
+
   let layer = L.tileLayer(tileObj.url, tileObj.options);
   if (checked) {
     layer.addTo(map);
@@ -284,6 +286,8 @@ export function addOverlayToMap(
   taxonName: string,
   checked = false,
 ) {
+  console.log(tileObj.url);
+
   let layer = L.tileLayer(tileObj.url, tileObj.options);
   if (checked) {
     layer.addTo(map);

@@ -30,11 +30,13 @@ import {
   fieldsWithAny,
   iNatApiNames,
   iNatApiNonFilterableNames,
+  allTaxa,
 } from "./inat_data.ts";
 
 import { renderTaxaList, renderPlacesList } from "./autocomplete_utils.ts";
 import type { Map } from "leaflet";
 import type { PlacesResult, TaxaResult } from "../types/inat_api";
+import { iNatOrange } from "./map_colors_utils.ts";
 
 export function bboxPlace(bbox: LngLat[]): NormalizediNatPlace {
   return {
@@ -93,7 +95,8 @@ export async function refreshiNatMapLayers(
         appStore.inatApiParams.place_id = placeId.toString();
       }
 
-      await fetchiNatMapData(taxon, appStore);
+      await fetchiNatMapDataForTaxon(taxon, appStore);
+      await getObservationsCountForTaxon(taxon, appStore);
     }
     // if no selectedTaxa, add bounding box to inatApiParams
   } else {
@@ -106,8 +109,13 @@ export async function refreshiNatMapLayers(
 }
 
 // called when user deletes a taxon
-export function removeTaxon(taxonId: number, appStore: MapStore) {
+export async function removeTaxon(taxonId: number, appStore: MapStore) {
   removeOneTaxonFromStoreAndMap(appStore, taxonId);
+
+  // if no selected taxa, load allTaxa
+  if (appStore.selectedTaxa.length === 0) {
+    await addAllTaxaToMapAndStore(appStore);
+  }
 
   renderTaxaList(appStore);
   renderPlacesList(appStore);
@@ -119,12 +127,13 @@ export async function removePlace(placeId: number, appStore: MapStore) {
   if (!appStore.selectedPlaces) return;
 
   // remove place
-  removeOnePlaceFromStoreAndMap(appStore, placeId);
+  await removeOnePlaceFromStoreAndMap(appStore, placeId);
 
   // remove existing taxa tiles, and refetch taxa tiles
   for await (const taxon of appStore.selectedTaxa) {
     removeOneTaxonFromMap(appStore, taxon.id);
-    await fetchiNatMapData(taxon, appStore);
+    await fetchiNatMapDataForTaxon(taxon, appStore);
+    await getObservationsCountForTaxon(taxon, appStore);
   }
 
   renderTaxaList(appStore);
@@ -133,7 +142,7 @@ export async function removePlace(placeId: number, appStore: MapStore) {
 }
 
 // called when user select taxa or place
-export async function fetchiNatMapData(
+export async function fetchiNatMapDataForTaxon(
   taxonObj: NormalizediNatTaxon,
   appStore: MapStore,
 ) {
@@ -142,46 +151,68 @@ export async function fetchiNatMapData(
   if (map == null) return;
   if (layerControl == null) return;
 
-  // get observations count
-  let observationParams: iNatApiParams = {
-    ...appStore.inatApiParams,
-    per_page: 0,
-  };
-  delete observationParams.colors;
-  let count = await getiNatObservationsTotal(observationParams);
-  taxonObj.observations_count = count;
-
-  updateSelectedTaxa(appStore, taxonObj);
-
-  // fetch iNaturalist map layers
+  // get iNaturalist map layers
   let { iNatGrid, iNatHeatmap, iNatTaxonRange, iNatPoint } = getiNatMapTiles(
     taxonObj.id,
     appStore.inatApiParams,
   );
 
-  // add layers to layer control
   let title = taxonObj.display_name;
   if (!title) return;
+
+  // add layers to map and layer control
   let iNatGridLayer = addOverlayToMap(iNatGrid, map, layerControl, title, true);
   let iNatPointLayer = addOverlayToMap(iNatPoint, map, layerControl, title);
   let iNatHeatmapLayer = addOverlayToMap(iNatHeatmap, map, layerControl, title);
-  let iNatTaxonRangeLayer = addOverlayToMap(
-    iNatTaxonRange,
-    map,
-    layerControl,
-    title,
-  );
 
-  // save layers to store sothe app can delete them later on
-  appStore.taxaMapLayers = {
-    ...appStore.taxaMapLayers,
-    [taxonObj.id]: [
+  // only need taxon range if taxon is selected
+  let layers = [];
+  if (taxonObj.id === 0) {
+    layers = [iNatGridLayer, iNatPointLayer, iNatHeatmapLayer];
+  } else {
+    let iNatTaxonRangeLayer = addOverlayToMap(
+      iNatTaxonRange,
+      map,
+      layerControl,
+      title,
+    );
+    layers = [
       iNatGridLayer,
       iNatPointLayer,
       iNatHeatmapLayer,
       iNatTaxonRangeLayer,
-    ],
+    ];
+  }
+
+  // save layers to store so the app can delete them later on
+  appStore.taxaMapLayers = {
+    ...appStore.taxaMapLayers,
+    [taxonObj.id]: layers,
   };
+}
+
+export async function getObservationsCountForTaxon(
+  taxonObj: NormalizediNatTaxon,
+  appStore: MapStore,
+) {
+  // get observations count
+  let observationParams: iNatApiParams = {
+    ...appStore.inatApiParams,
+    per_page: 0,
+  };
+  // delete colors
+  delete observationParams.colors;
+
+  // delete taxon_id when allTaxon
+  if (observationParams.taxon_id === "0") {
+    delete observationParams.taxon_id;
+  }
+
+  let count = await getiNatObservationsTotal(observationParams);
+  taxonObj.observations_count = count;
+
+  // update store.selectedTaxa
+  updateSelectedTaxa(appStore, taxonObj);
 }
 
 export function updateSelectedTaxa(
@@ -210,6 +241,24 @@ export function updateSelectedTaxa(
   appStore.selectedTaxa = temp;
 }
 
+export async function addAllTaxaToMapAndStore(appStore: MapStore) {
+  // set colors because colors is used to fetch map tiles
+  appStore.inatApiParams.colors = iNatOrange;
+  appStore.color = iNatOrange;
+
+  await fetchiNatMapDataForTaxon(allTaxa, appStore);
+  await getObservationsCountForTaxon(allTaxa, appStore);
+
+  // set taxon_id after getting map data
+  appStore.inatApiParams = {
+    ...appStore.inatApiParams,
+    taxon_id: "0",
+    colors: iNatOrange,
+  };
+  appStore.selectedTaxa = [allTaxa];
+  appStore.color = iNatOrange;
+}
+
 function removeOneTaxonFromStoreAndMap(appStore: MapStore, taxonId: number) {
   removeOneTaxonFromMap(appStore, taxonId);
 
@@ -220,7 +269,10 @@ function removeOneTaxonFromStoreAndMap(appStore: MapStore, taxonId: number) {
   );
 }
 
-function removeOnePlaceFromStoreAndMap(appStore: MapStore, placeId: number) {
+async function removeOnePlaceFromStoreAndMap(
+  appStore: MapStore,
+  placeId: number,
+) {
   removeOnePlaceFromMap(appStore, placeId);
 
   if (placeId === 0) {
@@ -241,7 +293,8 @@ function removeOnePlaceFromStoreAndMap(appStore: MapStore, placeId: number) {
     (place) => place.id !== placeId,
   );
   if (appStore.selectedPlaces.length === 0) {
-    removeTaxaFromStoreAndMap(appStore);
+    removeAllTaxaFromStoreAndMap(appStore);
+    await addAllTaxaToMapAndStore(appStore);
   }
 }
 
@@ -274,7 +327,7 @@ export function removeOnePlaceFromMap(appStore: MapStore, placeId: number) {
   delete appStore.placesMapLayers[placeId];
 }
 
-function removeTaxaFromStoreAndMap(appStore: MapStore) {
+export function removeAllTaxaFromStoreAndMap(appStore: MapStore) {
   let layerControl = appStore.map.layerControl;
   if (!layerControl) return;
 
@@ -384,13 +437,15 @@ export async function initApp(appStore: MapStore, urlStore: MapStore) {
   let map = appStore.map.map;
   if (!map) return;
 
-  // quality_grade, reviewed, verifiable, place_id, captive
-  for (const [key, value] of Object.entries(urlStore.inatApiParams)) {
+  for (const [k, value] of Object.entries(urlStore.inatApiParams)) {
+    let key = k as iNatApiParamsKeys;
+    // ignore params whose value is any
     if (fieldsWithAny.includes(key) && value === "any") {
-      delete appStore.inatApiParams[key as iNatApiParamsKeys];
+      delete appStore.inatApiParams[key];
+      // add valid params to inatApiParams
     } else if (iNatApiNames.includes(key)) {
-      delete appStore.inatApiParams[key as iNatApiParamsKeys];
-      appStore.inatApiParams[key as iNatApiParamsKeys] = value;
+      delete appStore.inatApiParams[key];
+      appStore.inatApiParams[key] = value;
     }
   }
 
@@ -432,6 +487,16 @@ export async function initApp(appStore: MapStore, urlStore: MapStore) {
     renderPlacesList(appStore);
     fitBoundsPlaces(appStore);
   }
+
+  // load allTaxon map tiles if no taxon id in the url
+  if (
+    urlStore.selectedTaxa === undefined ||
+    urlStore.selectedTaxa.length === 0
+  ) {
+    await addAllTaxaToMapAndStore(appStore);
+    renderTaxaList(appStore);
+  }
+
   window.dispatchEvent(new Event("appInitialized"));
 }
 
@@ -488,7 +553,8 @@ export async function processTaxonData(
   } else if (urlStore.inatApiParams.nelat !== undefined) {
     processBBoxData(appStore, urlStore);
   }
-  await fetchiNatMapData(taxon, appStore);
+  await fetchiNatMapDataForTaxon(taxon, appStore);
+  await getObservationsCountForTaxon(taxon, appStore);
 }
 
 export function processPlaceData(placeData: PlacesResult, appStore: MapStore) {

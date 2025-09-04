@@ -13,19 +13,20 @@ import type {
 } from "../types/inat_api.d.ts";
 import {
   formatTaxonName,
-  fetchiNatMapData,
+  fetchiNatMapDataForTaxon,
   removeOneTaxonFromMap,
   idStringAddId,
+  removeAllTaxaFromStoreAndMap,
+  getObservationsCountForTaxon,
 } from "./data_utils.ts";
 import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
-import { placeTypes, lifeTaxon } from "./inat_data.ts";
+import { placeTypes, speciesRanks } from "./inat_data.ts";
 import { updateUrl } from "./utils.ts";
 
 //=====================
 // taxa search
 // =====================
-const speciesRanks = ["species", "hybrid", "subspecies", "variety", "form"];
 
 export function renderAutocompleteTaxon(
   item: NormalizediNatTaxon,
@@ -87,7 +88,7 @@ export function processAutocompleteTaxa(
   return taxa;
 }
 
-// called by autocomplete search when an option is selected
+// called by autocomplete search when an taxa option is selected
 export async function taxonSelectedHandler(
   taxonObj: NormalizediNatTaxon,
   searchTerm: string,
@@ -102,6 +103,11 @@ export async function taxonSelectedHandler(
   let color = getColor(appStore, defaultColorScheme);
   taxonObj.color = color;
 
+  // remove all taxa if allTaxa is the current taxon
+  if (appStore.inatApiParams.taxon_id === "0") {
+    removeAllTaxaFromStoreAndMap(appStore);
+  }
+
   // get display name for taxon
   let { title, subtitle } = formatTaxonName(taxonObj, searchTerm, false);
   taxonObj.display_name = title;
@@ -115,7 +121,9 @@ export async function taxonSelectedHandler(
     colors: color,
   };
 
-  await fetchiNatMapData(taxonObj, appStore);
+  await fetchiNatMapDataForTaxon(taxonObj, appStore);
+  await getObservationsCountForTaxon(taxonObj, appStore);
+
   renderTaxaList(appStore);
   renderPlacesList(appStore);
   updateUrl(window.location, appStore);
@@ -221,20 +229,8 @@ export async function placeSelectedHandler(
   ];
   appStore.placesMapLayers = { [selection.id]: [layer as CustomGeoJSON] };
 
-  // set taxa to existing taxa or use Life.
-  let taxa = [];
-  if (appStore.selectedTaxa.length > 0) {
-    taxa = appStore.selectedTaxa;
-  } else {
-    let { title, subtitle } = formatTaxonName(lifeTaxon, "life");
-    lifeTaxon.title = title;
-    lifeTaxon.subtitle = subtitle;
-    lifeTaxon.color = getColor(appStore, defaultColorScheme);
-    taxa = [lifeTaxon];
-  }
-
   // get iNat map tiles for selected place
-  for await (const taxon of taxa) {
+  for await (const taxon of appStore.selectedTaxa) {
     // remove existing taxon layers from map
     removeOneTaxonFromMap(appStore, taxon.id);
     appStore.inatApiParams = {
@@ -244,7 +240,9 @@ export async function placeSelectedHandler(
       place_id: idStringAddId(selection.id, appStore.inatApiParams.place_id),
     };
 
-    await fetchiNatMapData(taxon, appStore);
+    await fetchiNatMapDataForTaxon(taxon, appStore);
+    await getObservationsCountForTaxon(taxon, appStore);
+
     renderTaxaList(appStore);
     renderPlacesList(appStore);
     fitBoundsPlaces(appStore);

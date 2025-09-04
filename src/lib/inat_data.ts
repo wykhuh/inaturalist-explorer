@@ -1,5 +1,5 @@
 import type { NormalizediNatTaxon, PlaceTypes } from "../types/app.d.ts";
-import { defaultColorScheme } from "./map_colors_utils.ts";
+import { defaultColorScheme, iNatOrange } from "./map_colors_utils.ts";
 
 export const taxonRanks = [
   "Kingdom",
@@ -31,6 +31,14 @@ export const taxonRanks = [
   "Complex",
   "Species / Hybrid",
   "Subspecies / Variety / Form",
+];
+
+export const speciesRanks = [
+  "species",
+  "hybrid",
+  "subspecies",
+  "variety",
+  "form",
 ];
 
 export const iNatApiNonFilterableNames = [
@@ -220,6 +228,14 @@ export const lifeTaxon: NormalizediNatTaxon = {
   color: defaultColorScheme[0],
   title: "Life",
   subtitle: "Life",
+};
+
+export const allTaxa: NormalizediNatTaxon = {
+  rank: "allTaxa rank",
+  id: 0,
+  display_name: "All species",
+  color: iNatOrange,
+  title: "All species",
 };
 
 export let fieldsWithAny = [

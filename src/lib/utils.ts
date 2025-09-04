@@ -59,9 +59,18 @@ export function pluralize(number: number, text: string, useComma = false) {
 }
 
 export function formatAppUrl(appStore: MapStore) {
-  let taxaIds = appStore.selectedTaxa.map((t) => t.id).join(",");
-  let placesIds = appStore.selectedPlaces.map((t) => t.id).join(",");
-  let colors = appStore.selectedTaxa.map((t) => t.color).join(",");
+  let taxaIds = appStore.selectedTaxa
+    .filter((r) => r.id !== 0)
+    .map((r) => r.id)
+    .join(",");
+  let placesIds = appStore.selectedPlaces
+    .filter((r) => r.id !== 0)
+    .map((r) => r.id)
+    .join(",");
+  let colors = appStore.selectedTaxa
+    .filter((r) => r.id !== 0)
+    .map((r) => r.color)
+    .join(",");
   if (taxaIds.length === 0 && placesIds.length === 0) {
     return "";
   }

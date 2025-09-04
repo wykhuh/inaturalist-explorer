@@ -11,7 +11,8 @@ import type {
   MapStore,
 } from "../../types/app";
 import {
-  fetchiNatMapData,
+  fetchiNatMapDataForTaxon,
+  getObservationsCountForTaxon,
   removeOneTaxonFromMap,
   updateStoreUsingFilters,
 } from "../../lib/data_utils";
@@ -114,7 +115,8 @@ export async function updateAppWithFilters(
       taxon_id: taxon.id.toString(),
       colors: taxon.color,
     };
-    await fetchiNatMapData(taxon, appStore);
+    await fetchiNatMapDataForTaxon(taxon, appStore);
+    await getObservationsCountForTaxon(taxon, appStore);
   }
   renderTaxaList(appStore);
   renderPlacesList(appStore);

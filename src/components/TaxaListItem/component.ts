@@ -49,9 +49,10 @@ class MyComponent extends HTMLElement {
 
     let butttonEl = this.querySelector(".close-button");
     if (butttonEl) {
-      butttonEl.addEventListener("click", function () {
+      butttonEl.addEventListener("click", async function () {
+        // don't execute removeTaxon for allTaxa with id = 0
         if (taxon.id) {
-          removeTaxon(taxon.id, window.app.store);
+          await removeTaxon(taxon.id, window.app.store);
         }
       });
     }

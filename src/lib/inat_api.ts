@@ -24,14 +24,30 @@ type Params = {
   [index: string]: any;
 };
 
+function formatDescription(params: Params, type: string) {
+  let text = `overlay: iNat ${type}, taxon_id ${params.taxon_id || 0}`;
+  if (params.place_id) {
+    text += `, place_id ${params.place_id}`;
+  }
+
+  return text;
+}
+
 export const getiNatMapTiles = (
   taxonID: number,
   params: Params,
 ): { [name: string]: TileSettings } => {
   // replace colors with color
   let dupParams = structuredClone(params);
+
+  // rename colors to color to work with iNat api
   dupParams.color = dupParams.colors;
   delete dupParams.colors;
+
+  // remove taxon id if it is zero
+  if (dupParams.taxon_id === "0") {
+    delete dupParams.taxon_id;
+  }
 
   let paramsString = new URLSearchParams(dupParams).toString();
   let taxonRangeParamsString = new URLSearchParams({
@@ -41,14 +57,6 @@ export const getiNatMapTiles = (
   delete dupParams.color;
   let noColorParamsString = new URLSearchParams(dupParams).toString();
 
-  function formatDescription(params: Params, type: string) {
-    let text = `overlay: iNat ${type}, taxon_id ${params.taxon_id}`;
-    if (params.place_id) {
-      text += `, place_id ${params.place_id}`;
-    }
-
-    return text;
-  }
   return {
     iNatGrid: {
       name: "Grid",
@@ -107,9 +115,10 @@ export async function getiNatObservationsTotal(
   let paramsString = new URLSearchParams(params).toString();
 
   try {
-    let response = await fetch(`${observations_api}?${paramsString}`);
+    let url = `${observations_api}?${paramsString}`;
+    let response = await fetch(url);
     let data = (await response.json()) as ObservationsAPI;
-    console.log(`${observations_api}?${paramsString}`, data.total_results);
+    console.log(url, data.total_results);
 
     return data.total_results;
   } catch (error) {
