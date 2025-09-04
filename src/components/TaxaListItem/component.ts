@@ -47,10 +47,15 @@ class MyComponent extends HTMLElement {
       );
     }
 
-    let butttonEl = this.querySelector(".close-button");
-    if (butttonEl) {
+    let butttonEl = this.querySelector(".close-button") as HTMLButtonElement;
+    // hide close button for allTaxa
+    if (taxon.id === 0) {
+      butttonEl.hidden = true;
+    }
+
+    // don't add event listener for allTaxa with id = 0
+    if (butttonEl && taxon.id !== 0) {
       butttonEl.addEventListener("click", async function () {
-        // don't execute removeTaxon for allTaxa with id = 0
         if (taxon.id) {
           await removeTaxon(taxon.id, window.app.store);
         }
