@@ -61,31 +61,31 @@ const setup = async () => {
           let target = event.target as HTMLInputElement;
 
           // disable/enable date inputs
-          if (target.id == "any_date") {
+          if (target.id === "any_date") {
             onInput.disabled = true;
             d1Input.disabled = true;
             d2Input.disabled = true;
             monthInput.disabled = true;
             yearInput.disabled = true;
-          } else if (target.id == "exact_date") {
+          } else if (target.id === "exact_date") {
             onInput.disabled = false;
             d1Input.disabled = true;
             d2Input.disabled = true;
             monthInput.disabled = true;
             yearInput.disabled = true;
-          } else if (target.id == "range_date") {
+          } else if (target.id === "range_date") {
             onInput.disabled = true;
             d1Input.disabled = false;
             d2Input.disabled = false;
             monthInput.disabled = true;
             yearInput.disabled = true;
-          } else if (target.id == "months_date") {
+          } else if (target.id === "months_date") {
             onInput.disabled = true;
             d1Input.disabled = true;
             d2Input.disabled = true;
             monthInput.disabled = false;
             yearInput.disabled = true;
-          } else if (target.id == "years_date") {
+          } else if (target.id === "years_date") {
             onInput.disabled = true;
             d1Input.disabled = true;
             d2Input.disabled = true;

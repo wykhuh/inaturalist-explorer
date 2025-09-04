@@ -55,8 +55,8 @@ export async function refreshiNatMapLayers(
   let map = appStore.map.map;
   let layerControl = appStore.map.layerControl;
 
-  if (map == null) return;
-  if (layerControl == null) return;
+  if (map === null) return;
+  if (layerControl === null) return;
 
   // remove old refresh box
   removeRefreshBBox(appStore, map);
@@ -91,7 +91,8 @@ export async function refreshiNatMapLayers(
         taxon_id: taxon.id.toString(),
         colors: taxon.color,
       };
-      if (placeId) {
+
+      if (placeId !== undefined) {
         appStore.inatApiParams.place_id = placeId.toString();
       }
 
@@ -148,8 +149,8 @@ export async function fetchiNatMapDataForTaxon(
 ) {
   let map = appStore.map.map;
   let layerControl = appStore.map.layerControl;
-  if (map == null) return;
-  if (layerControl == null) return;
+  if (map === null) return;
+  if (layerControl === null) return;
 
   // get iNaturalist map layers
   let { iNatGrid, iNatHeatmap, iNatTaxonRange, iNatPoint } = getiNatMapTiles(
@@ -244,7 +245,6 @@ export function updateSelectedTaxa(
 export async function addAllTaxaToMapAndStore(appStore: MapStore) {
   // set colors because colors is used to fetch map tiles
   appStore.inatApiParams.colors = iNatOrange;
-  appStore.color = iNatOrange;
 
   await fetchiNatMapDataForTaxon(allTaxa, appStore);
   await getObservationsCountForTaxon(allTaxa, appStore);
@@ -292,7 +292,10 @@ async function removeOnePlaceFromStoreAndMap(
   appStore.selectedPlaces = appStore.selectedPlaces.filter(
     (place) => place.id !== placeId,
   );
-  if (appStore.selectedPlaces.length === 0) {
+  if (
+    appStore.selectedPlaces.length === 0 &&
+    appStore.inatApiParams.taxon_id === "0"
+  ) {
     removeAllTaxaFromStoreAndMap(appStore);
     await addAllTaxaToMapAndStore(appStore);
   }
@@ -319,10 +322,13 @@ export function removeOneTaxonFromMap(appStore: MapStore, taxonId: number) {
 
 export function removeOnePlaceFromMap(appStore: MapStore, placeId: number) {
   if (!appStore.placesMapLayers) return;
+
   let mapLayers = appStore.placesMapLayers[placeId];
   if (!mapLayers) return;
 
-  mapLayers.forEach((layer) => layer.remove());
+  mapLayers.forEach((layer) => {
+    layer.remove();
+  });
 
   delete appStore.placesMapLayers[placeId];
 }
@@ -418,14 +424,14 @@ export function leafletVisibleLayers(
       if (options.layer_description) {
         if (layer._path || layer._container || !strict) {
           if (log) {
-            console.log(">>>", Object.keys(layer));
+            console.log(">>>", Object.keys(layer)); // keep
           }
           layer_descriptions.push(options.layer_description);
         } else if (log) {
-          console.log("?????", Object.keys(layer));
+          console.log("?????", Object.keys(layer)); // keep
         }
       } else if (log) {
-        console.log("???", Object.keys(layer));
+        console.log("???", Object.keys(layer)); // keep
       }
     });
   }
@@ -506,7 +512,7 @@ export async function processTaxonData(
   urlStore: MapStore,
 ) {
   let map = appStore.map.map;
-  if (map == null) return;
+  if (map === null) return;
   let urlStoreTaxon = urlStore.selectedTaxa.find((t) => t.id === taxonData.id);
   if (!urlStoreTaxon) return;
 
@@ -645,14 +651,14 @@ export function updateStoreUsingFilters(
 ) {
   // update store formFilters
   appStore.formFilters = filtersResults;
-  // console.log("------------ updateStoreUsingFilters");
-  // console.log("default:", mapStore.inatApiParams);
-  // console.log("appStore:", appStore.inatApiParams);
-  // console.log("filtersResults", filtersResults);
+  // console.log("------------ updateStoreUsingFilters"); // keep
+  // console.log("default:", mapStore.inatApiParams); // keep
+  // console.log("appStore:", appStore.inatApiParams); // keep
+  // console.log("filtersResults", filtersResults); // keep
 
   for (let [k, _value] of Object.entries(appStore.inatApiParams)) {
     let key = k as iNatApiParamsKeys;
-    // console.log(key, _value);
+    // console.log(key, _value); // keep
 
     // ignore params that can't be changed in the filter modal
     if (iNatApiNonFilterableNames.includes(key)) {
@@ -670,9 +676,6 @@ export function updateStoreUsingFilters(
       }
     }
   }
-
-  // console.log("627 appStore:", appStore.inatApiParams);
-  // console.log("628 filtersResults", filtersResults);
 
   appStore.inatApiParams = {
     ...appStore.inatApiParams,

@@ -149,13 +149,10 @@ describe("formatAppUrl", () => {
     );
   });
 
-  test("return empty string if no taxa or place", () => {
+  test("return empty string if no taxa or place and inatApiParams has default params", () => {
     let appStore: MapStore = {
       ...mapStore,
-      inatApiParams: {
-        colors: life.color,
-        spam: false,
-      },
+      inatApiParams: mapStore.inatApiParams,
       selectedTaxa: [],
       selectedPlaces: [],
     };
@@ -165,13 +162,31 @@ describe("formatAppUrl", () => {
     expect(result).toBe("");
   });
 
+  test("return params if no taxa or place and inatApiParams has additional params", () => {
+    let appStore: MapStore = {
+      ...mapStore,
+      inatApiParams: {
+        verifiable: true,
+        spam: false,
+        photos: true,
+      },
+      selectedTaxa: [],
+      selectedPlaces: [],
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe("verifiable=true&spam=false&photos=true");
+  });
+
   test("ignore formFilters if no taxa or places", () => {
     let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
+        verifiable: true,
         spam: false,
       },
-      formFilters: { params: { verifiable: "any" }, string: "verifiable=any" },
+      // formFilters: { params: { verifiable: "any" }, string: "verifiable=any" },
     };
 
     let result = formatAppUrl(appStore);

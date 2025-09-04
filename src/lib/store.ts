@@ -25,7 +25,7 @@ const proxiedStore = new Proxy(structuredClone(mapStore), {
   set(target, property: MapStoreKeys, value) {
     target[property] = value;
 
-    console.log(`proxy store.${property} changed`);
+    console.log(`proxy store.${property} changed`); // keep
     displayUserData(proxiedStore, `proxiedStore ${property}`);
 
     return true;

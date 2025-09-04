@@ -71,9 +71,6 @@ export function formatAppUrl(appStore: MapStore) {
     .filter((r) => r.id !== 0)
     .map((r) => r.color)
     .join(",");
-  if (taxaIds.length === 0 && placesIds.length === 0) {
-    return "";
-  }
 
   let params: iNatApiParams = {};
   if (taxaIds.length > 0) {
@@ -98,7 +95,23 @@ export function formatAppUrl(appStore: MapStore) {
     .toString()
     .replaceAll("%2C", ",");
 
+  if (defaultParams(searchParams)) {
+    return "";
+  }
+
   return searchParams;
+}
+
+function defaultParams(searchParams: string) {
+  let parts = searchParams.split("&");
+  if (
+    parts.includes("verifiable=true") &&
+    parts.includes("spam=false") &&
+    parts.length === 2
+  ) {
+    return true;
+  }
+  return false;
 }
 
 export function updateUrl(url_location: Location, appStore: MapStore) {

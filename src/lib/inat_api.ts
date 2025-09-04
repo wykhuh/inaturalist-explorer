@@ -118,7 +118,7 @@ export async function getiNatObservationsTotal(
     let url = `${observations_api}?${paramsString}`;
     let response = await fetch(url);
     let data = (await response.json()) as ObservationsAPI;
-    console.log(url, data.total_results);
+    // console.log(url, data.total_results); // keep
 
     return data.total_results;
   } catch (error) {

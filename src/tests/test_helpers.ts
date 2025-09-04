@@ -11,12 +11,13 @@ import type {
 } from "../types/app";
 import { mapStore } from "../lib/store.ts";
 import { losAngelesSearchPlaces } from "./fixtures/inatApi.ts";
+import { allTaxa } from "../lib/inat_data.ts";
 
 export function createMockServer() {
   const handlers = [
     http.get("https://api.inaturalist.org/v1/grid*", async (_args) => {
-      // console.log("request.url", _args.request.url);
-      return HttpResponse.json({ id: "abc-123" });
+      // console.log("request.url", _args.request.url); // keep
+      return HttpResponse.json({ id: "abc-123456" });
     }),
     http.get("https://api.inaturalist.org/v1/taxa/48460", async (_args) => {
       let data = {
@@ -53,10 +54,13 @@ export function createMockServer() {
       return HttpResponse.json(data);
     }),
     http.get("https://api.inaturalist.org/v2/observations*", async (_args) => {
-      // console.log("request.url", _args.request.url);
-      return HttpResponse.json({ total_results: 123, results: [] });
+      // console.log("request.url", _args.request.url); // keep
+      return HttpResponse.json({ total_results: 456789, results: [] });
     }),
-
+    http.get("https://{*}.tile.openstreetmap.org*", async (_args) => {
+      // console.log("request.url", _args.request.url); // keep
+      return HttpResponse.json({ total_results: 123456, results: [] });
+    }),
     http.get("*", async (_args) => {
       console.error("!! request.url !!", _args.request.url);
       return HttpResponse.json({});
@@ -69,18 +73,30 @@ export function createMockServer() {
 }
 
 export let colors = ["#4477aa", "#66ccee"];
+export let colorsEncoded = ["%234477aa", "%2366ccee"];
 
 export let placeLabel_la = "place layer: Los Angeles, 962";
 export let placeLabel_sd = "place layer: San Diego, 829";
 
 export let gridLabel_life = "overlay: iNat grid, taxon_id 48460";
 export let gridLabel_oaks = "overlay: iNat grid, taxon_id 861036";
+
 export let gridLabel_life_la =
   "overlay: iNat grid, taxon_id 48460, place_id 962";
+export let gridLabel_allTaxa_la =
+  "overlay: iNat grid, taxon_id 0, place_id 962";
+
 export let gridLabel_life_sd =
   "overlay: iNat grid, taxon_id 48460, place_id 829";
+export let gridLabel_allTaxa_sd =
+  "overlay: iNat grid, taxon_id 0, place_id 829";
+
 export let gridLabel_life_la_sd =
   "overlay: iNat grid, taxon_id 48460, place_id 962,829";
+export let gridLabel_allTaxa_la_sd =
+  "overlay: iNat grid, taxon_id 0, place_id 962,829";
+
+export let gridLabel_allTaxa = "overlay: iNat grid, taxon_id 0";
 
 export let refreshBBoxLabel = "refresh bounding box";
 export let basemapLabel_osm = "basemap: Open Street Map";
@@ -102,7 +118,7 @@ export function life(color = colors[0]) {
     title: "life",
     subtitle: "Life",
     color: color,
-    observations_count: 123,
+    observations_count: 456789,
   };
 }
 
@@ -122,7 +138,7 @@ export function redOak(color = colors[1]) {
     title: "red oaks",
     subtitle: "Lobatae",
     color: color,
-    observations_count: 123,
+    observations_count: 456789,
   };
 }
 
@@ -231,6 +247,11 @@ export function expectNoTaxa(store: MapStore) {
   expect(store.taxaMapLayers).toStrictEqual({});
 }
 
+export function expectAllTaxa(store: MapStore) {
+  expect(store.selectedTaxa).toStrictEqual([allTaxa]);
+  expect(store.taxaMapLayers[0].length).toBe(3);
+}
+
 export function expectNoPlaces(store: MapStore) {
   expect(store.selectedPlaces).toStrictEqual([]);
   expect(store.placesMapLayers).toStrictEqual({});
@@ -244,12 +265,29 @@ export function expectNoRefresh(store: MapStore) {
 
 export function expectLosAngelesPlace(store: MapStore) {
   expect(store.selectedPlaces).toEqual([losangeles]);
-  expect(store.placesMapLayers).not.toBeUndefined();
+  expect(Object.keys(store.placesMapLayers)).toStrictEqual([
+    losangeles.id.toString(),
+  ]);
+  expect(store.placesMapLayers[losangeles.id].length).toBe(1);
 }
 
 export function expectSanDiegoPlace(store: MapStore) {
   expect(store.selectedPlaces).toEqual([sandiego]);
   expect(store.placesMapLayers).not.toBeUndefined();
+  expect(Object.keys(store.placesMapLayers)).toStrictEqual([
+    sandiego.id.toString(),
+  ]);
+  expect(store.placesMapLayers[sandiego.id].length).toBe(1);
+}
+
+export function expect_LA_SD_Place(store: MapStore) {
+  expect(store.selectedPlaces).toEqual([losangeles, sandiego]);
+  expect(Object.keys(store.placesMapLayers)).toStrictEqual([
+    sandiego.id.toString(),
+    losangeles.id.toString(),
+  ]);
+  expect(store.placesMapLayers[losangeles.id].length).toBe(1);
+  expect(store.placesMapLayers[sandiego.id].length).toBe(1);
 }
 
 export function expectRefreshPlace(store: MapStore, type = "zero") {
@@ -260,7 +298,8 @@ export function expectRefreshPlace(store: MapStore, type = "zero") {
   expect(store.refreshMap.layer).toBeDefined();
   expect(store.refreshMap.showRefreshMapButton).toBeFalsy();
   expect(store.selectedPlaces).toEqual([place]);
-  expect(store.placesMapLayers).not.toBeUndefined();
+  expect(Object.keys(store.placesMapLayers)).toStrictEqual(["0"]);
+  expect(store.placesMapLayers["0"].length).toBe(1);
 }
 
 export function expectLifeTaxa(store: MapStore, color = colors[0]) {

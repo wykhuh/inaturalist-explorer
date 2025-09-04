@@ -8,7 +8,7 @@ let TAXA_QUERY = "red";
 let PLACES_QUERY = "los";
 
 test.beforeEach(async ({ page }) => {
-  console.log(`Running ${test.info().title}`);
+  console.log(`Running ${test.info().title}`); // keep
   await page.route(
     "https://api.inaturalist.org/v1/taxa/autocomplete?**",
     async (route) => {

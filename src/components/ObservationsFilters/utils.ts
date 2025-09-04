@@ -25,12 +25,12 @@ export function processFiltersForm(data: FormData): {
 } {
   // convert form data into object that can be use with URLSearchParams
   let values: iNatApiParams = {};
-  // console.log("----------- processFiltersForm");
+  // console.log("----------- processFiltersForm"); // keep
 
   for (const [k, value] of data) {
     // HACK: get rid of typescript errors for values[key]
     let key = k as iNatApiParamsKeys;
-    // console.log(key, value);
+    // console.log(key, value); // keep
 
     // ignore fields
     if (["on", "d1", "d2", "month", "year", "iconic_taxa"].includes(key)) {
@@ -140,7 +140,7 @@ function setSelectedOptionTrueFalse(
   value: boolean,
 ) {
   let { inatApiParams } = appStore;
-  if (inatApiParams[property] == value) {
+  if (inatApiParams[property] === value) {
     setSelectedOption(
       `#filters-form select#${property} option[value='${value}']`,
     );

@@ -96,8 +96,8 @@ export async function taxonSelectedHandler(
 ) {
   let map = appStore.map.map;
   let layerControl = appStore.map.layerControl;
-  if (map == null) return;
-  if (layerControl == null) return;
+  if (map === null) return;
+  if (layerControl === null) return;
 
   // get color for taxon
   let color = getColor(appStore, defaultColorScheme);
@@ -196,7 +196,6 @@ export async function placeSelectedHandler(
   layer.addTo(map);
 
   // remove selected place layer from map
-
   if (appStore.placesMapLayers) {
     let layers = appStore.placesMapLayers[selection.id.toString()];
     if (layers) {
@@ -215,6 +214,7 @@ export async function placeSelectedHandler(
     delete appStore.inatApiParams.nelat;
     delete appStore.inatApiParams.nelng;
     appStore.selectedPlaces = appStore.selectedPlaces.filter((p) => p.id !== 0);
+    delete appStore.placesMapLayers["0"];
   }
 
   // save place to store
@@ -227,7 +227,10 @@ export async function placeSelectedHandler(
       bounding_box: selection.bounding_box,
     },
   ];
-  appStore.placesMapLayers = { [selection.id]: [layer as CustomGeoJSON] };
+  appStore.placesMapLayers = {
+    ...appStore.placesMapLayers,
+    [selection.id]: [layer as CustomGeoJSON],
+  };
 
   // get iNat map tiles for selected place
   for await (const taxon of appStore.selectedTaxa) {

@@ -53,8 +53,6 @@ if (data) {
     years.push(Number(date.split("-")[0]));
   }
   window.app.store.iNatStats = { years: years.sort().reverse() };
-  console.log("year done");
-
   window.dispatchEvent(new Event("observationYearsLoaded"));
 }
 
