@@ -133,7 +133,6 @@ export async function fetchiNatMapDataForTaxon(
 
   // get iNaturalist map layers
   let { iNatGrid, iNatHeatmap, iNatTaxonRange, iNatPoint } = getiNatMapTiles(
-    taxonObj.id,
     appStore.inatApiParams,
   );
 
