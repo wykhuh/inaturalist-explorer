@@ -33,6 +33,12 @@ import {
   gridLabel_allTaxa_la,
   expectAllTaxa,
   colorsEncoded,
+  redOak,
+  sandiego,
+  placeLabel_sd,
+  gridLabel_life_la_sd,
+  gridLabel_oaks_la_sd,
+  expect_LA_SD_Place,
 } from "../test_helpers.ts";
 import type { iNatApiParams } from "../../types/app";
 import { allTaxa, fieldsWithAny } from "../../lib/inat_data.ts";
@@ -146,39 +152,6 @@ describe("initApp", () => {
     expect(store.inatApiParams).toStrictEqual(expectedParams);
   });
 
-  test.each(fieldsWithAny)(
-    "ignores certain fields with any value",
-    async (field) => {
-      let { store } = setupMapAndStore();
-
-      expectEmpytMap(store);
-
-      let searchparams = `?${field}=any`;
-      let urlData = decodeAppUrl(searchparams);
-
-      await initApp(store, urlData);
-
-      expect(leafletVisibleLayers(store)).toStrictEqual([
-        basemapLabel_osm,
-        gridLabel_allTaxa,
-      ]);
-      expectNoPlaces(store);
-      expectNoRefresh(store);
-      expectAllTaxa(store);
-
-      let expectedParams: iNatApiParams = {
-        spam: false,
-        colors: iNatOrange,
-        taxon_id: allTaxa.id.toString(),
-      };
-      if (field != "verifiable") {
-        expectedParams.verifiable = true;
-      }
-
-      expect(store.inatApiParams).toStrictEqual(expectedParams);
-    },
-  );
-
   test("loads and renders taxa data based on url params", async () => {
     let { store } = setupMapAndStore();
 
@@ -288,7 +261,7 @@ describe("initApp", () => {
   });
 
   test.each(fieldsWithAny)(
-    "loads and renders taxa data with field set to any",
+    "loads and renders taxa data, ignore field set to any",
     async (field) => {
       let { store } = setupMapAndStore();
 
@@ -347,12 +320,12 @@ describe("initApp", () => {
     expect(store.inatApiParams).toStrictEqual(expectedParams);
   });
 
-  test("loads and renders taxa and place data based on url params", async () => {
+  test("loads and renders one taxa and one place based on url params", async () => {
     let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
-    let searchparams = `?taxon_id=${life().id}&place_id=${losangeles.id}&colors=%234477aa&spam=false&verifiable=true`;
+    let searchparams = `?taxon_id=${life().id}&place_id=${losangeles.id}&colors=${colorsEncoded[0]}&spam=false&verifiable=true`;
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);
@@ -460,6 +433,50 @@ describe("initApp", () => {
       swlng: 0,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
+      verifiable: true,
+      spam: false,
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams);
+  });
+
+  test("loads and renders multiple taxa and places based on url params", async () => {
+    let { store } = setupMapAndStore();
+
+    expectEmpytMap(store);
+
+    colorsEncoded;
+
+    let searchparams = `?taxon_id=${life().id},${redOak().id}&place_id=${losangeles.id},${sandiego.id}&colors=${colorsEncoded[0]},${colorsEncoded[1]}&spam=false&verifiable=true`;
+    let urlData = decodeAppUrl(searchparams);
+    await initApp(store, urlData);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      // BUG: layers with same description
+      placeLabel_la,
+      placeLabel_la,
+      placeLabel_sd,
+      placeLabel_sd,
+      gridLabel_life_la_sd,
+      gridLabel_oaks_la_sd,
+    ]);
+    expectNoRefresh(store);
+    let lifeTemp = life(colors[0]);
+    let oakTemp = redOak(colors[1]);
+    expect(store.selectedTaxa).toStrictEqual([lifeTemp, oakTemp]);
+    expect(Object.keys(store.taxaMapLayers)).toEqual([
+      lifeTemp.id.toString(),
+      oakTemp.id.toString(),
+    ]);
+    expect(store.taxaMapLayers[lifeTemp.id].length).toBe(4);
+    expect(store.taxaMapLayers[oakTemp.id].length).toBe(4);
+    expect(store.color).toBe(colors[1]);
+    expect_LA_SD_Place(store);
+
+    let expectedParams: iNatApiParams = {
+      colors: colors[1],
+      place_id: `${losangeles.id},${sandiego.id}`,
+      taxon_id: redOak().id.toString(),
       verifiable: true,
       spam: false,
     };

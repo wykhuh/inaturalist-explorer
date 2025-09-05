@@ -10,7 +10,10 @@ import type {
   NormalizediNatTaxon,
 } from "../types/app";
 import { mapStore } from "../lib/store.ts";
-import { losAngelesSearchPlaces } from "./fixtures/inatApi.ts";
+import {
+  losAngelesSearchPlaces,
+  sandiegoSearchPlaces,
+} from "./fixtures/inatApi.ts";
 import { allTaxa } from "../lib/inat_data.ts";
 
 export function createMockServer() {
@@ -37,6 +40,23 @@ export function createMockServer() {
       };
       return HttpResponse.json(data);
     }),
+    http.get("https://api.inaturalist.org/v1/taxa/861036", async (_args) => {
+      let data = {
+        results: [
+          {
+            name: "Lobatae",
+            default_photo: {
+              square_url: "https://inat.com/photos/149586607/square.jpg",
+            },
+            preferred_common_name: "red oaks",
+            matched_term: "xxx",
+            rank: "section",
+            id: 861036,
+          },
+        ],
+      };
+      return HttpResponse.json(data);
+    }),
     http.get("https://api.inaturalist.org/v1/places/962", async (_args) => {
       let data = {
         results: [
@@ -48,6 +68,22 @@ export function createMockServer() {
             name: "Los Angeles",
             display_name: "Los Angeles County, US, CA",
             id: 962,
+          },
+        ],
+      };
+      return HttpResponse.json(data);
+    }),
+    http.get("https://api.inaturalist.org/v1/places/829", async (_args) => {
+      let data = {
+        results: [
+          {
+            bounding_box_geojson:
+              sandiegoSearchPlaces.results[0].record.bounding_box_geojson,
+            geometry_geojson:
+              sandiegoSearchPlaces.results[0].record.geometry_geojson,
+            name: "San Diego",
+            display_name: "San Diego County, CA, US",
+            id: 829,
           },
         ],
       };
@@ -96,6 +132,9 @@ export let gridLabel_life_la_sd =
 export let gridLabel_allTaxa_la_sd =
   "overlay: iNat grid, taxon_id 0, place_id 962,829";
 
+export let gridLabel_oaks_la_sd =
+  "overlay: iNat grid, taxon_id 861036, place_id 962,829";
+
 export let gridLabel_allTaxa = "overlay: iNat grid, taxon_id 0";
 
 export let refreshBBoxLabel = "refresh bounding box";
@@ -126,7 +165,7 @@ export let redOakBasic: NormalizediNatTaxon = {
   name: "Lobatae",
   default_photo: "https://inat.com/photos/149586607/square.jpg",
   preferred_common_name: "red oaks",
-  matched_term: "red oaks",
+  matched_term: "Lobatae",
   rank: "section",
   id: 861036,
 };
@@ -172,6 +211,7 @@ export let sandiego: NormalizediNatPlace = {
         [-117.611081, 33.505025],
         [-116.08094, 33.505025],
         [-116.08094, 32.528832],
+        [-117.611081, 32.528832],
       ],
     ],
   },

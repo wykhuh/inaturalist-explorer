@@ -443,6 +443,7 @@ export async function initApp(appStore: MapStore, urlStore: MapStore) {
   let map = appStore.map.map;
   if (!map) return;
 
+  // use url store to populate appStore.inatApiParams
   for (const [k, value] of Object.entries(urlStore.inatApiParams)) {
     let key = k as iNatApiParamsKeys;
     // ignore params whose value is any
@@ -458,23 +459,9 @@ export async function initApp(appStore: MapStore, urlStore: MapStore) {
   // HACK: trigger change in proxy store
   appStore.inatApiParams = appStore.inatApiParams;
 
-  // get taxa data, optional place data, optional bounding box
-  if (urlStore.selectedTaxa && urlStore.selectedTaxa.length > 0) {
-    for await (const urlStoreTaxon of urlStore.selectedTaxa) {
-      let taxonData = await getTaxonById(urlStoreTaxon.id);
-      if (!taxonData) {
-        continue;
-      }
-      await processTaxonData(taxonData, appStore, urlStore);
-    }
-    renderTaxaList(appStore);
-    renderPlacesList(appStore);
-    fitBoundsPlaces(appStore);
-
-    // get place data only
-  } else if (
-    urlStore.selectedPlaces &&
-    urlStore.selectedPlaces.length > 0 &&
+  // get place data
+  if (
+    urlStore.selectedPlaces?.length > 0 &&
     urlStore.inatApiParams.nelat === undefined
   ) {
     for await (const urlStorePlace of urlStore.selectedPlaces) {
@@ -482,16 +469,26 @@ export async function initApp(appStore: MapStore, urlStore: MapStore) {
       if (!placeData) {
         continue;
       }
-      await processPlaceData(placeData, appStore);
+      processPlaceData(placeData, appStore);
     }
-    renderPlacesList(appStore);
-    fitBoundsPlaces(appStore);
-
-    // get bounding box only
+    // get bounding box data
   } else if (urlStore.inatApiParams.nelat !== undefined) {
     processBBoxData(appStore, urlStore);
-    renderPlacesList(appStore);
-    fitBoundsPlaces(appStore);
+  }
+
+  // get taxa data
+  if (urlStore.selectedTaxa && urlStore.selectedTaxa.length > 0) {
+    for await (const urlStoreTaxon of urlStore.selectedTaxa) {
+      let taxonData = await getTaxonById(urlStoreTaxon.id);
+      if (!taxonData) {
+        continue;
+      }
+      let taxon = await processTaxonData(taxonData, appStore, urlStore);
+      if (taxon) {
+        await fetchiNatMapDataForTaxon(taxon, appStore);
+        await getObservationsCountForTaxon(taxon, appStore);
+      }
+    }
   }
 
   // load allTaxon map tiles if no taxon id in the url
@@ -500,8 +497,11 @@ export async function initApp(appStore: MapStore, urlStore: MapStore) {
     urlStore.selectedTaxa.length === 0
   ) {
     await addAllTaxaToMapAndStore(appStore);
-    renderTaxaList(appStore);
   }
+
+  renderTaxaList(appStore);
+  renderPlacesList(appStore);
+  fitBoundsPlaces(appStore);
 
   window.dispatchEvent(new Event("appInitialized"));
 }
@@ -542,25 +542,7 @@ export async function processTaxonData(
     appStore.color = urlStoreTaxon.color;
   }
 
-  // handle selected places
-  if (
-    urlStore.selectedPlaces &&
-    urlStore.selectedPlaces.length > 0 &&
-    urlStore.inatApiParams.nelat === undefined
-  ) {
-    for await (const urlStorePlace of urlStore.selectedPlaces) {
-      let placeData = await getPlaceById(urlStorePlace.id);
-      if (!placeData) {
-        continue;
-      }
-      await processPlaceData(placeData, appStore);
-    }
-    // handle bounding box
-  } else if (urlStore.inatApiParams.nelat !== undefined) {
-    processBBoxData(appStore, urlStore);
-  }
-  await fetchiNatMapDataForTaxon(taxon, appStore);
-  await getObservationsCountForTaxon(taxon, appStore);
+  return taxon;
 }
 
 export function processPlaceData(placeData: PlacesResult, appStore: MapStore) {
