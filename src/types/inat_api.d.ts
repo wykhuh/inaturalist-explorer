@@ -539,3 +539,143 @@ export type iNatHistogramApi = {
     };
   };
 };
+
+// ==================
+// autocomplete user api
+// ==================
+
+export interface iNatAutcompleteUsersAPI {
+  total_results: number;
+  page: number;
+  per_page: number;
+  results: AutcompleteUsersResult[];
+}
+
+export interface AutcompleteUsersResult {
+  id: number;
+  login: string;
+  spam: boolean;
+  suspended: boolean;
+  created_at: string;
+  login_autocomplete: string;
+  login_exact: string;
+  name: string;
+  name_autocomplete: string;
+  orcid?: string;
+  icon: string;
+  observations_count: number;
+  identifications_count: number;
+  journal_posts_count: number;
+  activity_count: number;
+  species_count: number;
+  universal_search_rank: number;
+  roles: string[];
+  site_id?: number;
+  icon_url: string;
+  annotated_observations_count?: number;
+}
+
+// ==================
+// autocomplete project api
+// ==================
+
+export interface iNatAutcompleteProjectsAPI {
+  total_results: number;
+  page: number;
+  per_page: number;
+  results: iNatAutcompleteProjectsResult[];
+}
+
+export interface iNatAutcompleteProjectsResult {
+  id: number;
+  title: string;
+  hide_title: boolean;
+  description: string;
+  slug: string;
+  project_type: string;
+  delegated_project_id?: number;
+  is_delegated_umbrella: boolean;
+  banner_color: string;
+  place_id?: number;
+  user_id: number;
+  admins: Admin[];
+  user_ids: number[];
+  location: any;
+  icon: string;
+  icon_file_name?: string;
+  header_image_url: string;
+  header_image_file_name: string;
+  header_image_contain: boolean;
+  project_observation_fields: any[];
+  terms: any;
+  search_parameters: SearchParameter[];
+  project_observation_rules: ProjectObservationRule[];
+  rule_preferences: RulePreference[];
+  created_at: string;
+  updated_at: string;
+  flags: any[];
+  site_features: SiteFeature[];
+  prefers_user_trust: boolean;
+  observation_requirements_updated_at: string;
+  hide_umbrella_map_flags?: boolean;
+  is_umbrella: boolean;
+  is_new_style_project: boolean;
+  user: User;
+}
+
+export interface Admin {
+  id: number;
+  user_id: number;
+  project_id: number;
+  role: string;
+  user: User;
+}
+
+export interface User {
+  id: number;
+  login: string;
+  spam: boolean;
+  suspended: boolean;
+  created_at: string;
+  login_autocomplete: string;
+  login_exact: string;
+  name?: string;
+  name_autocomplete?: string;
+  orcid?: string;
+  icon?: string;
+  observations_count: number;
+  identifications_count: number;
+  journal_posts_count: number;
+  activity_count: number;
+  species_count: number;
+  annotated_observations_count: number;
+  universal_search_rank: number;
+  roles: string[];
+  site_id?: number;
+  icon_url?: string;
+}
+
+export interface SearchParameter {
+  field: string;
+  value: any;
+  value_number?: number[];
+  value_keyword: any;
+}
+
+export interface ProjectObservationRule {
+  id: number;
+  operator: string;
+  operand_type: string;
+  operand_id: number;
+}
+
+export interface RulePreference {
+  field: string;
+  value: string;
+}
+
+export interface SiteFeature {
+  site_id: number;
+  noteworthy: boolean;
+  featured_at: string;
+}

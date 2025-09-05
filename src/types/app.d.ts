@@ -52,6 +52,18 @@ export type NormalizediNatPlace = {
   place_type_name?: string;
 };
 
+export type NormalizediNatProject = {
+  id: number;
+  name: string;
+  slug: string;
+};
+
+export type NormalizediNatUser = {
+  id: number;
+  login: string;
+  name: string;
+};
+
 export interface MapStore {
   selectedTaxa: NormalizediNatTaxon[];
   taxaMapLayers: { [index: string]: TileLayer[] };
@@ -108,11 +120,13 @@ interface iNatApiFilterableParams {
   photo_license?: string; // comma-seperated string, type CCLicense
   photos?: boolean;
   popular?: boolean;
+  project_id?: string; // comma-seperated string
   quality_grade?: "casual" | "needs_id" | "research";
   spam?: boolean;
   sound_license?: string; // comma-seperated string, type CCLicense
   sounds?: boolean;
   threatened?: boolean;
+  user_id?: string; // comma-seperated string
   verifiable?: boolean | "any";
   year?: string; // comma-seperated string
 
@@ -121,11 +135,9 @@ interface iNatApiFilterableParams {
   licensed?: boolean;
   out_of_range?: boolean;
   photo_licensed?: boolean;
-  project_id?: string; // comma-seperated string
   rank?: string; // comma-seperated string, type TaxonRanks
   without_taxon_id?: string; // comma-seperated string
   taxon_name?: string; // comma-seperated string
-  user_id?: string; // comma-seperated string
   ident_user_id?: number;
   annotation_user_id?: string; // comma-seperated string
   acc_above?: number;
