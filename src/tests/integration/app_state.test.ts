@@ -12,7 +12,7 @@ import jsdom from "jsdom";
 
 import {
   leafletVisibleLayers,
-  refreshiNatMapLayers,
+  refreshBoundingBox,
   removePlace,
   removeTaxon,
 } from "../../lib/data_utils.ts";
@@ -45,16 +45,16 @@ import {
   gridLabel_life_la,
   refreshBBoxLabel,
   basemapLabel_osm,
-  gridLabel_allTaxa,
-  expectAllTaxa,
-  gridLabel_allTaxa_la,
-  gridLabel_allTaxa_la_sd,
-  gridLabel_allTaxa_sd,
+  gridLabel_allTaxaRecord,
+  expectAllTaxaRecord,
+  gridLabel_allTaxaRecord_la,
+  gridLabel_allTaxaRecord_la_sd,
+  gridLabel_allTaxaRecord_sd,
   expect_LA_SD_Place,
   expectSanDiegoPlace,
   colorsEncoded,
 } from "../test_helpers.ts";
-import { allTaxa } from "../../lib/inat_data.ts";
+import { allTaxaRecord } from "../../lib/inat_data.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
 import { decodeAppUrl } from "../../lib/utils.ts";
 import { initApp } from "../../lib/init_app.ts";
@@ -180,15 +180,15 @@ describe("placeSelectedHandler", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
-      gridLabel_allTaxa_la,
+      gridLabel_allTaxaRecord_la,
     ]);
     expectNoRefresh(store);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectLosAngelesPlace(store);
     let expectedParams = {
       colors: iNatOrange,
       place_id: losangeles.id.toString(),
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -209,15 +209,15 @@ describe("placeSelectedHandler", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
-      gridLabel_allTaxa_la,
+      gridLabel_allTaxaRecord_la,
     ]);
     expectNoRefresh(store);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectLosAngelesPlace(store);
     let expectedParams1 = {
       colors: iNatOrange,
       place_id: losangeles.id.toString(),
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -232,15 +232,15 @@ describe("placeSelectedHandler", () => {
       basemapLabel_osm,
       placeLabel_la,
       placeLabel_sd,
-      gridLabel_allTaxa_la_sd,
+      gridLabel_allTaxaRecord_la_sd,
     ]);
     expectNoRefresh(store);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expect_LA_SD_Place(store);
     let expectedParams2 = {
       colors: iNatOrange,
       place_id: `${losangeles.id},${sandiego.id}`,
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -251,21 +251,21 @@ describe("placeSelectedHandler", () => {
   });
 });
 
-describe("refreshiNatMapLayers", () => {
+describe("refreshBoundingBox", () => {
   test(`refresh map;`, async () => {
     let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
     await initApp(store, decodeAppUrl(""));
-    await refreshiNatMapLayers(store);
+    await refreshBoundingBox(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       refreshBBoxLabel,
-      gridLabel_allTaxa,
+      gridLabel_allTaxaRecord,
     ]);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectRefreshPlace(store);
     expect(store.color).toEqual(iNatOrange);
     let expectedParams = {
@@ -275,7 +275,7 @@ describe("refreshiNatMapLayers", () => {
       swlng: 0,
       verifiable: true,
       spam: false,
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       colors: iNatOrange,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
@@ -291,14 +291,14 @@ describe("refreshiNatMapLayers", () => {
     expectEmpytMap(store);
 
     await initApp(store, decodeAppUrl(""));
-    await refreshiNatMapLayers(store);
+    await refreshBoundingBox(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       refreshBBoxLabel,
-      gridLabel_allTaxa,
+      gridLabel_allTaxaRecord,
     ]);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectRefreshPlace(store);
     expect(store.color).toEqual(iNatOrange);
     let expectedParams = {
@@ -308,7 +308,7 @@ describe("refreshiNatMapLayers", () => {
       swlng: 0,
       verifiable: true,
       spam: false,
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       colors: iNatOrange,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
@@ -317,14 +317,14 @@ describe("refreshiNatMapLayers", () => {
       `?verifiable=true&spam=false&nelat=0&nelng=0&swlat=0&swlng=0`,
     );
 
-    await refreshiNatMapLayers(store);
+    await refreshBoundingBox(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       refreshBBoxLabel,
-      gridLabel_allTaxa,
+      gridLabel_allTaxaRecord,
     ]);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectRefreshPlace(store);
     expect(store.color).toEqual(iNatOrange);
     expect(store.inatApiParams).toStrictEqual(expectedParams);
@@ -362,7 +362,7 @@ describe("combos", () => {
       `?taxon_id=${redOak().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
     );
 
-    await refreshiNatMapLayers(store);
+    await refreshBoundingBox(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -398,16 +398,16 @@ describe("combos", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
-      gridLabel_allTaxa_la,
+      gridLabel_allTaxaRecord_la,
     ]);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectNoRefresh(store);
     expectLosAngelesPlace(store);
     expect(store.selectedPlaces).toStrictEqual([losangeles]);
     let params = {
       colors: iNatOrange,
       place_id: losangeles.id.toString(),
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -416,17 +416,17 @@ describe("combos", () => {
       `?place_id=${losangeles.id}&verifiable=true&spam=false`,
     );
 
-    await refreshiNatMapLayers(store);
+    await refreshBoundingBox(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       refreshBBoxLabel,
-      gridLabel_allTaxa,
+      gridLabel_allTaxaRecord,
     ]);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectRefreshPlace(store, "LA");
     expect(store.inatApiParams).toStrictEqual({
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       colors: iNatOrange,
       nelat: 34.30714385628804,
       nelng: -118.12500000000001,
@@ -465,7 +465,7 @@ describe("combos", () => {
       `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
     );
 
-    await refreshiNatMapLayers(store);
+    await refreshBoundingBox(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -548,15 +548,15 @@ describe("combos", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
-      gridLabel_allTaxa_la,
+      gridLabel_allTaxaRecord_la,
     ]);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectNoRefresh(store);
     expectLosAngelesPlace(store);
     let params = {
       colors: iNatOrange,
       place_id: losangeles.id.toString(),
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -565,17 +565,17 @@ describe("combos", () => {
       `?place_id=${losangeles.id}&verifiable=true&spam=false`,
     );
 
-    await refreshiNatMapLayers(store);
+    await refreshBoundingBox(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       refreshBBoxLabel,
-      gridLabel_allTaxa,
+      gridLabel_allTaxaRecord,
     ]);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectRefreshPlace(store, "LA");
     expect(store.inatApiParams).toStrictEqual({
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       colors: iNatOrange,
       nelat: 34.30714385628804,
       nelng: -118.12500000000001,
@@ -593,15 +593,15 @@ describe("combos", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_sd,
-      gridLabel_allTaxa_sd,
+      gridLabel_allTaxaRecord_sd,
     ]);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectNoRefresh(store);
     expectSanDiegoPlace(store);
     let params2 = {
       colors: iNatOrange,
       place_id: sandiego.id.toString(),
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -625,14 +625,14 @@ describe("removePlace", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
-      gridLabel_allTaxa_la,
+      gridLabel_allTaxaRecord_la,
     ]);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectLosAngelesPlace(store);
     let params1 = {
       colors: iNatOrange,
       place_id: losangeles.id.toString(),
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -645,16 +645,16 @@ describe("removePlace", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxa,
+      gridLabel_allTaxaRecord,
     ]);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectNoPlaces(store);
     expect(store.color).toEqual(iNatOrange);
     let params2 = {
       colors: iNatOrange,
       spam: false,
       verifiable: true,
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
     };
     expect(store.inatApiParams).toStrictEqual(params2);
 
@@ -672,14 +672,14 @@ describe("removePlace", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
-      gridLabel_allTaxa_la,
+      gridLabel_allTaxaRecord_la,
     ]);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectLosAngelesPlace(store);
     let params1 = {
       colors: iNatOrange,
       place_id: losangeles.id.toString(),
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -694,14 +694,14 @@ describe("removePlace", () => {
       basemapLabel_osm,
       placeLabel_la,
       placeLabel_sd,
-      gridLabel_allTaxa_la_sd,
+      gridLabel_allTaxaRecord_la_sd,
     ]);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expect_LA_SD_Place(store);
     let params2 = {
       colors: iNatOrange,
       place_id: `${losangeles.id},${sandiego.id}`,
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -715,15 +715,15 @@ describe("removePlace", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_sd,
-      gridLabel_allTaxa_sd,
+      gridLabel_allTaxaRecord_sd,
     ]);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expect(store.selectedPlaces).toStrictEqual([sandiego]);
     expect(store.color).toEqual(iNatOrange);
     let params3 = {
       colors: iNatOrange,
       place_id: sandiego.id.toString(),
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       verifiable: true,
       spam: false,
     };
@@ -744,14 +744,14 @@ describe("removePlace", () => {
     expectEmpytMap(store);
 
     await initApp(store, decodeAppUrl(""));
-    await refreshiNatMapLayers(store);
+    await refreshBoundingBox(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       refreshBBoxLabel,
-      gridLabel_allTaxa,
+      gridLabel_allTaxaRecord,
     ]);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectRefreshPlace(store);
     expect(store.inatApiParams).toStrictEqual({
       nelat: 0,
@@ -760,7 +760,7 @@ describe("removePlace", () => {
       swlng: 0,
       verifiable: true,
       spam: false,
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       colors: iNatOrange,
     });
     expect(window.location.search).toBe(
@@ -771,13 +771,13 @@ describe("removePlace", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxa,
+      gridLabel_allTaxaRecord,
     ]);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectNoPlaces(store);
     let params2 = {
       colors: iNatOrange,
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       verifiable: true,
       spam: false,
     };
@@ -876,7 +876,7 @@ describe("removePlace", () => {
       `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
     );
 
-    await refreshiNatMapLayers(store);
+    await refreshBoundingBox(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -951,14 +951,14 @@ describe("removeTaxon", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxa,
+      gridLabel_allTaxaRecord,
     ]);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectNoPlaces(store);
     expect(store.color).toEqual(iNatOrange);
     let params2 = {
       colors: iNatOrange,
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -1051,14 +1051,14 @@ describe("removeTaxon", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
-      gridLabel_allTaxa_la,
+      gridLabel_allTaxaRecord_la,
     ]);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectLosAngelesPlace(store);
     let params1 = {
       colors: iNatOrange,
       place_id: losangeles.id.toString(),
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       spam: false,
       verifiable: true,
     };
@@ -1067,18 +1067,18 @@ describe("removeTaxon", () => {
       `?place_id=${losangeles.id}&verifiable=true&spam=false`,
     );
 
-    await removeTaxon(allTaxa.id, store);
+    await removeTaxon(allTaxaRecord.id, store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
-      gridLabel_allTaxa_la,
+      gridLabel_allTaxaRecord_la,
     ]);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectLosAngelesPlace(store);
     let params2 = {
       colors: iNatOrange,
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       place_id: losangeles.id.toString(),
       spam: false,
       verifiable: true,
@@ -1140,15 +1140,15 @@ describe("removeTaxon", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
-      gridLabel_allTaxa_la,
+      gridLabel_allTaxaRecord_la,
     ]);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectLosAngelesPlace(store);
     let params2 = {
       place_id: losangeles.id.toString(),
       spam: false,
       verifiable: true,
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       colors: iNatOrange,
     };
     expect(store.inatApiParams).toStrictEqual(params2);
@@ -1182,7 +1182,7 @@ describe("removeTaxon", () => {
       `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
     );
 
-    await refreshiNatMapLayers(store);
+    await refreshBoundingBox(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -1210,9 +1210,9 @@ describe("removeTaxon", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       refreshBBoxLabel,
-      gridLabel_allTaxa,
+      gridLabel_allTaxaRecord,
     ]);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectRefreshPlace(store);
     let params2 = {
       colors: iNatOrange,
@@ -1222,7 +1222,7 @@ describe("removeTaxon", () => {
       nelng: 0,
       swlat: 0,
       swlng: 0,
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
     };
     expect(store.inatApiParams).toStrictEqual(params2);
     expect(window.location.search).toBe(

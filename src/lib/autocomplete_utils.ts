@@ -15,8 +15,8 @@ import {
   formatTaxonName,
   fetchiNatMapDataForTaxon,
   removeOneTaxonFromMap,
-  idStringAddId,
-  removeAllTaxaFromStoreAndMap,
+  addIdToCommaSeparatedString,
+  removeTaxaFromStoreAndMap,
   getObservationsCountForTaxon,
 } from "./data_utils.ts";
 import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
@@ -103,9 +103,9 @@ export async function taxonSelectedHandler(
   let color = getColor(appStore, defaultColorScheme);
   taxonObj.color = color;
 
-  // remove all taxa if allTaxa is the current taxon
+  // remove all taxa if allTaxaRecord is the current taxon
   if (appStore.inatApiParams.taxon_id === "0") {
-    removeAllTaxaFromStoreAndMap(appStore);
+    removeTaxaFromStoreAndMap(appStore);
   }
 
   // get display name for taxon
@@ -240,7 +240,10 @@ export async function placeSelectedHandler(
       ...appStore.inatApiParams,
       taxon_id: taxon.id.toString(),
       colors: taxon.color,
-      place_id: idStringAddId(selection.id, appStore.inatApiParams.place_id),
+      place_id: addIdToCommaSeparatedString(
+        selection.id,
+        appStore.inatApiParams.place_id,
+      ),
     };
 
     await fetchiNatMapDataForTaxon(taxon, appStore);

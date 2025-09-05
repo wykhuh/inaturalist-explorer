@@ -12,16 +12,15 @@ import {
   fitBoundsPlaces,
 } from "./map_utils.ts";
 import { getPlaceById, getTaxonById } from "./inat_api.ts";
-import { fieldsWithAny, iNatApiNames } from "./inat_data.ts";
+import { bboxPlaceRecord, fieldsWithAny, iNatApiNames } from "./inat_data.ts";
 import { renderTaxaList, renderPlacesList } from "./autocomplete_utils.ts";
 import type { PlacesResult, TaxaResult } from "../types/inat_api";
 import {
-  addAllTaxaToMapAndStore,
-  bboxPlace,
+  addAllTaxaRecordToMapAndStore,
   fetchiNatMapDataForTaxon,
   formatTaxonName,
   getObservationsCountForTaxon,
-  idStringAddId,
+  addIdToCommaSeparatedString,
 } from "./data_utils";
 
 export async function initApp(appStore: MapStore, urlStore: MapStore) {
@@ -81,7 +80,7 @@ export async function initApp(appStore: MapStore, urlStore: MapStore) {
     urlStore.selectedTaxa === undefined ||
     urlStore.selectedTaxa.length === 0
   ) {
-    await addAllTaxaToMapAndStore(appStore);
+    await addAllTaxaRecordToMapAndStore(appStore);
   }
 
   renderTaxaList(appStore);
@@ -158,7 +157,7 @@ export function processPlaceData(placeData: PlacesResult, appStore: MapStore) {
   ];
 
   // create comma seperated place_id
-  appStore.inatApiParams.place_id = idStringAddId(
+  appStore.inatApiParams.place_id = addIdToCommaSeparatedString(
     placeData.id,
     appStore.inatApiParams.place_id,
   );
@@ -181,6 +180,6 @@ export function processBBoxData(appStore: MapStore, urlStore: MapStore) {
   appStore.inatApiParams.swlat = urlStore.inatApiParams.swlat;
   appStore.inatApiParams.swlng = urlStore.inatApiParams.swlng;
 
-  appStore.selectedPlaces = [bboxPlace(lngLatCoors)];
+  appStore.selectedPlaces = [bboxPlaceRecord(lngLatCoors)];
   appStore.placesMapLayers["0"] = [layer as unknown as CustomGeoJSON];
 }

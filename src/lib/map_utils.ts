@@ -9,7 +9,7 @@ import type {
   Coordinates,
   iNatApiParams,
 } from "../types/app.d.ts";
-import { refreshiNatMapLayers } from "./data_utils.ts";
+import { refreshBoundingBox } from "./data_utils.ts";
 
 export function getMonthName(month: number) {
   // https://reactgo.com/convert-month-number-to-name-js/
@@ -329,7 +329,7 @@ export function createRefreshMapButton(
           buttonEl.hidden = true;
         }
 
-        refreshiNatMapLayers(appStore);
+        refreshBoundingBox(appStore);
       };
 
       return buttonEl;

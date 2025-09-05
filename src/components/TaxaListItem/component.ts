@@ -48,12 +48,12 @@ class MyComponent extends HTMLElement {
     }
 
     let butttonEl = this.querySelector(".close-button") as HTMLButtonElement;
-    // hide close button for allTaxa
+    // hide close button for allTaxaRecord
     if (taxon.id === 0) {
       butttonEl.hidden = true;
     }
 
-    // don't add event listener for allTaxa with id = 0
+    // don't add event listener for allTaxaRecord with id = 0
     if (butttonEl && taxon.id !== 0) {
       butttonEl.addEventListener("click", async function () {
         if (taxon.id) {

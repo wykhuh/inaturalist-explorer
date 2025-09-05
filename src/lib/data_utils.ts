@@ -16,23 +16,18 @@ import {
 } from "./map_utils.ts";
 import { displayJson, updateUrl } from "./utils.ts";
 import { getiNatMapTiles, getiNatObservationsTotal } from "./inat_api.ts";
-import { iNatApiNonFilterableNames, allTaxa } from "./inat_data.ts";
+import {
+  iNatApiNonFilterableNames,
+  allTaxaRecord,
+  bboxPlaceRecord,
+} from "./inat_data.ts";
 
 import { renderTaxaList, renderPlacesList } from "./autocomplete_utils.ts";
 import type { Map } from "leaflet";
 import { iNatOrange } from "./map_colors_utils.ts";
 
-export function bboxPlace(bbox: LngLat[]): NormalizediNatPlace {
-  return {
-    id: 0,
-    name: "Custom Boundary",
-    display_name: "Custom Boundary",
-    bounding_box: { type: "Polygon", coordinates: [bbox] },
-  };
-}
-
 // called when user clicks refresh map button
-export async function refreshiNatMapLayers(
+export async function refreshBoundingBox(
   appStore: MapStore,
   placeId: number | undefined = undefined,
 ) {
@@ -56,7 +51,7 @@ export async function refreshiNatMapLayers(
   };
 
   // save place to store
-  appStore.selectedPlaces = [bboxPlace(lngLatCoors)];
+  appStore.selectedPlaces = [bboxPlaceRecord(lngLatCoors)];
   appStore.placesMapLayers = { "0": [layer as unknown as CustomGeoJSON] };
 
   renderPlacesList(appStore);
@@ -97,9 +92,9 @@ export async function refreshiNatMapLayers(
 export async function removeTaxon(taxonId: number, appStore: MapStore) {
   removeOneTaxonFromStoreAndMap(appStore, taxonId);
 
-  // if no selected taxa, load allTaxa
+  // if no selected taxa, load allTaxaRecord
   if (appStore.selectedTaxa.length === 0) {
-    await addAllTaxaToMapAndStore(appStore);
+    await addAllTaxaRecordToMapAndStore(appStore);
   }
 
   renderTaxaList(appStore);
@@ -226,12 +221,12 @@ export function updateSelectedTaxa(
   appStore.selectedTaxa = temp;
 }
 
-export async function addAllTaxaToMapAndStore(appStore: MapStore) {
+export async function addAllTaxaRecordToMapAndStore(appStore: MapStore) {
   // set colors because colors is used to fetch map tiles
   appStore.inatApiParams.colors = iNatOrange;
 
-  await fetchiNatMapDataForTaxon(allTaxa, appStore);
-  await getObservationsCountForTaxon(allTaxa, appStore);
+  await fetchiNatMapDataForTaxon(allTaxaRecord, appStore);
+  await getObservationsCountForTaxon(allTaxaRecord, appStore);
 
   // set taxon_id after getting map data
   appStore.inatApiParams = {
@@ -239,7 +234,7 @@ export async function addAllTaxaToMapAndStore(appStore: MapStore) {
     taxon_id: "0",
     colors: iNatOrange,
   };
-  appStore.selectedTaxa = [allTaxa];
+  appStore.selectedTaxa = [allTaxaRecord];
   appStore.color = iNatOrange;
 }
 
@@ -265,7 +260,10 @@ async function removeOnePlaceFromStoreAndMap(
     delete appStore.inatApiParams.swlat;
     delete appStore.inatApiParams.swlng;
   } else {
-    let ids = idStringRemoveId(placeId, appStore.inatApiParams.place_id);
+    let ids = removeIdFromCommaSeparatedString(
+      placeId,
+      appStore.inatApiParams.place_id,
+    );
     if (ids) {
       appStore.inatApiParams.place_id = ids;
     } else {
@@ -280,8 +278,8 @@ async function removeOnePlaceFromStoreAndMap(
     appStore.selectedPlaces.length === 0 &&
     appStore.inatApiParams.taxon_id === "0"
   ) {
-    removeAllTaxaFromStoreAndMap(appStore);
-    await addAllTaxaToMapAndStore(appStore);
+    removeTaxaFromStoreAndMap(appStore);
+    await addAllTaxaRecordToMapAndStore(appStore);
   }
 }
 
@@ -317,7 +315,7 @@ export function removeOnePlaceFromMap(appStore: MapStore, placeId: number) {
   delete appStore.placesMapLayers[placeId];
 }
 
-export function removeAllTaxaFromStoreAndMap(appStore: MapStore) {
+export function removeTaxaFromStoreAndMap(appStore: MapStore) {
   let layerControl = appStore.map.layerControl;
   if (!layerControl) return;
 
@@ -423,7 +421,10 @@ export function leafletVisibleLayers(
   return layer_descriptions;
 }
 
-export function idStringAddId(newId?: number, currentId?: string) {
+export function addIdToCommaSeparatedString(
+  newId?: number,
+  currentId?: string,
+) {
   if (newId === undefined) return;
 
   if (currentId === undefined) {
@@ -435,7 +436,10 @@ export function idStringAddId(newId?: number, currentId?: string) {
   return currentId;
 }
 
-export function idStringRemoveId(newId?: number, currentId?: string) {
+export function removeIdFromCommaSeparatedString(
+  newId?: number,
+  currentId?: string,
+) {
   if (newId === undefined) return;
   if (currentId === undefined) return;
 

@@ -4,8 +4,7 @@ import type {
   iNatApiParamsKeys,
   NormalizediNatTaxon,
 } from "../types/app";
-import { bboxPlace } from "./data_utils";
-import { iNatApiNonFilterableNames } from "./inat_data";
+import { bboxPlaceRecord, iNatApiNonFilterableNames } from "./inat_data";
 import { defaultColorScheme } from "./map_colors_utils";
 import { convertParamsBBoxToLngLat } from "./map_utils";
 
@@ -154,7 +153,7 @@ export function decodeAppUrl(searchParams: string) {
         if (id === "0") {
           let lngLatCoors = convertParamsBBoxToLngLat(urlParams);
           if (lngLatCoors) {
-            return bboxPlace(lngLatCoors);
+            return bboxPlaceRecord(lngLatCoors);
           }
         } else {
           return { id: Number(id) };

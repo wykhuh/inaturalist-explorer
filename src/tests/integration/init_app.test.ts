@@ -29,9 +29,9 @@ import {
   gridLabel_life_la,
   refreshBBoxLabel,
   basemapLabel_osm,
-  gridLabel_allTaxa,
-  gridLabel_allTaxa_la,
-  expectAllTaxa,
+  gridLabel_allTaxaRecord,
+  gridLabel_allTaxaRecord_la,
+  expectAllTaxaRecord,
   colorsEncoded,
   redOak,
   sandiego,
@@ -41,7 +41,7 @@ import {
   expect_LA_SD_Place,
 } from "../test_helpers.ts";
 import type { iNatApiParams } from "../../types/app";
-import { allTaxa, fieldsWithAny } from "../../lib/inat_data.ts";
+import { allTaxaRecord, fieldsWithAny } from "../../lib/inat_data.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
 import { initApp } from "../../lib/init_app.ts";
 
@@ -83,16 +83,16 @@ describe("initApp", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxa,
+      gridLabel_allTaxaRecord,
     ]);
     expectNoPlaces(store);
     expectNoRefresh(store);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
 
     let expectedParams: iNatApiParams = {
       verifiable: true,
       spam: false,
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       colors: iNatOrange,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
@@ -110,17 +110,17 @@ describe("initApp", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxa,
+      gridLabel_allTaxaRecord,
     ]);
     expectNoPlaces(store);
     expectNoRefresh(store);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
 
     let expectedParams: iNatApiParams = {
       verifiable: false,
       spam: true,
       photos: false,
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       colors: iNatOrange,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
@@ -138,16 +138,16 @@ describe("initApp", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxa,
+      gridLabel_allTaxaRecord,
     ]);
     expectNoPlaces(store);
     expectNoRefresh(store);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
 
     let expectedParams: iNatApiParams = {
       spam: false,
       verifiable: true,
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       colors: iNatOrange,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
@@ -394,14 +394,14 @@ describe("initApp", () => {
       basemapLabel_osm,
       placeLabel_la,
       placeLabel_la,
-      gridLabel_allTaxa_la,
+      gridLabel_allTaxaRecord_la,
     ]);
     expectNoRefresh(store);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     expectLosAngelesPlace(store);
     let expectedParams: iNatApiParams = {
       place_id: losangeles.id.toString(),
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       colors: iNatOrange,
       verifiable: true,
       spam: false,
@@ -423,16 +423,16 @@ describe("initApp", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       refreshBBoxLabel,
-      gridLabel_allTaxa,
+      gridLabel_allTaxaRecord,
     ]);
     expectRefreshPlace(store);
-    expectAllTaxa(store);
+    expectAllTaxaRecord(store);
     let expectedParams: iNatApiParams = {
       nelat: 0,
       nelng: 0,
       swlat: 0,
       swlng: 0,
-      taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
       colors: iNatOrange,
       verifiable: true,
       spam: false,

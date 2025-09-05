@@ -1,4 +1,9 @@
-import type { NormalizediNatTaxon, PlaceTypes } from "../types/app.d.ts";
+import type {
+  LngLat,
+  NormalizediNatPlace,
+  NormalizediNatTaxon,
+  PlaceTypes,
+} from "../types/app.d.ts";
 import { defaultColorScheme, iNatOrange } from "./map_colors_utils.ts";
 
 export const taxonRanks = [
@@ -230,13 +235,22 @@ export const lifeTaxon: NormalizediNatTaxon = {
   subtitle: "Life",
 };
 
-export const allTaxa: NormalizediNatTaxon = {
-  rank: "allTaxa rank",
+export const allTaxaRecord: NormalizediNatTaxon = {
+  rank: "allTaxaRecord rank",
   id: 0,
   display_name: "All species",
   color: iNatOrange,
   title: "All species",
 };
+
+export function bboxPlaceRecord(bbox: LngLat[]): NormalizediNatPlace {
+  return {
+    id: 0,
+    name: "Custom Boundary",
+    display_name: "Custom Boundary",
+    bounding_box: { type: "Polygon", coordinates: [bbox] },
+  };
+}
 
 export let fieldsWithAny = [
   "quality_grade",

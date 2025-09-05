@@ -14,7 +14,7 @@ import {
   losAngelesSearchPlaces,
   sandiegoSearchPlaces,
 } from "./fixtures/inatApi.ts";
-import { allTaxa } from "../lib/inat_data.ts";
+import { allTaxaRecord } from "../lib/inat_data.ts";
 
 export function createMockServer() {
   const handlers = [
@@ -119,23 +119,23 @@ export let gridLabel_oaks = "overlay: iNat grid, taxon_id 861036";
 
 export let gridLabel_life_la =
   "overlay: iNat grid, taxon_id 48460, place_id 962";
-export let gridLabel_allTaxa_la =
+export let gridLabel_allTaxaRecord_la =
   "overlay: iNat grid, taxon_id 0, place_id 962";
 
 export let gridLabel_life_sd =
   "overlay: iNat grid, taxon_id 48460, place_id 829";
-export let gridLabel_allTaxa_sd =
+export let gridLabel_allTaxaRecord_sd =
   "overlay: iNat grid, taxon_id 0, place_id 829";
 
 export let gridLabel_life_la_sd =
   "overlay: iNat grid, taxon_id 48460, place_id 962,829";
-export let gridLabel_allTaxa_la_sd =
+export let gridLabel_allTaxaRecord_la_sd =
   "overlay: iNat grid, taxon_id 0, place_id 962,829";
 
 export let gridLabel_oaks_la_sd =
   "overlay: iNat grid, taxon_id 861036, place_id 962,829";
 
-export let gridLabel_allTaxa = "overlay: iNat grid, taxon_id 0";
+export let gridLabel_allTaxaRecord = "overlay: iNat grid, taxon_id 0";
 
 export let refreshBBoxLabel = "refresh bounding box";
 export let basemapLabel_osm = "basemap: Open Street Map";
@@ -287,8 +287,8 @@ export function expectNoTaxa(store: MapStore) {
   expect(store.taxaMapLayers).toStrictEqual({});
 }
 
-export function expectAllTaxa(store: MapStore) {
-  expect(store.selectedTaxa).toStrictEqual([allTaxa]);
+export function expectAllTaxaRecord(store: MapStore) {
+  expect(store.selectedTaxa).toStrictEqual([allTaxaRecord]);
   expect(store.taxaMapLayers[0].length).toBe(3);
 }
 
