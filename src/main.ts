@@ -33,7 +33,7 @@ import {
 } from "./lib/inat_api.ts";
 import type { iNatAutocompleteTaxaAPI, iNatSearchAPI } from "./types/inat_api";
 import { decodeAppUrl } from "./lib/utils.ts";
-import { initApp } from "./lib/data_utils.ts";
+import { initApp } from "./lib/init_app.ts";
 
 window.app = { store: mapStore };
 window.app.store.displayJsonEl = document.getElementById("display-json");

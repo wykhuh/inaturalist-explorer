@@ -11,7 +11,6 @@ import {
 import jsdom from "jsdom";
 
 import {
-  initApp,
   leafletVisibleLayers,
   refreshiNatMapLayers,
   removePlace,
@@ -58,6 +57,7 @@ import {
 import { allTaxa } from "../../lib/inat_data.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
 import { decodeAppUrl } from "../../lib/utils.ts";
+import { initApp } from "../../lib/init_app.ts";
 
 beforeEach(() => {
   const { JSDOM } = jsdom;

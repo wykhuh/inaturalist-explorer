@@ -10,7 +10,7 @@ import {
 } from "vitest";
 import jsdom from "jsdom";
 
-import { initApp, leafletVisibleLayers } from "../../lib/data_utils";
+import { leafletVisibleLayers } from "../../lib/data_utils";
 import { decodeAppUrl } from "../../lib/utils";
 import {
   createMockServer,
@@ -43,6 +43,7 @@ import {
 import type { iNatApiParams } from "../../types/app";
 import { allTaxa, fieldsWithAny } from "../../lib/inat_data.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
+import { initApp } from "../../lib/init_app.ts";
 
 beforeEach(() => {
   const { JSDOM } = jsdom;
