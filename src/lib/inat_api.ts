@@ -6,6 +6,7 @@ import type {
   iNatPlacesAPI,
   iNatHistogramApi,
 } from "../types/inat_api.d.ts";
+import { iNatOrange } from "./map_colors_utils.ts";
 
 const search_api = "https://api.inaturalist.org/v1/search";
 export const search_places_api = `${search_api}?sources=places`;
@@ -46,6 +47,9 @@ export const getiNatMapTiles = (
   if (dupParams.taxon_id === "0") {
     delete dupParams.taxon_id;
   }
+  if (dupParams.color === undefined) {
+    dupParams.color = iNatOrange;
+  }
 
   let paramsString = new URLSearchParams(dupParams).toString();
   let taxonRangeParamsString = new URLSearchParams({
@@ -55,7 +59,7 @@ export const getiNatMapTiles = (
   delete dupParams.color;
   let noColorParamsString = new URLSearchParams(dupParams).toString();
 
-  return {
+  let tiles = {
     iNatGrid: {
       name: "Grid",
       type: "overlay",
@@ -105,6 +109,11 @@ export const getiNatMapTiles = (
       },
     },
   };
+
+  if (dupParams.taxon_id === "0" || dupParams.taxon_id === undefined) {
+    delete tiles.iNatTaxonRange;
+  }
+  return tiles;
 };
 
 export async function getiNatObservationsTotal(
