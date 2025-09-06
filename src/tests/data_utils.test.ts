@@ -6,9 +6,21 @@ import {
   updateSelectedTaxa,
   addIdToCommaSeparatedString,
   removeIdFromCommaSeparatedString,
+  removeIdfromInatApiParams,
 } from "../lib/data_utils.ts";
 import type { MapStore, NormalizediNatTaxon } from "../types/app.d.ts";
 import { mapStore } from "../lib/store.ts";
+import { initApp } from "../lib/init_app.ts";
+import { decodeAppUrl } from "../lib/utils.ts";
+import { taxonSelectedHandler } from "../lib/autocomplete_utils.ts";
+import {
+  life,
+  lifeBasic,
+  losangeles,
+  redOak,
+  redOakBasic,
+  sandiego,
+} from "./test_helpers.ts";
 
 describe("formatTaxonName", () => {
   describe("query matches common name", () => {
@@ -133,7 +145,6 @@ describe("formatTaxonName", () => {
 });
 
 describe("updateSelectedTaxa", () => {
-  let defaultStore: MapStore = structuredClone(mapStore);
   let taxon1: NormalizediNatTaxon = {
     name: "name 1",
     matched_term: "matched_term 1",
@@ -151,7 +162,7 @@ describe("updateSelectedTaxa", () => {
   };
 
   test("add new taxon to empty store.selectedTaxa", () => {
-    let store = { ...defaultStore, selectedTaxa: [] };
+    let store = structuredClone(mapStore);
     let taxon = taxon1;
     let expected = [taxon1];
 
@@ -161,10 +172,9 @@ describe("updateSelectedTaxa", () => {
   });
 
   test("add new taxon to store.selectedTaxa that has taxa", () => {
-    let store = {
-      ...defaultStore,
-      selectedTaxa: [taxon1],
-    };
+    let store = structuredClone(mapStore);
+    store.selectedTaxa = [taxon1];
+
     let taxon = taxon2;
     let expected = [taxon1, taxon2];
 
@@ -174,10 +184,8 @@ describe("updateSelectedTaxa", () => {
   });
 
   test("update existing taxon in store.selectedTaxa", () => {
-    let store = {
-      ...defaultStore,
-      selectedTaxa: [taxon1, { ...taxon2 }],
-    };
+    let store = structuredClone(mapStore);
+    store.selectedTaxa = [taxon1, taxon2];
     let taxon = { ...taxon2, observations_count: 33 };
     let expected = [taxon1, { ...taxon2, observations_count: 33 }];
 
@@ -223,6 +231,15 @@ describe("addIdToCommaSeparatedString", () => {
 
     expect(result).toBe(undefined);
   });
+
+  test("does not append id if it is already in string", () => {
+    let newId = 10;
+    let currentId = "20,10";
+
+    let result = addIdToCommaSeparatedString(newId, currentId);
+
+    expect(result).toBe("20,10");
+  });
 });
 
 describe("removeIdFromCommaSeparatedString", () => {
@@ -235,7 +252,7 @@ describe("removeIdFromCommaSeparatedString", () => {
     expect(result).toBe(undefined);
   });
 
-  test("removes id from current id string", () => {
+  test("removes id from current id string when it is last id", () => {
     let newId = 10;
     let currentId = "20,10";
 
@@ -244,7 +261,16 @@ describe("removeIdFromCommaSeparatedString", () => {
     expect(result).toBe("20");
   });
 
-  test("removes id from current id string 2", () => {
+  test("removes id from current id string when it is first id", () => {
+    let newId = 10;
+    let currentId = "10,20";
+
+    let result = removeIdFromCommaSeparatedString(newId, currentId);
+
+    expect(result).toBe("20");
+  });
+
+  test("removes id from current id string", () => {
     let newId = 10;
     let currentId = "20,10,15";
 
@@ -260,5 +286,119 @@ describe("removeIdFromCommaSeparatedString", () => {
     let result = removeIdFromCommaSeparatedString(newId, currentId);
 
     expect(result).toBe(undefined);
+  });
+
+  test("returns current id if id is not in current id", () => {
+    let newId = 10;
+    let currentId = "5";
+
+    let result = removeIdFromCommaSeparatedString(newId, currentId);
+
+    expect(result).toBe(currentId);
+  });
+});
+
+describe("removeIdfromInatApiParams", () => {
+  test("if no selectedTaxa, removes taxon_id and colors from inatApiParams", async () => {
+    let store = structuredClone(mapStore);
+    let target_id = 10;
+    store.selectedTaxa = [];
+    store.inatApiParams.taxon_id = target_id.toString();
+    store.inatApiParams.colors = "red";
+
+    removeIdfromInatApiParams(store, "taxon_id", target_id);
+
+    expect(store.inatApiParams.taxon_id).toBeUndefined();
+    expect(store.inatApiParams.colors).toBeUndefined();
+  });
+
+  test("if target_id not in selectedTaxa, set taxon_id and color to last item in selectedTaxa", async () => {
+    let store = structuredClone(mapStore);
+    let target_id = 10;
+    store.selectedTaxa = [lifeBasic, redOakBasic];
+    store.inatApiParams.taxon_id = target_id.toString();
+    store.inatApiParams.colors = "red";
+
+    removeIdfromInatApiParams(store, "taxon_id", target_id);
+
+    expect(store.inatApiParams.taxon_id).toBe(redOakBasic.id.toString());
+    expect(store.inatApiParams.colors).toBe(redOakBasic.color);
+  });
+
+  test("if target_id is the same as the last item in selectedTaxa, do nothing", async () => {
+    let store = structuredClone(mapStore);
+    let target_id = redOak().id;
+
+    store.selectedTaxa = [life(), redOak()];
+    store.inatApiParams.taxon_id = redOak().id.toString();
+    store.inatApiParams.colors = redOak().color;
+
+    removeIdfromInatApiParams(store, "taxon_id", target_id);
+
+    expect(store.inatApiParams.taxon_id).toBe(redOak().id.toString());
+    expect(store.inatApiParams.colors).toBe(redOak().color);
+  });
+
+  test("if target_id is in selectedTaxa, set taxon_id and color to last item in selectedTaxa", async () => {
+    let store = structuredClone(mapStore);
+    let target_id = life().id;
+    store.selectedTaxa = [life(), redOak()];
+    store.inatApiParams.taxon_id = life().id.toString();
+    store.inatApiParams.colors = life().color;
+
+    removeIdfromInatApiParams(store, "taxon_id", target_id);
+
+    expect(store.inatApiParams.taxon_id).toBe(redOak().id.toString());
+    expect(store.inatApiParams.colors).toBe(redOak().color);
+  });
+
+  test("if no selectedPlaces, removes place_id from inatApiParams", async () => {
+    let store = structuredClone(mapStore);
+    let target_id = 10;
+    store.selectedPlaces = [];
+    store.inatApiParams.place_id = target_id.toString();
+
+    removeIdfromInatApiParams(store, "place_id", target_id);
+
+    expect(store.inatApiParams.place_id).toBeUndefined();
+  });
+
+  test("if target_id is not in selectedPlaces, removes id from inatApiParams.place_id", async () => {
+    let store = structuredClone(mapStore);
+    let target_id = 10;
+    store.selectedPlaces = [losangeles, sandiego];
+    store.inatApiParams.place_id = `${target_id},${losangeles.id},${sandiego.id}`;
+
+    removeIdfromInatApiParams(store, "place_id", target_id);
+
+    expect(store.inatApiParams.place_id).toBe(
+      `${losangeles.id},${sandiego.id}`,
+    );
+  });
+
+  test("if target_id is the same as the last item in selectedPlaces, do nothing", async () => {
+    let store = structuredClone(mapStore);
+    let target_id = sandiego.id;
+    store.selectedPlaces = [losangeles, sandiego];
+    store.inatApiParams.place_id = `${losangeles.id},${sandiego.id}`;
+
+    removeIdfromInatApiParams(store, "place_id", target_id);
+
+    expect(store.inatApiParams.place_id).toBe(
+      `${losangeles.id},${sandiego.id}`,
+    );
+  });
+
+  test("if target_id is in selectedPlaces, do nothing", async () => {
+    let store = structuredClone(mapStore);
+    let target_id = losangeles.id;
+    store.selectedPlaces = [losangeles, sandiego];
+    store.inatApiParams.place_id = `${losangeles.id},${sandiego.id}`;
+
+    removeIdfromInatApiParams(store, "place_id", target_id);
+
+    expect(store.inatApiParams.place_id).toBe(
+      `${losangeles.id},${sandiego.id}`,
+    );
   });
 });

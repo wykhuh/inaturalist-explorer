@@ -53,6 +53,13 @@ import {
   expect_LA_SD_Place,
   expectSanDiegoPlace,
   colorsEncoded,
+  monarchBasic,
+  gridLabel_monarch,
+  monarch,
+  gridLabel_oaks_la_sd,
+  gridLabel_oaks_la,
+  expectLifeOakTaxa,
+  gridLabel_life_la_sd,
 } from "../test_helpers.ts";
 import { allTaxaRecord } from "../../lib/inat_data.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
@@ -490,7 +497,7 @@ describe("combos", () => {
     );
   });
 
-  test(`add life; add los angeles`, async () => {
+  test(`add taxon; add los angeles`, async () => {
     let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
@@ -609,6 +616,102 @@ describe("combos", () => {
 
     expect(window.location.search).toBe(
       `?place_id=${sandiego.id}&verifiable=true&spam=false`,
+    );
+  });
+
+  test("add taxon; add taxon; add place; add place", async () => {
+    let { store } = setupMapAndStore();
+
+    expectEmpytMap(store);
+
+    await initApp(store, decodeAppUrl(""));
+    await taxonSelectedHandler(lifeBasic, "life", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
+    ]);
+    expectLifeTaxa(store);
+    expectNoPlaces(store);
+    let params1 = {
+      colors: colors[0],
+      taxon_id: life().id.toString(),
+      spam: false,
+      verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params1);
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+    );
+
+    await taxonSelectedHandler(redOakBasic, "red", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
+      gridLabel_oaks,
+    ]);
+    expect(store.selectedTaxa).toStrictEqual([life(), redOak()]);
+    expect(Object.keys(store.taxaMapLayers)).toEqual([
+      life().id.toString(),
+      redOak().id.toString(),
+    ]);
+    expect(store.taxaMapLayers[life().id].length).toBe(4);
+    expect(store.taxaMapLayers[redOak().id].length).toBe(4);
+    expect(store.color).toBe(colors[1]);
+    expectNoPlaces(store);
+    let params2 = {
+      colors: colors[1],
+      taxon_id: redOak().id.toString(),
+      spam: false,
+      verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params2);
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id},${redOak().id}&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
+    );
+
+    await placeSelectedHandler(losangeles, "los", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      gridLabel_life_la,
+      gridLabel_oaks_la,
+    ]);
+    expectLifeOakTaxa(store);
+    let params3 = {
+      colors: colors[1],
+      place_id: losangeles.id.toString(),
+      taxon_id: redOak().id.toString(),
+      spam: false,
+      verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params3);
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id},${redOak().id}&place_id=${losangeles.id}&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
+    );
+
+    await placeSelectedHandler(sandiego, "san", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      placeLabel_sd,
+      gridLabel_life_la_sd,
+      gridLabel_oaks_la_sd,
+    ]);
+    expectLifeOakTaxa(store);
+    let params4 = {
+      colors: colors[1],
+      place_id: `${losangeles.id},${sandiego.id}`,
+      taxon_id: redOak().id.toString(),
+      spam: false,
+      verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params4);
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id},${redOak().id}&place_id=${losangeles.id},${sandiego.id}&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
     );
   });
 });
@@ -966,7 +1069,83 @@ describe("removeTaxon", () => {
     expect(window.location.search).toBe("");
   });
 
-  test("add taxon; add taxon; remove taxon", async () => {
+  test("add taxon; add taxon; remove first taxon", async () => {
+    let { store } = setupMapAndStore();
+
+    expectEmpytMap(store);
+
+    await initApp(store, decodeAppUrl(""));
+    await taxonSelectedHandler(lifeBasic, "life", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
+    ]);
+    expectLifeTaxa(store);
+    expectNoPlaces(store);
+    let params1 = {
+      colors: colors[0],
+      taxon_id: life().id.toString(),
+      spam: false,
+      verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params1);
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+    );
+
+    await taxonSelectedHandler(redOakBasic, "red", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
+      gridLabel_oaks,
+    ]);
+    expectLifeOakTaxa(store);
+    expect(store.selectedTaxa).toStrictEqual([life(), redOak()]);
+    expect(Object.keys(store.taxaMapLayers)).toEqual([
+      life().id.toString(),
+      redOak().id.toString(),
+    ]);
+    expect(store.taxaMapLayers[life().id].length).toBe(4);
+    expect(store.taxaMapLayers[redOak().id].length).toBe(4);
+    expect(store.color).toBe(colors[1]);
+    expectNoPlaces(store);
+    let params2 = {
+      colors: colors[1],
+      taxon_id: redOak().id.toString(),
+      spam: false,
+      verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params2);
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id},${redOak().id}&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
+    );
+
+    await removeTaxon(lifeBasic.id, store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_oaks,
+    ]);
+    expect(store.selectedTaxa).toStrictEqual([redOak()]);
+    expect(Object.keys(store.taxaMapLayers)).toEqual([redOak().id.toString()]);
+    expect(store.taxaMapLayers[redOak().id].length).toBe(4);
+    expectNoPlaces(store);
+    let params3 = {
+      colors: colors[1],
+      spam: false,
+      verifiable: true,
+      taxon_id: redOak().id.toString(),
+    };
+    expect(store.inatApiParams).toStrictEqual(params3);
+
+    expect(window.location.search).toBe(
+      `?taxon_id=${redOak().id}&colors=${colorsEncoded[1]}&verifiable=true&spam=false`,
+    );
+  });
+
+  test("add taxon; add taxon; add taxon; remove last taxon", async () => {
     let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
@@ -1018,74 +1197,61 @@ describe("removeTaxon", () => {
       `?taxon_id=${life().id},${redOak().id}&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
     );
 
-    await removeTaxon(lifeBasic.id, store);
+    await taxonSelectedHandler(monarchBasic, "mon", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
+      gridLabel_life,
+      gridLabel_oaks,
+      gridLabel_monarch,
+    ]);
+    expect(store.selectedTaxa).toStrictEqual([life(), redOak(), monarch()]);
+    expect(Object.keys(store.taxaMapLayers)).toStrictEqual([
+      life().id.toString(),
+      monarch().id.toString(),
+      redOak().id.toString(),
+    ]);
+    expect(store.taxaMapLayers[life().id].length).toBe(4);
+    expect(store.taxaMapLayers[redOak().id].length).toBe(4);
+    expect(store.taxaMapLayers[monarch().id].length).toBe(4);
+    expect(store.color).toBe(colors[2]);
+    expectNoPlaces(store);
+    let params4 = {
+      colors: colors[2],
+      taxon_id: monarch().id.toString(),
+      spam: false,
+      verifiable: true,
+    };
+    expect(store.inatApiParams).toStrictEqual(params4);
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id},${redOak().id},${monarch().id}&colors=${colorsEncoded[0]},${colorsEncoded[1]},${colorsEncoded[2]}&verifiable=true&spam=false`,
+    );
+
+    await removeTaxon(monarch().id, store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
       gridLabel_oaks,
     ]);
-    expect(store.selectedTaxa).toStrictEqual([redOak()]);
-    expect(Object.keys(store.taxaMapLayers)).toEqual([redOak().id.toString()]);
+    expect(store.selectedTaxa).toStrictEqual([life(), redOak()]);
+    expect(Object.keys(store.taxaMapLayers)).toEqual([
+      life().id.toString(),
+      redOak().id.toString(),
+    ]);
+    expect(store.taxaMapLayers[life().id].length).toBe(4);
     expect(store.taxaMapLayers[redOak().id].length).toBe(4);
     expectNoPlaces(store);
     let params3 = {
-      colors: colors[1],
+      colors: redOak().color,
       spam: false,
       verifiable: true,
+      taxon_id: redOak().id.toString(),
     };
     expect(store.inatApiParams).toStrictEqual(params3);
 
     expect(window.location.search).toBe(
-      `?taxon_id=${redOak().id}&colors=${colorsEncoded[1]}&verifiable=true&spam=false`,
-    );
-  });
-
-  test("add place; remove taxon", async () => {
-    let { store } = setupMapAndStore();
-
-    expectEmpytMap(store);
-
-    await initApp(store, decodeAppUrl(""));
-    await placeSelectedHandler(losangeles, "los", store);
-
-    expect(leafletVisibleLayers(store)).toStrictEqual([
-      basemapLabel_osm,
-      placeLabel_la,
-      gridLabel_allTaxaRecord_la,
-    ]);
-    expectAllTaxaRecord(store);
-    expectLosAngelesPlace(store);
-    let params1 = {
-      colors: iNatOrange,
-      place_id: losangeles.id.toString(),
-      taxon_id: allTaxaRecord.id.toString(),
-      spam: false,
-      verifiable: true,
-    };
-    expect(store.inatApiParams).toStrictEqual(params1);
-    expect(window.location.search).toBe(
-      `?place_id=${losangeles.id}&verifiable=true&spam=false`,
-    );
-
-    await removeTaxon(allTaxaRecord.id, store);
-
-    expect(leafletVisibleLayers(store)).toStrictEqual([
-      basemapLabel_osm,
-      placeLabel_la,
-      gridLabel_allTaxaRecord_la,
-    ]);
-    expectAllTaxaRecord(store);
-    expectLosAngelesPlace(store);
-    let params2 = {
-      colors: iNatOrange,
-      taxon_id: allTaxaRecord.id.toString(),
-      place_id: losangeles.id.toString(),
-      spam: false,
-      verifiable: true,
-    };
-    expect(store.inatApiParams).toStrictEqual(params2);
-    expect(window.location.search).toBe(
-      `?place_id=${losangeles.id}&verifiable=true&spam=false`,
+      `?taxon_id=${life().id},${redOak().id}&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
     );
   });
 

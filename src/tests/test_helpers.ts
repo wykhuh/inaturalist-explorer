@@ -108,14 +108,15 @@ export function createMockServer() {
   return server;
 }
 
-export let colors = ["#4477aa", "#66ccee"];
-export let colorsEncoded = ["%234477aa", "%2366ccee"];
+export let colors = ["#4477aa", "#66ccee", "#228833"];
+export let colorsEncoded = ["%234477aa", "%2366ccee", "%23228833"];
 
 export let placeLabel_la = "place layer: Los Angeles, 962";
 export let placeLabel_sd = "place layer: San Diego, 829";
 
 export let gridLabel_life = "overlay: iNat grid, taxon_id 48460";
 export let gridLabel_oaks = "overlay: iNat grid, taxon_id 861036";
+export let gridLabel_monarch = "overlay: iNat grid, taxon_id 48662";
 
 export let gridLabel_life_la =
   "overlay: iNat grid, taxon_id 48460, place_id 962";
@@ -132,6 +133,8 @@ export let gridLabel_life_la_sd =
 export let gridLabel_allTaxaRecord_la_sd =
   "overlay: iNat grid, taxon_id 0, place_id 962,829";
 
+export let gridLabel_oaks_la =
+  "overlay: iNat grid, taxon_id 861036, place_id 962";
 export let gridLabel_oaks_la_sd =
   "overlay: iNat grid, taxon_id 861036, place_id 962,829";
 
@@ -176,6 +179,26 @@ export function redOak(color = colors[1]) {
     display_name: "red oaks",
     title: "red oaks",
     subtitle: "Lobatae",
+    color: color,
+    observations_count: 456789,
+  };
+}
+
+export let monarchBasic: NormalizediNatTaxon = {
+  name: "Danaus plexippus",
+  default_photo: "https://inat.com/photos/61756746/square.jpg",
+  preferred_common_name: "Monarch",
+  matched_term: "mon",
+  rank: "species",
+  id: 48662,
+};
+
+export function monarch(color = colors[2]) {
+  return {
+    ...monarchBasic,
+    display_name: "Monarch",
+    title: "Monarch",
+    subtitle: "Danaus plexippus",
     color: color,
     observations_count: 456789,
   };
@@ -356,4 +379,22 @@ export function expectOakTaxa(store: MapStore, color = colors[1]) {
   expect(Object.keys(store.taxaMapLayers)).toEqual([oak.id.toString()]);
   expect(store.taxaMapLayers[oak.id].length).toBe(4);
   expect(store.color).toBe(color);
+}
+
+export function expectLifeOakTaxa(
+  store: MapStore,
+  customColors = [colors[0], colors[1]],
+) {
+  let lifeTemp = life(customColors[0]);
+  let oakTemp = redOak(customColors[1]);
+
+  expect(store.selectedTaxa).toStrictEqual([lifeTemp, oakTemp]);
+  expect(Object.keys(store.taxaMapLayers)).toEqual([
+    lifeTemp.id.toString(),
+    oakTemp.id.toString(),
+  ]);
+  expect(store.taxaMapLayers[lifeTemp.id].length).toBe(4);
+  expect(store.taxaMapLayers[oakTemp.id].length).toBe(4);
+
+  expect(store.color).toBe(customColors[1]);
 }

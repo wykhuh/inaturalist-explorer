@@ -112,6 +112,12 @@ export async function removePlace(placeId: number, appStore: MapStore) {
   // remove existing taxa tiles, and refetch taxa tiles
   for await (const taxon of appStore.selectedTaxa) {
     removeOneTaxonFromMap(appStore, taxon.id);
+
+    appStore.inatApiParams = {
+      ...appStore.inatApiParams,
+      taxon_id: taxon.id.toString(),
+      colors: taxon.color,
+    };
     await fetchiNatMapDataForTaxon(taxon, appStore);
     await getObservationsCountForTaxon(taxon, appStore);
   }
@@ -170,6 +176,10 @@ export async function fetchiNatMapDataForTaxon(
   };
 }
 
+// ================
+// taxon
+// ================
+
 export async function getObservationsCountForTaxon(
   taxonObj: NormalizediNatTaxon,
   appStore: MapStore,
@@ -221,8 +231,11 @@ export function updateSelectedTaxa(
 }
 
 export async function addAllTaxaRecordToMapAndStore(appStore: MapStore) {
-  // set colors because colors is used to fetch map tiles
-  appStore.inatApiParams.colors = iNatOrange;
+  appStore.inatApiParams = {
+    ...appStore.inatApiParams,
+    colors: iNatOrange,
+    taxon_id: "0",
+  };
 
   await fetchiNatMapDataForTaxon(allTaxaRecord, appStore);
   await getObservationsCountForTaxon(allTaxaRecord, appStore);
@@ -240,46 +253,11 @@ export async function addAllTaxaRecordToMapAndStore(appStore: MapStore) {
 function removeOneTaxonFromStoreAndMap(appStore: MapStore, taxonId: number) {
   removeOneTaxonFromMap(appStore, taxonId);
 
-  delete appStore.inatApiParams.taxon_id;
-
   appStore.selectedTaxa = appStore.selectedTaxa.filter(
     (taxon) => taxon.id !== taxonId,
   );
-}
 
-async function removeOnePlaceFromStoreAndMap(
-  appStore: MapStore,
-  placeId: number,
-) {
-  removeOnePlaceFromMap(appStore, placeId);
-
-  if (placeId === 0) {
-    delete appStore.inatApiParams.nelat;
-    delete appStore.inatApiParams.nelng;
-    delete appStore.inatApiParams.swlat;
-    delete appStore.inatApiParams.swlng;
-  } else {
-    let ids = removeIdFromCommaSeparatedString(
-      placeId,
-      appStore.inatApiParams.place_id,
-    );
-    if (ids) {
-      appStore.inatApiParams.place_id = ids;
-    } else {
-      delete appStore.inatApiParams.place_id;
-    }
-  }
-
-  appStore.selectedPlaces = appStore.selectedPlaces.filter(
-    (place) => place.id !== placeId,
-  );
-  if (
-    appStore.selectedPlaces.length === 0 &&
-    appStore.inatApiParams.taxon_id === "0"
-  ) {
-    removeTaxaFromStoreAndMap(appStore);
-    await addAllTaxaRecordToMapAndStore(appStore);
-  }
+  removeIdfromInatApiParams(appStore, "taxon_id", taxonId);
 }
 
 export function removeOneTaxonFromMap(appStore: MapStore, taxonId: number) {
@@ -301,19 +279,6 @@ export function removeOneTaxonFromMap(appStore: MapStore, taxonId: number) {
   appStore.taxaMapLayers = appStore.taxaMapLayers;
 }
 
-export function removeOnePlaceFromMap(appStore: MapStore, placeId: number) {
-  if (!appStore.placesMapLayers) return;
-
-  let mapLayers = appStore.placesMapLayers[placeId];
-  if (!mapLayers) return;
-
-  mapLayers.forEach((layer) => {
-    layer.remove();
-  });
-
-  delete appStore.placesMapLayers[placeId];
-}
-
 export function removeTaxaFromStoreAndMap(appStore: MapStore) {
   let layerControl = appStore.map.layerControl;
   if (!layerControl) return;
@@ -332,6 +297,45 @@ export function removeTaxaFromStoreAndMap(appStore: MapStore) {
   delete appStore.inatApiParams.taxon_id;
   appStore.selectedTaxa = [];
   appStore.taxaMapLayers = {};
+}
+
+// ================
+// place
+// ================
+
+async function removeOnePlaceFromStoreAndMap(
+  appStore: MapStore,
+  placeId: number,
+) {
+  removeOnePlaceFromMap(appStore, placeId);
+
+  appStore.selectedPlaces = appStore.selectedPlaces.filter(
+    (place) => place.id !== placeId,
+  );
+
+  // update inatApiParams for bounding box
+  if (placeId === 0) {
+    delete appStore.inatApiParams.nelat;
+    delete appStore.inatApiParams.nelng;
+    delete appStore.inatApiParams.swlat;
+    delete appStore.inatApiParams.swlng;
+    // update inatApiParams for places
+  } else {
+    removeIdfromInatApiParams(appStore, "place_id", placeId);
+  }
+}
+
+export function removeOnePlaceFromMap(appStore: MapStore, placeId: number) {
+  if (!appStore.placesMapLayers) return;
+
+  let mapLayers = appStore.placesMapLayers[placeId];
+  if (!mapLayers) return;
+
+  mapLayers.forEach((layer) => {
+    layer.remove();
+  });
+
+  delete appStore.placesMapLayers[placeId];
 }
 
 function removePlacesFromStoreAndMap(appStore: MapStore) {
@@ -358,6 +362,54 @@ function removePlacesFromStoreAndMap(appStore: MapStore) {
 function removeRefreshBBox(appStore: MapStore, map: Map) {
   if (appStore.refreshMap.layer) {
     appStore.refreshMap.layer.removeFrom(map);
+  }
+}
+
+// ================
+// misc
+// ================
+
+export function removeIdfromInatApiParams(
+  appStore: MapStore,
+  property: iNatApiParamsKeys,
+  value: any,
+) {
+  // handles taxon_id
+  if (property === "taxon_id") {
+    // if no selected taxa, delete taxon_id
+    if (appStore.selectedTaxa.length == 0) {
+      delete appStore.inatApiParams.taxon_id;
+      delete appStore.inatApiParams.colors;
+      // get id of last taxa is selectedTaxa
+    } else {
+      let lastTaxon = appStore.selectedTaxa[appStore.selectedTaxa.length - 1];
+      appStore.inatApiParams.taxon_id = lastTaxon.id.toString();
+      appStore.inatApiParams.colors = lastTaxon.color;
+    }
+    // handles place_id
+  } else if (property === "place_id") {
+    if (appStore.selectedPlaces.length === 0) {
+      delete appStore.inatApiParams.place_id;
+      return;
+    } else {
+      let lastPlace =
+        appStore.selectedPlaces[appStore.selectedPlaces.length - 1];
+      if (lastPlace.id === value) {
+      } else if (appStore.selectedPlaces.map((p) => p.id).includes(value)) {
+      } else {
+        let ids = removeIdFromCommaSeparatedString(
+          value,
+          appStore.inatApiParams[property],
+        );
+        if (ids) {
+          appStore.inatApiParams[property] = ids;
+        }
+      }
+    }
+  } else {
+    throw new Error(
+      `removeIdfromInatApiParams not implemented for ${property}`,
+    );
   }
 }
 
@@ -429,7 +481,11 @@ export function addIdToCommaSeparatedString(
   if (currentId === undefined) {
     currentId = newId.toString();
   } else {
-    currentId = currentId + "," + newId;
+    // only add newId to currentId if currentId does not have newId
+    let parts = currentId.split(",").map((i) => Number(i));
+    if (!parts.includes(newId)) {
+      currentId = currentId + "," + newId;
+    }
   }
 
   return currentId;
