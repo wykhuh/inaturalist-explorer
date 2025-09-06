@@ -7,6 +7,7 @@ import { addLayerToMap, getMapTiles } from "../lib/map_utils";
 import type {
   MapStore,
   NormalizediNatPlace,
+  NormalizediNatProject,
   NormalizediNatTaxon,
 } from "../types/app";
 import { mapStore } from "../lib/store.ts";
@@ -90,6 +91,36 @@ export function createMockServer() {
       };
       return HttpResponse.json(data);
     }),
+    http.get(
+      "https://api.inaturalist.org/v1/projects/237729",
+      async (_args) => {
+        let data = {
+          results: [
+            {
+              id: 237729,
+              title: "City Nature Challenge 2025: Aotearoa New Zealand",
+              slug: "city-nature-challenge-2025-aotearoa-new-zealand",
+            },
+          ],
+        };
+        return HttpResponse.json(data);
+      },
+    ),
+    http.get(
+      "https://api.inaturalist.org/v1/projects/229902",
+      async (_args) => {
+        let data = {
+          results: [
+            {
+              id: 229902,
+              title: "City Nature Challenge 2025: Ōtautahi/Christchurch",
+              slug: "city-nature-challenge-2025-otautahi-christchurch",
+            },
+          ],
+        };
+        return HttpResponse.json(data);
+      },
+    ),
     http.get("https://api.inaturalist.org/v2/observations*", async (_args) => {
       loggerUrl("request.url", _args.request.url);
       return HttpResponse.json({ total_results: 456789, results: [] });
@@ -140,9 +171,33 @@ export let gridLabel_oaks_la_sd =
   "overlay: iNat grid, taxon_id 861036, place_id 962,829";
 
 export let gridLabel_allTaxaRecord = "overlay: iNat grid, taxon_id 0";
+export let gridLabel_allTaxaRecord_project1 =
+  "overlay: iNat grid, taxon_id 0, project_id 237729";
+export let gridLabel_allTaxaRecord_project2 =
+  "overlay: iNat grid, taxon_id 0, project_id 229902";
+export let gridLabel_allTaxaRecord_projects =
+  "overlay: iNat grid, taxon_id 0, project_id 237729,229902";
 
 export let refreshBBoxLabel = "refresh bounding box";
 export let basemapLabel_osm = "basemap: Open Street Map";
+
+export let gridLabel_life_la_sd_project1 =
+  "overlay: iNat grid, taxon_id 48460, place_id 962,829, project_id 237729";
+export let gridLabel_life_la_sd_projects =
+  "overlay: iNat grid, taxon_id 48460, place_id 962,829, project_id 237729,229902";
+export let gridLabel_oaks_la_sd_project1 =
+  "overlay: iNat grid, taxon_id 861036, place_id 962,829, project_id 237729";
+export let gridLabel_oaks_la_sd_projects =
+  "overlay: iNat grid, taxon_id 861036, place_id 962,829, project_id 237729,229902";
+
+export let gridLabel_life_la_project1 =
+  "overlay: iNat grid, taxon_id 48460, place_id 962, project_id 237729";
+
+export let gridLabel_life_project1 =
+  "overlay: iNat grid, taxon_id 48460, project_id 237729";
+
+export let gridLabel_allTaxaRecord_la_project1 =
+  "overlay: iNat grid, taxon_id 0, place_id 962, project_id 237729";
 
 export let lifeBasic: NormalizediNatTaxon = {
   name: "Life",
@@ -275,6 +330,18 @@ export let refreshPlaceLA = {
   },
 };
 
+export let project_cnc1: NormalizediNatProject = {
+  id: 237729,
+  name: "City Nature Challenge 2025: Aotearoa New Zealand",
+  slug: "city-nature-challenge-2025-aotearoa-new-zealand",
+};
+
+export let project_cnc2: NormalizediNatProject = {
+  id: 229902,
+  name: "City Nature Challenge 2025: Ōtautahi/Christchurch",
+  slug: "city-nature-challenge-2025-otautahi-christchurch",
+};
+
 export function setupMapAndStore() {
   let map = L.map("map", {
     center: [0, 0],
@@ -314,6 +381,40 @@ export function expectNoTaxa(store: MapStore) {
 export function expectAllTaxaRecord(store: MapStore) {
   expect(store.selectedTaxa).toStrictEqual([allTaxaRecord]);
   expect(store.taxaMapLayers[0].length).toBe(3);
+}
+
+export function expectLifeTaxa(store: MapStore, color = colors[0]) {
+  let lifeTemp = life(color);
+  expect(store.selectedTaxa).toStrictEqual([lifeTemp]);
+  expect(Object.keys(store.taxaMapLayers)).toEqual([lifeTemp.id.toString()]);
+  expect(store.taxaMapLayers[lifeTemp.id].length).toBe(4);
+  expect(store.color).toBe(color);
+}
+
+export function expectOakTaxa(store: MapStore, color = colors[1]) {
+  let oak = redOak(color);
+  expect(store.selectedTaxa).toStrictEqual([oak]);
+  expect(Object.keys(store.taxaMapLayers)).toEqual([oak.id.toString()]);
+  expect(store.taxaMapLayers[oak.id].length).toBe(4);
+  expect(store.color).toBe(color);
+}
+
+export function expectLifeOakTaxa(
+  store: MapStore,
+  customColors = [colors[0], colors[1]],
+) {
+  let lifeTemp = life(customColors[0]);
+  let oakTemp = redOak(customColors[1]);
+
+  expect(store.selectedTaxa).toStrictEqual([lifeTemp, oakTemp]);
+  expect(Object.keys(store.taxaMapLayers)).toEqual([
+    lifeTemp.id.toString(),
+    oakTemp.id.toString(),
+  ]);
+  expect(store.taxaMapLayers[lifeTemp.id].length).toBe(4);
+  expect(store.taxaMapLayers[oakTemp.id].length).toBe(4);
+
+  expect(store.color).toBe(customColors[1]);
 }
 
 export function expectNoPlaces(store: MapStore) {
@@ -366,36 +467,16 @@ export function expectRefreshPlace(store: MapStore, type = "zero") {
   expect(store.placesMapLayers["0"].length).toBe(1);
 }
 
-export function expectLifeTaxa(store: MapStore, color = colors[0]) {
-  let lifeTemp = life(color);
-  expect(store.selectedTaxa).toStrictEqual([lifeTemp]);
-  expect(Object.keys(store.taxaMapLayers)).toEqual([lifeTemp.id.toString()]);
-  expect(store.taxaMapLayers[lifeTemp.id].length).toBe(4);
-  expect(store.color).toBe(color);
+export function expectNoProjects(store: MapStore) {
+  expect(store.selectedProjects).toEqual([]);
 }
 
-export function expectOakTaxa(store: MapStore, color = colors[1]) {
-  let oak = redOak(color);
-  expect(store.selectedTaxa).toStrictEqual([oak]);
-  expect(Object.keys(store.taxaMapLayers)).toEqual([oak.id.toString()]);
-  expect(store.taxaMapLayers[oak.id].length).toBe(4);
-  expect(store.color).toBe(color);
+export function expectProject1(store: MapStore) {
+  expect(store.selectedProjects).toEqual([project_cnc1]);
 }
-
-export function expectLifeOakTaxa(
-  store: MapStore,
-  customColors = [colors[0], colors[1]],
-) {
-  let lifeTemp = life(customColors[0]);
-  let oakTemp = redOak(customColors[1]);
-
-  expect(store.selectedTaxa).toStrictEqual([lifeTemp, oakTemp]);
-  expect(Object.keys(store.taxaMapLayers)).toEqual([
-    lifeTemp.id.toString(),
-    oakTemp.id.toString(),
-  ]);
-  expect(store.taxaMapLayers[lifeTemp.id].length).toBe(4);
-  expect(store.taxaMapLayers[oakTemp.id].length).toBe(4);
-
-  expect(store.color).toBe(customColors[1]);
+export function expectProject2(store: MapStore) {
+  expect(store.selectedProjects).toEqual([project_cnc2]);
+}
+export function expectProjects(store: MapStore) {
+  expect(store.selectedProjects).toEqual([project_cnc1, project_cnc2]);
 }

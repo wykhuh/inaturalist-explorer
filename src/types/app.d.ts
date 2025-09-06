@@ -71,6 +71,7 @@ export interface MapStore {
   selectedPlaces: NormalizediNatPlace[];
   placesMapLayers: { [index: string]: CustomGeoJSON[] };
   placesListEl: HTMLElement | null;
+  selectedProjects: NormalizediNatProject[];
   inatApiParams: iNatApiParams;
   displayJsonEl: HTMLElement | null;
   color: string;
@@ -97,10 +98,11 @@ interface iNatApiParams extends iNatApiFilterableParams {
   nelng?: number;
   swlat?: number;
   swlng?: number;
-  colors?: string; // only one value allowed
+  colors?: string;
   per_page?: number;
   place_id?: string; // comma-seperated string
   taxon_id?: string; // comma-seperated string
+  project_id?: string; // comma-seperated string
 }
 
 interface iNatApiFilterableParams {

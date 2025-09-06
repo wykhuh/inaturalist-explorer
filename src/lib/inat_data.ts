@@ -55,6 +55,7 @@ export const iNatApiNonFilterableNames = [
   "per_page",
   "place_id",
   "taxon_id",
+  "project_id",
 ];
 
 export const iNatApiFilterableNames = [

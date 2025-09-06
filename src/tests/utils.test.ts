@@ -10,7 +10,15 @@ import {
   decodeAppUrl,
 } from "../lib/utils.ts";
 import { mapStore } from "../lib/store.ts";
-import { losangeles, sandiego } from "./test_helpers.ts";
+import {
+  colorsEncoded,
+  life,
+  losangeles,
+  project_cnc1,
+  project_cnc2,
+  redOak,
+  sandiego,
+} from "./test_helpers.ts";
 import type { MapStore } from "../types/app";
 
 describe("hexToRgb", () => {
@@ -59,53 +67,55 @@ describe("pluralize", () => {
   });
 });
 
-let life = {
-  name: "Life",
-  matched_term: "life",
-  rank: "stateofmatter",
-  id: 48460,
-  color: "#4477aa",
-};
-let redOaks = {
-  name: "Lobatae",
-  matched_term: "red oaks",
-  rank: "section",
-  id: 861036,
-  color: "#66ccee",
-};
+// let life = {
+//   name: "Life",
+//   matched_term: "life",
+//   rank: "stateofmatter",
+//   id: 48460,
+//   color: "#4477aa",
+// };
+// let redOaks = {
+//   name: "Lobatae",
+//   matched_term: "red oaks",
+//   rank: "section",
+//   id: 861036,
+//   color: "#66ccee",
+// };
 
 describe("formatAppUrl", () => {
   test("format parameters for one taxon", () => {
     let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
-        taxon_id: life.id.toString(),
-        colors: life.color,
+        taxon_id: life().id.toString(),
+        colors: life().color,
         spam: false,
       },
-      selectedTaxa: [life],
+      selectedTaxa: [life()],
     };
 
     let result = formatAppUrl(appStore);
 
-    expect(result).toBe(`taxon_id=48460&colors=%234477aa&spam=false`);
+    expect(result).toBe(
+      `taxon_id=${life().id}&colors=${colorsEncoded[0]}&spam=false`,
+    );
   });
 
   test("format parameters for multiple taxa", () => {
     let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
-        taxon_id: redOaks.id.toString(),
-        colors: redOaks.color,
+        taxon_id: redOak().id.toString(),
+        colors: redOak().color,
         spam: false,
       },
-      selectedTaxa: [life, redOaks],
+      selectedTaxa: [life(), redOak()],
     };
 
     let result = formatAppUrl(appStore);
 
     expect(result).toBe(
-      "taxon_id=48460,861036&colors=%234477aa,%2366ccee&spam=false",
+      `taxon_id=${life().id},${redOak().id}&colors=${colorsEncoded[0]},${colorsEncoded[1]}&spam=false`,
     );
   });
 
@@ -113,43 +123,69 @@ describe("formatAppUrl", () => {
     let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
-        taxon_id: life.id.toString(),
-        colors: life.color,
         spam: false,
         place_id: losangeles.id.toString(),
       },
-      selectedTaxa: [life],
+      selectedTaxa: [],
       selectedPlaces: [losangeles],
     };
 
     let result = formatAppUrl(appStore);
 
-    expect(result).toBe(
-      `taxon_id=48460&place_id=962&colors=%234477aa&spam=false`,
-    );
+    expect(result).toBe(`place_id=${losangeles.id}&spam=false`);
   });
 
   test("format parameters for multiple places", () => {
     let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
-        taxon_id: life.id.toString(),
-        colors: life.color,
         spam: false,
         place_id: `${losangeles.id},${sandiego.id}`,
       },
-      selectedTaxa: [life],
+      selectedTaxa: [],
       selectedPlaces: [losangeles, sandiego],
     };
 
     let result = formatAppUrl(appStore);
 
+    expect(result).toBe(`place_id=${losangeles.id},${sandiego.id}&spam=false`);
+  });
+
+  test("format parameters for one project", () => {
+    let appStore: MapStore = {
+      ...mapStore,
+      inatApiParams: {
+        spam: false,
+        project_id: project_cnc1.id.toString(),
+      },
+      selectedTaxa: [],
+      selectedProjects: [project_cnc1],
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe(`project_id=${project_cnc1.id}&spam=false`);
+  });
+
+  test("format parameters for multiple project", () => {
+    let appStore: MapStore = {
+      ...mapStore,
+      inatApiParams: {
+        spam: false,
+        project_id: `${project_cnc1.id.toString()},${project_cnc2.id.toString()}`,
+      },
+      selectedTaxa: [],
+      selectedProjects: [project_cnc1, project_cnc2],
+    };
+
+    let result = formatAppUrl(appStore);
+
     expect(result).toBe(
-      "taxon_id=48460&place_id=962,829&colors=%234477aa&spam=false",
+      `project_id=${project_cnc1.id},${project_cnc2.id}&spam=false`,
     );
   });
 
-  test("return empty string if no taxa or place and inatApiParams has default params", () => {
+  test("return empty string if no taxa or place, and inatApiParams has default params", () => {
     let appStore: MapStore = {
       ...mapStore,
       inatApiParams: mapStore.inatApiParams,
@@ -162,7 +198,7 @@ describe("formatAppUrl", () => {
     expect(result).toBe("");
   });
 
-  test("return params if no taxa or place and inatApiParams has additional params", () => {
+  test("return params if no taxa or place, and inatApiParams has additional params", () => {
     let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
@@ -177,21 +213,6 @@ describe("formatAppUrl", () => {
     let result = formatAppUrl(appStore);
 
     expect(result).toBe("verifiable=true&spam=false&photos=true");
-  });
-
-  test("ignore formFilters if no taxa or places", () => {
-    let appStore: MapStore = {
-      ...mapStore,
-      inatApiParams: {
-        verifiable: true,
-        spam: false,
-      },
-      // formFilters: { params: { verifiable: "any" }, string: "verifiable=any" },
-    };
-
-    let result = formatAppUrl(appStore);
-
-    expect(result).toBe("");
   });
 });
 
@@ -212,11 +233,11 @@ describe("updateUrl", () => {
     let appStore = {
       ...mapStore,
       inatApiParams: {
-        taxon_id: life.id.toString(),
-        colors: life.color,
+        taxon_id: life().id.toString(),
+        colors: life().color,
         spam: false,
       },
-      selectedTaxa: [life],
+      selectedTaxa: [life()],
     };
 
     updateUrl(global.window.location, appStore);
@@ -224,7 +245,7 @@ describe("updateUrl", () => {
     expect(pushSpy).toHaveBeenCalledWith(
       {},
       "",
-      "http://localhost:3000?taxon_id=48460&colors=%234477aa&spam=false",
+      `http://localhost:3000?taxon_id=${life().id}&colors=${colorsEncoded[0]}&spam=false`,
     );
 
     pushSpy.mockRestore();
@@ -251,6 +272,40 @@ describe("decodeAppUrl", () => {
         verifiable: true,
         spam: false,
       },
+    };
+
+    let result = decodeAppUrl(searchParams);
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("returns object place data if place_id is present", () => {
+    let searchParams = "?place_id=987&spam=false&verifiable=true";
+
+    let expected = {
+      selectedPlaces: [{ id: 987 }],
+      inatApiParams: {
+        verifiable: true,
+        spam: false,
+      },
+      selectedTaxa: [],
+    };
+
+    let result = decodeAppUrl(searchParams);
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("returns project place data if project_id is present", () => {
+    let searchParams = "?project_id=987&spam=false&verifiable=true";
+
+    let expected = {
+      selectedProjects: [{ id: 987 }],
+      inatApiParams: {
+        verifiable: true,
+        spam: false,
+      },
+      selectedTaxa: [],
     };
 
     let result = decodeAppUrl(searchParams);

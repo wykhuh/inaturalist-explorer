@@ -320,7 +320,8 @@
     }
   }
 
-  ul#places-list-container {
+  ul#places-list-container,
+  ul#projects-list-container {
     padding: 0;
     list-style: none;
 
@@ -385,7 +386,8 @@
 
   @media (max-width: 750px) {
     #taxa-list-container,
-    #places-list-container {
+    #places-list-container,
+    #projects-list-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     }

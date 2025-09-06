@@ -5,22 +5,26 @@ import type {
   iNatTaxaAPI,
   iNatPlacesAPI,
   iNatHistogramApi,
+  iNatProjectsAPI,
 } from "../types/inat_api.d.ts";
 import { loggerUrl } from "./logger.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
 
+export const api_base = "https://api.inaturalist.org/v1/";
 const search_api = "https://api.inaturalist.org/v1/search";
-export const search_places_api = `${search_api}?sources=places`;
+export const autocomplete_places_api = `${search_api}?sources=places`;
+export const autocomplete_projects_api = `https://api.inaturalist.org/v1/projects/autocomplete?`;
 export const autocomplete_taxa_api =
   "https://api.inaturalist.org/v1/taxa/autocomplete?";
+
 const observations_api = "https://api.inaturalist.org/v2/observations";
 const observations_count_api =
   "https://api.inaturalist.org/v2/observations/species_counts";
-export const api_base = "https://api.inaturalist.org/v1/";
 const taxa_api = "https://api.inaturalist.org/v1/taxa/";
 const places_api = "https://api.inaturalist.org/v1/places/";
 const histogram_year_api =
   "https://api.inaturalist.org/v1/observations/histogram?date_field=observed&interval=year";
+const projects_api = "https://api.inaturalist.org/v1/projects/";
 
 type Params = {
   [index: string]: any;
@@ -32,6 +36,9 @@ function formatDescription(inatApiParams: Params, type: string) {
     text += `, place_id ${inatApiParams.place_id}`;
   }
 
+  if (inatApiParams.project_id) {
+    text += `, project_id ${inatApiParams.project_id}`;
+  }
   return text;
 }
 
@@ -152,7 +159,7 @@ export async function searchPlaces(placename: string) {
   let paramsString = new URLSearchParams(placename).toString();
 
   try {
-    let response = await fetch(`${search_places_api}${paramsString}`);
+    let response = await fetch(`${autocomplete_places_api}${paramsString}`);
     let data = (await response.json()) as ObservationsSpeciesCountAPI;
     return data.results.reduce((prev, current) => prev + current.count, 0);
   } catch (error) {
@@ -174,6 +181,16 @@ export async function getPlaceById(id: number) {
   try {
     let resp = await fetch(places_api + id);
     let data = (await resp.json()) as iNatPlacesAPI;
+    return data.results[0];
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getProjectById(id: number) {
+  try {
+    let resp = await fetch(projects_api + id);
+    let data = (await resp.json()) as iNatProjectsAPI;
     return data.results[0];
   } catch (error) {
     console.error(error);

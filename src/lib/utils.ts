@@ -66,6 +66,7 @@ export function formatAppUrl(appStore: MapStore) {
     .filter((r) => r.id !== 0)
     .map((r) => r.id)
     .join(",");
+  let projectsIds = appStore.selectedProjects.map((r) => r.id).join(",");
   let colors = appStore.selectedTaxa
     .filter((r) => r.id !== 0)
     .map((r) => r.color)
@@ -78,12 +79,15 @@ export function formatAppUrl(appStore: MapStore) {
   if (placesIds) {
     params.place_id = placesIds;
   }
+  if (projectsIds) {
+    params.project_id = projectsIds;
+  }
   if (colors.length > 0) {
     params.colors = colors;
   }
 
   Object.entries(appStore.inatApiParams).forEach(([key, value]) => {
-    if (!["taxon_id", "place_id", "colors"].includes(key)) {
+    if (!["taxon_id", "place_id", "project_id", "colors"].includes(key)) {
       if (params) {
         params[key as iNatApiParamsKeys] = value as any;
       }
@@ -173,7 +177,20 @@ export function decodeAppUrl(searchParams: string) {
       swlng: Number(urlParams.swlng),
     };
   }
+  // convert place_id in basic selectedPlaces with id or bbox
+  if ("project_id" in urlParams && urlParams.project_id !== "any") {
+    let ids = urlParams.project_id.split(",");
 
+    let projects = ids
+      .map((id) => {
+        return { id: Number(id) };
+      })
+      .filter((p) => p);
+
+    if (projects) {
+      apiParams.selectedProjects = projects as any;
+    }
+  }
   for (let [key, value] of new URLSearchParams(searchParams)) {
     if (!iNatApiNonFilterableNames.includes(key)) {
       if (value === "true") {

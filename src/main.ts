@@ -6,6 +6,7 @@ import "./assets/leaflet.css";
 import "./assets/autocomplete.css";
 import "./components/TaxaListItem/component.ts";
 import "./components/PlacesListItem/component.ts";
+import "./components/ProjectsListItem/component.ts";
 import "./components/ObservationsFilters/component.ts";
 import {
   getMapTiles,
@@ -16,6 +17,7 @@ import type {
   NormalizediNatTaxon,
   AutoCompleteEvent,
   NormalizediNatPlace,
+  NormalizediNatProject,
 } from "./types/app.d.ts";
 import mapStore from "./lib/store.ts";
 import {
@@ -25,13 +27,21 @@ import {
   processAutocompletePlaces,
   renderAutocompletePlace,
   placeSelectedHandler,
+  renderAutocompleteProject,
+  processAutocompleteProject,
+  projectSelectedHandler,
 } from "./lib/autocomplete_utils.ts";
 import {
+  autocomplete_projects_api,
   autocomplete_taxa_api,
   getObservationsYears,
-  search_places_api,
+  autocomplete_places_api,
 } from "./lib/inat_api.ts";
-import type { iNatAutocompleteTaxaAPI, iNatSearchAPI } from "./types/inat_api";
+import type {
+  iNatProjectsAPI,
+  iNatAutocompleteTaxaAPI,
+  iNatSearchAPI,
+} from "./types/inat_api";
 import { decodeAppUrl } from "./lib/utils.ts";
 import { initApp } from "./lib/init_app.ts";
 import { loggerUrl } from "./lib/logger.ts";
@@ -163,7 +173,7 @@ const autoCompletePlacesJS = new autoComplete({
   data: {
     src: async (query: string) => {
       try {
-        let url = `${search_places_api}&per_page=50&q=${query}`;
+        let url = `${autocomplete_places_api}&per_page=50&q=${query}`;
         loggerUrl(url);
         let res = await fetch(url);
         let data = (await res.json()) as iNatSearchAPI;
@@ -194,6 +204,59 @@ if (placesEl) {
     await placeSelectedHandler(selection, event.detail.query, window.app.store);
   });
 }
+
+// =====================
+// project search
+// =====================
+
+const autoCompleteProjectJS = new autoComplete({
+  autocomplete: "off",
+  selector: "#inatProjectsAutoComplete",
+  placeHolder: "Enter projects name",
+  threshold: 2,
+  searchEngine: (_query: string, record: NormalizediNatProject) => {
+    return renderAutocompleteProject(record);
+  },
+  data: {
+    src: async (query: string) => {
+      try {
+        let url = `${autocomplete_projects_api}&per_page=50&q=${query}`;
+        loggerUrl(url);
+        let res = await fetch(url);
+        let data = (await res.json()) as iNatProjectsAPI;
+        return processAutocompleteProject(data);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
+  resultsList: {
+    maxResults: 50,
+  },
+  events: {
+    input: {
+      selection: (event: AutoCompleteEvent) => {
+        const selection = event.detail.selection.value;
+        autoCompleteProjectJS.input.value = selection.name;
+      },
+    },
+  },
+});
+
+document
+  .querySelector("#inatProjectsAutoComplete")!
+  .addEventListener("selection", async function (event: any) {
+    let selection = event.detail.selection.value;
+    await projectSelectedHandler(
+      selection,
+      event.detail.query,
+      window.app.store,
+    );
+  });
+
+// =====================
+// user search
+// =====================
 
 // =====================
 // misc

@@ -39,6 +39,12 @@ import {
   gridLabel_life_la_sd,
   gridLabel_oaks_la_sd,
   expect_LA_SD_Place,
+  project_cnc1,
+  expectProject1,
+  gridLabel_allTaxaRecord_project1,
+  project_cnc2,
+  gridLabel_life_la_sd_projects,
+  gridLabel_oaks_la_sd_projects,
 } from "../test_helpers.ts";
 import type { iNatApiParams } from "../../types/app";
 import { allTaxaRecord, fieldsWithAny } from "../../lib/inat_data.ts";
@@ -440,14 +446,46 @@ describe("initApp", () => {
     expect(store.inatApiParams).toStrictEqual(expectedParams);
   });
 
-  test("loads and renders multiple taxa and places based on url params", async () => {
+  test("loads and renders project data based on url params", async () => {
+    let { store } = setupMapAndStore();
+
+    expectEmpytMap(store);
+
+    let searchparams = `?project_id=${project_cnc1.id}&verifiable=true&spam=false`;
+    let urlData = decodeAppUrl(searchparams);
+
+    await initApp(store, urlData);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord_project1,
+    ]);
+
+    expectNoRefresh(store);
+    expectAllTaxaRecord(store);
+    expectProject1(store);
+    let expectedParams: iNatApiParams = {
+      project_id: project_cnc1.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
+      colors: iNatOrange,
+      verifiable: true,
+      spam: false,
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams);
+  });
+
+  test("loads and renders multiple taxa, places, projects based on url params", async () => {
     let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
     colorsEncoded;
 
-    let searchparams = `?taxon_id=${life().id},${redOak().id}&place_id=${losangeles.id},${sandiego.id}&colors=${colorsEncoded[0]},${colorsEncoded[1]}&spam=false&verifiable=true`;
+    let searchparams = `?taxon_id=${life().id},${redOak().id}`;
+    searchparams += `&place_id=${losangeles.id},${sandiego.id}`;
+    searchparams += `&project_id=${project_cnc1.id},${project_cnc2.id}`;
+    searchparams += `&colors=${colorsEncoded[0]},${colorsEncoded[1]}`;
+    searchparams += `&spam=false&verifiable=true`;
     let urlData = decodeAppUrl(searchparams);
     await initApp(store, urlData);
 
@@ -458,8 +496,8 @@ describe("initApp", () => {
       placeLabel_la,
       placeLabel_sd,
       placeLabel_sd,
-      gridLabel_life_la_sd,
-      gridLabel_oaks_la_sd,
+      gridLabel_life_la_sd_projects,
+      gridLabel_oaks_la_sd_projects,
     ]);
     expectNoRefresh(store);
     let lifeTemp = life(colors[0]);
@@ -477,6 +515,7 @@ describe("initApp", () => {
     let expectedParams: iNatApiParams = {
       colors: colors[1],
       place_id: `${losangeles.id},${sandiego.id}`,
+      project_id: `${project_cnc1.id},${project_cnc2.id}`,
       taxon_id: redOak().id.toString(),
       verifiable: true,
       spam: false,

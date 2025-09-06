@@ -6,8 +6,10 @@ import type {
   MapStore,
   CustomGeoJSON,
   PlaceTypesKey,
+  NormalizediNatProject,
 } from "../types/app";
 import type {
+  iNatProjectsAPI,
   iNatAutocompleteTaxaAPI,
   iNatSearchAPI,
 } from "../types/inat_api.d.ts";
@@ -271,5 +273,83 @@ export function renderPlacesList(appStore: MapStore) {
       display_name: place.display_name,
     });
     appStore.placesListEl!.appendChild(templateEl);
+  });
+}
+
+// =====================
+// projects search
+// =====================
+
+export function processAutocompleteProject(
+  data: iNatProjectsAPI,
+): NormalizediNatProject[] {
+  return data.results.map((item) => {
+    return {
+      name: item.title,
+      id: item.id,
+      slug: item.slug,
+    };
+  });
+}
+
+export function renderAutocompleteProject(item: NormalizediNatProject): string {
+  let html = `
+  <div class="projects-ac-option" data-testid="projects-ac-option">
+    <div class="project-name">
+    ${item.name}
+    </div>
+  </div>`;
+
+  return html;
+}
+
+export async function projectSelectedHandler(
+  selection: NormalizediNatProject,
+  _query: string,
+  appStore: MapStore,
+) {
+  // add project to store
+  appStore.selectedProjects = [...appStore.selectedProjects, selection];
+  appStore.inatApiParams = {
+    ...appStore.inatApiParams,
+    project_id: addIdToCommaSeparatedString(
+      selection.id,
+      appStore.inatApiParams.project_id,
+    ),
+  };
+
+  // get iNat map tiles for selected place
+  for await (const taxon of appStore.selectedTaxa) {
+    // remove existing taxon layers from map
+    removeOneTaxonFromMap(appStore, taxon.id);
+    appStore.inatApiParams = {
+      ...appStore.inatApiParams,
+      taxon_id: taxon.id.toString(),
+      colors: taxon.color,
+      project_id: addIdToCommaSeparatedString(
+        selection.id,
+        appStore.inatApiParams.project_id,
+      ),
+    };
+
+    await fetchiNatMapDataForTaxon(taxon, appStore);
+    await getObservationsCountForTaxon(taxon, appStore);
+  }
+
+  renderTaxaList(appStore);
+  renderProjectsList(appStore);
+  updateUrl(window.location, appStore);
+}
+
+export function renderProjectsList(appStore: MapStore) {
+  let projectsListEl = document.querySelector("#projects-list-container");
+  if (!projectsListEl) return;
+
+  projectsListEl.innerHTML = "";
+  appStore.selectedProjects.forEach((project) => {
+    let templateEl = document.createElement("x-projects-list-item");
+    if (!templateEl) return;
+    templateEl.dataset.project = JSON.stringify(project);
+    projectsListEl.appendChild(templateEl);
   });
 }

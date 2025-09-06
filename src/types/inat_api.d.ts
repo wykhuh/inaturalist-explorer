@@ -579,14 +579,14 @@ export interface AutcompleteUsersResult {
 // autocomplete project api
 // ==================
 
-export interface iNatAutcompleteProjectsAPI {
+export interface iNatProjectsAPI {
   total_results: number;
   page: number;
   per_page: number;
-  results: iNatAutcompleteProjectsResult[];
+  results: ProjectsResult[];
 }
 
-export interface iNatAutcompleteProjectsResult {
+export interface ProjectsResult {
   id: number;
   title: string;
   hide_title: boolean;

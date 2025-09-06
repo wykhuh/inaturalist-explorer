@@ -11,10 +11,18 @@ import {
   drawMapBoundingBox,
   fitBoundsPlaces,
 } from "./map_utils.ts";
-import { getPlaceById, getTaxonById } from "./inat_api.ts";
+import { getPlaceById, getProjectById, getTaxonById } from "./inat_api.ts";
 import { bboxPlaceRecord, fieldsWithAny, iNatApiNames } from "./inat_data.ts";
-import { renderTaxaList, renderPlacesList } from "./autocomplete_utils.ts";
-import type { PlacesResult, TaxaResult } from "../types/inat_api";
+import {
+  renderTaxaList,
+  renderPlacesList,
+  renderProjectsList,
+} from "./autocomplete_utils.ts";
+import type {
+  PlacesResult,
+  ProjectsResult,
+  TaxaResult,
+} from "../types/inat_api";
 import {
   addAllTaxaRecordToMapAndStore,
   fetchiNatMapDataForTaxon,
@@ -60,6 +68,17 @@ export async function initApp(appStore: MapStore, urlStore: MapStore) {
     processBBoxData(appStore, urlStore);
   }
 
+  // get project data
+  if (urlStore.selectedProjects?.length > 0) {
+    for await (const urlStoreProject of urlStore.selectedProjects) {
+      let projectData = await getProjectById(urlStoreProject.id);
+      if (!projectData) {
+        continue;
+      }
+      processProjectData(projectData, appStore, urlStore);
+    }
+  }
+
   // get taxa data
   if (urlStore.selectedTaxa && urlStore.selectedTaxa.length > 0) {
     for await (const urlStoreTaxon of urlStore.selectedTaxa) {
@@ -86,6 +105,7 @@ export async function initApp(appStore: MapStore, urlStore: MapStore) {
   renderTaxaList(appStore);
   renderPlacesList(appStore);
   fitBoundsPlaces(appStore);
+  renderProjectsList(appStore);
 
   window.dispatchEvent(new Event("appInitialized"));
 }
@@ -182,4 +202,28 @@ export function processBBoxData(appStore: MapStore, urlStore: MapStore) {
 
   appStore.selectedPlaces = [bboxPlaceRecord(lngLatCoors)];
   appStore.placesMapLayers["0"] = [layer as unknown as CustomGeoJSON];
+}
+
+export function processProjectData(
+  projectData: ProjectsResult,
+  appStore: MapStore,
+  urlStore: MapStore,
+) {
+  let map = appStore.map.map;
+  if (!map) return;
+
+  appStore.selectedProjects = [
+    ...appStore.selectedProjects,
+    {
+      id: projectData.id,
+      name: projectData.title,
+      slug: projectData.slug,
+    },
+  ];
+
+  // create comma seperated project_id
+  appStore.inatApiParams.project_id = addIdToCommaSeparatedString(
+    projectData.id,
+    appStore.inatApiParams.project_id,
+  );
 }

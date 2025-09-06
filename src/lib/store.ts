@@ -8,6 +8,7 @@ export const mapStore: MapStore = {
   taxaListEl: null,
   selectedPlaces: [],
   placesMapLayers: {},
+  selectedProjects: [],
   placesListEl: null,
   inatApiParams: { verifiable: true, spam: false },
   displayJsonEl: null,

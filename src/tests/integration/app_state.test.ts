@@ -14,11 +14,13 @@ import {
   leafletVisibleLayers,
   refreshBoundingBox,
   removePlace,
+  removeProject,
   removeTaxon,
 } from "../../lib/data_utils.ts";
 import {
   taxonSelectedHandler,
   placeSelectedHandler,
+  projectSelectedHandler,
 } from "../../lib/autocomplete_utils.ts";
 import {
   createMockServer,
@@ -60,6 +62,23 @@ import {
   gridLabel_oaks_la,
   expectLifeOakTaxa,
   gridLabel_life_la_sd,
+  project_cnc1,
+  gridLabel_allTaxaRecord_project1,
+  project_cnc2,
+  gridLabel_allTaxaRecord_project2,
+  gridLabel_allTaxaRecord_projects,
+  expectNoProjects,
+  gridLabel_life_la_project1,
+  expectNoTaxa,
+  expectProject1,
+  gridLabel_life_la_sd_projects,
+  gridLabel_oaks_la_sd_projects,
+  gridLabel_life_la_sd_project1,
+  gridLabel_oaks_la_sd_project1,
+  expectProjects,
+  gridLabel_life_project1,
+  gridLabel_allTaxaRecord_la_project1,
+  expectProject2,
 } from "../test_helpers.ts";
 import { allTaxaRecord } from "../../lib/inat_data.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
@@ -134,6 +153,7 @@ describe("taxonSelectedHandler", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectLifeTaxa(store);
+    expectNoProjects(store);
     let expectedParams1 = {
       taxon_id: life().id.toString(),
       colors: colors[0],
@@ -155,6 +175,7 @@ describe("taxonSelectedHandler", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expect(store.selectedTaxa).toStrictEqual([life(), redOak()]);
+    expectNoProjects(store);
     expect(Object.keys(store.taxaMapLayers)).toEqual([
       life().id.toString(),
       redOak().id.toString(),
@@ -170,7 +191,8 @@ describe("taxonSelectedHandler", () => {
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id},${redOak().id}&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
+      `?taxon_id=${life().id},${redOak().id}` +
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
     );
   });
 });
@@ -192,6 +214,7 @@ describe("placeSelectedHandler", () => {
     expectNoRefresh(store);
     expectAllTaxaRecord(store);
     expectLosAngelesPlace(store);
+    expectNoProjects(store);
     let expectedParams = {
       colors: iNatOrange,
       place_id: losangeles.id.toString(),
@@ -221,6 +244,7 @@ describe("placeSelectedHandler", () => {
     expectNoRefresh(store);
     expectAllTaxaRecord(store);
     expectLosAngelesPlace(store);
+    expectNoProjects(store);
     let expectedParams1 = {
       colors: iNatOrange,
       place_id: losangeles.id.toString(),
@@ -244,6 +268,7 @@ describe("placeSelectedHandler", () => {
     expectNoRefresh(store);
     expectAllTaxaRecord(store);
     expect_LA_SD_Place(store);
+    expectNoProjects(store);
     let expectedParams2 = {
       colors: iNatOrange,
       place_id: `${losangeles.id},${sandiego.id}`,
@@ -274,6 +299,7 @@ describe("refreshBoundingBox", () => {
     ]);
     expectAllTaxaRecord(store);
     expectRefreshPlace(store);
+    expectNoProjects(store);
     expect(store.color).toEqual(iNatOrange);
     let expectedParams = {
       nelat: 0,
@@ -307,6 +333,7 @@ describe("refreshBoundingBox", () => {
     ]);
     expectAllTaxaRecord(store);
     expectRefreshPlace(store);
+    expectNoProjects(store);
     expect(store.color).toEqual(iNatOrange);
     let expectedParams = {
       nelat: 0,
@@ -333,6 +360,7 @@ describe("refreshBoundingBox", () => {
     ]);
     expectAllTaxaRecord(store);
     expectRefreshPlace(store);
+    expectNoProjects(store);
     expect(store.color).toEqual(iNatOrange);
     expect(store.inatApiParams).toStrictEqual(expectedParams);
     let refreshlayer2 = store.refreshMap.layer;
@@ -340,6 +368,88 @@ describe("refreshBoundingBox", () => {
 
     expect(window.location.search).toBe(
       `?verifiable=true&spam=false&nelat=0&nelng=0&swlat=0&swlng=0`,
+    );
+  });
+});
+
+describe("projectSelectedHandler", () => {
+  test("add project", async () => {
+    let { store } = setupMapAndStore();
+
+    expectEmpytMap(store);
+
+    await initApp(store, decodeAppUrl(""));
+    await projectSelectedHandler(project_cnc1, "city", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord_project1,
+    ]);
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expectAllTaxaRecord(store);
+    expect(store.selectedProjects).toStrictEqual([project_cnc1]);
+    let expectedParams = {
+      colors: iNatOrange,
+      taxon_id: allTaxaRecord.id.toString(),
+      verifiable: true,
+      spam: false,
+      project_id: project_cnc1.id.toString(),
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(window.location.search).toBe(
+      `?project_id=${project_cnc1.id}&verifiable=true&spam=false`,
+    );
+  });
+
+  test("add project; add project", async () => {
+    let { store } = setupMapAndStore();
+
+    expectEmpytMap(store);
+
+    await initApp(store, decodeAppUrl(""));
+    await projectSelectedHandler(project_cnc1, "city", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord_project1,
+    ]);
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expectAllTaxaRecord(store);
+    expect(store.selectedProjects).toStrictEqual([project_cnc1]);
+    let expectedParams = {
+      colors: iNatOrange,
+      taxon_id: allTaxaRecord.id.toString(),
+      verifiable: true,
+      spam: false,
+      project_id: project_cnc1.id.toString(),
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(window.location.search).toBe(
+      `?project_id=${project_cnc1.id}&verifiable=true&spam=false`,
+    );
+
+    await projectSelectedHandler(project_cnc2, "city", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord_projects,
+    ]);
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expectAllTaxaRecord(store);
+    expect(store.selectedProjects).toStrictEqual([project_cnc1, project_cnc2]);
+    let expectedParams2 = {
+      colors: iNatOrange,
+      taxon_id: allTaxaRecord.id.toString(),
+      verifiable: true,
+      spam: false,
+      project_id: `${project_cnc1.id},${project_cnc2.id}`,
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams2);
+    expect(window.location.search).toBe(
+      `?project_id=${project_cnc1.id},${project_cnc2.id}&verifiable=true&spam=false`,
     );
   });
 });
@@ -408,7 +518,6 @@ describe("combos", () => {
       gridLabel_allTaxaRecord_la,
     ]);
     expectAllTaxaRecord(store);
-    expectNoRefresh(store);
     expectLosAngelesPlace(store);
     expect(store.selectedPlaces).toStrictEqual([losangeles]);
     let params = {
@@ -447,29 +556,28 @@ describe("combos", () => {
     );
   });
 
-  test(`add taxon; refresh map;`, async () => {
+  test(`add project; refresh map;`, async () => {
     let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
     await initApp(store, decodeAppUrl(""));
-    await taxonSelectedHandler(lifeBasic, "life", store);
+    await projectSelectedHandler(project_cnc1, "city", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_life,
+      gridLabel_allTaxaRecord_project1,
     ]);
-    expectLifeTaxa(store);
-    expectNoRefresh(store);
-    expectNoPlaces(store);
+    expectAllTaxaRecord(store);
     expect(store.inatApiParams).toStrictEqual({
-      taxon_id: life().id.toString(),
-      colors: colors[0],
+      taxon_id: allTaxaRecord.id.toString(),
+      colors: iNatOrange,
       verifiable: true,
       spam: false,
+      project_id: project_cnc1.id.toString(),
     });
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+      `?project_id=${project_cnc1.id}&verifiable=true&spam=false`,
     );
 
     await refreshBoundingBox(store);
@@ -477,70 +585,25 @@ describe("combos", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       refreshBBoxLabel,
-      gridLabel_life,
+      gridLabel_allTaxaRecord_project1,
     ]);
-    expectLifeTaxa(store);
+    expectAllTaxaRecord(store);
     expectRefreshPlace(store);
     expect(store.inatApiParams).toStrictEqual({
-      taxon_id: life().id.toString(),
-      colors: colors[0],
+      taxon_id: allTaxaRecord.id.toString(),
+      colors: iNatOrange,
       nelat: 0,
       nelng: 0,
       swlat: 0,
       swlng: 0,
       verifiable: true,
       spam: false,
+      project_id: project_cnc1.id.toString(),
     });
 
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false&nelat=0&nelng=0&swlat=0&swlng=0`,
-    );
-  });
-
-  test(`add taxon; add los angeles`, async () => {
-    let { store } = setupMapAndStore();
-
-    expectEmpytMap(store);
-
-    await initApp(store, decodeAppUrl(""));
-    await taxonSelectedHandler(lifeBasic, "life", store);
-
-    expect(leafletVisibleLayers(store)).toStrictEqual([
-      basemapLabel_osm,
-      gridLabel_life,
-    ]);
-    expectLifeTaxa(store);
-    expectNoPlaces(store);
-    expectNoRefresh(store);
-    expect(store.inatApiParams).toStrictEqual({
-      taxon_id: life().id.toString(),
-      colors: colors[0],
-      verifiable: true,
-      spam: false,
-    });
-    expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
-    );
-
-    await placeSelectedHandler(losangeles, "los", store);
-
-    expect(leafletVisibleLayers(store)).toStrictEqual([
-      basemapLabel_osm,
-      placeLabel_la,
-      gridLabel_life_la,
-    ]);
-    expectLifeTaxa(store);
-    expectLosAngelesPlace(store);
-    expectNoRefresh(store);
-    expect(store.inatApiParams).toStrictEqual({
-      taxon_id: life().id.toString(),
-      colors: colors[0],
-      place_id: losangeles.id.toString(),
-      verifiable: true,
-      spam: false,
-    });
-    expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&place_id=${losangeles.id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+      `?project_id=${project_cnc1.id}&verifiable=true&spam=false` +
+        `&nelat=0&nelng=0&swlat=0&swlng=0`,
     );
   });
 
@@ -558,7 +621,6 @@ describe("combos", () => {
       gridLabel_allTaxaRecord_la,
     ]);
     expectAllTaxaRecord(store);
-    expectNoRefresh(store);
     expectLosAngelesPlace(store);
     let params = {
       colors: iNatOrange,
@@ -603,7 +665,6 @@ describe("combos", () => {
       gridLabel_allTaxaRecord_sd,
     ]);
     expectAllTaxaRecord(store);
-    expectNoRefresh(store);
     expectSanDiegoPlace(store);
     let params2 = {
       colors: iNatOrange,
@@ -619,7 +680,7 @@ describe("combos", () => {
     );
   });
 
-  test("add taxon; add taxon; add place; add place", async () => {
+  test(`add taxon; add place; add project`, async () => {
     let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
@@ -632,7 +693,74 @@ describe("combos", () => {
       gridLabel_life,
     ]);
     expectLifeTaxa(store);
-    expectNoPlaces(store);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id.toString(),
+      colors: colors[0],
+      verifiable: true,
+      spam: false,
+    });
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+    );
+
+    await placeSelectedHandler(losangeles, "los", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      gridLabel_life_la,
+    ]);
+    expectLifeTaxa(store);
+    expectLosAngelesPlace(store);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id.toString(),
+      colors: colors[0],
+      place_id: losangeles.id.toString(),
+      verifiable: true,
+      spam: false,
+    });
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&place_id=${losangeles.id}&colors=${colorsEncoded[0]}` +
+        `&verifiable=true&spam=false`,
+    );
+
+    await projectSelectedHandler(project_cnc1, "city", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      gridLabel_life_la_project1,
+    ]);
+    expectLifeTaxa(store);
+    expectLosAngelesPlace(store);
+    expectProject1(store);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id.toString(),
+      colors: colors[0],
+      place_id: losangeles.id.toString(),
+      verifiable: true,
+      spam: false,
+      project_id: project_cnc1.id.toString(),
+    });
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&place_id=${losangeles.id}&project_id=${project_cnc1.id}` +
+        `&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+    );
+  });
+
+  test("add taxon; add taxon; add place; add place; add project; add project", async () => {
+    let { store } = setupMapAndStore();
+
+    expectEmpytMap(store);
+
+    await initApp(store, decodeAppUrl(""));
+    await taxonSelectedHandler(lifeBasic, "life", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
+    ]);
+    expectLifeTaxa(store);
     let params1 = {
       colors: colors[0],
       taxon_id: life().id.toString(),
@@ -659,7 +787,6 @@ describe("combos", () => {
     expect(store.taxaMapLayers[life().id].length).toBe(4);
     expect(store.taxaMapLayers[redOak().id].length).toBe(4);
     expect(store.color).toBe(colors[1]);
-    expectNoPlaces(store);
     let params2 = {
       colors: colors[1],
       taxon_id: redOak().id.toString(),
@@ -668,7 +795,8 @@ describe("combos", () => {
     };
     expect(store.inatApiParams).toStrictEqual(params2);
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id},${redOak().id}&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
+      `?taxon_id=${life().id},${redOak().id}` +
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
     );
 
     await placeSelectedHandler(losangeles, "los", store);
@@ -680,6 +808,7 @@ describe("combos", () => {
       gridLabel_oaks_la,
     ]);
     expectLifeOakTaxa(store);
+    expectLosAngelesPlace(store);
     let params3 = {
       colors: colors[1],
       place_id: losangeles.id.toString(),
@@ -689,7 +818,8 @@ describe("combos", () => {
     };
     expect(store.inatApiParams).toStrictEqual(params3);
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id},${redOak().id}&place_id=${losangeles.id}&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
+      `?taxon_id=${life().id},${redOak().id}&place_id=${losangeles.id}` +
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
     );
 
     await placeSelectedHandler(sandiego, "san", store);
@@ -702,6 +832,7 @@ describe("combos", () => {
       gridLabel_oaks_la_sd,
     ]);
     expectLifeOakTaxa(store);
+    expect_LA_SD_Place(store);
     let params4 = {
       colors: colors[1],
       place_id: `${losangeles.id},${sandiego.id}`,
@@ -711,7 +842,65 @@ describe("combos", () => {
     };
     expect(store.inatApiParams).toStrictEqual(params4);
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id},${redOak().id}&place_id=${losangeles.id},${sandiego.id}&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
+      `?taxon_id=${life().id},${redOak().id}` +
+        `&place_id=${losangeles.id},${sandiego.id}` +
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
+    );
+
+    await projectSelectedHandler(project_cnc1, "city", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      placeLabel_sd,
+      gridLabel_life_la_sd_project1,
+      gridLabel_oaks_la_sd_project1,
+    ]);
+    expectLifeOakTaxa(store);
+    expect_LA_SD_Place(store);
+    expectProject1(store);
+    let params5 = {
+      colors: colors[1],
+      place_id: `${losangeles.id},${sandiego.id}`,
+      taxon_id: redOak().id.toString(),
+      spam: false,
+      verifiable: true,
+      project_id: project_cnc1.id.toString(),
+    };
+    expect(store.inatApiParams).toStrictEqual(params5);
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id},${redOak().id}` +
+        `&place_id=${losangeles.id},${sandiego.id}` +
+        `&project_id=${project_cnc1.id}` +
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
+    );
+
+    await projectSelectedHandler(project_cnc2, "city", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      placeLabel_sd,
+      gridLabel_life_la_sd_projects,
+      gridLabel_oaks_la_sd_projects,
+    ]);
+    expectLifeOakTaxa(store);
+    expect_LA_SD_Place(store);
+    expectProjects(store);
+    let params6 = {
+      colors: colors[1],
+      place_id: `${losangeles.id},${sandiego.id}`,
+      taxon_id: redOak().id.toString(),
+      spam: false,
+      verifiable: true,
+      project_id: `${project_cnc1.id},${project_cnc2.id}`,
+    };
+    expect(store.inatApiParams).toStrictEqual(params6);
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id},${redOak().id}` +
+        `&place_id=${losangeles.id},${sandiego.id}` +
+        `&project_id=${project_cnc1.id},${project_cnc2.id}` +
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
     );
   });
 });
@@ -751,7 +940,6 @@ describe("removePlace", () => {
       gridLabel_allTaxaRecord,
     ]);
     expectAllTaxaRecord(store);
-    expectNoPlaces(store);
     expect(store.color).toEqual(iNatOrange);
     let params2 = {
       colors: iNatOrange,
@@ -877,7 +1065,6 @@ describe("removePlace", () => {
       gridLabel_allTaxaRecord,
     ]);
     expectAllTaxaRecord(store);
-    expectNoPlaces(store);
     let params2 = {
       colors: iNatOrange,
       taxon_id: allTaxaRecord.id.toString(),
@@ -901,8 +1088,6 @@ describe("removePlace", () => {
       gridLabel_life,
     ]);
     expectLifeTaxa(store);
-    expectNoPlaces(store);
-    expectNoRefresh(store);
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: life().id.toString(),
       colors: colors[0],
@@ -931,7 +1116,8 @@ describe("removePlace", () => {
     };
     expect(store.inatApiParams).toStrictEqual(params1);
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&place_id=${losangeles.id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+      `?taxon_id=${life().id}&place_id=${losangeles.id}` +
+        `&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
     );
 
     await removePlace(losangeles.id, store);
@@ -941,7 +1127,6 @@ describe("removePlace", () => {
       gridLabel_life,
     ]);
     expectLifeTaxa(store);
-    expectNoPlaces(store);
     let params2 = {
       colors: colors[0],
       taxon_id: life().id.toString(),
@@ -967,8 +1152,6 @@ describe("removePlace", () => {
       gridLabel_life,
     ]);
     expectLifeTaxa(store);
-    expectNoPlaces(store);
-    expectNoRefresh(store);
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: life().id.toString(),
       colors: colors[0],
@@ -1000,7 +1183,8 @@ describe("removePlace", () => {
     };
     expect(store.inatApiParams).toStrictEqual(params1);
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false&nelat=0&nelng=0&swlat=0&swlng=0`,
+      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true` +
+        `&spam=false&nelat=0&nelng=0&swlat=0&swlng=0`,
     );
 
     await removePlace(0, store);
@@ -1010,7 +1194,6 @@ describe("removePlace", () => {
       gridLabel_life,
     ]);
     expectLifeTaxa(store);
-    expectNoPlaces(store);
     let params2 = {
       colors: colors[0],
       taxon_id: life().id.toString(),
@@ -1020,6 +1203,94 @@ describe("removePlace", () => {
     expect(store.inatApiParams).toStrictEqual(params2);
     expect(window.location.search).toBe(
       `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+    );
+  });
+
+  test(`add taxon; add place; add project; remove place`, async () => {
+    let { store } = setupMapAndStore();
+
+    expectEmpytMap(store);
+
+    await initApp(store, decodeAppUrl(""));
+    await taxonSelectedHandler(lifeBasic, "life", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
+    ]);
+    expectLifeTaxa(store);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id.toString(),
+      colors: colors[0],
+      verifiable: true,
+      spam: false,
+    });
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+    );
+
+    await placeSelectedHandler(losangeles, "los", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      gridLabel_life_la,
+    ]);
+    expectLifeTaxa(store);
+    expectLosAngelesPlace(store);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id.toString(),
+      colors: colors[0],
+      place_id: losangeles.id.toString(),
+      verifiable: true,
+      spam: false,
+    });
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&place_id=${losangeles.id}&colors=${colorsEncoded[0]}` +
+        `&verifiable=true&spam=false`,
+    );
+
+    await projectSelectedHandler(project_cnc1, "city", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      gridLabel_life_la_project1,
+    ]);
+    expectLifeTaxa(store);
+    expectLosAngelesPlace(store);
+    expectProject1(store);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id.toString(),
+      colors: colors[0],
+      place_id: losangeles.id.toString(),
+      verifiable: true,
+      spam: false,
+      project_id: project_cnc1.id.toString(),
+    });
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&place_id=${losangeles.id}&project_id=${project_cnc1.id}` +
+        `&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+    );
+
+    await removePlace(losangeles.id, store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life_project1,
+    ]);
+    expectLifeTaxa(store);
+    expectProject1(store);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id.toString(),
+      colors: colors[0],
+      verifiable: true,
+      spam: false,
+      project_id: project_cnc1.id.toString(),
+    });
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&project_id=${project_cnc1.id}` +
+        `&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
     );
   });
 });
@@ -1038,7 +1309,7 @@ describe("removeTaxon", () => {
       gridLabel_life,
     ]);
     expectLifeTaxa(store);
-    expectNoPlaces(store);
+
     let params1 = {
       colors: colors[0],
       taxon_id: life().id.toString(),
@@ -1057,7 +1328,7 @@ describe("removeTaxon", () => {
       gridLabel_allTaxaRecord,
     ]);
     expectAllTaxaRecord(store);
-    expectNoPlaces(store);
+
     expect(store.color).toEqual(iNatOrange);
     let params2 = {
       colors: iNatOrange,
@@ -1082,7 +1353,7 @@ describe("removeTaxon", () => {
       gridLabel_life,
     ]);
     expectLifeTaxa(store);
-    expectNoPlaces(store);
+
     let params1 = {
       colors: colors[0],
       taxon_id: life().id.toString(),
@@ -1110,7 +1381,7 @@ describe("removeTaxon", () => {
     expect(store.taxaMapLayers[life().id].length).toBe(4);
     expect(store.taxaMapLayers[redOak().id].length).toBe(4);
     expect(store.color).toBe(colors[1]);
-    expectNoPlaces(store);
+
     let params2 = {
       colors: colors[1],
       taxon_id: redOak().id.toString(),
@@ -1119,7 +1390,8 @@ describe("removeTaxon", () => {
     };
     expect(store.inatApiParams).toStrictEqual(params2);
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id},${redOak().id}&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
+      `?taxon_id=${life().id},${redOak().id}` +
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
     );
 
     await removeTaxon(lifeBasic.id, store);
@@ -1131,7 +1403,7 @@ describe("removeTaxon", () => {
     expect(store.selectedTaxa).toStrictEqual([redOak()]);
     expect(Object.keys(store.taxaMapLayers)).toEqual([redOak().id.toString()]);
     expect(store.taxaMapLayers[redOak().id].length).toBe(4);
-    expectNoPlaces(store);
+
     let params3 = {
       colors: colors[1],
       spam: false,
@@ -1158,7 +1430,7 @@ describe("removeTaxon", () => {
       gridLabel_life,
     ]);
     expectLifeTaxa(store);
-    expectNoPlaces(store);
+
     let params1 = {
       colors: colors[0],
       taxon_id: life().id.toString(),
@@ -1185,7 +1457,7 @@ describe("removeTaxon", () => {
     expect(store.taxaMapLayers[life().id].length).toBe(4);
     expect(store.taxaMapLayers[redOak().id].length).toBe(4);
     expect(store.color).toBe(colors[1]);
-    expectNoPlaces(store);
+
     let params2 = {
       colors: colors[1],
       taxon_id: redOak().id.toString(),
@@ -1194,7 +1466,8 @@ describe("removeTaxon", () => {
     };
     expect(store.inatApiParams).toStrictEqual(params2);
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id},${redOak().id}&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
+      `?taxon_id=${life().id},${redOak().id}` +
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
     );
 
     await taxonSelectedHandler(monarchBasic, "mon", store);
@@ -1215,7 +1488,7 @@ describe("removeTaxon", () => {
     expect(store.taxaMapLayers[redOak().id].length).toBe(4);
     expect(store.taxaMapLayers[monarch().id].length).toBe(4);
     expect(store.color).toBe(colors[2]);
-    expectNoPlaces(store);
+
     let params4 = {
       colors: colors[2],
       taxon_id: monarch().id.toString(),
@@ -1224,7 +1497,9 @@ describe("removeTaxon", () => {
     };
     expect(store.inatApiParams).toStrictEqual(params4);
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id},${redOak().id},${monarch().id}&colors=${colorsEncoded[0]},${colorsEncoded[1]},${colorsEncoded[2]}&verifiable=true&spam=false`,
+      `?taxon_id=${life().id},${redOak().id},${monarch().id}` +
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]},${colorsEncoded[2]}` +
+        `&verifiable=true&spam=false`,
     );
 
     await removeTaxon(monarch().id, store);
@@ -1241,7 +1516,7 @@ describe("removeTaxon", () => {
     ]);
     expect(store.taxaMapLayers[life().id].length).toBe(4);
     expect(store.taxaMapLayers[redOak().id].length).toBe(4);
-    expectNoPlaces(store);
+
     let params3 = {
       colors: redOak().color,
       spam: false,
@@ -1251,7 +1526,8 @@ describe("removeTaxon", () => {
     expect(store.inatApiParams).toStrictEqual(params3);
 
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id},${redOak().id}&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
+      `?taxon_id=${life().id},${redOak().id}` +
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&verifiable=true&spam=false`,
     );
   });
 
@@ -1268,8 +1544,6 @@ describe("removeTaxon", () => {
       gridLabel_life,
     ]);
     expectLifeTaxa(store);
-    expectNoPlaces(store);
-    expectNoRefresh(store);
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: life().id.toString(),
       colors: colors[0],
@@ -1298,7 +1572,8 @@ describe("removeTaxon", () => {
     };
     expect(store.inatApiParams).toStrictEqual(params1);
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&place_id=${losangeles.id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+      `?taxon_id=${life().id}&place_id=${losangeles.id}` +
+        `&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
     );
 
     await removeTaxon(life().id, store);
@@ -1336,8 +1611,6 @@ describe("removeTaxon", () => {
       gridLabel_life,
     ]);
     expectLifeTaxa(store);
-    expectNoPlaces(store);
-    expectNoRefresh(store);
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: life().id.toString(),
       colors: colors[0],
@@ -1368,7 +1641,8 @@ describe("removeTaxon", () => {
       swlng: 0,
     });
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false&nelat=0&nelng=0&swlat=0&swlng=0`,
+      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}` +
+        `&verifiable=true&spam=false&nelat=0&nelng=0&swlat=0&swlng=0`,
     );
 
     await removeTaxon(life().id, store);
@@ -1393,6 +1667,434 @@ describe("removeTaxon", () => {
     expect(store.inatApiParams).toStrictEqual(params2);
     expect(window.location.search).toBe(
       `?verifiable=true&spam=false&nelat=0&nelng=0&swlat=0&swlng=0`,
+    );
+  });
+
+  test(`add taxon; add place; add project; remove taxon`, async () => {
+    let { store } = setupMapAndStore();
+
+    expectEmpytMap(store);
+
+    await initApp(store, decodeAppUrl(""));
+    await taxonSelectedHandler(lifeBasic, "life", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
+    ]);
+    expectLifeTaxa(store);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id.toString(),
+      colors: colors[0],
+      verifiable: true,
+      spam: false,
+    });
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+    );
+
+    await placeSelectedHandler(losangeles, "los", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      gridLabel_life_la,
+    ]);
+    expectLifeTaxa(store);
+    expectLosAngelesPlace(store);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id.toString(),
+      colors: colors[0],
+      place_id: losangeles.id.toString(),
+      verifiable: true,
+      spam: false,
+    });
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&place_id=${losangeles.id}&colors=${colorsEncoded[0]}` +
+        `&verifiable=true&spam=false`,
+    );
+
+    await projectSelectedHandler(project_cnc1, "city", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      gridLabel_life_la_project1,
+    ]);
+    expectLifeTaxa(store);
+    expectLosAngelesPlace(store);
+    expectProject1(store);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id.toString(),
+      colors: colors[0],
+      place_id: losangeles.id.toString(),
+      verifiable: true,
+      spam: false,
+      project_id: project_cnc1.id.toString(),
+    });
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&place_id=${losangeles.id}&project_id=${project_cnc1.id}` +
+        `&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+    );
+
+    await removeTaxon(life().id, store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      gridLabel_allTaxaRecord_la_project1,
+    ]);
+    expectAllTaxaRecord(store);
+    expectLosAngelesPlace(store);
+    expectProject1(store);
+    expect(store.inatApiParams).toStrictEqual({
+      colors: iNatOrange,
+      verifiable: true,
+      spam: false,
+      taxon_id: allTaxaRecord.id.toString(),
+      place_id: losangeles.id.toString(),
+      project_id: project_cnc1.id.toString(),
+    });
+    expect(window.location.search).toBe(
+      `?place_id=${losangeles.id}&project_id=${project_cnc1.id}` +
+        `&verifiable=true&spam=false`,
+    );
+  });
+});
+
+describe("removeProject", () => {
+  test("add project; remove project", async () => {
+    let { store } = setupMapAndStore();
+
+    expectEmpytMap(store);
+
+    await initApp(store, decodeAppUrl(""));
+    await projectSelectedHandler(project_cnc1, "city", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord_project1,
+    ]);
+    expectAllTaxaRecord(store);
+    expectProject1(store);
+    let expectedParams = {
+      colors: iNatOrange,
+      taxon_id: allTaxaRecord.id.toString(),
+      verifiable: true,
+      spam: false,
+      project_id: project_cnc1.id.toString(),
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(window.location.search).toBe(
+      `?project_id=${project_cnc1.id}&verifiable=true&spam=false`,
+    );
+
+    await removeProject(project_cnc1.id, store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord,
+    ]);
+    expectAllTaxaRecord(store);
+    let expectedParams2 = {
+      colors: iNatOrange,
+      taxon_id: allTaxaRecord.id.toString(),
+      verifiable: true,
+      spam: false,
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams2);
+    expect(window.location.search).toBe("");
+  });
+
+  test("add project; add project; remove project", async () => {
+    let { store } = setupMapAndStore();
+
+    expectEmpytMap(store);
+
+    await initApp(store, decodeAppUrl(""));
+    await projectSelectedHandler(project_cnc1, "city", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord_project1,
+    ]);
+    expectAllTaxaRecord(store);
+    expectProject1(store);
+    let expectedParams = {
+      colors: iNatOrange,
+      taxon_id: allTaxaRecord.id.toString(),
+      verifiable: true,
+      spam: false,
+      project_id: project_cnc1.id.toString(),
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(window.location.search).toBe(
+      `?project_id=${project_cnc1.id}&verifiable=true&spam=false`,
+    );
+
+    await projectSelectedHandler(project_cnc2, "city", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord_projects,
+    ]);
+    expectAllTaxaRecord(store);
+    expectProjects(store);
+    let expectedParams2 = {
+      colors: iNatOrange,
+      taxon_id: allTaxaRecord.id.toString(),
+      verifiable: true,
+      spam: false,
+      project_id: `${project_cnc1.id},${project_cnc2.id}`,
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams2);
+    expect(window.location.search).toBe(
+      `?project_id=${project_cnc1.id},${project_cnc2.id}&verifiable=true&spam=false`,
+    );
+
+    await removeProject(project_cnc1.id, store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord_project2,
+    ]);
+    expectAllTaxaRecord(store);
+    expectProject2(store);
+    let expectedParams3 = {
+      colors: iNatOrange,
+      taxon_id: allTaxaRecord.id.toString(),
+      verifiable: true,
+      spam: false,
+      project_id: `${project_cnc2.id}`,
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams3);
+    expect(window.location.search).toBe(
+      `?project_id=${project_cnc2.id}&verifiable=true&spam=false`,
+    );
+  });
+
+  test("add project; add taxon; remove project", async () => {
+    let { store } = setupMapAndStore();
+
+    expectEmpytMap(store);
+
+    await initApp(store, decodeAppUrl(""));
+    await projectSelectedHandler(project_cnc1, "city", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord_project1,
+    ]);
+    expectAllTaxaRecord(store);
+    expectProject1(store);
+    let expectedParams = {
+      colors: iNatOrange,
+      taxon_id: allTaxaRecord.id.toString(),
+      verifiable: true,
+      spam: false,
+      project_id: project_cnc1.id.toString(),
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(window.location.search).toBe(
+      `?project_id=${project_cnc1.id}&verifiable=true&spam=false`,
+    );
+
+    await taxonSelectedHandler(life(), "life", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life_project1,
+    ]);
+    expectLifeTaxa(store);
+    expectProject1(store);
+    let expectedParams3 = {
+      colors: colors[0],
+      taxon_id: life().id.toString(),
+      verifiable: true,
+      spam: false,
+      project_id: project_cnc1.id.toString(),
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams3);
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&project_id=${project_cnc1.id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+    );
+
+    await removeProject(project_cnc1.id, store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
+    ]);
+    expectLifeTaxa(store);
+    let expectedParams2 = {
+      colors: colors[0],
+      taxon_id: life().id.toString(),
+      verifiable: true,
+      spam: false,
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams2);
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+    );
+  });
+
+  test("add project; add place; remove project", async () => {
+    let { store } = setupMapAndStore();
+
+    expectEmpytMap(store);
+
+    await initApp(store, decodeAppUrl(""));
+    await projectSelectedHandler(project_cnc1, "city", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord_project1,
+    ]);
+    expectAllTaxaRecord(store);
+    expectProject1(store);
+    let expectedParams = {
+      colors: iNatOrange,
+      taxon_id: allTaxaRecord.id.toString(),
+      verifiable: true,
+      spam: false,
+      project_id: project_cnc1.id.toString(),
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(window.location.search).toBe(
+      `?project_id=${project_cnc1.id}&verifiable=true&spam=false`,
+    );
+
+    await placeSelectedHandler(losangeles, "los", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      gridLabel_allTaxaRecord_la_project1,
+    ]);
+    expectAllTaxaRecord(store);
+    expectProject1(store);
+    expectLosAngelesPlace(store);
+    let expectedParams3 = {
+      colors: iNatOrange,
+      taxon_id: allTaxaRecord.id.toString(),
+      verifiable: true,
+      spam: false,
+      place_id: losangeles.id.toString(),
+      project_id: project_cnc1.id.toString(),
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams3);
+    expect(window.location.search).toBe(
+      `?place_id=${losangeles.id}&project_id=${project_cnc1.id}&verifiable=true&spam=false`,
+    );
+
+    await removeProject(project_cnc1.id, store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      gridLabel_allTaxaRecord_la,
+    ]);
+    expectAllTaxaRecord(store);
+    expectLosAngelesPlace(store);
+    let expectedParams4 = {
+      colors: iNatOrange,
+      taxon_id: allTaxaRecord.id.toString(),
+      verifiable: true,
+      spam: false,
+      place_id: losangeles.id.toString(),
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams4);
+    expect(window.location.search).toBe(
+      `?place_id=${losangeles.id}&verifiable=true&spam=false`,
+    );
+  });
+
+  test(`add taxon; add place; add project; remove project`, async () => {
+    let { store } = setupMapAndStore();
+
+    expectEmpytMap(store);
+
+    await initApp(store, decodeAppUrl(""));
+    await taxonSelectedHandler(lifeBasic, "life", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
+    ]);
+    expectLifeTaxa(store);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id.toString(),
+      colors: colors[0],
+      verifiable: true,
+      spam: false,
+    });
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+    );
+
+    await placeSelectedHandler(losangeles, "los", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      gridLabel_life_la,
+    ]);
+    expectLifeTaxa(store);
+    expectLosAngelesPlace(store);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id.toString(),
+      colors: colors[0],
+      place_id: losangeles.id.toString(),
+      verifiable: true,
+      spam: false,
+    });
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&place_id=${losangeles.id}&colors=${colorsEncoded[0]}` +
+        `&verifiable=true&spam=false`,
+    );
+
+    await projectSelectedHandler(project_cnc1, "city", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      gridLabel_life_la_project1,
+    ]);
+    expectLifeTaxa(store);
+    expectLosAngelesPlace(store);
+    expectProject1(store);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id.toString(),
+      colors: colors[0],
+      place_id: losangeles.id.toString(),
+      verifiable: true,
+      spam: false,
+      project_id: project_cnc1.id.toString(),
+    });
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&place_id=${losangeles.id}&project_id=${project_cnc1.id}` +
+        `&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+    );
+
+    await removeProject(project_cnc1.id, store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      gridLabel_life_la,
+    ]);
+    expectLifeTaxa(store);
+    expectLosAngelesPlace(store);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id.toString(),
+      colors: colors[0],
+      verifiable: true,
+      spam: false,
+      place_id: losangeles.id.toString(),
+    });
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&place_id=${losangeles.id}` +
+        `&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
     );
   });
 });

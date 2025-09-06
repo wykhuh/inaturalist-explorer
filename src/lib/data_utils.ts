@@ -22,7 +22,11 @@ import {
   bboxPlaceRecord,
 } from "./inat_data.ts";
 
-import { renderTaxaList, renderPlacesList } from "./autocomplete_utils.ts";
+import {
+  renderTaxaList,
+  renderPlacesList,
+  renderProjectsList,
+} from "./autocomplete_utils.ts";
 import type { Map } from "leaflet";
 import { iNatOrange } from "./map_colors_utils.ts";
 import { logger, loggerFilters } from "./logger.ts";
@@ -126,6 +130,31 @@ export async function removePlace(placeId: number, appStore: MapStore) {
 
   renderTaxaList(appStore);
   renderPlacesList(appStore);
+  updateUrl(window.location, appStore);
+}
+
+// called when user deletes a project
+export async function removeProject(projectId: number, appStore: MapStore) {
+  if (!appStore.selectedProjects) return;
+
+  // remove project
+  await removeOneProjectFromStore(appStore, projectId);
+
+  // remove existing taxa tiles, and refetch taxa tiles
+  for await (const taxon of appStore.selectedTaxa) {
+    removeOneTaxonFromMap(appStore, taxon.id);
+
+    appStore.inatApiParams = {
+      ...appStore.inatApiParams,
+      taxon_id: taxon.id.toString(),
+      colors: taxon.color,
+    };
+    await fetchiNatMapDataForTaxon(taxon, appStore);
+    await getObservationsCountForTaxon(taxon, appStore);
+  }
+
+  renderTaxaList(appStore);
+  renderProjectsList(appStore);
   updateUrl(window.location, appStore);
 }
 
@@ -361,6 +390,21 @@ function removePlacesFromStoreAndMap(appStore: MapStore) {
   appStore.selectedPlaces = [];
 }
 
+// ================
+// project
+// ================
+
+function removeOneProjectFromStore(appStore: MapStore, projectId: number) {
+  appStore.selectedProjects = appStore.selectedProjects.filter(
+    (item) => item.id !== projectId,
+  );
+  removeIdfromInatApiParams(appStore, "project_id", projectId);
+}
+
+// ================
+// bounding box
+// ================
+
 function removeRefreshBBox(appStore: MapStore, map: Map) {
   if (appStore.refreshMap.layer) {
     appStore.refreshMap.layer.removeFrom(map);
@@ -371,43 +415,78 @@ function removeRefreshBBox(appStore: MapStore, map: Map) {
 // misc
 // ================
 
+function removeTaxonId(appStore: MapStore) {
+  if (appStore.selectedTaxa.length == 0) {
+    delete appStore.inatApiParams.taxon_id;
+    delete appStore.inatApiParams.colors;
+    // get id of last taxa is selectedTaxa
+  } else {
+    let lastTaxon = appStore.selectedTaxa[appStore.selectedTaxa.length - 1];
+    appStore.inatApiParams.taxon_id = lastTaxon.id.toString();
+    appStore.inatApiParams.colors = lastTaxon.color;
+  }
+}
+
+function setinatApiParams(
+  appStore: MapStore,
+  property: iNatApiParamsKeys,
+  value: any,
+) {
+  let ids = removeIdFromCommaSeparatedString(
+    value,
+    appStore.inatApiParams[property],
+  );
+  if (ids) {
+    appStore.inatApiParams[property] = ids;
+  }
+}
+
+function removePlaceId(
+  appStore: MapStore,
+  property: iNatApiParamsKeys,
+  value: any,
+) {
+  if (appStore.selectedPlaces.length === 0) {
+    delete appStore.inatApiParams.place_id;
+  } else {
+    let lastPlace = appStore.selectedPlaces[appStore.selectedPlaces.length - 1];
+    if (lastPlace.id === value) {
+    } else if (appStore.selectedPlaces.map((p) => p.id).includes(value)) {
+    } else {
+      setinatApiParams(appStore, property, value);
+    }
+  }
+}
+
+function removeProjectId(
+  appStore: MapStore,
+  property: iNatApiParamsKeys,
+  value: any,
+) {
+  if (appStore.selectedProjects.length === 0) {
+    delete appStore.inatApiParams.project_id;
+  } else {
+    let lastRecord =
+      appStore.selectedProjects[appStore.selectedProjects.length - 1];
+    if (lastRecord.id === value) {
+    } else if (appStore.selectedProjects.map((p) => p.id).includes(value)) {
+    } else {
+      setinatApiParams(appStore, property, value);
+    }
+  }
+}
+
 export function removeIdfromInatApiParams(
   appStore: MapStore,
   property: iNatApiParamsKeys,
   value: any,
 ) {
-  // handles taxon_id
   if (property === "taxon_id") {
-    // if no selected taxa, delete taxon_id
-    if (appStore.selectedTaxa.length == 0) {
-      delete appStore.inatApiParams.taxon_id;
-      delete appStore.inatApiParams.colors;
-      // get id of last taxa is selectedTaxa
-    } else {
-      let lastTaxon = appStore.selectedTaxa[appStore.selectedTaxa.length - 1];
-      appStore.inatApiParams.taxon_id = lastTaxon.id.toString();
-      appStore.inatApiParams.colors = lastTaxon.color;
-    }
-    // handles place_id
+    removeTaxonId(appStore);
   } else if (property === "place_id") {
-    if (appStore.selectedPlaces.length === 0) {
-      delete appStore.inatApiParams.place_id;
-      return;
-    } else {
-      let lastPlace =
-        appStore.selectedPlaces[appStore.selectedPlaces.length - 1];
-      if (lastPlace.id === value) {
-      } else if (appStore.selectedPlaces.map((p) => p.id).includes(value)) {
-      } else {
-        let ids = removeIdFromCommaSeparatedString(
-          value,
-          appStore.inatApiParams[property],
-        );
-        if (ids) {
-          appStore.inatApiParams[property] = ids;
-        }
-      }
-    }
+    removePlaceId(appStore, "place_id", value);
+  } else if (property === "project_id") {
+    removeProjectId(appStore, "project_id", value);
   } else {
     throw new Error(
       `removeIdfromInatApiParams not implemented for ${property}`,
@@ -574,6 +653,7 @@ export function displayUserData(appStore: MapStore, _source: string) {
     taxaMapLayers: formatTaxaMapLayers(),
     selectedPlaces: appStore.selectedPlaces,
     placesMapLayers: formatPlacesMapLayers(),
+    selectedProjects: appStore.selectedProjects,
     refreshMap: {
       showRefreshMapButton: appStore.refreshMap.showRefreshMapButton,
       layer: {
