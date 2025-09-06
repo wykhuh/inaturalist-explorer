@@ -15,11 +15,12 @@ import {
   sandiegoSearchPlaces,
 } from "./fixtures/inatApi.ts";
 import { allTaxaRecord } from "../lib/inat_data.ts";
+import { loggerUrl } from "../lib/logger.ts";
 
 export function createMockServer() {
   const handlers = [
     http.get("https://api.inaturalist.org/v1/grid*", async (_args) => {
-      // console.log("request.url", _args.request.url); // keep
+      loggerUrl("request.url", _args.request.url);
       return HttpResponse.json({ id: "abc-123456" });
     }),
     http.get("https://api.inaturalist.org/v1/taxa/48460", async (_args) => {
@@ -90,11 +91,11 @@ export function createMockServer() {
       return HttpResponse.json(data);
     }),
     http.get("https://api.inaturalist.org/v2/observations*", async (_args) => {
-      // console.log("request.url", _args.request.url); // keep
+      loggerUrl("request.url", _args.request.url);
       return HttpResponse.json({ total_results: 456789, results: [] });
     }),
     http.get("https://{*}.tile.openstreetmap.org*", async (_args) => {
-      // console.log("request.url", _args.request.url); // keep
+      loggerUrl("request.url", _args.request.url);
       return HttpResponse.json({ total_results: 123456, results: [] });
     }),
     http.get("*", async (_args) => {

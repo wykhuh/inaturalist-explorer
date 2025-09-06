@@ -6,6 +6,7 @@ import type {
   iNatPlacesAPI,
   iNatHistogramApi,
 } from "../types/inat_api.d.ts";
+import { loggerUrl } from "./logger.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
 
 const search_api = "https://api.inaturalist.org/v1/search";
@@ -125,7 +126,7 @@ export async function getiNatObservationsTotal(
     let url = `${observations_api}?${paramsString}`;
     let response = await fetch(url);
     let data = (await response.json()) as ObservationsAPI;
-    // console.log(url, data.total_results); // keep
+    loggerUrl(url, data.total_results);
 
     return data.total_results;
   } catch (error) {

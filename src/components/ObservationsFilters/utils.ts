@@ -18,6 +18,7 @@ import {
 } from "../../lib/data_utils";
 import { renderPlacesList, renderTaxaList } from "../../lib/autocomplete_utils";
 import { updateUrl } from "../../lib/utils";
+import { loggerFilters } from "../../lib/logger";
 
 export function processFiltersForm(data: FormData): {
   params: iNatApiParams;
@@ -25,12 +26,12 @@ export function processFiltersForm(data: FormData): {
 } {
   // convert form data into object that can be use with URLSearchParams
   let values: iNatApiParams = {};
-  // console.log("----------- processFiltersForm"); // keep
+  loggerFilters("----------- processFiltersForm");
 
   for (const [k, value] of data) {
     // HACK: get rid of typescript errors for values[key]
     let key = k as iNatApiParamsKeys;
-    // console.log(key, value); // keep
+    loggerFilters(key, value);
 
     // ignore fields
     if (

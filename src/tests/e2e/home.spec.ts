@@ -3,12 +3,13 @@ import {
   redTaxaAutocomplete,
   losAngelesSearchPlaces,
 } from "../fixtures/inatApi.ts";
+import { logger } from "../../lib/logger.ts";
 
 let TAXA_QUERY = "red";
 let PLACES_QUERY = "los";
 
 test.beforeEach(async ({ page }) => {
-  console.log(`Running ${test.info().title}`); // keep
+  logger(`Running ${test.info().title}`);
   await page.route(
     "https://api.inaturalist.org/v1/taxa/autocomplete?**",
     async (route) => {

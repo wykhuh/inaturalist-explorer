@@ -25,6 +25,8 @@ import {
 import { renderTaxaList, renderPlacesList } from "./autocomplete_utils.ts";
 import type { Map } from "leaflet";
 import { iNatOrange } from "./map_colors_utils.ts";
+import { logger, loggerFilters } from "./logger.ts";
+import { mapStore } from "./store.ts";
 
 // called when user clicks refresh map button
 export async function refreshBoundingBox(
@@ -443,11 +445,7 @@ export function formatTaxonName(
   return { title, titleAriaLabel, subtitle, subtitleAriaLabel, hasCommonName };
 }
 
-export function leafletVisibleLayers(
-  appStore: MapStore,
-  log = false,
-  strict = false,
-) {
+export function leafletVisibleLayers(appStore: MapStore, strict = false) {
   let layer_descriptions: any[] = [];
   if (appStore.map.map) {
     appStore.map.map.eachLayer((lay) => {
@@ -456,15 +454,14 @@ export function leafletVisibleLayers(
 
       if (options.layer_description) {
         if (layer._path || layer._container || !strict) {
-          if (log) {
-            console.log(">>>", Object.keys(layer)); // keep
-          }
+          logger(">>>", Object.keys(layer));
+
           layer_descriptions.push(options.layer_description);
-        } else if (log) {
-          console.log("?????", Object.keys(layer)); // keep
+        } else {
+          logger("?????", Object.keys(layer));
         }
-      } else if (log) {
-        console.log("???", Object.keys(layer)); // keep
+      } else {
+        logger("???", Object.keys(layer));
       }
     });
   }
@@ -515,14 +512,14 @@ export function updateStoreUsingFilters(
 ) {
   // update store formFilters
   appStore.formFilters = filtersResults;
-  // console.log("------------ updateStoreUsingFilters"); // keep
-  // console.log("default:", mapStore.inatApiParams); // keep
-  // console.log("appStore:", appStore.inatApiParams); // keep
-  // console.log("filtersResults", filtersResults); // keep
+  loggerFilters("------------ updateStoreUsingFilters");
+  loggerFilters("default:", mapStore.inatApiParams);
+  loggerFilters("appStore:", appStore.inatApiParams);
+  loggerFilters("filtersResults", filtersResults);
 
   for (let [k, _value] of Object.entries(appStore.inatApiParams)) {
     let key = k as iNatApiParamsKeys;
-    // console.log(key, _value); // keep
+    loggerFilters(key, _value);
 
     // ignore params that can't be changed in the filter modal
     if (iNatApiNonFilterableNames.includes(key)) {

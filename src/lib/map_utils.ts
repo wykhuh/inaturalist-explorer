@@ -10,6 +10,7 @@ import type {
   iNatApiParams,
 } from "../types/app.d.ts";
 import { refreshBoundingBox } from "./data_utils.ts";
+import { loggerUrl } from "./logger.ts";
 
 export function getMonthName(month: number) {
   // https://reactgo.com/convert-month-number-to-name-js/
@@ -268,7 +269,7 @@ export function addLayerToMap(
   layerControl: any,
   checked = false,
 ) {
-  // console.log(tileObj.url); // keep
+  loggerUrl(tileObj.url);
 
   let layer = L.tileLayer(tileObj.url, tileObj.options);
   if (checked) {
@@ -286,7 +287,7 @@ export function addOverlayToMap(
   taxonName: string,
   checked = false,
 ) {
-  // console.log(tileObj.url); // keep
+  loggerUrl(tileObj.url);
 
   let layer = L.tileLayer(tileObj.url, tileObj.options);
   if (checked) {
@@ -335,7 +336,7 @@ export function createRefreshMapButton(
       return buttonEl;
     },
     onRemove: function (_map: Map) {
-      console.log("button onRemove"); // keep
+      console.info("button onRemove");
     },
   });
 

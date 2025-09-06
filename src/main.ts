@@ -34,6 +34,7 @@ import {
 import type { iNatAutocompleteTaxaAPI, iNatSearchAPI } from "./types/inat_api";
 import { decodeAppUrl } from "./lib/utils.ts";
 import { initApp } from "./lib/init_app.ts";
+import { loggerUrl } from "./lib/logger.ts";
 
 window.app = { store: mapStore };
 window.app.store.displayJsonEl = document.getElementById("display-json");
@@ -117,9 +118,9 @@ const autoCompleteTaxaJS = new autoComplete({
   data: {
     src: async (query: string) => {
       try {
-        let res = await fetch(
-          `${autocomplete_taxa_api}&per_page=50&q=${query}`,
-        );
+        let url = `${autocomplete_taxa_api}&per_page=50&q=${query}`;
+        loggerUrl(url);
+        let res = await fetch(url);
         let data = (await res.json()) as iNatAutocompleteTaxaAPI;
         return processAutocompleteTaxa(data, query);
       } catch (error) {
@@ -162,7 +163,9 @@ const autoCompletePlacesJS = new autoComplete({
   data: {
     src: async (query: string) => {
       try {
-        let res = await fetch(`${search_places_api}&per_page=50&q=${query}`);
+        let url = `${search_places_api}&per_page=50&q=${query}`;
+        loggerUrl(url);
+        let res = await fetch(url);
         let data = (await res.json()) as iNatSearchAPI;
         return processAutocompletePlaces(data);
       } catch (error) {
