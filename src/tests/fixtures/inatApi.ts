@@ -1,10 +1,10 @@
 import type {
   iNatSearchAPI,
-  iNatAutocompleteResult,
-  ObservationsSpeciesCountAPI,
+  TaxaResult,
+  iNatObservationsSpeciesCountAPI,
 } from "../../types/inat_api.js";
 
-export let redTaxaAutocomplete: iNatAutocompleteResult[] = [
+export let redTaxaAutocomplete: TaxaResult[] = [
   {
     id: 846366,
     rank: "tribe",
@@ -431,7 +431,7 @@ export let redTaxaAutocomplete: iNatAutocompleteResult[] = [
   },
 ];
 
-export let canisTaxaAutocomplete: iNatAutocompleteResult[] = [
+export let canisTaxaAutocomplete: TaxaResult[] = [
   {
     id: 42044,
     rank: "genus",
@@ -873,7 +873,7 @@ export let canisTaxaAutocomplete: iNatAutocompleteResult[] = [
   },
 ];
 
-export let redOaksSpeciesCount: ObservationsSpeciesCountAPI = {
+export let redOaksSpeciesCount: iNatObservationsSpeciesCountAPI = {
   total_results: 175,
   page: 1,
   per_page: 200,

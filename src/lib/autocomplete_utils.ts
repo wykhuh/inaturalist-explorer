@@ -7,10 +7,12 @@ import type {
   CustomGeoJSON,
   PlaceTypesKey,
   NormalizediNatProject,
+  NormalizediNatUser,
 } from "../types/app";
 import type {
   iNatProjectsAPI,
-  iNatAutocompleteTaxaAPI,
+  iNatUsersAPI,
+  iNatTaxaAPI,
   iNatSearchAPI,
 } from "../types/inat_api.d.ts";
 import {
@@ -68,7 +70,7 @@ export function renderAutocompleteTaxon(
 }
 
 export function processAutocompleteTaxa(
-  response: iNatAutocompleteTaxaAPI,
+  response: iNatTaxaAPI,
   query: string,
 ): NormalizediNatTaxon[] {
   let taxa = response.results.map((result) => {
@@ -326,10 +328,6 @@ export async function projectSelectedHandler(
       ...appStore.inatApiParams,
       taxon_id: taxon.id.toString(),
       colors: taxon.color,
-      project_id: addIdToCommaSeparatedString(
-        selection.id,
-        appStore.inatApiParams.project_id,
-      ),
     };
 
     await fetchiNatMapDataForTaxon(taxon, appStore);
@@ -351,5 +349,85 @@ export function renderProjectsList(appStore: MapStore) {
     if (!templateEl) return;
     templateEl.dataset.project = JSON.stringify(project);
     projectsListEl.appendChild(templateEl);
+  });
+}
+
+// =====================
+// users search
+// =====================
+
+export function processAutocompleteUser(
+  data: iNatUsersAPI,
+): NormalizediNatUser[] {
+  return data.results.map((item) => {
+    return {
+      id: item.id,
+      login: item.login,
+      name: item.name,
+    };
+  });
+}
+
+export function renderAutocompleteUser(item: NormalizediNatUser): string {
+  let html = `
+  <div class="users-ac-option" data-testid="users-ac-option">
+    <div class="user-name">
+    ${item.login}`;
+
+  if (item.name) {
+    html += ` (${item.name})`;
+  }
+
+  html += `
+    </div>
+  </div>`;
+
+  return html;
+}
+
+export async function userSelectedHandler(
+  selection: NormalizediNatUser,
+  _query: string,
+  appStore: MapStore,
+) {
+  // add project to store
+  appStore.selectedUsers = [...appStore.selectedUsers, selection];
+  appStore.inatApiParams = {
+    ...appStore.inatApiParams,
+    user_id: addIdToCommaSeparatedString(
+      selection.id,
+      appStore.inatApiParams.user_id,
+    ),
+  };
+
+  // get iNat map tiles for selected user
+  for await (const taxon of appStore.selectedTaxa) {
+    // remove existing taxon layers from map
+    removeOneTaxonFromMap(appStore, taxon.id);
+    appStore.inatApiParams = {
+      ...appStore.inatApiParams,
+      taxon_id: taxon.id.toString(),
+      colors: taxon.color,
+    };
+
+    await fetchiNatMapDataForTaxon(taxon, appStore);
+    await getObservationsCountForTaxon(taxon, appStore);
+  }
+
+  renderTaxaList(appStore);
+  renderUsersList(appStore);
+  updateUrl(window.location, appStore);
+}
+
+export function renderUsersList(appStore: MapStore) {
+  let usersListEl = document.querySelector("#users-list-container");
+  if (!usersListEl) return;
+
+  usersListEl.innerHTML = "";
+  appStore.selectedUsers.forEach((user) => {
+    let templateEl = document.createElement("x-users-list-item");
+    if (!templateEl) return;
+    templateEl.dataset.user = JSON.stringify(user);
+    usersListEl.appendChild(templateEl);
   });
 }

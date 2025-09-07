@@ -9,14 +9,18 @@ import type {
   NormalizediNatPlace,
   NormalizediNatProject,
   NormalizediNatTaxon,
+  NormalizediNatUser,
 } from "../types/app";
 import { mapStore } from "../lib/store.ts";
-import {
-  losAngelesSearchPlaces,
-  sandiegoSearchPlaces,
-} from "./fixtures/inatApi.ts";
 import { allTaxaRecord } from "../lib/inat_data.ts";
 import { loggerUrl } from "../lib/logger.ts";
+import {
+  placeSelectedHandler,
+  projectSelectedHandler,
+  taxonSelectedHandler,
+  userSelectedHandler,
+} from "../lib/autocomplete_utils.ts";
+import { leafletVisibleLayers } from "../lib/data_utils.ts";
 
 export function createMockServer() {
   const handlers = [
@@ -28,15 +32,8 @@ export function createMockServer() {
       let data = {
         results: [
           {
-            name: "Life",
-            default_photo: {
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
-            },
-            preferred_common_name: "life",
-            matched_term: "life",
-            rank: "stateofmatter",
-            id: 48460,
+            ...lifeBasic,
+            default_photo: { square_url: lifeBasic.default_photo },
           },
         ],
       };
@@ -46,14 +43,8 @@ export function createMockServer() {
       let data = {
         results: [
           {
-            name: "Lobatae",
-            default_photo: {
-              square_url: "https://inat.com/photos/149586607/square.jpg",
-            },
-            preferred_common_name: "red oaks",
-            matched_term: "xxx",
-            rank: "section",
-            id: 861036,
+            ...redOakBasic,
+            default_photo: { square_url: redOakBasic.default_photo },
           },
         ],
       };
@@ -63,13 +54,9 @@ export function createMockServer() {
       let data = {
         results: [
           {
-            bounding_box_geojson:
-              losAngelesSearchPlaces.results[0].record.bounding_box_geojson,
-            geometry_geojson:
-              losAngelesSearchPlaces.results[0].record.geometry_geojson,
-            name: "Los Angeles",
-            display_name: "Los Angeles County, US, CA",
-            id: 962,
+            ...losangeles,
+            bounding_box_geojson: losangeles.bounding_box,
+            geometry_geojson: losangeles.geometry,
           },
         ],
       };
@@ -79,13 +66,9 @@ export function createMockServer() {
       let data = {
         results: [
           {
-            bounding_box_geojson:
-              sandiegoSearchPlaces.results[0].record.bounding_box_geojson,
-            geometry_geojson:
-              sandiegoSearchPlaces.results[0].record.geometry_geojson,
-            name: "San Diego",
-            display_name: "San Diego County, CA, US",
-            id: 829,
+            ...sandiego,
+            bounding_box_geojson: sandiego.bounding_box,
+            geometry_geojson: sandiego.geometry,
           },
         ],
       };
@@ -95,13 +78,7 @@ export function createMockServer() {
       "https://api.inaturalist.org/v1/projects/237729",
       async (_args) => {
         let data = {
-          results: [
-            {
-              id: 237729,
-              title: "City Nature Challenge 2025: Aotearoa New Zealand",
-              slug: "city-nature-challenge-2025-aotearoa-new-zealand",
-            },
-          ],
+          results: [{ ...project_cnc1, title: project_cnc1.name }],
         };
         return HttpResponse.json(data);
       },
@@ -110,17 +87,23 @@ export function createMockServer() {
       "https://api.inaturalist.org/v1/projects/229902",
       async (_args) => {
         let data = {
-          results: [
-            {
-              id: 229902,
-              title: "City Nature Challenge 2025: Ōtautahi/Christchurch",
-              slug: "city-nature-challenge-2025-otautahi-christchurch",
-            },
-          ],
+          results: [{ ...project_cnc2, title: project_cnc2.name }],
         };
         return HttpResponse.json(data);
       },
     ),
+    http.get("https://api.inaturalist.org/v1/users/222137", async (_args) => {
+      let data = {
+        results: [{ ...user1 }],
+      };
+      return HttpResponse.json(data);
+    }),
+    http.get("https://api.inaturalist.org/v1/users/677256", async (_args) => {
+      let data = {
+        results: [{ ...user2 }],
+      };
+      return HttpResponse.json(data);
+    }),
     http.get("https://api.inaturalist.org/v2/observations*", async (_args) => {
       loggerUrl("request.url", _args.request.url);
       return HttpResponse.json({ total_results: 456789, results: [] });
@@ -171,12 +154,23 @@ export let gridLabel_oaks_la_sd =
   "overlay: iNat grid, taxon_id 861036, place_id 962,829";
 
 export let gridLabel_allTaxaRecord = "overlay: iNat grid, taxon_id 0";
+
 export let gridLabel_allTaxaRecord_project1 =
   "overlay: iNat grid, taxon_id 0, project_id 237729";
 export let gridLabel_allTaxaRecord_project2 =
   "overlay: iNat grid, taxon_id 0, project_id 229902";
 export let gridLabel_allTaxaRecord_projects =
   "overlay: iNat grid, taxon_id 0, project_id 237729,229902";
+
+export let gridLabel_allTaxaRecord_user1 =
+  "overlay: iNat grid, taxon_id 0, user_id 222137";
+export let gridLabel_allTaxaRecord_user2 =
+  "overlay: iNat grid, taxon_id 0, user_id 677256";
+export let gridLabel_allTaxaRecord_users =
+  "overlay: iNat grid, taxon_id 0, user_id 222137,677256";
+
+export let gridLabel_life_la_user1 =
+  "overlay: iNat grid, taxon_id 48460, place_id 962, user_id 222137";
 
 export let refreshBBoxLabel = "refresh bounding box";
 export let basemapLabel_osm = "basemap: Open Street Map";
@@ -185,6 +179,7 @@ export let gridLabel_life_la_sd_project1 =
   "overlay: iNat grid, taxon_id 48460, place_id 962,829, project_id 237729";
 export let gridLabel_life_la_sd_projects =
   "overlay: iNat grid, taxon_id 48460, place_id 962,829, project_id 237729,229902";
+
 export let gridLabel_oaks_la_sd_project1 =
   "overlay: iNat grid, taxon_id 861036, place_id 962,829, project_id 237729";
 export let gridLabel_oaks_la_sd_projects =
@@ -193,11 +188,47 @@ export let gridLabel_oaks_la_sd_projects =
 export let gridLabel_life_la_project1 =
   "overlay: iNat grid, taxon_id 48460, place_id 962, project_id 237729";
 
+export let gridLabel_life_la_project1_user1 =
+  "overlay: iNat grid, taxon_id 48460, place_id 962, project_id 237729, user_id 222137";
+export let gridLabel_oak_la_project1_user1 =
+  "overlay: iNat grid, taxon_id 861036, place_id 962, project_id 237729, user_id 222137";
+
+export let gridLabel_life_la_sd_project1_user1 =
+  "overlay: iNat grid, taxon_id 48460, place_id 962,829, project_id 237729, user_id 222137";
+export let gridLabel_oak_la_sd_project1_user1 =
+  "overlay: iNat grid, taxon_id 861036, place_id 962,829, project_id 237729, user_id 222137";
+export let gridLabel_life_la_sd_projects_user1 =
+  "overlay: iNat grid, taxon_id 48460, place_id 962,829, project_id 237729,229902, user_id 222137";
+export let gridLabel_oak_la_sd_projects_user1 =
+  "overlay: iNat grid, taxon_id 861036, place_id 962,829, project_id 237729,229902, user_id 222137";
+
 export let gridLabel_life_project1 =
   "overlay: iNat grid, taxon_id 48460, project_id 237729";
+export let gridLabel_life_project1_user1 =
+  "overlay: iNat grid, taxon_id 48460, project_id 237729, user_id 222137";
 
 export let gridLabel_allTaxaRecord_la_project1 =
   "overlay: iNat grid, taxon_id 0, place_id 962, project_id 237729";
+export let gridLabel_allTaxaRecord_la_project1_user1 =
+  "overlay: iNat grid, taxon_id 0, place_id 962, project_id 237729, user_id 222137";
+
+export let gridLabel_life_places_projects_user1 =
+  "overlay: iNat grid, taxon_id 48460, place_id 962,829, project_id 237729,229902, user_id 222137";
+export let gridLabel_oak_places_projects_user1 =
+  "overlay: iNat grid, taxon_id 861036, place_id 962,829, project_id 237729,229902, user_id 222137";
+
+export let gridLabel_life_places_resources =
+  "overlay: iNat grid, taxon_id 48460, place_id 962,829, project_id 237729,229902, user_id 222137,677256";
+export let gridLabel_oaks_places_resources =
+  "overlay: iNat grid, taxon_id 861036, place_id 962,829, project_id 237729,229902, user_id 222137,677256";
+
+export let gridLabel_life_resource =
+  "overlay: iNat grid, taxon_id 48460, place_id 962, project_id 237729, user_id 222137";
+
+export let gridLabel_life_bbox_resources =
+  "overlay: iNat grid, taxon_id 48460, project_id 237729,229902, user_id 222137,677256";
+export let gridLabel_oaks_bbox_resources =
+  "overlay: iNat grid, taxon_id 861036, project_id 237729,229902, user_id 222137,677256";
 
 export let lifeBasic: NormalizediNatTaxon = {
   name: "Life",
@@ -342,6 +373,18 @@ export let project_cnc2: NormalizediNatProject = {
   slug: "city-nature-challenge-2025-otautahi-christchurch",
 };
 
+export let user1: NormalizediNatUser = {
+  id: 222137,
+  login: "reiner",
+  name: "Reiner Richter",
+};
+
+export let user2: NormalizediNatUser = {
+  id: 677256,
+  login: "alanhorstmann",
+  name: "Alan Horstmann",
+};
+
 export function setupMapAndStore() {
   let map = L.map("map", {
     center: [0, 0],
@@ -413,8 +456,6 @@ export function expectLifeOakTaxa(
   ]);
   expect(store.taxaMapLayers[lifeTemp.id].length).toBe(4);
   expect(store.taxaMapLayers[oakTemp.id].length).toBe(4);
-
-  expect(store.color).toBe(customColors[1]);
 }
 
 export function expectNoPlaces(store: MapStore) {
@@ -438,7 +479,6 @@ export function expectLosAngelesPlace(store: MapStore) {
 
 export function expectSanDiegoPlace(store: MapStore) {
   expect(store.selectedPlaces).toEqual([sandiego]);
-  expect(store.placesMapLayers).not.toBeUndefined();
   expect(Object.keys(store.placesMapLayers)).toStrictEqual([
     sandiego.id.toString(),
   ]);
@@ -453,6 +493,10 @@ export function expect_LA_SD_Place(store: MapStore) {
   ]);
   expect(store.placesMapLayers[losangeles.id].length).toBe(1);
   expect(store.placesMapLayers[sandiego.id].length).toBe(1);
+}
+
+export function expect_users(store: MapStore) {
+  expect(store.selectedUsers).toEqual([user1, user2]);
 }
 
 export function expectRefreshPlace(store: MapStore, type = "zero") {
@@ -479,4 +523,104 @@ export function expectProject2(store: MapStore) {
 }
 export function expectProjects(store: MapStore) {
   expect(store.selectedProjects).toEqual([project_cnc1, project_cnc2]);
+}
+
+export function expectUser1(store: MapStore) {
+  expect(store.selectedUsers).toEqual([user1]);
+}
+export function expectUser2(store: MapStore) {
+  expect(store.selectedUsers).toEqual([user2]);
+}
+export function expectUsers(store: MapStore) {
+  expect(store.selectedUsers).toEqual([user1, user2]);
+}
+
+export async function addResources(store: MapStore) {
+  await taxonSelectedHandler(lifeBasic, "life", store);
+
+  expect(leafletVisibleLayers(store)).toStrictEqual([
+    basemapLabel_osm,
+    gridLabel_life,
+  ]);
+  expectLifeTaxa(store);
+  expect(store.inatApiParams).toStrictEqual({
+    taxon_id: life().id.toString(),
+    colors: colors[0],
+    verifiable: true,
+    spam: false,
+  });
+  expect(window.location.search).toBe(
+    `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+  );
+
+  await placeSelectedHandler(losangeles, "los", store);
+
+  expect(leafletVisibleLayers(store)).toStrictEqual([
+    basemapLabel_osm,
+    placeLabel_la,
+    gridLabel_life_la,
+  ]);
+  expectLifeTaxa(store);
+  expectLosAngelesPlace(store);
+  expect(store.inatApiParams).toStrictEqual({
+    taxon_id: life().id.toString(),
+    colors: colors[0],
+    place_id: losangeles.id.toString(),
+    verifiable: true,
+    spam: false,
+  });
+  expect(window.location.search).toBe(
+    `?taxon_id=${life().id}&place_id=${losangeles.id}&colors=${colorsEncoded[0]}` +
+      `&verifiable=true&spam=false`,
+  );
+
+  await projectSelectedHandler(project_cnc1, "city", store);
+
+  expect(leafletVisibleLayers(store)).toStrictEqual([
+    basemapLabel_osm,
+    placeLabel_la,
+    gridLabel_life_la_project1,
+  ]);
+  expectLifeTaxa(store);
+  expectLosAngelesPlace(store);
+  expectProject1(store);
+  expect(store.inatApiParams).toStrictEqual({
+    taxon_id: life().id.toString(),
+    colors: colors[0],
+    place_id: losangeles.id.toString(),
+    verifiable: true,
+    spam: false,
+    project_id: project_cnc1.id.toString(),
+  });
+
+  expect(window.location.search).toBe(
+    `?taxon_id=${life().id}&place_id=${losangeles.id}&project_id=${project_cnc1.id}` +
+      `&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+  );
+
+  await userSelectedHandler(user1, "user", store);
+
+  expect(leafletVisibleLayers(store)).toStrictEqual([
+    basemapLabel_osm,
+    placeLabel_la,
+    gridLabel_life_la_project1_user1,
+  ]);
+  expectLifeTaxa(store);
+  expectLosAngelesPlace(store);
+  expectProject1(store);
+  expectUser1(store);
+  expect(store.inatApiParams).toStrictEqual({
+    taxon_id: life().id.toString(),
+    colors: colors[0],
+    place_id: losangeles.id.toString(),
+    verifiable: true,
+    spam: false,
+    project_id: project_cnc1.id.toString(),
+    user_id: user1.id.toString(),
+  });
+
+  expect(window.location.search).toBe(
+    `?taxon_id=${life().id}&place_id=${losangeles.id}&project_id=${project_cnc1.id}` +
+      `&user_id=${user1.id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+  );
 }

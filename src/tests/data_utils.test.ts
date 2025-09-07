@@ -8,11 +8,8 @@ import {
   removeIdFromCommaSeparatedString,
   removeIdfromInatApiParams,
 } from "../lib/data_utils.ts";
-import type { MapStore, NormalizediNatTaxon } from "../types/app.d.ts";
+import type { NormalizediNatTaxon } from "../types/app.d.ts";
 import { mapStore } from "../lib/store.ts";
-import { initApp } from "../lib/init_app.ts";
-import { decodeAppUrl } from "../lib/utils.ts";
-import { taxonSelectedHandler } from "../lib/autocomplete_utils.ts";
 import {
   life,
   lifeBasic,

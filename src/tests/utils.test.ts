@@ -252,7 +252,7 @@ describe("updateUrl", () => {
   });
 });
 
-describe("decodeAppUrl", () => {
+describe("decodeAppUrl resources", () => {
   test("returns object with taxa data if taxon_id is present", () => {
     let searchParams =
       "?taxon_id=123,456&colors=%23ffffff,%23eeeeee&spam=false&verifiable=true";
@@ -279,7 +279,7 @@ describe("decodeAppUrl", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test("returns object place data if place_id is present", () => {
+  test("returns object with place data if place_id is present", () => {
     let searchParams = "?place_id=987&spam=false&verifiable=true";
 
     let expected = {
@@ -296,7 +296,7 @@ describe("decodeAppUrl", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test("returns project place data if project_id is present", () => {
+  test("returns object with project data if project_id is present", () => {
     let searchParams = "?project_id=987&spam=false&verifiable=true";
 
     let expected = {
@@ -313,23 +313,16 @@ describe("decodeAppUrl", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test("returns object with taxa and place data if place_id is present", () => {
-    let searchParams =
-      "?taxon_id=123&place_id=987&colors=%23ffffff&spam=false&verifiable=true";
+  test("returns object with user data if user_id is present", () => {
+    let searchParams = "?user_id=1&spam=false&verifiable=true";
 
     let expected = {
-      color: "#ffffff",
-      selectedTaxa: [
-        {
-          id: 123,
-          color: "#ffffff",
-        },
-      ],
-      selectedPlaces: [{ id: 987 }],
+      selectedUsers: [{ id: 1 }],
       inatApiParams: {
         verifiable: true,
         spam: false,
       },
+      selectedTaxa: [],
     };
 
     let result = decodeAppUrl(searchParams);
@@ -373,6 +366,39 @@ describe("decodeAppUrl", () => {
     expect(result).toStrictEqual(expected);
   });
 
+  test(
+    "returns taxa, place, project, user data if taxon_id, place_id, " +
+      "project_id, user_id are present",
+    () => {
+      let searchParams =
+        "?taxon_id=12&place_id=34&project_id=56&user_id=78" +
+        "&colors=%23ffffff&spam=false&verifiable=true";
+
+      let expected = {
+        color: "#ffffff",
+        selectedTaxa: [
+          {
+            id: 12,
+            color: "#ffffff",
+          },
+        ],
+        selectedPlaces: [{ id: 34 }],
+        selectedProjects: [{ id: 56 }],
+        selectedUsers: [{ id: 78 }],
+        inatApiParams: {
+          verifiable: true,
+          spam: false,
+        },
+      };
+
+      let result = decodeAppUrl(searchParams);
+
+      expect(result).toStrictEqual(expected);
+    },
+  );
+});
+
+describe("decodeAppUrl options", () => {
   test("returns object with if spam and verifiable are false", () => {
     let searchParams =
       "?taxon_id=123&colors=%23ffffff&spam=false&verifiable=false";
@@ -395,26 +421,6 @@ describe("decodeAppUrl", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test("returns object with if verifiable is any", () => {
-    let searchParams = "?taxon_id=123&colors=%23ffffff&verifiable=any";
-    let expected = {
-      color: "#ffffff",
-      selectedTaxa: [
-        {
-          id: 123,
-          color: "#ffffff",
-        },
-      ],
-      inatApiParams: {
-        verifiable: "any",
-      },
-    };
-
-    let result = decodeAppUrl(searchParams);
-
-    expect(result).toStrictEqual(expected);
-  });
-
   test("returns object with if spam and verifiable are true", () => {
     let searchParams =
       "?taxon_id=123&colors=%23ffffff&spam=true&verifiable=true";
@@ -429,6 +435,26 @@ describe("decodeAppUrl", () => {
       inatApiParams: {
         verifiable: true,
         spam: true,
+      },
+    };
+
+    let result = decodeAppUrl(searchParams);
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("returns object with if verifiable is any", () => {
+    let searchParams = "?taxon_id=123&colors=%23ffffff&verifiable=any";
+    let expected = {
+      color: "#ffffff",
+      selectedTaxa: [
+        {
+          id: 123,
+          color: "#ffffff",
+        },
+      ],
+      inatApiParams: {
+        verifiable: "any",
       },
     };
 

@@ -321,7 +321,8 @@
   }
 
   ul#places-list-container,
-  ul#projects-list-container {
+  ul#projects-list-container,
+  ul#users-list-container {
     padding: 0;
     list-style: none;
 

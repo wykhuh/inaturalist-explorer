@@ -7,6 +7,7 @@ import "./assets/autocomplete.css";
 import "./components/TaxaListItem/component.ts";
 import "./components/PlacesListItem/component.ts";
 import "./components/ProjectsListItem/component.ts";
+import "./components/UsersListItem/component.ts";
 import "./components/ObservationsFilters/component.ts";
 import {
   getMapTiles,
@@ -18,6 +19,7 @@ import type {
   AutoCompleteEvent,
   NormalizediNatPlace,
   NormalizediNatProject,
+  NormalizediNatUser,
 } from "./types/app.d.ts";
 import mapStore from "./lib/store.ts";
 import {
@@ -30,17 +32,22 @@ import {
   renderAutocompleteProject,
   processAutocompleteProject,
   projectSelectedHandler,
+  renderAutocompleteUser,
+  processAutocompleteUser,
+  userSelectedHandler,
 } from "./lib/autocomplete_utils.ts";
 import {
   autocomplete_projects_api,
   autocomplete_taxa_api,
   getObservationsYears,
   autocomplete_places_api,
+  autocomplete_users_api,
 } from "./lib/inat_api.ts";
 import type {
   iNatProjectsAPI,
-  iNatAutocompleteTaxaAPI,
+  iNatTaxaAPI,
   iNatSearchAPI,
+  iNatUsersAPI,
 } from "./types/inat_api";
 import { decodeAppUrl } from "./lib/utils.ts";
 import { initApp } from "./lib/init_app.ts";
@@ -131,7 +138,7 @@ const autoCompleteTaxaJS = new autoComplete({
         let url = `${autocomplete_taxa_api}&per_page=50&q=${query}`;
         loggerUrl(url);
         let res = await fetch(url);
-        let data = (await res.json()) as iNatAutocompleteTaxaAPI;
+        let data = (await res.json()) as iNatTaxaAPI;
         return processAutocompleteTaxa(data, query);
       } catch (error) {
         console.error(error);
@@ -144,7 +151,7 @@ const autoCompleteTaxaJS = new autoComplete({
   events: {
     input: {
       selection: (event: AutoCompleteEvent) => {
-        const selection = event.detail.selection.value;
+        const selection = event.detail.selection.value as NormalizediNatTaxon;
         autoCompleteTaxaJS.input.value = selection.title;
       },
     },
@@ -189,7 +196,7 @@ const autoCompletePlacesJS = new autoComplete({
   events: {
     input: {
       selection: (event: AutoCompleteEvent) => {
-        const selection = event.detail.selection.value;
+        const selection = event.detail.selection.value as NormalizediNatPlace;
         autoCompletePlacesJS.input.value = selection.display_name;
       },
     },
@@ -257,6 +264,48 @@ document
 // =====================
 // user search
 // =====================
+
+const autoCompleteUsersJS = new autoComplete({
+  autocomplete: "off",
+  selector: "#inatUsersAutoComplete",
+  placeHolder: "Enter user name",
+  threshold: 2,
+  searchEngine: (_query: string, record: NormalizediNatUser) => {
+    return renderAutocompleteUser(record);
+  },
+  data: {
+    src: async (query: string) => {
+      try {
+        let url = `${autocomplete_users_api}&per_page=25&q=${query}`;
+        loggerUrl(url);
+        let res = await fetch(url);
+        let data = (await res.json()) as iNatUsersAPI;
+        return processAutocompleteUser(data);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
+  resultsList: {
+    maxResults: 25,
+  },
+  events: {
+    input: {
+      selection: (event: AutoCompleteEvent) => {
+        const selection = event.detail.selection.value as NormalizediNatUser;
+
+        autoCompleteUsersJS.input.value = selection.login;
+      },
+    },
+  },
+});
+
+document
+  .querySelector("#inatUsersAutoComplete")!
+  .addEventListener("selection", async function (event: any) {
+    let selection = event.detail.selection.value;
+    await userSelectedHandler(selection, event.detail.query, window.app.store);
+  });
 
 // =====================
 // misc

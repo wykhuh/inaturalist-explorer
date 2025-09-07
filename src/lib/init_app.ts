@@ -11,17 +11,24 @@ import {
   drawMapBoundingBox,
   fitBoundsPlaces,
 } from "./map_utils.ts";
-import { getPlaceById, getProjectById, getTaxonById } from "./inat_api.ts";
+import {
+  getPlaceById,
+  getProjectById,
+  getTaxonById,
+  getUserById,
+} from "./inat_api.ts";
 import { bboxPlaceRecord, fieldsWithAny, iNatApiNames } from "./inat_data.ts";
 import {
   renderTaxaList,
   renderPlacesList,
   renderProjectsList,
+  renderUsersList,
 } from "./autocomplete_utils.ts";
 import type {
   PlacesResult,
   ProjectsResult,
   TaxaResult,
+  UserResult,
 } from "../types/inat_api";
 import {
   addAllTaxaRecordToMapAndStore,
@@ -75,7 +82,18 @@ export async function initApp(appStore: MapStore, urlStore: MapStore) {
       if (!projectData) {
         continue;
       }
-      processProjectData(projectData, appStore, urlStore);
+      processProjectData(projectData, appStore);
+    }
+  }
+
+  // get user data
+  if (urlStore.selectedUsers?.length > 0) {
+    for await (const urlStoreUser of urlStore.selectedUsers) {
+      let data = await getUserById(urlStoreUser.id);
+      if (!data) {
+        continue;
+      }
+      processUserData(data, appStore);
     }
   }
 
@@ -102,10 +120,11 @@ export async function initApp(appStore: MapStore, urlStore: MapStore) {
     await addAllTaxaRecordToMapAndStore(appStore);
   }
 
+  fitBoundsPlaces(appStore);
   renderTaxaList(appStore);
   renderPlacesList(appStore);
-  fitBoundsPlaces(appStore);
   renderProjectsList(appStore);
+  renderUsersList(appStore);
 
   window.dispatchEvent(new Event("appInitialized"));
 }
@@ -207,11 +226,7 @@ export function processBBoxData(appStore: MapStore, urlStore: MapStore) {
 export function processProjectData(
   projectData: ProjectsResult,
   appStore: MapStore,
-  urlStore: MapStore,
 ) {
-  let map = appStore.map.map;
-  if (!map) return;
-
   appStore.selectedProjects = [
     ...appStore.selectedProjects,
     {
@@ -225,5 +240,22 @@ export function processProjectData(
   appStore.inatApiParams.project_id = addIdToCommaSeparatedString(
     projectData.id,
     appStore.inatApiParams.project_id,
+  );
+}
+
+function processUserData(userData: UserResult, appStore: MapStore) {
+  appStore.selectedUsers = [
+    ...appStore.selectedUsers,
+    {
+      id: userData.id,
+      name: userData.name,
+      login: userData.login,
+    },
+  ];
+
+  // create comma seperated user_id
+  appStore.inatApiParams.user_id = addIdToCommaSeparatedString(
+    userData.id,
+    appStore.inatApiParams.user_id,
   );
 }

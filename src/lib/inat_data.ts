@@ -56,6 +56,7 @@ export const iNatApiNonFilterableNames = [
   "place_id",
   "taxon_id",
   "project_id",
+  "user_id",
 ];
 
 export const iNatApiFilterableNames = [
@@ -91,7 +92,6 @@ export const iNatApiFilterableNames = [
   "rank",
   "without_taxon_id",
   "taxon_name",
-  "user_id",
   "ident_user_id",
   "annotation_user_id",
   "acc_above",

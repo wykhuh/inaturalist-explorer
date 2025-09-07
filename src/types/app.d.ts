@@ -71,6 +71,7 @@ export interface MapStore {
   selectedPlaces: NormalizediNatPlace[];
   placesMapLayers: { [index: string]: CustomGeoJSON[] };
   placesListEl: HTMLElement | null;
+  selectedUsers: NormalizediNatUser[];
   selectedProjects: NormalizediNatProject[];
   inatApiParams: iNatApiParams;
   displayJsonEl: HTMLElement | null;
@@ -103,6 +104,7 @@ interface iNatApiParams extends iNatApiFilterableParams {
   place_id?: string; // comma-seperated string
   taxon_id?: string; // comma-seperated string
   project_id?: string; // comma-seperated string
+  user_id?: string; // comma-seperated string
 }
 
 interface iNatApiFilterableParams {
@@ -206,9 +208,36 @@ export type iNatApiFilterableParamsKeys = keyof iNatApiFilterableParams;
 export interface AutoCompleteEvent {
   detail: {
     query: string;
-    selection: { index: number; match: string; value: NormalizediNatTaxon };
+    selection: {
+      index: number;
+      match: string;
+      value:
+        | NormalizediNatTaxon
+        | NormalizediNatPlace
+        | NormalizediNatProject
+        | NormalizediNatUser;
+    };
   };
 }
+
+export type iNatObservationTilesSettings = {
+  iNatGrid: ObservationTilesSetting;
+  iNatPoint: ObservationTilesSetting;
+  iNatTaxonRange?: ObservationTilesSetting;
+  iNatHeatmap: ObservationTilesSetting;
+};
+
+export type ObservationTilesSetting = {
+  name: string;
+  type: string;
+  url: string;
+  options: {
+    attribution: string;
+    minZoom: number;
+    maxZoom: number;
+    layer_description: string;
+  };
+};
 
 // https://freshman.tech/snippets/typescript/fix-value-not-exist-eventtarget/
 type ButtonEvent = Event & {

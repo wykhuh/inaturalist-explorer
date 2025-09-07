@@ -9,6 +9,7 @@ export const mapStore: MapStore = {
   selectedPlaces: [],
   placesMapLayers: {},
   selectedProjects: [],
+  selectedUsers: [],
   placesListEl: null,
   inatApiParams: { verifiable: true, spam: false },
   displayJsonEl: null,

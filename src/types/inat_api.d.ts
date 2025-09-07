@@ -29,7 +29,7 @@ export interface SearchRecord {
   admin_level: number | null;
   bbox_area: number;
   ancestor_place_ids: number[] | null;
-  user: User | null;
+  user: UserBasic | null;
   geometry_geojson: MultiPolygonJson | PolygonJson;
   bounding_box_geojson: PolygonJson;
   location: string;
@@ -41,7 +41,7 @@ export interface SearchRecord {
   matched_term: string;
 }
 
-export interface User {
+export interface UserBasic {
   id: number;
   login: string;
   spam: boolean;
@@ -73,14 +73,14 @@ export interface Geojson {
 // taxa api
 // ==================
 
-type iNatAutocompleteTaxaAPI = {
+export interface iNatTaxaAPI {
   total_results: number;
   page: number;
   per_page: number;
-  results: iNatAutocompleteResult[];
-};
+  results: TaxaResult[];
+}
 
-type iNatAutocompleteResult = {
+export interface TaxaResult {
   id: number;
   rank: string;
   rank_level: number;
@@ -95,51 +95,194 @@ type iNatAutocompleteResult = {
   taxon_changes_count: number;
   taxon_schemes_count: number;
   observations_count: number;
-  flag_counts: {
-    resolved: number;
-    unresolved: number;
-  };
+  photos_locked?: boolean;
+  flag_counts: FlagCounts;
   current_synonymous_taxon_ids: number | null;
+  taxon_photos?: TaxonPhoto[];
   atlas_id: number | null;
   complete_species_count: number | null;
   wikipedia_url: string | null;
   matched_term: string;
   iconic_taxon_name: string;
   preferred_common_name?: string;
-  conservation_status?: {
-    id: number;
-    place_id: number | null;
-    source_id: number | null;
-    user_id: number;
-    authority: string;
-    status: string;
-    status_name: string;
-    geoprivacy: string;
-    iucn: number;
-  };
+  conservation_statuses?: ConservationStatus[];
+  ancestors?: Ancestor[];
+  children?: Children[];
+  conservation_statuses: any[];
+  listed_taxa_count?: number;
+  listed_taxa?: ListedTaxa[];
+  wikipedia_summary?: string;
+  vision?: boolean;
   complete_rank?: string;
-};
+}
 
-type DefaultPhoto = {
+export interface DefaultPhoto {
   id: number;
   license_code: string | null;
   attribution: string;
   url: string;
-  original_dimensions: {
-    height: number;
-    width: number;
-  };
+  original_dimensions: OriginalDimensions;
   flags: string[];
   attribution_name: string;
   square_url: string;
   medium_url: string;
+}
+
+export interface OriginalDimensions {
+  height: number;
+  width: number;
+}
+
+export interface FlagCounts {
+  resolved: number;
+  unresolved: number;
+}
+
+export interface TaxonPhoto {
+  taxon_id: number;
+  photo: Photo;
+  taxon: Taxon;
+}
+
+export interface Photo {
+  id: number;
+  license_code?: string;
+  attribution: string;
+  url: string;
+  original_dimensions: OriginalDimensions;
+  flags: any[];
+  native_page_url?: string;
+  native_photo_id?: string;
+  type: string;
+  attribution_name: string;
+  square_url: string;
+  small_url: string;
+  medium_url: string;
+  large_url: string;
+  original_url: string;
+}
+
+export interface Taxon {
+  id: number;
+  rank: string;
+  rank_level: number;
+  iconic_taxon_id: number;
+  ancestor_ids: number[];
+  is_active: boolean;
+  name: string;
+  parent_id: number;
+  ancestry: string;
+  extinct: boolean;
+  default_photo: DefaultPhoto;
+  taxon_changes_count: number;
+  taxon_schemes_count: number;
+  observations_count: number;
+  photos_locked: boolean;
+  flag_counts: FlagCounts;
+  current_synonymous_taxon_ids: any;
+  atlas_id: any;
+  complete_species_count: any;
+  wikipedia_url: string;
+  iconic_taxon_name: string;
+  preferred_common_name: string;
+}
+
+export interface ConservationStatus {
+  id: number;
+  place_id: number | null;
+  source_id: number | null;
+  user_id: number;
+  authority: string;
+  status: string;
+  status_name: string;
+  geoprivacy: string;
+  iucn: number;
+}
+
+export interface Ancestor {
+  id: number;
+  rank: string;
+  rank_level: number;
+  iconic_taxon_id: number;
+  ancestor_ids: number[];
+  is_active: boolean;
+  name: string;
+  parent_id: number;
+  ancestry: string;
+  extinct: boolean;
+  default_photo: DefaultPhoto;
+  taxon_changes_count: number;
+  taxon_schemes_count: number;
+  observations_count: number;
+  flag_counts: FlagCounts;
+  current_synonymous_taxon_ids: any;
+  atlas_id: any;
+  complete_species_count: any;
+  wikipedia_url: string;
+  complete_rank?: string;
+  iconic_taxon_name: string;
+  preferred_common_name: string;
+}
+
+export interface Children {
+  id: number;
+  rank: string;
+  rank_level: number;
+  iconic_taxon_id: number;
+  ancestor_ids: number[];
+  is_active: boolean;
+  name: string;
+  parent_id: number;
+  ancestry: string;
+  extinct: boolean;
+  default_photo: DefaultPhoto;
+  taxon_changes_count: number;
+  taxon_schemes_count: number;
+  observations_count: number;
+  flag_counts: FlagCounts;
+  current_synonymous_taxon_ids: any;
+  atlas_id: any;
+  complete_species_count: any;
+  wikipedia_url: string;
+  iconic_taxon_name: string;
+  preferred_common_name?: string;
+}
+
+export interface ListedTaxa {
+  id: number;
+  taxon_id: number;
+  establishment_means: string;
+  place: Place;
+  list: List;
+}
+
+export interface Place {
+  id: number;
+  name: string;
+  display_name: string;
+  admin_level?: number;
+  ancestor_place_ids: number[];
+}
+
+export interface List {
+  id: number;
+  title: string;
+}
+
+// ==================
+// observations  api
+// ==================
+
+export type iNatObservationsAPI = {
+  total_results: number;
+  page: number;
+  per_page: number;
+  results: {
+    uuid: string;
+  }[];
 };
 
-// ==================
-// observations api
-// ==================
-
-export type ObservationsSpeciesCountAPI = {
+export type iNatObservationsSpeciesCountAPI = {
   total_results: number;
   page: number;
   per_page: number;
@@ -151,21 +294,12 @@ export type ObservationsSpeciesCountAPI = {
   }[];
 };
 
-export type ObservationsAPI = {
-  total_results: number;
-  page: number;
-  per_page: number;
-  results: {
-    uuid: string;
-  }[];
-};
-
 // ==================
-// observations api
+// observations tiles api
 // ==================
 
 // https://api.inaturalist.org/v1/docs/#!/Observation_Tiles/get_grid_zoom_x_y_png
-type TilesAPIParams = {
+type iNatObservationTilesAPI = {
   zoom: number;
   x: number;
   y: number;
@@ -315,191 +449,6 @@ type IconicTaxa =
   | "unknown";
 
 // ==================
-// taxa api
-// ==================
-
-export interface iNatTaxaAPI {
-  total_results: number;
-  page: number;
-  per_page: number;
-  results: TaxaResult[];
-}
-
-export interface TaxaResult {
-  id: number;
-  rank: string;
-  rank_level: number;
-  iconic_taxon_id: number;
-  ancestor_ids: number[];
-  is_active: boolean;
-  name: string;
-  parent_id: number;
-  ancestry: string;
-  extinct: boolean;
-  default_photo: DefaultPhoto;
-  taxon_changes_count: number;
-  taxon_schemes_count: number;
-  observations_count: number;
-  photos_locked: boolean;
-  flag_counts: FlagCounts;
-  current_synonymous_taxon_ids: any;
-  taxon_photos: TaxonPhoto[];
-  atlas_id: any;
-  complete_species_count: any;
-  wikipedia_url: string;
-  iconic_taxon_name: string;
-  preferred_common_name: string;
-  ancestors: Ancestor[];
-  children: Children[];
-  conservation_statuses: any[];
-  listed_taxa_count: number;
-  listed_taxa: ListedTaxa[];
-  wikipedia_summary: string;
-  vision: boolean;
-}
-
-export interface DefaultPhoto {
-  id: number;
-  license_code: string;
-  attribution: string;
-  url: string;
-  original_dimensions: OriginalDimensions;
-  flags: any[];
-  attribution_name: string;
-  square_url: string;
-  medium_url: string;
-}
-
-export interface OriginalDimensions {
-  height: number;
-  width: number;
-}
-
-export interface FlagCounts {
-  resolved: number;
-  unresolved: number;
-}
-
-export interface TaxonPhoto {
-  taxon_id: number;
-  photo: Photo;
-  taxon: Taxon;
-}
-
-export interface Photo {
-  id: number;
-  license_code?: string;
-  attribution: string;
-  url: string;
-  original_dimensions: OriginalDimensions;
-  flags: any[];
-  native_page_url?: string;
-  native_photo_id?: string;
-  type: string;
-  attribution_name: string;
-  square_url: string;
-  small_url: string;
-  medium_url: string;
-  large_url: string;
-  original_url: string;
-}
-
-export interface Taxon {
-  id: number;
-  rank: string;
-  rank_level: number;
-  iconic_taxon_id: number;
-  ancestor_ids: number[];
-  is_active: boolean;
-  name: string;
-  parent_id: number;
-  ancestry: string;
-  extinct: boolean;
-  default_photo: DefaultPhoto;
-  taxon_changes_count: number;
-  taxon_schemes_count: number;
-  observations_count: number;
-  photos_locked: boolean;
-  flag_counts: FlagCounts;
-  current_synonymous_taxon_ids: any;
-  atlas_id: any;
-  complete_species_count: any;
-  wikipedia_url: string;
-  iconic_taxon_name: string;
-  preferred_common_name: string;
-}
-
-export interface Ancestor {
-  id: number;
-  rank: string;
-  rank_level: number;
-  iconic_taxon_id: number;
-  ancestor_ids: number[];
-  is_active: boolean;
-  name: string;
-  parent_id: number;
-  ancestry: string;
-  extinct: boolean;
-  default_photo: DefaultPhoto;
-  taxon_changes_count: number;
-  taxon_schemes_count: number;
-  observations_count: number;
-  flag_counts: FlagCounts;
-  current_synonymous_taxon_ids: any;
-  atlas_id: any;
-  complete_species_count: any;
-  wikipedia_url: string;
-  complete_rank?: string;
-  iconic_taxon_name: string;
-  preferred_common_name: string;
-}
-
-export interface Children {
-  id: number;
-  rank: string;
-  rank_level: number;
-  iconic_taxon_id: number;
-  ancestor_ids: number[];
-  is_active: boolean;
-  name: string;
-  parent_id: number;
-  ancestry: string;
-  extinct: boolean;
-  default_photo: DefaultPhoto;
-  taxon_changes_count: number;
-  taxon_schemes_count: number;
-  observations_count: number;
-  flag_counts: FlagCounts;
-  current_synonymous_taxon_ids: any;
-  atlas_id: any;
-  complete_species_count: any;
-  wikipedia_url: string;
-  iconic_taxon_name: string;
-  preferred_common_name?: string;
-}
-
-export interface ListedTaxa {
-  id: number;
-  taxon_id: number;
-  establishment_means: string;
-  place: Place;
-  list: List;
-}
-
-export interface Place {
-  id: number;
-  name: string;
-  display_name: string;
-  admin_level?: number;
-  ancestor_place_ids: number[];
-}
-
-export interface List {
-  id: number;
-  title: string;
-}
-
-// ==================
 // places api
 // ==================
 
@@ -541,17 +490,17 @@ export type iNatHistogramApi = {
 };
 
 // ==================
-// autocomplete user api
+//  user api
 // ==================
 
-export interface iNatAutcompleteUsersAPI {
+export interface iNatUsersAPI {
   total_results: number;
   page: number;
   per_page: number;
-  results: AutcompleteUsersResult[];
+  results: UserResult[];
 }
 
-export interface AutcompleteUsersResult {
+export interface UserResult {
   id: number;
   login: string;
   spam: boolean;
@@ -576,7 +525,7 @@ export interface AutcompleteUsersResult {
 }
 
 // ==================
-// autocomplete project api
+// project api
 // ==================
 
 export interface iNatProjectsAPI {
@@ -637,14 +586,14 @@ export interface User {
   spam: boolean;
   suspended: boolean;
   created_at: string;
-  login_autocomplete: string;
-  login_exact: string;
+  login_autocomplete?: string;
+  login_exact?: string;
   name?: string;
   name_autocomplete?: string;
   orcid?: string;
   icon?: string;
-  observations_count: number;
-  identifications_count: number;
+  observations_count?: number;
+  identifications_count?: number;
   journal_posts_count: number;
   activity_count: number;
   species_count: number;

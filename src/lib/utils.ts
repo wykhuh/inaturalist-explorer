@@ -67,6 +67,7 @@ export function formatAppUrl(appStore: MapStore) {
     .map((r) => r.id)
     .join(",");
   let projectsIds = appStore.selectedProjects.map((r) => r.id).join(",");
+  let usersIds = appStore.selectedUsers.map((r) => r.id).join(",");
   let colors = appStore.selectedTaxa
     .filter((r) => r.id !== 0)
     .map((r) => r.color)
@@ -82,12 +83,17 @@ export function formatAppUrl(appStore: MapStore) {
   if (projectsIds) {
     params.project_id = projectsIds;
   }
+  if (usersIds) {
+    params.user_id = usersIds;
+  }
   if (colors.length > 0) {
     params.colors = colors;
   }
 
   Object.entries(appStore.inatApiParams).forEach(([key, value]) => {
-    if (!["taxon_id", "place_id", "project_id", "colors"].includes(key)) {
+    if (
+      !["taxon_id", "place_id", "project_id", "user_id", "colors"].includes(key)
+    ) {
       if (params) {
         params[key as iNatApiParamsKeys] = value as any;
       }
@@ -148,7 +154,7 @@ export function decodeAppUrl(searchParams: string) {
   }
   apiParams.selectedTaxa = taxa;
 
-  // convert place_id in basic selectedPlaces with id or bbox
+  // convert place_id into basic selectedPlaces with id or bbox
   if ("place_id" in urlParams && urlParams.place_id !== "any") {
     let ids = urlParams.place_id.split(",");
 
@@ -177,7 +183,7 @@ export function decodeAppUrl(searchParams: string) {
       swlng: Number(urlParams.swlng),
     };
   }
-  // convert place_id in basic selectedPlaces with id or bbox
+  // convert project_id into basic selectedProject with id
   if ("project_id" in urlParams && urlParams.project_id !== "any") {
     let ids = urlParams.project_id.split(",");
 
@@ -191,6 +197,21 @@ export function decodeAppUrl(searchParams: string) {
       apiParams.selectedProjects = projects as any;
     }
   }
+  // convert user_id into basic selectedUser with id
+  if ("user_id" in urlParams && urlParams.user_id !== "any") {
+    let ids = urlParams.user_id.split(",");
+
+    let users = ids
+      .map((id) => {
+        return { id: Number(id) };
+      })
+      .filter((p) => p);
+
+    if (users) {
+      apiParams.selectedUsers = users as any;
+    }
+  }
+
   for (let [key, value] of new URLSearchParams(searchParams)) {
     if (!iNatApiNonFilterableNames.includes(key)) {
       if (value === "true") {

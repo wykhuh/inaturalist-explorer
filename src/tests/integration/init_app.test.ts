@@ -26,7 +26,6 @@ import {
   colors,
   placeLabel_la,
   gridLabel_life,
-  gridLabel_life_la,
   refreshBBoxLabel,
   basemapLabel_osm,
   gridLabel_allTaxaRecord,
@@ -36,15 +35,22 @@ import {
   redOak,
   sandiego,
   placeLabel_sd,
-  gridLabel_life_la_sd,
-  gridLabel_oaks_la_sd,
   expect_LA_SD_Place,
   project_cnc1,
   expectProject1,
   gridLabel_allTaxaRecord_project1,
   project_cnc2,
-  gridLabel_life_la_sd_projects,
-  gridLabel_oaks_la_sd_projects,
+  expectLifeOakTaxa,
+  expectProjects,
+  user1,
+  gridLabel_allTaxaRecord_user1,
+  expectUser1,
+  user2,
+  expect_users,
+  gridLabel_life_places_resources,
+  gridLabel_oaks_places_resources,
+  gridLabel_oaks_bbox_resources,
+  gridLabel_life_bbox_resources,
 } from "../test_helpers.ts";
 import type { iNatApiParams } from "../../types/app";
 import { allTaxaRecord, fieldsWithAny } from "../../lib/inat_data.ts";
@@ -76,7 +82,7 @@ afterAll(() => {
   server.close();
 });
 
-describe("initApp", () => {
+describe("initApp options", () => {
   test("adds all taxa, verifiable true, and spam false when no search params", async () => {
     let { store } = setupMapAndStore();
 
@@ -155,33 +161,6 @@ describe("initApp", () => {
       verifiable: true,
       taxon_id: allTaxaRecord.id.toString(),
       colors: iNatOrange,
-    };
-    expect(store.inatApiParams).toStrictEqual(expectedParams);
-  });
-
-  test("loads and renders taxa data based on url params", async () => {
-    let { store } = setupMapAndStore();
-
-    expectEmpytMap(store);
-
-    let searchparams = `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`;
-    let urlData = decodeAppUrl(searchparams);
-
-    await initApp(store, urlData);
-
-    expect(leafletVisibleLayers(store)).toStrictEqual([
-      basemapLabel_osm,
-      gridLabel_life,
-    ]);
-    expectNoPlaces(store);
-    expectNoRefresh(store);
-    expectLifeTaxa(store);
-
-    let expectedParams: iNatApiParams = {
-      colors: colors[0],
-      taxon_id: life().id.toString(),
-      verifiable: true,
-      spam: false,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
   });
@@ -326,63 +305,33 @@ describe("initApp", () => {
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
   });
+});
 
-  test("loads and renders one taxa and one place based on url params", async () => {
+describe("initApp resources", () => {
+  test("loads and renders taxa data based on url params", async () => {
     let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
 
-    let searchparams = `?taxon_id=${life().id}&place_id=${losangeles.id}&colors=${colorsEncoded[0]}&spam=false&verifiable=true`;
+    let searchparams = `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`;
     let urlData = decodeAppUrl(searchparams);
 
     await initApp(store, urlData);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      placeLabel_la,
-      placeLabel_la,
-      gridLabel_life_la,
-    ]);
-    expectNoRefresh(store);
-    expectLifeTaxa(store);
-    expectLosAngelesPlace(store);
-    let expectedParams: iNatApiParams = {
-      colors: colors[0],
-      place_id: losangeles.id.toString(),
-      taxon_id: life().id.toString(),
-      verifiable: true,
-      spam: false,
-    };
-    expect(store.inatApiParams).toStrictEqual(expectedParams);
-  });
-
-  test("loads and renders taxa and bounding box data based on url params", async () => {
-    let { store } = setupMapAndStore();
-
-    expectEmpytMap(store);
-
-    let searchparams = `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&spam=false&verifiable=true&nelat=0&nelng=0&swlat=0&swlng=0`;
-    let urlData = decodeAppUrl(searchparams);
-
-    await initApp(store, urlData);
-
-    expect(leafletVisibleLayers(store)).toStrictEqual([
-      basemapLabel_osm,
-      refreshBBoxLabel,
       gridLabel_life,
     ]);
-    expectRefreshPlace(store);
+    expectNoPlaces(store);
+    expectNoRefresh(store);
     expectLifeTaxa(store);
     let expectedParams: iNatApiParams = {
       colors: colors[0],
       taxon_id: life().id.toString(),
-      nelat: 0,
-      nelng: 0,
-      swlat: 0,
-      swlng: 0,
       verifiable: true,
       spam: false,
     };
+
     expect(store.inatApiParams).toStrictEqual(expectedParams);
   });
 
@@ -398,7 +347,6 @@ describe("initApp", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      placeLabel_la,
       placeLabel_la,
       gridLabel_allTaxaRecord_la,
     ]);
@@ -460,8 +408,8 @@ describe("initApp", () => {
       basemapLabel_osm,
       gridLabel_allTaxaRecord_project1,
     ]);
-
     expectNoRefresh(store);
+    expectNoPlaces(store);
     expectAllTaxaRecord(store);
     expectProject1(store);
     let expectedParams: iNatApiParams = {
@@ -474,7 +422,37 @@ describe("initApp", () => {
     expect(store.inatApiParams).toStrictEqual(expectedParams);
   });
 
-  test("loads and renders multiple taxa, places, projects based on url params", async () => {
+  test("loads and renders user data based on url params", async () => {
+    let { store } = setupMapAndStore();
+
+    expectEmpytMap(store);
+
+    let searchparams = `?user_id=${user1.id}&verifiable=true&spam=false`;
+    let urlData = decodeAppUrl(searchparams);
+    console.log(urlData);
+
+    await initApp(store, urlData);
+    // console.log(store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord_user1,
+    ]);
+    expectNoRefresh(store);
+    expectNoPlaces(store);
+    expectAllTaxaRecord(store);
+    expectUser1(store);
+    let expectedParams: iNatApiParams = {
+      user_id: user1.id.toString(),
+      taxon_id: allTaxaRecord.id.toString(),
+      colors: iNatOrange,
+      verifiable: true,
+      spam: false,
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams);
+  });
+
+  test("loads and renders resources and places based on url params", async () => {
     let { store } = setupMapAndStore();
 
     expectEmpytMap(store);
@@ -484,6 +462,7 @@ describe("initApp", () => {
     let searchparams = `?taxon_id=${life().id},${redOak().id}`;
     searchparams += `&place_id=${losangeles.id},${sandiego.id}`;
     searchparams += `&project_id=${project_cnc1.id},${project_cnc2.id}`;
+    searchparams += `&user_id=${user1.id},${user2.id}`;
     searchparams += `&colors=${colorsEncoded[0]},${colorsEncoded[1]}`;
     searchparams += `&spam=false&verifiable=true`;
     let urlData = decodeAppUrl(searchparams);
@@ -491,34 +470,66 @@ describe("initApp", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      // BUG: layers with same description
-      placeLabel_la,
       placeLabel_la,
       placeLabel_sd,
-      placeLabel_sd,
-      gridLabel_life_la_sd_projects,
-      gridLabel_oaks_la_sd_projects,
+      gridLabel_life_places_resources,
+      gridLabel_oaks_places_resources,
     ]);
     expectNoRefresh(store);
-    let lifeTemp = life(colors[0]);
-    let oakTemp = redOak(colors[1]);
-    expect(store.selectedTaxa).toStrictEqual([lifeTemp, oakTemp]);
-    expect(Object.keys(store.taxaMapLayers)).toEqual([
-      lifeTemp.id.toString(),
-      oakTemp.id.toString(),
-    ]);
-    expect(store.taxaMapLayers[lifeTemp.id].length).toBe(4);
-    expect(store.taxaMapLayers[oakTemp.id].length).toBe(4);
-    expect(store.color).toBe(colors[1]);
+    expectLifeOakTaxa(store);
     expect_LA_SD_Place(store);
+    expect_users(store);
 
     let expectedParams: iNatApiParams = {
       colors: colors[1],
       place_id: `${losangeles.id},${sandiego.id}`,
       project_id: `${project_cnc1.id},${project_cnc2.id}`,
+      user_id: `${user1.id},${user2.id}`,
       taxon_id: redOak().id.toString(),
       verifiable: true,
       spam: false,
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams);
+  });
+
+  test("loads and renders resources and bounding box based on url params", async () => {
+    let { store } = setupMapAndStore();
+
+    expectEmpytMap(store);
+
+    colorsEncoded;
+
+    let searchparams = `?taxon_id=${life().id},${redOak().id}`;
+    searchparams += `&nelat=0&nelng=0&swlat=0&swlng=0`;
+    searchparams += `&project_id=${project_cnc1.id},${project_cnc2.id}`;
+    searchparams += `&user_id=${user1.id},${user2.id}`;
+    searchparams += `&colors=${colorsEncoded[0]},${colorsEncoded[1]}`;
+    searchparams += `&spam=false&verifiable=true`;
+    let urlData = decodeAppUrl(searchparams);
+    await initApp(store, urlData);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      refreshBBoxLabel,
+      gridLabel_life_bbox_resources,
+      gridLabel_oaks_bbox_resources,
+    ]);
+    expectRefreshPlace(store);
+    expectLifeOakTaxa(store);
+    expectProjects(store);
+    expect_users(store);
+
+    let expectedParams: iNatApiParams = {
+      colors: colors[1],
+      project_id: `${project_cnc1.id},${project_cnc2.id}`,
+      taxon_id: `${redOak().id}`,
+      verifiable: true,
+      spam: false,
+      nelat: 0,
+      nelng: 0,
+      swlat: 0,
+      swlng: 0,
+      user_id: `${user1.id},${user2.id}`,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
   });

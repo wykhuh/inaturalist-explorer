@@ -1,11 +1,13 @@
-import type { NormalizediNatTaxon, TileSettings } from "../types/app.d.ts";
+// import type { TileSettings } from "../types/app.d.ts";
+import type { iNatObservationTilesSettings } from "../types/app";
 import type {
-  ObservationsSpeciesCountAPI,
-  ObservationsAPI,
+  iNatObservationsSpeciesCountAPI,
+  iNatObservationsAPI,
   iNatTaxaAPI,
   iNatPlacesAPI,
   iNatHistogramApi,
   iNatProjectsAPI,
+  iNatUsersAPI,
 } from "../types/inat_api.d.ts";
 import { loggerUrl } from "./logger.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
@@ -14,6 +16,7 @@ export const api_base = "https://api.inaturalist.org/v1/";
 const search_api = "https://api.inaturalist.org/v1/search";
 export const autocomplete_places_api = `${search_api}?sources=places`;
 export const autocomplete_projects_api = `https://api.inaturalist.org/v1/projects/autocomplete?`;
+export const autocomplete_users_api = `https://api.inaturalist.org/v1/users/autocomplete?order=activity`;
 export const autocomplete_taxa_api =
   "https://api.inaturalist.org/v1/taxa/autocomplete?";
 
@@ -25,6 +28,7 @@ const places_api = "https://api.inaturalist.org/v1/places/";
 const histogram_year_api =
   "https://api.inaturalist.org/v1/observations/histogram?date_field=observed&interval=year";
 const projects_api = "https://api.inaturalist.org/v1/projects/";
+const users_api = "https://api.inaturalist.org/v1/users/";
 
 type Params = {
   [index: string]: any;
@@ -35,16 +39,18 @@ function formatDescription(inatApiParams: Params, type: string) {
   if (inatApiParams.place_id) {
     text += `, place_id ${inatApiParams.place_id}`;
   }
-
   if (inatApiParams.project_id) {
     text += `, project_id ${inatApiParams.project_id}`;
+  }
+  if (inatApiParams.user_id) {
+    text += `, user_id ${inatApiParams.user_id}`;
   }
   return text;
 }
 
 export const getiNatMapTiles = (
   inatApiParams: Params,
-): { [name: string]: TileSettings } => {
+): iNatObservationTilesSettings => {
   let dupParams = structuredClone(inatApiParams);
 
   // rename colors to color to work with iNat api
@@ -67,7 +73,7 @@ export const getiNatMapTiles = (
   delete dupParams.color;
   let noColorParamsString = new URLSearchParams(dupParams).toString();
 
-  let tiles = {
+  let tiles: iNatObservationTilesSettings = {
     iNatGrid: {
       name: "Grid",
       type: "overlay",
@@ -132,7 +138,7 @@ export async function getiNatObservationsTotal(
   try {
     let url = `${observations_api}?${paramsString}`;
     let response = await fetch(url);
-    let data = (await response.json()) as ObservationsAPI;
+    let data = (await response.json()) as iNatObservationsAPI;
     loggerUrl(url, data.total_results);
 
     return data.total_results;
@@ -148,7 +154,7 @@ export async function getiNatObservationsSpeciesCount(
 
   try {
     let response = await fetch(`${observations_count_api}?${paramsString}`);
-    let data = (await response.json()) as ObservationsSpeciesCountAPI;
+    let data = (await response.json()) as iNatObservationsSpeciesCountAPI;
     return data.results.reduce((prev, current) => prev + current.count, 0);
   } catch (error) {
     console.error(error);
@@ -160,7 +166,7 @@ export async function searchPlaces(placename: string) {
 
   try {
     let response = await fetch(`${autocomplete_places_api}${paramsString}`);
-    let data = (await response.json()) as ObservationsSpeciesCountAPI;
+    let data = (await response.json()) as iNatObservationsSpeciesCountAPI;
     return data.results.reduce((prev, current) => prev + current.count, 0);
   } catch (error) {
     console.error(error);
@@ -191,6 +197,16 @@ export async function getProjectById(id: number) {
   try {
     let resp = await fetch(projects_api + id);
     let data = (await resp.json()) as iNatProjectsAPI;
+    return data.results[0];
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getUserById(id: number) {
+  try {
+    let resp = await fetch(users_api + id);
+    let data = (await resp.json()) as iNatUsersAPI;
     return data.results[0];
   } catch (error) {
     console.error(error);

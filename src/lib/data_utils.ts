@@ -5,8 +5,6 @@ import type {
   CustomLayerOptions,
   CustomLayer,
   CustomGeoJSON,
-  NormalizediNatPlace,
-  LngLat,
   iNatApiParamsKeys,
 } from "../types/app";
 import {
@@ -26,8 +24,9 @@ import {
   renderTaxaList,
   renderPlacesList,
   renderProjectsList,
+  renderUsersList,
 } from "./autocomplete_utils.ts";
-import type { Map } from "leaflet";
+import type { Map, TileLayer } from "leaflet";
 import { iNatOrange } from "./map_colors_utils.ts";
 import { logger, loggerFilters } from "./logger.ts";
 import { mapStore } from "./store.ts";
@@ -158,6 +157,30 @@ export async function removeProject(projectId: number, appStore: MapStore) {
   updateUrl(window.location, appStore);
 }
 
+export async function removeUser(userId: number, appStore: MapStore) {
+  if (!appStore.selectedUsers) return;
+
+  // remove user
+  await removeOneUserFromStore(appStore, userId);
+
+  // remove existing taxa tiles, and refetch taxa tiles
+  for await (const taxon of appStore.selectedTaxa) {
+    removeOneTaxonFromMap(appStore, taxon.id);
+
+    appStore.inatApiParams = {
+      ...appStore.inatApiParams,
+      taxon_id: taxon.id.toString(),
+      colors: taxon.color,
+    };
+    await fetchiNatMapDataForTaxon(taxon, appStore);
+    await getObservationsCountForTaxon(taxon, appStore);
+  }
+
+  renderTaxaList(appStore);
+  renderUsersList(appStore);
+  updateUrl(window.location, appStore);
+}
+
 // called when user select taxa or place
 export async function fetchiNatMapDataForTaxon(
   taxonObj: NormalizediNatTaxon,
@@ -182,10 +205,11 @@ export async function fetchiNatMapDataForTaxon(
   let iNatHeatmapLayer = addOverlayToMap(iNatHeatmap, map, layerControl, title);
 
   // only need taxon range if taxon is selected
-  let layers = [];
+  let layers: TileLayer[] = [];
   if (taxonObj.id === 0) {
     layers = [iNatGridLayer, iNatPointLayer, iNatHeatmapLayer];
-  } else {
+    // add taxon range layer to map and layer control
+  } else if (iNatTaxonRange) {
     let iNatTaxonRangeLayer = addOverlayToMap(
       iNatTaxonRange,
       map,
@@ -412,6 +436,17 @@ function removeRefreshBBox(appStore: MapStore, map: Map) {
 }
 
 // ================
+// user
+// ================
+
+function removeOneUserFromStore(appStore: MapStore, userId: number) {
+  appStore.selectedUsers = appStore.selectedUsers.filter(
+    (item) => item.id !== userId,
+  );
+  removeIdfromInatApiParams(appStore, "user_id", userId);
+}
+
+// ================
 // misc
 // ================
 
@@ -476,6 +511,23 @@ function removeProjectId(
   }
 }
 
+function removeUserId(
+  appStore: MapStore,
+  property: iNatApiParamsKeys,
+  value: any,
+) {
+  if (appStore.selectedUsers.length === 0) {
+    delete appStore.inatApiParams.user_id;
+  } else {
+    let lastRecord = appStore.selectedUsers[appStore.selectedUsers.length - 1];
+    if (lastRecord.id === value) {
+    } else if (appStore.selectedUsers.map((p) => p.id).includes(value)) {
+    } else {
+      setinatApiParams(appStore, property, value);
+    }
+  }
+}
+
 export function removeIdfromInatApiParams(
   appStore: MapStore,
   property: iNatApiParamsKeys,
@@ -487,6 +539,8 @@ export function removeIdfromInatApiParams(
     removePlaceId(appStore, "place_id", value);
   } else if (property === "project_id") {
     removeProjectId(appStore, "project_id", value);
+  } else if (property === "user_id") {
+    removeUserId(appStore, "user_id", value);
   } else {
     throw new Error(
       `removeIdfromInatApiParams not implemented for ${property}`,

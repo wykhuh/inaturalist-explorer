@@ -8,6 +8,7 @@ import type {
   LngLat,
   Coordinates,
   iNatApiParams,
+  ObservationTilesSetting,
 } from "../types/app.d.ts";
 import { refreshBoundingBox } from "./data_utils.ts";
 import { loggerUrl } from "./logger.ts";
@@ -281,7 +282,7 @@ export function addLayerToMap(
 }
 
 export function addOverlayToMap(
-  tileObj: TileSettings,
+  tileObj: ObservationTilesSetting,
   map: any,
   layerControl: any,
   taxonName: string,
