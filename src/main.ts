@@ -1,4 +1,3 @@
-import autoComplete from "@tarekraafat/autocomplete.js";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -16,53 +15,22 @@ import {
 } from "./lib/map_utils.ts";
 import type {
   NormalizediNatTaxon,
-  AutoCompleteEvent,
   NormalizediNatPlace,
-  NormalizediNatProject,
-  NormalizediNatUser,
 } from "./types/app.d.ts";
 import mapStore from "./lib/store.ts";
-import {
-  processAutocompleteTaxa,
-  renderAutocompleteTaxon,
-  taxonSelectedHandler,
-  processAutocompletePlaces,
-  renderAutocompletePlace,
-  placeSelectedHandler,
-  renderAutocompleteProject,
-  processAutocompleteProject,
-  projectSelectedHandler,
-  renderAutocompleteUser,
-  processAutocompleteUser,
-  userSelectedHandler,
-} from "./lib/autocomplete_utils.ts";
-import {
-  autocomplete_projects_api,
-  autocomplete_taxa_api,
-  getObservationsYears,
-  autocomplete_places_api,
-  autocomplete_users_api,
-} from "./lib/inat_api.ts";
-import type {
-  iNatProjectsAPI,
-  iNatTaxaAPI,
-  iNatSearchAPI,
-  iNatUsersAPI,
-} from "./types/inat_api";
+import { placeSelectedHandler } from "./lib/search_places.ts";
+import { projectSelectedHandler } from "./lib/search_projects.ts";
+import { taxonSelectedHandler } from "./lib/search_taxa.ts";
+import { userSelectedHandler } from "./lib/search_users.ts";
+import { getObservationsYears } from "./lib/inat_api.ts";
 import { decodeAppUrl } from "./lib/utils.ts";
 import { initApp } from "./lib/init_app.ts";
-import { loggerUrl } from "./lib/logger.ts";
-import { renderUserSearch } from "./lib/search_users.ts";
-import { renderPlacesSearch } from "./lib/search_places.ts";
-import { renderProjectSearch } from "./lib/search_projects.ts";
-import { renderTaxaSearch } from "./lib/search_taxa.ts";
+import { setupUserSearch } from "./lib/search_users.ts";
+import { setupPlacesSearch } from "./lib/search_places.ts";
+import { setupProjectSearch } from "./lib/search_projects.ts";
+import { setupTaxaSearch } from "./lib/search_taxa.ts";
 
 window.app = { store: mapStore };
-window.app.store.displayJsonEl = document.getElementById("display-json");
-window.app.store.taxaListEl = document.getElementById("taxa-list-container");
-window.app.store.placesListEl = document.getElementById(
-  "places-list-container",
-);
 
 // =====================
 // misc
@@ -122,56 +90,99 @@ map.on("zoomend", function () {
 // =====================
 
 let urlData = decodeAppUrl(window.location.search);
-// initApp(window.app.store, urlData);
+initApp(window.app.store, urlData);
 
 // =====================
-// taxa search
+// search
 // =====================
 
-// =====================
-// places search
-// =====================
+let searchSelector = "#inatAutocomplete";
+let searchInputEl = document.querySelector(searchSelector) as HTMLInputElement;
+let searchSelectEl = document.querySelector(
+  "#search-type",
+) as HTMLSelectElement;
 
-// =====================
-// project search
-// =====================
+if (searchInputEl) {
+  // when user selects an search result,
+  searchInputEl.innerHTML = "";
+  window.app.store.search.setup = setupTaxaSearch(searchSelector);
+  window.app.store.search.selectedHandler = taxonSelectedHandler;
 
-// =====================
-// user search
-// =====================
+  searchInputEl.addEventListener("selection", async function (event: any) {
+    let selection = event.detail.selection.value;
+    let query = event.detail.query;
+
+    window.app.store.search.selectedHandler(selection, query, window.app.store);
+  });
+}
+
+if (searchSelectEl && searchInputEl) {
+  // update search input when user changes the search type
+  searchSelectEl.addEventListener("change", (event) => {
+    let target = event.target as HTMLInputElement;
+    if (target === null) return;
+
+    // remove event listerner for autocomplete search
+    window.app.store.search.setup.unInit();
+    // clear search input
+    searchInputEl.innerHTML = "";
+    searchInputEl.value = "";
+
+    let searchInstance;
+    let searchSelectedHandler;
+    switch (target.value) {
+      case "places":
+        searchInstance = setupPlacesSearch;
+        searchSelectedHandler = placeSelectedHandler;
+        break;
+      case "projects":
+        searchInstance = setupProjectSearch;
+        searchSelectedHandler = projectSelectedHandler;
+        break;
+      case "users":
+        searchInstance = setupUserSearch;
+        searchSelectedHandler = userSelectedHandler;
+        break;
+      default:
+        searchInstance = setupTaxaSearch;
+        searchSelectedHandler = taxonSelectedHandler;
+        break;
+    }
+
+    window.app.store.search.setup = searchInstance(searchSelector);
+    window.app.store.search.selectedHandler = searchSelectedHandler;
+  });
+}
 
 // =====================
 // misc
 // =====================
-let currentSearch = "species";
-let currentSearchFn;
 
-renderTaxaSearch();
-let searchSelectEl = document.querySelector(
-  "#search-type",
-) as HTMLSelectElement;
-if (searchSelectEl) {
-  searchSelectEl.addEventListener("change", (event) => {
-    if (event.target === null) return;
+let placesHeading = document.querySelector(
+  "#home .menu .places-heading",
+) as HTMLElement;
+let projectsHeading = document.querySelector(
+  "#home .menu .projects-heading",
+) as HTMLElement;
+let usersHeading = document.querySelector(
+  "#home .menu .users-heading",
+) as HTMLElement;
 
-    switch (event.target.value) {
-      case "species":
-        renderTaxaSearch();
-        break;
-      case "places":
-        renderPlacesSearch();
-        break;
-      case "projects":
-        renderProjectSearch();
-        break;
-      case "users":
-        renderUserSearch();
-        break;
-      default:
-        break;
-    }
-  });
-}
+window.addEventListener("selectedPlacesChange", () => {
+  if (!placesHeading) return;
+  let resource = window.app.store.selectedPlaces;
+  placesHeading.hidden = resource.length === 0 ? true : false;
+});
+window.addEventListener("selectedProjectsChange", () => {
+  if (!projectsHeading) return;
+  let resource = window.app.store.selectedProjects;
+  projectsHeading.hidden = resource.length === 0 ? true : false;
+});
+window.addEventListener("selectedUsersChange", () => {
+  if (!usersHeading) return;
+  let resource = window.app.store.selectedUsers;
+  usersHeading.hidden = resource.length === 0 ? true : false;
+});
 
 // =====================
 // dev

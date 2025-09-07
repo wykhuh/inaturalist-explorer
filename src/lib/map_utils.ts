@@ -78,6 +78,7 @@ export function areAllPointsInMap(coordinates: LatLngExpression[], map: Map) {
   }
 }
 
+// TODO: change TileSettings to same type as inat map tiles
 export const getMapTiles = (): { [name: string]: TileSettings } => {
   return {
     OpenStreetMap: {

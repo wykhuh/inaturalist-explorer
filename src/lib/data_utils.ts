@@ -1,3 +1,5 @@
+import type { Map, TileLayer } from "leaflet";
+
 import type {
   NormalizediNatTaxon,
   MapStore,
@@ -19,14 +21,7 @@ import {
   allTaxaRecord,
   bboxPlaceRecord,
 } from "./inat_data.ts";
-
-import {
-  renderTaxaList,
-  renderPlacesList,
-  renderProjectsList,
-  renderUsersList,
-} from "./autocomplete_utils.ts";
-import type { Map, TileLayer } from "leaflet";
+import { renderPlacesList } from "./search_places.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
 import { logger, loggerFilters } from "./logger.ts";
 import { mapStore } from "./store.ts";
@@ -90,94 +85,6 @@ export async function refreshBoundingBox(
       ...inatBbox,
     };
   }
-  updateUrl(window.location, appStore);
-}
-
-// called when user deletes a taxon
-export async function removeTaxon(taxonId: number, appStore: MapStore) {
-  removeOneTaxonFromStoreAndMap(appStore, taxonId);
-
-  // if no selected taxa, load allTaxaRecord
-  if (appStore.selectedTaxa.length === 0) {
-    await addAllTaxaRecordToMapAndStore(appStore);
-  }
-
-  renderTaxaList(appStore);
-  renderPlacesList(appStore);
-  updateUrl(window.location, appStore);
-}
-
-// called when user deletes a place
-export async function removePlace(placeId: number, appStore: MapStore) {
-  if (!appStore.selectedPlaces) return;
-
-  // remove place
-  await removeOnePlaceFromStoreAndMap(appStore, placeId);
-
-  // remove existing taxa tiles, and refetch taxa tiles
-  for await (const taxon of appStore.selectedTaxa) {
-    removeOneTaxonFromMap(appStore, taxon.id);
-
-    appStore.inatApiParams = {
-      ...appStore.inatApiParams,
-      taxon_id: taxon.id.toString(),
-      colors: taxon.color,
-    };
-    await fetchiNatMapDataForTaxon(taxon, appStore);
-    await getObservationsCountForTaxon(taxon, appStore);
-  }
-
-  renderTaxaList(appStore);
-  renderPlacesList(appStore);
-  updateUrl(window.location, appStore);
-}
-
-// called when user deletes a project
-export async function removeProject(projectId: number, appStore: MapStore) {
-  if (!appStore.selectedProjects) return;
-
-  // remove project
-  await removeOneProjectFromStore(appStore, projectId);
-
-  // remove existing taxa tiles, and refetch taxa tiles
-  for await (const taxon of appStore.selectedTaxa) {
-    removeOneTaxonFromMap(appStore, taxon.id);
-
-    appStore.inatApiParams = {
-      ...appStore.inatApiParams,
-      taxon_id: taxon.id.toString(),
-      colors: taxon.color,
-    };
-    await fetchiNatMapDataForTaxon(taxon, appStore);
-    await getObservationsCountForTaxon(taxon, appStore);
-  }
-
-  renderTaxaList(appStore);
-  renderProjectsList(appStore);
-  updateUrl(window.location, appStore);
-}
-
-export async function removeUser(userId: number, appStore: MapStore) {
-  if (!appStore.selectedUsers) return;
-
-  // remove user
-  await removeOneUserFromStore(appStore, userId);
-
-  // remove existing taxa tiles, and refetch taxa tiles
-  for await (const taxon of appStore.selectedTaxa) {
-    removeOneTaxonFromMap(appStore, taxon.id);
-
-    appStore.inatApiParams = {
-      ...appStore.inatApiParams,
-      taxon_id: taxon.id.toString(),
-      colors: taxon.color,
-    };
-    await fetchiNatMapDataForTaxon(taxon, appStore);
-    await getObservationsCountForTaxon(taxon, appStore);
-  }
-
-  renderTaxaList(appStore);
-  renderUsersList(appStore);
   updateUrl(window.location, appStore);
 }
 
@@ -304,7 +211,10 @@ export async function addAllTaxaRecordToMapAndStore(appStore: MapStore) {
   appStore.selectedTaxa = [allTaxaRecord];
 }
 
-function removeOneTaxonFromStoreAndMap(appStore: MapStore, taxonId: number) {
+export function removeOneTaxonFromStoreAndMap(
+  appStore: MapStore,
+  taxonId: number,
+) {
   removeOneTaxonFromMap(appStore, taxonId);
 
   appStore.selectedTaxa = appStore.selectedTaxa.filter(
@@ -357,7 +267,7 @@ export function removeTaxaFromStoreAndMap(appStore: MapStore) {
 // place
 // ================
 
-async function removeOnePlaceFromStoreAndMap(
+export async function removeOnePlaceFromStoreAndMap(
   appStore: MapStore,
   placeId: number,
 ) {
@@ -417,7 +327,10 @@ function removePlacesFromStoreAndMap(appStore: MapStore) {
 // project
 // ================
 
-function removeOneProjectFromStore(appStore: MapStore, projectId: number) {
+export function removeOneProjectFromStore(
+  appStore: MapStore,
+  projectId: number,
+) {
   appStore.selectedProjects = appStore.selectedProjects.filter(
     (item) => item.id !== projectId,
   );
@@ -438,7 +351,7 @@ function removeRefreshBBox(appStore: MapStore, map: Map) {
 // user
 // ================
 
-function removeOneUserFromStore(appStore: MapStore, userId: number) {
+export function removeOneUserFromStore(appStore: MapStore, userId: number) {
   appStore.selectedUsers = appStore.selectedUsers.filter(
     (item) => item.id !== userId,
   );
@@ -716,5 +629,8 @@ export function displayUserData(appStore: MapStore, _source: string) {
     mapLayerDescriptions: leafletVisibleLayers(appStore),
     iNatStats: { years_summary: yearString },
   };
-  displayJson(data, appStore.displayJsonEl);
+  let displayJsonEl = document.getElementById("display-json");
+  if (displayJsonEl) {
+    displayJson(data, displayJsonEl);
+  }
 }

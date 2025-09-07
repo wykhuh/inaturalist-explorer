@@ -1,4 +1,4 @@
-import { removeUser } from "../../lib/data_utils.ts";
+import { removeUser } from "../../lib/search_users";
 import type { NormalizediNatUser } from "../../types/app";
 
 class MyComponent extends HTMLElement {

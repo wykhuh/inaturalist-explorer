@@ -1,4 +1,4 @@
-import { removeProject } from "../../lib/data_utils.ts";
+import { removeProject } from "../../lib/search_projects.ts";
 import type { NormalizediNatProject } from "../../types/app";
 
 class MyComponent extends HTMLElement {

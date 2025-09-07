@@ -215,7 +215,7 @@
     margin-top: var(--flow-space, 1em);
   }
 
-  main.two-columns {
+  #home .two-columns {
     display: grid;
     grid-template-columns: 250px 1fr;
     grid-template-rows: 1fr 50px;
@@ -227,7 +227,7 @@
   }
 
   @media (max-width: 750px) {
-    main.two-columns {
+    #home .two-columns {
       grid-template-columns: 1fr;
     }
     .explorer {
@@ -239,6 +239,15 @@
 @layer explorer-menu {
   .sv_dropdown.is-open {
     z-index: 500 !important;
+  }
+
+  .menu {
+    padding: 0 1rem;
+
+    h2 {
+      font-size: var(--font-size-md);
+      margin: 1rem 0 .5rem 0;
+    }
   }
 
   .taxa-ac-option {
@@ -257,15 +266,10 @@
     }
   }
 
-  .menu {
-    padding: 0 1rem;
-  }
-
-  #display-json {
-    z-index: 1000;
-    position: absolute;
-    background-color: rgba(255, 255, 255, 0.5);
-    font-size: var(--font-size-sm);
+  .places-ac-option {
+    & .place-type {
+      color: var(--clr-gray-700);
+    }
   }
 
   ul#taxa-list-container {
@@ -344,11 +348,12 @@
     }
   }
 
-  .places-ac-option {
-    & .place-type {
-      color: var(--clr-gray-700);
-    }
-  }
+  #display-json {
+    z-index: 1000;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.5);
+    font-size: var(--font-size-sm);
+
 }
 
 @layer filters {

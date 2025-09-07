@@ -14,13 +14,11 @@ import type {
 import { mapStore } from "../lib/store.ts";
 import { allTaxaRecord } from "../lib/inat_data.ts";
 import { loggerUrl } from "../lib/logger.ts";
-import {
-  placeSelectedHandler,
-  projectSelectedHandler,
-  taxonSelectedHandler,
-  userSelectedHandler,
-} from "../lib/autocomplete_utils.ts";
 import { leafletVisibleLayers } from "../lib/data_utils.ts";
+import { placeSelectedHandler } from "../lib/search_places.ts";
+import { projectSelectedHandler } from "../lib/search_projects.ts";
+import { taxonSelectedHandler } from "../lib/search_taxa.ts";
+import { userSelectedHandler } from "../lib/search_users.ts";
 
 export function createMockServer() {
   const handlers = [

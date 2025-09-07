@@ -5,14 +5,11 @@ import { logger } from "./logger.ts";
 export const mapStore: MapStore = {
   selectedTaxa: [],
   taxaMapLayers: {},
-  taxaListEl: null,
   selectedPlaces: [],
   placesMapLayers: {},
   selectedProjects: [],
   selectedUsers: [],
-  placesListEl: null,
   inatApiParams: { verifiable: true, spam: false },
-  displayJsonEl: null,
   color: "",
   map: { map: null, layerControl: null },
   refreshMap: {
@@ -22,6 +19,7 @@ export const mapStore: MapStore = {
   },
   formFilters: { params: {}, string: "" },
   iNatStats: {},
+  search: {},
 };
 
 const proxiedStore = new Proxy(structuredClone(mapStore), {
@@ -30,6 +28,15 @@ const proxiedStore = new Proxy(structuredClone(mapStore), {
 
     logger(`proxy store.${property} changed`);
     displayUserData(proxiedStore, `proxiedStore ${property}`);
+    if (property === "selectedPlaces") {
+      window.dispatchEvent(new Event("selectedPlacesChange"));
+    } else if (property === "selectedProjects") {
+      window.dispatchEvent(new Event("selectedProjectsChange"));
+    } else if (property === "selectedTaxa") {
+      window.dispatchEvent(new Event("selectedTaxaChange"));
+    } else if (property === "selectedUsers") {
+      window.dispatchEvent(new Event("selectedUsersChange"));
+    }
 
     return true;
   },

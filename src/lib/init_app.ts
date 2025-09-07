@@ -18,12 +18,10 @@ import {
   getUserById,
 } from "./inat_api.ts";
 import { bboxPlaceRecord, fieldsWithAny, iNatApiNames } from "./inat_data.ts";
-import {
-  renderTaxaList,
-  renderPlacesList,
-  renderProjectsList,
-  renderUsersList,
-} from "./autocomplete_utils.ts";
+import { renderPlacesList } from "./search_places.ts";
+import { renderProjectsList } from "./search_projects.ts";
+import { renderTaxaList } from "./search_taxa.ts";
+import { renderUsersList } from "./search_users.ts";
 import type {
   PlacesResult,
   ProjectsResult,

@@ -1,4 +1,4 @@
-import { removeTaxon } from "../../lib/data_utils.ts";
+import { removeTaxon } from "../../lib/search_taxa.ts";
 import { pluralize } from "../../lib/utils.ts";
 import type { NormalizediNatTaxon } from "../../types/app";
 

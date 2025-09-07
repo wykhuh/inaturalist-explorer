@@ -1,4 +1,4 @@
-import { removePlace } from "../../lib/data_utils.ts";
+import { removePlace } from "../../lib/search_places.ts";
 import type { NormalizediNatPlace } from "../../types/app";
 
 class MyComponent extends HTMLElement {

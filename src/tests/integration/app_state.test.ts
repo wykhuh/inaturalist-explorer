@@ -13,17 +13,14 @@ import jsdom from "jsdom";
 import {
   leafletVisibleLayers,
   refreshBoundingBox,
-  removePlace,
-  removeProject,
-  removeTaxon,
-  removeUser,
 } from "../../lib/data_utils.ts";
+import { placeSelectedHandler, removePlace } from "../../lib/search_places.ts";
 import {
-  taxonSelectedHandler,
-  placeSelectedHandler,
   projectSelectedHandler,
-  userSelectedHandler,
-} from "../../lib/autocomplete_utils.ts";
+  removeProject,
+} from "../../lib/search_projects.ts";
+import { taxonSelectedHandler, removeTaxon } from "../../lib/search_taxa.ts";
+import { userSelectedHandler, removeUser } from "../../lib/search_users.ts";
 import {
   createMockServer,
   setupMapAndStore,

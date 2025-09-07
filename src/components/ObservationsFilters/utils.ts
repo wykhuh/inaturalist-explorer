@@ -16,9 +16,10 @@ import {
   removeOneTaxonFromMap,
   updateStoreUsingFilters,
 } from "../../lib/data_utils";
-import { renderPlacesList, renderTaxaList } from "../../lib/autocomplete_utils";
 import { updateUrl } from "../../lib/utils";
 import { loggerFilters } from "../../lib/logger";
+import { renderTaxaList } from "../../lib/search_taxa";
+import { renderPlacesList } from "../../lib/search_places";
 
 export function processFiltersForm(data: FormData): {
   params: iNatApiParams;

@@ -1,27 +1,30 @@
 import autoComplete from "@tarekraafat/autocomplete.js";
 
-import "../assets/autocomplete.css";
-import "../components/TaxaListItem/component.ts";
-import "../components/PlacesListItem/component.ts";
-import "../components/ProjectsListItem/component.ts";
-import "../components/UsersListItem/component.ts";
-import "../components/ObservationsFilters/component.ts";
 import type { AutoCompleteEvent, NormalizediNatUser } from "../types/app.d.ts";
-import {
-  renderAutocompleteUser,
-  processAutocompleteUser,
-  userSelectedHandler,
-} from "../lib/autocomplete_utils.ts";
+
 import { autocomplete_users_api } from "../lib/inat_api.ts";
 import type { iNatUsersAPI } from "../types/inat_api";
 
 import { loggerUrl } from "../lib/logger.ts";
 
-export function renderUserSearch() {
+import type { MapStore } from "../types/app";
+
+import {
+  fetchiNatMapDataForTaxon,
+  removeOneTaxonFromMap,
+  addIdToCommaSeparatedString,
+  getObservationsCountForTaxon,
+  removeOneUserFromStore,
+} from "./data_utils.ts";
+
+import { updateUrl } from "./utils.ts";
+import { renderTaxaList } from "./search_taxa.ts";
+
+export function setupUserSearch(selector: string) {
   const autoCompleteUsersJS = new autoComplete({
     autocomplete: "off",
-    selector: "#inatUsersAutoComplete",
-    placeHolder: "Enter user name",
+    selector: selector,
+    placeHolder: "Enter username",
     threshold: 2,
     searchEngine: (_query: string, record: NormalizediNatUser) => {
       return renderAutocompleteUser(record);
@@ -51,12 +54,107 @@ export function renderUserSearch() {
       },
     },
   });
+
+  return autoCompleteUsersJS;
 }
 
-let userSearchEl = document.querySelector("#inatUsersAutoComplete");
-if (userSearchEl) {
-  userSearchEl.addEventListener("selection", async function (event: any) {
-    let selection = event.detail.selection.value;
-    await userSelectedHandler(selection, event.detail.query, window.app.store);
+export function processAutocompleteUser(
+  data: iNatUsersAPI,
+): NormalizediNatUser[] {
+  return data.results.map((item) => {
+    return {
+      id: item.id,
+      login: item.login,
+      name: item.name,
+    };
   });
+}
+
+export function renderAutocompleteUser(item: NormalizediNatUser): string {
+  let html = `
+  <div class="users-ac-option" data-testid="users-ac-option">
+    <div class="user-name">
+    ${item.login}`;
+
+  if (item.name) {
+    html += ` (${item.name})`;
+  }
+
+  html += `
+    </div>
+  </div>`;
+
+  return html;
+}
+
+// called by autocomplete search when an user option is selected
+export async function userSelectedHandler(
+  selection: NormalizediNatUser,
+  _query: string,
+  appStore: MapStore,
+) {
+  // add project to store
+  appStore.selectedUsers = [...appStore.selectedUsers, selection];
+  appStore.inatApiParams = {
+    ...appStore.inatApiParams,
+    user_id: addIdToCommaSeparatedString(
+      selection.id,
+      appStore.inatApiParams.user_id,
+    ),
+  };
+
+  // get iNat map tiles for selected user
+  for await (const taxon of appStore.selectedTaxa) {
+    // remove existing taxon layers from map
+    removeOneTaxonFromMap(appStore, taxon.id);
+    appStore.inatApiParams = {
+      ...appStore.inatApiParams,
+      taxon_id: taxon.id.toString(),
+      colors: taxon.color,
+    };
+
+    await fetchiNatMapDataForTaxon(taxon, appStore);
+    await getObservationsCountForTaxon(taxon, appStore);
+  }
+
+  renderTaxaList(appStore);
+  renderUsersList(appStore);
+  updateUrl(window.location, appStore);
+}
+
+export function renderUsersList(appStore: MapStore) {
+  let listEl = document.querySelector("#users-list-container");
+  if (!listEl) return;
+
+  listEl.innerHTML = "";
+  appStore.selectedUsers.forEach((user) => {
+    let templateEl = document.createElement("x-users-list-item");
+    if (!templateEl) return;
+    templateEl.dataset.user = JSON.stringify(user);
+    listEl.appendChild(templateEl);
+  });
+}
+
+export async function removeUser(userId: number, appStore: MapStore) {
+  if (!appStore.selectedUsers) return;
+
+  // remove user
+  removeOneUserFromStore(appStore, userId);
+
+  // remove existing taxa tiles, and refetch taxa tiles
+  for await (const taxon of appStore.selectedTaxa) {
+    removeOneTaxonFromMap(appStore, taxon.id);
+
+    appStore.inatApiParams = {
+      ...appStore.inatApiParams,
+      taxon_id: taxon.id.toString(),
+      colors: taxon.color,
+    };
+    await fetchiNatMapDataForTaxon(taxon, appStore);
+    await getObservationsCountForTaxon(taxon, appStore);
+  }
+
+  renderTaxaList(appStore);
+  renderUsersList(appStore);
+  updateUrl(window.location, appStore);
 }

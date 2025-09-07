@@ -1,12 +1,15 @@
 // @vitest-environment jsdom
 
 import { expect, test, describe } from "vitest";
+
 import {
   processAutocompleteTaxa,
   renderAutocompleteTaxon,
+} from "../lib/search_taxa.ts";
+import {
   processAutocompletePlaces,
   renderAutocompletePlace,
-} from "../lib/autocomplete_utils.js";
+} from "../lib/search_places.ts";
 import { losAngelesSearchPlaces } from "./fixtures/inatApi.js";
 import type { NormalizediNatPlace } from "../types/app.js";
 

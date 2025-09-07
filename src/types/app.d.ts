@@ -65,16 +65,18 @@ export type NormalizediNatUser = {
 };
 
 export interface MapStore {
+  search: {
+    setup?: any;
+    selectedHandler?: any;
+    listContainer?: string;
+  };
   selectedTaxa: NormalizediNatTaxon[];
   taxaMapLayers: { [index: string]: TileLayer[] };
-  taxaListEl: HTMLElement | null;
   selectedPlaces: NormalizediNatPlace[];
   placesMapLayers: { [index: string]: CustomGeoJSON[] };
-  placesListEl: HTMLElement | null;
   selectedUsers: NormalizediNatUser[];
   selectedProjects: NormalizediNatProject[];
   inatApiParams: iNatApiParams;
-  displayJsonEl: HTMLElement | null;
   color: string;
   map: { map: Map | null; layerControl: Control.Layers | null };
   boundingBox?: { nelat: number; nelng: number; swlat: number; swlng: number };
@@ -287,3 +289,13 @@ export type PlaceTypes = {
   [key: string]: string;
 };
 export type PlaceTypesKey = keyof PlaceTypes;
+
+type SearchOptions = {
+  places: SearchOption;
+  projects: SearchOption;
+  users: SearchOption;
+  taxa: SearchOption;
+};
+
+type SearchOption = { setup: any; selectedHandler: any };
+type SearchOptionsKeys = keyof SearchOptions;
