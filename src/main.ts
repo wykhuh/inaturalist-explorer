@@ -52,6 +52,10 @@ import type {
 import { decodeAppUrl } from "./lib/utils.ts";
 import { initApp } from "./lib/init_app.ts";
 import { loggerUrl } from "./lib/logger.ts";
+import { renderUserSearch } from "./lib/search_users.ts";
+import { renderPlacesSearch } from "./lib/search_places.ts";
+import { renderProjectSearch } from "./lib/search_projects.ts";
+import { renderTaxaSearch } from "./lib/search_taxa.ts";
 
 window.app = { store: mapStore };
 window.app.store.displayJsonEl = document.getElementById("display-json");
@@ -118,198 +122,56 @@ map.on("zoomend", function () {
 // =====================
 
 let urlData = decodeAppUrl(window.location.search);
-initApp(window.app.store, urlData);
+// initApp(window.app.store, urlData);
 
 // =====================
 // taxa search
 // =====================
 
-const autoCompleteTaxaJS = new autoComplete({
-  autocomplete: "off",
-  selector: "#inatTaxaAutoComplete",
-  placeHolder: "Enter species name",
-  threshold: 2,
-  searchEngine: (query: string, record: NormalizediNatTaxon) => {
-    return renderAutocompleteTaxon(record, query);
-  },
-  data: {
-    src: async (query: string) => {
-      try {
-        let url = `${autocomplete_taxa_api}&per_page=50&q=${query}`;
-        loggerUrl(url);
-        let res = await fetch(url);
-        let data = (await res.json()) as iNatTaxaAPI;
-        return processAutocompleteTaxa(data, query);
-      } catch (error) {
-        console.error(error);
-      }
-    },
-  },
-  resultsList: {
-    maxResults: 50,
-  },
-  events: {
-    input: {
-      selection: (event: AutoCompleteEvent) => {
-        const selection = event.detail.selection.value as NormalizediNatTaxon;
-        autoCompleteTaxaJS.input.value = selection.title;
-      },
-    },
-  },
-});
-
-document
-  .querySelector("#inatTaxaAutoComplete")!
-  .addEventListener("selection", async function (event: any) {
-    let selection = event.detail.selection.value;
-    await taxonSelectedHandler(selection, event.detail.query, window.app.store);
-  });
-
 // =====================
 // places search
 // =====================
-
-const autoCompletePlacesJS = new autoComplete({
-  autocomplete: "off",
-  selector: "#inatPlacesSearch",
-  placeHolder: "Enter place name",
-  threshold: 2,
-  searchEngine: (_query: string, record: NormalizediNatPlace) => {
-    return renderAutocompletePlace(record);
-  },
-  data: {
-    src: async (query: string) => {
-      try {
-        let url = `${autocomplete_places_api}&per_page=50&q=${query}`;
-        loggerUrl(url);
-        let res = await fetch(url);
-        let data = (await res.json()) as iNatSearchAPI;
-        return processAutocompletePlaces(data);
-      } catch (error) {
-        console.error(error);
-      }
-    },
-  },
-  resultsList: {
-    maxResults: 50,
-  },
-  events: {
-    input: {
-      selection: (event: AutoCompleteEvent) => {
-        const selection = event.detail.selection.value as NormalizediNatPlace;
-        autoCompletePlacesJS.input.value = selection.display_name;
-      },
-    },
-  },
-});
-
-let placesEl = document.querySelector("#inatPlacesSearch");
-
-if (placesEl) {
-  placesEl.addEventListener("selection", async function (event: any) {
-    let selection = event.detail.selection.value;
-    await placeSelectedHandler(selection, event.detail.query, window.app.store);
-  });
-}
 
 // =====================
 // project search
 // =====================
 
-const autoCompleteProjectJS = new autoComplete({
-  autocomplete: "off",
-  selector: "#inatProjectsAutoComplete",
-  placeHolder: "Enter projects name",
-  threshold: 2,
-  searchEngine: (_query: string, record: NormalizediNatProject) => {
-    return renderAutocompleteProject(record);
-  },
-  data: {
-    src: async (query: string) => {
-      try {
-        let url = `${autocomplete_projects_api}&per_page=50&q=${query}`;
-        loggerUrl(url);
-        let res = await fetch(url);
-        let data = (await res.json()) as iNatProjectsAPI;
-        return processAutocompleteProject(data);
-      } catch (error) {
-        console.error(error);
-      }
-    },
-  },
-  resultsList: {
-    maxResults: 50,
-  },
-  events: {
-    input: {
-      selection: (event: AutoCompleteEvent) => {
-        const selection = event.detail.selection.value;
-        autoCompleteProjectJS.input.value = selection.name;
-      },
-    },
-  },
-});
-
-document
-  .querySelector("#inatProjectsAutoComplete")!
-  .addEventListener("selection", async function (event: any) {
-    let selection = event.detail.selection.value;
-    await projectSelectedHandler(
-      selection,
-      event.detail.query,
-      window.app.store,
-    );
-  });
-
 // =====================
 // user search
 // =====================
 
-const autoCompleteUsersJS = new autoComplete({
-  autocomplete: "off",
-  selector: "#inatUsersAutoComplete",
-  placeHolder: "Enter user name",
-  threshold: 2,
-  searchEngine: (_query: string, record: NormalizediNatUser) => {
-    return renderAutocompleteUser(record);
-  },
-  data: {
-    src: async (query: string) => {
-      try {
-        let url = `${autocomplete_users_api}&per_page=25&q=${query}`;
-        loggerUrl(url);
-        let res = await fetch(url);
-        let data = (await res.json()) as iNatUsersAPI;
-        return processAutocompleteUser(data);
-      } catch (error) {
-        console.error(error);
-      }
-    },
-  },
-  resultsList: {
-    maxResults: 25,
-  },
-  events: {
-    input: {
-      selection: (event: AutoCompleteEvent) => {
-        const selection = event.detail.selection.value as NormalizediNatUser;
-
-        autoCompleteUsersJS.input.value = selection.login;
-      },
-    },
-  },
-});
-
-document
-  .querySelector("#inatUsersAutoComplete")!
-  .addEventListener("selection", async function (event: any) {
-    let selection = event.detail.selection.value;
-    await userSelectedHandler(selection, event.detail.query, window.app.store);
-  });
-
 // =====================
 // misc
 // =====================
+let currentSearch = "species";
+let currentSearchFn;
+
+renderTaxaSearch();
+let searchSelectEl = document.querySelector(
+  "#search-type",
+) as HTMLSelectElement;
+if (searchSelectEl) {
+  searchSelectEl.addEventListener("change", (event) => {
+    if (event.target === null) return;
+
+    switch (event.target.value) {
+      case "species":
+        renderTaxaSearch();
+        break;
+      case "places":
+        renderPlacesSearch();
+        break;
+      case "projects":
+        renderProjectSearch();
+        break;
+      case "users":
+        renderUserSearch();
+        break;
+      default:
+        break;
+    }
+  });
+}
 
 // =====================
 // dev
