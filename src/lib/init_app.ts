@@ -161,9 +161,6 @@ export async function processTaxonData(
     taxon_id: taxon.id.toString(),
     colors: urlStoreTaxon.color,
   };
-  if (urlStoreTaxon.color) {
-    appStore.color = urlStoreTaxon.color;
-  }
 
   return taxon;
 }

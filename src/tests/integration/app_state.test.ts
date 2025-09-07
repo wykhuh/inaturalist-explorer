@@ -183,7 +183,6 @@ describe("taxonSelectedHandler", () => {
     ]);
     expect(store.taxaMapLayers[life().id].length).toBe(4);
     expect(store.taxaMapLayers[redOak().id].length).toBe(4);
-    expect(store.color).toBe(colors[1]);
     let expectedParams2 = {
       taxon_id: redOakBasic.id.toString(),
       colors: colors[1],
@@ -301,7 +300,6 @@ describe("refreshBoundingBox", () => {
     expectAllTaxaRecord(store);
     expectRefreshPlace(store);
     expectNoProjects(store);
-    expect(store.color).toEqual(iNatOrange);
     let expectedParams = {
       nelat: 0,
       nelng: 0,
@@ -335,7 +333,6 @@ describe("refreshBoundingBox", () => {
     expectAllTaxaRecord(store);
     expectRefreshPlace(store);
     expectNoProjects(store);
-    expect(store.color).toEqual(iNatOrange);
     let expectedParams = {
       nelat: 0,
       nelng: 0,
@@ -362,7 +359,6 @@ describe("refreshBoundingBox", () => {
     expectAllTaxaRecord(store);
     expectRefreshPlace(store);
     expectNoProjects(store);
-    expect(store.color).toEqual(iNatOrange);
     expect(store.inatApiParams).toStrictEqual(expectedParams);
     let refreshlayer2 = store.refreshMap.layer;
     expect(refreshlayer1).not.toStrictEqual(refreshlayer2);

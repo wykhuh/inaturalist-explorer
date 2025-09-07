@@ -413,7 +413,6 @@ export function expectEmpytMap(store: MapStore) {
   expect(store.refreshMap.refreshMapButtonEl).toBeNull();
   expect(store.refreshMap.showRefreshMapButton).toBeFalsy();
   expect(store.refreshMap.layer).toBeNull();
-  expect(store.color).toEqual("");
 }
 
 export function expectNoTaxa(store: MapStore) {
@@ -431,7 +430,6 @@ export function expectLifeTaxa(store: MapStore, color = colors[0]) {
   expect(store.selectedTaxa).toStrictEqual([lifeTemp]);
   expect(Object.keys(store.taxaMapLayers)).toEqual([lifeTemp.id.toString()]);
   expect(store.taxaMapLayers[lifeTemp.id].length).toBe(4);
-  expect(store.color).toBe(color);
 }
 
 export function expectOakTaxa(store: MapStore, color = colors[1]) {
@@ -439,7 +437,6 @@ export function expectOakTaxa(store: MapStore, color = colors[1]) {
   expect(store.selectedTaxa).toStrictEqual([oak]);
   expect(Object.keys(store.taxaMapLayers)).toEqual([oak.id.toString()]);
   expect(store.taxaMapLayers[oak.id].length).toBe(4);
-  expect(store.color).toBe(color);
 }
 
 export function expectLifeOakTaxa(

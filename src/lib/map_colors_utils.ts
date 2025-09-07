@@ -179,14 +179,14 @@ export let iNatOrange = "#EB5528";
 export let defaultColorScheme = colorsSixTolBright;
 
 export function getColor(appStore: MapStore, colorArray: string[]) {
-  let color;
-  if (appStore.color === "") {
+  let color = appStore.inatApiParams.colors;
+  if (color === undefined || color === "") {
     color = colorArray[0];
   } else {
-    let index = colorArray.indexOf(appStore.color);
+    let index = colorArray.indexOf(color);
     color = colorArray[(index + 1) % colorArray.length];
   }
-  appStore.color = color;
+  appStore.inatApiParams.colors = color;
 
   return color;
 }

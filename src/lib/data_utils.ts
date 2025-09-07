@@ -302,7 +302,6 @@ export async function addAllTaxaRecordToMapAndStore(appStore: MapStore) {
     colors: iNatOrange,
   };
   appStore.selectedTaxa = [allTaxaRecord];
-  appStore.color = iNatOrange;
 }
 
 function removeOneTaxonFromStoreAndMap(appStore: MapStore, taxonId: number) {
@@ -701,7 +700,6 @@ export function displayUserData(appStore: MapStore, _source: string) {
 
   let data = {
     inatApiParams: appStore.inatApiParams,
-    color: appStore.color,
     formFilters: appStore.formFilters,
     selectedTaxa: appStore.selectedTaxa,
     taxaMapLayers: formatTaxaMapLayers(),
