@@ -16,6 +16,8 @@ import {
 import type {
   NormalizediNatTaxon,
   NormalizediNatPlace,
+  SearchOptions,
+  SearchOptionsKeys,
 } from "./types/app.d.ts";
 import mapStore from "./lib/store.ts";
 import { placeSelectedHandler } from "./lib/search_places.ts";
@@ -102,6 +104,25 @@ let searchSelectEl = document.querySelector(
   "#search-type",
 ) as HTMLSelectElement;
 
+let searchOptions: SearchOptions = {
+  places: {
+    setup: setupPlacesSearch,
+    selectedHandler: placeSelectedHandler,
+  },
+  projects: {
+    setup: setupProjectSearch,
+    selectedHandler: projectSelectedHandler,
+  },
+  users: {
+    setup: setupUserSearch,
+    selectedHandler: userSelectedHandler,
+  },
+  taxa: {
+    setup: setupTaxaSearch,
+    selectedHandler: taxonSelectedHandler,
+  },
+};
+
 if (searchInputEl) {
   // when user selects an search result,
   searchInputEl.innerHTML = "";
@@ -128,29 +149,10 @@ if (searchSelectEl && searchInputEl) {
     searchInputEl.innerHTML = "";
     searchInputEl.value = "";
 
-    let searchInstance;
-    let searchSelectedHandler;
-    switch (target.value) {
-      case "places":
-        searchInstance = setupPlacesSearch;
-        searchSelectedHandler = placeSelectedHandler;
-        break;
-      case "projects":
-        searchInstance = setupProjectSearch;
-        searchSelectedHandler = projectSelectedHandler;
-        break;
-      case "users":
-        searchInstance = setupUserSearch;
-        searchSelectedHandler = userSelectedHandler;
-        break;
-      default:
-        searchInstance = setupTaxaSearch;
-        searchSelectedHandler = taxonSelectedHandler;
-        break;
-    }
+    let targetSearch = searchOptions[target.value as SearchOptionsKeys];
 
-    window.app.store.search.setup = searchInstance(searchSelector);
-    window.app.store.search.selectedHandler = searchSelectedHandler;
+    window.app.store.search.setup = targetSearch.setup(searchSelector);
+    window.app.store.search.selectedHandler = targetSearch.selectedHandler;
   });
 }
 
