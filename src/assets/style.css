@@ -1,4 +1,4 @@
-@layer reset, base, layout, home, explorer-menu, filters, explorer, utilities;
+@layer reset, base, layout, components, home, explorer-menu, filters, explorer, utilities;
 
 @layer reset {
   /* 1. Use a more-intuitive box-sizing model */
@@ -232,6 +232,31 @@
     }
     .explorer {
       order: -1;
+    }
+  }
+}
+
+@layer components {
+  .loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #f6d4c9;
+    border-bottom-color: #ff3d00;
+    border-radius: 50%;
+    display: none;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    position: absolute;
+    left: calc(50% - 120px / 2);
+    top: calc(50% - 120px / 2);
+  }
+
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
     }
   }
 }

@@ -299,3 +299,8 @@ type SearchOptions = {
 
 type SearchOption = { setup: any; selectedHandler: any };
 type SearchOptionsKeys = keyof SearchOptions;
+
+type Spinner = {
+  start: () => void;
+  stop: () => void;
+};
