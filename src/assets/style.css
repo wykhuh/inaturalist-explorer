@@ -22,6 +22,9 @@
   ul,
   li {
     margin: 0;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    padding-inline-start: 0;
   }
 
   body {
@@ -257,6 +260,25 @@
     }
     100% {
       transform: rotate(360deg);
+    }
+  }
+
+  ul.pagination {
+    display: flex;
+    margin: 0;
+
+    .disable {
+      color: var(--clr-gray-700);
+    }
+
+    .current-page {
+      background-color: var(--clr-gray-300);
+    }
+
+    li {
+      list-style: none;
+      border: 1px solid var(--clr-gray-300);
+      padding: 0.25rem 0.5rem;
     }
   }
 }
