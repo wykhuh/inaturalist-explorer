@@ -1,0 +1,45 @@
+<template>
+  <section class="two-columns">
+    <div class="menu">
+      <div class="form-group">
+        <label>
+          Search for
+          <select id="search-type" name="search-type">
+            <option selected value="taxa">Species</option>
+            <option value="places">iNaturalist Places</option>
+            <option value="projects">Projects</option>
+            <option value="users">users</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="form-group">
+        <label
+          >Search
+          <input id="inatAutocomplete" type="text" autocomplete="off" />
+        </label>
+      </div>
+      <ul id="selected-taxa-list-container"></ul>
+
+      <h2 class="taxa-heading">Species</h2>
+      <ul id="taxa-list-container"></ul>
+
+      <h2 class="places-heading" hidden>Places</h2>
+      <ul id="places-list-container"></ul>
+
+      <h2 class="projects-heading" hidden>Projects</h2>
+      <ul id="projects-list-container"></ul>
+
+      <h2 class="users-heading" hidden>Users</h2>
+      <ul id="users-list-container"></ul>
+
+      <div><pre id="display-json"></pre></div>
+    </div>
+    <div class="explorer">
+      <div class="dialog-container">
+        <x-filters></x-filters>
+      </div>
+      <div id="map"></div>
+    </div>
+  </section>
+</template>

@@ -106,3 +106,9 @@ an update in proxy store.
 ==
 
 http://localhost:5173/?taxon_id=47126,1&place_id=962&project_id=31997,16065,62506,224219,189339&user_id=34687,12809,81779,223005,81779,223005&colors=%2366ccee,%23228833&verifiable=true&spam=false
+
+==
+
+https://transform.tools/json-to-typescript
+
+https://www.urldecoder.org
