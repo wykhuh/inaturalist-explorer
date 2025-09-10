@@ -8,6 +8,7 @@ import type {
   iNatHistogramApi,
   iNatProjectsAPI,
   iNatUsersAPI,
+  iNatObservationsObserversAPI,
 } from "../types/inat_api.d.ts";
 import { loggerUrl } from "./logger.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
@@ -192,6 +193,28 @@ export async function getPlaceById(id: number) {
     console.error(error);
   }
 }
+// order_by=id&order=desc
+// order_by=observed_on&order=desc
+export async function getObservationsObservers(
+  appParams: string,
+  perPage: number,
+  page: number,
+) {
+  let searchParams = new URLSearchParams(appParams);
+  let url =
+    `${observations_api}/observers?${searchParams}&ttl=3600` +
+    `&per_page=${perPage}&page=${page}` +
+    `&fields=(user%3A(icon_url%3A!t%2Cid%3A!t%2Clogin%3A!t%2Cname%3A!t))`;
+  try {
+    let resp = await fetch(url);
+    let data = (await resp.json()) as iNatObservationsObserversAPI;
+    loggerUrl(url, data.total_results);
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 
 export async function getProjectById(id: number) {
   try {

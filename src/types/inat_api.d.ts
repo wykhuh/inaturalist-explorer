@@ -282,6 +282,26 @@ export type iNatObservationsAPI = {
   }[];
 };
 
+export interface ObservationUser {
+  id: number;
+  icon_url?: string;
+  login: string;
+  name?: string;
+}
+
+export interface iNatObservationsObserversAPI {
+  total_results: number;
+  page: number;
+  per_page: number;
+  results: ObservationsObserversResult[];
+}
+
+export interface ObservationsObserversResult {
+  observation_count: number;
+  species_count: number;
+  user: ObservationUser;
+}
+
 export type iNatObservationsSpeciesCountAPI = {
   total_results: number;
   page: number;

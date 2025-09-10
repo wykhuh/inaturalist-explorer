@@ -305,6 +305,29 @@
     padding: 2rem 1rem;
   }
 
+  table.observers-list {
+    width: calc(100%);
+
+    td {
+      padding: 0.5rem 0.5rem;
+    }
+
+    tr:nth-child(even) {
+      background-color: var(--clr-gray-200);
+    }
+
+    .avatar-name {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 20px;
+    }
+  }
 }
 
 @layer explorer-menu {
