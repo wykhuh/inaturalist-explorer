@@ -30,7 +30,8 @@ export async function fetchAndRenderData(
     let pagination1 = createPagination(
       data.per_page,
       data.page,
-      data.total_results,
+      // iNat API only returns first 500 records
+      Math.min(data.total_results, 500),
       paginationcCallback,
     );
     containerEl.appendChild(pagination1);
@@ -41,7 +42,8 @@ export async function fetchAndRenderData(
     let pagination2El = createPagination(
       data.per_page,
       data.page,
-      data.total_results,
+      // iNat API only returns first 500 records
+      Math.min(data.total_results, 500),
       paginationcCallback,
     );
     containerEl.appendChild(pagination2El);
