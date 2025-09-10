@@ -305,7 +305,8 @@
     padding: 2rem 1rem;
   }
 
-  table.observers-list {
+  table.observers-list,
+  table.identifiers-list {
     width: calc(100%);
 
     td {

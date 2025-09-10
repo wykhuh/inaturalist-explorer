@@ -9,6 +9,7 @@ import type {
   iNatProjectsAPI,
   iNatUsersAPI,
   iNatObservationsObserversAPI,
+  iNatObservationsIdentifiersAPI,
 } from "../types/inat_api.d.ts";
 import { loggerUrl } from "./logger.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
@@ -26,8 +27,8 @@ const observations_count_api =
   "https://api.inaturalist.org/v2/observations/species_counts";
 const taxa_api = "https://api.inaturalist.org/v1/taxa/";
 const places_api = "https://api.inaturalist.org/v1/places/";
-const histogram_year_api =
-  "https://api.inaturalist.org/v1/observations/histogram?date_field=observed&interval=year";
+// set max-age Cache-Control HTTP header to 30 days
+const histogram_year_api = `https://api.inaturalist.org/v1/observations/histogram?date_field=observed&interval=year&ttl=${60 * 60 * 24 * 30}`;
 const projects_api = "https://api.inaturalist.org/v1/projects/";
 const users_api = "https://api.inaturalist.org/v1/users/";
 
@@ -131,37 +132,6 @@ export const getiNatMapTiles = (
   return tiles;
 };
 
-export async function getiNatObservationsTotal(
-  params: Params,
-): Promise<number | undefined> {
-  let paramsString = new URLSearchParams(params).toString();
-
-  try {
-    let url = `${observations_api}?${paramsString}`;
-    let response = await fetch(url);
-    let data = (await response.json()) as iNatObservationsAPI;
-    loggerUrl(url, data.total_results);
-
-    return data.total_results;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-export async function getiNatObservationsSpeciesCount(
-  params: Params,
-): Promise<number | undefined> {
-  let paramsString = new URLSearchParams(params).toString();
-
-  try {
-    let response = await fetch(`${observations_count_api}?${paramsString}`);
-    let data = (await response.json()) as iNatObservationsSpeciesCountAPI;
-    return data.results.reduce((prev, current) => prev + current.count, 0);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 export async function searchPlaces(placename: string) {
   let paramsString = new URLSearchParams(placename).toString();
 
@@ -193,6 +163,55 @@ export async function getPlaceById(id: number) {
     console.error(error);
   }
 }
+
+export async function getProjectById(id: number) {
+  try {
+    let resp = await fetch(projects_api + id);
+    let data = (await resp.json()) as iNatProjectsAPI;
+    return data.results[0];
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getUserById(id: number) {
+  try {
+    let resp = await fetch(users_api + id);
+    let data = (await resp.json()) as iNatUsersAPI;
+    return data.results[0];
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// used to populate the years filter
+export async function getObservationsYears() {
+  try {
+    let resp = await fetch(histogram_year_api);
+    let data = (await resp.json()) as iNatHistogramApi;
+    return data.results;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getiNatObservationsTotal(
+  params: Params,
+): Promise<number | undefined> {
+  let paramsString = new URLSearchParams(params).toString();
+
+  try {
+    let url = `${observations_api}?${paramsString}`;
+    let response = await fetch(url);
+    let data = (await response.json()) as iNatObservationsAPI;
+    loggerUrl(url, data.total_results);
+
+    return data.total_results;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 // order_by=id&order=desc
 // order_by=observed_on&order=desc
 export async function getObservationsObservers(
@@ -215,32 +234,21 @@ export async function getObservationsObservers(
   }
 }
 
-
-export async function getProjectById(id: number) {
+export async function getObservationsIdentifiers(
+  appParams: string,
+  perPage: number,
+  page: number,
+) {
+  let searchParams = new URLSearchParams(appParams);
+  let url =
+    `${observations_api}/identifiers?${searchParams}&ttl=3600` +
+    `&per_page=${perPage}&page=${page}` +
+    `&fields=(user%3A(icon_url%3A!t%2Cid%3A!t%2Clogin%3A!t%2Cname%3A!t))`;
   try {
-    let resp = await fetch(projects_api + id);
-    let data = (await resp.json()) as iNatProjectsAPI;
-    return data.results[0];
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-export async function getUserById(id: number) {
-  try {
-    let resp = await fetch(users_api + id);
-    let data = (await resp.json()) as iNatUsersAPI;
-    return data.results[0];
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-export async function getObservationsYears() {
-  try {
-    let resp = await fetch(histogram_year_api);
-    let data = (await resp.json()) as iNatHistogramApi;
-    return data.results;
+    let resp = await fetch(url);
+    let data = (await resp.json()) as iNatObservationsIdentifiersAPI;
+    loggerUrl(url, data.total_results);
+    return data;
   } catch (error) {
     console.error(error);
   }

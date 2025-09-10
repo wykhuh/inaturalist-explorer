@@ -302,6 +302,18 @@ export interface ObservationsObserversResult {
   user: ObservationUser;
 }
 
+export interface iNatObservationsIdentifiersAPI {
+  total_results: number;
+  page: number;
+  per_page: number;
+  results: ObservationsIdentifiersResult[];
+}
+
+export interface ObservationsIdentifiersResult {
+  count: number;
+  user: ObservationUser;
+}
+
 export type iNatObservationsSpeciesCountAPI = {
   total_results: number;
   page: number;

@@ -1,4 +1,4 @@
-// import { createPagination } from "../../lib/pagination";
+import { fetchAndRenderData, paginationcCallback, perPage } from "./utils";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -16,6 +16,9 @@ class MyComponent extends HTMLElement {
 
     if (!template) return;
     this.appendChild(template.content.cloneNode(true));
+
+    let currentPage = 1;
+    fetchAndRenderData(currentPage, perPage, paginationcCallback);
   }
 
   connectedCallback() {
