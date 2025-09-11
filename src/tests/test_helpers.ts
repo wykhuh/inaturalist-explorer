@@ -241,8 +241,8 @@ export let lifeBasic: NormalizediNatTaxon = {
 export function life(color = colors[0]) {
   return {
     ...lifeBasic,
-    display_name: "life",
-    title: "life",
+    display_name: "Life",
+    title: "Life",
     subtitle: "Life",
     color: color,
     observations_count: 456789,
@@ -261,8 +261,8 @@ export let redOakBasic: NormalizediNatTaxon = {
 export function redOak(color = colors[1]) {
   return {
     ...redOakBasic,
-    display_name: "red oaks",
-    title: "red oaks",
+    display_name: "Red Oaks",
+    title: "Red Oaks",
     subtitle: "Lobatae",
     color: color,
     observations_count: 456789,

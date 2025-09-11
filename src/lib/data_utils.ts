@@ -25,6 +25,7 @@ import { renderPlacesList } from "./search_places.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
 import { logger, loggerFilters } from "./logger.ts";
 import { mapStore } from "./store.ts";
+import type { SpeciesCountTaxon } from "../types/inat_api";
 
 // called when user clicks refresh map button
 export async function refreshBoundingBox(
@@ -460,27 +461,63 @@ export function removeIdfromInatApiParams(
   }
 }
 
+function isNormalizediNatTaxon(
+  record: NormalizediNatTaxon | SpeciesCountTaxon,
+): record is NormalizediNatTaxon {
+  return "matched_term" in record;
+}
+
+function capitalizeFirstLetter(text: string) {
+  return text && text[0].toUpperCase() + text.slice(1);
+}
+
 export function formatTaxonName(
-  item: NormalizediNatTaxon,
+  item: NormalizediNatTaxon | SpeciesCountTaxon,
   inputValue: string,
   includeMatchedTerm = true,
 ) {
   let hasCommonName = true;
-  let title = item.preferred_common_name;
-  let titleAriaLabel = "taxon common name";
+  let title;
+  let titleAriaLabel;
   let subtitle;
   let subtitleAriaLabel;
 
-  if (title && item.name) {
-    subtitle = item.name;
-    subtitleAriaLabel = "taxon scientific name";
-    if (
-      includeMatchedTerm &&
-      !title.toLowerCase().includes(inputValue.toLowerCase()) &&
-      !subtitle.toLowerCase().includes(inputValue.toLowerCase())
-    ) {
-      title += ` (${item.matched_term})`;
+  // has common name
+  if (item.preferred_common_name) {
+    title = item.preferred_common_name
+      .split(" ")
+      .map((word) => {
+        if (word !== "and") {
+          return capitalizeFirstLetter(word);
+        } else {
+          return word;
+        }
+      })
+      .join(" ");
+
+    titleAriaLabel = "taxon common name";
+
+    // has scientific name
+    if (item.name) {
+      subtitle = item.name;
+      subtitleAriaLabel = "taxon scientific name";
+
+      // add optional (matched_term)
+      if (includeMatchedTerm && isNormalizediNatTaxon(item)) {
+        if (item.matched_term === item.preferred_common_name) {
+        } else if (item.matched_term === item.name) {
+        } else if (
+          item.matched_term &&
+          !item.preferred_common_name
+            ?.toLowerCase()
+            .includes(inputValue.toLowerCase()) &&
+          !item.name.toLowerCase().includes(inputValue.toLowerCase())
+        ) {
+          title += ` (${capitalizeFirstLetter(item.matched_term)})`;
+        }
+      }
     }
+    // no common-name
   } else {
     hasCommonName = false;
     title = item.name;

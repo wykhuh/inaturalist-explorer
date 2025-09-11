@@ -4,7 +4,7 @@ import type {
   iNatObservationsSpeciesCountAPI,
 } from "../../types/inat_api.js";
 
-export let redTaxaAutocomplete: TaxaResult[] = [
+export let redTaxaAutocompleteResults: TaxaResult[] = [
   {
     id: 846366,
     rank: "tribe",
@@ -431,7 +431,14 @@ export let redTaxaAutocomplete: TaxaResult[] = [
   },
 ];
 
-export let canisTaxaAutocomplete: TaxaResult[] = [
+export let redTaxaAutocomplete = {
+  total_results: 50,
+  page: 1,
+  per_page: 25,
+  results: redTaxaAutocompleteResults,
+};
+
+export let canisTaxaAutocompleteResults: TaxaResult[] = [
   {
     id: 42044,
     rank: "genus",
@@ -870,6 +877,450 @@ export let canisTaxaAutocomplete: TaxaResult[] = [
     matched_term: "Canis mesomelas mesomelas",
     iconic_taxon_name: "Mammalia",
     preferred_common_name: "Southern Black-backed Jackal",
+  },
+];
+
+export let canisTaxaAutocomplete = {
+  total_results: 50,
+  page: 1,
+  per_page: 25,
+  results: canisTaxaAutocompleteResults,
+};
+
+export let coastOakAutocompleteResults = [
+  {
+    id: 78808,
+    rank: "species",
+    rank_level: 10,
+    iconic_taxon_id: 47126,
+    ancestor_ids: [
+      48460, 47126, 211194, 47125, 47124, 47853, 47852, 47851, 861029, 861036,
+      1542658, 78808,
+    ],
+    is_active: true,
+    name: "Quercus parvula",
+    parent_id: 1542658,
+    ancestry:
+      "48460/47126/211194/47125/47124/47853/47852/47851/861029/861036/1542658",
+    extinct: false,
+    default_photo: {
+      id: 1149511,
+      license_code: "cc-by-nc",
+      attribution: "(c) dshell, some rights reserved (CC BY-NC)",
+      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/1149511/square.JPG",
+      original_dimensions: {
+        height: 1536,
+        width: 2048,
+      },
+      flags: [],
+      attribution_name: "dshell",
+      square_url:
+        "https://inaturalist-open-data.s3.amazonaws.com/photos/1149511/square.JPG",
+      medium_url:
+        "https://inaturalist-open-data.s3.amazonaws.com/photos/1149511/medium.JPG",
+    },
+    taxon_changes_count: 0,
+    taxon_schemes_count: 3,
+    observations_count: 1138,
+    flag_counts: {
+      resolved: 1,
+      unresolved: 0,
+    },
+    current_synonymous_taxon_ids: null,
+    atlas_id: null,
+    complete_species_count: null,
+    wikipedia_url: "http://en.wikipedia.org/wiki/Quercus_parvula",
+    matched_term: "coast oak",
+    iconic_taxon_name: "Plantae",
+    preferred_common_name: "coast oak",
+    conservation_status: {
+      id: 212499,
+      place_id: null,
+      source_id: null,
+      user_id: null,
+      authority: "IUCN Red List",
+      status: "nt",
+      status_name: "near threatened",
+      geoprivacy: "open",
+      iucn: 20,
+    },
+  },
+  {
+    id: 47850,
+    rank: "species",
+    rank_level: 10,
+    iconic_taxon_id: 47126,
+    ancestor_ids: [
+      48460, 47126, 211194, 47125, 47124, 47853, 47852, 47851, 861029, 861036,
+      1542658, 47850,
+    ],
+    is_active: true,
+    name: "Quercus agrifolia",
+    parent_id: 1542658,
+    ancestry:
+      "48460/47126/211194/47125/47124/47853/47852/47851/861029/861036/1542658",
+    extinct: false,
+    default_photo: {
+      id: 18734105,
+      license_code: "cc-by-sa",
+      attribution: "(c) Franco Folini, some rights reserved (CC BY-SA)",
+      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/18734105/square.jpg",
+      original_dimensions: {
+        height: 1356,
+        width: 2048,
+      },
+      flags: [],
+      attribution_name: "Franco Folini",
+      square_url:
+        "https://inaturalist-open-data.s3.amazonaws.com/photos/18734105/square.jpg",
+      medium_url:
+        "https://inaturalist-open-data.s3.amazonaws.com/photos/18734105/medium.jpg",
+    },
+    taxon_changes_count: 0,
+    taxon_schemes_count: 5,
+    observations_count: 54847,
+    flag_counts: {
+      resolved: 1,
+      unresolved: 0,
+    },
+    current_synonymous_taxon_ids: null,
+    atlas_id: 141,
+    complete_species_count: null,
+    wikipedia_url: "http://en.wikipedia.org/wiki/Quercus_agrifolia",
+    matched_term: "coast live oak",
+    iconic_taxon_name: "Plantae",
+    preferred_common_name: "coast live oak",
+  },
+  {
+    id: 62888,
+    rank: "species",
+    rank_level: 10,
+    iconic_taxon_id: 47126,
+    ancestor_ids: [
+      48460, 47126, 211194, 47125, 47124, 47853, 62890, 62891, 62888,
+    ],
+    is_active: true,
+    name: "Casuarina equisetifolia",
+    parent_id: 62891,
+    ancestry: "48460/47126/211194/47125/47124/47853/62890/62891",
+    extinct: false,
+    default_photo: {
+      id: 16450498,
+      license_code: "cc-by-nc",
+      attribution:
+        "(c) Pedro Alanis, some rights reserved (CC BY-NC), uploaded by Pedro Alanis",
+      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/16450498/square.jpeg",
+      original_dimensions: {
+        height: 1536,
+        width: 2048,
+      },
+      flags: [],
+      attribution_name: "Pedro Alanis",
+      square_url:
+        "https://inaturalist-open-data.s3.amazonaws.com/photos/16450498/square.jpeg",
+      medium_url:
+        "https://inaturalist-open-data.s3.amazonaws.com/photos/16450498/medium.jpeg",
+    },
+    taxon_changes_count: 0,
+    taxon_schemes_count: 3,
+    observations_count: 18163,
+    flag_counts: {
+      resolved: 0,
+      unresolved: 0,
+    },
+    current_synonymous_taxon_ids: null,
+    atlas_id: null,
+    complete_species_count: null,
+    wikipedia_url: "http://en.wikipedia.org/wiki/Casuarina_equisetifolia",
+    matched_term: "coast she-oak",
+    iconic_taxon_name: "Plantae",
+    preferred_common_name: "Beach Sheoak",
+  },
+  {
+    id: 567699,
+    rank: "species",
+    rank_level: 10,
+    iconic_taxon_id: 47126,
+    ancestor_ids: [
+      48460, 47126, 211194, 47125, 47124, 47605, 47604, 201654, 632780, 184565,
+      567699,
+    ],
+    is_active: true,
+    name: "Brachylaena discolor",
+    parent_id: 184565,
+    ancestry: "48460/47126/211194/47125/47124/47605/47604/201654/632780/184565",
+    extinct: false,
+    default_photo: {
+      id: 19070182,
+      license_code: "cc-by-nc",
+      attribution:
+        "(c) Ricky Taylor, some rights reserved (CC BY-NC), uploaded by Ricky Taylor",
+      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/19070182/square.jpg",
+      original_dimensions: {
+        height: 1705,
+        width: 2048,
+      },
+      flags: [],
+      attribution_name: "Ricky Taylor",
+      square_url:
+        "https://inaturalist-open-data.s3.amazonaws.com/photos/19070182/square.jpg",
+      medium_url:
+        "https://inaturalist-open-data.s3.amazonaws.com/photos/19070182/medium.jpg",
+    },
+    taxon_changes_count: 0,
+    taxon_schemes_count: 1,
+    observations_count: 2773,
+    flag_counts: {
+      resolved: 0,
+      unresolved: 1,
+    },
+    current_synonymous_taxon_ids: null,
+    atlas_id: null,
+    complete_species_count: null,
+    wikipedia_url: "http://en.wikipedia.org/wiki/Brachylaena_discolor",
+    matched_term: "Coast Silver-oak",
+    iconic_taxon_name: "Plantae",
+    preferred_common_name: "Coast Silver-oak",
+  },
+  {
+    id: 64137,
+    rank: "species",
+    rank_level: 10,
+    iconic_taxon_id: 47126,
+    ancestor_ids: [
+      48460, 47126, 211194, 47125, 47124, 47853, 47852, 47851, 861029, 861033,
+      1553163, 1553166, 64137,
+    ],
+    is_active: true,
+    name: "Quercus dumosa",
+    parent_id: 1553166,
+    ancestry:
+      "48460/47126/211194/47125/47124/47853/47852/47851/861029/861033/1553163/1553166",
+    extinct: false,
+    default_photo: {
+      id: 5095235,
+      license_code: "cc-by-nc",
+      attribution:
+        "(c) James Bailey, some rights reserved (CC BY-NC), uploaded by James Bailey",
+      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/5095235/square.jpeg",
+      original_dimensions: {
+        height: 1365,
+        width: 2048,
+      },
+      flags: [],
+      attribution_name: "James Bailey",
+      square_url:
+        "https://inaturalist-open-data.s3.amazonaws.com/photos/5095235/square.jpeg",
+      medium_url:
+        "https://inaturalist-open-data.s3.amazonaws.com/photos/5095235/medium.jpeg",
+    },
+    taxon_changes_count: 1,
+    taxon_schemes_count: 6,
+    observations_count: 2275,
+    flag_counts: {
+      resolved: 1,
+      unresolved: 0,
+    },
+    current_synonymous_taxon_ids: null,
+    atlas_id: null,
+    complete_species_count: null,
+    wikipedia_url: "http://en.wikipedia.org/wiki/Quercus_dumosa",
+    matched_term: "coastal sage scrub oak",
+    iconic_taxon_name: "Plantae",
+    preferred_common_name: "Nuttall's scrub oak",
+    conservation_status: {
+      id: 87032,
+      place_id: null,
+      source_id: 9164,
+      user_id: null,
+      authority: "IUCN Red List",
+      status: "en",
+      status_name: "endangered",
+      geoprivacy: "open",
+      iucn: 40,
+    },
+  },
+  {
+    id: 81309,
+    rank: "variety",
+    rank_level: 5,
+    iconic_taxon_id: 47126,
+    ancestor_ids: [
+      48460, 47126, 211194, 47125, 47124, 47853, 47852, 47851, 861029, 861036,
+      1542658, 47850, 81309,
+    ],
+    is_active: true,
+    name: "Quercus agrifolia oxyadenia",
+    parent_id: 47850,
+    ancestry:
+      "48460/47126/211194/47125/47124/47853/47852/47851/861029/861036/1542658/47850",
+    extinct: false,
+    default_photo: {
+      id: 1451089,
+      license_code: null,
+      attribution:
+        "(c) Jay Keller, all rights reserved, uploaded by Jay Keller",
+      url: "https://static.inaturalist.org/photos/1451089/square.jpg",
+      original_dimensions: {
+        height: 1520,
+        width: 2005,
+      },
+      flags: [],
+      attribution_name: "Jay Keller",
+      square_url: "https://static.inaturalist.org/photos/1451089/square.jpg",
+      medium_url: "https://static.inaturalist.org/photos/1451089/medium.jpg",
+    },
+    taxon_changes_count: 0,
+    taxon_schemes_count: 3,
+    observations_count: 356,
+    flag_counts: {
+      resolved: 0,
+      unresolved: 0,
+    },
+    current_synonymous_taxon_ids: null,
+    atlas_id: null,
+    complete_species_count: null,
+    wikipedia_url: null,
+    matched_term: "Southern Coast Live Oak",
+    iconic_taxon_name: "Plantae",
+    preferred_common_name: "Southern Coast Live Oak",
+  },
+  {
+    id: 1473163,
+    rank: "hybrid",
+    rank_level: 10,
+    iconic_taxon_id: 47126,
+    ancestor_ids: [
+      48460, 47126, 211194, 47125, 47124, 47853, 47852, 47851, 861029, 861036,
+      1542658, 1473163,
+    ],
+    is_active: true,
+    name: "Quercus agrifolia × wislizeni",
+    parent_id: 1542658,
+    ancestry:
+      "48460/47126/211194/47125/47124/47853/47852/47851/861029/861036/1542658",
+    extinct: false,
+    default_photo: {
+      id: 215365554,
+      license_code: "cc-by-nc",
+      attribution: "(c) rebeccabrubaker, some rights reserved (CC BY-NC)",
+      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/215365554/square.jpg",
+      original_dimensions: {
+        height: 2048,
+        width: 1536,
+      },
+      flags: [],
+      attribution_name: "rebeccabrubaker",
+      square_url:
+        "https://inaturalist-open-data.s3.amazonaws.com/photos/215365554/square.jpg",
+      medium_url:
+        "https://inaturalist-open-data.s3.amazonaws.com/photos/215365554/medium.jpg",
+    },
+    taxon_changes_count: 0,
+    taxon_schemes_count: 0,
+    observations_count: 160,
+    flag_counts: {
+      resolved: 0,
+      unresolved: 0,
+    },
+    current_synonymous_taxon_ids: null,
+    atlas_id: null,
+    complete_species_count: null,
+    wikipedia_url: null,
+    matched_term: "Coast Live × Interior Live Oak",
+    iconic_taxon_name: "Plantae",
+    preferred_common_name: "Coast Live × Interior Live Oak",
+  },
+  {
+    id: 37011,
+    rank: "species",
+    rank_level: 10,
+    iconic_taxon_id: 26036,
+    ancestor_ids: [
+      48460, 1, 2, 355675, 26036, 26172, 85552, 1563904, 36982, 787703, 37010,
+      37011,
+    ],
+    is_active: true,
+    name: "Cyclodomorphus michaeli",
+    parent_id: 37010,
+    ancestry: "48460/1/2/355675/26036/26172/85552/1563904/36982/787703/37010",
+    extinct: false,
+    default_photo: {
+      id: 396015294,
+      license_code: null,
+      attribution:
+        "(c) Tom Frisby, all rights reserved, uploaded by Tom Frisby",
+      url: "https://static.inaturalist.org/photos/396015294/square.jpg",
+      original_dimensions: {
+        height: 1365,
+        width: 2048,
+      },
+      flags: [],
+      attribution_name: "Tom Frisby",
+      square_url: "https://static.inaturalist.org/photos/396015294/square.jpg",
+      medium_url: "https://static.inaturalist.org/photos/396015294/medium.jpg",
+    },
+    taxon_changes_count: 0,
+    taxon_schemes_count: 2,
+    observations_count: 99,
+    flag_counts: {
+      resolved: 1,
+      unresolved: 0,
+    },
+    current_synonymous_taxon_ids: null,
+    atlas_id: null,
+    complete_species_count: null,
+    wikipedia_url:
+      "https://en.wikipedia.org/wiki/Coastal_she-oak_slender_bluetongue",
+    complete_rank: "subspecies",
+    matched_term: "Coastal She-oak Slender Bluetongue",
+    iconic_taxon_name: "Reptilia",
+    preferred_common_name: "Mainland Sheoak Skink",
+  },
+  {
+    id: 170977,
+    rank: "hybrid",
+    rank_level: 10,
+    iconic_taxon_id: 47126,
+    ancestor_ids: [
+      48460, 47126, 211194, 47125, 47124, 47853, 47852, 47851, 861029, 861036,
+      1549940, 170977,
+    ],
+    is_active: true,
+    name: "Quercus × atlantica",
+    parent_id: 1549940,
+    ancestry:
+      "48460/47126/211194/47125/47124/47853/47852/47851/861029/861036/1549940",
+    extinct: false,
+    default_photo: {
+      id: 51576437,
+      license_code: null,
+      attribution:
+        "(c) Jeff Stauffer, all rights reserved, uploaded by Jeff Stauffer",
+      url: "https://static.inaturalist.org/photos/51576437/square.jpg",
+      original_dimensions: {
+        height: 1536,
+        width: 2048,
+      },
+      flags: [],
+      attribution_name: "Jeff Stauffer",
+      square_url: "https://static.inaturalist.org/photos/51576437/square.jpg",
+      medium_url: "https://static.inaturalist.org/photos/51576437/medium.jpg",
+    },
+    taxon_changes_count: 0,
+    taxon_schemes_count: 1,
+    observations_count: 4,
+    flag_counts: {
+      resolved: 0,
+      unresolved: 0,
+    },
+    current_synonymous_taxon_ids: null,
+    atlas_id: null,
+    complete_species_count: null,
+    wikipedia_url: null,
+    matched_term: "Atlantic coast oak",
+    iconic_taxon_name: "Plantae",
+    preferred_common_name: "Atlantic coast oak",
   },
 ];
 

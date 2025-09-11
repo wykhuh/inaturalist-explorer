@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import {
-  redTaxaAutocomplete,
+  redTaxaAutocompleteResults,
   losAngelesSearchPlaces,
 } from "../fixtures/inatApi.ts";
 import { logger } from "../../lib/logger.ts";
@@ -13,7 +13,7 @@ test.beforeEach(async ({ page }) => {
   await page.route(
     "https://api.inaturalist.org/v1/taxa/autocomplete?**",
     async (route) => {
-      const json = { results: redTaxaAutocomplete };
+      const json = { results: redTaxaAutocompleteResults };
       await route.fulfill({ json });
     },
   );
@@ -43,13 +43,15 @@ test("search taxa workflow", async ({ page }) => {
   await expect(page).toHaveScreenshot({ maxDiffPixels: 100 });
 
   // app show list of search results
-  let names = redTaxaAutocomplete.map((record) => record.preferred_common_name);
+  let names = redTaxaAutocompleteResults.map(
+    (record) => record.preferred_common_name,
+  );
   for await (const name of names) {
     await expect(page.getByText(name as string)).toBeVisible();
   }
 
   // user select one taxa
-  let selectedTaxon = redTaxaAutocomplete[1];
+  let selectedTaxon = redTaxaAutocompleteResults[1];
   await page.getByText(selectedTaxon.preferred_common_name as string).click();
 
   // app makes requests for iNaturalist grid map tiles
@@ -80,7 +82,7 @@ test("search taxa, remove taxa workflow", async ({ page }) => {
   await page.getByRole("textbox", { name: "Search species" }).fill(TAXA_QUERY);
 
   // user select one taxa
-  let selectedTaxon = redTaxaAutocomplete[1];
+  let selectedTaxon = redTaxaAutocompleteResults[1];
   await page.getByText(selectedTaxon.preferred_common_name as string).click();
 
   // add adds taxon item
@@ -208,7 +210,7 @@ test("search taxa, search place workflow", async ({ page }) => {
   await page.getByRole("textbox", { name: "Search species" }).fill(TAXA_QUERY);
 
   // user select one taxa
-  let selectedTaxon = redTaxaAutocomplete[1];
+  let selectedTaxon = redTaxaAutocompleteResults[1];
   await page.getByText(selectedTaxon.preferred_common_name as string).click();
 
   // user enter search term

@@ -18,6 +18,11 @@ import {
   redOakBasic,
   sandiego,
 } from "./test_helpers.ts";
+import {
+  canisTaxaAutocompleteResults,
+  coastOakAutocompleteResults,
+  redTaxaAutocompleteResults,
+} from "./fixtures/inatApi.ts";
 
 describe("formatTaxonName", () => {
   describe("query matches common name", () => {
@@ -138,6 +143,169 @@ describe("formatTaxonName", () => {
 
       expect(results).toStrictEqual(expected);
     });
+  });
+
+  describe("common name and matched_term are the same", () => {
+    test("only include preferred_common_name", () => {
+      let query = "coast oak";
+      let data = {
+        name: "Quercus agrifolia oxyadenia",
+        default_photo: "https://inat.com/photos/34859026/square.jpg",
+        preferred_common_name: "Southern Coast Live Oak",
+        matched_term: "Southern Coast Live Oak",
+        rank: "variety",
+        id: 81309,
+      };
+      let expected = {
+        hasCommonName: true,
+        subtitle: "Quercus agrifolia oxyadenia",
+        subtitleAriaLabel: "taxon scientific name",
+        title: "Southern Coast Live Oak",
+        titleAriaLabel: "taxon common name",
+      };
+
+      let results = formatTaxonName(data, query);
+
+      expect(results).toStrictEqual(expected);
+    });
+  });
+
+  describe("search for red", () => {
+    let processed = redTaxaAutocompleteResults.map((res) => {
+      return { ...res, default_photo: res.default_photo?.square_url };
+    });
+    let results = [
+      [processed[0], "Reduncines", "Reduncini", true],
+      [processed[1], "Red Oaks", "Lobatae", true],
+      [processed[2], "American Robin (Red Robin)", "Turdus migratorius", true],
+      [
+        processed[3],
+        "Northern Cardinal (Red Cardinal)",
+        "Cardinalis cardinalis",
+        true,
+      ],
+      [processed[4], "Red-tailed Hawk", "Buteo jamaicensis", true],
+      [
+        processed[5],
+        "Agelaius Blackbirds (Red-shouldered Blackbirds and Allies)",
+        "Agelaius",
+        true,
+      ],
+      [processed[6], "Red-winged Blackbird", "Agelaius phoeniceus", true],
+      [processed[7], "Red Admiral", "Vanessa atalanta", true],
+      [processed[8], "Red and Bordered Plant Bugs", "Pyrrhocoroidea", true],
+      [processed[9], "Red Algae", "Rhodophyta", true],
+    ];
+
+    test.each(results)(
+      "returns title and subtitle",
+      (processed, common, science, hasCommonName) => {
+        let data = processed as NormalizediNatTaxon;
+
+        let res = formatTaxonName(data, "red");
+
+        expect(res.title).toBe(common);
+        expect(res.subtitle).toBe(science);
+        expect(res.hasCommonName).toBe(hasCommonName);
+      },
+    );
+  });
+
+  describe("search for canis", () => {
+    let processed = canisTaxaAutocompleteResults.map((res) => {
+      return { ...res, default_photo: res.default_photo?.square_url };
+    });
+    let results = [
+      [processed[0], "Wolves and Dogs", "Canis", true],
+      [processed[1], "Domestic Dog", "Canis familiaris", true],
+      [processed[2], "Coyote", "Canis latrans", true],
+      [processed[3], "Red Fox (Canis vulpes)", "Vulpes vulpes", true],
+      [processed[4], "Gray Wolf", "Canis lupus", true],
+      [processed[5], "Spotted Hyena (Canis crocuta)", "Crocuta crocuta", true],
+      [
+        processed[6],
+        "Black-backed Jackal (Canis mesomelas)",
+        "Lupulella mesomelas",
+        true,
+      ],
+      [processed[7], "Golden Jackal", "Canis aureus", true],
+      [processed[8], "Crab-eating Fox (Canis thous)", "Cerdocyon thous", true],
+      [
+        processed[9],
+        "Southern Black-backed Jackal (Canis mesomelas mesomelas)",
+        "Lupulella mesomelas mesomelas",
+        true,
+      ],
+    ];
+
+    test.each(results)(
+      "returns title and subtitle",
+      (processed, common, science, hasCommonName) => {
+        let data = processed as NormalizediNatTaxon;
+
+        let res = formatTaxonName(data, "canis");
+
+        expect(res.title).toBe(common);
+        expect(res.subtitle).toBe(science);
+        expect(res.hasCommonName).toBe(hasCommonName);
+      },
+    );
+  });
+
+  describe("search for coast oak", () => {
+    let processed = coastOakAutocompleteResults.map((res) => {
+      return { ...res, default_photo: res.default_photo?.square_url };
+    });
+
+    let results = [
+      [processed[0], "Coast Oak", "Quercus parvula", true],
+      [processed[1], "Coast Live Oak", "Quercus agrifolia", true],
+      [
+        processed[2],
+        "Beach Sheoak (Coast she-oak)",
+        "Casuarina equisetifolia",
+        true,
+      ],
+      [processed[3], "Coast Silver-oak", "Brachylaena discolor", true],
+      [
+        processed[4],
+        "Nuttall's Scrub Oak (Coastal sage scrub oak)",
+        "Quercus dumosa",
+        true,
+      ],
+      [
+        processed[5],
+        "Southern Coast Live Oak",
+        "Quercus agrifolia oxyadenia",
+        true,
+      ],
+      [
+        processed[6],
+        "Coast Live × Interior Live Oak",
+        "Quercus agrifolia × wislizeni",
+        true,
+      ],
+      [
+        processed[7],
+        "Mainland Sheoak Skink (Coastal She-oak Slender Bluetongue)",
+        "Cyclodomorphus michaeli",
+        true,
+      ],
+      [processed[8], "Atlantic Coast Oak", "Quercus × atlantica", true],
+    ];
+
+    test.each(results)(
+      "returns title and subtitle",
+      (processed, common, science, hasCommonName) => {
+        let data = processed as NormalizediNatTaxon;
+
+        let res = formatTaxonName(data, "coast oak");
+
+        expect(res.title).toBe(common);
+        expect(res.subtitle).toBe(science);
+        expect(res.hasCommonName).toBe(hasCommonName);
+      },
+    );
   });
 });
 
