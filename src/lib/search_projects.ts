@@ -36,7 +36,7 @@ export function setupProjectSearch(selector: string) {
           let data = (await res.json()) as iNatProjectsAPI;
           return processAutocompleteProject(data);
         } catch (error) {
-          console.error(error);
+          console.error("setupProjectSearch ERROR:", error);
         }
       },
     },

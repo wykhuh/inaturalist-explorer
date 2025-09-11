@@ -9,7 +9,7 @@ class MyComponent extends HTMLElement {
     try {
       resp = await fetch("/src/components/ObservationsHeader/template.html");
     } catch (error) {
-      console.error(error);
+      console.error("ObservationsHeader ERROR:", error);
     }
 
     if (!resp) return;

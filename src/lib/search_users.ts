@@ -38,7 +38,7 @@ export function setupUserSearch(selector: string) {
           let data = (await res.json()) as iNatUsersAPI;
           return processAutocompleteUser(data);
         } catch (error) {
-          console.error(error);
+          console.error("setupUserSearch ERROR:", error);
         }
       },
     },

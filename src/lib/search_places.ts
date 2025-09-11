@@ -42,7 +42,7 @@ export function setupPlacesSearch(selector: string) {
           let data = (await res.json()) as iNatSearchAPI;
           return processAutocompletePlaces(data);
         } catch (error) {
-          console.error(error);
+          console.error("setupPlacesSearch ERROR:", error);
         }
       },
     },

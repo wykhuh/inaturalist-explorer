@@ -140,7 +140,7 @@ export async function searchPlaces(placename: string) {
     let data = (await response.json()) as iNatObservationsSpeciesCountAPI;
     return data.results.reduce((prev, current) => prev + current.count, 0);
   } catch (error) {
-    console.error(error);
+    console.error("searchPlaces ERROR:", error);
   }
 }
 
@@ -150,7 +150,7 @@ export async function getTaxonById(id: number) {
     let data = (await resp.json()) as iNatTaxaAPI;
     return data.results[0];
   } catch (error) {
-    console.error(error);
+    console.error("getTaxonById ERROR:", error);
   }
 }
 
@@ -160,7 +160,7 @@ export async function getPlaceById(id: number) {
     let data = (await resp.json()) as iNatPlacesAPI;
     return data.results[0];
   } catch (error) {
-    console.error(error);
+    console.error("getPlaceById ERROR:", error);
   }
 }
 
@@ -170,7 +170,7 @@ export async function getProjectById(id: number) {
     let data = (await resp.json()) as iNatProjectsAPI;
     return data.results[0];
   } catch (error) {
-    console.error(error);
+    console.error("getProjectById ERROR:", error);
   }
 }
 
@@ -180,7 +180,7 @@ export async function getUserById(id: number) {
     let data = (await resp.json()) as iNatUsersAPI;
     return data.results[0];
   } catch (error) {
-    console.error(error);
+    console.error("getUserById ERROR:", error);
   }
 }
 
@@ -191,7 +191,7 @@ export async function getObservationsYears() {
     let data = (await resp.json()) as iNatHistogramApi;
     return data.results;
   } catch (error) {
-    console.error(error);
+    console.error("getObservationsYears ERROR:", error);
   }
 }
 
@@ -208,7 +208,7 @@ export async function getiNatObservationsTotal(
 
     return data.total_results;
   } catch (error) {
-    console.error(error);
+    console.error("get iNatObservations Total ERROR:", error);
   }
 }
 
@@ -230,7 +230,7 @@ export async function getObservationsObservers(
     loggerUrl(url, data.total_results);
     return data;
   } catch (error) {
-    console.error(error);
+    console.error("getObservationsObservers ERROR:", error);
   }
 }
 
@@ -250,6 +250,6 @@ export async function getObservationsIdentifiers(
     loggerUrl(url, data.total_results);
     return data;
   } catch (error) {
-    console.error(error);
+    console.error("getObservationsIdentifiers ERROR:", error);
   }
 }

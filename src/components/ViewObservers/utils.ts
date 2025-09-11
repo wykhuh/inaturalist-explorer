@@ -61,7 +61,7 @@ async function getAPIData(currentPage: number, perPage: number) {
 
     return data;
   } catch (error) {
-    console.error(error);
+    console.error("ViewObservers getAPIData ERROR:", error);
   }
 }
 

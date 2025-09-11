@@ -39,7 +39,7 @@ export function setupTaxaSearch(selector: string) {
           let data = (await res.json()) as iNatTaxaAPI;
           return processAutocompleteTaxa(data, query);
         } catch (error) {
-          console.error(error);
+          console.error("setupTaxaSearch ERROR:", error);
         }
       },
     },
