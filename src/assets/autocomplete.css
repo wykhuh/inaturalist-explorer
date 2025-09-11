@@ -47,7 +47,7 @@
 .autoComplete_wrapper > ul {
   width: 30rem;
   position: absolute;
-  max-height: 300px;
+  max-height: 500px;
   overflow-y: scroll;
   left: 0;
   right: 0;
@@ -73,7 +73,7 @@
 }
 
 .autoComplete_wrapper > ul > li {
-  margin: 0.3rem;
+  margin: 0;
   padding: 0.3rem 0.5rem;
   text-align: left;
   color: var(--clr-ac-black);
@@ -87,6 +87,7 @@
 .autoComplete_wrapper > ul > li {
   & .title {
     font-weight: 550;
+    font-size: var(--font-size-sm);
   }
 
   & .rank {
