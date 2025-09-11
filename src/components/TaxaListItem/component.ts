@@ -68,4 +68,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("x-taxa-list-item", MyComponent);
+customElements.define("x-species-list-item", MyComponent);

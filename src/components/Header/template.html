@@ -1,7 +1,7 @@
 <template>
-  <header>
+  <header id="site-header">
     <div class="wrapper-fullwidth">
-      <nav>
+      <nav id="site-nav">
         <span>iNaturalist Explorer</span>
         <ul>
           <li><a href="/">Home</a></li>
@@ -10,32 +10,4 @@
       </nav>
     </div>
   </header>
-
-  <style>
-    header {
-      padding: 1rem;
-    }
-
-    nav {
-      display: flex;
-      gap: 20px;
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 10px;
-      margin: 0;
-      padding: 0;
-    }
-
-    nav a {
-      text-decoration: none;
-    }
-
-    nav a:hover,
-    nav a:focus {
-      text-decoration: underline;
-    }
-  </style>
 </template>

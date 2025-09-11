@@ -13,9 +13,47 @@
     <x-header></x-header>
 
     <main>
-      <h1>Observations</h1>
       <x-observations-header></x-observations-header>
-      <section id="view-container"></section>
+      <section class="two-columns">
+        <div class="menu">
+          <div class="form-group">
+            <label>
+              Search for
+              <select id="search-type" name="search-type">
+                <option selected value="taxa">Species</option>
+                <option value="places">iNaturalist Places</option>
+                <option value="projects">Projects</option>
+                <option value="users">users</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label
+              >Search
+              <input id="inatAutocomplete" type="text" autocomplete="off" />
+            </label>
+          </div>
+          <div class="dialog-container">
+            <x-filters></x-filters>
+          </div>
+
+          <h2 class="taxa-heading">Species</h2>
+          <ul id="selected-species-list"></ul>
+
+          <h2 class="places-heading" hidden>Places</h2>
+          <ul id="selected-places-list"></ul>
+
+          <h2 class="projects-heading" hidden>Projects</h2>
+          <ul id="selected-projects-list"></ul>
+
+          <h2 class="users-heading" hidden>Users</h2>
+          <ul id="selected-users-list"></ul>
+
+          <div><pre id="display-json"></pre></div>
+        </div>
+        <div id="view-container"></div>
+      </section>
     </main>
   </body>
 </html>

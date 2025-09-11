@@ -161,13 +161,13 @@ export async function taxonSelectedHandler(
 }
 
 export function renderTaxaList(appStore: MapStore) {
-  let listEl = document.querySelector("#taxa-list-container");
+  let listEl = document.querySelector("#selected-species-list");
   if (!listEl) return;
 
   listEl.innerHTML = "";
 
   appStore.selectedTaxa.forEach((taxon) => {
-    let templateEl = document.createElement("x-taxa-list-item");
+    let templateEl = document.createElement("x-species-list-item");
     templateEl.dataset.taxon = JSON.stringify(taxon);
     listEl.appendChild(templateEl);
   });

@@ -115,7 +115,7 @@ export async function projectSelectedHandler(
 }
 
 export function renderProjectsList(appStore: MapStore) {
-  let listEl = document.querySelector("#projects-list-container");
+  let listEl = document.querySelector("#selected-projects-list");
   if (!listEl) return;
 
   listEl.innerHTML = "";

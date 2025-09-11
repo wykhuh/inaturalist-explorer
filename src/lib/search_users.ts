@@ -123,7 +123,7 @@ export async function userSelectedHandler(
 }
 
 export function renderUsersList(appStore: MapStore) {
-  let listEl = document.querySelector("#users-list-container");
+  let listEl = document.querySelector("#selected-users-list");
   if (!listEl) return;
 
   listEl.innerHTML = "";

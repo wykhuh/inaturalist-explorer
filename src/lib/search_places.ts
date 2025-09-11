@@ -179,7 +179,7 @@ export async function placeSelectedHandler(
 }
 
 export function renderPlacesList(appStore: MapStore) {
-  let listEl = document.querySelector("#places-list-container");
+  let listEl = document.querySelector("#selected-places-list");
   if (!listEl) return;
 
   listEl.innerHTML = "";
