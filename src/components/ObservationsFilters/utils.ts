@@ -19,7 +19,6 @@ import {
 import { updateUrl } from "../../lib/utils";
 import { loggerFilters } from "../../lib/logger";
 import { renderTaxaList } from "../../lib/search_taxa";
-import { renderPlacesList } from "../../lib/search_places";
 
 export function processFiltersForm(data: FormData): {
   params: iNatApiParams;
@@ -144,8 +143,8 @@ export async function updateAppWithFilters(
     await fetchiNatMapDataForTaxon(taxon, appStore);
     await getObservationsCountForTaxon(taxon, appStore);
   }
+
   renderTaxaList(appStore);
-  renderPlacesList(appStore);
   updateUrl(window.location, appStore);
 
   if (logEl) {

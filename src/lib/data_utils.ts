@@ -26,6 +26,7 @@ import { iNatOrange } from "./map_colors_utils.ts";
 import { logger, loggerFilters } from "./logger.ts";
 import { mapStore } from "./store.ts";
 import type { SpeciesCountTaxon } from "../types/inat_api";
+import { renderTaxaList } from "./search_taxa.ts";
 
 // called when user clicks refresh map button
 export async function refreshBoundingBox(
@@ -54,8 +55,6 @@ export async function refreshBoundingBox(
   // save place to store
   appStore.selectedPlaces = [bboxPlaceRecord(lngLatCoors)];
   appStore.placesMapLayers = { "0": [layer as unknown as CustomGeoJSON] };
-
-  renderPlacesList(appStore);
 
   let bbox = map.getBounds();
   let inatBbox = formatiNatAPIBoundingBoxParams(bbox);
@@ -86,6 +85,9 @@ export async function refreshBoundingBox(
       ...inatBbox,
     };
   }
+
+  renderTaxaList(appStore);
+  renderPlacesList(appStore);
   updateUrl(window.location, appStore);
 }
 
@@ -111,25 +113,23 @@ export async function fetchiNatMapDataForTaxon(
   let iNatGridLayer = addOverlayToMap(iNatGrid, map, layerControl, title, true);
   let iNatPointLayer = addOverlayToMap(iNatPoint, map, layerControl, title);
   let iNatHeatmapLayer = addOverlayToMap(iNatHeatmap, map, layerControl, title);
-
-  // only need taxon range if taxon is selected
-  let layers: TileLayer[] = [];
-  if (taxonObj.id === 0) {
-    layers = [iNatGridLayer, iNatPointLayer, iNatHeatmapLayer];
-    // add taxon range layer to map and layer control
-  } else if (iNatTaxonRange) {
-    let iNatTaxonRangeLayer = addOverlayToMap(
+  let iNatTaxonRangeLayer;
+  if (iNatTaxonRange) {
+    iNatTaxonRangeLayer = addOverlayToMap(
       iNatTaxonRange,
       map,
       layerControl,
       title,
     );
-    layers = [
-      iNatGridLayer,
-      iNatPointLayer,
-      iNatHeatmapLayer,
-      iNatTaxonRangeLayer,
-    ];
+  }
+
+  let layers: (TileLayer | undefined)[] = [
+    iNatGridLayer,
+    iNatPointLayer,
+    iNatHeatmapLayer,
+  ];
+  if (iNatTaxonRangeLayer) {
+    layers.push(iNatTaxonRangeLayer);
   }
 
   // save layers to store so the app can delete them later on

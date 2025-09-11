@@ -277,10 +277,71 @@ export type iNatObservationsAPI = {
   total_results: number;
   page: number;
   per_page: number;
-  results: {
-    uuid: string;
-  }[];
+  results: ObservationsResult[];
 };
+
+export interface ObservationsResult {
+  uuid: string;
+  comments_count: number;
+  created_at: string;
+  created_at_details: CreatedAtDetails;
+  created_time_zone: string;
+  faves_count: number;
+  geoprivacy: any;
+  id: number;
+  identifications: Identification[];
+  identifications_count: number;
+  location: string;
+  mappable: boolean;
+  obscured: boolean;
+  observed_on: string;
+  observed_on_details: ObservedOnDetails;
+  observed_time_zone: string;
+  photos: ObservationPhoto[];
+  place_guess: string;
+  quality_grade: string;
+  sounds: any[];
+  taxon: ObservationTaxon;
+  time_observed_at: string;
+  user: ObservationUser;
+}
+
+export interface CreatedAtDetails {
+  date: string;
+  day: number;
+  hour: number;
+  month: number;
+  week: number;
+  year: number;
+}
+
+export interface Identification {
+  id: number;
+  current: boolean;
+}
+
+export interface ObservedOnDetails {
+  date: string;
+  day: number;
+  hour: number;
+  month: number;
+  week: number;
+  year: number;
+}
+
+export interface ObservationPhoto {
+  id: number;
+  url: string;
+}
+
+export interface ObservationTaxon {
+  id: number;
+  iconic_taxon_id: number;
+  name: string;
+  preferred_common_name?: string;
+  rank: string;
+  rank_level: number;
+}
 
 export interface ObservationUser {
   id: number;
@@ -623,38 +684,6 @@ export interface ProjectsResult {
   is_umbrella: boolean;
   is_new_style_project: boolean;
   user: User;
-}
-
-export interface Admin {
-  id: number;
-  user_id: number;
-  project_id: number;
-  role: string;
-  user: User;
-}
-
-export interface User {
-  id: number;
-  login: string;
-  spam: boolean;
-  suspended: boolean;
-  created_at: string;
-  login_autocomplete?: string;
-  login_exact?: string;
-  name?: string;
-  name_autocomplete?: string;
-  orcid?: string;
-  icon?: string;
-  observations_count?: number;
-  identifications_count?: number;
-  journal_posts_count: number;
-  activity_count: number;
-  species_count: number;
-  annotated_observations_count: number;
-  universal_search_rank: number;
-  roles: string[];
-  site_id?: number;
-  icon_url?: string;
 }
 
 export interface SearchParameter {

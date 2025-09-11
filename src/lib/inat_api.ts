@@ -210,6 +210,36 @@ export async function getiNatObservationsTotal(
   }
 }
 
+export async function getObservations(
+  appParams: string,
+  perPage: number,
+  page: number,
+  order_by = "id",
+  order = "desc",
+) {
+  let searchParams = new URLSearchParams(appParams);
+  let url =
+    `${observations_api}?${searchParams}&ttl=3600` +
+    `&per_page=${perPage}&page=${page}&order_by=${order_by}&order=${order}` +
+    `&fields=(taxon%3A(ancestors%3A(default_photo%3A(square_url%3A!t)` +
+    `%2Ciconic_taxon_name%3A!t%2Cid%3A!t%2Cname%3A!t` +
+    `%2Cpreferred_common_name%3A!t%2Cpreferred_common_names%3A(name%3A!t)` +
+    `%2Crank%3A!t%2Crank_level%3A!t%2Cuuid%3A!t)%2Cancestry%3A!t` +
+    `%2Cconservation_status%3A(status%3A!t)` +
+    `%2Cdefault_photo%3A(attribution%3A!t%2Clicense_code%3A!t%2Csquare_url%3A!t)` +
+    `%2Ciconic_taxon_name%3A!t%2Cid%3A!t%2Cname%3A!t` +
+    `%2Cpreferred_common_name%3A!t%2Cpreferred_common_names%3A(name%3A!t)` +
+    `%2Crank%3A!t))`;
+  try {
+    let resp = await fetch(url);
+    let data = (await resp.json()) as iNatObservationsAPI;
+    loggerUrl(url, data.total_results);
+    return data;
+  } catch (error) {
+    console.error("getObservations ERROR:", error);
+  }
+}
+
 export async function getObservationsSpecies(
   appParams: string,
   perPage: number,

@@ -127,3 +127,17 @@ https://stackoverflow.com/questions/50404970/web-components-pass-data-to-and-fro
 --
 
 https://fungi-finders-example.netlify.app/mushroom-guide
+
+===
+
+todo
+
+get counts for header
+
+update species, identifiers, observers when using search
+
+==
+
+bugs
+
+when you click on observers view, we get duplicate selected items

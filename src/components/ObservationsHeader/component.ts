@@ -1,3 +1,5 @@
+import { updateCounts, viewChangeHandler } from "./utils";
+
 class MyComponent extends HTMLElement {
   constructor() {
     super();
@@ -24,39 +26,17 @@ class MyComponent extends HTMLElement {
 
     this.appendChild(template.content.cloneNode(true));
 
-    this.viewChangeHandler("#observations-header #observations", "map");
-    this.viewChangeHandler("#observations-header #species", "species");
-    this.viewChangeHandler("#observations-header #identifiers", "identifiers");
-    this.viewChangeHandler("#observations-header #observers", "observers");
-  }
+    viewChangeHandler("#observations-header #observations", "map");
+    viewChangeHandler("#observations-header #species", "species");
+    viewChangeHandler("#observations-header #identifiers", "identifiers");
+    viewChangeHandler("#observations-header #observers", "observers");
 
-  viewChangeHandler(selector: string, view: string) {
-    let viewContainerEl = document.querySelector("#view-container");
-    let viewEl = document.querySelector(selector);
-
-    if (viewEl && viewContainerEl) {
-      viewEl.addEventListener("click", () => {
-        this.updateView(view, viewContainerEl);
-      });
-    }
-  }
-
-  updateView(targetView: string, parentEl: Element) {
-    if (!parentEl) return;
-
-    parentEl.innerHTML = "";
-
-    let view;
-    if (targetView === "species") {
-      view = document.createElement("x-view-species");
-    } else if (targetView === "identifiers") {
-      view = document.createElement("x-view-identifiers");
-    } else if (targetView === "observers") {
-      view = document.createElement("x-view-observers");
-    } else {
-      view = document.createElement("x-view-map");
-    }
-    parentEl.appendChild(view);
+    window.addEventListener("appUrlChange", () => {
+      updateCounts();
+    });
+    window.addEventListener("appInitialized", () => {
+      updateCounts();
+    });
   }
 
   connectedCallback() {

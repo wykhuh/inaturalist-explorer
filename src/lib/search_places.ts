@@ -167,13 +167,11 @@ export async function placeSelectedHandler(
 
     await fetchiNatMapDataForTaxon(taxon, appStore);
     await getObservationsCountForTaxon(taxon, appStore);
-
-    renderTaxaList(appStore);
-    renderPlacesList(appStore);
-    fitBoundsPlaces(appStore);
   }
 
   // zoom to map to fit all selected places
+  renderTaxaList(appStore);
+  renderPlacesList(appStore);
   fitBoundsPlaces(appStore);
   updateUrl(window.location, appStore);
 }

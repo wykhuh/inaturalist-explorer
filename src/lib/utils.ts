@@ -129,6 +129,7 @@ export function updateUrl(url_location: Location, appStore: MapStore) {
     ? `${url_location.origin}?${paramsString}`
     : url_location.origin;
   window.history.pushState({}, "", url);
+  window.dispatchEvent(new Event("appUrlChange"));
 }
 
 export function decodeAppUrl(searchParams: string) {

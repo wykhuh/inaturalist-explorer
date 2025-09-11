@@ -19,6 +19,10 @@ class MyComponent extends HTMLElement {
 
     let currentPage = 1;
     fetchAndRenderData(currentPage, perPage, paginationcCallback);
+
+    window.addEventListener("appUrlChange", () => {
+      fetchAndRenderData(currentPage, perPage, paginationcCallback);
+    });
   }
 
   connectedCallback() {

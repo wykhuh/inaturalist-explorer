@@ -29,8 +29,6 @@ class MyComponent extends HTMLElement {
 
     this.appendChild(template.content.cloneNode(true));
 
-    // console.log(this.data);
-
     this.renderCard();
   }
 
