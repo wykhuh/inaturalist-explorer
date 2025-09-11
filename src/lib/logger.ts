@@ -18,3 +18,10 @@ export function loggerFilters(...args: any) {
 
   console.log(...args);
 }
+
+export function loggerTime(...args: any) {
+  const log = import.meta.env.VITE_LOGGER_TIME;
+  if (!log || log === "false") return;
+
+  console.log(...args);
+}

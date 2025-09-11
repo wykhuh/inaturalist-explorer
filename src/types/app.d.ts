@@ -304,3 +304,7 @@ type Spinner = {
   start: () => void;
   stop: () => void;
 };
+
+export interface DataComponent extends HTMLElement {
+  data?: any;
+}

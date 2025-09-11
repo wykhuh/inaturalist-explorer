@@ -8,6 +8,8 @@ import "./components/ViewMap/component.ts";
 import "./components/ViewSpecies/component.ts";
 import "./components/ViewIdentifiers/component.ts";
 import "./components/ViewObservers/component.ts";
+import "./components/CardSpecies/component.ts";
+
 import mapStore from "./lib/store.ts";
 
 window.app = { store: mapStore };

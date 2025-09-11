@@ -292,11 +292,16 @@ export function addOverlayToMap(
   loggerUrl(tileObj.url);
 
   let layer = L.tileLayer(tileObj.url, tileObj.options);
-  if (checked) {
-    layer.addTo(map);
+
+  try {
+    if (checked) {
+      layer.addTo(map);
+    }
+    layerControl.addOverlay(layer, `${taxonName} ${tileObj.name}`);
+    return layer;
+  } catch (error) {
+    console.log("addOverlayToMap ERROR:", error);
   }
-  layerControl.addOverlay(layer, `${taxonName} ${tileObj.name}`);
-  return layer;
 }
 
 // convert Leaflet bounds Object into format that works with iNaturalist API

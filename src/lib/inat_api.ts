@@ -23,8 +23,6 @@ export const autocomplete_taxa_api =
   "https://api.inaturalist.org/v1/taxa/autocomplete?";
 
 const observations_api = "https://api.inaturalist.org/v2/observations";
-const observations_count_api =
-  "https://api.inaturalist.org/v2/observations/species_counts";
 const taxa_api = "https://api.inaturalist.org/v1/taxa/";
 const places_api = "https://api.inaturalist.org/v1/places/";
 // set max-age Cache-Control HTTP header to 30 days
@@ -209,6 +207,35 @@ export async function getiNatObservationsTotal(
     return data.total_results;
   } catch (error) {
     console.error("get iNatObservations Total ERROR:", error);
+  }
+}
+
+export async function getObservationsSpecies(
+  appParams: string,
+  perPage: number,
+  page: number,
+) {
+  let searchParams = new URLSearchParams(appParams);
+  let url =
+    `${observations_api}/species_counts?${searchParams}&ttl=3600` +
+    `&per_page=${perPage}&page=${page}` +
+    `&fields=(taxon%3A(ancestors%3A(iconic_taxon_name%3A!t` +
+    `%2Cid%3A!t%2Cname%3A!t` +
+    `%2Cpreferred_common_name%3A!t%2Cpreferred_common_names%3A(name%3A!t)` +
+    `%2Crank%3A!t%2Crank_level%3A!t%2Cuuid%3A!t)%2Cancestry%3A!t` +
+    `%2Cconservation_status%3A(status%3A!t)` +
+    `%2Cdefault_photo%3A(attribution%3A!t%2Clicense_code%3A!t%2Cmedium_url%3A!t%2Csquare_url%3A!t%2Curl%3A!t)` +
+    `%2Ciconic_taxon_name%3A!t%2Cid%3A!t%2Cname%3A!t` +
+    `%2Cpreferred_common_name%3A!t%2Cpreferred_common_names%3A(name%3A!t)` +
+    `%2Crank%3A!t))`;
+
+  try {
+    let resp = await fetch(url);
+    let data = (await resp.json()) as iNatObservationsSpeciesCountAPI;
+    loggerUrl(url, data.total_results);
+    return data;
+  } catch (error) {
+    console.error("getObservationsSpecies ERROR:", error);
   }
 }
 

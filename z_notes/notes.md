@@ -112,3 +112,14 @@ http://localhost:5173/?taxon_id=47126,1&place_id=962&project_id=31997,16065,6250
 https://transform.tools/json-to-typescript
 
 https://www.urldecoder.org
+
+==
+How to measure time taken by a function to execute
+https://stackoverflow.com/questions/313893/how-to-measure-time-taken-by-a-function-to-execute
+
+==
+
+https://www.geeksforgeeks.org/css/css-popover-menu/
+
+Web Components, pass data to and from
+https://stackoverflow.com/questions/50404970/web-components-pass-data-to-and-from

@@ -314,17 +314,38 @@ export interface ObservationsIdentifiersResult {
   user: ObservationUser;
 }
 
-export type iNatObservationsSpeciesCountAPI = {
+export interface iNatObservationsSpeciesCountAPI {
   total_results: number;
   page: number;
   per_page: number;
-  results: {
-    count: number;
-    taxon: {
-      id: number;
-    };
-  }[];
-};
+  results: SpeciesCountResult[];
+}
+
+export interface SpeciesCountResult {
+  count: number;
+  taxon: SpeciesCountTaxon;
+}
+
+export interface SpeciesCountTaxon {
+  id: number;
+  ancestry?: string;
+  default_photo?: SpeciesCountDefaultPhoto;
+  iconic_taxon_name?: string;
+  is_active?: boolean;
+  name?: string;
+  preferred_common_name?: string;
+  rank?: string;
+  rank_level?: number;
+}
+
+export interface SpeciesCountDefaultPhoto {
+  id: number;
+  attribution: string;
+  license_code: string;
+  medium_url: string;
+  square_url: string;
+  url: string;
+}
 
 // ==================
 // observations tiles api

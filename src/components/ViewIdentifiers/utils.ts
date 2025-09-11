@@ -1,5 +1,6 @@
 import { formatAvatar } from "../../lib/data_utils";
 import { getObservationsIdentifiers } from "../../lib/inat_api";
+import { loggerTime } from "../../lib/logger";
 import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";
 import type { ObservationsIdentifiersResult } from "../../types/inat_api";
@@ -20,7 +21,7 @@ export async function fetchAndRenderData(
   const t1 = performance.now();
   let data = await getAPIData(currentPage, perPage);
   const t10 = performance.now();
-  console.log(`api ${t10 - t1} milliseconds`);
+  loggerTime(`api ${t10 - t1} milliseconds`);
 
   spinner.stop();
 
