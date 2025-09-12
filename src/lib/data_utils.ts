@@ -15,7 +15,7 @@ import {
   getAndDrawMapBoundingBox,
 } from "./map_utils.ts";
 import { displayJson, updateUrl } from "./utils.ts";
-import { getiNatMapTiles, getiNatObservationsTotal } from "./inat_api.ts";
+import { getiNatMapTiles, getObservations } from "./inat_api.ts";
 import {
   iNatApiNonFilterableNames,
   allTaxaRecord,
@@ -150,7 +150,6 @@ export async function getObservationsCountForTaxon(
   // get observations count
   let observationParams: iNatApiParams = {
     ...appStore.inatApiParams,
-    per_page: 0,
   };
   // delete colors
   delete observationParams.colors;
@@ -159,9 +158,9 @@ export async function getObservationsCountForTaxon(
   if (observationParams.taxon_id === "0") {
     delete observationParams.taxon_id;
   }
-
-  let count = await getiNatObservationsTotal(observationParams);
-  taxonObj.observations_count = count;
+  let params = new URLSearchParams(observationParams).toString();
+  let data = await getObservations(params, 0, 1);
+  taxonObj.observations_count = data?.total_results;
 
   // update store.selectedTaxa
   updateSelectedTaxa(appStore, taxonObj);

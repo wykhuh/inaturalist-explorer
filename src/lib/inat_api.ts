@@ -194,23 +194,6 @@ export async function getObservationsYears() {
   }
 }
 
-export async function getiNatObservationsTotal(
-  params: Params,
-): Promise<number | undefined> {
-  let paramsString = new URLSearchParams(params).toString();
-
-  try {
-    let url = `${observations_api}?${paramsString}`;
-    let response = await fetch(url);
-    let data = (await response.json()) as iNatObservationsAPI;
-    loggerUrl(url, data.total_results);
-
-    return data.total_results;
-  } catch (error) {
-    console.error("get iNatObservations Total ERROR:", error);
-  }
-}
-
 export async function getObservations(
   appParams: string,
   perPage: number,
