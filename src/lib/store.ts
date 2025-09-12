@@ -19,7 +19,6 @@ export const mapStore: MapStore = {
   },
   formFilters: { params: {}, string: "" },
   iNatStats: {},
-  search: {},
   currentView: "observations",
 };
 

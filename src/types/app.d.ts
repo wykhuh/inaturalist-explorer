@@ -16,6 +16,41 @@ declare global {
   }
 }
 
+export interface MapStore {
+  selectedTaxa: NormalizediNatTaxon[];
+  taxaMapLayers: { [index: string]: TileLayer[] };
+  selectedPlaces: NormalizediNatPlace[];
+  placesMapLayers: { [index: string]: CustomGeoJSON[] };
+  selectedUsers: NormalizediNatUser[];
+  selectedProjects: NormalizediNatProject[];
+  inatApiParams: iNatApiParams;
+  color: string;
+  map: {
+    map: Map | null;
+    layerControl: Control.Layers | null;
+    bounds?: LatLngBoundsExpression;
+  };
+  refreshMap: {
+    refreshMapButtonEl: HTMLElement | null;
+    showRefreshMapButton: boolean;
+    layer: CustomPolygon | null;
+  };
+  formFilters: {
+    params: iNatApiParams;
+    string: string;
+  };
+  iNatStats: {
+    years?: number[];
+  };
+  currentView: ObservationViews;
+}
+
+export type ObservationViews =
+  | "observations"
+  | "species"
+  | "identifiers"
+  | "observers";
+
 export type NormalizediNatTaxon = {
   name?: string;
   default_photo?: string;
@@ -51,46 +86,6 @@ export type NormalizediNatUser = {
   login: string;
   name: string;
 };
-
-export interface MapStore {
-  search: {
-    setup?: any;
-    selectedHandler?: any;
-    listContainer?: string;
-  };
-  selectedTaxa: NormalizediNatTaxon[];
-  taxaMapLayers: { [index: string]: TileLayer[] };
-  selectedPlaces: NormalizediNatPlace[];
-  placesMapLayers: { [index: string]: CustomGeoJSON[] };
-  selectedUsers: NormalizediNatUser[];
-  selectedProjects: NormalizediNatProject[];
-  inatApiParams: iNatApiParams;
-  color: string;
-  map: {
-    map: Map | null;
-    layerControl: Control.Layers | null;
-    bounds?: LatLngBoundsExpression;
-  };
-  refreshMap: {
-    refreshMapButtonEl: HTMLElement | null;
-    showRefreshMapButton: boolean;
-    layer: CustomPolygon | null;
-  };
-  formFilters: {
-    params: iNatApiParams;
-    string: string;
-  };
-  iNatStats: {
-    years?: number[];
-  };
-  currentView: ObservationViews;
-}
-
-export type ObservationViews =
-  | "observations"
-  | "species"
-  | "identifiers"
-  | "observers";
 
 export type MapStoreKeys = keyof MapStore;
 

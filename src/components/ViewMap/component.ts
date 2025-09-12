@@ -139,22 +139,20 @@ class MyComponent extends HTMLElement {
         selectedHandler: taxonSelectedHandler,
       },
     };
+    let setup: any;
+    let selectedHandler: any;
 
     if (searchInputEl) {
       // when user selects an search result,
       searchInputEl.innerHTML = "";
-      window.app.store.search.setup = setupTaxaSearch(searchSelector);
-      window.app.store.search.selectedHandler = taxonSelectedHandler;
+      setup = setupTaxaSearch(searchSelector);
+      selectedHandler = taxonSelectedHandler;
 
       searchInputEl.addEventListener("selection", async function (event: any) {
         let selection = event.detail.selection.value;
         let query = event.detail.query;
 
-        window.app.store.search.selectedHandler(
-          selection,
-          query,
-          window.app.store,
-        );
+        selectedHandler(selection, query, window.app.store);
       });
     }
 
@@ -165,15 +163,15 @@ class MyComponent extends HTMLElement {
         if (target === null) return;
 
         // remove event listerner for autocomplete search
-        window.app.store.search.setup.unInit();
+        setup.unInit();
         // clear search input
         searchInputEl.innerHTML = "";
         searchInputEl.value = "";
 
         let targetSearch = searchOptions[target.value as SearchOptionsKeys];
 
-        window.app.store.search.setup = targetSearch.setup(searchSelector);
-        window.app.store.search.selectedHandler = targetSearch.selectedHandler;
+        setup = targetSearch.setup(searchSelector);
+        selectedHandler = targetSearch.selectedHandler;
       });
     }
   }
