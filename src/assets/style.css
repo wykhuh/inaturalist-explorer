@@ -389,8 +389,8 @@
   #view-container {
     width: 100%;
 
-    .identifiers-list-container,
-    .observers-list-container,
+    .identifiers-table-container,
+    .observers-table-container,
     .species-list-container {
       margin: 1.5rem 1rem 1.5rem 0;
     }
@@ -469,8 +469,8 @@
       }
     }
 
-    table.observers-list,
-    table.identifiers-list {
+    table.observers-table,
+    table.identifiers-table {
       width: 100%;
 
       td {

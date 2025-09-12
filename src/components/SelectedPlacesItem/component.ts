@@ -10,7 +10,9 @@ class MyComponent extends HTMLElement {
     if (!this.dataset.place) return;
 
     const parser = new DOMParser();
-    const resp = await fetch("/src/components/PlacesListItem/template.html");
+    const resp = await fetch(
+      "/src/components/SelectedPlacesItem/template.html",
+    );
     const html = await resp.text();
 
     const template = parser

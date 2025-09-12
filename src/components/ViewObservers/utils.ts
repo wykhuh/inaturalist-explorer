@@ -12,7 +12,7 @@ export async function fetchAndRenderData(
   perPage: number,
   paginationcCallback: (currentPage: number) => void,
 ) {
-  let containerEl = document.querySelector(".observers-list-container");
+  let containerEl = document.querySelector(".observers-table-container");
   if (!containerEl) return;
 
   let spinner = createSpinner();
@@ -72,7 +72,7 @@ function createTable(
   perPage: number,
 ) {
   let tableEl = document.createElement("table") as HTMLElement;
-  tableEl.className = "observers-list";
+  tableEl.className = "observers-table";
 
   let rowEl = document.createElement("tr");
 

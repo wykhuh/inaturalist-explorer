@@ -11,7 +11,7 @@ class MyComponent extends HTMLElement {
     if (!this.dataset.taxon) return;
 
     const parser = new DOMParser();
-    const resp = await fetch("/src/components/TaxaListItem/template.html");
+    const resp = await fetch("/src/components/SelectedTaxaItem/template.html");
     const html = await resp.text();
 
     const template = parser

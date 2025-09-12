@@ -1,5 +1,5 @@
-import { removeProject } from "../../lib/search_projects.ts";
-import type { NormalizediNatProject } from "../../types/app";
+import { removeUser } from "../../lib/search_users";
+import type { NormalizediNatUser } from "../../types/app";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -7,10 +7,10 @@ class MyComponent extends HTMLElement {
   }
 
   async render() {
-    if (!this.dataset.project) return;
+    if (!this.dataset.user) return;
 
     const parser = new DOMParser();
-    const resp = await fetch("/src/components/ProjectsListItem/template.html");
+    const resp = await fetch("/src/components/SelectedUsersItem/template.html");
     const html = await resp.text();
 
     const template = parser
@@ -20,18 +20,22 @@ class MyComponent extends HTMLElement {
     if (!template) return;
     this.appendChild(template.content.cloneNode(true));
 
-    let project = JSON.parse(this.dataset.project) as NormalizediNatProject;
+    let user = JSON.parse(this.dataset.user) as NormalizediNatUser;
 
     let nameEl = this.querySelector(".name");
-    if (nameEl && project.name) {
-      nameEl.textContent = project.name;
+    if (nameEl && user.login) {
+      let text = user.login;
+      if (user.name) {
+        text += ` (${user.name})`;
+      }
+      nameEl.textContent = text;
     }
 
     let butttonEl = this.querySelector(".close-button");
     if (butttonEl) {
       butttonEl.addEventListener("click", async function () {
-        if (project.id !== undefined) {
-          await removeProject(project.id, window.app.store);
+        if (user.id !== undefined) {
+          await removeUser(user.id, window.app.store);
         }
       });
     }
@@ -42,4 +46,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("x-projects-list-item", MyComponent);
+customElements.define("x-users-list-item", MyComponent);
