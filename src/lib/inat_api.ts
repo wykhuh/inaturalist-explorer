@@ -1,5 +1,7 @@
-// import type { TileSettings } from "../types/app.d.ts";
-import type { iNatObservationTilesSettings } from "../types/app";
+import type {
+  iNatObservationTilesSettings,
+  NormalizediNatTaxon,
+} from "../types/app";
 import type {
   iNatObservationsSpeciesCountAPI,
   iNatObservationsAPI,
@@ -51,6 +53,7 @@ function formatDescription(inatApiParams: Params, type: string) {
 
 export const getiNatMapTiles = (
   inatApiParams: Params,
+  taxonObj: NormalizediNatTaxon,
 ): iNatObservationTilesSettings => {
   let dupParams = structuredClone(inatApiParams);
 
@@ -85,6 +88,7 @@ export const getiNatMapTiles = (
         minZoom: 0,
         maxZoom: 21,
         layer_description: formatDescription(inatApiParams, "grid"),
+        control_name: `${taxonObj.display_name} Grid`,
       },
     },
     iNatPoint: {
@@ -97,6 +101,7 @@ export const getiNatMapTiles = (
         minZoom: 0,
         maxZoom: 21,
         layer_description: formatDescription(inatApiParams, "points"),
+        control_name: `${taxonObj.display_name} Points`,
       },
     },
     iNatTaxonRange: {
@@ -109,6 +114,7 @@ export const getiNatMapTiles = (
         minZoom: 0,
         maxZoom: 21,
         layer_description: formatDescription(inatApiParams, "taxon range"),
+        control_name: `${taxonObj.display_name} Taxon Range`,
       },
     },
     iNatHeatmap: {
@@ -121,6 +127,7 @@ export const getiNatMapTiles = (
         minZoom: 0,
         maxZoom: 21,
         layer_description: formatDescription(inatApiParams, "heatmap"),
+        control_name: `${taxonObj.display_name} Heatmap`,
       },
     },
   };

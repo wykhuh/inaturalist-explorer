@@ -5,6 +5,7 @@ import type {
   MapStore,
   CustomGeoJSON,
   iNatApiParamsKeys,
+  ObservationTilesSetting,
 } from "../types/app";
 import {
   convertParamsBBoxToLngLat,
@@ -127,6 +128,58 @@ export async function initApp(appStore: MapStore, urlStore: MapStore) {
   window.dispatchEvent(new Event("appInitialized"));
 }
 
+export async function loadCachedStore(appStore: MapStore) {
+  let map = appStore.map.map;
+  if (!map) return;
+
+  // get place data
+  if (
+    appStore.selectedPlaces?.length > 0 &&
+    appStore.inatApiParams.nelat === undefined
+  ) {
+    for await (const place of appStore.selectedPlaces) {
+      let oldLayers = appStore.placesMapLayers[place.id];
+      if (oldLayers) {
+        oldLayers.forEach((layer) => layer.addTo(map));
+      } else {
+        console.error("loadCachedStore selectedPlaces error.");
+      }
+    }
+    // get bounding box data
+  } else if (appStore.inatApiParams.nelat !== undefined) {
+    if (appStore.refreshMap.layer) {
+      appStore.refreshMap.layer.addTo(map);
+    }
+  }
+
+  let layerControl = appStore.map.layerControl;
+
+  // get taxa data
+  for await (const taxon of appStore.selectedTaxa) {
+    // removeOneTaxonFromMap(appStore, taxon.id);
+    let layers = appStore.taxaMapLayers[taxon.id];
+    layers.forEach((layer, i) => {
+      if (i === 0) {
+        layer.addTo(map);
+      }
+      if (layerControl) {
+        let control_name =
+          (layer as unknown as ObservationTilesSetting).options.control_name ||
+          "";
+        layerControl.addOverlay(layer, control_name);
+      }
+    });
+  }
+
+  // load allTaxon map tiles if no taxon id in the url
+  if (
+    appStore.selectedTaxa === undefined ||
+    appStore.selectedTaxa.length === 0
+  ) {
+    await addAllTaxaRecordToMapAndStore(appStore);
+  }
+}
+
 export async function processTaxonData(
   taxonData: TaxaResult,
   appStore: MapStore,
@@ -187,6 +240,7 @@ export function processPlaceData(placeData: PlacesResult, appStore: MapStore) {
       name: placeData.name,
       display_name: placeData.display_name,
       bounding_box: bbox,
+      geometry: placeData.geometry_geojson,
     },
   ];
 

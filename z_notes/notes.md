@@ -136,8 +136,14 @@ get counts for header
 
 update species, identifiers, observers when using search
 
-==
+add observations grid and list
+
+# add filter count
 
 bugs
 
 when you click on observers view, we get duplicate selected items
+
+==
+
+https://leaflet-extras.github.io/leaflet-providers/preview/

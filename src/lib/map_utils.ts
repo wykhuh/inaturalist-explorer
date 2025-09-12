@@ -2,7 +2,6 @@ import L from "leaflet";
 import type { Map, LatLngExpression } from "leaflet";
 
 import type {
-  TileSettings,
   MapStore,
   LeafletBounds,
   LngLat,
@@ -78,8 +77,7 @@ export function areAllPointsInMap(coordinates: LatLngExpression[], map: Map) {
   }
 }
 
-// TODO: change TileSettings to same type as inat map tiles
-export const getMapTiles = (): { [name: string]: TileSettings } => {
+export const getMapTiles = (): { [name: string]: ObservationTilesSetting } => {
   return {
     OpenStreetMap: {
       name: "Open Street Map",
@@ -266,7 +264,7 @@ export const getMapTiles = (): { [name: string]: TileSettings } => {
 };
 
 export function addLayerToMap(
-  tileObj: TileSettings,
+  tileObj: ObservationTilesSetting,
   map: any,
   layerControl: any,
   checked = false,
@@ -286,7 +284,6 @@ export function addOverlayToMap(
   tileObj: ObservationTilesSetting,
   map: any,
   layerControl: any,
-  taxonName: string,
   checked = false,
 ) {
   loggerUrl(tileObj.url);
@@ -297,7 +294,7 @@ export function addOverlayToMap(
     if (checked) {
       layer.addTo(map);
     }
-    layerControl.addOverlay(layer, `${taxonName} ${tileObj.name}`);
+    layerControl.addOverlay(layer, tileObj.options.control_name);
     return layer;
   } catch (error) {
     console.log("addOverlayToMap ERROR:", error);

@@ -11,7 +11,7 @@ import {
 } from "../../lib/map_utils";
 import { getObservationsYears } from "../../lib/inat_api";
 import { decodeAppUrl } from "../../lib/utils";
-import { initApp } from "../../lib/init_app";
+import { initApp, loadCachedStore } from "../../lib/init_app";
 import type { SearchOptions, SearchOptionsKeys } from "../../types/app";
 import { setupTaxaSearch, taxonSelectedHandler } from "../../lib/search_taxa";
 import { setupUserSearch, userSelectedHandler } from "../../lib/search_users";
@@ -41,10 +41,24 @@ class MyComponent extends HTMLElement {
     if (!template) return;
     this.appendChild(template.content.cloneNode(true));
 
-    this.renderMap();
-    await this.dataSetup();
-    this.searchSetup();
-    this.searchHeadingSetup();
+    let store = window.app.store;
+    // called when switching views
+    if (store.map.map) {
+      // remove cached map and event listeners
+      store.map.map.remove();
+      // create new map
+      this.renderMap();
+      // load cached data from store
+      loadCachedStore(window.app.store);
+      // called on intial page load
+    } else {
+      // create new map
+      this.renderMap();
+      // connect to api to get data
+      await this.dataSetup();
+      this.searchSetup();
+      this.searchHeadingSetup();
+    }
   }
 
   renderMap() {

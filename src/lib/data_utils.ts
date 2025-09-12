@@ -104,23 +104,16 @@ export async function fetchiNatMapDataForTaxon(
   // get iNaturalist map layers
   let { iNatGrid, iNatHeatmap, iNatTaxonRange, iNatPoint } = getiNatMapTiles(
     appStore.inatApiParams,
+    taxonObj,
   );
 
-  let title = taxonObj.display_name;
-  if (!title) return;
-
   // add layers to map and layer control
-  let iNatGridLayer = addOverlayToMap(iNatGrid, map, layerControl, title, true);
-  let iNatPointLayer = addOverlayToMap(iNatPoint, map, layerControl, title);
-  let iNatHeatmapLayer = addOverlayToMap(iNatHeatmap, map, layerControl, title);
+  let iNatGridLayer = addOverlayToMap(iNatGrid, map, layerControl, true);
+  let iNatPointLayer = addOverlayToMap(iNatPoint, map, layerControl);
+  let iNatHeatmapLayer = addOverlayToMap(iNatHeatmap, map, layerControl);
   let iNatTaxonRangeLayer;
   if (iNatTaxonRange) {
-    iNatTaxonRangeLayer = addOverlayToMap(
-      iNatTaxonRange,
-      map,
-      layerControl,
-      title,
-    );
+    iNatTaxonRangeLayer = addOverlayToMap(iNatTaxonRange, map, layerControl);
   }
 
   let layers: (TileLayer | undefined)[] = [
@@ -158,7 +151,7 @@ export async function getObservationsCountForTaxon(
   if (observationParams.taxon_id === "0") {
     delete observationParams.taxon_id;
   }
-  let params = new URLSearchParams(observationParams).toString();
+  let params = new URLSearchParams(observationParams as any).toString();
   let data = await getObservations(params, 0, 1);
   taxonObj.observations_count = data?.total_results;
 

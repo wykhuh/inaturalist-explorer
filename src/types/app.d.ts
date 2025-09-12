@@ -16,18 +16,6 @@ declare global {
   }
 }
 
-export type TileSettings = {
-  name: string;
-  type: "overlay" | "basemap";
-  url: string;
-  options: {
-    layer_description: string;
-    attribution: string;
-    minZoom: number;
-    maxZoom: number;
-  };
-};
-
 export type NormalizediNatTaxon = {
   name?: string;
   default_photo?: string;
@@ -229,17 +217,18 @@ export type iNatObservationTilesSettings = {
   iNatHeatmap: ObservationTilesSetting;
 };
 
-export type ObservationTilesSetting = {
+export interface ObservationTilesSetting {
   name: string;
-  type: string;
+  type: "overlay" | "basemap";
   url: string;
   options: {
     attribution: string;
     minZoom: number;
     maxZoom: number;
     layer_description: string;
+    control_name?: string;
   };
-};
+}
 
 // https://freshman.tech/snippets/typescript/fix-value-not-exist-eventtarget/
 type ButtonEvent = Event & {
@@ -269,9 +258,16 @@ export interface CustomLayerOptions extends LayerOptions {
 }
 
 export interface CustomPolygon extends Polygon {
-  _bounds: { nelat?: number; nelng?: number; swlat?: number; swlng?: number };
+  _bounds: LeafletBounds;
   options: CustomPolygonOptions;
 }
+
+type LeafletBounds = {
+  nelat?: number;
+  nelng?: number;
+  swlat?: number;
+  swlng?: number;
+};
 
 export interface CustomPolygonOptions extends PolylineOptions {
   layer_description: string;
