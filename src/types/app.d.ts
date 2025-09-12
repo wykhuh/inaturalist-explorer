@@ -83,7 +83,14 @@ export interface MapStore {
   iNatStats: {
     years?: number[];
   };
+  currentView: ObservationViews;
 }
+
+export type ObservationViews =
+  | "observations"
+  | "species"
+  | "identifiers"
+  | "observers";
 
 export type MapStoreKeys = keyof MapStore;
 

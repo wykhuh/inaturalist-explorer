@@ -112,6 +112,10 @@
     --clr-green-400: hsl(143, 19%, 49%);
     --clr-green-500: hsl(143, 38%, 37%);
 
+    --clr-iNat-green: #86a91c;
+    --clr-iNat-orange: #f16f3a;
+    --clr-iNat-dark-gray: #565656;
+
     /* typography */
     --ff-heading: sans-serif;
     --ff-body: sans-serif;
@@ -315,7 +319,7 @@
 
   #observations-header {
     padding: 0 1rem;
-    background-color: var(--clr-gray-900);
+    background-color: var(--clr-iNat-dark-gray);
     color: var(--clr-white);
 
     h1 {
@@ -324,7 +328,7 @@
   }
 
   #observations-nav {
-    background-color: var(--clr-gray-900);
+    background-color: var(--clr-iNat-dark-gray);
     display: flex;
     align-items: center;
 
@@ -344,9 +348,20 @@
       /* color: var(--clr-white); */
       list-style: none;
       margin: 0;
-      padding: 1rem;
+      padding: 0.5rem 1rem;
       display: flex;
       flex-direction: column;
+    }
+
+    .currentView {
+      background-color: var(--clr-iNat-green);
+    }
+
+    .observations-count,
+    .species-count,
+    .identifiers-count,
+    .observers-count {
+      font-weight: 550;
     }
   }
 

@@ -20,6 +20,7 @@ export const mapStore: MapStore = {
   formFilters: { params: {}, string: "" },
   iNatStats: {},
   search: {},
+  currentView: "observations",
 };
 
 const proxiedStore = new Proxy(structuredClone(mapStore), {

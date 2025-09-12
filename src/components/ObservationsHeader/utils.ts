@@ -4,24 +4,30 @@ import {
   getObservationsObservers,
   getObservationsSpecies,
 } from "../../lib/inat_api";
-import type { MapStore } from "../../types/app";
+import type { MapStore, ObservationViews } from "../../types/app";
 
 export function viewChangeHandler(
   selector: string,
-  view: string,
+  view: ObservationViews,
   appStore: MapStore,
+  componentContext: HTMLElement,
 ) {
   let viewContainerEl = document.querySelector("#view-container");
   let viewEl = document.querySelector(selector);
 
   if (viewEl && viewContainerEl) {
     viewEl.addEventListener("click", () => {
-      updateView(view, viewContainerEl, appStore);
+      updateView(view, viewContainerEl, appStore, componentContext);
     });
   }
 }
 
-function updateView(targetView: string, parentEl: Element, appStore: MapStore) {
+function updateView(
+  targetView: ObservationViews,
+  parentEl: Element,
+  appStore: MapStore,
+  componentContext: HTMLElement,
+) {
   if (!parentEl) return;
 
   // save map bounds before switching views so app can return to this map location
@@ -30,6 +36,7 @@ function updateView(targetView: string, parentEl: Element, appStore: MapStore) {
     appStore.map.bounds = map?.getBounds();
   }
 
+  // load view component
   parentEl.innerHTML = "";
 
   let view;
@@ -43,6 +50,14 @@ function updateView(targetView: string, parentEl: Element, appStore: MapStore) {
     view = document.createElement("x-view-map");
   }
   parentEl.appendChild(view);
+
+  // update currentView class in nav
+  let oldItemEl = componentContext.querySelector(`#${appStore.currentView}`);
+  oldItemEl?.classList.remove("currentView");
+  let itemEl = componentContext.querySelector(`#${targetView}`);
+  itemEl?.classList.add("currentView");
+
+  appStore.currentView = targetView;
 }
 
 async function updateResourceCounts(

@@ -175,7 +175,8 @@ export let warmMonths = [4, 5, 6, 7, 8, 9];
 
 export let blue = "#3388ff";
 export let darkGray = "#525252";
-export let iNatOrange = "#EB5528";
+export let iNatOrange = "#f16f3a";
+export let iNatGreen = "#86a91c";
 
 export let defaultColorScheme = colorsSixTolBright;
 

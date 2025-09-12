@@ -26,15 +26,29 @@ class MyComponent extends HTMLElement {
 
     this.appendChild(template.content.cloneNode(true));
 
+    let itemEl = this.querySelector(`#${window.app.store.currentView}`);
+    itemEl?.classList.add("currentView");
+
     let store = window.app.store;
-    viewChangeHandler("#observations-header #observations", "map", store);
-    viewChangeHandler("#observations-header #species", "species", store);
+    viewChangeHandler(
+      "#observations-header #observations",
+      "observations",
+      store,
+      this,
+    );
+    viewChangeHandler("#observations-header #species", "species", store, this);
     viewChangeHandler(
       "#observations-header #identifiers",
       "identifiers",
       store,
+      this,
     );
-    viewChangeHandler("#observations-header #observers", "observers", store);
+    viewChangeHandler(
+      "#observations-header #observers",
+      "observers",
+      store,
+      this,
+    );
 
     window.addEventListener("appUrlChange", () => {
       updateCounts();
