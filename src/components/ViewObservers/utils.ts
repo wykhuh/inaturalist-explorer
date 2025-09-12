@@ -5,7 +5,7 @@ import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";
 import type { ObservationsObserversResult } from "../../types/inat_api";
 
-export let perPage = 50;
+export let perPage = 100;
 
 export async function fetchAndRenderData(
   currentPage: number,
