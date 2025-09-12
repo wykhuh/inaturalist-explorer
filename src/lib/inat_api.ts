@@ -11,6 +11,7 @@ import type {
   iNatObservationsObserversAPI,
   iNatObservationsIdentifiersAPI,
 } from "../types/inat_api.d.ts";
+import { normalizeAppParams } from "./data_utils.ts";
 import { loggerUrl } from "./logger.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
 
@@ -217,7 +218,7 @@ export async function getObservations(
   order_by = "id",
   order = "desc",
 ) {
-  let searchParams = new URLSearchParams(appParams);
+  let searchParams = normalizeAppParams(appParams);
   let url =
     `${observations_api}?${searchParams}&ttl=3600` +
     `&per_page=${perPage}&page=${page}&order_by=${order_by}&order=${order}` +
@@ -230,6 +231,7 @@ export async function getObservations(
     `%2Ciconic_taxon_name%3A!t%2Cid%3A!t%2Cname%3A!t` +
     `%2Cpreferred_common_name%3A!t%2Cpreferred_common_names%3A(name%3A!t)` +
     `%2Crank%3A!t))`;
+
   try {
     let resp = await fetch(url);
     let data = (await resp.json()) as iNatObservationsAPI;
@@ -245,7 +247,7 @@ export async function getObservationsSpecies(
   perPage: number,
   page: number,
 ) {
-  let searchParams = new URLSearchParams(appParams);
+  let searchParams = normalizeAppParams(appParams);
   let url =
     `${observations_api}/species_counts?${searchParams}&ttl=3600` +
     `&per_page=${perPage}&page=${page}` +
@@ -276,7 +278,7 @@ export async function getObservationsObservers(
   perPage: number,
   page: number,
 ) {
-  let searchParams = new URLSearchParams(appParams);
+  let searchParams = normalizeAppParams(appParams);
   let url =
     `${observations_api}/observers?${searchParams}&ttl=3600` +
     `&per_page=${perPage}&page=${page}` +
@@ -296,7 +298,7 @@ export async function getObservationsIdentifiers(
   perPage: number,
   page: number,
 ) {
-  let searchParams = new URLSearchParams(appParams);
+  let searchParams = normalizeAppParams(appParams);
   let url =
     `${observations_api}/identifiers?${searchParams}&ttl=3600` +
     `&per_page=${perPage}&page=${page}` +

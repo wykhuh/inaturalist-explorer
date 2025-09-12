@@ -685,3 +685,14 @@ export function displayUserData(appStore: MapStore, _source: string) {
     displayJson(data, displayJsonEl);
   }
 }
+
+export function normalizeAppParams(appParams: string) {
+  let rawParams = new URLSearchParams(appParams);
+  if (rawParams.get("verifiable") === null) {
+    rawParams.append("verifiable", "true");
+  }
+  if (rawParams.get("spam") === null) {
+    rawParams.append("spam", "false");
+  }
+  return rawParams;
+}
