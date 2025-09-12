@@ -407,13 +407,16 @@
         list-style: none;
         border: 1px solid var(--clr-gray-300);
         padding: 0.25rem 0.5rem;
+        cursor: pointer;
 
-        .disable {
-          color: var(--clr-gray-700);
+        &.disable {
+          color: var(--clr-gray-600);
+          cursor: text;
         }
 
-        .current-page {
+        &.current-page {
           background-color: var(--clr-gray-300);
+          font-weight: 550;
         }
       }
     }
