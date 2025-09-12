@@ -45,6 +45,8 @@ export interface MapStore {
   currentView: ObservationViews;
 }
 
+export type MapStoreKeys = keyof MapStore;
+
 export type ObservationViews =
   | "observations"
   | "species"

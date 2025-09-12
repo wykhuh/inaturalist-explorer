@@ -8,6 +8,7 @@ import type {
   CustomLayer,
   CustomGeoJSON,
   iNatApiParamsKeys,
+  MapStoreKeys,
 } from "../types/app";
 import {
   addOverlayToMap,
@@ -25,7 +26,11 @@ import { renderPlacesList } from "./search_places.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
 import { logger, loggerFilters } from "./logger.ts";
 import { mapStore } from "./store.ts";
-import type { SpeciesCountTaxon } from "../types/inat_api";
+import type {
+  MultiPolygonJson,
+  PolygonJson,
+  SpeciesCountTaxon,
+} from "../types/inat_api";
 import { renderTaxaList } from "./search_taxa.ts";
 
 // called when user clicks refresh map button
@@ -633,10 +638,31 @@ export function formatAvatar(imgUrl?: string) {
 }
 
 export function displayUserData(appStore: MapStore, _source: string) {
+  let displayJsonEl = document.getElementById("display-json");
+  if (!displayJsonEl) return;
+
   function formatTaxaMapLayers() {
     let temp: any = {};
     Object.entries(appStore.taxaMapLayers).forEach(([key, val]) => {
       temp[key] = val.map((v: any) => v.options.layer_description);
+    });
+    return temp;
+  }
+  function formatSelectedPlaces() {
+    let temp: any = {};
+    // return temp;
+    let places = appStore.selectedPlaces;
+    places.forEach((place) => {
+      Object.entries(place).forEach(([key, val]) => {
+        if (["bounding_box", "geometry"].includes(key)) {
+          temp[key] = {
+            type: (val as PolygonJson | MultiPolygonJson).type,
+            coordinates: "[...]",
+          };
+        } else {
+          temp[key] = val;
+        }
+      });
     });
     return temp;
   }
@@ -647,32 +673,44 @@ export function displayUserData(appStore: MapStore, _source: string) {
     });
     return temp;
   }
-
-  let yearString = "";
-  if (appStore.iNatStats.years) {
-    let allYears = appStore.iNatStats.years;
-    yearString = `${allYears[0]}-${allYears[allYears.length - 1]}`;
-  }
-
-  let data = {
-    inatApiParams: appStore.inatApiParams,
-    formFilters: appStore.formFilters,
-    selectedTaxa: appStore.selectedTaxa,
-    taxaMapLayers: formatTaxaMapLayers(),
-    selectedPlaces: appStore.selectedPlaces,
-    placesMapLayers: formatPlacesMapLayers(),
-    selectedProjects: appStore.selectedProjects,
-    refreshMap: {
+  function formatRefreshMap() {
+    return {
       showRefreshMapButton: appStore.refreshMap.showRefreshMapButton,
       layer: {
         layer_description: appStore.refreshMap.layer?.options.layer_description,
-        // bounds: appStore.refreshMap.layer?._bounds,
+        bounds: "[...]",
       },
-    },
-    mapLayerDescriptions: leafletVisibleLayers(appStore),
-    iNatStats: { years_summary: yearString },
-  };
-  let displayJsonEl = document.getElementById("display-json");
+    };
+  }
+  function formatYears() {
+    let yearString = "";
+    if (appStore.iNatStats.years) {
+      let allYears = appStore.iNatStats.years;
+      yearString = `${allYears[0]}-${allYears[allYears.length - 1]}`;
+    }
+    return yearString;
+  }
+
+  let data = {} as any;
+  Object.keys(appStore).forEach((k) => {
+    let key = k as MapStoreKeys;
+    if (key === "taxaMapLayers") {
+      data.taxaMapLayers = formatTaxaMapLayers();
+    } else if (key === "placesMapLayers") {
+      data.placesMapLayers = formatPlacesMapLayers();
+    } else if (key === "map") {
+      data.mapLayerDescriptions = leafletVisibleLayers(appStore);
+    } else if (key === "iNatStats") {
+      data.iNatStats = { years_summary: formatYears() };
+    } else if (key === "selectedPlaces") {
+      data.selectedPlaces = formatSelectedPlaces();
+    } else if (key === "refreshMap") {
+      data.refreshMap = formatRefreshMap();
+    } else {
+      data[key] = appStore[key];
+    }
+  });
+
   if (displayJsonEl) {
     displayJson(data, displayJsonEl);
   }
