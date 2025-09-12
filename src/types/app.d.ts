@@ -66,8 +66,11 @@ export interface MapStore {
   selectedProjects: NormalizediNatProject[];
   inatApiParams: iNatApiParams;
   color: string;
-  map: { map: Map | null; layerControl: Control.Layers | null };
-  boundingBox?: { nelat: number; nelng: number; swlat: number; swlng: number };
+  map: {
+    map: Map | null;
+    layerControl: Control.Layers | null;
+    bounds?: LatLngBoundsExpression;
+  };
   refreshMap: {
     refreshMapButtonEl: HTMLElement | null;
     showRefreshMapButton: boolean;

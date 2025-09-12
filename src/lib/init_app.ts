@@ -178,6 +178,11 @@ export async function loadCachedStore(appStore: MapStore) {
   ) {
     await addAllTaxaRecordToMapAndStore(appStore);
   }
+
+  // set map to previous position
+  if (appStore.map.bounds) {
+    map.fitBounds(appStore.map.bounds);
+  }
 }
 
 export async function processTaxonData(

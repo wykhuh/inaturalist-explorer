@@ -4,20 +4,31 @@ import {
   getObservationsObservers,
   getObservationsSpecies,
 } from "../../lib/inat_api";
+import type { MapStore } from "../../types/app";
 
-export function viewChangeHandler(selector: string, view: string) {
+export function viewChangeHandler(
+  selector: string,
+  view: string,
+  appStore: MapStore,
+) {
   let viewContainerEl = document.querySelector("#view-container");
   let viewEl = document.querySelector(selector);
 
   if (viewEl && viewContainerEl) {
     viewEl.addEventListener("click", () => {
-      updateView(view, viewContainerEl);
+      updateView(view, viewContainerEl, appStore);
     });
   }
 }
 
-function updateView(targetView: string, parentEl: Element) {
+function updateView(targetView: string, parentEl: Element, appStore: MapStore) {
   if (!parentEl) return;
+
+  // save map bounds before switching views so app can return to this map location
+  let map = appStore.map.map;
+  if (map) {
+    appStore.map.bounds = map?.getBounds();
+  }
 
   parentEl.innerHTML = "";
 
