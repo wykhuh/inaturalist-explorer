@@ -2,6 +2,7 @@ import type { SpeciesCountResult } from "../../types/inat_api";
 import type { DataComponent } from "../../types/app";
 import { pluralize } from "../../lib/utils";
 import { formatTaxonName } from "../../lib/data_utils";
+import { iNatTaxaUrl } from "../../lib/inat_data";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -35,6 +36,11 @@ class MyComponent extends HTMLElement {
   renderCard() {
     let data = (this as DataComponent).data as SpeciesCountResult;
     let { title, subtitle } = formatTaxonName(data.taxon, "", false);
+
+    let linkEl = this.querySelector(".photo a") as HTMLLinkElement;
+    if (linkEl) {
+      linkEl.href = `${iNatTaxaUrl}/${data.taxon.id}`;
+    }
 
     let imgEl = this.querySelector("img");
     if (imgEl && data.taxon.default_photo?.medium_url) {
@@ -79,14 +85,13 @@ class MyComponent extends HTMLElement {
     }
 
     let titleEl = this.querySelector(".title");
+    if (titleEl && title) {
+      titleEl.innerHTML = `<a href="${iNatTaxaUrl}/${data.taxon.id}">${title}</a>`;
+    }
+
     let subtitleEl = this.querySelector(".subtitle");
-    if (titleEl && subtitleEl) {
-      if (title) {
-        titleEl.textContent = title;
-      }
-      if (subtitle) {
-        subtitleEl.textContent = subtitle;
-      }
+    if (subtitleEl && subtitle) {
+      subtitleEl.innerHTML = `<a href="${iNatTaxaUrl}/${data.taxon.id}">${subtitle}</a>`;
     }
   }
 

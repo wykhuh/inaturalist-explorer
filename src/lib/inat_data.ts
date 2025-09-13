@@ -263,3 +263,4 @@ export let fieldsWithAny = [
 
 export const iNatObservationUrl = "https://www.inaturalist.org/observations";
 export const iNatUserUrl = "https://www.inaturalist.org/people";
+export const iNatTaxaUrl = "https://www.inaturalist.org/taxa";

@@ -1,5 +1,6 @@
 import { formatAvatar } from "../../lib/data_utils";
 import { getObservationsIdentifiers } from "../../lib/inat_api";
+import { iNatUserUrl } from "../../lib/inat_data";
 import { loggerTime } from "../../lib/logger";
 import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";
@@ -98,7 +99,10 @@ function createTable(
     rowEl.appendChild(tdEl);
 
     tdEl = document.createElement("td");
-    tdEl.innerHTML = `<span class="avatar-name">${formatAvatar(row.user.icon_url)}${row.user.login}</span>`;
+    tdEl.innerHTML = `<span class="avatar-name">
+      <a href="${iNatUserUrl}/${row.user.login}">${formatAvatar(row.user.icon_url)}</a>
+      <a href="${iNatUserUrl}/${row.user.login}">${row.user.login}</a>
+    </span>`;
     rowEl.appendChild(tdEl);
 
     tdEl = document.createElement("td");
