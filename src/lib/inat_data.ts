@@ -260,3 +260,6 @@ export let fieldsWithAny = [
   "place_id",
   "captive",
 ];
+
+export const iNatObservationUrl = "https://www.inaturalist.org/observations";
+export const iNatUserUrl = "https://www.inaturalist.org/people";

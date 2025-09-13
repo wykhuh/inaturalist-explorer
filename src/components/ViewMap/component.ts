@@ -23,6 +23,7 @@ import {
   placeSelectedHandler,
   setupPlacesSearch,
 } from "../../lib/search_places";
+import { fetchAndRenderData, paginationcCallback, perPage } from "./utils";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -50,6 +51,8 @@ class MyComponent extends HTMLElement {
       this.renderMap();
       // load cached data from store
       loadCachedStore(window.app.store);
+      this.searchHeadingSetup();
+
       // called on intial page load
     } else {
       // create new map
@@ -59,6 +62,13 @@ class MyComponent extends HTMLElement {
       this.searchSetup();
       this.searchHeadingSetup();
     }
+
+    let currentPage = 1;
+    fetchAndRenderData(currentPage, perPage, paginationcCallback);
+
+    window.addEventListener("appUrlChange", () => {
+      fetchAndRenderData(currentPage, perPage, paginationcCallback);
+    });
   }
 
   renderMap() {

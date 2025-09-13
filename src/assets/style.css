@@ -88,6 +88,10 @@
   isolation: isolate;
 } */
   /* ================ */
+
+  table {
+    border-spacing: 0;
+  }
 }
 
 @layer base {
@@ -383,115 +387,262 @@
       background-color: var(--clr-gray-400);
     }
   }
+
+  .pagination {
+    display: flex;
+    margin: 1rem 0;
+
+    li {
+      list-style: none;
+      border: 1px solid var(--clr-gray-300);
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+
+      &.disable {
+        color: var(--clr-gray-600);
+        cursor: text;
+      }
+
+      &.current-page {
+        background-color: var(--clr-gray-300);
+        font-weight: 550;
+      }
+    }
+  }
 }
 
 @layer views {
   #view-container {
     width: 100%;
+  }
 
-    .identifiers-table-container,
-    .observers-table-container,
-    .species-list-container {
-      margin: 1.5rem 1rem 1.5rem 0;
+  .identifiers-table-container,
+  .observers-table-container,
+  .species-list-container {
+    margin: 1.5rem 1rem 1.5rem 0;
+  }
+
+  #map {
+    height: 80vh;
+  }
+
+  .species-list.grid-auto-fill {
+    --autofill-min-col: 200px;
+  }
+
+  .species-list,
+  .observers-table,
+  .identifiers-table,
+  .observations-table {
+    .title {
+      font-weight: 550;
+      line-height: 1.25;
+
+      a {
+        color: var(--text-main);
+        text-decoration: none;
+      }
+      a:hover {
+        color: var(--text-main);
+        text-decoration: underline;
+      }
     }
 
-    #map {
-      height: 80vh;
+    .subtitle {
+      font-style: italic;
+      line-height: 1.25;
+
+      a {
+        color: var(--text-main);
+        text-decoration: none;
+      }
+      a:hover {
+        color: var(--text-main);
+        text-decoration: underline;
+      }
     }
 
-    .pagination {
+    .avatar-name {
       display: flex;
-      margin: 1rem 0;
-
-      li {
-        list-style: none;
-        border: 1px solid var(--clr-gray-300);
-        padding: 0.25rem 0.5rem;
-        cursor: pointer;
-
-        &.disable {
-          color: var(--clr-gray-600);
-          cursor: text;
-        }
-
-        &.current-page {
-          background-color: var(--clr-gray-300);
-          font-weight: 550;
-        }
+      gap: 0.5rem;
+      align-items: center;
+      a {
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+        color: var(--brand-main);
       }
     }
 
-    .species-list.grid-auto-fill {
-      --autofill-min-col: 200px;
+    .person-icon,
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 18px;
+    }
 
-      x-card-species {
-        border: 1px solid var(--clr-gray-400);
+    .person-icon {
+      background-color: var(--clr-gray-400);
+      g {
+        transform: translateY(8px);
       }
+    }
+  }
 
-      .card {
-        .photo {
-          position: relative;
-          border-bottom: 1px solid var(--clr-gray-400);
-        }
-        .photo img {
+  .observers-table,
+  .identifiers-table,
+  .observations-table {
+    width: 100%;
+
+    th {
+      text-align: left;
+    }
+
+    td {
+      padding: 0.5rem 0.5rem;
+    }
+
+    tr:nth-child(even) {
+      background-color: var(--clr-gray-200);
+    }
+  }
+
+  .species-list {
+    x-card-species {
+      border: 1px solid var(--clr-gray-400);
+    }
+
+    .card {
+      .photo {
+        position: relative;
+        border-bottom: 1px solid var(--clr-gray-400);
+
+        img {
           object-fit: cover;
           width: 100%;
           height: 20vw;
         }
+        img:hover {
+          opacity: 0.7;
+        }
+      }
 
-        .licensing {
-          background-color: rgba(0, 0, 0, 0.3);
-          color: var(--clr-white);
-          padding: 0.25rem 0.5rem;
-          position: absolute;
-          bottom: 0rem;
+      .licensing {
+        background-color: rgba(0, 0, 0, 0.3);
+        color: var(--clr-white);
+        padding: 0.25rem 0.5rem;
+        position: absolute;
+        bottom: 0rem;
+      }
+
+      .attribution {
+        background-color: rgba(0, 0, 0, 0.4);
+        color: var(--clr-white);
+        bottom: 2rem;
+        padding: 0.25rem;
+      }
+
+      .caption {
+        display: flex;
+        flex-direction: column;
+        padding: 0.5rem 0.75rem;
+      }
+    }
+  }
+
+  .observations-table {
+    td.name {
+      display: flex;
+      flex-direction: column;
+    }
+
+    td.media {
+      padding: 0;
+      /* position: relative; */
+
+      div.media {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        background-color: var(--clr-gray-500);
+      }
+
+      .audio-icon {
+        --audio-color: rgba(255, 255, 255, 0.75);
+
+        top: 10px;
+        left: 10px;
+        width: 60px;
+        height: 60px;
+        position: absolute;
+
+        path:nth-of-type(1) {
+          fill: var(--audio-color) !important;
+          stroke: var(--audio-color) !important;
+          stroke-width: 0px !important;
         }
 
-        .attribution {
-          background-color: rgba(0, 0, 0, 0.4);
-          color: var(--clr-white);
-          bottom: 2rem;
-          padding: 0.25rem;
+        path:nth-of-type(2) {
+          stroke: var(--audio-color) !important;
         }
+      }
 
-        .caption {
-          display: flex;
-          flex-direction: column;
-          padding: 0.5rem 0.75rem;
-        }
-        .title {
-          font-weight: 550;
-        }
+      .count {
+        bottom: 0;
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 0 5px;
+        color: #ffffff;
+        font-size: var(--font-size-sm);
+      }
 
-        .subtitle {
-          font-style: italic;
-        }
+      img {
+        position: absolute;
+        top: 0;
+
+        object-fit: cover;
+        width: 80px;
+        height: 80px;
       }
     }
 
-    table.observers-table,
-    table.identifiers-table {
-      width: 100%;
+    .research-grade {
+      margin-top: 0.5rem;
 
-      td {
-        padding: 0.5rem 0.5rem;
+      .research-grade-badge {
+        background-color: var(--clr-iNat-green);
+        color: var(--clr-white);
+        padding: 3px;
+        font-size: var(--font-size-sm);
       }
+    }
 
-      tr:nth-child(even) {
-        background-color: var(--clr-gray-200);
-      }
+    .metadata-counts {
+      white-space: nowrap;
+      margin-top: 0.5rem;
+      display: flex;
+      gap: 0.75rem;
+    }
 
-      .avatar-name {
-        display: flex;
-        gap: 0.5rem;
-        align-items: center;
+    .speech-icon {
+      width: 1rem;
+      height: 1rem;
+      display: inline-block;
+      transform: translateY(2px);
+      margin-right: 2px;
+      g {
+        fill: var(--clr-gray-900);
       }
+    }
 
-      .avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 20px;
-      }
+    .obscured {
+      font-size: var(--font-size-heading-sm);
+      margin-right: 4px;
+    }
+
+    .avatar-name {
+      flex-direction: column;
     }
   }
 }
@@ -533,58 +684,7 @@
     }
   }
 
-  ul#selected-species-list {
-    padding: 0;
-    list-style: none;
-
-    @media (max-width: 750px) {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    }
-
-    li {
-      display: grid;
-      gap: 0.5rem;
-      grid-template-columns: auto 1fr auto;
-      padding: 0.25rem 0.5rem;
-      align-items: center;
-      border: 1px solid var(--clr-gray-500);
-    }
-
-    .swatch {
-      display: block;
-      width: 1rem;
-      height: 1rem;
-    }
-
-    .data {
-      display: grid;
-      align-content: center;
-      line-height: 1.3;
-    }
-
-    .title {
-      font-weight: 550;
-    }
-
-    .subtitle {
-      font-style: italic;
-      font-size: var(--font-size-sm);
-    }
-
-    .count {
-      font-size: var(--font-size-sm);
-    }
-
-    .close-button {
-      padding: 0;
-      font-size: var(--font-size-md);
-      background-color: transparent;
-      border: 0;
-      cursor: pointer;
-    }
-  }
-
+  ul#selected-species-list,
   ul#selected-places-list,
   ul#selected-projects-list,
   ul#selected-users-list {
@@ -611,6 +711,51 @@
       background-color: transparent;
       border: 0;
       cursor: pointer;
+    }
+  }
+
+  ul#selected-species-list {
+    padding: 0;
+    list-style: none;
+
+    @media (max-width: 750px) {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+
+    li {
+      grid-template-columns: auto 1fr auto;
+    }
+
+    .swatch {
+      display: block;
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .data {
+      display: grid;
+      align-content: center;
+      line-height: 1.3;
+    }
+
+    .count {
+      font-size: var(--font-size-sm);
+    }
+
+    .title {
+      font-weight: 550;
+      a {
+        text-decoration: none;
+      }
+    }
+
+    .subtitle {
+      font-style: italic;
+      font-size: var(--font-size-sm);
+      a {
+        text-decoration: none;
+      }
     }
   }
 

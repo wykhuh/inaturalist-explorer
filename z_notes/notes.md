@@ -139,3 +139,7 @@ add filter count
 ==
 
 https://leaflet-extras.github.io/leaflet-providers/preview/
+
+==
+
+https://stackoverflow.com/questions/78270011/insert-a-table-row-with-custom-web-components

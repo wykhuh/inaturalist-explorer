@@ -32,6 +32,7 @@ import type {
   SpeciesCountTaxon,
 } from "../types/inat_api";
 import { renderTaxaList } from "./search_taxa.ts";
+import { person2 } from "../assets/icons.ts";
 
 // called when user clicks refresh map button
 export async function refreshBoundingBox(
@@ -627,13 +628,7 @@ export function formatAvatar(imgUrl?: string) {
   if (imgUrl) {
     return `<img class="avatar" src="${imgUrl}">`;
   } else {
-    return `<svg class="avatar" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="100px" height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
-<g>
-	<circle cx="50.036" cy="32.302" r="24.545"/>
-	<path d="M63.695,60.938h-27.39C19.017,60.938,5,74.954,5,92.243h90C95,74.954,80.983,60.938,63.695,60.938z"/>
-</g>
-</svg>`;
+    return person2;
   }
 }
 

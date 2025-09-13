@@ -231,3 +231,15 @@ export function decodeAppUrl(searchParams: string) {
 export function getRandomInt(max: number) {
   return Math.floor(Math.random() * max);
 }
+
+export function formatDate(date: string, timezone: string) {
+  return new Date(date).toLocaleString("en-US", {
+    timeZone: timezone,
+    timeZoneName: "short",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  });
+}
