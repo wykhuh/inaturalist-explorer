@@ -43,6 +43,7 @@ export interface MapStore {
     years?: number[];
   };
   currentView: ObservationViews;
+  currentObservationsSubview: string;
 }
 
 export type MapStoreKeys = keyof MapStore;
@@ -52,6 +53,8 @@ export type ObservationViews =
   | "species"
   | "identifiers"
   | "observers";
+
+export type ObservationSubviews = "table" | "grid";
 
 export type NormalizediNatTaxon = {
   name?: string;

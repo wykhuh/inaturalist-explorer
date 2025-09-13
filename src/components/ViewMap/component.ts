@@ -42,11 +42,10 @@ class MyComponent extends HTMLElement {
     if (!template) return;
     this.appendChild(template.content.cloneNode(true));
 
-    let store = window.app.store;
     // called when switching views
-    if (store.map.map) {
+    if (window.app.store.map.map) {
       // remove cached map and event listeners
-      store.map.map.remove();
+      window.app.store.map.map.remove();
       // create new map
       this.renderMap();
       // load cached data from store
@@ -64,10 +63,20 @@ class MyComponent extends HTMLElement {
     }
 
     let currentPage = 1;
-    fetchAndRenderData(currentPage, perPage, paginationcCallback);
+    fetchAndRenderData(
+      currentPage,
+      perPage,
+      paginationcCallback,
+      window.app.store,
+    );
 
     window.addEventListener("appUrlChange", () => {
-      fetchAndRenderData(currentPage, perPage, paginationcCallback);
+      fetchAndRenderData(
+        currentPage,
+        perPage,
+        paginationcCallback,
+        window.app.store,
+      );
     });
   }
 

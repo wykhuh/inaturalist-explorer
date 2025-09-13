@@ -73,7 +73,7 @@ function createTable(
   perPage: number,
 ) {
   let tableEl = document.createElement("table") as HTMLElement;
-  tableEl.className = "observers-table";
+  tableEl.className = "observers-table table";
 
   let rowEl = document.createElement("tr");
 

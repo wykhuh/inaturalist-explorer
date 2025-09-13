@@ -59,7 +59,7 @@ class MyComponent extends HTMLElement {
       imgEl.alt = altText;
     }
 
-    let countEl = this.querySelector(".count");
+    let countEl = this.querySelector(".photos-count");
     if (countEl) {
       countEl.textContent = pluralize(data.count, "observation", true);
     }

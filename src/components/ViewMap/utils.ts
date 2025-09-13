@@ -14,6 +14,7 @@ import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";
 import type { ObservationsResult } from "../../types/inat_api";
 import { formatDate } from "../../lib/utils";
+import type { DataComponent, MapStore } from "../../types/app";
 
 export let perPage = 50;
 
@@ -21,6 +22,7 @@ export async function fetchAndRenderData(
   currentPage: number,
   perPage: number,
   paginationcCallback: (currentPage: number) => void,
+  store: MapStore,
 ) {
   let containerEl = document.querySelector(".observations-list-container");
   if (!containerEl) return;
@@ -46,8 +48,11 @@ export async function fetchAndRenderData(
     );
     containerEl.appendChild(pagination1);
 
-    let tableEl = createTable(data.results);
-    containerEl.appendChild(tableEl);
+    if (store.currentObservationsSubview === "table") {
+      containerEl.appendChild(createTable(data.results));
+    } else {
+      containerEl.appendChild(createGrid(data.results));
+    }
 
     let pagination2El = createPagination(
       data.per_page,
@@ -77,7 +82,7 @@ async function getAPIData(currentPage: number, perPage: number) {
 
 function createTable(results: ObservationsResult[]) {
   let tableEl = document.createElement("table") as HTMLElement;
-  tableEl.className = "observations-table";
+  tableEl.className = "observations-table table";
 
   let rowEl = document.createElement("tr");
 
@@ -116,8 +121,9 @@ function createTable(results: ObservationsResult[]) {
     let mediaContent = '<div class="media">';
 
     if (row.photos.length > 0) {
+      let url = row.photos[0].url.replace("/square.", "/medium.");
       mediaContent += `<a href="${iNatObservationUrl}/${row.id}">`;
-      mediaContent += `<img src="${row.photos[0].url.replace("square.jpg", "medium.jpg")}">`;
+      mediaContent += `<img src="${url}">`;
       mediaContent += "</a>";
     }
     if (row.sounds.length > 0) {
@@ -226,6 +232,21 @@ function createTable(results: ObservationsResult[]) {
   return tableEl;
 }
 
+function createGrid(results: ObservationsResult[]) {
+  let containerEl = document.createElement("div");
+  containerEl.className = "observations-list grid-auto-fill";
+
+  results.forEach((row) => {
+    let cardEl = document.createElement(
+      "x-card-observation",
+    ) as unknown as DataComponent;
+    cardEl.data = row;
+    containerEl.appendChild(cardEl);
+  });
+
+  return containerEl;
+}
+
 export function paginationcCallback(num: number) {
-  fetchAndRenderData(num, perPage, paginationcCallback);
+  fetchAndRenderData(num, perPage, paginationcCallback, window.app.store);
 }

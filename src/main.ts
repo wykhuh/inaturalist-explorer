@@ -9,6 +9,7 @@ import "./components/ViewSpecies/component.ts";
 import "./components/ViewIdentifiers/component.ts";
 import "./components/ViewObservers/component.ts";
 import "./components/CardSpecies/component.ts";
+import "./components/CardObservation/component.ts";
 
 import mapStore from "./lib/store.ts";
 
