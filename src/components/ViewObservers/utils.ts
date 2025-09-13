@@ -124,6 +124,5 @@ function createTable(
 }
 
 export function paginationcCallback(num: number) {
-  console.log(num);
   fetchAndRenderData(num, perPage, paginationcCallback);
 }

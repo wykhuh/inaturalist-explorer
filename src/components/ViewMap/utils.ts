@@ -30,7 +30,6 @@ export async function fetchAndRenderData(
 
   const t1 = performance.now();
   let data = await getAPIData(currentPage, perPage);
-  console.log(data);
   const t10 = performance.now();
   loggerTime(`api ${t10 - t1} milliseconds`);
 
@@ -228,6 +227,5 @@ function createTable(results: ObservationsResult[]) {
 }
 
 export function paginationcCallback(num: number) {
-  console.log(num);
   fetchAndRenderData(num, perPage, paginationcCallback);
 }

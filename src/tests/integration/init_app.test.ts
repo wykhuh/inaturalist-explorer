@@ -429,10 +429,8 @@ describe("initApp resources", () => {
 
     let searchparams = `?user_id=${user1.id}&verifiable=true&spam=false`;
     let urlData = decodeAppUrl(searchparams);
-    console.log(urlData);
 
     await initApp(store, urlData);
-    // console.log(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
