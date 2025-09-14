@@ -167,6 +167,8 @@
     --border-radius-2: 0.5rem;
     --border-radius-3: 0.75rem;
 
+    --border-grey: 1px solid var(--clr-gray-300);
+
     /* @media (prefers-color-scheme: light) {
       --text-main: var(--clr-brown-700);
       --text-high-contrast: var(--clr-brown-900);
@@ -414,6 +416,31 @@
     }
   }
 
+  #observations-subview-nav {
+    margin-top: 2rem;
+
+    ul {
+      display: flex;
+      margin: 0;
+
+      li {
+        list-style: none;
+        border: var(--border-grey);
+        padding: 0.25rem 0.5rem;
+
+        a {
+          color: var(--text-main);
+          text-decoration: none;
+        }
+      }
+
+      .current-subview {
+        background-color: var(--clr-gray-300);
+        font-weight: 550;
+      }
+    }
+  }
+
   #display-json {
     z-index: 1000;
     position: absolute;
@@ -427,7 +454,7 @@
 
     li {
       list-style: none;
-      border: 1px solid var(--clr-gray-300);
+      border: var(--border-grey);
       padding: 0.25rem 0.5rem;
       cursor: pointer;
 
@@ -476,11 +503,11 @@
     margin: var(--view-container-margins);
   }
 
-  .species-list,
+  .species-grid,
   .observers-table,
   .identifiers-table,
   .observations-table,
-  .observations-list {
+  .observations-grid {
     .title {
       font-weight: 550;
       line-height: 1.25;
@@ -559,9 +586,6 @@
       display: inline-block;
       transform: translateY(2px);
       margin-right: 2px;
-      g {
-        fill: var(--clr-gray-900);
-      }
     }
 
     .photos-count {
@@ -574,14 +598,11 @@
     }
   }
 
-  .species-list.grid-auto-fill {
+  .species-grid.grid-auto-fill {
     --autofill-min-col: 200px;
   }
 
-  .species-list {
-    x-card-species {
-    }
-
+  .species-grid {
     .card {
       border: 1px solid var(--clr-gray-400);
 
@@ -666,11 +687,11 @@
     }
   }
 
-  .observations-list.grid-auto-fill {
+  .observations-grid.grid-auto-fill {
     --autofill-min-col: 250px;
   }
 
-  .observations-list {
+  .observations-grid {
     .card {
       display: flex;
       flex-direction: column;

@@ -701,6 +701,8 @@ export function displayUserData(appStore: MapStore, _source: string) {
       data.selectedPlaces = formatSelectedPlaces();
     } else if (key === "refreshMap") {
       data.refreshMap = formatRefreshMap();
+    } else if (key === "observationsSubviewData") {
+      data.observationsSubviewData = appStore.observationsSubviewData.length;
     } else {
       data[key] = appStore[key];
     }

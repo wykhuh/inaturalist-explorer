@@ -15,8 +15,9 @@ import { createSpinner } from "../../lib/spinner";
 import type { ObservationsResult } from "../../types/inat_api";
 import { formatDate } from "../../lib/utils";
 import type { DataComponent, MapStore } from "../../types/app";
+import { observationsDemoLA } from "../../tests/fixtures/observations";
 
-export let perPage = 50;
+export let perPage = 48;
 
 export async function fetchAndRenderData(
   currentPage: number,
@@ -31,6 +32,7 @@ export async function fetchAndRenderData(
   spinner.start();
 
   const t1 = performance.now();
+  // fetch data from api
   let data = await getAPIData(currentPage, perPage);
   const t10 = performance.now();
   loggerTime(`api ${t10 - t1} milliseconds`);
@@ -38,6 +40,9 @@ export async function fetchAndRenderData(
   spinner.stop();
 
   if (data) {
+    // store results in store for switching subview
+    store.observationsSubviewData = data.results;
+
     containerEl.innerHTML = "";
 
     let pagination1 = createPagination(
@@ -48,11 +53,15 @@ export async function fetchAndRenderData(
     );
     containerEl.appendChild(pagination1);
 
+    // switch between table and grid subview
+    let subviewEl = document.createElement("div");
+    subviewEl.className = "observations-subview";
     if (store.currentObservationsSubview === "table") {
-      containerEl.appendChild(createTable(data.results));
+      subviewEl.appendChild(createTable(data.results));
     } else {
-      containerEl.appendChild(createGrid(data.results));
+      subviewEl.appendChild(createGrid(data.results));
     }
+    containerEl.append(subviewEl);
 
     let pagination2El = createPagination(
       data.per_page,
@@ -65,6 +74,10 @@ export async function fetchAndRenderData(
 }
 
 async function getAPIData(currentPage: number, perPage: number) {
+  if (import.meta.env.VITE_CACHE === "true") {
+    return observationsDemoLA;
+  }
+
   try {
     let data = await getObservations(
       window.location.search,
@@ -80,7 +93,7 @@ async function getAPIData(currentPage: number, perPage: number) {
   }
 }
 
-function createTable(results: ObservationsResult[]) {
+export function createTable(results: ObservationsResult[]) {
   let tableEl = document.createElement("table") as HTMLElement;
   tableEl.className = "observations-table table";
 
@@ -232,9 +245,9 @@ function createTable(results: ObservationsResult[]) {
   return tableEl;
 }
 
-function createGrid(results: ObservationsResult[]) {
+export function createGrid(results: ObservationsResult[]) {
   let containerEl = document.createElement("div");
-  containerEl.className = "observations-list grid-auto-fill";
+  containerEl.className = "observations-grid grid-auto-fill";
 
   results.forEach((row) => {
     let cardEl = document.createElement(
@@ -249,4 +262,46 @@ function createGrid(results: ObservationsResult[]) {
 
 export function paginationcCallback(num: number) {
   fetchAndRenderData(num, perPage, paginationcCallback, window.app.store);
+}
+
+export function toggleSubview(
+  event: Event,
+  tableLinkEl: HTMLElement,
+  gridLinkEl: HTMLElement,
+  appStore: MapStore,
+) {
+  event.preventDefault();
+  if (!(event.target instanceof HTMLElement)) {
+    return;
+  }
+  let containerEl = document.querySelector(".observations-subview");
+  if (!containerEl) {
+    return;
+  }
+
+  let view = event.target.dataset.view;
+  if (!view) return;
+  // early return if this is current subview
+  if (view === appStore.currentObservationsSubview) return;
+
+  // update store
+  window.app.store.currentObservationsSubview = view;
+
+  containerEl.innerHTML = "";
+
+  if (view === "table") {
+    tableLinkEl.classList.add("current-subview");
+    gridLinkEl.classList.remove("current-subview");
+
+    containerEl.appendChild(
+      createTable(window.app.store.observationsSubviewData),
+    );
+  } else {
+    tableLinkEl.classList.remove("current-subview");
+    gridLinkEl.classList.add("current-subview");
+
+    containerEl.appendChild(
+      createGrid(window.app.store.observationsSubviewData),
+    );
+  }
 }

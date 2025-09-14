@@ -12,7 +12,11 @@ import {
 import { getObservationsYears } from "../../lib/inat_api";
 import { decodeAppUrl } from "../../lib/utils";
 import { initApp, loadCachedStore } from "../../lib/init_app";
-import type { SearchOptions, SearchOptionsKeys } from "../../types/app";
+import type {
+  MapStore,
+  SearchOptions,
+  SearchOptionsKeys,
+} from "../../types/app";
 import { setupTaxaSearch, taxonSelectedHandler } from "../../lib/search_taxa";
 import { setupUserSearch, userSelectedHandler } from "../../lib/search_users";
 import {
@@ -23,11 +27,22 @@ import {
   placeSelectedHandler,
   setupPlacesSearch,
 } from "../../lib/search_places";
-import { fetchAndRenderData, paginationcCallback, perPage } from "./utils";
+import {
+  createGrid,
+  createTable,
+  fetchAndRenderData,
+  paginationcCallback,
+  perPage,
+  toggleSubview,
+} from "./utils";
 
 class MyComponent extends HTMLElement {
   constructor() {
     super();
+  }
+
+  connectedCallback() {
+    this.render();
   }
 
   async render() {
@@ -78,6 +93,8 @@ class MyComponent extends HTMLElement {
         window.app.store,
       );
     });
+
+    this.subviewHandler();
   }
 
   renderMap() {
@@ -223,8 +240,27 @@ class MyComponent extends HTMLElement {
     });
   }
 
-  connectedCallback() {
-    this.render();
+  subviewHandler() {
+    let tableLinkEl = this.querySelector(".subview-table") as HTMLElement;
+    let gridLinkEl = this.querySelector(".subview-grid") as HTMLElement;
+
+    // set current-subview
+    let subview = window.app.store.currentObservationsSubview;
+    if (subview === "table") {
+      tableLinkEl.classList.add("current-subview");
+    } else {
+      gridLinkEl.classList.add("current-subview");
+    }
+
+    // change subview when clicked
+    if (tableLinkEl && gridLinkEl) {
+      tableLinkEl.addEventListener("click", (event) => {
+        toggleSubview(event, tableLinkEl, gridLinkEl, window.app.store);
+      });
+      gridLinkEl.addEventListener("click", (event) => {
+        toggleSubview(event, tableLinkEl, gridLinkEl, window.app.store);
+      });
+    }
   }
 }
 

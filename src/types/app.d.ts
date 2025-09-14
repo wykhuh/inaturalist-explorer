@@ -44,6 +44,7 @@ export interface MapStore {
   };
   currentView: ObservationViews;
   currentObservationsSubview: string;
+  observationsSubviewData: ObservationsResult[];
 }
 
 export type MapStoreKeys = keyof MapStore;

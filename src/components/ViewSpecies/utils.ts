@@ -67,7 +67,7 @@ async function getAPIData(currentPage: number, perPage: number) {
 
 function createGrid(results: SpeciesCountResult[]) {
   let containerEl = document.createElement("div");
-  containerEl.className = "species-list grid-auto-fill";
+  containerEl.className = "species-grid grid-auto-fill";
 
   results.forEach((row) => {
     let cardEl = document.createElement(
