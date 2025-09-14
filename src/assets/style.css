@@ -876,9 +876,14 @@
     /* top: 0; */
     width: calc(100% - 270px);
     margin-right: 1rem;
+    padding: 0;
 
     @media (max-width: 750px) {
       width: 100%;
+    }
+
+    & > div {
+      padding: 1rem;
     }
   }
 

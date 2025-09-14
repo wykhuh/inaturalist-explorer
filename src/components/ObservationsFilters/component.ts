@@ -35,6 +35,17 @@ const setup = async () => {
       window.addEventListener("appInitialized", () => {
         initFilters(window.app.store);
       });
+
+      // close dialog if click ouside of dialog
+      // https://stackoverflow.com/a/73988585
+      let dialogEl = this.querySelector(".filters-modal") as HTMLDialogElement;
+      if (dialogEl) {
+        dialogEl.addEventListener("click", (event) => {
+          if (event.target === dialogEl) {
+            dialogEl.close();
+          }
+        });
+      }
     }
 
     renderForm() {
