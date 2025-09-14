@@ -9,6 +9,10 @@ class MyComponent extends HTMLElement {
     super();
   }
 
+  connectedCallback() {
+    this.render();
+  }
+
   async render() {
     const parser = new DOMParser();
     let resp;
@@ -93,10 +97,6 @@ class MyComponent extends HTMLElement {
     if (subtitleEl && subtitle) {
       subtitleEl.innerHTML = `<a href="${iNatTaxaUrl}/${data.taxon.id}">${subtitle}</a>`;
     }
-  }
-
-  connectedCallback() {
-    this.render();
   }
 }
 

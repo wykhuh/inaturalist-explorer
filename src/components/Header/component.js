@@ -10,13 +10,11 @@ const setup = async () => {
   class MyComponent extends HTMLElement {
     constructor() {
       super();
-
-      // this.attachShadow({ mode: "open" }).appendChild(
-      //   template.content.cloneNode(true)
-      // );
     }
 
     connectedCallback() {
+      if (!template) return;
+
       this.appendChild(template.content.cloneNode(true));
     }
   }

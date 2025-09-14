@@ -6,6 +6,10 @@ class MyComponent extends HTMLElement {
     super();
   }
 
+  connectedCallback() {
+    this.render();
+  }
+
   async render() {
     if (!this.dataset.user) return;
 
@@ -39,10 +43,6 @@ class MyComponent extends HTMLElement {
         }
       });
     }
-  }
-
-  connectedCallback() {
-    this.render();
   }
 }
 

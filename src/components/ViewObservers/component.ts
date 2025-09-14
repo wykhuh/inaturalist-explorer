@@ -5,6 +5,10 @@ class MyComponent extends HTMLElement {
     super();
   }
 
+  connectedCallback() {
+    this.render();
+  }
+
   async render() {
     const parser = new DOMParser();
     const resp = await fetch("/src/components/ViewObservers/template.html");
@@ -23,10 +27,6 @@ class MyComponent extends HTMLElement {
     window.addEventListener("appUrlChange", () => {
       fetchAndRenderData(currentPage, perPage, paginationcCallback);
     });
-  }
-
-  connectedCallback() {
-    this.render();
   }
 }
 

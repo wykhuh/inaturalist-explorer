@@ -21,6 +21,22 @@ const setup = async () => {
       super();
     }
 
+    connectedCallback() {
+      if (!template) return;
+
+      this.appendChild(template.content.cloneNode(true));
+
+      this.renderModal();
+      this.renderForm();
+      this.formEventHandler();
+      window.addEventListener("observationYearsLoaded", () => {
+        renderYearsSelect();
+      });
+      window.addEventListener("appInitialized", () => {
+        initFilters(window.app.store);
+      });
+    }
+
     renderForm() {
       renderRankSelect("#hrank", "");
       renderRankSelect("#lrank", "");
@@ -132,22 +148,6 @@ const setup = async () => {
 
       closeButton.addEventListener("click", () => {
         dialog.close();
-      });
-    }
-
-    connectedCallback() {
-      if (!template) return;
-
-      this.appendChild(template.content.cloneNode(true));
-
-      this.renderModal();
-      this.renderForm();
-      this.formEventHandler();
-      window.addEventListener("observationYearsLoaded", () => {
-        renderYearsSelect();
-      });
-      window.addEventListener("appInitialized", () => {
-        initFilters(window.app.store);
       });
     }
   }
