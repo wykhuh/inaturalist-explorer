@@ -644,10 +644,8 @@ export function displayUserData(appStore: MapStore, _source: string) {
     return temp;
   }
   function formatSelectedPlaces() {
-    let temp: any = {};
-    // return temp;
-    let places = appStore.selectedPlaces;
-    places.forEach((place) => {
+    return appStore.selectedPlaces.map((place) => {
+      let temp = {} as any;
       Object.entries(place).forEach(([key, val]) => {
         if (["bounding_box", "geometry"].includes(key)) {
           temp[key] = {
@@ -658,8 +656,8 @@ export function displayUserData(appStore: MapStore, _source: string) {
           temp[key] = val;
         }
       });
+      return temp;
     });
-    return temp;
   }
   function formatPlacesMapLayers() {
     let temp: any = {};
