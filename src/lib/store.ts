@@ -1,6 +1,6 @@
 import type { MapStore, MapStoreKeys } from "../types/app.d.ts";
 import { displayUserData } from "./data_utils.ts";
-import { logger } from "./logger.ts";
+import { loggerStore } from "./logger.ts";
 
 export const mapStore: MapStore = {
   selectedTaxa: [],
@@ -28,7 +28,7 @@ const proxiedStore = new Proxy(structuredClone(mapStore), {
   set(target, property: MapStoreKeys, value) {
     target[property] = value;
 
-    logger(`proxy store.${property} changed`);
+    loggerStore(`proxy store.${property} changed`);
     displayUserData(proxiedStore, `proxiedStore ${property}`);
     if (property === "selectedPlaces") {
       window.dispatchEvent(new Event("selectedPlacesChange"));

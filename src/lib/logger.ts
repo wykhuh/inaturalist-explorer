@@ -25,3 +25,17 @@ export function loggerTime(...args: any) {
 
   console.log(...args);
 }
+
+export function loggerMapLayers(...args: any) {
+  const log = import.meta.env.VITE_LOGGER_MAP;
+  if (!log || log === "false") return;
+
+  console.log(...args);
+}
+
+export function loggerStore(...args: any) {
+  const log = import.meta.env.VITE_LOGGER_STORE;
+  if (!log || log === "false") return;
+
+  console.log(...args);
+}

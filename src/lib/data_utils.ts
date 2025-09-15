@@ -24,7 +24,7 @@ import {
 } from "../data/inat_data.ts";
 import { renderPlacesList } from "./search_places.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
-import { logger, loggerFilters } from "./logger.ts";
+import { loggerMapLayers, loggerFilters } from "./logger.ts";
 import { mapStore } from "./store.ts";
 import type {
   MultiPolygonJson,
@@ -534,14 +534,14 @@ export function leafletVisibleLayers(appStore: MapStore, strict = false) {
 
       if (options.layer_description) {
         if (layer._path || layer._container || !strict) {
-          logger(">>>", Object.keys(layer));
+          loggerMapLayers(">>>", Object.keys(layer));
 
           layer_descriptions.push(options.layer_description);
         } else {
-          logger("?????", Object.keys(layer));
+          loggerMapLayers("?????", Object.keys(layer));
         }
       } else {
-        logger("???", Object.keys(layer));
+        loggerMapLayers("???", Object.keys(layer));
       }
     });
   }
