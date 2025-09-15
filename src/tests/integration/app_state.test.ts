@@ -78,7 +78,7 @@ import {
   gridLabel_life_la_sd_projects_user1,
   addResources,
 } from "../test_helpers.ts";
-import { allTaxaRecord } from "../../lib/inat_data.ts";
+import { allTaxaRecord } from "../../data/inat_data.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
 import { decodeAppUrl } from "../../lib/utils.ts";
 import { initApp } from "../../lib/init_app.ts";

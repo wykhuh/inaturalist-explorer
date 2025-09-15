@@ -21,7 +21,7 @@ import {
   iNatApiNonFilterableNames,
   allTaxaRecord,
   bboxPlaceRecord,
-} from "./inat_data.ts";
+} from "../data/inat_data.ts";
 import { renderPlacesList } from "./search_places.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
 import { logger, loggerFilters } from "./logger.ts";

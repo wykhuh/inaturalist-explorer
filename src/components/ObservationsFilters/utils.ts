@@ -2,7 +2,7 @@ import {
   CCLicenses,
   iNatApiFilterableNames,
   taxonRanks,
-} from "../../lib/inat_data";
+} from "../../data/inat_data";
 import { mapStore } from "../../lib/store";
 import type {
   iNatApiFilterableParamsKeys,

@@ -8,7 +8,7 @@ import {
 } from "../../assets/icons";
 import { formatAvatar, formatTaxonName } from "../../lib/data_utils";
 import { getObservations } from "../../lib/inat_api";
-import { iNatObservationUrl, iNatUserUrl } from "../../lib/inat_data";
+import { iNatObservationUrl, iNatUserUrl } from "../../data/inat_data";
 import { loggerTime } from "../../lib/logger";
 import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";

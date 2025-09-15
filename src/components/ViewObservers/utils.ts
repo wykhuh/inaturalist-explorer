@@ -1,6 +1,6 @@
 import { formatAvatar } from "../../lib/data_utils";
 import { getObservationsObservers } from "../../lib/inat_api";
-import { iNatUserUrl } from "../../lib/inat_data";
+import { iNatUserUrl } from "../../data/inat_data";
 import { loggerTime } from "../../lib/logger";
 import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";

@@ -2,7 +2,7 @@ import type { SpeciesCountResult } from "../../types/inat_api";
 import type { DataComponent } from "../../types/app";
 import { pluralize } from "../../lib/utils";
 import { formatTaxonName } from "../../lib/data_utils";
-import { iNatTaxaUrl } from "../../lib/inat_data";
+import { iNatTaxaUrl } from "../../data/inat_data";
 
 class MyComponent extends HTMLElement {
   constructor() {

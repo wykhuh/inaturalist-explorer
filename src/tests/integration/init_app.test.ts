@@ -53,7 +53,7 @@ import {
   gridLabel_life_bbox_resources,
 } from "../test_helpers.ts";
 import type { iNatApiParams } from "../../types/app";
-import { allTaxaRecord, fieldsWithAny } from "../../lib/inat_data.ts";
+import { allTaxaRecord, fieldsWithAny } from "../../data/inat_data.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
 import { initApp } from "../../lib/init_app.ts";
 

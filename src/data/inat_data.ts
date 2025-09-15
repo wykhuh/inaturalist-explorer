@@ -3,8 +3,8 @@ import type {
   NormalizediNatPlace,
   NormalizediNatTaxon,
   PlaceTypes,
-} from "../types/app.d.ts";
-import { defaultColorScheme, iNatOrange } from "./map_colors_utils.ts";
+} from "../types/app";
+import { defaultColorScheme, iNatOrange } from "../lib/map_colors_utils.ts";
 
 export const taxonRanks = [
   "Kingdom",
@@ -57,6 +57,8 @@ export const iNatApiNonFilterableNames = [
   "taxon_id",
   "project_id",
   "user_id",
+  "view",
+  "subview",
 ];
 
 export const iNatApiFilterableNames = [

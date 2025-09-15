@@ -18,7 +18,11 @@ import {
   getTaxonById,
   getUserById,
 } from "./inat_api.ts";
-import { bboxPlaceRecord, fieldsWithAny, iNatApiNames } from "./inat_data.ts";
+import {
+  bboxPlaceRecord,
+  fieldsWithAny,
+  iNatApiNames,
+} from "../data/inat_data.ts";
 import { renderPlacesList } from "./search_places.ts";
 import { renderProjectsList } from "./search_projects.ts";
 import { renderTaxaList } from "./search_taxa.ts";

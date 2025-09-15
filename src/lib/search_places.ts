@@ -20,8 +20,8 @@ import {
   removeOnePlaceFromStoreAndMap,
 } from "./data_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
-import { placeTypes } from "./inat_data.ts";
 import { updateUrl } from "./utils.ts";
+import { placeTypes } from "../data/inat_data.ts";
 import { renderTaxaList } from "./search_taxa.ts";
 
 export function setupPlacesSearch(selector: string) {

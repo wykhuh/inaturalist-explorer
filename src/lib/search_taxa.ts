@@ -16,8 +16,8 @@ import {
   removeOneTaxonFromStoreAndMap,
   removeTaxaFromStoreAndMap,
 } from "./data_utils.ts";
-import { speciesRanks } from "./inat_data.ts";
 import { updateUrl } from "./utils.ts";
+import { speciesRanks } from "../data/inat_data.ts";
 import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
 
 export function setupTaxaSearch(selector: string) {

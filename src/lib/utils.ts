@@ -4,7 +4,7 @@ import type {
   iNatApiParamsKeys,
   NormalizediNatTaxon,
 } from "../types/app";
-import { bboxPlaceRecord, iNatApiNonFilterableNames } from "./inat_data";
+import { bboxPlaceRecord, iNatApiNonFilterableNames } from "../data/inat_data";
 import { defaultColorScheme } from "./map_colors_utils";
 import { convertParamsBBoxToLngLat } from "./map_utils";
 

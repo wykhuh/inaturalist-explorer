@@ -12,7 +12,7 @@ import type {
   NormalizediNatUser,
 } from "../types/app";
 import { mapStore } from "../lib/store.ts";
-import { allTaxaRecord } from "../lib/inat_data.ts";
+import { allTaxaRecord } from "../data/inat_data.ts";
 import { loggerUrl } from "../lib/logger.ts";
 import { leafletVisibleLayers } from "../lib/data_utils.ts";
 import { placeSelectedHandler } from "../lib/search_places.ts";

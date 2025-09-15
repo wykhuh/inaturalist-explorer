@@ -1,7 +1,7 @@
 import type { ObservationsResult } from "../../types/inat_api";
 import type { DataComponent } from "../../types/app";
 import { formatAvatar, formatTaxonName } from "../../lib/data_utils";
-import { iNatObservationUrl, iNatUserUrl } from "../../lib/inat_data";
+import { iNatObservationUrl, iNatUserUrl } from "../../data/inat_data";
 import { audio, check, speech, star } from "../../assets/icons";
 
 class MyComponent extends HTMLElement {
