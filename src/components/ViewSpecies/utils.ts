@@ -2,10 +2,11 @@ import { getObservationsSpecies } from "../../lib/inat_api";
 import { loggerTime } from "../../lib/logger";
 import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";
+import { threatenedSpecies } from "../../tests/fixtures/observations";
 import type { DataComponent } from "../../types/app";
 import type { SpeciesCountResult } from "../../types/inat_api";
 
-export let perPage = 50;
+export let perPage = 48;
 
 export async function fetchAndRenderData(
   currentPage: number,
@@ -51,6 +52,10 @@ export async function fetchAndRenderData(
 }
 
 async function getAPIData(currentPage: number, perPage: number) {
+  if (import.meta.env.VITE_CACHE === "true") {
+    return threatenedSpecies;
+  }
+
   try {
     let data = await getObservationsSpecies(
       window.location.search,

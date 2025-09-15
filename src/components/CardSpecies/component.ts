@@ -41,6 +41,25 @@ class MyComponent extends HTMLElement {
     let data = (this as DataComponent).data as SpeciesCountResult;
     let { title, subtitle } = formatTaxonName(data.taxon, "", false);
 
+    let mediaEl = this.querySelector(".media") as HTMLLinkElement;
+    if (mediaEl) {
+      let establishmentMeans =
+        data.taxon.establishment_means?.establishment_means;
+      if (establishmentMeans) {
+        let spanEl = document.createElement("span");
+        if (establishmentMeans === "native") {
+          spanEl.className = "establishment-means native";
+          spanEl.textContent = "N";
+          spanEl.title = establishmentMeans;
+        } else if (establishmentMeans === "introduced") {
+          spanEl.className = "establishment-means introduced";
+          spanEl.textContent = "IN";
+          spanEl.title = establishmentMeans;
+        }
+        mediaEl.appendChild(spanEl);
+      }
+    }
+
     let linkEl = this.querySelector(".media a") as HTMLLinkElement;
     if (linkEl) {
       linkEl.href = `${iNatTaxaUrl}/${data.taxon.id}`;

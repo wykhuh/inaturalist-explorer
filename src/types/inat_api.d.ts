@@ -397,6 +397,11 @@ export interface SpeciesCountTaxon {
   preferred_common_name?: string;
   rank?: string;
   rank_level?: number;
+  conservation_status: {
+    id: number;
+    status: string;
+  };
+  establishment_means?: { establishment_means: string };
 }
 
 export interface SpeciesCountDefaultPhoto {

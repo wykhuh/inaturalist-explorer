@@ -118,6 +118,7 @@
 
     --clr-iNat-green: #86a91c;
     --clr-iNat-orange: #f16f3a;
+    --clr-iNat-pink: #ff1493;
     --clr-iNat-dark-gray: #565656;
 
     --clr-overlay-dark-400: rgba(0, 0, 0, 0.4);
@@ -592,9 +593,13 @@
       bottom: 0;
       position: absolute;
       background-color: var(--clr-overlay-dark-600);
-      padding: 0.25rem 0.5rem;
       color: #ffffff;
       font-size: var(--font-size-sm);
+      width: 1.6rem;
+      height: 1.6rem;
+      padding-top: 0.3rem;
+      line-height: 1;
+      text-align: center;
     }
   }
 
@@ -626,15 +631,19 @@
       .licensing {
         background-color: var(--clr-overlay-dark-400);
         color: var(--clr-white);
-        padding: 0.25rem 0.5rem;
         position: absolute;
-        bottom: 0rem;
+        bottom: 0;
+        width: 1.6rem;
+        height: 1.6rem;
+        padding-top: 0.3rem;
+        line-height: 1;
+        text-align: center;
       }
 
       .attribution {
         background-color: var(--clr-overlay-dark-700);
         color: var(--clr-white);
-        bottom: 2rem;
+        bottom: 1.5rem;
         padding: 0.25rem;
       }
 
@@ -648,6 +657,25 @@
       .observations-count {
         /* add as much space to margin top as possible so it is at bottom of card */
         margin-block-start: auto;
+      }
+
+      .establishment-means {
+        position: absolute;
+        top: 0;
+        right: 0;
+        color: var(--clr-white);
+        width: 1.6rem;
+        height: 1.6rem;
+        padding-top: 0.3rem;
+        line-height: 1;
+        text-align: center;
+      }
+
+      .establishment-means.native {
+        background-color: var(--clr-iNat-green);
+      }
+      .establishment-means.introduced {
+        background-color: var(--clr-iNat-pink);
       }
     }
   }
