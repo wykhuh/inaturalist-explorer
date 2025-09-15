@@ -81,7 +81,7 @@ import {
 import { allTaxaRecord } from "../../data/inat_data.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
 import { decodeAppUrl } from "../../lib/utils.ts";
-import { initApp } from "../../lib/init_app.ts";
+import { initApp, initStoreViews } from "../../lib/init_app.ts";
 
 beforeEach(() => {
   const { JSDOM } = jsdom;
@@ -114,6 +114,7 @@ describe("taxonSelectedHandler", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await taxonSelectedHandler(lifeBasic, "life", store);
 
@@ -141,6 +142,7 @@ describe("taxonSelectedHandler", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await taxonSelectedHandler(lifeBasic, "life", store);
 
@@ -200,6 +202,7 @@ describe("placeSelectedHandler", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await placeSelectedHandler(losangeles, "los", store);
 
@@ -230,6 +233,7 @@ describe("placeSelectedHandler", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await placeSelectedHandler(losangeles, "los", store);
 
@@ -286,6 +290,7 @@ describe("refreshBoundingBox", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await refreshBoundingBox(store);
 
@@ -319,6 +324,7 @@ describe("refreshBoundingBox", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await refreshBoundingBox(store);
 
@@ -372,6 +378,7 @@ describe("projectSelectedHandler", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await projectSelectedHandler(project_cnc1, "city", store);
 
@@ -401,6 +408,7 @@ describe("projectSelectedHandler", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await projectSelectedHandler(project_cnc1, "city", store);
 
@@ -454,6 +462,7 @@ describe("userSelectedHandler", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await userSelectedHandler(user1, "user", store);
 
@@ -483,6 +492,7 @@ describe("userSelectedHandler", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await userSelectedHandler(user1, "user", store);
 
@@ -536,6 +546,7 @@ describe("combos", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await taxonSelectedHandler(redOakBasic, "red", store);
 
@@ -585,6 +596,7 @@ describe("combos", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await placeSelectedHandler(losangeles, "los", store);
 
@@ -636,6 +648,7 @@ describe("combos", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await projectSelectedHandler(project_cnc1, "city", store);
 
@@ -689,6 +702,7 @@ describe("combos", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await userSelectedHandler(user1, "user", store);
 
@@ -742,6 +756,7 @@ describe("combos", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await placeSelectedHandler(losangeles, "los", store);
 
@@ -815,6 +830,7 @@ describe("combos", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
 
     await addResources(store);
@@ -825,6 +841,7 @@ describe("combos", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await addResources(store);
 
@@ -954,6 +971,7 @@ describe("combos", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
 
     await addResources(store);
@@ -1036,6 +1054,7 @@ describe("removePlace", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await placeSelectedHandler(losangeles, "los", store);
 
@@ -1068,6 +1087,7 @@ describe("removePlace", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await placeSelectedHandler(losangeles, "los", store);
 
@@ -1117,6 +1137,7 @@ describe("removePlace", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await refreshBoundingBox(store);
 
@@ -1151,6 +1172,7 @@ describe("removePlace", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await taxonSelectedHandler(lifeBasic, "life", store);
 
@@ -1198,6 +1220,7 @@ describe("removePlace", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await taxonSelectedHandler(lifeBasic, "life", store);
 
@@ -1250,6 +1273,7 @@ describe("removeTaxon", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await taxonSelectedHandler(lifeBasic, "life", store);
 
@@ -1281,6 +1305,7 @@ describe("removeTaxon", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await taxonSelectedHandler(lifeBasic, "life", store);
 
@@ -1331,6 +1356,7 @@ describe("removeProject", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await projectSelectedHandler(project_cnc1, "city", store);
 
@@ -1363,6 +1389,7 @@ describe("removeProject", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await projectSelectedHandler(project_cnc1, "city", store);
 
@@ -1414,6 +1441,7 @@ describe("removeUser", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await userSelectedHandler(user1, "user", store);
 
@@ -1446,6 +1474,7 @@ describe("removeUser", () => {
 
     expectEmpytMap(store);
 
+    initStoreViews(store, decodeAppUrl(""));
     await initApp(store, decodeAppUrl(""));
     await userSelectedHandler(user1, "user", store);
 

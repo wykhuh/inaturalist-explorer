@@ -9,6 +9,14 @@ class MyComponent extends HTMLElement {
   connectedCallback() {
     logger("++ ObservationHeader render");
     this.render();
+
+    window.addEventListener("appUrlChange", () => {
+      // updateCounts();
+    });
+    window.addEventListener("storeDataLoaded", () => {
+      logger("++ ObservationHeader storeDataLoaded");
+      updateCounts();
+    });
   }
 
   async render() {
@@ -55,14 +63,6 @@ class MyComponent extends HTMLElement {
       store,
       this,
     );
-
-    window.addEventListener("appUrlChange", () => {
-      // updateCounts();
-    });
-    window.addEventListener("appInitialized", () => {
-      logger("++ updateCounts");
-      updateCounts();
-    });
   }
 }
 

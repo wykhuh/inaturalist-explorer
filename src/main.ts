@@ -12,6 +12,8 @@ import "./components/CardSpecies/component.ts";
 import "./components/CardObservation/component.ts";
 
 import mapStore from "./lib/store.ts";
+import { initStoreViews } from "./lib/init_app.ts";
+import { decodeAppUrl } from "./lib/utils.ts";
 
 window.app = { store: mapStore };
 
@@ -19,6 +21,8 @@ let defaultView = "x-view-map";
 
 let viewContainerEl = document.querySelector("#view-container");
 if (viewContainerEl) {
+  let urlData = decodeAppUrl(window.location.search);
+  initStoreViews(window.app.store, urlData);
   let view = document.createElement(defaultView);
   viewContainerEl.appendChild(view);
 }

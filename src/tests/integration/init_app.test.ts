@@ -55,7 +55,7 @@ import {
 import type { iNatApiParams } from "../../types/app";
 import { allTaxaRecord, fieldsWithAny } from "../../data/inat_data.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
-import { initApp } from "../../lib/init_app.ts";
+import { initStoreViews, initApp } from "../../lib/init_app.ts";
 
 beforeEach(() => {
   const { JSDOM } = jsdom;
@@ -82,7 +82,7 @@ afterAll(() => {
   server.close();
 });
 
-describe("initApp options", () => {
+describe("initStoreViews and initApp options", () => {
   test("adds all taxa, verifiable true, and spam false when no search params", async () => {
     let { store } = setupMapAndStore();
 
@@ -91,6 +91,7 @@ describe("initApp options", () => {
     let searchparams = "";
     let urlData = decodeAppUrl(searchparams);
 
+    initStoreViews(store, urlData);
     await initApp(store, urlData);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -118,6 +119,7 @@ describe("initApp options", () => {
     let searchparams = "?verifiable=false&spam=true&photos=false";
     let urlData = decodeAppUrl(searchparams);
 
+    initStoreViews(store, urlData);
     await initApp(store, urlData);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -146,6 +148,7 @@ describe("initApp options", () => {
     let searchparams = "?boo=true&foo=any";
     let urlData = decodeAppUrl(searchparams);
 
+    initStoreViews(store, urlData);
     await initApp(store, urlData);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -173,6 +176,7 @@ describe("initApp options", () => {
     let searchparams = `?taxon_id=${life().id}&verifiable=false&spam=false`;
     let urlData = decodeAppUrl(searchparams);
 
+    initStoreViews(store, urlData);
     await initApp(store, urlData);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -200,6 +204,7 @@ describe("initApp options", () => {
     let searchparams = `?taxon_id=${life().id}&verifiable=true&spam=true`;
     let urlData = decodeAppUrl(searchparams);
 
+    initStoreViews(store, urlData);
     await initApp(store, urlData);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -227,6 +232,7 @@ describe("initApp options", () => {
     let searchparams = `?taxon_id=${life().id}`;
     let urlData = decodeAppUrl(searchparams);
 
+    initStoreViews(store, urlData);
     await initApp(store, urlData);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -287,6 +293,7 @@ describe("initApp options", () => {
     let searchparams = `?taxon_id=${life().id}&verifiable=true&spam=false`;
     let urlData = decodeAppUrl(searchparams);
 
+    initStoreViews(store, urlData);
     await initApp(store, urlData);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -314,6 +321,7 @@ describe("initApp options", () => {
     let searchparams = `?view=observations&subview=grid`;
     let urlData = decodeAppUrl(searchparams);
 
+    initStoreViews(store, urlData);
     await initApp(store, urlData);
 
     expectNoPlaces(store);
@@ -338,6 +346,7 @@ describe("initApp options", () => {
     let searchparams = `?view=identifiers`;
     let urlData = decodeAppUrl(searchparams);
 
+    initStoreViews(store, urlData);
     await initApp(store, urlData);
 
     expectNoPlaces(store);
@@ -355,7 +364,7 @@ describe("initApp options", () => {
   });
 });
 
-describe("initApp resources", () => {
+describe("initStoreViews and initApp resources", () => {
   test("loads and renders taxa data based on url params", async () => {
     let { store } = setupMapAndStore();
 
@@ -364,6 +373,7 @@ describe("initApp resources", () => {
     let searchparams = `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`;
     let urlData = decodeAppUrl(searchparams);
 
+    initStoreViews(store, urlData);
     await initApp(store, urlData);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -391,6 +401,7 @@ describe("initApp resources", () => {
     let searchparams = `?place_id=${losangeles.id}&verifiable=true&spam=false`;
     let urlData = decodeAppUrl(searchparams);
 
+    initStoreViews(store, urlData);
     await initApp(store, urlData);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -420,6 +431,7 @@ describe("initApp resources", () => {
       "?spam=false&verifiable=true&nelat=0&nelng=0&swlat=0&swlng=0";
     let urlData = decodeAppUrl(searchparams);
 
+    initStoreViews(store, urlData);
     await initApp(store, urlData);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -450,6 +462,7 @@ describe("initApp resources", () => {
     let searchparams = `?project_id=${project_cnc1.id}&verifiable=true&spam=false`;
     let urlData = decodeAppUrl(searchparams);
 
+    initStoreViews(store, urlData);
     await initApp(store, urlData);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -478,6 +491,7 @@ describe("initApp resources", () => {
     let searchparams = `?user_id=${user1.id}&verifiable=true&spam=false`;
     let urlData = decodeAppUrl(searchparams);
 
+    initStoreViews(store, urlData);
     await initApp(store, urlData);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -512,6 +526,7 @@ describe("initApp resources", () => {
     searchparams += `&colors=${colorsEncoded[0]},${colorsEncoded[1]}`;
     searchparams += `&spam=false&verifiable=true`;
     let urlData = decodeAppUrl(searchparams);
+    initStoreViews(store, urlData);
     await initApp(store, urlData);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -552,6 +567,7 @@ describe("initApp resources", () => {
     searchparams += `&colors=${colorsEncoded[0]},${colorsEncoded[1]}`;
     searchparams += `&spam=false&verifiable=true`;
     let urlData = decodeAppUrl(searchparams);
+    initStoreViews(store, urlData);
     await initApp(store, urlData);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([

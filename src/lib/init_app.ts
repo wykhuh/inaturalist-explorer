@@ -61,16 +61,6 @@ export async function initApp(appStore: MapStore, urlStore: MapStore) {
     }
   }
 
-  // use url store to populate store view and and subview
-  if (urlStore.currentView) {
-    appStore.currentView = urlStore.currentView;
-  }
-  if (urlStore.currentView === "observations") {
-    appStore.currentObservationsSubview = urlStore.currentObservationsSubview;
-  } else {
-    appStore.currentObservationsSubview = undefined;
-  }
-
   // HACK: trigger change in proxy store
   appStore.inatApiParams = appStore.inatApiParams;
   appStore.currentObservationsSubview = appStore.currentObservationsSubview;
@@ -147,6 +137,23 @@ export async function initApp(appStore: MapStore, urlStore: MapStore) {
   window.dispatchEvent(new Event("appInitialized"));
 }
 
+// populate store with basic view data from app url.
+// used to set view in observation header and subview in obdervation view
+export function initStoreViews(appStore: MapStore, urlStore: MapStore) {
+  logger("++ initStoreViews");
+
+  // use url store to populate store view and and subview
+  if (urlStore.currentView) {
+    appStore.currentView = urlStore.currentView;
+  }
+  if (urlStore.currentView === "observations") {
+    appStore.currentObservationsSubview = urlStore.currentObservationsSubview;
+  } else {
+    appStore.currentObservationsSubview = undefined;
+  }
+}
+
+// use app store to reload map data
 export async function loadCachedStore(appStore: MapStore) {
   let map = appStore.map.map;
   if (!map) return;
