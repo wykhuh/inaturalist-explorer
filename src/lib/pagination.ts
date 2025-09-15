@@ -7,13 +7,7 @@ export function createPagination(
   callback: (pageNumber: number) => void,
 ) {
   let numPages = Math.ceil(totalRecords / perPage);
-  const sequence = generateFromObj({
-    curPage: currentPage,
-    numPages: numPages,
-    numPagesAtEdges: 1,
-    numPagesAroundCurrent: 1,
-    glue: "…",
-  });
+  const sequence = createSequence(numPages, currentPage);
 
   let listEl = document.createElement("ul");
   listEl.className = "pagination";
@@ -58,4 +52,18 @@ export function createPagination(
   listEl.appendChild(nextEl);
 
   return listEl;
+}
+
+export function createSequence(numPages: number, currentPage: number) {
+  if (numPages === 0) {
+    return [];
+  }
+
+  return generateFromObj({
+    curPage: currentPage,
+    numPages: numPages,
+    numPagesAtEdges: 1,
+    numPagesAroundCurrent: 1,
+    glue: "…",
+  });
 }
