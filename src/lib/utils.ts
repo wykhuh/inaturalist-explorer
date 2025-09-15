@@ -123,7 +123,7 @@ function defaultParams(searchParams: string) {
   return false;
 }
 
-export function updateUrl(url_location: Location, appStore: MapStore) {
+export function updateAppUrl(url_location: Location, appStore: MapStore) {
   let paramsString = formatAppUrl(appStore);
   let url = paramsString
     ? `${url_location.origin}?${paramsString}`

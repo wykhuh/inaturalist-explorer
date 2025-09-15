@@ -16,8 +16,8 @@ import {
   removeOneTaxonFromStoreAndMap,
   removeTaxaFromStoreAndMap,
 } from "./data_utils.ts";
-import { updateUrl } from "./utils.ts";
 import { speciesRanks } from "../data/inat_data.ts";
+import { updateAppUrl } from "./utils.ts";
 import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
 
 export function setupTaxaSearch(selector: string) {
@@ -155,7 +155,7 @@ export async function taxonSelectedHandler(
   await getObservationsCountForTaxon(taxonObj, appStore);
 
   renderTaxaList(appStore);
-  updateUrl(window.location, appStore);
+  updateAppUrl(window.location, appStore);
 }
 
 export function renderTaxaList(appStore: MapStore) {
@@ -181,5 +181,5 @@ export async function removeTaxon(taxonId: number, appStore: MapStore) {
   }
 
   renderTaxaList(appStore);
-  updateUrl(window.location, appStore);
+  updateAppUrl(window.location, appStore);
 }

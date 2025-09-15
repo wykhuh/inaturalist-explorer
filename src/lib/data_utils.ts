@@ -15,7 +15,7 @@ import {
   formatiNatAPIBoundingBoxParams,
   getAndDrawMapBoundingBox,
 } from "./map_utils.ts";
-import { displayJson, updateUrl } from "./utils.ts";
+import { displayJson, updateAppUrl } from "./utils.ts";
 import { getiNatMapTiles, getObservations } from "./inat_api.ts";
 import {
   iNatApiNonFilterableNames,
@@ -94,7 +94,7 @@ export async function refreshBoundingBox(
 
   renderTaxaList(appStore);
   renderPlacesList(appStore);
-  updateUrl(window.location, appStore);
+  updateAppUrl(window.location, appStore);
 }
 
 // called when user select taxa or place

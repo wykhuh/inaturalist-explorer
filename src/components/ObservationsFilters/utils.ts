@@ -16,7 +16,7 @@ import {
   removeOneTaxonFromMap,
   updateStoreUsingFilters,
 } from "../../lib/data_utils";
-import { updateUrl } from "../../lib/utils";
+import { updateAppUrl } from "../../lib/utils";
 import { loggerFilters } from "../../lib/logger";
 import { renderTaxaList } from "../../lib/search_taxa";
 
@@ -145,7 +145,7 @@ export async function updateAppWithFilters(
   }
 
   renderTaxaList(appStore);
-  updateUrl(window.location, appStore);
+  updateAppUrl(window.location, appStore);
 
   if (logEl) {
     logEl.innerText = results.string;

@@ -6,7 +6,7 @@ import {
   hexToRgb,
   pluralize,
   formatAppUrl,
-  updateUrl,
+  updateAppUrl,
   decodeAppUrl,
 } from "../lib/utils.ts";
 import { mapStore } from "../lib/store.ts";
@@ -216,12 +216,12 @@ describe("formatAppUrl", () => {
   });
 });
 
-describe("updateUrl", () => {
+describe("updateAppUrl", () => {
   test("uses push state to change location url with default store", () => {
     const pushSpy = vi.spyOn(history, "pushState");
     let appStore = mapStore;
 
-    updateUrl(global.window.location, appStore);
+    updateAppUrl(global.window.location, appStore);
 
     expect(pushSpy).toHaveBeenCalledWith({}, "", "http://localhost:3000");
 
@@ -240,7 +240,7 @@ describe("updateUrl", () => {
       selectedTaxa: [life()],
     };
 
-    updateUrl(global.window.location, appStore);
+    updateAppUrl(global.window.location, appStore);
 
     expect(pushSpy).toHaveBeenCalledWith(
       {},

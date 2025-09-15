@@ -20,8 +20,8 @@ import {
   removeOnePlaceFromStoreAndMap,
 } from "./data_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
-import { updateUrl } from "./utils.ts";
 import { placeTypes } from "../data/inat_data.ts";
+import { updateAppUrl } from "./utils.ts";
 import { renderTaxaList } from "./search_taxa.ts";
 
 export function setupPlacesSearch(selector: string) {
@@ -173,7 +173,7 @@ export async function placeSelectedHandler(
   renderTaxaList(appStore);
   renderPlacesList(appStore);
   fitBoundsPlaces(appStore);
-  updateUrl(window.location, appStore);
+  updateAppUrl(window.location, appStore);
 }
 
 export function renderPlacesList(appStore: MapStore) {
@@ -214,5 +214,5 @@ export async function removePlace(placeId: number, appStore: MapStore) {
 
   renderTaxaList(appStore);
   renderPlacesList(appStore);
-  updateUrl(window.location, appStore);
+  updateAppUrl(window.location, appStore);
 }

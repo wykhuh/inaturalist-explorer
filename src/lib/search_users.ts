@@ -17,7 +17,7 @@ import {
   removeOneUserFromStore,
 } from "./data_utils.ts";
 
-import { updateUrl } from "./utils.ts";
+import { updateAppUrl } from "./utils.ts";
 import { renderTaxaList } from "./search_taxa.ts";
 
 export function setupUserSearch(selector: string) {
@@ -119,7 +119,7 @@ export async function userSelectedHandler(
 
   renderTaxaList(appStore);
   renderUsersList(appStore);
-  updateUrl(window.location, appStore);
+  updateAppUrl(window.location, appStore);
 }
 
 export function renderUsersList(appStore: MapStore) {
@@ -156,5 +156,5 @@ export async function removeUser(userId: number, appStore: MapStore) {
 
   renderTaxaList(appStore);
   renderUsersList(appStore);
-  updateUrl(window.location, appStore);
+  updateAppUrl(window.location, appStore);
 }

@@ -15,7 +15,7 @@ import {
   getObservationsCountForTaxon,
   removeOneProjectFromStore,
 } from "./data_utils.ts";
-import { updateUrl } from "./utils.ts";
+import { updateAppUrl } from "./utils.ts";
 import { renderTaxaList } from "./search_taxa.ts";
 
 export function setupProjectSearch(selector: string) {
@@ -111,7 +111,7 @@ export async function projectSelectedHandler(
 
   renderTaxaList(appStore);
   renderProjectsList(appStore);
-  updateUrl(window.location, appStore);
+  updateAppUrl(window.location, appStore);
 }
 
 export function renderProjectsList(appStore: MapStore) {
@@ -149,5 +149,5 @@ export async function removeProject(projectId: number, appStore: MapStore) {
 
   renderTaxaList(appStore);
   renderProjectsList(appStore);
-  updateUrl(window.location, appStore);
+  updateAppUrl(window.location, appStore);
 }
