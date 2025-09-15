@@ -3,10 +3,17 @@ import type {
   iNatApiParams,
   iNatApiParamsKeys,
   NormalizediNatTaxon,
+  ObservationViews,
 } from "../types/app";
-import { bboxPlaceRecord, iNatApiNonFilterableNames } from "../data/inat_data";
+import {
+  bboxPlaceRecord,
+  iNatApiFilterableNames,
+  iNatApiNames,
+  iNatApiNonFilterableNames,
+} from "../data/inat_data";
 import { defaultColorScheme } from "./map_colors_utils";
 import { convertParamsBBoxToLngLat } from "./map_utils";
+import { validObservationsSubviews, validViews } from "../data/app_data";
 
 export function displayJson(json: any, el: HTMLElement | null) {
   const debug = import.meta.env.VITE_DEBUG;
@@ -90,37 +97,74 @@ export function formatAppUrl(appStore: MapStore) {
     params.colors = colors;
   }
 
+  let processedKeys = [
+    "taxon_id",
+    "place_id",
+    "project_id",
+    "user_id",
+    "colors",
+  ];
   Object.entries(appStore.inatApiParams).forEach(([key, value]) => {
-    if (
-      !["taxon_id", "place_id", "project_id", "user_id", "colors"].includes(key)
-    ) {
-      if (params) {
+    if (processedKeys.includes(key)) {
+    } else {
+      if (params && iNatApiNames.includes(key)) {
         params[key as iNatApiParamsKeys] = value as any;
       }
     }
   });
 
+  if (appStore.currentView === "observations") {
+    if (appStore.currentObservationsSubview === "table") {
+      params.view = appStore.currentView;
+      params.subview = appStore.currentObservationsSubview;
+    }
+  } else if (appStore.currentView) {
+    if (validViews.includes(appStore.currentView)) {
+      params.view = appStore.currentView;
+    }
+  }
+
   let searchParams = new URLSearchParams(params as any)
     .toString()
     .replaceAll("%2C", ",");
 
-  if (defaultParams(searchParams)) {
-    return "";
-  }
+  searchParams = removeDefaultParams(searchParams);
 
   return searchParams;
 }
 
-function defaultParams(searchParams: string) {
+export function removeDefaultParams(searchParams: string) {
   let parts = searchParams.split("&");
-  if (
-    parts.includes("verifiable=true") &&
-    parts.includes("spam=false") &&
-    parts.length === 2
-  ) {
-    return true;
+
+  let defaultiNatAPiParamas =
+    parts.includes("verifiable=true") && parts.includes("spam=false");
+  let defaultView =
+    parts.includes("view=observations") && parts.includes("subview=grid");
+
+  if (defaultiNatAPiParamas && defaultView) {
+    parts = removeValueFromArray("verifiable=true", parts);
+    parts = removeValueFromArray("spam=false", parts);
+    parts = removeValueFromArray("view=observations", parts);
+    parts = removeValueFromArray("subview=grid", parts);
   }
-  return false;
+  if (defaultView) {
+    parts = removeValueFromArray("view=observations", parts);
+    parts = removeValueFromArray("subview=grid", parts);
+  }
+  if (defaultiNatAPiParamas && parts.length === 2) {
+    parts = removeValueFromArray("verifiable=true", parts);
+    parts = removeValueFromArray("spam=false", parts);
+  }
+
+  return parts.join("&");
+}
+
+function removeValueFromArray(value: any, array: any[]) {
+  const index = array.indexOf(value);
+  if (index > -1) {
+    array.splice(index, 1);
+  }
+  return array;
 }
 
 export function updateAppUrl(url_location: Location, appStore: MapStore) {
@@ -128,13 +172,14 @@ export function updateAppUrl(url_location: Location, appStore: MapStore) {
   let url = paramsString
     ? `${url_location.origin}?${paramsString}`
     : url_location.origin;
+
   window.history.pushState({}, "", url);
   window.dispatchEvent(new Event("appUrlChange"));
 }
 
 export function decodeAppUrl(searchParams: string) {
   const urlParams = Object.fromEntries(new URLSearchParams(searchParams));
-  let apiParams = { inatApiParams: {} } as MapStore;
+  let store = { inatApiParams: {} } as MapStore;
 
   // convert taxon_id into basic selectedTaxa with id and color
   let taxa: NormalizediNatTaxon[] = [];
@@ -149,11 +194,11 @@ export function decodeAppUrl(searchParams: string) {
         color: colors[i],
       });
       if (i === ids.length - 1) {
-        apiParams.color = colors[i];
+        store.color = colors[i];
       }
     });
   }
-  apiParams.selectedTaxa = taxa;
+  store.selectedTaxa = taxa;
 
   // convert place_id into basic selectedPlaces with id or bbox
   if ("place_id" in urlParams && urlParams.place_id !== "any") {
@@ -173,11 +218,11 @@ export function decodeAppUrl(searchParams: string) {
       .filter((p) => p);
 
     if (places) {
-      apiParams.selectedPlaces = places as any;
+      store.selectedPlaces = places as any;
     }
   }
   if ("nelat" in urlParams) {
-    apiParams.inatApiParams = {
+    store.inatApiParams = {
       nelat: Number(urlParams.nelat),
       nelng: Number(urlParams.nelng),
       swlat: Number(urlParams.swlat),
@@ -195,7 +240,7 @@ export function decodeAppUrl(searchParams: string) {
       .filter((p) => p);
 
     if (projects) {
-      apiParams.selectedProjects = projects as any;
+      store.selectedProjects = projects as any;
     }
   }
   // convert user_id into basic selectedUser with id
@@ -209,22 +254,36 @@ export function decodeAppUrl(searchParams: string) {
       .filter((p) => p);
 
     if (users) {
-      apiParams.selectedUsers = users as any;
+      store.selectedUsers = users as any;
+    }
+  }
+
+  if (urlParams.view && validViews.includes(urlParams.view)) {
+    store.currentView = urlParams.view as ObservationViews;
+    if (urlParams.view === "observations") {
+      if (
+        urlParams.subview &&
+        validObservationsSubviews.includes(urlParams.subview)
+      ) {
+        store.currentObservationsSubview = urlParams.subview;
+      }
     }
   }
 
   for (let [key, value] of new URLSearchParams(searchParams)) {
-    if (!iNatApiNonFilterableNames.includes(key)) {
+    // convert to boolean
+    if (iNatApiFilterableNames.includes(key)) {
       if (value === "true") {
         value = true as unknown as string;
       }
       if (value === "false") {
         value = false as unknown as string;
       }
-      (apiParams.inatApiParams[key as iNatApiParamsKeys] as string) = value;
+      (store.inatApiParams[key as iNatApiParamsKeys] as string) = value;
     }
   }
-  return apiParams;
+
+  return store;
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
@@ -232,7 +291,9 @@ export function getRandomInt(max: number) {
   return Math.floor(Math.random() * max);
 }
 
-export function formatDate(date: string, timezone: string) {
+export function formatDate(date: string | null, timezone: string) {
+  if (!date) return;
+
   return new Date(date).toLocaleString("en-US", {
     timeZone: timezone,
     timeZoneName: "short",

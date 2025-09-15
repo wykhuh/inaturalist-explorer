@@ -624,7 +624,7 @@ export function updateStoreUsingFilters(
   };
 }
 
-export function formatAvatar(imgUrl?: string) {
+export function formatAvatar(imgUrl?: string | null) {
   if (imgUrl) {
     return `<img class="avatar" src="${imgUrl}">`;
   } else {

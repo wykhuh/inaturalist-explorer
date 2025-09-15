@@ -55,7 +55,7 @@ class MyComponent extends HTMLElement {
     );
 
     window.addEventListener("appUrlChange", () => {
-      updateCounts();
+      // updateCounts();
     });
     window.addEventListener("appInitialized", () => {
       updateCounts();

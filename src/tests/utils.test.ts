@@ -8,6 +8,7 @@ import {
   formatAppUrl,
   updateAppUrl,
   decodeAppUrl,
+  removeDefaultParams,
 } from "../lib/utils.ts";
 import { mapStore } from "../lib/store.ts";
 import {
@@ -18,8 +19,12 @@ import {
   project_cnc2,
   redOak,
   sandiego,
+  user1,
+  user2,
 } from "./test_helpers.ts";
-import type { MapStore } from "../types/app";
+import type { MapStore, ObservationViews } from "../types/app";
+import { iNatApiFilterableNames } from "../data/inat_data.ts";
+import { validObservationsSubviews, validViews } from "../data/app_data.ts";
 
 describe("hexToRgb", () => {
   test("converts 6 character hex to rgb", () => {
@@ -67,29 +72,14 @@ describe("pluralize", () => {
   });
 });
 
-// let life = {
-//   name: "Life",
-//   matched_term: "life",
-//   rank: "stateofmatter",
-//   id: 48460,
-//   color: "#4477aa",
-// };
-// let redOaks = {
-//   name: "Lobatae",
-//   matched_term: "red oaks",
-//   rank: "section",
-//   id: 861036,
-//   color: "#66ccee",
-// };
-
 describe("formatAppUrl", () => {
   test("format parameters for one taxon", () => {
     let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
+        ...mapStore.inatApiParams,
         taxon_id: life().id.toString(),
         colors: life().color,
-        spam: false,
       },
       selectedTaxa: [life()],
     };
@@ -97,7 +87,8 @@ describe("formatAppUrl", () => {
     let result = formatAppUrl(appStore);
 
     expect(result).toBe(
-      `taxon_id=${life().id}&colors=${colorsEncoded[0]}&spam=false`,
+      `taxon_id=${life().id}&colors=${colorsEncoded[0]}` +
+        `&verifiable=true&spam=false`,
     );
   });
 
@@ -105,9 +96,9 @@ describe("formatAppUrl", () => {
     let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
+        ...mapStore.inatApiParams,
         taxon_id: redOak().id.toString(),
         colors: redOak().color,
-        spam: false,
       },
       selectedTaxa: [life(), redOak()],
     };
@@ -115,7 +106,9 @@ describe("formatAppUrl", () => {
     let result = formatAppUrl(appStore);
 
     expect(result).toBe(
-      `taxon_id=${life().id},${redOak().id}&colors=${colorsEncoded[0]},${colorsEncoded[1]}&spam=false`,
+      `taxon_id=${life().id},${redOak().id}` +
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}` +
+        `&verifiable=true&spam=false`,
     );
   });
 
@@ -123,7 +116,7 @@ describe("formatAppUrl", () => {
     let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
-        spam: false,
+        ...mapStore.inatApiParams,
         place_id: losangeles.id.toString(),
       },
       selectedTaxa: [],
@@ -132,14 +125,16 @@ describe("formatAppUrl", () => {
 
     let result = formatAppUrl(appStore);
 
-    expect(result).toBe(`place_id=${losangeles.id}&spam=false`);
+    expect(result).toBe(
+      `place_id=${losangeles.id}` + `&verifiable=true&spam=false`,
+    );
   });
 
   test("format parameters for multiple places", () => {
     let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
-        spam: false,
+        ...mapStore.inatApiParams,
         place_id: `${losangeles.id},${sandiego.id}`,
       },
       selectedTaxa: [],
@@ -148,14 +143,17 @@ describe("formatAppUrl", () => {
 
     let result = formatAppUrl(appStore);
 
-    expect(result).toBe(`place_id=${losangeles.id},${sandiego.id}&spam=false`);
+    expect(result).toBe(
+      `place_id=${losangeles.id},${sandiego.id}` +
+        `&verifiable=true&spam=false`,
+    );
   });
 
   test("format parameters for one project", () => {
     let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
-        spam: false,
+        ...mapStore.inatApiParams,
         project_id: project_cnc1.id.toString(),
       },
       selectedTaxa: [],
@@ -164,14 +162,16 @@ describe("formatAppUrl", () => {
 
     let result = formatAppUrl(appStore);
 
-    expect(result).toBe(`project_id=${project_cnc1.id}&spam=false`);
+    expect(result).toBe(
+      `project_id=${project_cnc1.id}` + `&verifiable=true&spam=false`,
+    );
   });
 
   test("format parameters for multiple project", () => {
     let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
-        spam: false,
+        ...mapStore.inatApiParams,
         project_id: `${project_cnc1.id.toString()},${project_cnc2.id.toString()}`,
       },
       selectedTaxa: [],
@@ -181,11 +181,87 @@ describe("formatAppUrl", () => {
     let result = formatAppUrl(appStore);
 
     expect(result).toBe(
-      `project_id=${project_cnc1.id},${project_cnc2.id}&spam=false`,
+      `project_id=${project_cnc1.id},${project_cnc2.id}` +
+        `&verifiable=true&spam=false`,
     );
   });
 
-  test("return empty string if no taxa or place, and inatApiParams has default params", () => {
+  test("format parameters for one user", () => {
+    let appStore: MapStore = {
+      ...mapStore,
+      inatApiParams: {
+        ...mapStore.inatApiParams,
+        user_id: user1.id.toString(),
+      },
+      selectedTaxa: [],
+      selectedUsers: [user1],
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe(`user_id=${user1.id}` + `&verifiable=true&spam=false`);
+  });
+
+  test("format parameters for multiple users", () => {
+    let appStore: MapStore = {
+      ...mapStore,
+      inatApiParams: {
+        ...mapStore.inatApiParams,
+        user_id: `${user1.id},${user2.id}`,
+      },
+      selectedTaxa: [],
+      selectedUsers: [user1, user2],
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe(
+      `user_id=${user1.id},${user2.id}` + `&verifiable=true&spam=false`,
+    );
+  });
+
+  test("return empty string for default view, subview, and inatApiParams", () => {
+    let appStore: MapStore = {
+      ...mapStore,
+      currentView: "observations",
+      currentObservationsSubview: "grid",
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe("");
+  });
+
+  test.each(["identifiers", "observers", "species"])(
+    "return view if view is not observations",
+    (view) => {
+      let appStore: MapStore = {
+        ...mapStore,
+        currentView: view as ObservationViews,
+        currentObservationsSubview: undefined,
+      };
+
+      let result = formatAppUrl(appStore);
+
+      expect(result).toBe(`verifiable=true&spam=false&view=${view}`);
+    },
+  );
+
+  test("return view & subview if has view is observations and table ", () => {
+    let appStore: MapStore = {
+      ...mapStore,
+      currentView: "observations",
+      currentObservationsSubview: "table",
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe(
+      "verifiable=true&spam=false&view=observations&subview=table",
+    );
+  });
+
+  test("return empty string if no selected resources, and inatApiParams has default params", () => {
     let appStore: MapStore = {
       ...mapStore,
       inatApiParams: mapStore.inatApiParams,
@@ -198,12 +274,11 @@ describe("formatAppUrl", () => {
     expect(result).toBe("");
   });
 
-  test("return params if no taxa or place, and inatApiParams has additional params", () => {
+  test("return params if no selected resources, and inatApiParams has additional params", () => {
     let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
-        verifiable: true,
-        spam: false,
+        ...mapStore.inatApiParams,
         photos: true,
       },
       selectedTaxa: [],
@@ -213,6 +288,55 @@ describe("formatAppUrl", () => {
     let result = formatAppUrl(appStore);
 
     expect(result).toBe("verifiable=true&spam=false&photos=true");
+  });
+
+  test("ignore invalid params if no selected resources", () => {
+    let appStore = {
+      ...mapStore,
+      inatApiParams: {
+        ...mapStore.inatApiParams,
+        foo: "boo",
+      },
+      selectedTaxa: [],
+      selectedPlaces: [],
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe("");
+  });
+
+  test("ignore invalid params if no selected resources", () => {
+    let appStore = {
+      ...mapStore,
+      inatApiParams: {
+        ...mapStore.inatApiParams,
+        foo: "boo",
+        place_id: "962",
+      },
+      selectedTaxa: [],
+      selectedPlaces: [losangeles],
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe("place_id=962&verifiable=true&spam=false");
+  });
+
+  test("return params if no selected resources, and spam and verifiable are not default", () => {
+    let appStore: MapStore = {
+      ...mapStore,
+      inatApiParams: {
+        verifiable: false,
+        spam: true,
+      },
+      selectedTaxa: [],
+      selectedPlaces: [],
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe("verifiable=false&spam=true");
   });
 });
 
@@ -479,5 +603,147 @@ describe("decodeAppUrl options", () => {
     let result = decodeAppUrl(searchParams);
 
     expect(result).toStrictEqual(expected);
+  });
+
+  test.each(validViews)("returns view if view is valid", (view) => {
+    let searchParams = "?view=" + view;
+    let expected = {
+      currentView: view,
+      inatApiParams: {},
+      selectedTaxa: [],
+    };
+
+    let result = decodeAppUrl(searchParams);
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test.each(validObservationsSubviews)(
+    "returns view and subview if view is observations and subview is valid",
+    (subview) => {
+      let searchParams = "?view=observations&subview=" + subview;
+      let expected = {
+        currentView: "observations",
+        currentObservationsSubview: subview,
+        inatApiParams: {},
+        selectedTaxa: [],
+      };
+
+      let result = decodeAppUrl(searchParams);
+
+      expect(result).toStrictEqual(expected);
+    },
+  );
+
+  test("ignores invalid subviews for observations", () => {
+    let searchParams = "?view=observations&subview=boo";
+    let expected = {
+      currentView: "observations",
+      inatApiParams: {},
+      selectedTaxa: [],
+    };
+
+    let result = decodeAppUrl(searchParams);
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test.each(validViews)("test ignore invalid subview", (view) => {
+    let searchParams = `?view=${view}&subview=foo`;
+    let expected = {
+      currentView: view,
+      inatApiParams: {},
+      selectedTaxa: [],
+    };
+
+    let result = decodeAppUrl(searchParams);
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("ignores invalid views and subview", () => {
+    let searchParams = "?view=boo&subview=boo";
+    let expected = {
+      inatApiParams: {},
+      selectedTaxa: [],
+    };
+
+    let result = decodeAppUrl(searchParams);
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("ignores invalid params", () => {
+    let searchParams = "?foo=boo";
+    let expected = {
+      inatApiParams: {},
+      selectedTaxa: [],
+    };
+
+    let result = decodeAppUrl(searchParams);
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test.each(iNatApiFilterableNames)(
+    "adds valid params to inatApiParams",
+    (name) => {
+      let searchParams = `?${name}=true`;
+      let expected = {
+        inatApiParams: { [name]: true },
+        selectedTaxa: [],
+      };
+
+      let result = decodeAppUrl(searchParams);
+
+      expect(result).toStrictEqual(expected);
+    },
+  );
+});
+
+describe("removeDefaultParams", () => {
+  test("return empty string if default inatApiParams and view", () => {
+    let params = "verifiable=true&spam=false&view=observations&subview=grid";
+
+    let result = removeDefaultParams(params);
+
+    expect(result).toBe("");
+  });
+
+  test("return view and subview if view observation and subview is table", () => {
+    let params = "verifiable=true&spam=false&view=observations&subview=table";
+
+    let result = removeDefaultParams(params);
+
+    expect(result).toBe(
+      "verifiable=true&spam=false&view=observations&subview=table",
+    );
+  });
+
+  test.each(["species", "identifiers", "observers"])(
+    "return view  if view is not observations",
+    (view) => {
+      let params = `verifiable=true&spam=false&view=${view}`;
+
+      let result = removeDefaultParams(params);
+
+      expect(result).toBe(`verifiable=true&spam=false&view=${view}`);
+    },
+  );
+
+  test("return verifiable and spam if not default values", () => {
+    let params = "verifiable=false&spam=true&view=observations&subview=grid";
+
+    let result = removeDefaultParams(params);
+
+    expect(result).toBe("verifiable=false&spam=true");
+  });
+
+  test("other params if default inatApiParams and view", () => {
+    let params = "verifiable=true&spam=false&view=observations&subview=grid";
+
+    let result = removeDefaultParams(params);
+
+    expect(result).toBe("");
   });
 });

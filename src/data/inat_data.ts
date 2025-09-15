@@ -90,7 +90,6 @@ export const iNatApiFilterableNames = [
   "licensed",
   "out_of_range",
   "photo_licensed",
-  "project_id",
   "rank",
   "without_taxon_id",
   "taxon_name",

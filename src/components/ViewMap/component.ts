@@ -12,11 +12,7 @@ import {
 import { getObservationsYears } from "../../lib/inat_api";
 import { decodeAppUrl } from "../../lib/utils";
 import { initApp, loadCachedStore } from "../../lib/init_app";
-import type {
-  MapStore,
-  SearchOptions,
-  SearchOptionsKeys,
-} from "../../types/app";
+import type { SearchOptions, SearchOptionsKeys } from "../../types/app";
 import { setupTaxaSearch, taxonSelectedHandler } from "../../lib/search_taxa";
 import { setupUserSearch, userSelectedHandler } from "../../lib/search_users";
 import {
@@ -28,8 +24,6 @@ import {
   setupPlacesSearch,
 } from "../../lib/search_places";
 import {
-  createGrid,
-  createTable,
   fetchAndRenderData,
   paginationcCallback,
   perPage,

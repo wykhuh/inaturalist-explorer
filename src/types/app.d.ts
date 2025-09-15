@@ -42,8 +42,8 @@ export interface MapStore {
   iNatStats: {
     years?: number[];
   };
-  currentView: ObservationViews;
-  currentObservationsSubview: string;
+  currentView?: ObservationViews;
+  currentObservationsSubview?: string;
   observationsSubviewData: ObservationsResult[];
 }
 
@@ -134,6 +134,8 @@ interface iNatApiFilterableParams {
   user_id?: string; // comma-seperated string
   verifiable?: boolean | "any";
   year?: string; // comma-seperated string
+  view?: string;
+  subview?: string;
 
   // TODO: needs to be implemented
   acc?: boolean;

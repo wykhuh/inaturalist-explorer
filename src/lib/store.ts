@@ -19,9 +19,9 @@ export const mapStore: MapStore = {
   },
   formFilters: { params: {}, string: "" },
   iNatStats: {},
+  observationsSubviewData: [],
   currentView: "observations",
   currentObservationsSubview: "grid",
-  observationsSubviewData: [],
 };
 
 const proxiedStore = new Proxy(structuredClone(mapStore), {

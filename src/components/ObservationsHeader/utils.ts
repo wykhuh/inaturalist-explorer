@@ -4,6 +4,7 @@ import {
   getObservationsObservers,
   getObservationsSpecies,
 } from "../../lib/inat_api";
+import { updateAppUrl } from "../../lib/utils";
 import type { MapStore, ObservationViews } from "../../types/app";
 
 export function viewChangeHandler(
@@ -17,7 +18,10 @@ export function viewChangeHandler(
 
   if (viewEl && viewContainerEl) {
     viewEl.addEventListener("click", () => {
-      updateView(view, viewContainerEl, appStore, componentContext);
+      // only change view if new view is different than current view
+      if (appStore.currentView !== view) {
+        updateView(view, viewContainerEl, appStore, componentContext);
+      }
     });
   }
 }
@@ -58,6 +62,8 @@ function updateView(
   itemEl?.classList.add("currentView");
 
   appStore.currentView = targetView;
+
+  updateAppUrl(window.location, appStore);
 }
 
 async function updateResourceCounts(

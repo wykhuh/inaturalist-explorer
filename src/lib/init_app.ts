@@ -58,8 +58,20 @@ export async function initApp(appStore: MapStore, urlStore: MapStore) {
     }
   }
 
+  // use url store to populate store view and and subview
+  if (urlStore.currentView) {
+    appStore.currentView = urlStore.currentView;
+  }
+  if (urlStore.currentView === "observations") {
+    appStore.currentObservationsSubview = urlStore.currentObservationsSubview;
+  } else {
+    appStore.currentObservationsSubview = undefined;
+  }
+
   // HACK: trigger change in proxy store
   appStore.inatApiParams = appStore.inatApiParams;
+  appStore.currentObservationsSubview = appStore.currentObservationsSubview;
+  appStore.currentView = appStore.currentView;
 
   // get place data
   if (

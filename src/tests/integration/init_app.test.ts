@@ -305,6 +305,54 @@ describe("initApp options", () => {
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
   });
+
+  test("adds view and subview to store", async () => {
+    let { store } = setupMapAndStore();
+
+    expectEmpytMap(store);
+
+    let searchparams = `?view=observations&subview=grid`;
+    let urlData = decodeAppUrl(searchparams);
+
+    await initApp(store, urlData);
+
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expectAllTaxaRecord(store);
+    let expectedParams: iNatApiParams = {
+      colors: iNatOrange,
+      taxon_id: allTaxaRecord.id.toString(),
+      verifiable: true,
+      spam: false,
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.currentView).toBe("observations");
+    expect(store.currentObservationsSubview).toBe("grid");
+  });
+
+  test("adds view to store", async () => {
+    let { store } = setupMapAndStore();
+
+    expectEmpytMap(store);
+
+    let searchparams = `?view=identifiers`;
+    let urlData = decodeAppUrl(searchparams);
+
+    await initApp(store, urlData);
+
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expectAllTaxaRecord(store);
+    let expectedParams: iNatApiParams = {
+      colors: iNatOrange,
+      taxon_id: allTaxaRecord.id.toString(),
+      verifiable: true,
+      spam: false,
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.currentView).toBe("identifiers");
+    expect(store.currentObservationsSubview).toBe(undefined);
+  });
 });
 
 describe("initApp resources", () => {

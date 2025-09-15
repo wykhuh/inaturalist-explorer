@@ -302,7 +302,7 @@ export interface ObservationsResult {
   quality_grade: string;
   sounds: any[];
   taxon: ObservationTaxon;
-  time_observed_at: string;
+  time_observed_at: string | null;
   user: ObservationUser;
 }
 
@@ -345,7 +345,7 @@ export interface ObservationTaxon {
 
 export interface ObservationUser {
   id: number;
-  icon_url?: string;
+  icon_url?: string | null;
   login: string;
   name?: string;
 }
@@ -397,7 +397,7 @@ export interface SpeciesCountTaxon {
   preferred_common_name?: string;
   rank?: string;
   rank_level?: number;
-  conservation_status: {
+  conservation_status?: {
     id: number;
     status: string;
   };
@@ -407,7 +407,7 @@ export interface SpeciesCountTaxon {
 export interface SpeciesCountDefaultPhoto {
   id: number;
   attribution: string;
-  license_code: string;
+  license_code: string | null;
   medium_url: string;
   square_url: string;
   url: string;
