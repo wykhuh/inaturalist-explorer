@@ -48,7 +48,6 @@ class MyComponent extends HTMLElement {
     let mediaContent = "";
 
     if (data.photos.length > 0) {
-      console.log(data.photos[0].url);
       let url = data.photos[0].url.replace("/square.", "/medium.");
       mediaContent += `<a href="${iNatObservationUrl}/${data.id}">`;
       mediaContent += `<img src="${url}">`;

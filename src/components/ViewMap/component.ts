@@ -29,6 +29,7 @@ import {
   perPage,
   toggleSubview,
 } from "./utils";
+import { logger } from "../../lib/logger";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -36,6 +37,7 @@ class MyComponent extends HTMLElement {
   }
 
   connectedCallback() {
+    logger("++ ViewMap render");
     this.render();
   }
 

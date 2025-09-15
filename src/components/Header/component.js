@@ -1,3 +1,5 @@
+import { logger } from "../../lib/logger";
+
 const setup = async () => {
   const parser = new DOMParser();
   const resp = await fetch("/src/components/Header/template.html");
@@ -13,6 +15,7 @@ const setup = async () => {
     }
 
     connectedCallback() {
+      logger("++ Header render");
       if (!template) return;
 
       this.appendChild(template.content.cloneNode(true));

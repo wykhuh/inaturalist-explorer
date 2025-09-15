@@ -40,8 +40,11 @@ import {
   getObservationsCountForTaxon,
   addIdToCommaSeparatedString,
 } from "./data_utils";
+import { logger } from "./logger.ts";
 
 export async function initApp(appStore: MapStore, urlStore: MapStore) {
+  logger("++ initApp");
+
   let map = appStore.map.map;
   if (!map) return;
 

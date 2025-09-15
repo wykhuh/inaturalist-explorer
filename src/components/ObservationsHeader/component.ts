@@ -1,3 +1,4 @@
+import { logger } from "../../lib/logger";
 import { updateCounts, viewChangeHandler } from "./utils";
 
 class MyComponent extends HTMLElement {
@@ -6,6 +7,7 @@ class MyComponent extends HTMLElement {
   }
 
   connectedCallback() {
+    logger("++ ObservationHeader render");
     this.render();
   }
 
@@ -58,6 +60,7 @@ class MyComponent extends HTMLElement {
       // updateCounts();
     });
     window.addEventListener("appInitialized", () => {
+      logger("++ updateCounts");
       updateCounts();
     });
   }
