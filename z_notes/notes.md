@@ -132,9 +132,15 @@ https://fungi-finders-example.netlify.app/mushroom-guide
 
 todo
 
-add observations grid and list
+add native, introduced on species page
 
 add filter count
+
+add page, view, subview to url, order, order_by
+
+add sort by to filters
+
+close/open sidebar
 
 ==
 

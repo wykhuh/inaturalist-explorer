@@ -41,7 +41,7 @@ class MyComponent extends HTMLElement {
     let data = (this as DataComponent).data as SpeciesCountResult;
     let { title, subtitle } = formatTaxonName(data.taxon, "", false);
 
-    let linkEl = this.querySelector(".photo a") as HTMLLinkElement;
+    let linkEl = this.querySelector(".media a") as HTMLLinkElement;
     if (linkEl) {
       linkEl.href = `${iNatTaxaUrl}/${data.taxon.id}`;
     }
@@ -63,7 +63,7 @@ class MyComponent extends HTMLElement {
       imgEl.alt = altText;
     }
 
-    let countEl = this.querySelector(".photos-count");
+    let countEl = this.querySelector(".observations-count");
     if (countEl) {
       countEl.textContent = pluralize(data.count, "observation", true);
     }

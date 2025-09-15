@@ -1,7 +1,7 @@
 import type { ObservationsResult } from "../../types/inat_api";
 import type { DataComponent } from "../../types/app";
-import { formatTaxonName } from "../../lib/data_utils";
-import { iNatObservationUrl } from "../../lib/inat_data";
+import { formatAvatar, formatTaxonName } from "../../lib/data_utils";
+import { iNatObservationUrl, iNatUserUrl } from "../../lib/inat_data";
 import { audio, check, speech, star } from "../../assets/icons";
 
 class MyComponent extends HTMLElement {
@@ -73,6 +73,15 @@ class MyComponent extends HTMLElement {
 
     if (data.taxon) {
       let { title, subtitle } = formatTaxonName(data.taxon, "", false);
+
+      if (data.user) {
+        detailsContent += `<span class="avatar-name">
+          <a href="${iNatUserUrl}/${data.user.login}" title="${data.user.login}">
+          ${formatAvatar(data.user.icon_url)}
+          </a>
+        </span>`;
+      }
+
       detailsContent += `<span class="title">`;
       detailsContent += `<a href="${iNatObservationUrl}/${data.id}">${title}</a>`;
       detailsContent += "</span>";

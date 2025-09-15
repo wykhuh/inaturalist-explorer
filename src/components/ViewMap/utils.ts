@@ -131,7 +131,12 @@ export function createTable(results: ObservationsResult[]) {
     // media
     let tdEl = document.createElement("td");
     tdEl.className = "media";
-    let mediaContent = '<div class="media">';
+
+    let classes = ["media"];
+    if (row.photos.length === 0 && row.sounds.length > 0) {
+      classes.push("sound-only");
+    }
+    let mediaContent = `<div class="${classes.join(" ")}">`;
 
     if (row.photos.length > 0) {
       let url = row.photos[0].url.replace("/square.", "/medium.");
@@ -145,7 +150,7 @@ export function createTable(results: ObservationsResult[]) {
       mediaContent += "</a>";
     }
     if (row.photos.length > 1) {
-      mediaContent += `<span class="count">${row.photos.length}</span>`;
+      mediaContent += `<span class="photos-count">${row.photos.length}</span>`;
     }
     mediaContent += "</div>";
     tdEl.innerHTML = mediaContent;
