@@ -124,12 +124,9 @@ export function resetForm(appStore: MapStore) {
   appStore.inatApiParams = appStore.inatApiParams;
 }
 
-export async function updateAppWithFilters(
-  data: FormData,
-  appStore: MapStore,
-  logEl: HTMLElement,
-) {
+export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
   let results = processFiltersForm(data);
+
   updateStoreUsingFilters(appStore, results);
 
   for await (const taxon of appStore.selectedTaxa) {
@@ -144,12 +141,9 @@ export async function updateAppWithFilters(
     await getObservationsCountForTaxon(taxon, appStore);
   }
 
+  renderFiltersList(data);
   renderTaxaList(appStore);
   updateAppUrl(window.location, appStore);
-
-  if (logEl) {
-    logEl.innerText = results.string;
-  }
 }
 
 function setSelectedOption(selector: string) {
@@ -193,6 +187,7 @@ function setInputDisabled(selector: string, value: any) {
   }
 }
 
+// use store to populate the filter form fields on page load
 export function initFilters(appStore: MapStore) {
   let { inatApiParams } = appStore;
 
@@ -394,5 +389,19 @@ export function renderYearsSelect() {
       optionEl.value = year.toString();
       selectEl.appendChild(optionEl);
     });
+  }
+}
+
+export function renderFiltersList(data: FormData) {
+  let listEl = document.querySelector(".filters-list");
+  if (!listEl) return;
+
+  listEl.innerHTML = "";
+  let results = processFiltersForm(data);
+
+  for (let [key, value] of Object.entries(results.params)) {
+    let itemEl = document.createElement("li");
+    itemEl.textContent = `${key}=${value}`;
+    listEl.appendChild(itemEl);
   }
 }

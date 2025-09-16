@@ -6,6 +6,7 @@ import {
   renderLicenseSelect,
   renderRankSelect,
   renderYearsSelect,
+  renderFiltersList,
 } from "./utils";
 
 class MyComponent extends HTMLElement {
@@ -26,6 +27,7 @@ class MyComponent extends HTMLElement {
     this.renderModal();
     this.renderForm();
     this.formEventHandler();
+
     window.addEventListener("observationYearsLoaded", () => {
       // use api data to render the years field
       renderYearsSelect();
@@ -33,6 +35,13 @@ class MyComponent extends HTMLElement {
     window.addEventListener("storePopulated", () => {
       // use store to set values the form on page load
       initFilters(window.app.store);
+
+      // show list of selected filters
+      let formEl = this.querySelector("#filters-form") as HTMLFormElement;
+      if (formEl) {
+        const data = new FormData(formEl);
+        renderFiltersList(data);
+      }
     });
 
     // close dialog if click ouside of dialog
@@ -80,8 +89,6 @@ class MyComponent extends HTMLElement {
       "#filters-form select[name='year']",
     ) as HTMLInputElement;
 
-    let logEl = document.querySelector("#log") as HTMLElement;
-
     inputs.forEach((input) => {
       input.addEventListener("change", (event) => {
         let target = event.target as HTMLInputElement;
@@ -126,7 +133,7 @@ class MyComponent extends HTMLElement {
         event.preventDefault();
 
         const data = new FormData(form);
-        updateAppWithFilters(data, window.app.store, logEl);
+        updateAppWithFilters(data, window.app.store);
       });
 
       form.addEventListener("change", async (event) => {
@@ -135,11 +142,15 @@ class MyComponent extends HTMLElement {
         event.preventDefault();
 
         const data = new FormData(form);
-        updateAppWithFilters(data, window.app.store, logEl);
+        updateAppWithFilters(data, window.app.store);
       });
 
       form.addEventListener("reset", () => {
         resetForm(appStore);
+
+        // show list of selected filters
+        const data = new FormData(form);
+        renderFiltersList(data);
       });
     }
   }
