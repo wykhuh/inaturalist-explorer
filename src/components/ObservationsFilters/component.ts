@@ -1,7 +1,6 @@
 import { setupComponent } from "../../lib/component_utils";
 import {
   initFilters,
-  resetForm,
   updateAppWithFilters,
   renderLicenseSelect,
   renderRankSelect,
@@ -66,8 +65,6 @@ class MyComponent extends HTMLElement {
   }
 
   formEventHandler() {
-    let appStore = window.app.store;
-
     const inputs = document.querySelectorAll(
       "#filters-form input",
     ) as NodeListOf<HTMLInputElement>;
@@ -146,11 +143,11 @@ class MyComponent extends HTMLElement {
       });
 
       form.addEventListener("reset", () => {
-        resetForm(appStore);
-
-        // show list of selected filters
-        const data = new FormData(form);
-        renderFiltersList(data);
+        // HACK: use setTimeout to add new event that has access to resetted form
+        setTimeout(() => {
+          let data = new FormData(form);
+          updateAppWithFilters(data, window.app.store);
+        }, 0);
       });
     }
   }

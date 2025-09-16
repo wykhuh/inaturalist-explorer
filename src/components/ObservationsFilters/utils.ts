@@ -1,11 +1,5 @@
-import {
-  CCLicenses,
-  iNatApiFilterableNames,
-  taxonRanks,
-} from "../../data/inat_data";
-import { mapStore } from "../../lib/store";
+import { CCLicenses, taxonRanks } from "../../data/inat_data";
 import type {
-  iNatApiFilterableParamsKeys,
   iNatApiParams,
   iNatApiParamsKeys,
   MapStore,
@@ -104,29 +98,11 @@ export function processFiltersForm(data: FormData): {
   };
 }
 
-export function resetForm(appStore: MapStore) {
-  appStore.formFilters = mapStore.formFilters;
-
-  // delete filterable fields from appStore.inatApiParams
-  Object.keys(appStore.inatApiParams).forEach((param) => {
-    if (
-      iNatApiFilterableNames.includes(param) &&
-      !Object.keys(mapStore.inatApiParams).includes(param)
-    ) {
-      delete appStore.inatApiParams[param as iNatApiFilterableParamsKeys];
-    }
-  });
-
-  appStore.inatApiParams.spam = false;
-  appStore.inatApiParams.verifiable = true;
-
-  // HACK: trigger change in proxy store
-  appStore.inatApiParams = appStore.inatApiParams;
-}
-
 export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
+  // get values from form data
   let results = processFiltersForm(data);
 
+  // update store inatApiParams with form values
   updateStoreUsingFilters(appStore, results);
 
   for await (const taxon of appStore.selectedTaxa) {
@@ -137,12 +113,16 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
       taxon_id: taxon.id.toString(),
       colors: taxon.color,
     };
+    // get new iNat map tiles
     await fetchiNatMapDataForTaxon(taxon, appStore);
+    // fetch new counts from api
     await getObservationsCountForTaxon(taxon, appStore);
   }
 
+  // update UI
   renderFiltersList(data);
   renderTaxaList(appStore);
+  // update browser url
   updateAppUrl(window.location, appStore);
 }
 
