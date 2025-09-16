@@ -64,9 +64,12 @@ async function updateResourceCounts(
 
   let data = await dataFn(searchParams, perPage, page);
   let count = data?.total_results;
-  let countEl = document.querySelector(selector);
-  if (countEl && count) {
-    countEl.textContent = count.toLocaleString();
+
+  let countEls = document.querySelectorAll(selector);
+  if (countEls && count) {
+    Array.from(countEls).forEach((countEl) => {
+      countEl.textContent = count.toLocaleString();
+    });
   }
 }
 

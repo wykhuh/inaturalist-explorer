@@ -952,6 +952,30 @@
     & > div {
       padding: 1rem;
     }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+
+      #observations-header {
+        ul {
+          flex-wrap: wrap;
+        }
+
+        .currentView {
+          background-color: var(--clr-iNat-dark-gray);
+        }
+        li {
+          padding: 0.5rem 0.5rem;
+          flex-direction: row;
+          gap: 5px;
+        }
+
+        h1 {
+          display: none;
+        }
+      }
+    }
   }
 
   #filters-form {
