@@ -9,7 +9,6 @@ import {
   bboxPlaceRecord,
   iNatApiFilterableNames,
   iNatApiNames,
-  iNatApiNonFilterableNames,
 } from "../data/inat_data";
 import { defaultColorScheme } from "./map_colors_utils";
 import { convertParamsBBoxToLngLat } from "./map_utils";

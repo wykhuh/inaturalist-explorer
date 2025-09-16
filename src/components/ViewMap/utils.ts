@@ -6,16 +6,16 @@ import {
   speech,
   star,
 } from "../../assets/icons";
+import { iNatObservationUrl, iNatUserUrl } from "../../data/inat_data";
 import { formatAvatar, formatTaxonName } from "../../lib/data_utils";
 import { getObservations } from "../../lib/inat_api";
-import { iNatObservationUrl, iNatUserUrl } from "../../data/inat_data";
 import { loggerTime } from "../../lib/logger";
 import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";
-import type { ObservationsResult } from "../../types/inat_api";
 import { formatDate } from "../../lib/utils";
-import type { DataComponent, MapStore } from "../../types/app";
 import { observationsDemoLA } from "../../tests/fixtures/observations";
+import type { ObservationsResult } from "../../types/inat_api";
+import type { DataComponent, MapStore } from "../../types/app";
 
 export let perPage = 48;
 

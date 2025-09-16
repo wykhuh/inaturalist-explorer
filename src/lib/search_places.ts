@@ -103,31 +103,36 @@ export async function placeSelectedHandler(
   appStore: MapStore,
 ) {
   let map = appStore.map.map;
-  if (!map) return;
+  // if (!map) return;
 
-  // draw boundaries of selected place
-  let options: any = {
-    color: "red",
-    fillColor: "none",
-    layer_description: `place layer: ${selection.name}, ${selection.id}`,
-  };
-  let layer = L.geoJSON(selection.geometry as any, options);
-  layer.addTo(map);
+  let layer;
+  if (map) {
+    // draw boundaries of selected place
+    let options: any = {
+      color: "red",
+      fillColor: "none",
+      layer_description: `place layer: ${selection.name}, ${selection.id}`,
+    };
+    layer = L.geoJSON(selection.geometry as any, options);
+    layer.addTo(map);
 
-  // remove selected place layer from map
-  if (appStore.placesMapLayers) {
-    let layers = appStore.placesMapLayers[selection.id.toString()];
-    if (layers) {
-      layers.forEach((layer) => {
-        layer.removeFrom(map);
-      });
+    // remove selected place layer from map
+    if (appStore.placesMapLayers) {
+      let layers = appStore.placesMapLayers[selection.id.toString()];
+      if (layers) {
+        layers.forEach((layer) => {
+          layer.removeFrom(map);
+        });
+      }
     }
   }
 
   // remove refresh bound box from map
   if (appStore.refreshMap.layer) {
-    appStore.refreshMap.layer.removeFrom(map);
-    appStore.refreshMap.layer = null;
+    if (map) {
+      appStore.refreshMap.layer.removeFrom(map);
+      appStore.refreshMap.layer = null;
+    }
     delete appStore.inatApiParams.swlat;
     delete appStore.inatApiParams.swlng;
     delete appStore.inatApiParams.nelat;
@@ -144,12 +149,15 @@ export async function placeSelectedHandler(
       name: selection.name,
       display_name: selection.display_name,
       bounding_box: selection.bounding_box,
+      geometry: selection.geometry,
     },
   ];
-  appStore.placesMapLayers = {
-    ...appStore.placesMapLayers,
-    [selection.id]: [layer as CustomGeoJSON],
-  };
+  if (map) {
+    appStore.placesMapLayers = {
+      ...appStore.placesMapLayers,
+      [selection.id]: [layer as CustomGeoJSON],
+    };
+  }
 
   // get iNat map tiles for selected place
   for await (const taxon of appStore.selectedTaxa) {
@@ -172,7 +180,9 @@ export async function placeSelectedHandler(
   // zoom to map to fit all selected places
   renderTaxaList(appStore);
   renderPlacesList(appStore);
-  fitBoundsPlaces(appStore);
+  if (map) {
+    fitBoundsPlaces(appStore);
+  }
   updateAppUrl(window.location, appStore);
 }
 

@@ -32,7 +32,7 @@ const setup = async () => {
       window.addEventListener("observationYearsLoaded", () => {
         renderYearsSelect();
       });
-      window.addEventListener("storeDataLoaded", () => {
+      window.addEventListener("storePopulated", () => {
         initFilters(window.app.store);
       });
 

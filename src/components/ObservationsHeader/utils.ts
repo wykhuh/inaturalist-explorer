@@ -1,3 +1,4 @@
+import { viewAndTemplateObject } from "../../lib/data_utils";
 import {
   getObservations,
   getObservationsIdentifiers,
@@ -34,25 +35,12 @@ function updateView(
 ) {
   if (!parentEl) return;
 
-  // save map bounds before switching views so app can return to this map location
-  let map = appStore.map.map;
-  if (map) {
-    appStore.map.bounds = map?.getBounds();
-  }
-
   // load view component
   parentEl.innerHTML = "";
 
-  let view;
-  if (targetView === "species") {
-    view = document.createElement("x-view-species");
-  } else if (targetView === "identifiers") {
-    view = document.createElement("x-view-identifiers");
-  } else if (targetView === "observers") {
-    view = document.createElement("x-view-observers");
-  } else {
-    view = document.createElement("x-view-map");
-  }
+  let templateName = viewAndTemplateObject(targetView);
+  let view = document.createElement(templateName);
+
   parentEl.appendChild(view);
 
   // update currentView class in nav

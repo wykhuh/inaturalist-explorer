@@ -1,4 +1,4 @@
-import { logger } from "../../lib/logger";
+import { logger, loggerStore } from "../../lib/logger";
 
 const setup = async () => {
   const parser = new DOMParser();
@@ -15,7 +15,7 @@ const setup = async () => {
     }
 
     connectedCallback() {
-      logger("++ Header render");
+      loggerStore("++ Header render");
       if (!template) return;
 
       this.appendChild(template.content.cloneNode(true));

@@ -14,7 +14,6 @@ import { leafletVisibleLayers } from "../../lib/data_utils";
 import { decodeAppUrl } from "../../lib/utils";
 import {
   createMockServer,
-  setupMapAndStore,
   expectEmpytMap,
   expectLifeTaxa,
   expectLosAngelesPlace,
@@ -51,11 +50,13 @@ import {
   gridLabel_oaks_places_resources,
   gridLabel_oaks_bbox_resources,
   gridLabel_life_bbox_resources,
+  placeBBoxLabel,
 } from "../test_helpers.ts";
 import type { iNatApiParams } from "../../types/app";
 import { allTaxaRecord, fieldsWithAny } from "../../data/inat_data.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
-import { initStoreViews, initApp } from "../../lib/init_app.ts";
+import { initPopulateStore, initRenderMap } from "../../lib/init_app.ts";
+import { mapStore } from "../../lib/store.ts";
 
 beforeEach(() => {
   const { JSDOM } = jsdom;
@@ -82,17 +83,17 @@ afterAll(() => {
   server.close();
 });
 
-describe("initStoreViews and initApp options", () => {
+describe("initPopulateStore and initRenderMap options", () => {
   test("adds all taxa, verifiable true, and spam false when no search params", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
     let searchparams = "";
     let urlData = decodeAppUrl(searchparams);
 
-    initStoreViews(store, urlData);
-    await initApp(store, urlData);
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -112,15 +113,15 @@ describe("initStoreViews and initApp options", () => {
   });
 
   test("updates inatApiParams with values in params ", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
     let searchparams = "?verifiable=false&spam=true&photos=false";
     let urlData = decodeAppUrl(searchparams);
 
-    initStoreViews(store, urlData);
-    await initApp(store, urlData);
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -141,15 +142,15 @@ describe("initStoreViews and initApp options", () => {
   });
 
   test("ignores invalid params ", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
     let searchparams = "?boo=true&foo=any";
     let urlData = decodeAppUrl(searchparams);
 
-    initStoreViews(store, urlData);
-    await initApp(store, urlData);
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -169,15 +170,15 @@ describe("initStoreViews and initApp options", () => {
   });
 
   test("loads and renders taxa data with verifiable and spam set to false", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
     let searchparams = `?taxon_id=${life().id}&verifiable=false&spam=false`;
     let urlData = decodeAppUrl(searchparams);
 
-    initStoreViews(store, urlData);
-    await initApp(store, urlData);
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -197,15 +198,15 @@ describe("initStoreViews and initApp options", () => {
   });
 
   test("loads and renders taxa data with verifiable and spam set to true", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
     let searchparams = `?taxon_id=${life().id}&verifiable=true&spam=true`;
     let urlData = decodeAppUrl(searchparams);
 
-    initStoreViews(store, urlData);
-    await initApp(store, urlData);
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -225,15 +226,15 @@ describe("initStoreViews and initApp options", () => {
   });
 
   test("loads and renders taxa data without verifiable and spam", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
     let searchparams = `?taxon_id=${life().id}`;
     let urlData = decodeAppUrl(searchparams);
 
-    initStoreViews(store, urlData);
-    await initApp(store, urlData);
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -255,14 +256,15 @@ describe("initStoreViews and initApp options", () => {
   test.each(fieldsWithAny)(
     "loads and renders taxa data, ignore field set to any",
     async (field) => {
-      let { store } = setupMapAndStore();
+      let store = structuredClone(mapStore);
 
       expectEmpytMap(store);
 
       let searchparams = `?taxon_id=${life().id}&${field}=any`;
       let urlData = decodeAppUrl(searchparams);
 
-      await initApp(store, urlData);
+      await initPopulateStore(store, urlData);
+      await initRenderMap(store);
 
       expect(leafletVisibleLayers(store)).toStrictEqual([
         basemapLabel_osm,
@@ -286,15 +288,15 @@ describe("initStoreViews and initApp options", () => {
   );
 
   test("loads and renders taxa data if colors not in url", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
     let searchparams = `?taxon_id=${life().id}&verifiable=true&spam=false`;
     let urlData = decodeAppUrl(searchparams);
 
-    initStoreViews(store, urlData);
-    await initApp(store, urlData);
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -314,15 +316,15 @@ describe("initStoreViews and initApp options", () => {
   });
 
   test("adds view and subview to store", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
     let searchparams = `?view=observations&subview=grid`;
     let urlData = decodeAppUrl(searchparams);
 
-    initStoreViews(store, urlData);
-    await initApp(store, urlData);
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
 
     expectNoPlaces(store);
     expectNoRefresh(store);
@@ -339,15 +341,15 @@ describe("initStoreViews and initApp options", () => {
   });
 
   test("adds view to store", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
     let searchparams = `?view=identifiers`;
     let urlData = decodeAppUrl(searchparams);
 
-    initStoreViews(store, urlData);
-    await initApp(store, urlData);
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
 
     expectNoPlaces(store);
     expectNoRefresh(store);
@@ -364,17 +366,17 @@ describe("initStoreViews and initApp options", () => {
   });
 });
 
-describe("initStoreViews and initApp resources", () => {
+describe("initPopulateStore and initRenderMap resources", () => {
   test("loads and renders taxa data based on url params", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
     let searchparams = `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`;
     let urlData = decodeAppUrl(searchparams);
 
-    initStoreViews(store, urlData);
-    await initApp(store, urlData);
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -394,15 +396,15 @@ describe("initStoreViews and initApp resources", () => {
   });
 
   test("loads and renders place data based on url params", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
     let searchparams = `?place_id=${losangeles.id}&verifiable=true&spam=false`;
     let urlData = decodeAppUrl(searchparams);
 
-    initStoreViews(store, urlData);
-    await initApp(store, urlData);
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -423,7 +425,7 @@ describe("initStoreViews and initApp resources", () => {
   });
 
   test("loads and renders bounding box data based on url params", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
@@ -431,11 +433,12 @@ describe("initStoreViews and initApp resources", () => {
       "?spam=false&verifiable=true&nelat=0&nelng=0&swlat=0&swlng=0";
     let urlData = decodeAppUrl(searchparams);
 
-    initStoreViews(store, urlData);
-    await initApp(store, urlData);
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
+      placeBBoxLabel,
       refreshBBoxLabel,
       gridLabel_allTaxaRecord,
     ]);
@@ -455,15 +458,15 @@ describe("initStoreViews and initApp resources", () => {
   });
 
   test("loads and renders project data based on url params", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
     let searchparams = `?project_id=${project_cnc1.id}&verifiable=true&spam=false`;
     let urlData = decodeAppUrl(searchparams);
 
-    initStoreViews(store, urlData);
-    await initApp(store, urlData);
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -484,15 +487,15 @@ describe("initStoreViews and initApp resources", () => {
   });
 
   test("loads and renders user data based on url params", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
     let searchparams = `?user_id=${user1.id}&verifiable=true&spam=false`;
     let urlData = decodeAppUrl(searchparams);
 
-    initStoreViews(store, urlData);
-    await initApp(store, urlData);
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -513,7 +516,7 @@ describe("initStoreViews and initApp resources", () => {
   });
 
   test("loads and renders resources and places based on url params", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
@@ -526,8 +529,9 @@ describe("initStoreViews and initApp resources", () => {
     searchparams += `&colors=${colorsEncoded[0]},${colorsEncoded[1]}`;
     searchparams += `&spam=false&verifiable=true`;
     let urlData = decodeAppUrl(searchparams);
-    initStoreViews(store, urlData);
-    await initApp(store, urlData);
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -554,7 +558,7 @@ describe("initStoreViews and initApp resources", () => {
   });
 
   test("loads and renders resources and bounding box based on url params", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
@@ -567,11 +571,13 @@ describe("initStoreViews and initApp resources", () => {
     searchparams += `&colors=${colorsEncoded[0]},${colorsEncoded[1]}`;
     searchparams += `&spam=false&verifiable=true`;
     let urlData = decodeAppUrl(searchparams);
-    initStoreViews(store, urlData);
-    await initApp(store, urlData);
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
+      placeBBoxLabel,
       refreshBBoxLabel,
       gridLabel_life_bbox_resources,
       gridLabel_oaks_bbox_resources,

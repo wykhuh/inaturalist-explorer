@@ -132,9 +132,9 @@ https://fungi-finders-example.netlify.app/mushroom-guide
 
 todo
 
-add filter count
-
 add page, view, subview to url, order, order_by
+
+add filter count
 
 add sort by to filters
 

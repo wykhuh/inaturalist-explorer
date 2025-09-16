@@ -124,10 +124,10 @@ export async function taxonSelectedHandler(
   searchTerm: string,
   appStore: MapStore,
 ) {
-  let map = appStore.map.map;
-  let layerControl = appStore.map.layerControl;
-  if (map === null) return;
-  if (layerControl === null) return;
+  // let map = appStore.map.map;
+  // let layerControl = appStore.map.layerControl;
+  // if (map === null) return;
+  // if (layerControl === null) return;
 
   // get color for taxon
   let color = getColor(appStore, defaultColorScheme);
@@ -163,7 +163,6 @@ export function renderTaxaList(appStore: MapStore) {
   if (!listEl) return;
 
   listEl.innerHTML = "";
-
   appStore.selectedTaxa.forEach((taxon) => {
     let templateEl = document.createElement("x-species-list-item");
     templateEl.dataset.taxon = JSON.stringify(taxon);

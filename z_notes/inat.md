@@ -63,3 +63,9 @@ https://api.inaturalist.org/v2/observations?verifiable=true&spam=false&per_page=
 
 https://www.inaturalist.org/observations?subview=map
 271,218,997 -
+
+==
+
+http://localhost:5173/?taxon_id=47163,3&place_id=962,829&project_id=224063,65248&user_id=12809,223005,818374,513214&colors=%23228833,%23ccbb44&verifiable=true&spam=false
+
+LA SD, 2 CNC, 4 users, 2 taxa

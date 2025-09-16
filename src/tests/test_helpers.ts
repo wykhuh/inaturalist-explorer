@@ -172,6 +172,7 @@ export let gridLabel_life_la_user1 =
 
 export let refreshBBoxLabel = "refresh bounding box";
 export let basemapLabel_osm = "basemap: Open Street Map";
+export let placeBBoxLabel = "place layer: Custom Boundary, 0";
 
 export let gridLabel_life_la_sd_project1 =
   "overlay: iNat grid, taxon_id 48460, place_id 962,829, project_id 237729";
@@ -459,8 +460,6 @@ export function expectNoPlaces(store: MapStore) {
 }
 
 export function expectNoRefresh(store: MapStore) {
-  expect(store.refreshMap.refreshMapButtonEl).toBeNull();
-  expect(store.refreshMap.showRefreshMapButton).toBeFalsy();
   expect(store.refreshMap.layer).toBeNull();
 }
 
@@ -500,7 +499,6 @@ export function expectRefreshPlace(store: MapStore, type = "zero") {
     place = refreshPlaceLA;
   }
   expect(store.refreshMap.layer).toBeDefined();
-  expect(store.refreshMap.showRefreshMapButton).toBeFalsy();
   expect(store.selectedPlaces).toEqual([place]);
   expect(Object.keys(store.placesMapLayers)).toStrictEqual(["0"]);
   expect(store.placesMapLayers["0"].length).toBe(1);

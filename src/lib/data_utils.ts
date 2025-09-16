@@ -24,13 +24,9 @@ import {
 } from "../data/inat_data.ts";
 import { renderPlacesList } from "./search_places.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
-import { loggerMapLayers, loggerFilters } from "./logger.ts";
+import { logger, loggerFilters } from "./logger.ts";
 import { mapStore } from "./store.ts";
-import type {
-  MultiPolygonJson,
-  PolygonJson,
-  SpeciesCountTaxon,
-} from "../types/inat_api";
+import type { PolygonJson, SpeciesCountTaxon } from "../types/inat_api";
 import { renderTaxaList } from "./search_taxa.ts";
 import { person2 } from "../assets/icons.ts";
 
@@ -534,14 +530,14 @@ export function leafletVisibleLayers(appStore: MapStore, strict = false) {
 
       if (options.layer_description) {
         if (layer._path || layer._container || !strict) {
-          loggerMapLayers(">>>", Object.keys(layer));
+          // logger(">>>", Object.keys(layer));
 
           layer_descriptions.push(options.layer_description);
         } else {
-          loggerMapLayers("?????", Object.keys(layer));
+          logger("?????", Object.keys(layer));
         }
       } else {
-        loggerMapLayers("???", Object.keys(layer));
+        logger("???", Object.keys(layer));
       }
     });
   }
@@ -648,9 +644,13 @@ export function displayUserData(appStore: MapStore, _source: string) {
       let temp = {} as any;
       Object.entries(place).forEach(([key, val]) => {
         if (["bounding_box", "geometry"].includes(key)) {
+          let value = val as PolygonJson;
           temp[key] = {
-            type: (val as PolygonJson | MultiPolygonJson).type,
-            coordinates: "[...]",
+            type: value.type,
+            coordinates:
+              value.type === "Polygon"
+                ? value.coordinates[0].length
+                : value.coordinates[0][0].length,
           };
         } else {
           temp[key] = val;
@@ -671,7 +671,7 @@ export function displayUserData(appStore: MapStore, _source: string) {
       showRefreshMapButton: appStore.refreshMap.showRefreshMapButton,
       layer: {
         layer_description: appStore.refreshMap.layer?.options.layer_description,
-        bounds: "[...]",
+        bounds: appStore.refreshMap.layer?._bounds,
       },
     };
   }
@@ -692,6 +692,10 @@ export function displayUserData(appStore: MapStore, _source: string) {
     } else if (key === "placesMapLayers") {
       data.placesMapLayers = formatPlacesMapLayers();
     } else if (key === "map") {
+      data.map = {
+        map: !!appStore.map.map,
+        layerControl: !!appStore.map.layerControl,
+      };
       data.mapLayerDescriptions = leafletVisibleLayers(appStore);
     } else if (key === "iNatStats") {
       data.iNatStats = { years_summary: formatYears() };
@@ -720,4 +724,18 @@ export function normalizeAppParams(appParams: string) {
     rawParams.append("spam", "false");
   }
   return rawParams;
+}
+
+export function viewAndTemplateObject(targetView: string) {
+  let view;
+  if (targetView === "species") {
+    view = "x-view-species";
+  } else if (targetView === "identifiers") {
+    view = "x-view-identifiers";
+  } else if (targetView === "observers") {
+    view = "x-view-observers";
+  } else {
+    view = "x-view-map";
+  }
+  return view;
 }

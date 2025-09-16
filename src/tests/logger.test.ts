@@ -16,6 +16,7 @@ beforeEach(() => {
 });
 afterEach(() => {
   consoleMock.mockReset();
+  vi.stubEnv("VITE_LOGGER", "false");
 });
 
 describe("logger if VITE_LOGGER is true", () => {

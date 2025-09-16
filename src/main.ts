@@ -12,17 +12,26 @@ import "./components/CardSpecies/component.ts";
 import "./components/CardObservation/component.ts";
 
 import mapStore from "./lib/store.ts";
-import { initStoreViews } from "./lib/init_app.ts";
+import {
+  initPopulateStore,
+  searchHeadingSetup,
+  searchSetup,
+} from "./lib/init_app.ts";
 import { decodeAppUrl } from "./lib/utils.ts";
+import { viewAndTemplateObject } from "./lib/data_utils.ts";
 
 window.app = { store: mapStore };
-
-let defaultView = "x-view-map";
 
 let viewContainerEl = document.querySelector("#view-container");
 if (viewContainerEl) {
   let urlData = decodeAppUrl(window.location.search);
-  initStoreViews(window.app.store, urlData);
-  let view = document.createElement(defaultView);
-  viewContainerEl.appendChild(view);
+  searchSetup();
+  searchHeadingSetup();
+  await initPopulateStore(window.app.store, urlData);
+
+  if (window.app.store.currentView) {
+    let templateName = viewAndTemplateObject(window.app.store.currentView);
+    let view = document.createElement(templateName);
+    viewContainerEl.appendChild(view);
+  }
 }

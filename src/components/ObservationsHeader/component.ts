@@ -1,4 +1,4 @@
-import { logger } from "../../lib/logger";
+import { loggerStore } from "../../lib/logger";
 import { updateCounts, viewChangeHandler } from "./utils";
 
 class MyComponent extends HTMLElement {
@@ -7,14 +7,15 @@ class MyComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    logger("++ ObservationHeader render");
+    loggerStore("++ ObservationHeader render");
     this.render();
 
     window.addEventListener("appUrlChange", () => {
-      // updateCounts();
+      updateCounts();
     });
-    window.addEventListener("storeDataLoaded", () => {
-      logger("++ ObservationHeader storeDataLoaded");
+    // storePopulated
+    window.addEventListener("storePopulated", () => {
+      loggerStore("++ ObservationHeader storePopulated");
       updateCounts();
     });
   }

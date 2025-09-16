@@ -23,7 +23,6 @@ import { taxonSelectedHandler, removeTaxon } from "../../lib/search_taxa.ts";
 import { userSelectedHandler, removeUser } from "../../lib/search_users.ts";
 import {
   createMockServer,
-  setupMapAndStore,
   expectEmpytMap,
   expectLifeTaxa,
   expectLosAngelesPlace,
@@ -81,7 +80,8 @@ import {
 import { allTaxaRecord } from "../../data/inat_data.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
 import { decodeAppUrl } from "../../lib/utils.ts";
-import { initApp, initStoreViews } from "../../lib/init_app.ts";
+import { initPopulateStore, initRenderMap } from "../../lib/init_app.ts";
+import { mapStore } from "../../lib/store.ts";
 
 beforeEach(() => {
   const { JSDOM } = jsdom;
@@ -110,12 +110,12 @@ afterAll(() => {
 
 describe("taxonSelectedHandler", () => {
   test(`add red oak`, async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await taxonSelectedHandler(lifeBasic, "life", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -138,12 +138,12 @@ describe("taxonSelectedHandler", () => {
   });
 
   test(`add life; add red oak`, async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await taxonSelectedHandler(lifeBasic, "life", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -197,13 +197,14 @@ describe("taxonSelectedHandler", () => {
 });
 
 describe("placeSelectedHandler", () => {
-  test(` add los angeles`, async () => {
-    let { store } = setupMapAndStore();
+  test(`add los angeles`, async () => {
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
+
     await placeSelectedHandler(losangeles, "los", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -211,8 +212,11 @@ describe("placeSelectedHandler", () => {
       placeLabel_la,
       gridLabel_allTaxaRecord_la,
     ]);
+
     expectNoRefresh(store);
+
     expectAllTaxaRecord(store);
+
     expectLosAngelesPlace(store);
     expectNoProjects(store);
     let expectedParams = {
@@ -229,12 +233,12 @@ describe("placeSelectedHandler", () => {
   });
 
   test(`add los angeles; add san diego`, async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await placeSelectedHandler(losangeles, "los", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -286,12 +290,12 @@ describe("placeSelectedHandler", () => {
 
 describe("refreshBoundingBox", () => {
   test(`refresh map;`, async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await refreshBoundingBox(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -320,12 +324,12 @@ describe("refreshBoundingBox", () => {
   });
 
   test(`refresh map; refresh map;`, async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await refreshBoundingBox(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -374,12 +378,12 @@ describe("refreshBoundingBox", () => {
 
 describe("projectSelectedHandler", () => {
   test("add project", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await projectSelectedHandler(project_cnc1, "city", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -404,12 +408,12 @@ describe("projectSelectedHandler", () => {
   });
 
   test("add project; add project", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await projectSelectedHandler(project_cnc1, "city", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -458,12 +462,12 @@ describe("projectSelectedHandler", () => {
 
 describe("userSelectedHandler", () => {
   test("add user", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await userSelectedHandler(user1, "user", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -488,12 +492,12 @@ describe("userSelectedHandler", () => {
   });
 
   test("add user; add user", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await userSelectedHandler(user1, "user", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -542,12 +546,12 @@ describe("userSelectedHandler", () => {
 
 describe("combos", () => {
   test(`add taxon; refresh map;`, async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await taxonSelectedHandler(redOakBasic, "red", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -592,12 +596,12 @@ describe("combos", () => {
   });
 
   test(`add place; refresh map;`, async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await placeSelectedHandler(losangeles, "los", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -644,12 +648,12 @@ describe("combos", () => {
   });
 
   test(`add project; refresh map;`, async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await projectSelectedHandler(project_cnc1, "city", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -698,12 +702,12 @@ describe("combos", () => {
   });
 
   test(`add user; refresh map;`, async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await userSelectedHandler(user1, "user", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -752,12 +756,12 @@ describe("combos", () => {
   });
 
   test(`add place; refresh map; add place`, async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await placeSelectedHandler(losangeles, "los", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -825,24 +829,13 @@ describe("combos", () => {
     );
   });
 
-  test(`add taxon; add place; add project; add user`, async () => {
-    let { store } = setupMapAndStore();
-
-    expectEmpytMap(store);
-
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
-
-    await addResources(store);
-  });
-
   test("add taxon x 2; add place x 2; add project x 2; add user x 2", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await addResources(store);
 
     await taxonSelectedHandler(redOakBasic, "red", store);
@@ -967,12 +960,12 @@ describe("combos", () => {
   });
 
   test(`add taxon; add place; add project; add user; remove resources`, async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
 
     await addResources(store);
 
@@ -1050,12 +1043,12 @@ describe("combos", () => {
 
 describe("removePlace", () => {
   test("add place; remove place", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await placeSelectedHandler(losangeles, "los", store);
 
     let params1 = {
@@ -1083,12 +1076,12 @@ describe("removePlace", () => {
   });
 
   test("add place; add place; remove place", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await placeSelectedHandler(losangeles, "los", store);
 
     let params1 = {
@@ -1133,12 +1126,12 @@ describe("removePlace", () => {
   });
 
   test("add refresh bounding box; remove place", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await refreshBoundingBox(store);
 
     expect(store.inatApiParams).toStrictEqual({
@@ -1168,12 +1161,12 @@ describe("removePlace", () => {
   });
 
   test("add taxon; add place; remove place", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await taxonSelectedHandler(lifeBasic, "life", store);
 
     expect(store.inatApiParams).toStrictEqual({
@@ -1216,12 +1209,12 @@ describe("removePlace", () => {
   });
 
   test("add taxon; add refresh; remove place", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await taxonSelectedHandler(lifeBasic, "life", store);
 
     expect(store.inatApiParams).toStrictEqual({
@@ -1269,12 +1262,12 @@ describe("removePlace", () => {
 
 describe("removeTaxon", () => {
   test("add taxon; remove taxon", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await taxonSelectedHandler(lifeBasic, "life", store);
 
     let params1 = {
@@ -1301,12 +1294,12 @@ describe("removeTaxon", () => {
   });
 
   test("add taxon; add taxon; remove first taxon", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await taxonSelectedHandler(lifeBasic, "life", store);
 
     let params1 = {
@@ -1352,12 +1345,12 @@ describe("removeTaxon", () => {
 
 describe("removeProject", () => {
   test("add project; remove project", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await projectSelectedHandler(project_cnc1, "city", store);
 
     let expectedParams = {
@@ -1385,12 +1378,12 @@ describe("removeProject", () => {
   });
 
   test("add project; add project; remove project", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await projectSelectedHandler(project_cnc1, "city", store);
 
     let expectedParams = {
@@ -1437,12 +1430,12 @@ describe("removeProject", () => {
 
 describe("removeUser", () => {
   test("add user; remove user", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await userSelectedHandler(user1, "user", store);
 
     let expectedParams = {
@@ -1470,12 +1463,12 @@ describe("removeUser", () => {
   });
 
   test("add user; add user; remove user", async () => {
-    let { store } = setupMapAndStore();
+    let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    initStoreViews(store, decodeAppUrl(""));
-    await initApp(store, decodeAppUrl(""));
+    await initPopulateStore(store, decodeAppUrl(""));
+    await initRenderMap(store);
     await userSelectedHandler(user1, "user", store);
 
     let expectedParams = {
