@@ -651,3 +651,23 @@ export function viewAndTemplateObject(targetView: string) {
   }
   return view;
 }
+
+export function cleanupObervationsParams(appStore: MapStore) {
+  let observationParams: iNatApiParams = {
+    ...appStore.inatApiParams,
+  };
+  // delete properties that should not go to api
+  delete observationParams.colors;
+  delete observationParams.view;
+  delete observationParams.subview;
+
+  // delete internal app ids
+  if (observationParams.taxon_id === "0") {
+    delete observationParams.taxon_id;
+  }
+  if (observationParams.place_id === "0") {
+    delete observationParams.place_id;
+  }
+
+  return observationParams;
+}

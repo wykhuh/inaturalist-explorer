@@ -8,6 +8,7 @@ import {
   removeIdFromCommaSeparatedString,
   removeIdfromInatApiParams,
   normalizeAppParams,
+  cleanupObervationsParams,
 } from "../lib/data_utils.ts";
 import type { NormalizediNatTaxon } from "../types/app.d.ts";
 import { mapStore } from "../lib/store.ts";
@@ -589,5 +590,52 @@ describe("normalizeAppParams", () => {
     let result = normalizeAppParams(appParams);
 
     expect(result.toString()).toBe(appParams);
+  });
+});
+
+describe("cleanupObervationsParams", () => {
+  test("if store has not changed, returns object with default inatApiParams", () => {
+    let store = structuredClone(mapStore);
+
+    let results = cleanupObervationsParams(store);
+
+    expect(results).toStrictEqual({ spam: false, verifiable: true });
+  });
+
+  test("returns object with properties from inatApiParams", () => {
+    let store = structuredClone(mapStore);
+    store.inatApiParams.taxon_id = "10,11";
+    store.inatApiParams.place_id = "20,12";
+    store.inatApiParams.sounds = true;
+
+    let results = cleanupObervationsParams(store);
+
+    expect(results).toStrictEqual({
+      spam: false,
+      verifiable: true,
+      place_id: "20,12",
+      taxon_id: "10,11",
+      sounds: true,
+    });
+  });
+
+  test("ignores taxon_id and place_id when they are 0", () => {
+    let store = structuredClone(mapStore);
+    store.inatApiParams.taxon_id = "0";
+    store.inatApiParams.place_id = "0";
+
+    let results = cleanupObervationsParams(store);
+
+    expect(results).toStrictEqual({ spam: false, verifiable: true });
+  });
+
+  test("ignores view and subview", () => {
+    let store = structuredClone(mapStore);
+    store.inatApiParams.view = "observations";
+    store.inatApiParams.subview = "grid";
+
+    let results = cleanupObervationsParams(store);
+
+    expect(results).toStrictEqual({ spam: false, verifiable: true });
   });
 });
