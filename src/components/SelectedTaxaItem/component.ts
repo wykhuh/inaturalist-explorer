@@ -1,3 +1,4 @@
+import { setupComponent } from "../../lib/component_utils.ts";
 import { removeTaxon } from "../../lib/search_taxa.ts";
 import { pluralize } from "../../lib/utils.ts";
 import type { NormalizediNatTaxon } from "../../types/app";
@@ -14,16 +15,10 @@ class MyComponent extends HTMLElement {
   async render() {
     if (!this.dataset.taxon) return;
 
-    const parser = new DOMParser();
-    const resp = await fetch("/src/components/SelectedTaxaItem/template.html");
-    const html = await resp.text();
-
-    const template = parser
-      .parseFromString(html, "text/html")
-      .querySelector("template");
-
-    if (!template) return;
-    this.appendChild(template.content.cloneNode(true));
+    await setupComponent(
+      "/src/components/SelectedTaxaItem/template.html",
+      this,
+    );
 
     let taxon = JSON.parse(this.dataset.taxon) as NormalizediNatTaxon;
 

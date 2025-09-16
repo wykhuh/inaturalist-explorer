@@ -3,6 +3,7 @@ import type { DataComponent } from "../../types/app";
 import { pluralize } from "../../lib/utils";
 import { formatTaxonName } from "../../lib/data_utils";
 import { iNatTaxaUrl } from "../../data/inat_data";
+import { setupComponent } from "../../lib/component_utils";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -14,25 +15,7 @@ class MyComponent extends HTMLElement {
   }
 
   async render() {
-    const parser = new DOMParser();
-    let resp;
-    try {
-      resp = await fetch("/src/components/CardSpecies/template.html");
-    } catch (error) {
-      console.error("CardSpecies ERROR:", error);
-    }
-
-    if (!resp) return;
-
-    const html = await resp.text();
-
-    const template = parser
-      .parseFromString(html, "text/html")
-      .querySelector("template");
-
-    if (!template) return;
-
-    this.appendChild(template.content.cloneNode(true));
+    await setupComponent("/src/components/CardSpecies/template.html", this);
 
     this.renderCard();
   }

@@ -1,28 +1,15 @@
-import { logger, loggerStore } from "../../lib/logger";
+import { loggerStore } from "../../lib/logger";
+import { setupComponent } from "../../lib/component_utils";
 
-const setup = async () => {
-  const parser = new DOMParser();
-  const resp = await fetch("/src/components/Header/template.html");
-  const html = await resp.text();
-
-  const template = parser
-    .parseFromString(html, "text/html")
-    .querySelector("template");
-
-  class MyComponent extends HTMLElement {
-    constructor() {
-      super();
-    }
-
-    connectedCallback() {
-      loggerStore("++ Header render");
-      if (!template) return;
-
-      this.appendChild(template.content.cloneNode(true));
-    }
+class MyComponent extends HTMLElement {
+  constructor() {
+    super();
   }
+  connectedCallback() {
+    loggerStore("++ Header render");
 
-  customElements.define("x-header", MyComponent);
-};
+    setupComponent("/src/components/Header/template.html", this);
+  }
+}
 
-setup();
+customElements.define("x-header", MyComponent);

@@ -1,3 +1,4 @@
+import { setupComponent } from "../../lib/component_utils";
 import { loggerStore } from "../../lib/logger";
 import { updateCounts, viewChangeHandler } from "./utils";
 
@@ -21,25 +22,10 @@ class MyComponent extends HTMLElement {
   }
 
   async render() {
-    const parser = new DOMParser();
-    let resp;
-    try {
-      resp = await fetch("/src/components/ObservationsHeader/template.html");
-    } catch (error) {
-      console.error("ObservationsHeader ERROR:", error);
-    }
-
-    if (!resp) return;
-
-    const html = await resp.text();
-
-    const template = parser
-      .parseFromString(html, "text/html")
-      .querySelector("template");
-
-    if (!template) return;
-
-    this.appendChild(template.content.cloneNode(true));
+    await setupComponent(
+      "/src/components/ObservationsHeader/template.html",
+      this,
+    );
 
     let itemEl = this.querySelector(`#${window.app.store.currentView}`);
     itemEl?.classList.add("currentView");

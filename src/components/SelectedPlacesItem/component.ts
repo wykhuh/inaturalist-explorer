@@ -1,3 +1,4 @@
+import { setupComponent } from "../../lib/component_utils.ts";
 import { removePlace } from "../../lib/search_places.ts";
 import type { NormalizediNatPlace } from "../../types/app";
 
@@ -13,18 +14,10 @@ class MyComponent extends HTMLElement {
   async render() {
     if (!this.dataset.place) return;
 
-    const parser = new DOMParser();
-    const resp = await fetch(
+    await setupComponent(
       "/src/components/SelectedPlacesItem/template.html",
+      this,
     );
-    const html = await resp.text();
-
-    const template = parser
-      .parseFromString(html, "text/html")
-      .querySelector("template");
-
-    if (!template) return;
-    this.appendChild(template.content.cloneNode(true));
 
     let place = JSON.parse(this.dataset.place) as NormalizediNatPlace;
 

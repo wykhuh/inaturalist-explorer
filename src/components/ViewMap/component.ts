@@ -11,6 +11,7 @@ import {
 import { loggerStore } from "../../lib/logger";
 import { initRenderMap } from "../../lib/init_app";
 import { renderTaxaList } from "../../lib/search_taxa";
+import { setupComponent } from "../../lib/component_utils";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -40,16 +41,7 @@ class MyComponent extends HTMLElement {
   }
 
   async render() {
-    const parser = new DOMParser();
-    const resp = await fetch("/src/components/ViewMap/template.html");
-    const html = await resp.text();
-
-    const template = parser
-      .parseFromString(html, "text/html")
-      .querySelector("template");
-
-    if (!template) return;
-    this.appendChild(template.content.cloneNode(true));
+    await setupComponent("/src/components/ViewMap/template.html", this);
 
     // create new map
     await initRenderMap(window.app.store);

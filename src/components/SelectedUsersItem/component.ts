@@ -1,3 +1,4 @@
+import { setupComponent } from "../../lib/component_utils";
 import { removeUser } from "../../lib/search_users";
 import type { NormalizediNatUser } from "../../types/app";
 
@@ -13,16 +14,10 @@ class MyComponent extends HTMLElement {
   async render() {
     if (!this.dataset.user) return;
 
-    const parser = new DOMParser();
-    const resp = await fetch("/src/components/SelectedUsersItem/template.html");
-    const html = await resp.text();
-
-    const template = parser
-      .parseFromString(html, "text/html")
-      .querySelector("template");
-
-    if (!template) return;
-    this.appendChild(template.content.cloneNode(true));
+    await setupComponent(
+      "/src/components/SelectedUsersItem/template.html",
+      this,
+    );
 
     let user = JSON.parse(this.dataset.user) as NormalizediNatUser;
 

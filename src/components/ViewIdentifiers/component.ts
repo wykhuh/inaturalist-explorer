@@ -1,3 +1,4 @@
+import { setupComponent } from "../../lib/component_utils";
 import { fetchAndRenderData, paginationcCallback, perPage } from "./utils";
 
 class MyComponent extends HTMLElement {
@@ -10,16 +11,7 @@ class MyComponent extends HTMLElement {
   }
 
   async render() {
-    const parser = new DOMParser();
-    const resp = await fetch("/src/components/ViewIdentifiers/template.html");
-    const html = await resp.text();
-
-    const template = parser
-      .parseFromString(html, "text/html")
-      .querySelector("template");
-
-    if (!template) return;
-    this.appendChild(template.content.cloneNode(true));
+    await setupComponent("/src/components/ViewIdentifiers/template.html", this);
 
     let currentPage = 1;
     fetchAndRenderData(currentPage, perPage, paginationcCallback);
