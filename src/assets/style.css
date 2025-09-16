@@ -956,6 +956,17 @@
       }
     }
   }
+
+  .filters-count {
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: var(--clr-iNat-green);
+    display: inline-block;
+    border-radius: 50%;
+    text-align: center;
+    color: var(--clr-white);
+    margin-left: 5px;
+  }
 }
 
 @layer filtersModal {

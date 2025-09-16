@@ -136,8 +136,6 @@ add view, subview to url,
 
 add page, order, order_by to url,
 
-show number of selected filter
-
 add sort by to filters
 
 close/open sidebar

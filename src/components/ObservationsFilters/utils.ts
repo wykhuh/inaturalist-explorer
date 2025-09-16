@@ -404,4 +404,15 @@ export function renderFiltersList(data: FormData) {
     itemEl.textContent = `${key}=${value}`;
     listEl.appendChild(itemEl);
   }
+  let countEl = document.querySelector(".filters-count") as HTMLElement;
+  if (countEl) {
+    let count = Object.keys(results.params).length;
+    if (count > 0) {
+      countEl.innerHTML = count.toString();
+      countEl.style = "display:inline-block";
+    } else {
+      countEl.innerHTML = "";
+      countEl.style = "display:none";
+    }
+  }
 }
