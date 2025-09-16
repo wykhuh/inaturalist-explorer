@@ -1,11 +1,11 @@
 <template>
-  <button id="filters-btn">Filters</button>
+  <button id="filters-btn" class="btn-primary">Filters</button>
 
   <dialog class="filters-modal">
     <div>
       <div class="modal-header">
         <x-observations-header></x-observations-header>
-        <div><button class="close-btn">Close</button></div>
+        <div><button class="close-btn btn-primary">Close</button></div>
       </div>
       <ol class="filters-list"></ol>
 
@@ -319,8 +319,8 @@
           </div>
         </div>
         <div class="controls">
-          <button type="submit">Update Search</button>
-          <button type="reset">Reset</button>
+          <button class="btn-primary" type="submit">Update Search</button>
+          <button class="btn-danger" type="reset">Reset</button>
         </div>
       </form>
     </div>

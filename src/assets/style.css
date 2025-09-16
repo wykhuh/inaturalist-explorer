@@ -116,6 +116,12 @@
     --clr-green-400: hsl(143, 19%, 49%);
     --clr-green-500: hsl(143, 38%, 37%);
 
+    --clr-primary: var(--clr-gray-400);
+    --clr-secondary: #0d6efd;
+    --clr-success: #198754;
+    --clr-danger: #dc3545;
+    --clr-warning: #ffc107;
+
     --clr-iNat-green: #86a91c;
     --clr-iNat-orange: #f16f3a;
     --clr-iNat-pink: #ff1493;
@@ -163,6 +169,9 @@
     --font-size-heading-regular: var(--fs-800);
     --font-size-heading-lg: var(--fs-900);
     --font-size-heading-xl: var(--fs-1000);
+
+    --fw-bold: 550;
+    --fw-extra-bold: 900;
 
     --border-radius-1: 0.25rem;
     --border-radius-2: 0.5rem;
@@ -260,6 +269,25 @@
 
     &:hover {
       background-color: var(--clr-gray-400);
+    }
+  }
+
+  .btn-primary {
+    background-color: var(--clr-primary);
+
+    &:hover {
+      background-color: var(--clr-white);
+    }
+  }
+
+  .btn-danger {
+    border: 1px solid var(--clr-danger);
+    background-color: var(--clr-danger);
+    color: var(--clr-white);
+
+    &:hover {
+      background-color: var(--clr-white);
+      color: var(--text-main);
     }
   }
 }
@@ -403,6 +431,7 @@
       padding: 0.5rem 1rem;
       display: flex;
       flex-direction: column;
+      cursor: pointer;
     }
 
     .currentView {
@@ -413,7 +442,7 @@
     .species-count,
     .identifiers-count,
     .observers-count {
-      font-weight: 550;
+      font-weight: var(--fw-bold);
     }
   }
 
@@ -437,7 +466,7 @@
 
       .current-subview {
         background-color: var(--clr-gray-300);
-        font-weight: 550;
+        font-weight: var(--fw-bold);
       }
     }
   }
@@ -466,7 +495,7 @@
 
       &.current-page {
         background-color: var(--clr-gray-300);
-        font-weight: 550;
+        font-weight: var(--fw-bold);
       }
     }
   }
@@ -510,7 +539,7 @@
   .observations-table,
   .observations-grid {
     .title {
-      font-weight: 550;
+      font-weight: var(--fw-bold);
       line-height: 1.25;
       a {
         color: var(--text-main);
@@ -838,7 +867,7 @@
       display: grid;
     }
     .common-name {
-      font-weight: 510;
+      font-weight: var(--fw-bold);
     }
     .scientific-name {
       font-style: italic;
@@ -877,7 +906,9 @@
       font-size: var(--font-size-md);
       background-color: transparent;
       border: 0;
-      cursor: pointer;
+      &:hover {
+        font-weight: var(--fw-extra-bold);
+      }
     }
   }
 
@@ -911,7 +942,7 @@
     }
 
     .title {
-      font-weight: 550;
+      font-weight: var(--fw-bold);
       a {
         text-decoration: none;
       }
@@ -923,15 +954,6 @@
       a {
         text-decoration: none;
       }
-    }
-  }
-
-  #filters-btn {
-    background-color: var(--clr-gray-400);
-    color: var(--clr-black);
-
-    &:hover {
-      background-color: var(--clr-white);
     }
   }
 }
@@ -953,6 +975,7 @@
     .modal-header {
       display: flex;
       justify-content: space-between;
+      gap: 1rem;
 
       #observations-header {
         ul {
