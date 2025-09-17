@@ -17,7 +17,6 @@ import {
   getMapTiles,
 } from "./map_utils.ts";
 import {
-  getObservationsYears,
   getPlaceById,
   getProjectById,
   getTaxonById,
@@ -152,16 +151,6 @@ export async function initPopulateStore(
   renderUsersList(appStore);
 
   window.dispatchEvent(new Event("storePopulated"));
-
-  let data = await getObservationsYears();
-  if (data) {
-    let years = [];
-    for (let [date, _count] of Object.entries(data.year)) {
-      years.push(Number(date.split("-")[0]));
-    }
-    window.app.store.iNatStats = { years: years.sort().reverse() };
-    window.dispatchEvent(new Event("observationYearsLoaded"));
-  }
 }
 
 export async function initRenderMap(appStore: MapStore) {

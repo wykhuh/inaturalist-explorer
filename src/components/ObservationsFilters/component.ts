@@ -26,11 +26,8 @@ class MyComponent extends HTMLElement {
     this.renderModal();
     this.renderForm();
     this.formEventHandler();
+    renderYearsSelect();
 
-    window.addEventListener("observationYearsLoaded", () => {
-      // use api data to render the years field
-      renderYearsSelect();
-    });
     window.addEventListener("storePopulated", () => {
       // use store to set values the form on page load
       initFilters(window.app.store);

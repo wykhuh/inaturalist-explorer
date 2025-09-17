@@ -1,4 +1,8 @@
-import { CCLicenses, taxonRanks } from "../../data/inat_data";
+import {
+  CCLicenses,
+  iNatObservationsYears,
+  taxonRanks,
+} from "../../data/inat_data";
 import type {
   iNatApiParams,
   iNatApiParamsKeys,
@@ -355,15 +359,13 @@ export function renderLicenseSelect(
 }
 
 export function renderYearsSelect() {
-  if (!window.app.store.iNatStats.years) return;
-
   let selectEl = document.querySelector("#year");
   if (selectEl) {
     let optionEl = document.createElement("option");
     optionEl.innerText = "Select years";
     selectEl.appendChild(optionEl);
 
-    window.app.store.iNatStats.years.forEach((year) => {
+    iNatObservationsYears.forEach((year) => {
       let optionEl = document.createElement("option");
       optionEl.innerText = year.toString();
       optionEl.value = year.toString();
