@@ -7,6 +7,7 @@ import { createSpinner } from "../../lib/spinner";
 import type { ObservationsObserversResult } from "../../types/inat_api";
 import { updateAppUrl } from "../../lib/utils";
 import type { MapStore } from "../../types/app";
+import { observers } from "../../data/inat_api_cache";
 
 export let perPage = 100;
 
@@ -57,6 +58,9 @@ export async function fetchAndRenderData(
 
 async function getAPIData(perPage: number) {
   let params = cleanupObervationsParams(window.location.search);
+  if (import.meta.env.VITE_CACHE === "true") {
+    return observers;
+  }
 
   try {
     let data = await getObservationsObservers(params, perPage);

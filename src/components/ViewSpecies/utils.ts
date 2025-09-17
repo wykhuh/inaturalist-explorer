@@ -1,10 +1,10 @@
+import { threatenedSpecies } from "../../data/inat_api_cache";
 import { cleanupObervationsParams } from "../../lib/data_utils";
 import { getObservationsSpecies } from "../../lib/inat_api";
 import { loggerTime } from "../../lib/logger";
 import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";
 import { updateAppUrl } from "../../lib/utils";
-import { threatenedSpecies } from "../../tests/fixtures/observations";
 import type { DataComponent } from "../../types/app";
 import type { SpeciesCountResult } from "../../types/inat_api";
 

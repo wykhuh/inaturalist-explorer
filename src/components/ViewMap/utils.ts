@@ -17,9 +17,9 @@ import { loggerTime } from "../../lib/logger";
 import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";
 import { formatDate, updateAppUrl } from "../../lib/utils";
-import { observationsDemoLA } from "../../tests/fixtures/observations";
 import type { ObservationsResult } from "../../types/inat_api";
 import type { DataComponent, MapStore } from "../../types/app";
+import { observationsDemoLA } from "../../data/inat_api_cache";
 
 export let perPage = 48;
 
