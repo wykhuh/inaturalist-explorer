@@ -3,7 +3,7 @@ import type { PolygonJson } from "../types/inat_api";
 import { leafletVisibleLayers } from "./data_utils";
 import { displayJson } from "./utils";
 
-function createModal() {
+export function createModal() {
   let displayJsonEl = document.getElementById("display-json");
   if (!displayJsonEl) return;
 
@@ -87,14 +87,40 @@ function formatYears(appStore: MapStore) {
   return yearString;
 }
 
-export function displayUserData(appStore: MapStore, _source: string) {
+function toggleOverlay() {
   const debug = import.meta.env.VITE_DEBUG;
   if (!debug || debug === "false") return;
 
   let displayJsonEl = document.getElementById("display-json");
   if (!displayJsonEl) return;
+  let displayJsonWrapperEl = document.getElementById("display-json-wrapper");
+  if (!displayJsonWrapperEl) return;
+  let controlsEl = document.querySelector("#display-json .controls");
+  if (!controlsEl) return;
 
-  let contentEl = createModal();
+  let buttonEl = document.createElement("button");
+  buttonEl.textContent = "show app store";
+  // let buttonEl = document.querySelector("#display-json button");
+  if (!buttonEl) return;
+
+  controlsEl.appendChild(buttonEl);
+  buttonEl.addEventListener("click", () => {
+    if (displayJsonWrapperEl.className === "hide") {
+      displayJsonWrapperEl.className = "";
+    } else {
+      displayJsonWrapperEl.className = "hide";
+    }
+  });
+}
+
+toggleOverlay();
+
+export function displayUserData(appStore: MapStore, _source: string) {
+  const debug = import.meta.env.VITE_DEBUG;
+  if (!debug || debug === "false") return;
+
+  let displayJsonWrapperEl = document.getElementById("display-json-wrapper");
+  if (!displayJsonWrapperEl) return;
 
   let data = {} as any;
   Object.keys(appStore).forEach((k) => {
@@ -122,7 +148,7 @@ export function displayUserData(appStore: MapStore, _source: string) {
     }
   });
 
-  if (contentEl) {
-    displayJson(data, contentEl);
+  if (displayJsonWrapperEl) {
+    displayJson(data, displayJsonWrapperEl);
   }
 }

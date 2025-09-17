@@ -472,10 +472,19 @@
   }
 
   #display-json {
-    z-index: 1000;
-    position: absolute;
-    background-color: var(--clr-overlay-light-400);
-    font-size: var(--font-size-sm);
+    margin-top: 1rem;
+
+    #display-json-wrapper {
+      font-size: var(--font-size-sm);
+      z-index: 1000;
+      position: absolute;
+      padding: 1rem;
+      background-color: var(--clr-overlay-dark-700);
+      color: var(--clr-white);
+    }
+    .hide {
+      display: none;
+    }
   }
 
   .pagination {
