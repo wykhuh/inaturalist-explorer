@@ -1,5 +1,5 @@
 import type { MapStore, MapStoreKeys } from "../types/app.d.ts";
-import { displayUserData } from "./data_utils.ts";
+import { displayUserData } from "./dev_utils.ts";
 import { loggerStore } from "./logger.ts";
 
 export const mapStore: MapStore = {

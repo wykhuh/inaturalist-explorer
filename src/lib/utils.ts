@@ -15,9 +15,6 @@ import { convertParamsBBoxToLngLat } from "./map_utils";
 import { validObservationsSubviews, validViews } from "../data/app_data";
 
 export function displayJson(json: any, el: HTMLElement | null) {
-  const debug = import.meta.env.VITE_DEBUG;
-  if (!debug || debug === "false") return;
-
   // fix cyclic object errors
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Cyclic_object_value#Examples
   const getCircularReplacer = () => {
