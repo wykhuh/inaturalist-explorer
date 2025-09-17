@@ -50,7 +50,7 @@ class MyComponent extends HTMLElement {
     // load observation data for grid/table
     fetchAndRenderData(perPage, paginationcCallback, window.app.store);
 
-    window.addEventListener("appUrlChange", () => {
+    window.addEventListener("appUrlChangexxx", () => {
       fetchAndRenderData(perPage, paginationcCallback, window.app.store);
     });
 

@@ -90,6 +90,7 @@ export async function refreshBoundingBox(
 
   renderTaxaList(appStore);
   renderPlacesList(appStore);
+  window.dispatchEvent(new Event("observationsChange"));
   updateAppUrl(window.location, appStore);
 }
 

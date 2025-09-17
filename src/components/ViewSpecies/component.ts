@@ -1,4 +1,5 @@
 import { setupComponent } from "../../lib/component_utils";
+import { loggerStore } from "../../lib/logger";
 import { fetchAndRenderData, paginationcCallback, perPage } from "./utils";
 
 class MyComponent extends HTMLElement {
@@ -7,6 +8,8 @@ class MyComponent extends HTMLElement {
   }
 
   connectedCallback() {
+    loggerStore("++ ViewSpecies render");
+
     this.render();
   }
 
@@ -15,7 +18,7 @@ class MyComponent extends HTMLElement {
 
     fetchAndRenderData(perPage, paginationcCallback);
 
-    window.addEventListener("appUrlChange", () => {
+    window.addEventListener("appUrlChangexxx", () => {
       fetchAndRenderData(perPage, paginationcCallback);
     });
   }

@@ -155,6 +155,7 @@ export async function taxonSelectedHandler(
   await getObservationsCountForTaxon(taxonObj, appStore);
 
   renderTaxaList(appStore);
+  window.dispatchEvent(new Event("observationsChange"));
   updateAppUrl(window.location, appStore);
 }
 
@@ -180,5 +181,6 @@ export async function removeTaxon(taxonId: number, appStore: MapStore) {
   }
 
   renderTaxaList(appStore);
+  window.dispatchEvent(new Event("observationsChange"));
   updateAppUrl(window.location, appStore);
 }

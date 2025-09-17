@@ -1,4 +1,5 @@
 import { setupComponent } from "../../lib/component_utils";
+import { loggerStore } from "../../lib/logger";
 import {
   initFilters,
   updateAppWithFilters,
@@ -14,6 +15,8 @@ class MyComponent extends HTMLElement {
   }
 
   connectedCallback() {
+    loggerStore("++ ObservationFilters render");
+
     this.render();
   }
 

@@ -63,7 +63,7 @@ export async function initPopulateStore(
   appStore: MapStore,
   urlStore: MapStore,
 ) {
-  loggerStore("++ initPopulateStore");
+  loggerStore("++ initPopulateStore start");
 
   // use url store to populate appStore.inatApiParams
   for (const [k, value] of Object.entries(urlStore.inatApiParams)) {
@@ -149,6 +149,8 @@ export async function initPopulateStore(
   renderPlacesList(appStore);
   renderProjectsList(appStore);
   renderUsersList(appStore);
+
+  loggerStore("++ initPopulateStore end");
 
   window.dispatchEvent(new Event("storePopulated"));
 }

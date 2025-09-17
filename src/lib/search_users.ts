@@ -119,6 +119,7 @@ export async function userSelectedHandler(
 
   renderTaxaList(appStore);
   renderUsersList(appStore);
+  window.dispatchEvent(new Event("observationsChange"));
   updateAppUrl(window.location, appStore);
 }
 
@@ -156,5 +157,6 @@ export async function removeUser(userId: number, appStore: MapStore) {
 
   renderTaxaList(appStore);
   renderUsersList(appStore);
+  window.dispatchEvent(new Event("observationsChange"));
   updateAppUrl(window.location, appStore);
 }
