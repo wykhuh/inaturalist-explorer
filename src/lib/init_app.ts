@@ -7,6 +7,7 @@ import type {
   iNatApiParamsKeys,
   SearchOptions,
   SearchOptionsKeys,
+  ObservationViews,
 } from "../types/app";
 import {
   addLayerToMap,
@@ -82,11 +83,19 @@ export async function initPopulateStore(
   if (urlStore.currentView) {
     appStore.currentView = urlStore.currentView;
   }
-  if (urlStore.currentView === "observations") {
-    appStore.currentObservationsSubview = urlStore.currentObservationsSubview;
-  } else {
-    appStore.currentObservationsSubview = undefined;
+
+  // populate viewMetadata
+  for (let [k, value] of Object.entries(urlStore.viewMetadata)) {
+    let key = k as ObservationViews;
+    appStore.viewMetadata[key] = {
+      ...appStore.viewMetadata[key],
+      ...value,
+    };
   }
+
+  // HACK: trigger store proxy
+  appStore.inatApiParams = appStore.inatApiParams;
+  appStore.viewMetadata = appStore.viewMetadata;
 
   // places data
   if (

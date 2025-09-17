@@ -73,6 +73,15 @@ describe("pluralize", () => {
 });
 
 describe("formatAppUrl", () => {
+  test("format parameters for default store", () => {
+    let appStore: MapStore = {
+      ...mapStore,
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe(``);
+  });
   test("format parameters for one taxon", () => {
     let appStore: MapStore = {
       ...mapStore,
@@ -220,60 +229,6 @@ describe("formatAppUrl", () => {
     );
   });
 
-  test("return empty string for default view, subview, and inatApiParams", () => {
-    let appStore: MapStore = {
-      ...mapStore,
-      currentView: "observations",
-      currentObservationsSubview: "grid",
-    };
-
-    let result = formatAppUrl(appStore);
-
-    expect(result).toBe("");
-  });
-
-  test.each(["identifiers", "observers", "species"])(
-    "return view if view is not observations",
-    (view) => {
-      let appStore: MapStore = {
-        ...mapStore,
-        currentView: view as ObservationViews,
-        currentObservationsSubview: undefined,
-      };
-
-      let result = formatAppUrl(appStore);
-
-      expect(result).toBe(`verifiable=true&spam=false&view=${view}`);
-    },
-  );
-
-  test("return view & subview if has view is observations and table ", () => {
-    let appStore: MapStore = {
-      ...mapStore,
-      currentView: "observations",
-      currentObservationsSubview: "table",
-    };
-
-    let result = formatAppUrl(appStore);
-
-    expect(result).toBe(
-      "verifiable=true&spam=false&view=observations&subview=table",
-    );
-  });
-
-  test("return empty string if no selected resources, and inatApiParams has default params", () => {
-    let appStore: MapStore = {
-      ...mapStore,
-      inatApiParams: mapStore.inatApiParams,
-      selectedTaxa: [],
-      selectedPlaces: [],
-    };
-
-    let result = formatAppUrl(appStore);
-
-    expect(result).toBe("");
-  });
-
   test("return params if no selected resources, and inatApiParams has additional params", () => {
     let appStore: MapStore = {
       ...mapStore,
@@ -339,7 +294,51 @@ describe("formatAppUrl", () => {
     expect(result).toBe("verifiable=false&spam=true");
   });
 
-  test("return params for page, order, order_by", () => {
+  test.each(["identifiers", "observers", "species"])(
+    "return parameters if view is not observations",
+    (view) => {
+      let appStore: MapStore = {
+        ...mapStore,
+        currentView: view as ObservationViews,
+      };
+
+      let result = formatAppUrl(appStore);
+
+      expect(result).toBe(`verifiable=true&spam=false&view=${view}`);
+    },
+  );
+
+  test("return empty string if view is observations", () => {
+    let appStore: MapStore = {
+      ...mapStore,
+      currentView: "observations",
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe(``);
+  });
+
+  test("return view & subview if view is observations and table ", () => {
+    let appStore: MapStore = {
+      ...mapStore,
+      currentView: "observations",
+      viewMetadata: {
+        observations: { subview: "table" },
+        observers: {},
+        identifiers: {},
+        species: {},
+      },
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe(
+      "verifiable=true&spam=false&view=observations&subview=table",
+    );
+  });
+
+  test("return params for page, order, order_by if observation", () => {
     let appStore: MapStore = {
       ...mapStore,
       inatApiParams: {
@@ -351,6 +350,7 @@ describe("formatAppUrl", () => {
       },
       selectedTaxa: [],
       selectedPlaces: [],
+      currentView: "observations",
       viewMetadata: {
         observations: { page: 1, order: "desc", order_by: "id" },
         identifiers: { page: 2 },
@@ -365,6 +365,37 @@ describe("formatAppUrl", () => {
       "verifiable=true&spam=false&page=1&order=desc&order_by=id",
     );
   });
+
+  test.each(["identifiers", "species", "observers"])(
+    "return params for page, order, order_by if not observation",
+    (name) => {
+      let appStore: MapStore = {
+        ...mapStore,
+        inatApiParams: {
+          verifiable: true,
+          spam: false,
+          page: 1,
+          order: "desc",
+          order_by: "id",
+        },
+        selectedTaxa: [],
+        selectedPlaces: [],
+        currentView: name as any,
+        viewMetadata: {
+          observations: { page: 10, order: "desc", order_by: "id" },
+          identifiers: { page: 11, order: "desc", order_by: "id" },
+          species: { page: 12, order: "desc", order_by: "id" },
+          observers: { page: 13, order: "desc", order_by: "id" },
+        },
+      };
+
+      let result = formatAppUrl(appStore);
+
+      expect(result).toBe(
+        `verifiable=true&spam=false&page=1&order=desc&order_by=id&view=${name}`,
+      );
+    },
+  );
 });
 
 describe("updateAppUrl", () => {
@@ -423,6 +454,13 @@ describe("decodeAppUrl resources", () => {
         verifiable: true,
         spam: false,
       },
+      currentView: "observations",
+      viewMetadata: {
+        observations: {},
+        identifiers: {},
+        observers: {},
+        species: {},
+      },
     };
 
     let result = decodeAppUrl(searchParams);
@@ -440,6 +478,13 @@ describe("decodeAppUrl resources", () => {
         spam: false,
       },
       selectedTaxa: [],
+      currentView: "observations",
+      viewMetadata: {
+        observations: {},
+        identifiers: {},
+        observers: {},
+        species: {},
+      },
     };
 
     let result = decodeAppUrl(searchParams);
@@ -457,6 +502,13 @@ describe("decodeAppUrl resources", () => {
         spam: false,
       },
       selectedTaxa: [],
+      currentView: "observations",
+      viewMetadata: {
+        observations: {},
+        identifiers: {},
+        observers: {},
+        species: {},
+      },
     };
 
     let result = decodeAppUrl(searchParams);
@@ -474,6 +526,13 @@ describe("decodeAppUrl resources", () => {
         spam: false,
       },
       selectedTaxa: [],
+      currentView: "observations",
+      viewMetadata: {
+        observations: {},
+        identifiers: {},
+        observers: {},
+        species: {},
+      },
     };
 
     let result = decodeAppUrl(searchParams);
@@ -510,6 +569,13 @@ describe("decodeAppUrl resources", () => {
         swlat: 2,
         swlng: -3,
       },
+      currentView: "observations",
+      viewMetadata: {
+        observations: {},
+        identifiers: {},
+        observers: {},
+        species: {},
+      },
     };
 
     let result = decodeAppUrl(searchParams);
@@ -540,6 +606,13 @@ describe("decodeAppUrl resources", () => {
           verifiable: true,
           spam: false,
         },
+        currentView: "observations",
+        viewMetadata: {
+          observations: {},
+          identifiers: {},
+          observers: {},
+          species: {},
+        },
       };
 
       let result = decodeAppUrl(searchParams);
@@ -565,6 +638,13 @@ describe("decodeAppUrl options", () => {
         verifiable: false,
         spam: false,
       },
+      currentView: "observations",
+      viewMetadata: {
+        observations: {},
+        identifiers: {},
+        observers: {},
+        species: {},
+      },
     };
 
     let result = decodeAppUrl(searchParams);
@@ -587,6 +667,13 @@ describe("decodeAppUrl options", () => {
         verifiable: true,
         spam: true,
       },
+      currentView: "observations",
+      viewMetadata: {
+        observations: {},
+        identifiers: {},
+        observers: {},
+        species: {},
+      },
     };
 
     let result = decodeAppUrl(searchParams);
@@ -607,6 +694,13 @@ describe("decodeAppUrl options", () => {
       inatApiParams: {
         verifiable: "any",
       },
+      currentView: "observations",
+      viewMetadata: {
+        observations: {},
+        identifiers: {},
+        observers: {},
+        species: {},
+      },
     };
 
     let result = decodeAppUrl(searchParams);
@@ -625,6 +719,13 @@ describe("decodeAppUrl options", () => {
         },
       ],
       inatApiParams: {},
+      currentView: "observations",
+      viewMetadata: {
+        observations: {},
+        identifiers: {},
+        observers: {},
+        species: {},
+      },
     };
 
     let result = decodeAppUrl(searchParams);
@@ -638,6 +739,12 @@ describe("decodeAppUrl options", () => {
       currentView: view,
       inatApiParams: {},
       selectedTaxa: [],
+      viewMetadata: {
+        observations: {},
+        identifiers: {},
+        observers: {},
+        species: {},
+      },
     };
 
     let result = decodeAppUrl(searchParams);
@@ -651,9 +758,16 @@ describe("decodeAppUrl options", () => {
       let searchParams = "?view=observations&subview=" + subview;
       let expected = {
         currentView: "observations",
-        currentObservationsSubview: subview,
         inatApiParams: {},
         selectedTaxa: [],
+        viewMetadata: {
+          observations: {
+            subview: subview,
+          },
+          identifiers: {},
+          observers: {},
+          species: {},
+        },
       };
 
       let result = decodeAppUrl(searchParams);
@@ -662,25 +776,18 @@ describe("decodeAppUrl options", () => {
     },
   );
 
-  test("ignores invalid subviews for observations", () => {
-    let searchParams = "?view=observations&subview=boo";
-    let expected = {
-      currentView: "observations",
-      inatApiParams: {},
-      selectedTaxa: [],
-    };
-
-    let result = decodeAppUrl(searchParams);
-
-    expect(result).toStrictEqual(expected);
-  });
-
   test.each(validViews)("test ignore invalid subview", (view) => {
     let searchParams = `?view=${view}&subview=foo`;
     let expected = {
       currentView: view,
       inatApiParams: {},
       selectedTaxa: [],
+      viewMetadata: {
+        observations: {},
+        identifiers: {},
+        observers: {},
+        species: {},
+      },
     };
 
     let result = decodeAppUrl(searchParams);
@@ -688,11 +795,18 @@ describe("decodeAppUrl options", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test("ignores invalid views and subview", () => {
+  test("set params if invalid views and subview", () => {
     let searchParams = "?view=boo&subview=boo";
     let expected = {
       inatApiParams: {},
       selectedTaxa: [],
+      currentView: "observations",
+      viewMetadata: {
+        observations: {},
+        identifiers: {},
+        observers: {},
+        species: {},
+      },
     };
 
     let result = decodeAppUrl(searchParams);
@@ -705,6 +819,13 @@ describe("decodeAppUrl options", () => {
     let expected = {
       inatApiParams: {},
       selectedTaxa: [],
+      currentView: "observations",
+      viewMetadata: {
+        observations: {},
+        identifiers: {},
+        observers: {},
+        species: {},
+      },
     };
 
     let result = decodeAppUrl(searchParams);
@@ -719,6 +840,13 @@ describe("decodeAppUrl options", () => {
       let expected = {
         inatApiParams: { [name]: true },
         selectedTaxa: [],
+        currentView: "observations",
+        viewMetadata: {
+          observations: {},
+          identifiers: {},
+          observers: {},
+          species: {},
+        },
       };
 
       let result = decodeAppUrl(searchParams);
@@ -732,12 +860,42 @@ describe("decodeAppUrl options", () => {
     let expected = {
       inatApiParams: { page: 2, order: "desc", order_by: "id" },
       selectedTaxa: [],
+      currentView: "observations",
+      viewMetadata: {
+        observations: { page: 2, order: "desc", order_by: "id" },
+        identifiers: {},
+        observers: {},
+        species: {},
+      },
     };
 
     let result = decodeAppUrl(searchParams);
 
     expect(result).toStrictEqual(expected);
   });
+
+  test.each(validViews)(
+    "returns object with view, page, order, order_by",
+    (name) => {
+      let searchParams = `?view=${name}&page=2&order=desc&order_by=id`;
+      let expected = {
+        inatApiParams: { page: 2, order: "desc", order_by: "id" },
+        selectedTaxa: [],
+        currentView: name,
+        viewMetadata: {
+          observations: {},
+          identifiers: {},
+          observers: {},
+          species: {},
+          [name]: { page: 2, order: "desc", order_by: "id" },
+        },
+      };
+
+      let result = decodeAppUrl(searchParams);
+
+      expect(result).toStrictEqual(expected);
+    },
+  );
 });
 
 describe("removeDefaultParams", () => {

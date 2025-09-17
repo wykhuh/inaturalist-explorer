@@ -183,8 +183,8 @@ export async function placeSelectedHandler(
   if (map) {
     fitBoundsPlaces(appStore);
   }
-  window.dispatchEvent(new Event("observationsChange"));
   updateAppUrl(window.location, appStore);
+  window.dispatchEvent(new Event("observationsChange"));
 }
 
 export function renderPlacesList(appStore: MapStore) {
@@ -225,6 +225,6 @@ export async function removePlace(placeId: number, appStore: MapStore) {
 
   renderTaxaList(appStore);
   renderPlacesList(appStore);
-  window.dispatchEvent(new Event("observationsChange"));
   updateAppUrl(window.location, appStore);
+  window.dispatchEvent(new Event("observationsChange"));
 }

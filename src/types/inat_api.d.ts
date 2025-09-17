@@ -347,7 +347,7 @@ export interface ObservationUser {
   id: number;
   icon_url?: string | null;
   login: string;
-  name?: string;
+  name?: string | null;
 }
 
 export interface iNatObservationsObserversAPI {

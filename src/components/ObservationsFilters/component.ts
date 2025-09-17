@@ -15,9 +15,11 @@ class MyComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    loggerStore("++ ObservationFilters render");
+    window.addEventListener("storePopulated", () => {
+      loggerStore("++ ObservationFilters render");
 
-    this.render();
+      this.render();
+    });
   }
 
   async render() {
@@ -31,17 +33,15 @@ class MyComponent extends HTMLElement {
     this.formEventHandler();
     renderYearsSelect();
 
-    window.addEventListener("storePopulated", () => {
-      // use store to set values the form on page load
-      initFilters(window.app.store);
+    // use store to set values the form on page load
+    initFilters(window.app.store);
 
-      // show list of selected filters
-      let formEl = this.querySelector("#filters-form") as HTMLFormElement;
-      if (formEl) {
-        const data = new FormData(formEl);
-        renderFiltersList(data);
-      }
-    });
+    // show list of selected filters
+    let formEl = this.querySelector("#filters-form") as HTMLFormElement;
+    if (formEl) {
+      const data = new FormData(formEl);
+      renderFiltersList(data);
+    }
 
     // close dialog if click ouside of dialog
     // https://stackoverflow.com/a/73988585

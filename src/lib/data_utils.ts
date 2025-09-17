@@ -90,8 +90,8 @@ export async function refreshBoundingBox(
 
   renderTaxaList(appStore);
   renderPlacesList(appStore);
-  window.dispatchEvent(new Event("observationsChange"));
   updateAppUrl(window.location, appStore);
+  window.dispatchEvent(new Event("observationsChange"));
 }
 
 // called when user select taxa or place
@@ -146,7 +146,7 @@ export async function getObservationsCountForTaxon(
   let tempParams = new URLSearchParams(
     appStore.inatApiParams as any,
   ).toString();
-  let params = cleanupObervationsParams(tempParams);
+  let params = cleanupObervationsParams(tempParams, appStore);
   let perPage = 0;
 
   let data = await getObservations(params, perPage);
@@ -648,7 +648,10 @@ export function viewAndTemplateObject(targetView: string) {
   return view;
 }
 
-export function cleanupObervationsParams(searchParams: string) {
+export function cleanupObervationsParams(
+  searchParams: string,
+  appStore: MapStore,
+) {
   let params = new URLSearchParams(searchParams);
 
   // delete properties that should not go to api
@@ -662,6 +665,17 @@ export function cleanupObervationsParams(searchParams: string) {
   }
   if (params.get("place_id") === "0") {
     params.delete("place_id");
+  }
+
+  // replace page from url with page in store
+  if (params.get("page")) {
+    let page;
+    if (appStore.currentView) {
+      page = appStore.viewMetadata[appStore.currentView]?.page || 1;
+    } else {
+      page = 1;
+    }
+    params.set("page", page.toString());
   }
 
   // delete invalid params

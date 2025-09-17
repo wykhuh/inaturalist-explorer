@@ -239,7 +239,7 @@ export async function getObservations(
   try {
     let resp = await fetch(url);
     let data = (await resp.json()) as iNatObservationsAPI;
-    loggerUrl(url, data.total_results);
+    loggerUrl(url.split("&fields")[0] + "&fields...", data.total_results);
     return data;
   } catch (error) {
     console.error("getObservations ERROR:", error);
@@ -267,7 +267,7 @@ export async function getObservationsSpecies(
   try {
     let resp = await fetch(url);
     let data = (await resp.json()) as iNatObservationsSpeciesCountAPI;
-    loggerUrl(url, data.total_results);
+    loggerUrl(url.split("&fields")[0] + "&fields...", data.total_results);
     return data;
   } catch (error) {
     console.error("getObservationsSpecies ERROR:", error);
@@ -288,7 +288,7 @@ export async function getObservationsObservers(
   try {
     let resp = await fetch(url);
     let data = (await resp.json()) as iNatObservationsObserversAPI;
-    loggerUrl(url, data.total_results);
+    loggerUrl(url.split("&fields")[0] + "&fields...", data.total_results);
     return data;
   } catch (error) {
     console.error("getObservationsObservers ERROR:", error);
@@ -307,7 +307,7 @@ export async function getObservationsIdentifiers(
   try {
     let resp = await fetch(url);
     let data = (await resp.json()) as iNatObservationsIdentifiersAPI;
-    loggerUrl(url, data.total_results);
+    loggerUrl(url.split("&fields")[0] + "&fields...", data.total_results);
     return data;
   } catch (error) {
     console.error("getObservationsIdentifiers ERROR:", error);

@@ -21,9 +21,8 @@ export const mapStore: MapStore = {
   iNatStats: {},
   observationsSubviewData: [],
   currentView: "observations",
-  currentObservationsSubview: "grid",
   viewMetadata: {
-    observations: {},
+    observations: { subview: "grid" },
     species: {},
     identifiers: {},
     observers: {},

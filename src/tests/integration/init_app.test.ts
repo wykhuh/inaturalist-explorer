@@ -315,12 +315,12 @@ describe("initPopulateStore and initRenderMap options", () => {
     expect(store.inatApiParams).toStrictEqual(expectedParams);
   });
 
-  test("adds view and subview to store", async () => {
+  test("adds observations view and subview to store", async () => {
     let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    let searchparams = `?view=observations&subview=grid`;
+    let searchparams = `?view=observations&subview=table`;
     let urlData = decodeAppUrl(searchparams);
 
     await initPopulateStore(store, urlData);
@@ -329,15 +329,38 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectAllTaxaRecord(store);
-    let expectedParams: iNatApiParams = {
+    expect(store.inatApiParams).toStrictEqual({
       colors: iNatOrange,
       taxon_id: allTaxaRecord.id.toString(),
       verifiable: true,
       spam: false,
-    };
-    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    });
     expect(store.currentView).toBe("observations");
-    expect(store.currentObservationsSubview).toBe("grid");
+    expect(store.viewMetadata.observations).toStrictEqual({ subview: "table" });
+  });
+
+  test("adds observations view to store", async () => {
+    let store = structuredClone(mapStore);
+
+    expectEmpytMap(store);
+
+    let searchparams = `?view=observations`;
+    let urlData = decodeAppUrl(searchparams);
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expectAllTaxaRecord(store);
+    expect(store.inatApiParams).toStrictEqual({
+      colors: iNatOrange,
+      taxon_id: allTaxaRecord.id.toString(),
+      verifiable: true,
+      spam: false,
+    });
+    expect(store.currentView).toBe("observations");
+    expect(store.viewMetadata.observations).toStrictEqual({ subview: "grid" });
   });
 
   test("adds view to store", async () => {
@@ -354,15 +377,53 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectAllTaxaRecord(store);
-    let expectedParams: iNatApiParams = {
+    expect(store.inatApiParams).toStrictEqual({
       colors: iNatOrange,
       taxon_id: allTaxaRecord.id.toString(),
       verifiable: true,
       spam: false,
-    };
-    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    });
     expect(store.currentView).toBe("identifiers");
-    expect(store.currentObservationsSubview).toBe(undefined);
+    expect(store.viewMetadata.identifiers).toStrictEqual({});
+  });
+
+  test("adds page, order, order_by, and view to store", async () => {
+    let store = structuredClone(mapStore);
+
+    expectEmpytMap(store);
+
+    let searchparams = `?view=identifiers&page=3&order=desc&order_by=id`;
+    let urlData = decodeAppUrl(searchparams);
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expectAllTaxaRecord(store);
+    expect(store.inatApiParams).toStrictEqual({
+      colors: iNatOrange,
+      taxon_id: allTaxaRecord.id.toString(),
+      verifiable: true,
+      spam: false,
+      page: 3,
+      order: "desc",
+      order_by: "id",
+    });
+    expect(store.viewMetadata).toStrictEqual({
+      identifiers: { page: 3, order: "desc", order_by: "id" },
+      observers: {},
+      species: {},
+      observations: {
+        subview: "grid",
+      },
+    });
+    expect(store.currentView).toBe("identifiers");
+    expect(store.viewMetadata.identifiers).toStrictEqual({
+      page: 3,
+      order: "desc",
+      order_by: "id",
+    });
   });
 });
 

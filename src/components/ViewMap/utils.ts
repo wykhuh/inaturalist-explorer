@@ -36,7 +36,7 @@ export async function fetchAndRenderData(
 
   const t1 = performance.now();
   // fetch data from api
-  let data = await getAPIData(perPage);
+  let data = await getAPIData(perPage, appStore);
   const t10 = performance.now();
   loggerTime(`api ${t10 - t1} milliseconds`);
 
@@ -59,7 +59,7 @@ export async function fetchAndRenderData(
     // switch between table and grid subview
     let subviewEl = document.createElement("div");
     subviewEl.className = "observations-subview";
-    if (appStore.currentObservationsSubview === "table") {
+    if (appStore.viewMetadata.observations.subview === "table") {
       subviewEl.appendChild(createTable(data.results));
     } else {
       subviewEl.appendChild(createGrid(data.results));
@@ -76,12 +76,12 @@ export async function fetchAndRenderData(
   }
 }
 
-async function getAPIData(perPage: number) {
+async function getAPIData(perPage: number, appStore: MapStore) {
   if (import.meta.env.VITE_CACHE === "true") {
     return observationsDemoLA;
   }
 
-  let params = cleanupObervationsParams(window.location.search);
+  let params = cleanupObervationsParams(window.location.search, appStore);
 
   try {
     let data = await getObservations(params, perPage);
@@ -274,6 +274,8 @@ export function paginationcCallback(num: number) {
     ...window.app.store.viewMetadata.observations,
     page: num,
   };
+  // HACK: update store
+  window.app.store.viewMetadata = window.app.store.viewMetadata;
 
   fetchAndRenderData(perPage, paginationcCallback, window.app.store);
   updateAppUrl(window.location, window.app.store);
@@ -294,18 +296,21 @@ export function toggleSubview(
     return;
   }
 
-  let view = event.target.dataset.view;
-  if (!view) return;
+  let subview = event.target.dataset.subview;
+  if (!subview) return;
   // early return if this is current subview
-  if (view === appStore.currentObservationsSubview) return;
+  if (subview === appStore.viewMetadata.observations?.subview) return;
 
   // update store
-  appStore.currentObservationsSubview = view;
+  appStore.viewMetadata.observations.subview = subview;
+
+  // HACK: force triggering store proxy
+  appStore.viewMetadata = appStore.viewMetadata;
 
   containerEl.innerHTML = "";
 
   // load store.observationsSubviewData to populate table and grid to avoid API call
-  if (view === "table") {
+  if (subview === "table") {
     tableLinkEl.classList.add("current-subview");
     gridLinkEl.classList.remove("current-subview");
 

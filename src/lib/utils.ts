@@ -79,6 +79,7 @@ export function formatAppUrl(appStore: MapStore) {
     .join(",");
 
   let params: iNatApiParams = {};
+
   if (taxaIds.length > 0) {
     params.taxon_id = taxaIds;
   }
@@ -112,9 +113,9 @@ export function formatAppUrl(appStore: MapStore) {
   });
 
   if (appStore.currentView === "observations") {
-    if (appStore.currentObservationsSubview === "table") {
+    if (appStore.viewMetadata.observations?.subview === "table") {
       params.view = appStore.currentView;
-      params.subview = appStore.currentObservationsSubview;
+      params.subview = appStore.viewMetadata.observations.subview;
     }
   } else if (appStore.currentView) {
     if (validViews.includes(appStore.currentView)) {
@@ -172,12 +173,19 @@ export function updateAppUrl(url_location: Location, appStore: MapStore) {
     : url_location.origin;
 
   window.history.pushState({}, "", url);
-  window.dispatchEvent(new Event("appUrlChange"));
 }
 
 export function decodeAppUrl(searchParams: string) {
   const urlParams = Object.fromEntries(new URLSearchParams(searchParams));
-  let store = { inatApiParams: {} } as MapStore;
+  let store = {
+    inatApiParams: {},
+    viewMetadata: {
+      observations: {},
+      identifiers: {},
+      observers: {},
+      species: {},
+    },
+  } as MapStore;
 
   // convert taxon_id into basic selectedTaxa with id and color
   let taxa: NormalizediNatTaxon[] = [];
@@ -227,6 +235,7 @@ export function decodeAppUrl(searchParams: string) {
       swlng: Number(urlParams.swlng),
     };
   }
+
   // convert project_id into basic selectedProject with id
   if ("project_id" in urlParams && urlParams.project_id !== "any") {
     let ids = urlParams.project_id.split(",");
@@ -241,6 +250,7 @@ export function decodeAppUrl(searchParams: string) {
       store.selectedProjects = projects as any;
     }
   }
+
   // convert user_id into basic selectedUser with id
   if ("user_id" in urlParams && urlParams.user_id !== "any") {
     let ids = urlParams.user_id.split(",");
@@ -258,13 +268,48 @@ export function decodeAppUrl(searchParams: string) {
 
   if (urlParams.view && validViews.includes(urlParams.view)) {
     store.currentView = urlParams.view as ObservationViews;
-    if (urlParams.view === "observations") {
-      if (
-        urlParams.subview &&
-        validObservationsSubviews.includes(urlParams.subview)
-      ) {
-        store.currentObservationsSubview = urlParams.subview;
-      }
+  } else {
+    store.currentView = "observations";
+  }
+
+  if (urlParams.view === "observations") {
+    if (validObservationsSubviews.includes(urlParams.subview)) {
+      store.viewMetadata.observations.subview = urlParams.subview;
+    }
+  }
+
+  if (urlParams.order) {
+    if (orderValues.includes(urlParams.order)) {
+      store.inatApiParams.order = urlParams.order;
+    }
+    if (urlParams.view && validViews.includes(urlParams.view)) {
+      store.viewMetadata[urlParams.view as ObservationViews].order =
+        urlParams.order;
+    } else {
+      store.viewMetadata.observations.order = urlParams.order;
+    }
+  }
+
+  if (urlParams.order_by) {
+    if (observationsOrderByValues.includes(urlParams.order_by)) {
+      store.inatApiParams.order_by = urlParams.order_by;
+    }
+    if (urlParams.view && validViews.includes(urlParams.view)) {
+      store.viewMetadata[urlParams.view as ObservationViews].order_by =
+        urlParams.order_by;
+    } else {
+      store.viewMetadata.observations.order_by = urlParams.order_by;
+    }
+  }
+
+  if (urlParams.page) {
+    store.inatApiParams.page = Number(urlParams.page);
+    if (urlParams.view && validViews.includes(urlParams.view)) {
+      store.viewMetadata[urlParams.view as ObservationViews].page = Number(
+        urlParams.page,
+      );
+    } else {
+      store.viewMetadata.observations.page = Number(urlParams.page);
     }
   }
 
@@ -279,21 +324,6 @@ export function decodeAppUrl(searchParams: string) {
       }
       (store.inatApiParams[key as iNatApiParamsKeys] as string) = value;
     }
-  }
-
-  if (urlParams.page) {
-    store.inatApiParams.page = Number(urlParams.page);
-  }
-
-  if (urlParams.order && orderValues.includes(urlParams.order)) {
-    store.inatApiParams.order = urlParams.order;
-  }
-
-  if (
-    urlParams.order_by &&
-    observationsOrderByValues.includes(urlParams.order_by)
-  ) {
-    store.inatApiParams.order_by = urlParams.order_by;
   }
 
   return store;

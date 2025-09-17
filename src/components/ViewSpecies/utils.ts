@@ -5,7 +5,7 @@ import { loggerTime } from "../../lib/logger";
 import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";
 import { updateAppUrl } from "../../lib/utils";
-import type { DataComponent } from "../../types/app";
+import type { DataComponent, MapStore } from "../../types/app";
 import type { SpeciesCountResult } from "../../types/inat_api";
 
 export let perPage = 48;
@@ -13,6 +13,7 @@ export let perPage = 48;
 export async function fetchAndRenderData(
   perPage: number,
   paginationcCallback: (currentPage: number) => void,
+  appStore: MapStore,
 ) {
   let containerEl = document.querySelector(".species-list-container");
   if (!containerEl) return;
@@ -21,7 +22,7 @@ export async function fetchAndRenderData(
   spinner.start();
 
   const t1 = performance.now();
-  let data = await getAPIData(perPage);
+  let data = await getAPIData(perPage, appStore);
 
   const t10 = performance.now();
   loggerTime(`api ${t10 - t1} milliseconds`);
@@ -52,13 +53,12 @@ export async function fetchAndRenderData(
   }
 }
 
-async function getAPIData(perPage: number) {
+async function getAPIData(perPage: number, appStore: MapStore) {
   if (import.meta.env.VITE_CACHE === "true") {
     return threatenedSpecies;
   }
 
-  let params = cleanupObervationsParams(window.location.search);
-
+  let params = cleanupObervationsParams(window.location.search, appStore);
   try {
     let data = await getObservationsSpecies(params, perPage);
     if (!data) return;
@@ -93,7 +93,9 @@ export function paginationcCallback(num: number) {
     ...window.app.store.viewMetadata.species,
     page: num,
   };
+  // HACK: update store
+  window.app.store.viewMetadata = window.app.store.viewMetadata;
 
-  fetchAndRenderData(perPage, paginationcCallback);
+  fetchAndRenderData(perPage, paginationcCallback, window.app.store);
   updateAppUrl(window.location, window.app.store);
 }

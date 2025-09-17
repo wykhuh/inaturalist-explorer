@@ -23,7 +23,7 @@ export async function fetchAndRenderData(
   spinner.start();
 
   const t1 = performance.now();
-  let data = await getAPIData(perPage);
+  let data = await getAPIData(perPage, appStore);
   const t10 = performance.now();
   loggerTime(`api ${t10 - t1} milliseconds`);
 
@@ -56,11 +56,12 @@ export async function fetchAndRenderData(
   }
 }
 
-async function getAPIData(perPage: number) {
-  let params = cleanupObervationsParams(window.location.search);
+async function getAPIData(perPage: number, appStore: MapStore) {
   if (import.meta.env.VITE_CACHE === "true") {
     return observers;
   }
+
+  let params = cleanupObervationsParams(window.location.search, appStore);
 
   try {
     let data = await getObservationsObservers(params, perPage);
@@ -137,6 +138,8 @@ export function paginationcCallback(num: number) {
     ...window.app.store.viewMetadata.observers,
     page: num,
   };
+  // HACK: update store
+  window.app.store.viewMetadata = window.app.store.viewMetadata;
 
   fetchAndRenderData(perPage, paginationcCallback, window.app.store);
   updateAppUrl(window.location, window.app.store);

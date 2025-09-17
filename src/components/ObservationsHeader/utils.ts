@@ -30,7 +30,7 @@ export function viewChangeHandler(
   }
 }
 
-function updateView(
+export function updateView(
   targetView: ObservationViews,
   parentEl: Element,
   appStore: MapStore,
@@ -38,11 +38,12 @@ function updateView(
 ) {
   if (!parentEl) return;
 
+  // load view component
   parentEl.innerHTML = "";
 
-  // load view component
   let templateName = viewAndTemplateObject(targetView);
   let view = document.createElement(templateName);
+
   parentEl.appendChild(view);
 
   // update currentView class in nav
@@ -51,14 +52,11 @@ function updateView(
   let itemEl = componentContext.querySelector(`#${targetView}`);
   itemEl?.classList.add("currentView");
 
-  // update appStore
   appStore.currentView = targetView;
 
-  // use appStore.viewMetadata to set appStore values
-  appStore.inatApiParams.page = appStore.viewMetadata[targetView].page || 1;
-  if (appStore.viewMetadata[targetView].subview) {
-    appStore.currentObservationsSubview =
-      appStore.viewMetadata[targetView].subview;
+  let page = appStore.viewMetadata[targetView]?.page;
+  if (page) {
+    appStore.inatApiParams.page = page;
   }
 
   updateAppUrl(window.location, appStore);
@@ -82,9 +80,8 @@ async function updateResourceCounts(
   }
 }
 
-export function updateCounts() {
-  let params = cleanupObervationsParams(window.location.search);
-
+export function updateCounts(appStore: MapStore, locationSearch: string) {
+  let params = cleanupObervationsParams(locationSearch, appStore);
   updateResourceCounts(getObservations, ".observations-count", params);
   updateResourceCounts(getObservationsSpecies, ".species-count", params);
   updateResourceCounts(

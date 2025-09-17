@@ -16,10 +16,10 @@ class MyComponent extends HTMLElement {
   async render() {
     await setupComponent("/src/components/ViewSpecies/template.html", this);
 
-    fetchAndRenderData(perPage, paginationcCallback);
+    fetchAndRenderData(perPage, paginationcCallback, window.app.store);
 
-    window.addEventListener("appUrlChangexxx", () => {
-      fetchAndRenderData(perPage, paginationcCallback);
+    window.addEventListener("observationsChange", () => {
+      fetchAndRenderData(perPage, paginationcCallback, window.app.store);
     });
   }
 }

@@ -18,7 +18,7 @@ class MyComponent extends HTMLElement {
 
     fetchAndRenderData(perPage, paginationcCallback, window.app.store);
 
-    window.addEventListener("appUrlChangexxx", () => {
+    window.addEventListener("observationsChange", () => {
       fetchAndRenderData(perPage, paginationcCallback, window.app.store);
     });
   }

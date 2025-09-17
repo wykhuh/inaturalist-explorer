@@ -32,7 +32,9 @@ export function createPagination(
     }
     if (typeof pageNum === "number") {
       liEl.addEventListener("click", () => {
-        callback(pageNum);
+        if (pageNum !== currentPage) {
+          callback(pageNum);
+        }
       });
     }
     listEl.appendChild(liEl);

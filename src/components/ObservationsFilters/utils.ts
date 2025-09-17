@@ -128,8 +128,8 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
   renderTaxaList(appStore);
   // update browser url
 
-  window.dispatchEvent(new Event("observationsChange"));
   updateAppUrl(window.location, appStore);
+  window.dispatchEvent(new Event("observationsChange"));
 }
 
 function setSelectedOption(selector: string) {

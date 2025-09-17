@@ -111,8 +111,8 @@ export async function projectSelectedHandler(
 
   renderTaxaList(appStore);
   renderProjectsList(appStore);
-  window.dispatchEvent(new Event("observationsChange"));
   updateAppUrl(window.location, appStore);
+  window.dispatchEvent(new Event("observationsChange"));
 }
 
 export function renderProjectsList(appStore: MapStore) {
@@ -150,6 +150,6 @@ export async function removeProject(projectId: number, appStore: MapStore) {
 
   renderTaxaList(appStore);
   renderProjectsList(appStore);
-  window.dispatchEvent(new Event("observationsChange"));
   updateAppUrl(window.location, appStore);
+  window.dispatchEvent(new Event("observationsChange"));
 }

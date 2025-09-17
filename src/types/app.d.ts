@@ -43,7 +43,6 @@ export interface MapStore {
     years?: number[];
   };
   currentView?: ObservationViews;
-  currentObservationsSubview?: string;
   observationsSubviewData: ObservationsResult[];
   viewMetadata: {
     observations: ViewOptions;

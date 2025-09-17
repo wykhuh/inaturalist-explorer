@@ -11,18 +11,19 @@ class MyComponent extends HTMLElement {
     loggerStore("++ ObservationHeader render");
     this.render();
 
+    // app uses two <x-observations-header>;
+    // only execute updateCounts() for instance that has updatecounts="true"
     window.addEventListener("observationsChange", () => {
       loggerStore("++ ObservationHeader observationsChange");
-
-      updateCounts();
+      if (this.dataset.updatecounts === "true") {
+        updateCounts(window.app.store, window.location.search);
+      }
     });
 
     window.addEventListener("storePopulated", () => {
       loggerStore("++ ObservationHeader storePopulated");
-      // app uses two <x-observations-header>;
-      // only execute updateCounts() for instance that has updatecounts="true"
       if (this.dataset.updatecounts === "true") {
-        updateCounts();
+        updateCounts(window.app.store, window.location.search);
       }
     });
   }

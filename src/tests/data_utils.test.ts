@@ -595,37 +595,64 @@ describe("normalizeAppParams", () => {
 
 describe("cleanupObervationsParams", () => {
   test("if no search params, returns empty string", () => {
+    let store = structuredClone(mapStore);
     let searchParams = "";
-    let results = cleanupObervationsParams(searchParams);
+
+    let results = cleanupObervationsParams(searchParams, store);
 
     expect(results).toStrictEqual("");
   });
 
   test("returns params if params are valid properites for iNat API", () => {
+    let store = structuredClone(mapStore);
     let searchParams = "sounds=true&taxon_id=1";
-    let results = cleanupObervationsParams(searchParams);
+
+    let results = cleanupObervationsParams(searchParams, store);
 
     expect(results).toStrictEqual(searchParams);
   });
 
   test("ignores params if params are not properites for iNat API", () => {
+    let store = structuredClone(mapStore);
     let searchParams = "sounds=true&taxon_id=1&foo=true";
-    let results = cleanupObervationsParams(searchParams);
+
+    let results = cleanupObervationsParams(searchParams, store);
 
     expect(results).toStrictEqual("sounds=true&taxon_id=1");
   });
 
   test("ignores taxon_id and place_id when they are 0", () => {
+    let store = structuredClone(mapStore);
     let searchParams = "sounds=true&taxon_id=0&place_id=0";
-    let results = cleanupObervationsParams(searchParams);
+
+    let results = cleanupObervationsParams(searchParams, store);
 
     expect(results).toStrictEqual("sounds=true");
   });
 
   test("ignores view and subview", () => {
+    let store = structuredClone(mapStore);
     let searchParams = "sounds=true&taxon_id=1&view=observation&subview=table";
-    let results = cleanupObervationsParams(searchParams);
+
+    let results = cleanupObervationsParams(searchParams, store);
 
     expect(results).toStrictEqual("sounds=true&taxon_id=1");
+  });
+
+  test("uses page and view from store to update params", () => {
+    let store = structuredClone(mapStore);
+    store.inatApiParams.page = 3;
+    store.currentView = "observations";
+    store.viewMetadata = {
+      observations: { page: 30 },
+      identifiers: { page: 31 },
+      observers: { page: 32 },
+      species: { page: 33 },
+    };
+    let searchParams = "view=observations&sounds=true&taxon_id=1&page=1";
+
+    let results = cleanupObervationsParams(searchParams, store);
+
+    expect(results).toStrictEqual("sounds=true&taxon_id=1&page=30");
   });
 });
