@@ -409,7 +409,6 @@
   }
 
   #observations-nav {
-    background-color: var(--clr-iNat-dark-gray);
     display: flex;
     align-items: center;
 
@@ -996,14 +995,18 @@
       display: flex;
       justify-content: space-between;
       gap: 1rem;
+      border-bottom: 1px solid var(--clr-gray-700);
 
       #observations-header {
+        background-color: var(--clr-white);
+        color: var(--text-main);
+
         ul {
           flex-wrap: wrap;
         }
 
         .currentView {
-          background-color: var(--clr-iNat-dark-gray);
+          background-color: var(--clr-white);
         }
         li {
           padding: 0.5rem 0.5rem;
