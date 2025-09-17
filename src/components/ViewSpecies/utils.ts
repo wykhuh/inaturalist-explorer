@@ -1,7 +1,9 @@
+import { cleanupObervationsParams } from "../../lib/data_utils";
 import { getObservationsSpecies } from "../../lib/inat_api";
 import { loggerTime } from "../../lib/logger";
 import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";
+import { updateAppUrl } from "../../lib/utils";
 import { threatenedSpecies } from "../../tests/fixtures/observations";
 import type { DataComponent } from "../../types/app";
 import type { SpeciesCountResult } from "../../types/inat_api";
@@ -9,7 +11,6 @@ import type { SpeciesCountResult } from "../../types/inat_api";
 export let perPage = 48;
 
 export async function fetchAndRenderData(
-  currentPage: number,
   perPage: number,
   paginationcCallback: (currentPage: number) => void,
 ) {
@@ -20,7 +21,7 @@ export async function fetchAndRenderData(
   spinner.start();
 
   const t1 = performance.now();
-  let data = await getAPIData(currentPage, perPage);
+  let data = await getAPIData(perPage);
 
   const t10 = performance.now();
   loggerTime(`api ${t10 - t1} milliseconds`);
@@ -51,17 +52,15 @@ export async function fetchAndRenderData(
   }
 }
 
-async function getAPIData(currentPage: number, perPage: number) {
+async function getAPIData(perPage: number) {
   if (import.meta.env.VITE_CACHE === "true") {
     return threatenedSpecies;
   }
 
+  let params = cleanupObervationsParams(window.location.search);
+
   try {
-    let data = await getObservationsSpecies(
-      window.location.search,
-      perPage,
-      currentPage,
-    );
+    let data = await getObservationsSpecies(params, perPage);
     if (!data) return;
 
     return data;
@@ -86,5 +85,15 @@ function createGrid(results: SpeciesCountResult[]) {
 }
 
 export function paginationcCallback(num: number) {
-  fetchAndRenderData(num, perPage, paginationcCallback);
+  window.app.store.inatApiParams = {
+    ...window.app.store.inatApiParams,
+    page: num,
+  };
+  window.app.store.viewMetadata.species = {
+    ...window.app.store.viewMetadata.species,
+    page: num,
+  };
+
+  fetchAndRenderData(perPage, paginationcCallback);
+  updateAppUrl(window.location, window.app.store);
 }

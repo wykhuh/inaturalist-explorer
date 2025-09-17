@@ -204,14 +204,13 @@ export async function getObservationsYears() {
 export async function getObservations(
   appParams: string,
   perPage: number,
-  page: number,
   order_by = "id",
   order = "desc",
 ) {
   let searchParams = normalizeAppParams(appParams);
   let url =
     `${observations_api}?${searchParams}&ttl=3600` +
-    `&per_page=${perPage}&page=${page}&order_by=${order_by}&order=${order}` +
+    `&per_page=${perPage}&order_by=${order_by}&order=${order}` +
     `&fields=(comments_count%3A!t` +
     `%2Ccreated_at%3A!t` +
     `%2Ccreated_at_details%3Aall` +
@@ -250,12 +249,11 @@ export async function getObservations(
 export async function getObservationsSpecies(
   appParams: string,
   perPage: number,
-  page: number,
 ) {
   let searchParams = normalizeAppParams(appParams);
   let url =
     `${observations_api}/species_counts?${searchParams}&ttl=3600` +
-    `&per_page=${perPage}&page=${page}` +
+    `&per_page=${perPage}` +
     `&fields=(taxon%3A(ancestors%3A(iconic_taxon_name%3A!t` +
     `%2Cid%3A!t%2Cname%3A!t` +
     `%2Cpreferred_common_name%3A!t%2Cpreferred_common_names%3A(name%3A!t)` +
@@ -281,12 +279,11 @@ export async function getObservationsSpecies(
 export async function getObservationsObservers(
   appParams: string,
   perPage: number,
-  page: number,
 ) {
   let searchParams = normalizeAppParams(appParams);
   let url =
     `${observations_api}/observers?${searchParams}&ttl=3600` +
-    `&per_page=${perPage}&page=${page}` +
+    `&per_page=${perPage}` +
     `&fields=(user%3A(icon_url%3A!t%2Cid%3A!t%2Clogin%3A!t%2Cname%3A!t))`;
   try {
     let resp = await fetch(url);
@@ -301,12 +298,11 @@ export async function getObservationsObservers(
 export async function getObservationsIdentifiers(
   appParams: string,
   perPage: number,
-  page: number,
 ) {
   let searchParams = normalizeAppParams(appParams);
   let url =
     `${observations_api}/identifiers?${searchParams}&ttl=3600` +
-    `&per_page=${perPage}&page=${page}` +
+    `&per_page=${perPage}` +
     `&fields=(user%3A(icon_url%3A!t%2Cid%3A!t%2Clogin%3A!t%2Cname%3A!t))`;
   try {
     let resp = await fetch(url);

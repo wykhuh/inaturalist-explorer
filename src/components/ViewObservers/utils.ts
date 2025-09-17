@@ -1,17 +1,19 @@
-import { formatAvatar } from "../../lib/data_utils";
+import { cleanupObervationsParams, formatAvatar } from "../../lib/data_utils";
 import { getObservationsObservers } from "../../lib/inat_api";
 import { iNatUserUrl } from "../../data/inat_data";
 import { loggerTime } from "../../lib/logger";
 import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";
 import type { ObservationsObserversResult } from "../../types/inat_api";
+import { updateAppUrl } from "../../lib/utils";
+import type { MapStore } from "../../types/app";
 
 export let perPage = 100;
 
 export async function fetchAndRenderData(
-  currentPage: number,
   perPage: number,
   paginationcCallback: (currentPage: number) => void,
+  appStore: MapStore,
 ) {
   let containerEl = document.querySelector(".observers-table-container");
   if (!containerEl) return;
@@ -20,7 +22,7 @@ export async function fetchAndRenderData(
   spinner.start();
 
   const t1 = performance.now();
-  let data = await getAPIData(currentPage, perPage);
+  let data = await getAPIData(perPage);
   const t10 = performance.now();
   loggerTime(`api ${t10 - t1} milliseconds`);
 
@@ -38,7 +40,8 @@ export async function fetchAndRenderData(
     );
     containerEl.appendChild(pagination1);
 
-    let tableEl = createTable(data.results, currentPage, perPage);
+    let page = appStore.inatApiParams.page || 1;
+    let tableEl = createTable(data.results, page, perPage);
     containerEl.appendChild(tableEl);
 
     let pagination2El = createPagination(
@@ -52,13 +55,11 @@ export async function fetchAndRenderData(
   }
 }
 
-async function getAPIData(currentPage: number, perPage: number) {
+async function getAPIData(perPage: number) {
+  let params = cleanupObervationsParams(window.location.search);
+
   try {
-    let data = await getObservationsObservers(
-      window.location.search,
-      perPage,
-      currentPage,
-    );
+    let data = await getObservationsObservers(params, perPage);
     if (!data) return;
 
     return data;
@@ -124,5 +125,15 @@ function createTable(
 }
 
 export function paginationcCallback(num: number) {
-  fetchAndRenderData(num, perPage, paginationcCallback);
+  window.app.store.inatApiParams = {
+    ...window.app.store.inatApiParams,
+    page: num,
+  };
+  window.app.store.viewMetadata.observers = {
+    ...window.app.store.viewMetadata.observers,
+    page: num,
+  };
+
+  fetchAndRenderData(perPage, paginationcCallback, window.app.store);
+  updateAppUrl(window.location, window.app.store);
 }

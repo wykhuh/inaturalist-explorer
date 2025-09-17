@@ -13,11 +13,10 @@ class MyComponent extends HTMLElement {
   async render() {
     await setupComponent("/src/components/ViewIdentifiers/template.html", this);
 
-    let currentPage = 1;
-    fetchAndRenderData(currentPage, perPage, paginationcCallback);
+    fetchAndRenderData(perPage, paginationcCallback, window.app.store);
 
     window.addEventListener("appUrlChange", () => {
-      fetchAndRenderData(currentPage, perPage, paginationcCallback);
+      fetchAndRenderData(perPage, paginationcCallback, window.app.store);
     });
   }
 }

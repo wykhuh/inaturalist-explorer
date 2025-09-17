@@ -1,4 +1,7 @@
-import { viewAndTemplateObject } from "../../lib/data_utils";
+import {
+  cleanupObervationsParams,
+  viewAndTemplateObject,
+} from "../../lib/data_utils";
 import {
   getObservations,
   getObservationsIdentifiers,
@@ -35,12 +38,11 @@ function updateView(
 ) {
   if (!parentEl) return;
 
-  // load view component
   parentEl.innerHTML = "";
 
+  // load view component
   let templateName = viewAndTemplateObject(targetView);
   let view = document.createElement(templateName);
-
   parentEl.appendChild(view);
 
   // update currentView class in nav
@@ -49,7 +51,15 @@ function updateView(
   let itemEl = componentContext.querySelector(`#${targetView}`);
   itemEl?.classList.add("currentView");
 
+  // update appStore
   appStore.currentView = targetView;
+
+  // use appStore.viewMetadata to set appStore values
+  appStore.inatApiParams.page = appStore.viewMetadata[targetView].page || 1;
+  if (appStore.viewMetadata[targetView].subview) {
+    appStore.currentObservationsSubview =
+      appStore.viewMetadata[targetView].subview;
+  }
 
   updateAppUrl(window.location, appStore);
 }
@@ -60,9 +70,8 @@ async function updateResourceCounts(
   searchParams: string,
 ) {
   let perPage = 0;
-  let page = 1;
 
-  let data = await dataFn(searchParams, perPage, page);
+  let data = await dataFn(searchParams, perPage);
   let count = data?.total_results;
 
   let countEls = document.querySelectorAll(selector);
@@ -74,24 +83,14 @@ async function updateResourceCounts(
 }
 
 export function updateCounts() {
-  updateResourceCounts(
-    getObservations,
-    ".observations-count",
-    window.location.search,
-  );
-  updateResourceCounts(
-    getObservationsSpecies,
-    ".species-count",
-    window.location.search,
-  );
+  let params = cleanupObervationsParams(window.location.search);
+
+  updateResourceCounts(getObservations, ".observations-count", params);
+  updateResourceCounts(getObservationsSpecies, ".species-count", params);
   updateResourceCounts(
     getObservationsIdentifiers,
     ".identifiers-count",
-    window.location.search,
+    params,
   );
-  updateResourceCounts(
-    getObservationsObservers,
-    ".observers-count",
-    window.location.search,
-  );
+  updateResourceCounts(getObservationsObservers, ".observers-count", params);
 }

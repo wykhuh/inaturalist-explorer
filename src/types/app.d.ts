@@ -45,7 +45,20 @@ export interface MapStore {
   currentView?: ObservationViews;
   currentObservationsSubview?: string;
   observationsSubviewData: ObservationsResult[];
+  viewMetadata: {
+    observations: ViewOptions;
+    species: ViewOptions;
+    identifiers: ViewOptions;
+    observers: ViewOptions;
+  };
 }
+
+type ViewOptions = {
+  page?: number;
+  order?: string;
+  order_by?: string;
+  subview?: string;
+};
 
 export type MapStoreKeys = keyof MapStore;
 
@@ -106,6 +119,9 @@ interface iNatApiParams extends iNatApiFilterableParams {
   taxon_id?: string; // comma-seperated string
   project_id?: string; // comma-seperated string
   user_id?: string; // comma-seperated string
+  page?: number;
+  order?: string;
+  order_by?: string;
 }
 
 interface iNatApiFilterableParams {

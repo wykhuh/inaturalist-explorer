@@ -20,6 +20,7 @@ import {
   iNatApiNonFilterableNames,
   allTaxaRecord,
   bboxPlaceRecord,
+  iNatApiNames,
 } from "../data/inat_data.ts";
 import { renderPlacesList } from "./search_places.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
@@ -141,19 +142,13 @@ export async function getObservationsCountForTaxon(
   taxonObj: NormalizediNatTaxon,
   appStore: MapStore,
 ) {
-  // get observations count
-  let observationParams: iNatApiParams = {
-    ...appStore.inatApiParams,
-  };
-  // delete colors
-  delete observationParams.colors;
+  let tempParams = new URLSearchParams(
+    appStore.inatApiParams as any,
+  ).toString();
+  let params = cleanupObervationsParams(tempParams);
+  let perPage = 0;
 
-  // delete taxon_id when allTaxon
-  if (observationParams.taxon_id === "0") {
-    delete observationParams.taxon_id;
-  }
-  let params = new URLSearchParams(observationParams as any).toString();
-  let data = await getObservations(params, 0, 1);
+  let data = await getObservations(params, perPage);
   taxonObj.observations_count = data?.total_results;
 
   // update store.selectedTaxa
@@ -652,22 +647,28 @@ export function viewAndTemplateObject(targetView: string) {
   return view;
 }
 
-export function cleanupObervationsParams(appStore: MapStore) {
-  let observationParams: iNatApiParams = {
-    ...appStore.inatApiParams,
-  };
+export function cleanupObervationsParams(searchParams: string) {
+  let params = new URLSearchParams(searchParams);
+
   // delete properties that should not go to api
-  delete observationParams.colors;
-  delete observationParams.view;
-  delete observationParams.subview;
+  params.delete("colors");
+  params.delete("view");
+  params.delete("subview");
 
   // delete internal app ids
-  if (observationParams.taxon_id === "0") {
-    delete observationParams.taxon_id;
+  if (params.get("taxon_id") === "0") {
+    params.delete("taxon_id");
   }
-  if (observationParams.place_id === "0") {
-    delete observationParams.place_id;
+  if (params.get("place_id") === "0") {
+    params.delete("place_id");
   }
 
-  return observationParams;
+  // delete invalid params
+  params.forEach((_value, key) => {
+    if (!iNatApiNames.includes(key)) {
+      params.delete(key);
+    }
+  });
+
+  return params.toString();
 }

@@ -59,6 +59,9 @@ export const iNatApiNonFilterableNames = [
   "user_id",
   "view",
   "subview",
+  "page",
+  "order",
+  "order_by",
 ];
 
 export const iNatApiFilterableNames = [
@@ -275,4 +278,27 @@ export const iNatObservationsYears = [
   1960, 1959, 1958, 1957, 1956, 1955, 1954, 1953, 1952, 1951, 1950, 1949, 1948,
   1947, 1946, 1945, 1944, 1943, 1942, 1941, 1940, 1939, 1938, 1937, 1936, 1935,
   1934, 1933, 1932, 1931, 1930, 1929, 1928, 1927, 1926, 1925,
+];
+
+// desc is default for /observations
+export const orderValues = ["desc", "asc"];
+
+// created_at default for /observations
+export const observationsOrderByValuesAll = [
+  "created_at",
+  "geo_score",
+  "id",
+  "observed_on",
+  "random",
+  "species_guess",
+  "updated_at",
+  "votes",
+];
+
+//
+export const observationsOrderByValues = [
+  "id",
+  "created_at",
+  "observed_on",
+  "votes",
 ];

@@ -594,48 +594,38 @@ describe("normalizeAppParams", () => {
 });
 
 describe("cleanupObervationsParams", () => {
-  test("if store has not changed, returns object with default inatApiParams", () => {
-    let store = structuredClone(mapStore);
+  test("if no search params, returns empty string", () => {
+    let searchParams = "";
+    let results = cleanupObervationsParams(searchParams);
 
-    let results = cleanupObervationsParams(store);
-
-    expect(results).toStrictEqual({ spam: false, verifiable: true });
+    expect(results).toStrictEqual("");
   });
 
-  test("returns object with properties from inatApiParams", () => {
-    let store = structuredClone(mapStore);
-    store.inatApiParams.taxon_id = "10,11";
-    store.inatApiParams.place_id = "20,12";
-    store.inatApiParams.sounds = true;
+  test("returns params if params are valid properites for iNat API", () => {
+    let searchParams = "sounds=true&taxon_id=1";
+    let results = cleanupObervationsParams(searchParams);
 
-    let results = cleanupObervationsParams(store);
+    expect(results).toStrictEqual(searchParams);
+  });
 
-    expect(results).toStrictEqual({
-      spam: false,
-      verifiable: true,
-      place_id: "20,12",
-      taxon_id: "10,11",
-      sounds: true,
-    });
+  test("ignores params if params are not properites for iNat API", () => {
+    let searchParams = "sounds=true&taxon_id=1&foo=true";
+    let results = cleanupObervationsParams(searchParams);
+
+    expect(results).toStrictEqual("sounds=true&taxon_id=1");
   });
 
   test("ignores taxon_id and place_id when they are 0", () => {
-    let store = structuredClone(mapStore);
-    store.inatApiParams.taxon_id = "0";
-    store.inatApiParams.place_id = "0";
+    let searchParams = "sounds=true&taxon_id=0&place_id=0";
+    let results = cleanupObervationsParams(searchParams);
 
-    let results = cleanupObervationsParams(store);
-
-    expect(results).toStrictEqual({ spam: false, verifiable: true });
+    expect(results).toStrictEqual("sounds=true");
   });
 
   test("ignores view and subview", () => {
-    let store = structuredClone(mapStore);
-    store.inatApiParams.view = "observations";
-    store.inatApiParams.subview = "grid";
+    let searchParams = "sounds=true&taxon_id=1&view=observation&subview=table";
+    let results = cleanupObervationsParams(searchParams);
 
-    let results = cleanupObervationsParams(store);
-
-    expect(results).toStrictEqual({ spam: false, verifiable: true });
+    expect(results).toStrictEqual("sounds=true&taxon_id=1");
   });
 });

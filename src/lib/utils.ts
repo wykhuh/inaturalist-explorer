@@ -9,6 +9,8 @@ import {
   bboxPlaceRecord,
   iNatApiFilterableNames,
   iNatApiNames,
+  observationsOrderByValues,
+  orderValues,
 } from "../data/inat_data";
 import { defaultColorScheme } from "./map_colors_utils";
 import { convertParamsBBoxToLngLat } from "./map_utils";
@@ -277,6 +279,21 @@ export function decodeAppUrl(searchParams: string) {
       }
       (store.inatApiParams[key as iNatApiParamsKeys] as string) = value;
     }
+  }
+
+  if (urlParams.page) {
+    store.inatApiParams.page = Number(urlParams.page);
+  }
+
+  if (urlParams.order && orderValues.includes(urlParams.order)) {
+    store.inatApiParams.order = urlParams.order;
+  }
+
+  if (
+    urlParams.order_by &&
+    observationsOrderByValues.includes(urlParams.order_by)
+  ) {
+    store.inatApiParams.order_by = urlParams.order_by;
   }
 
   return store;

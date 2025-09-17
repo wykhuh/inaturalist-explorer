@@ -48,21 +48,10 @@ class MyComponent extends HTMLElement {
     renderTaxaList(window.app.store);
 
     // load observation data for grid/table
-    let currentPage = 1;
-    fetchAndRenderData(
-      currentPage,
-      perPage,
-      paginationcCallback,
-      window.app.store,
-    );
+    fetchAndRenderData(perPage, paginationcCallback, window.app.store);
 
     window.addEventListener("appUrlChange", () => {
-      fetchAndRenderData(
-        currentPage,
-        perPage,
-        paginationcCallback,
-        window.app.store,
-      );
+      fetchAndRenderData(perPage, paginationcCallback, window.app.store);
     });
 
     this.subviewHandler();

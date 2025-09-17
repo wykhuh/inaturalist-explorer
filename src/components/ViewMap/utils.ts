@@ -7,12 +7,16 @@ import {
   star,
 } from "../../assets/icons";
 import { iNatObservationUrl, iNatUserUrl } from "../../data/inat_data";
-import { formatAvatar, formatTaxonName } from "../../lib/data_utils";
+import {
+  cleanupObervationsParams,
+  formatAvatar,
+  formatTaxonName,
+} from "../../lib/data_utils";
 import { getObservations } from "../../lib/inat_api";
 import { loggerTime } from "../../lib/logger";
 import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";
-import { formatDate } from "../../lib/utils";
+import { formatDate, updateAppUrl } from "../../lib/utils";
 import { observationsDemoLA } from "../../tests/fixtures/observations";
 import type { ObservationsResult } from "../../types/inat_api";
 import type { DataComponent, MapStore } from "../../types/app";
@@ -20,10 +24,9 @@ import type { DataComponent, MapStore } from "../../types/app";
 export let perPage = 48;
 
 export async function fetchAndRenderData(
-  currentPage: number,
   perPage: number,
   paginationcCallback: (currentPage: number) => void,
-  store: MapStore,
+  appStore: MapStore,
 ) {
   let containerEl = document.querySelector(".observations-list-container");
   if (!containerEl) return;
@@ -33,7 +36,7 @@ export async function fetchAndRenderData(
 
   const t1 = performance.now();
   // fetch data from api
-  let data = await getAPIData(currentPage, perPage);
+  let data = await getAPIData(perPage);
   const t10 = performance.now();
   loggerTime(`api ${t10 - t1} milliseconds`);
 
@@ -41,7 +44,7 @@ export async function fetchAndRenderData(
 
   if (data) {
     // store results in store for switching subview
-    store.observationsSubviewData = data.results;
+    appStore.observationsSubviewData = data.results;
 
     containerEl.innerHTML = "";
 
@@ -56,7 +59,7 @@ export async function fetchAndRenderData(
     // switch between table and grid subview
     let subviewEl = document.createElement("div");
     subviewEl.className = "observations-subview";
-    if (store.currentObservationsSubview === "table") {
+    if (appStore.currentObservationsSubview === "table") {
       subviewEl.appendChild(createTable(data.results));
     } else {
       subviewEl.appendChild(createGrid(data.results));
@@ -73,18 +76,15 @@ export async function fetchAndRenderData(
   }
 }
 
-async function getAPIData(currentPage: number, perPage: number) {
+async function getAPIData(perPage: number) {
   if (import.meta.env.VITE_CACHE === "true") {
     return observationsDemoLA;
   }
 
+  let params = cleanupObervationsParams(window.location.search);
+
   try {
-    let data = await getObservations(
-      window.location.search,
-      perPage,
-      currentPage,
-      "created_at",
-    );
+    let data = await getObservations(params, perPage);
     if (!data) return;
 
     return data;
@@ -266,7 +266,17 @@ export function createGrid(results: ObservationsResult[]) {
 }
 
 export function paginationcCallback(num: number) {
-  fetchAndRenderData(num, perPage, paginationcCallback, window.app.store);
+  window.app.store.inatApiParams = {
+    ...window.app.store.inatApiParams,
+    page: num,
+  };
+  window.app.store.viewMetadata.observations = {
+    ...window.app.store.viewMetadata.observations,
+    page: num,
+  };
+
+  fetchAndRenderData(perPage, paginationcCallback, window.app.store);
+  updateAppUrl(window.location, window.app.store);
 }
 
 export function toggleSubview(
@@ -290,23 +300,23 @@ export function toggleSubview(
   if (view === appStore.currentObservationsSubview) return;
 
   // update store
-  window.app.store.currentObservationsSubview = view;
+  appStore.currentObservationsSubview = view;
 
   containerEl.innerHTML = "";
 
+  // load store.observationsSubviewData to populate table and grid to avoid API call
   if (view === "table") {
     tableLinkEl.classList.add("current-subview");
     gridLinkEl.classList.remove("current-subview");
 
-    containerEl.appendChild(
-      createTable(window.app.store.observationsSubviewData),
-    );
+    containerEl.appendChild(createTable(appStore.observationsSubviewData));
   } else {
     tableLinkEl.classList.remove("current-subview");
     gridLinkEl.classList.add("current-subview");
 
-    containerEl.appendChild(
-      createGrid(window.app.store.observationsSubviewData),
-    );
+    containerEl.appendChild(createGrid(appStore.observationsSubviewData));
   }
+
+  // add subview to url
+  updateAppUrl(window.location, appStore);
 }

@@ -22,6 +22,12 @@ export const mapStore: MapStore = {
   observationsSubviewData: [],
   currentView: "observations",
   currentObservationsSubview: "grid",
+  viewMetadata: {
+    observations: {},
+    species: {},
+    identifiers: {},
+    observers: {},
+  },
 };
 
 const proxiedStore = new Proxy(structuredClone(mapStore), {

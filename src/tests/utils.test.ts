@@ -306,7 +306,7 @@ describe("formatAppUrl", () => {
     expect(result).toBe("");
   });
 
-  test("ignore invalid params if no selected resources", () => {
+  test("ignore invalid params if selected resources", () => {
     let appStore = {
       ...mapStore,
       inatApiParams: {
@@ -337,6 +337,33 @@ describe("formatAppUrl", () => {
     let result = formatAppUrl(appStore);
 
     expect(result).toBe("verifiable=false&spam=true");
+  });
+
+  test("return params for page, order, order_by", () => {
+    let appStore: MapStore = {
+      ...mapStore,
+      inatApiParams: {
+        verifiable: true,
+        spam: false,
+        page: 1,
+        order: "desc",
+        order_by: "id",
+      },
+      selectedTaxa: [],
+      selectedPlaces: [],
+      viewMetadata: {
+        observations: { page: 1, order: "desc", order_by: "id" },
+        identifiers: { page: 2 },
+        species: { page: 3 },
+        observers: { page: 4 },
+      },
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe(
+      "verifiable=true&spam=false&page=1&order=desc&order_by=id",
+    );
   });
 });
 
@@ -699,6 +726,18 @@ describe("decodeAppUrl options", () => {
       expect(result).toStrictEqual(expected);
     },
   );
+
+  test("returns object with page, order, order_by", () => {
+    let searchParams = "?page=2&order=desc&order_by=id";
+    let expected = {
+      inatApiParams: { page: 2, order: "desc", order_by: "id" },
+      selectedTaxa: [],
+    };
+
+    let result = decodeAppUrl(searchParams);
+
+    expect(result).toStrictEqual(expected);
+  });
 });
 
 describe("removeDefaultParams", () => {
