@@ -231,17 +231,18 @@ export function removeOneTaxonFromMap(appStore: MapStore, taxonId: number) {
 
 export function removeTaxaFromStoreAndMap(appStore: MapStore) {
   let layerControl = appStore.map.layerControl;
-  if (!layerControl) return;
 
-  // remove from map
-  Object.values(appStore.taxaMapLayers).forEach((layers) => {
-    layers.forEach((layer) => {
-      // remove layer from layer control
-      layerControl.removeLayer(layer);
-      // remove layer from map
-      layer.remove();
+  if (layerControl) {
+    // remove from map
+    Object.values(appStore.taxaMapLayers).forEach((layers) => {
+      layers.forEach((layer) => {
+        // remove layer from layer control
+        layerControl.removeLayer(layer);
+        // remove layer from map
+        layer.remove();
+      });
     });
-  });
+  }
 
   // remove from store
   delete appStore.inatApiParams.taxon_id;
