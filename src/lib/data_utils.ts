@@ -14,13 +14,12 @@ import {
   formatiNatAPIBoundingBoxParams,
   getAndDrawMapBoundingBox,
 } from "./map_utils.ts";
-import { updateAppUrl } from "./utils.ts";
+import { formatAppUrl, updateAppUrl } from "./utils.ts";
 import { getiNatMapTiles, getObservations } from "./inat_api.ts";
 import {
   iNatApiNonFilterableNames,
   allTaxaRecord,
   bboxPlaceRecord,
-  iNatApiNames,
 } from "../data/inat_data.ts";
 import { renderPlacesList } from "./search_places.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
@@ -143,10 +142,7 @@ export async function getObservationsCountForTaxon(
   taxonObj: NormalizediNatTaxon,
   appStore: MapStore,
 ) {
-  let tempParams = new URLSearchParams(
-    appStore.inatApiParams as any,
-  ).toString();
-  let params = cleanupObervationsParams(tempParams, appStore);
+  let params = cleanupObervationsParams(appStore);
   let perPage = 0;
 
   let data = await getObservations(params, perPage);
@@ -648,59 +644,28 @@ export function viewAndTemplateObject(targetView: string) {
   return view;
 }
 
-export function cleanupObervationsParams(
-  searchParams: string,
-  appStore: MapStore,
-) {
-  let params = new URLSearchParams(searchParams);
-  cleanupParams(params, appStore);
+export function cleanupObervationsParams(appStore: MapStore) {
+  let params = cleanupParams(appStore);
   return params.toString();
 }
 
-function cleanupParams(params: URLSearchParams, appStore: MapStore) {
+function cleanupParams(appStore: MapStore) {
+  let string = formatAppUrl(appStore);
+  let params = new URLSearchParams(string);
+
   // delete properties that should not go to api
   params.delete("colors");
   params.delete("view");
   params.delete("subview");
 
-  // delete internal app ids
-  if (params.get("taxon_id") === "0") {
-    params.delete("taxon_id");
-  }
-  if (params.get("place_id") === "0") {
-    params.delete("place_id");
-  }
-
-  // replace page from url with page in store
-  if (params.get("page")) {
-    let page;
-    if (appStore.currentView) {
-      page = appStore.viewMetadata[appStore.currentView]?.page || 1;
-    } else {
-      page = 1;
-    }
-    params.set("page", page.toString());
-  }
-
-  // delete invalid params
-  params.forEach((_value, key) => {
-    if (!iNatApiNames.includes(key)) {
-      params.delete(key);
-    }
-  });
+  return params;
 }
 
-export function cleanupObervationsObserversParams(
-  searchParams: string,
-  appStore: MapStore,
-) {
-  let params = new URLSearchParams(searchParams);
-  cleanupParams(params, appStore);
+export function cleanupObervationsObserversParams(appStore: MapStore) {
+  let params = cleanupParams(appStore);
 
   params.delete("order");
   params.delete("order_by");
-
-  return params.toString();
 
   return params.toString();
 }

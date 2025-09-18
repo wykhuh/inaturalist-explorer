@@ -81,8 +81,8 @@ async function updateResourceCounts(
   }
 }
 
-export function updateCounts(appStore: MapStore, locationSearch: string) {
-  let params = cleanupObervationsParams(locationSearch, appStore);
+export function updateCounts(appStore: MapStore) {
+  let params = cleanupObervationsParams(appStore);
   updateResourceCounts(getObservations, ".observations-count", params);
   updateResourceCounts(getObservationsSpecies, ".species-count", params);
   updateResourceCounts(
@@ -91,10 +91,7 @@ export function updateCounts(appStore: MapStore, locationSearch: string) {
     params,
   );
 
-  let observersParams = cleanupObervationsObserversParams(
-    locationSearch,
-    appStore,
-  );
+  let observersParams = cleanupObervationsObserversParams(appStore);
   updateResourceCounts(
     getObservationsObservers,
     ".observers-count",

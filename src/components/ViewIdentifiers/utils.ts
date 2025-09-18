@@ -61,7 +61,7 @@ async function getAPIData(perPage: number, appStore: MapStore) {
     return identifiers;
   }
 
-  let params = cleanupObervationsParams(window.location.search, appStore);
+  let params = cleanupObervationsParams(appStore);
 
   try {
     let data = await getObservationsIdentifiers(params, perPage);

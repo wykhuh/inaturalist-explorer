@@ -58,7 +58,7 @@ async function getAPIData(perPage: number, appStore: MapStore) {
     return threatenedSpecies;
   }
 
-  let params = cleanupObervationsParams(window.location.search, appStore);
+  let params = cleanupObervationsParams(appStore);
   try {
     let data = await getObservationsSpecies(params, perPage);
     if (!data) return;

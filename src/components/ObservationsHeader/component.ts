@@ -16,14 +16,14 @@ class MyComponent extends HTMLElement {
     window.addEventListener("observationsChange", () => {
       loggerStore("++ ObservationHeader observationsChange");
       if (this.dataset.updatecounts === "true") {
-        updateCounts(window.app.store, window.location.search);
+        updateCounts(window.app.store);
       }
     });
 
     window.addEventListener("storePopulated", () => {
       loggerStore("++ ObservationHeader storePopulated");
       if (this.dataset.updatecounts === "true") {
-        updateCounts(window.app.store, window.location.search);
+        updateCounts(window.app.store);
       }
     });
   }

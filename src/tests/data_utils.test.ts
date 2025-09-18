@@ -594,65 +594,81 @@ describe("normalizeAppParams", () => {
 });
 
 describe("cleanupObervationsParams", () => {
-  test("if no search params, returns empty string", () => {
+  test("if no changes to store params, returns empty string", () => {
     let store = structuredClone(mapStore);
-    let searchParams = "";
 
-    let results = cleanupObervationsParams(searchParams, store);
+    let results = cleanupObervationsParams(store);
 
     expect(results).toStrictEqual("");
   });
 
   test("returns params if params are valid properites for iNat API", () => {
     let store = structuredClone(mapStore);
-    let searchParams = "sounds=true&taxon_id=1";
+    store.inatApiParams.sounds = true;
+    store.inatApiParams.order = "desc";
+    store.inatApiParams.order_by = "id";
+    store.inatApiParams.page = 1;
+    store.selectedTaxa = [
+      { id: 1, color: "red" },
+      { id: 2, color: "blue" },
+    ];
 
-    let results = cleanupObervationsParams(searchParams, store);
+    let results = cleanupObervationsParams(store);
 
-    expect(results).toStrictEqual(searchParams);
+    expect(results).toStrictEqual(
+      "taxon_id=1%2C2&verifiable=true&spam=false&sounds=true" +
+        "&order=desc&order_by=id&page=1",
+    );
   });
 
   test("ignores params if params are not properites for iNat API", () => {
     let store = structuredClone(mapStore);
-    let searchParams = "sounds=true&taxon_id=1&foo=true";
+    (store.inatApiParams as any).foo = true;
 
-    let results = cleanupObervationsParams(searchParams, store);
+    let results = cleanupObervationsParams(store);
 
-    expect(results).toStrictEqual("sounds=true&taxon_id=1");
+    expect(results).toStrictEqual("");
   });
 
   test("ignores taxon_id and place_id when they are 0", () => {
     let store = structuredClone(mapStore);
-    let searchParams = "sounds=true&taxon_id=0&place_id=0";
+    store.inatApiParams.sounds = true;
+    store.inatApiParams.taxon_id = "0";
+    store.inatApiParams.place_id = "0";
+    store.selectedTaxa = [{ id: 0, color: "red" }];
+    store.selectedPlaces = [{ id: 0 }];
 
-    let results = cleanupObervationsParams(searchParams, store);
+    let results = cleanupObervationsParams(store);
 
-    expect(results).toStrictEqual("sounds=true");
+    expect(results).toStrictEqual("verifiable=true&spam=false&sounds=true");
   });
 
-  test("ignores view and subview", () => {
+  test("ignores view, colors, subview", () => {
     let store = structuredClone(mapStore);
-    let searchParams = "sounds=true&taxon_id=1&view=observation&subview=table";
+    store.inatApiParams.taxon_id = "1";
+    store.inatApiParams.colors = "red";
+    store.selectedTaxa = [{ id: 1, color: "red" }];
+    store.currentView = "observations";
+    store.viewMetadata.observations.subview = "table";
 
-    let results = cleanupObervationsParams(searchParams, store);
+    let results = cleanupObervationsParams(store);
 
-    expect(results).toStrictEqual("sounds=true&taxon_id=1");
+    expect(results).toStrictEqual("taxon_id=1&verifiable=true&spam=false");
   });
 
-  test("uses page and view from store to update params", () => {
+  test("uses page, order, order from store to update params", () => {
     let store = structuredClone(mapStore);
+    store.inatApiParams.sounds = true;
+    store.inatApiParams.taxon_id = "1";
+    store.inatApiParams.colors = "red";
+    store.selectedTaxa = [{ id: 1, color: "red" }];
     store.inatApiParams.page = 3;
     store.currentView = "observations";
-    store.viewMetadata = {
-      observations: { page: 30 },
-      identifiers: { page: 31 },
-      observers: { page: 32 },
-      species: { page: 33 },
-    };
-    let searchParams = "view=observations&sounds=true&taxon_id=1&page=1";
 
-    let results = cleanupObervationsParams(searchParams, store);
+    let results = cleanupObervationsParams(store);
 
-    expect(results).toStrictEqual("sounds=true&taxon_id=1&page=30");
+    expect(results).toStrictEqual(
+      "taxon_id=1&verifiable=true&spam=false&sounds=true&page=3",
+    );
   });
 });
