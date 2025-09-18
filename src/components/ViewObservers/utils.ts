@@ -1,4 +1,8 @@
-import { cleanupObervationsParams, formatAvatar } from "../../lib/data_utils";
+import {
+  cleanupObervationsObserversParams,
+  cleanupObervationsParams,
+  formatAvatar,
+} from "../../lib/data_utils";
 import { getObservationsObservers } from "../../lib/inat_api";
 import { iNatUserUrl } from "../../data/inat_data";
 import { loggerTime } from "../../lib/logger";
@@ -61,7 +65,11 @@ async function getAPIData(perPage: number, appStore: MapStore) {
     return observers;
   }
 
-  let params = cleanupObervationsParams(window.location.search, appStore);
+  let params = cleanupObervationsObserversParams(
+    window.location.search,
+    appStore,
+  );
+  console.log(params, "????");
 
   try {
     let data = await getObservationsObservers(params, perPage);

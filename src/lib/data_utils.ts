@@ -653,7 +653,11 @@ export function cleanupObervationsParams(
   appStore: MapStore,
 ) {
   let params = new URLSearchParams(searchParams);
+  cleanupParams(params, appStore);
+  return params.toString();
+}
 
+function cleanupParams(params: URLSearchParams, appStore: MapStore) {
   // delete properties that should not go to api
   params.delete("colors");
   params.delete("view");
@@ -684,6 +688,19 @@ export function cleanupObervationsParams(
       params.delete(key);
     }
   });
+}
+
+export function cleanupObervationsObserversParams(
+  searchParams: string,
+  appStore: MapStore,
+) {
+  let params = new URLSearchParams(searchParams);
+  cleanupParams(params, appStore);
+
+  params.delete("order");
+  params.delete("order_by");
+
+  return params.toString();
 
   return params.toString();
 }

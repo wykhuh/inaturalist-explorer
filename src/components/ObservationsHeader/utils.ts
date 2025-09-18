@@ -1,4 +1,5 @@
 import {
+  cleanupObervationsObserversParams,
   cleanupObervationsParams,
   viewAndTemplateObject,
 } from "../../lib/data_utils";
@@ -89,5 +90,14 @@ export function updateCounts(appStore: MapStore, locationSearch: string) {
     ".identifiers-count",
     params,
   );
-  updateResourceCounts(getObservationsObservers, ".observers-count", params);
+
+  let observersParams = cleanupObervationsObserversParams(
+    locationSearch,
+    appStore,
+  );
+  updateResourceCounts(
+    getObservationsObservers,
+    ".observers-count",
+    observersParams,
+  );
 }
