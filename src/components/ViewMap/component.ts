@@ -4,9 +4,11 @@ import "../../assets/autocomplete.css";
 
 import {
   fetchAndRenderData,
+  initFilters,
   paginationcCallback,
   perPage,
-  toggleSubview,
+  updateSubviewState,
+  updateOrderState,
 } from "./utils";
 import { loggerStore } from "../../lib/logger";
 import { initRenderMap } from "../../lib/init_app";
@@ -49,6 +51,9 @@ class MyComponent extends HTMLElement {
     await initRenderMap(window.app.store);
     renderTaxaList(window.app.store);
 
+    // use store to set values the form on page load
+    initFilters(window.app.store);
+
     // load observation data for grid/table
     fetchAndRenderData(perPage, paginationcCallback, window.app.store);
 
@@ -57,13 +62,14 @@ class MyComponent extends HTMLElement {
     });
 
     this.subviewHandler(window.app.store);
+    this.orderFormHandler();
   }
 
   subviewHandler(appStore: MapStore) {
-    let tableLinkEl = this.querySelector(".subview-table") as HTMLElement;
-    let gridLinkEl = this.querySelector(".subview-grid") as HTMLElement;
+    let tableLinkEl = document.querySelector(".subview-table") as HTMLElement;
+    let gridLinkEl = document.querySelector(".subview-grid") as HTMLElement;
 
-    // set current-subview
+    // set initial current-subview class in html
     let subview = appStore.viewMetadata.observations?.subview;
     if (subview === "table") {
       tableLinkEl.classList.add("current-subview");
@@ -74,10 +80,23 @@ class MyComponent extends HTMLElement {
     // change subview when clicked
     if (tableLinkEl && gridLinkEl) {
       tableLinkEl.addEventListener("click", (event) => {
-        toggleSubview(event, tableLinkEl, gridLinkEl, appStore);
+        updateSubviewState(event, tableLinkEl, gridLinkEl, appStore);
       });
       gridLinkEl.addEventListener("click", (event) => {
-        toggleSubview(event, tableLinkEl, gridLinkEl, appStore);
+        updateSubviewState(event, tableLinkEl, gridLinkEl, appStore);
+      });
+    }
+  }
+
+  orderFormHandler() {
+    const form = this.querySelector("#order-form") as HTMLFormElement;
+
+    if (form) {
+      form.addEventListener("change", async (event) => {
+        if (event.target === null) return;
+
+        const data = new FormData(form);
+        updateOrderState(data, window.app.store);
       });
     }
   }

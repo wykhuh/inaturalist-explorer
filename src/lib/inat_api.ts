@@ -201,16 +201,11 @@ export async function getObservationsYears() {
   }
 }
 
-export async function getObservations(
-  appParams: string,
-  perPage: number,
-  order_by = "id",
-  order = "desc",
-) {
+export async function getObservations(appParams: string, perPage: number) {
   let searchParams = normalizeAppParams(appParams);
   let url =
     `${observations_api}?${searchParams}&ttl=3600` +
-    `&per_page=${perPage}&order_by=${order_by}&order=${order}` +
+    `&per_page=${perPage}` +
     `&fields=(comments_count%3A!t` +
     `%2Ccreated_at%3A!t` +
     `%2Ccreated_at_details%3Aall` +

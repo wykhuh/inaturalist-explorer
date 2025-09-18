@@ -132,12 +132,6 @@ https://fungi-finders-example.netlify.app/mushroom-guide
 
 todo
 
-add view, subview to url,
-
-add page, order, order_by to url,
-
-add sort by to filters
-
 close/open sidebar
 
 ==

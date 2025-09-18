@@ -1,15 +1,31 @@
 <template>
   <div id="map"></div>
-  <nav id="observations-subview-nav">
-    <ul>
-      <li class="subview-grid">
-        <a href="#" data-subview="grid">Grid</a>
-      </li>
-      <li class="subview-table">
-        <a href="#" data-subview="table">Table</a>
-      </li>
-    </ul>
-  </nav>
+  <div id="observations-list-controls">
+    <div>
+      <div id="observations-subview">
+        <button class="subview-grid" data-subview="grid">Grid</button>
+        <button class="subview-table" data-subview="table">Table</button>
+      </div>
+    </div>
+
+    <form id="order-form">
+      <div class="form-group">
+        <label for="order_by">Sort By</label>
+        <select id="order_by" name="order_by">
+          <option value="created_at">Created At</option>
+          <option value="observed_on">Observed On</option>
+          <option value="votes">Favorites</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="order">Direction</label>
+        <select id="order" name="order">
+          <option value="desc">Descending</option>
+          <option value="asc">Ascending</option>
+        </select>
+      </div>
+    </form>
+  </div>
 
   <div class="observations-list-container"></div>
 </template>

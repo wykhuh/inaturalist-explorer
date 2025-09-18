@@ -162,6 +162,7 @@ export async function initPopulateStore(
   loggerStore("++ initPopulateStore end");
 
   window.dispatchEvent(new Event("storePopulated"));
+  loggerStore("dispatch observationsChange");
 }
 
 export async function initRenderMap(appStore: MapStore) {

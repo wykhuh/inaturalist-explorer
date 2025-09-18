@@ -60,8 +60,6 @@ export const iNatApiNonFilterableNames = [
   "view",
   "subview",
   "page",
-  "order",
-  "order_by",
 ];
 
 export const iNatApiFilterableNames = [
@@ -78,6 +76,8 @@ export const iNatApiFilterableNames = [
   "month",
   "native",
   "on",
+  "order",
+  "order_by",
   "photo_license",
   "photos",
   "popular",

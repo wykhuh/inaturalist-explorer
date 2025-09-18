@@ -58,6 +58,22 @@ export function updateView(
   let page = appStore.viewMetadata[targetView]?.page;
   if (page) {
     appStore.inatApiParams.page = page;
+  } else {
+    delete appStore.inatApiParams.page;
+  }
+
+  let order = appStore.viewMetadata[targetView]?.order;
+  if (order) {
+    appStore.inatApiParams.order = order;
+  } else {
+    delete appStore.inatApiParams.order;
+  }
+
+  let order_by = appStore.viewMetadata[targetView]?.order_by;
+  if (order_by) {
+    appStore.inatApiParams.order_by = order_by;
+  } else {
+    delete appStore.inatApiParams.order_by;
   }
 
   updateAppUrl(window.location, appStore);

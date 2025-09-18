@@ -87,10 +87,15 @@ describe("updateView", () => {
     },
   );
 
-  test("uses viewMetadata to set page if viewMetadata is set", () => {
+  test("uses viewMetadata to set page, order, order_by if viewMetadata is set", () => {
     const store = structuredClone(mapStore);
     store.currentView = "observations";
-    store.viewMetadata.observers = { page: 10 };
+    store.viewMetadata.observations = {};
+    store.viewMetadata.observers = {
+      page: 10,
+      order_by: "votes",
+      order: "asc",
+    };
 
     let parentEl = document.querySelector("div") as HTMLDivElement;
     let targetLI = document.querySelector("#observers");
@@ -111,9 +116,46 @@ describe("updateView", () => {
       spam: false,
       verifiable: true,
       page: 10,
+      order: "asc",
+      order_by: "votes",
     });
     expect(window.location.search).toBe(
-      "?verifiable=true&spam=false&page=10&view=observers",
+      "?verifiable=true&spam=false&page=10&order=asc" +
+        "&order_by=votes&view=observers",
+    );
+  });
+
+  test("uses viewMetadata to set page, order, order_by if viewMetadata is set", () => {
+    const store = structuredClone(mapStore);
+    store.currentView = "observations";
+    store.viewMetadata.observations = {
+      page: 10,
+      order_by: "votes",
+      order: "asc",
+    };
+    store.viewMetadata.observers = {};
+
+    let parentEl = document.querySelector("div") as HTMLDivElement;
+    let targetLI = document.querySelector("#observers");
+    let oldLI = document.querySelector("#observations");
+
+    expect(oldLI?.className).toBe("currentView");
+    expect(targetLI?.className).toBe("");
+    expect(parentEl?.innerHTML).toBe("demo");
+    expect(store.currentView).toBe("observations");
+
+    updateView("observers", parentEl, store, document as any);
+
+    expect(oldLI?.className).toBe("");
+    expect(targetLI?.className).toBe("currentView");
+    expect(parentEl?.innerHTML).toBe("<x-view-observers></x-view-observers>");
+    expect(store.currentView).toBe("observers");
+    expect(store.inatApiParams).toStrictEqual({
+      spam: false,
+      verifiable: true,
+    });
+    expect(window.location.search).toBe(
+      "?verifiable=true&spam=false&view=observers",
     );
   });
 });

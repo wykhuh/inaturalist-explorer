@@ -848,6 +848,9 @@ describe("decodeAppUrl options", () => {
           species: {},
         },
       };
+      if (name == "order_by" || name == "order") {
+        (expected.viewMetadata.observations as any)[name] = "true";
+      }
 
       let result = decodeAppUrl(searchParams);
 

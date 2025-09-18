@@ -445,28 +445,28 @@
     }
   }
 
-  #observations-subview-nav {
+  #observations-list-controls {
+    display: flex;
+    gap: 1rem;
     margin-top: 2rem;
+    align-items: center;
 
-    ul {
+    #observations-subview {
       display: flex;
-      margin: 0;
 
-      li {
-        list-style: none;
+      button {
+        border-radius: 0;
         border: var(--border-grey);
-        padding: 0.25rem 0.5rem;
-
-        a {
-          color: var(--text-main);
-          text-decoration: none;
-        }
       }
-
       .current-subview {
         background-color: var(--clr-gray-300);
         font-weight: var(--fw-bold);
       }
+    }
+
+    #order-form {
+      display: flex;
+      gap: 1rem;
     }
   }
 

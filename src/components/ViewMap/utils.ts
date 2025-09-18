@@ -20,9 +20,11 @@ import { formatDate, updateAppUrl } from "../../lib/utils";
 import type { ObservationsResult } from "../../types/inat_api";
 import type { DataComponent, MapStore } from "../../types/app";
 import { observationsDemoLA } from "../../data/inat_api_cache";
+import { setSelectedOption } from "../../lib/form_utils";
 
 export let perPage = 48;
 
+// fetch new data from api when changing pages, order, filters and view
 export async function fetchAndRenderData(
   perPage: number,
   paginationcCallback: (currentPage: number) => void,
@@ -36,6 +38,12 @@ export async function fetchAndRenderData(
 
   const t1 = performance.now();
   // fetch data from api
+  console.log(
+    "456",
+    appStore.inatApiParams.order,
+    appStore.inatApiParams.order_by,
+  );
+
   let data = await getAPIData(perPage, appStore);
   const t10 = performance.now();
   loggerTime(`api ${t10 - t1} milliseconds`);
@@ -281,7 +289,7 @@ export function paginationcCallback(num: number) {
   updateAppUrl(window.location, window.app.store);
 }
 
-export function toggleSubview(
+export function updateSubviewState(
   event: Event,
   tableLinkEl: HTMLElement,
   gridLinkEl: HTMLElement,
@@ -323,5 +331,50 @@ export function toggleSubview(
   }
 
   // add subview to url
+  updateAppUrl(window.location, appStore);
+}
+
+// use store to populate the filter form fields on page load
+export function initFilters(appStore: MapStore) {
+  let { inatApiParams } = appStore;
+
+  if (inatApiParams.order !== undefined) {
+    setSelectedOption(
+      `#order-form select#order option[value='${inatApiParams.order}']`,
+    );
+  }
+  if (inatApiParams.order_by !== undefined) {
+    setSelectedOption(
+      `#order-form select#order_by option[value='${inatApiParams.order_by}']`,
+    );
+  }
+}
+
+export async function updateOrderState(data: FormData, appStore: MapStore) {
+  // get values from form data
+  let orderBy;
+  let order;
+  data.forEach((v, k) => {
+    if (k === "order_by") {
+      orderBy = v;
+    } else {
+      order = v;
+    }
+  });
+
+  if (orderBy === "created_at" && order === "desc") {
+    delete appStore.inatApiParams.order_by;
+    delete appStore.inatApiParams.order;
+  } else {
+    appStore.inatApiParams.order_by = orderBy;
+    appStore.inatApiParams.order = order;
+  }
+  if (appStore.currentView) {
+    appStore.viewMetadata[appStore.currentView].order = order;
+    appStore.viewMetadata[appStore.currentView].order_by = orderBy;
+  }
+
+  fetchAndRenderData(perPage, paginationcCallback, appStore);
+  // update browser url
   updateAppUrl(window.location, appStore);
 }
