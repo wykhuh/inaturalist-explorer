@@ -34,4 +34,23 @@ if (viewContainerEl) {
     let view = document.createElement(templateName);
     viewContainerEl.appendChild(view);
   }
+  toggleSidebarHandler();
+}
+
+function toggleSidebarHandler() {
+  let toggleEl = document.querySelector("#sidebar-toggle") as HTMLButtonElement;
+  if (!toggleEl) return;
+  let siteLayoutEl = document.querySelector("#site-layout") as HTMLElement;
+  if (!siteLayoutEl) return;
+
+  toggleEl.addEventListener("click", (event) => {
+    let target = event.target as HTMLElement;
+    if (target === null) return;
+
+    if (siteLayoutEl.classList.contains("sidebar-open")) {
+      siteLayoutEl.classList.replace("sidebar-open", "sidebar-close");
+    } else {
+      siteLayoutEl.classList.replace("sidebar-close", "sidebar-open");
+    }
+  });
 }

@@ -444,13 +444,13 @@ export function searchSetup() {
 
 export function searchHeadingSetup() {
   let placesHeading = document.querySelector(
-    "#home .menu .places-heading",
+    "#home .sidebar-menu .places-heading",
   ) as HTMLElement;
   let projectsHeading = document.querySelector(
-    "#home .menu .projects-heading",
+    "#home .sidebar-menu .projects-heading",
   ) as HTMLElement;
   let usersHeading = document.querySelector(
-    "#home .menu .users-heading",
+    "#home .sidebar-menu .users-heading",
   ) as HTMLElement;
 
   window.addEventListener("selectedPlacesChange", () => {

@@ -132,7 +132,9 @@ https://fungi-finders-example.netlify.app/mushroom-guide
 
 todo
 
-close/open sidebar
+cache api request
+
+save requests in browser database
 
 ==
 
