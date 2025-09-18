@@ -17,6 +17,13 @@ import {
 import { updateAppUrl } from "../../lib/utils";
 import { loggerFilters } from "../../lib/logger";
 import { renderTaxaList } from "../../lib/search_taxa";
+import {
+  setInputChecked,
+  setInputDisabled,
+  setInputValue,
+  setSelectedOption,
+  setSelectedOptionTrueFalse,
+} from "../../lib/form_utils";
 
 export function processFiltersForm(data: FormData): {
   params: iNatApiParams;
@@ -132,53 +139,16 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
   window.dispatchEvent(new Event("observationsChange"));
 }
 
-function setSelectedOption(selector: string) {
-  let el = document.querySelector(selector) as HTMLOptionElement;
-  if (el) {
-    el.selected = true;
-  }
-}
-
-function setSelectedOptionTrueFalse(
-  appStore: MapStore,
-  property: iNatApiParamsKeys,
-  value: boolean,
-) {
-  let { inatApiParams } = appStore;
-  if (inatApiParams[property] === value) {
-    setSelectedOption(
-      `#filters-form select#${property} option[value='${value}']`,
-    );
-  }
-}
-
-function setInputValue(selector: string, value: any) {
-  let el = document.querySelector(selector) as HTMLOptionElement;
-  if (el) {
-    el.value = value;
-  }
-}
-
-function setInputChecked(selector: string, value: any) {
-  let el = document.querySelector(selector) as HTMLInputElement;
-  if (el) {
-    el.checked = value;
-  }
-}
-
-function setInputDisabled(selector: string, value: any) {
-  let el = document.querySelector(selector) as HTMLOptionElement;
-  if (el) {
-    el.disabled = value;
-  }
-}
-
 // use store to populate the filter form fields on page load
 export function initFilters(appStore: MapStore) {
   let { inatApiParams } = appStore;
 
   if (inatApiParams.captive !== undefined) {
-    setSelectedOptionTrueFalse(appStore, "captive", inatApiParams.captive);
+    setSelectedOptionTrueFalse(
+      "#filters-form",
+      "captive",
+      inatApiParams.captive,
+    );
   }
 
   if (inatApiParams.d1 !== undefined) {
@@ -193,7 +163,11 @@ export function initFilters(appStore: MapStore) {
   }
 
   if (inatApiParams.endemic !== undefined) {
-    setSelectedOptionTrueFalse(appStore, "endemic", inatApiParams.endemic);
+    setSelectedOptionTrueFalse(
+      "#filters-form",
+      "endemic",
+      inatApiParams.endemic,
+    );
   }
 
   if (inatApiParams.hrank !== undefined) {
@@ -210,7 +184,7 @@ export function initFilters(appStore: MapStore) {
 
   if (inatApiParams.identified !== undefined) {
     setSelectedOptionTrueFalse(
-      appStore,
+      "#filters-form",
       "identified",
       inatApiParams.identified,
     );
@@ -218,7 +192,7 @@ export function initFilters(appStore: MapStore) {
 
   if (inatApiParams.introduced !== undefined) {
     setSelectedOptionTrueFalse(
-      appStore,
+      "#filters-form",
       "introduced",
       inatApiParams.introduced,
     );
@@ -247,7 +221,7 @@ export function initFilters(appStore: MapStore) {
   }
 
   if (inatApiParams.native !== undefined) {
-    setSelectedOptionTrueFalse(appStore, "native", inatApiParams.native);
+    setSelectedOptionTrueFalse("#filters-form", "native", inatApiParams.native);
   }
 
   if (inatApiParams.on !== undefined) {
@@ -265,11 +239,15 @@ export function initFilters(appStore: MapStore) {
   }
 
   if (inatApiParams.photos !== undefined) {
-    setSelectedOptionTrueFalse(appStore, "photos", inatApiParams.photos);
+    setSelectedOptionTrueFalse("#filters-form", "photos", inatApiParams.photos);
   }
 
   if (inatApiParams.popular !== undefined) {
-    setSelectedOptionTrueFalse(appStore, "popular", inatApiParams.popular);
+    setSelectedOptionTrueFalse(
+      "#filters-form",
+      "popular",
+      inatApiParams.popular,
+    );
   }
 
   if (inatApiParams.quality_grade !== undefined) {
@@ -287,12 +265,12 @@ export function initFilters(appStore: MapStore) {
   }
 
   if (inatApiParams.sounds !== undefined) {
-    setSelectedOptionTrueFalse(appStore, "sounds", inatApiParams.sounds);
+    setSelectedOptionTrueFalse("#filters-form", "sounds", inatApiParams.sounds);
   }
 
   if (inatApiParams.threatened !== undefined) {
     setSelectedOptionTrueFalse(
-      appStore,
+      "#filters-form",
       "threatened",
       inatApiParams.threatened,
     );
@@ -300,7 +278,7 @@ export function initFilters(appStore: MapStore) {
 
   if (inatApiParams.verifiable !== undefined) {
     setSelectedOptionTrueFalse(
-      appStore,
+      "#filters-form",
       "verifiable",
       inatApiParams.verifiable as boolean,
     );
