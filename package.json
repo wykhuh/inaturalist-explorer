@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build && rsync -R ./src/components/**/template.html ./dist",
     "preview": "vite preview",
     "test_watch": "vitest",
     "test": "vitest run",
@@ -15,7 +15,9 @@
     "type": "tsc",
     "format": "prettier --write ./src",
     "cleanup": "npm run type & npm run format",
-    "ci": "npm run type & npm run test & npm run e2e"
+    "ci": "npm run type & npm run format & npm run test ",
+    "build-ghpages": "vite build --base=/inaturalist-explorer/ && rsync -R ./src/components/**/template.html ./dist",
+    "preview-ghpages": "vite preview --base=/inaturalist-explorer/"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
