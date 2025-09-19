@@ -2,12 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <base href="https://wykhuh.github.io/inaturalist-explorer/" />
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/src/assets/style.css" />
     <title>iNaturalist Explorer</title>
     <script type="module" src="/src/main.ts"></script>
+    <script type="module">
+      if (import.meta.env.VITE_BASE === "/inaturalist-explorer") {
+        let head = document.querySelector("head");
+        if (head) {
+          let base = document.createElement("base");
+          base.href = "https://wykhuh.github.io/inaturalist-explorer/";
+          head.appendChild(base);
+        }
+      }
+    </script>
   </head>
   <body id="home">
     <x-header></x-header>
