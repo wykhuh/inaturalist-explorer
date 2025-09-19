@@ -661,6 +661,10 @@ function cleanupParams(appStore: MapStore) {
   params.delete("view");
   params.delete("subview");
 
+  if (params.get("taxon_id") === "0") {
+    params.delete("taxon_id");
+  }
+
   return params;
 }
 
@@ -669,6 +673,11 @@ export function cleanupObervationsParamsForRecord(inatParams: iNatApiParams) {
   params.delete("colors");
   params.delete("view");
   params.delete("subview");
+
+  if (inatParams.taxon_id === "0") {
+    params.delete("taxon_id");
+  }
+
   return params;
 }
 
