@@ -9,14 +9,12 @@ import { autocomplete_projects_api } from "../lib/inat_api.ts";
 import type { iNatProjectsAPI } from "../types/inat_api";
 import { loggerUrl } from "../lib/logger.ts";
 import {
-  fetchiNatMapDataForTaxon,
-  removeOneTaxonFromMap,
   addIdToCommaSeparatedString,
-  getObservationsCountForTaxon,
   removeOneProjectFromStore,
 } from "./data_utils.ts";
 import { updateAppUrl } from "./utils.ts";
 import { renderTaxaList } from "./search_taxa.ts";
+import { updateTilesAndCountForAllTaxa } from "./search_utils.ts";
 
 export function setupProjectSearch(selector: string) {
   const autoCompleteProjectJS = new autoComplete({
@@ -96,18 +94,7 @@ export async function projectSelectedHandler(
   };
 
   // get iNat map tiles for selected place
-  for await (const taxon of appStore.selectedTaxa) {
-    // remove existing taxon layers from map
-    removeOneTaxonFromMap(appStore, taxon.id);
-    appStore.inatApiParams = {
-      ...appStore.inatApiParams,
-      taxon_id: taxon.id.toString(),
-      colors: taxon.color,
-    };
-
-    await fetchiNatMapDataForTaxon(taxon, appStore);
-    await getObservationsCountForTaxon(taxon, appStore);
-  }
+  updateTilesAndCountForAllTaxa(appStore);
 
   renderTaxaList(appStore);
   renderProjectsList(appStore);
@@ -136,17 +123,7 @@ export async function removeProject(projectId: number, appStore: MapStore) {
   removeOneProjectFromStore(appStore, projectId);
 
   // remove existing taxa tiles, and refetch taxa tiles
-  for await (const taxon of appStore.selectedTaxa) {
-    removeOneTaxonFromMap(appStore, taxon.id);
-
-    appStore.inatApiParams = {
-      ...appStore.inatApiParams,
-      taxon_id: taxon.id.toString(),
-      colors: taxon.color,
-    };
-    await fetchiNatMapDataForTaxon(taxon, appStore);
-    await getObservationsCountForTaxon(taxon, appStore);
-  }
+  updateTilesAndCountForAllTaxa(appStore);
 
   renderTaxaList(appStore);
   renderProjectsList(appStore);

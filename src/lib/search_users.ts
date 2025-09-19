@@ -10,15 +10,13 @@ import { loggerUrl } from "../lib/logger.ts";
 import type { MapStore } from "../types/app";
 
 import {
-  fetchiNatMapDataForTaxon,
-  removeOneTaxonFromMap,
   addIdToCommaSeparatedString,
-  getObservationsCountForTaxon,
   removeOneUserFromStore,
 } from "./data_utils.ts";
 
 import { updateAppUrl } from "./utils.ts";
 import { renderTaxaList } from "./search_taxa.ts";
+import { updateTilesAndCountForAllTaxa } from "./search_utils.ts";
 
 export function setupUserSearch(selector: string) {
   const autoCompleteUsersJS = new autoComplete({
@@ -104,18 +102,7 @@ export async function userSelectedHandler(
   };
 
   // get iNat map tiles for selected user
-  for await (const taxon of appStore.selectedTaxa) {
-    // remove existing taxon layers from map
-    removeOneTaxonFromMap(appStore, taxon.id);
-    appStore.inatApiParams = {
-      ...appStore.inatApiParams,
-      taxon_id: taxon.id.toString(),
-      colors: taxon.color,
-    };
-
-    await fetchiNatMapDataForTaxon(taxon, appStore);
-    await getObservationsCountForTaxon(taxon, appStore);
-  }
+  updateTilesAndCountForAllTaxa(appStore);
 
   renderTaxaList(appStore);
   renderUsersList(appStore);
@@ -143,17 +130,7 @@ export async function removeUser(userId: number, appStore: MapStore) {
   removeOneUserFromStore(appStore, userId);
 
   // remove existing taxa tiles, and refetch taxa tiles
-  for await (const taxon of appStore.selectedTaxa) {
-    removeOneTaxonFromMap(appStore, taxon.id);
-
-    appStore.inatApiParams = {
-      ...appStore.inatApiParams,
-      taxon_id: taxon.id.toString(),
-      colors: taxon.color,
-    };
-    await fetchiNatMapDataForTaxon(taxon, appStore);
-    await getObservationsCountForTaxon(taxon, appStore);
-  }
+  updateTilesAndCountForAllTaxa(appStore);
 
   renderTaxaList(appStore);
   renderUsersList(appStore);

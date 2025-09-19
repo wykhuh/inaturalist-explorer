@@ -40,11 +40,8 @@ import type {
 } from "../types/inat_api";
 import {
   addAllTaxaRecordToMapAndStore,
-  fetchiNatMapDataForTaxon,
   formatTaxonName,
-  getObservationsCountForTaxon,
   addIdToCommaSeparatedString,
-  removeOneTaxonFromMap,
 } from "./data_utils";
 import { loggerStore } from "./logger.ts";
 import {
@@ -57,6 +54,10 @@ import {
 } from "../lib/search_projects.ts";
 import { setupUserSearch, userSelectedHandler } from "../lib/search_users.ts";
 import { setupTaxaSearch, taxonSelectedHandler } from "../lib/search_taxa.ts";
+import {
+  updateCountForAllTaxa,
+  updateTilesForAllTaxa,
+} from "./search_utils.ts";
 
 // populate store with basic view data from app url.
 // used to set view in observation header and subview in obdervation view
@@ -145,14 +146,7 @@ export async function initPopulateStore(
     }
   }
 
-  for await (const taxon of appStore.selectedTaxa) {
-    appStore.inatApiParams = {
-      ...appStore.inatApiParams,
-      taxon_id: taxon.id.toString(),
-      colors: taxon.color,
-    };
-    await getObservationsCountForTaxon(taxon, appStore);
-  }
+  updateCountForAllTaxa(appStore);
 
   renderTaxaList(appStore);
   renderPlacesList(appStore);
@@ -215,17 +209,7 @@ export async function initRenderMap(appStore: MapStore) {
   }
 
   // add iNat taxa layers
-  for await (const taxon of appStore.selectedTaxa) {
-    removeOneTaxonFromMap(appStore, taxon.id);
-
-    appStore.inatApiParams = {
-      ...appStore.inatApiParams,
-      taxon_id: taxon.id.toString(),
-      colors: taxon.color,
-    };
-
-    await fetchiNatMapDataForTaxon(taxon, appStore);
-  }
+  updateTilesForAllTaxa(appStore);
 
   // return map to previous position when switching views
   if (appStore.map.bounds) {

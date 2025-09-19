@@ -8,12 +8,7 @@ import type {
   iNatApiParamsKeys,
   MapStore,
 } from "../../types/app";
-import {
-  fetchiNatMapDataForTaxon,
-  getObservationsCountForTaxon,
-  removeOneTaxonFromMap,
-  updateStoreUsingFilters,
-} from "../../lib/data_utils";
+import { updateStoreUsingFilters } from "../../lib/data_utils";
 import { updateAppUrl } from "../../lib/utils";
 import { loggerFilters } from "../../lib/logger";
 import { renderTaxaList } from "../../lib/search_taxa";
@@ -24,6 +19,7 @@ import {
   setSelectedOption,
   setSelectedOptionTrueFalse,
 } from "../../lib/form_utils";
+import { updateTilesAndCountForAllTaxa } from "../../lib/search_utils";
 
 export function processFiltersForm(data: FormData): {
   params: iNatApiParams;
@@ -116,19 +112,7 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
   // update store inatApiParams with form values
   updateStoreUsingFilters(appStore, results);
 
-  for await (const taxon of appStore.selectedTaxa) {
-    removeOneTaxonFromMap(appStore, taxon.id);
-
-    appStore.inatApiParams = {
-      ...appStore.inatApiParams,
-      taxon_id: taxon.id.toString(),
-      colors: taxon.color,
-    };
-    // get new iNat map tiles
-    await fetchiNatMapDataForTaxon(taxon, appStore);
-    // fetch new counts from api
-    await getObservationsCountForTaxon(taxon, appStore);
-  }
+  updateTilesAndCountForAllTaxa(appStore);
 
   // update UI
   renderFiltersList(data);

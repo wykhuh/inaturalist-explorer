@@ -23,6 +23,7 @@ import { fitBoundsPlaces } from "./map_utils.ts";
 import { placeTypes } from "../data/inat_data.ts";
 import { updateAppUrl } from "./utils.ts";
 import { renderTaxaList } from "./search_taxa.ts";
+import { updateTilesAndCountForAllTaxa } from "./search_utils.ts";
 
 export function setupPlacesSearch(selector: string) {
   const autoCompletePlacesJS = new autoComplete({
@@ -211,17 +212,7 @@ export async function removePlace(placeId: number, appStore: MapStore) {
   await removeOnePlaceFromStoreAndMap(appStore, placeId);
 
   // remove existing taxa tiles, and refetch taxa tiles
-  for await (const taxon of appStore.selectedTaxa) {
-    removeOneTaxonFromMap(appStore, taxon.id);
-
-    appStore.inatApiParams = {
-      ...appStore.inatApiParams,
-      taxon_id: taxon.id.toString(),
-      colors: taxon.color,
-    };
-    await fetchiNatMapDataForTaxon(taxon, appStore);
-    await getObservationsCountForTaxon(taxon, appStore);
-  }
+  updateTilesAndCountForAllTaxa(appStore);
 
   renderTaxaList(appStore);
   renderPlacesList(appStore);
