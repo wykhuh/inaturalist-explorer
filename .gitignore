@@ -31,3 +31,4 @@ dist-ssr
 /coverage/
 /src/tests/e2e/*-snapshots
 .env
+.env.production
