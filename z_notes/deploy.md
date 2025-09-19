@@ -54,3 +54,7 @@ export default defineConfig({
   ],
 });
 ```
+
+==
+
+I harded coded VITE_BASE into the git actions yml file because I could not get secrets to work. VITE_BASE is used for fetch('./path/template.html')
