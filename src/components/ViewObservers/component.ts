@@ -16,10 +16,10 @@ class MyComponent extends HTMLElement {
   async render() {
     await setupComponent("/src/components/ViewObservers/template.html", this);
 
-    fetchAndRenderData(perPage, paginationcCallback, window.app.store);
+    await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
 
-    window.addEventListener("observationsChange", () => {
-      fetchAndRenderData(perPage, paginationcCallback, window.app.store);
+    window.addEventListener("observationsChange", async () => {
+      await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
     });
   }
 }

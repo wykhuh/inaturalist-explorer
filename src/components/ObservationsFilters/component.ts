@@ -126,11 +126,11 @@ class MyComponent extends HTMLElement {
     });
 
     if (form) {
-      form.addEventListener("submit", (event) => {
+      form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         const data = new FormData(form);
-        updateAppWithFilters(data, window.app.store);
+        await updateAppWithFilters(data, window.app.store);
       });
 
       form.addEventListener("change", async (event) => {
@@ -139,14 +139,14 @@ class MyComponent extends HTMLElement {
         event.preventDefault();
 
         const data = new FormData(form);
-        updateAppWithFilters(data, window.app.store);
+        await updateAppWithFilters(data, window.app.store);
       });
 
       form.addEventListener("reset", () => {
         // HACK: use setTimeout to add new event that has access to resetted form
-        setTimeout(() => {
+        setTimeout(async () => {
           let data = new FormData(form);
-          updateAppWithFilters(data, window.app.store);
+          await updateAppWithFilters(data, window.app.store);
         }, 0);
       });
     }

@@ -94,7 +94,7 @@ export async function projectSelectedHandler(
   };
 
   // get iNat map tiles for selected place
-  updateTilesAndCountForAllTaxa(appStore);
+  await updateTilesAndCountForAllTaxa(appStore);
 
   renderTaxaList(appStore);
   renderProjectsList(appStore);
@@ -123,7 +123,7 @@ export async function removeProject(projectId: number, appStore: MapStore) {
   removeOneProjectFromStore(appStore, projectId);
 
   // remove existing taxa tiles, and refetch taxa tiles
-  updateTilesAndCountForAllTaxa(appStore);
+  await updateTilesAndCountForAllTaxa(appStore);
 
   renderTaxaList(appStore);
   renderProjectsList(appStore);

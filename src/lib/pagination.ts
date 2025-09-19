@@ -4,7 +4,7 @@ export function createPagination(
   perPage: number,
   currentPage: number,
   totalRecords: number,
-  callback: (pageNumber: number) => void,
+  paginationcCallback: (pageNumber: number) => Promise<void>,
 ) {
   let numPages = Math.ceil(totalRecords / perPage);
   const sequence = createSequence(numPages, currentPage);
@@ -18,8 +18,8 @@ export function createPagination(
     prevEl.className = "disable";
   }
   if (currentPage > 1) {
-    prevEl.addEventListener("click", () => {
-      callback(currentPage - 1);
+    prevEl.addEventListener("click", async () => {
+      await paginationcCallback(currentPage - 1);
     });
   }
   listEl.appendChild(prevEl);
@@ -31,9 +31,9 @@ export function createPagination(
       liEl.className = "current-page";
     }
     if (typeof pageNum === "number") {
-      liEl.addEventListener("click", () => {
+      liEl.addEventListener("click", async () => {
         if (pageNum !== currentPage) {
-          callback(pageNum);
+          await paginationcCallback(pageNum);
         }
       });
     }
@@ -46,8 +46,8 @@ export function createPagination(
     nextEl.className = "disable";
   }
   if (currentPage <= numPages - 1) {
-    nextEl.addEventListener("click", () => {
-      callback(currentPage + 1);
+    nextEl.addEventListener("click", async () => {
+      await paginationcCallback(currentPage + 1);
     });
   }
 

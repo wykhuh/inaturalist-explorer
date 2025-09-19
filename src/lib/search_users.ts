@@ -102,7 +102,7 @@ export async function userSelectedHandler(
   };
 
   // get iNat map tiles for selected user
-  updateTilesAndCountForAllTaxa(appStore);
+  await updateTilesAndCountForAllTaxa(appStore);
 
   renderTaxaList(appStore);
   renderUsersList(appStore);
@@ -130,7 +130,7 @@ export async function removeUser(userId: number, appStore: MapStore) {
   removeOneUserFromStore(appStore, userId);
 
   // remove existing taxa tiles, and refetch taxa tiles
-  updateTilesAndCountForAllTaxa(appStore);
+  await updateTilesAndCountForAllTaxa(appStore);
 
   renderTaxaList(appStore);
   renderUsersList(appStore);

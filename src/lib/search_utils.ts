@@ -30,7 +30,6 @@ export async function updateCountForAllTaxa(appStore: MapStore) {
       taxon_id: taxon.id.toString(),
       colors: taxon.color,
     };
-
     // fetch new counts from api
     await getObservationsCountForTaxon(taxon, appStore);
   }
@@ -46,7 +45,6 @@ export async function updateTilesForAllTaxa(appStore: MapStore) {
       taxon_id: taxon.id.toString(),
       colors: taxon.color,
     };
-
     // get new iNat map tiles
     await fetchiNatMapDataForTaxon(taxon, appStore);
   }

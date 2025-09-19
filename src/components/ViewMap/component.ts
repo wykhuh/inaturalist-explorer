@@ -55,10 +55,10 @@ class MyComponent extends HTMLElement {
     initFilters(window.app.store);
 
     // load observation data for grid/table
-    fetchAndRenderData(perPage, paginationcCallback, window.app.store);
+    await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
 
-    window.addEventListener("observationsChange", () => {
-      fetchAndRenderData(perPage, paginationcCallback, window.app.store);
+    window.addEventListener("observationsChange", async () => {
+      await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
     });
 
     this.subviewHandler(window.app.store);

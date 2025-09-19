@@ -328,13 +328,13 @@ export function createRefreshMapButton(
       buttonEl.textContent = "Redo search in map";
       buttonEl.hidden = true;
 
-      buttonEl.onclick = function () {
+      buttonEl.onclick = async function () {
         appStore.refreshMap.showRefreshMapButton = false;
         if (buttonEl) {
           buttonEl.hidden = true;
         }
 
-        refreshBoundingBox(appStore);
+        await refreshBoundingBox(appStore);
       };
 
       return buttonEl;

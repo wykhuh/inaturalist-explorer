@@ -132,7 +132,7 @@ function createTable(
   return tableEl;
 }
 
-export function paginationcCallback(num: number) {
+export async function paginationcCallback(num: number) {
   window.app.store.inatApiParams = {
     ...window.app.store.inatApiParams,
     page: num,
@@ -144,6 +144,6 @@ export function paginationcCallback(num: number) {
   // HACK: update store
   window.app.store.viewMetadata = window.app.store.viewMetadata;
 
-  fetchAndRenderData(perPage, paginationcCallback, window.app.store);
+  await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
   updateAppUrl(window.location, window.app.store);
 }

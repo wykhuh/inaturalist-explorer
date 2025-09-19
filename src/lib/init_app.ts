@@ -146,8 +146,7 @@ export async function initPopulateStore(
     }
   }
 
-  updateCountForAllTaxa(appStore);
-
+  await updateCountForAllTaxa(appStore);
   renderTaxaList(appStore);
   renderPlacesList(appStore);
   renderProjectsList(appStore);
@@ -209,7 +208,7 @@ export async function initRenderMap(appStore: MapStore) {
   }
 
   // add iNat taxa layers
-  updateTilesForAllTaxa(appStore);
+  await updateTilesForAllTaxa(appStore);
 
   // return map to previous position when switching views
   if (appStore.map.bounds) {
@@ -402,7 +401,7 @@ export function searchSetup() {
     searchInputEl.addEventListener("selection", async function (event: any) {
       let selection = event.detail.selection.value;
       let query = event.detail.query;
-      selectedHandler(selection, query, window.app.store);
+      await selectedHandler(selection, query, window.app.store);
     });
   }
 

@@ -212,7 +212,7 @@ export async function removePlace(placeId: number, appStore: MapStore) {
   await removeOnePlaceFromStoreAndMap(appStore, placeId);
 
   // remove existing taxa tiles, and refetch taxa tiles
-  updateTilesAndCountForAllTaxa(appStore);
+  await updateTilesAndCountForAllTaxa(appStore);
 
   renderTaxaList(appStore);
   renderPlacesList(appStore);

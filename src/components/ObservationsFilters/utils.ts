@@ -112,7 +112,7 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
   // update store inatApiParams with form values
   updateStoreUsingFilters(appStore, results);
 
-  updateTilesAndCountForAllTaxa(appStore);
+  await updateTilesAndCountForAllTaxa(appStore);
 
   // update UI
   renderFiltersList(data);
