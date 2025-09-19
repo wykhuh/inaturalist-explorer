@@ -11,6 +11,12 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# The permissions for GITHUB_TOKEN are read-only by default. If you want to
+# push tags, you need to have write permissions to contents.
+# https://stackoverflow.com/a/73687177
+permissions:
+  contents: write
+
 # Allow one concurrent deployment
 concurrency:
   group: "pages"
