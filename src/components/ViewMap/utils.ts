@@ -38,12 +38,6 @@ export async function fetchAndRenderData(
 
   const t1 = performance.now();
   // fetch data from api
-  console.log(
-    "456",
-    appStore.inatApiParams.order,
-    appStore.inatApiParams.order_by,
-  );
-
   let data = await getAPIData(perPage, appStore);
   const t10 = performance.now();
   loggerTime(`api ${t10 - t1} milliseconds`);

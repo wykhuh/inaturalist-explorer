@@ -398,17 +398,18 @@
   }
 
   .loader {
-    width: 48px;
-    height: 48px;
-    border: 5px solid #f6d4c9;
+    width: 75px;
+    height: 75px;
+    border: 7px solid #f6d4c9;
     border-bottom-color: #ff3d00;
     border-radius: 50%;
     display: none;
     box-sizing: border-box;
     animation: rotation 1s linear infinite;
-    position: absolute;
+    position: fixed;
     left: calc(50% - 120px / 2);
     top: calc(50% - 120px / 2);
+    z-index: 501;
   }
 
   @keyframes rotation {
