@@ -169,8 +169,8 @@ function removeValueFromArray(value: any, array: any[]) {
 export function updateAppUrl(url_location: Location, appStore: MapStore) {
   let paramsString = formatAppUrl(appStore);
   let url = paramsString
-    ? `${url_location.origin}?${paramsString}`
-    : url_location.origin;
+    ? `${url_location.origin}${import.meta.env.VITE_BASE}?${paramsString}`
+    : `${url_location.origin}${import.meta.env.VITE_BASE}`;
 
   window.history.pushState({}, "", url);
 }
