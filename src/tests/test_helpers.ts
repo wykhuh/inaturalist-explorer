@@ -103,8 +103,25 @@ export function createMockServer() {
       return HttpResponse.json(data);
     }),
     http.get("https://api.inaturalist.org/v2/observations*", async (_args) => {
-      loggerUrl("request.url", _args.request.url);
-      return HttpResponse.json({ total_results: 456789, results: [] });
+      let url = _args.request.url;
+      loggerUrl("request.url", url);
+
+      let count = 0;
+      if (url.includes(`taxon_id=${allTaxaRecord.id}&`)) {
+        count = 100000;
+      } else if (
+        url.includes(`taxon_id=${lifeBasic.id}%2C${redOakBasic.id}&`)
+      ) {
+        count = 11000;
+      } else if (url.includes(`taxon_id=${lifeBasic.id}&`)) {
+        count = 10000;
+      } else if (url.includes(`taxon_id=${redOakBasic.id}&`)) {
+        count = 1000;
+      } else {
+        count = 100;
+      }
+
+      return HttpResponse.json({ total_results: count, results: [] });
     }),
     http.get("https://{*}.tile.openstreetmap.org*", async (_args) => {
       loggerUrl("request.url", _args.request.url);
@@ -246,7 +263,7 @@ export function life(color = colors[0]) {
     title: "Life",
     subtitle: "Life",
     color: color,
-    observations_count: 456789,
+    observations_count: 10000,
   };
 }
 
@@ -266,7 +283,7 @@ export function redOak(color = colors[1]) {
     title: "Red Oaks",
     subtitle: "Lobatae",
     color: color,
-    observations_count: 456789,
+    observations_count: 1000,
   };
 }
 
