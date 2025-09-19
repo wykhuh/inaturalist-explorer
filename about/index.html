@@ -2,11 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <base href="https://wykhuh.github.io/inaturalist-explorer/" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>iNaturalist Explorer</title>
-    <script type="module" crossorigin src="/inaturalist-explorer/assets/component-BtAyLo_o.js"></script>
+    <script type="module" crossorigin src="/inaturalist-explorer/assets/about-jvz1tCTe.js"></script>
+    <link rel="modulepreload" crossorigin href="/inaturalist-explorer/assets/component-BtAyLo_o.js">
     <link rel="stylesheet" crossorigin href="/inaturalist-explorer/assets/component-DeYnHhVo.css">
   </head>
   <body id="about">
@@ -15,12 +15,12 @@
       <div id="wrapper" class="flow">
         <h1>About</h1>
         <p>
-          iNaturalist Explorer is a website that lets people explore iNaturalist
-          data. This site adds some features that is missing from
+          iNaturalist Explorer is a opensource website that lets people explore
+          iNaturalist data. This site adds some features that are missing from
           <a href="https://www.inaturalist.org/observations"
             >iNaturalist Explore Observations</a
           >
-          page.
+          page. This site gets data from the iNaturalist API.
         </p>
         <h2>Features</h2>
         <ul>
@@ -57,6 +57,28 @@
                 >iNaturalist "observations" API</a
               >
             </p>
+          </li>
+        </ul>
+        <h2>Techinical Details</h2>
+        <p>
+          This static site is built using JavaScript/TypeScript, CSS, and HTML.
+          I wanted to use the built-in features of JavaScript, CSS, HTML, and
+          keep third party libraries to a minimum. I end up using TypeScript and
+          three libraries (<a href="https://leafletjs.com/">Leaflet</a>,
+          <a href="https://tarekraafat.github.io/autoComplete.js/"
+            >Autocomplete.js</a
+          >, and
+          <a href="https://github.com/bramus/js-pagination-sequence"
+            >Pagination Sequence</a
+          >) to create site. This is the most complex project I've built without
+          a website or CSS framework. I also wanted to keep costs low as
+          possible so this is a static site that is hosted on Github.
+        </p>
+        <ul>
+          <li>
+            <a href="https://github.com/wykhuh/inaturalist-explorer"
+              >Github Repo</a
+            >
           </li>
         </ul>
       </div>
