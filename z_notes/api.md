@@ -239,3 +239,7 @@ verifiable: unchecked -> web app: &verifiable=any, api: &spam=false
 
 ====================
 v2 lets you set the returned fields for observations
+
+==
+
+https://forum.inaturalist.org/t/ideas-for-a-revamped-explore-observations-search-page/8439/379

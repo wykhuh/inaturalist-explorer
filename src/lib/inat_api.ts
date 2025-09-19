@@ -138,18 +138,6 @@ export const getiNatMapTiles = (
   return tiles;
 };
 
-export async function searchPlaces(placename: string) {
-  let paramsString = new URLSearchParams(placename).toString();
-
-  try {
-    let response = await fetch(`${autocomplete_places_api}${paramsString}`);
-    let data = (await response.json()) as iNatObservationsSpeciesCountAPI;
-    return data.results.reduce((prev, current) => prev + current.count, 0);
-  } catch (error) {
-    console.error("searchPlaces ERROR:", error);
-  }
-}
-
 export async function getTaxonById(id: number) {
   try {
     let resp = await fetch(taxa_api + id);

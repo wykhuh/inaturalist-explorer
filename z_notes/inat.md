@@ -27,7 +27,7 @@ Ideas for a revamped Explore/Observations Search Page
 
 https://forum.inaturalist.org/t/ideas-for-a-revamped-explore-observations-search-page/8439
 
-==
+# https://forum.inaturalist.org/t/ideas-for-a-revamped-explore-observations-search-page/8439/379
 
 https://forum.inaturalist.org/t/what-is-places-type-for-the-api-call-for-places-nearby/49446/2
 
@@ -69,3 +69,11 @@ https://www.inaturalist.org/observations?subview=map
 http://localhost:5173/?taxon_id=47163,3&place_id=962,829&project_id=224063,65248&user_id=12809,223005,818374,513214&colors=%23228833,%23ccbb44&verifiable=true&spam=false
 
 LA SD, 2 CNC, 4 users, 2 taxa
+
+==
+
+https://forum.inaturalist.org/t/ideas-for-a-revamped-explore-observations-search-page/8439/379
+
+==
+
+https://www.maplibrary.org/1254/exploring-map-projection-alternatives-for-web-use/
