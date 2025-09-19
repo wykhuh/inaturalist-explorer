@@ -352,7 +352,7 @@
 
   #about #wrapper {
     max-width: 1000px;
-    margin: 0 auto;
+    margin: 0 auto 2rem auto;
 
     @media (max-width: 1000px) {
       padding: 0 1rem;
