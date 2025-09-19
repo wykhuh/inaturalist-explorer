@@ -68,6 +68,8 @@ class MyComponent extends HTMLElement {
   subviewHandler(appStore: MapStore) {
     let tableLinkEl = document.querySelector(".subview-table") as HTMLElement;
     let gridLinkEl = document.querySelector(".subview-grid") as HTMLElement;
+    if (!tableLinkEl) return;
+    if (!gridLinkEl) return;
 
     // set initial current-subview class in html
     let subview = appStore.viewMetadata.observations?.subview;
