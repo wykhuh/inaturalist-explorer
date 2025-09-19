@@ -12,7 +12,7 @@ export let perPage = 48;
 
 export async function fetchAndRenderData(
   perPage: number,
-  paginationcCallback: (currentPage: number) => void,
+  paginationcCallback: (currentPage: number) => Promise<void>,
   appStore: MapStore,
 ) {
   let containerEl = document.querySelector(".species-list-container");

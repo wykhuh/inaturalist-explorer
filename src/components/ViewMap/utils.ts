@@ -27,7 +27,7 @@ export let perPage = 48;
 // fetch new data from api when changing pages, order, filters and view
 export async function fetchAndRenderData(
   perPage: number,
-  paginationcCallback: (currentPage: number) => void,
+  paginationcCallback: (currentPage: number) => Promise<void>,
   appStore: MapStore,
 ) {
   let containerEl = document.querySelector(".observations-list-container");

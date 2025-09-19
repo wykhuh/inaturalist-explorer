@@ -16,7 +16,7 @@ export let perPage = 100;
 
 export async function fetchAndRenderData(
   perPage: number,
-  paginationcCallback: (currentPage: number) => void,
+  paginationcCallback: (currentPage: number) => Promise<void>,
   appStore: MapStore,
 ) {
   let containerEl = document.querySelector(".observers-table-container");
