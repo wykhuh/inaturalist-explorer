@@ -37,6 +37,8 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build-ghpages
+        env:
+          VITE_BASE: ${{ secrets.VITE_BASE }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
