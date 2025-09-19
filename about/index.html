@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/src/assets/style.css" />
     <title>iNaturalist Explorer</title>
-    <script type="module" src="/src/components/Header/component.js"></script>
+    <script type="module" crossorigin src="/inaturalist-explorer/assets/component-Jy5b6wEw.js"></script>
+    <link rel="stylesheet" crossorigin href="/inaturalist-explorer/assets/component-YKia3GHJ.css">
   </head>
   <body id="about">
     <x-header></x-header>
@@ -32,6 +32,30 @@
           </li>
           <li>
             Show iNaturalist maps as grid, points, heatmap and taxon range
+          </li>
+          <li>
+            The urls are compatible with iNaturalist API. Most of the properties
+            in the urls will work with the iNaturalist API. You can copy and
+            paste the query params (stuff after the ?) from the site, and use
+            them for the iNaturalist API. The only properties not compatible are
+            colors, view, and subview.
+
+            <p>
+              For instance, this is the URL query params for all monarchs in
+              California.
+            </p>
+            <div>
+              <code
+                >taxon_id=48662&place_id=14&colors=%234477aa&verifiable=true&spam=false</code
+              >
+            </div>
+            <p>
+              You can copy the query params and use them for the
+              <a
+                href="https://api.inaturalist.org/v1/observations?taxon_id=48662&place_id=14&colors=%234477aa&verifiable=true&spam=false"
+                >iNaturalist "observations" API</a
+              >
+            </p>
           </li>
         </ul>
       </div>
