@@ -53,7 +53,12 @@ export function hexToRgb(hex: string, alpha = 1) {
   return str;
 }
 
-export function pluralize(number: number, text: string, useComma = false) {
+export function pluralize(
+  number: number | undefined,
+  text: string,
+  useComma = false,
+) {
+  if (number === undefined) number = 0;
   let displayNumber = useComma ? number.toLocaleString() : number;
   if (number === 1) {
     return `${displayNumber} ${text}`;

@@ -38,7 +38,7 @@ class MyComponent extends HTMLElement {
     }
 
     let countEl = this.querySelector(".count");
-    if (countEl && taxon.observations_count) {
+    if (countEl) {
       countEl.textContent = pluralize(
         taxon.observations_count,
         "observation",
