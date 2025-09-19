@@ -142,7 +142,9 @@ export async function getObservationsCountForTaxon(
   taxonObj: NormalizediNatTaxon,
   appStore: MapStore,
 ) {
-  let params = cleanupObervationsParams(appStore);
+  let params = cleanupObervationsParamsForRecord(
+    appStore.inatApiParams,
+  ).toString();
   let perPage = 0;
 
   let data = await getObservations(params, perPage);
@@ -659,6 +661,14 @@ function cleanupParams(appStore: MapStore) {
   params.delete("view");
   params.delete("subview");
 
+  return params;
+}
+
+export function cleanupObervationsParamsForRecord(inatParams: iNatApiParams) {
+  let params = new URLSearchParams(inatParams as any);
+  params.delete("colors");
+  params.delete("view");
+  params.delete("subview");
   return params;
 }
 
