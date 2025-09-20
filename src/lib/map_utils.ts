@@ -286,6 +286,8 @@ export function addOverlayToMap(
   layerControl: any,
   checked = false,
 ) {
+  if (!tileObj) return;
+
   loggerUrl(tileObj.url);
 
   let layer = L.tileLayer(tileObj.url, tileObj.options);

@@ -38,7 +38,9 @@ export function createModal() {
 function formatTaxaMapLayers(appStore: MapStore) {
   let temp: any = {};
   Object.entries(appStore.taxaMapLayers).forEach(([key, val]) => {
-    temp[key] = val.map((v: any) => v.options.layer_description);
+    temp[key] = val
+      .filter((v) => v)
+      .map((v: any) => v.options?.layer_description);
   });
   return temp;
 }
