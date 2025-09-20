@@ -368,7 +368,7 @@ function setinatApiParams(
   property: iNatApiParamsKeys,
   value: any,
 ) {
-  let ids = removeIdFromCommaSeparatedString(
+  let ids = removeValueFromCommaSeparatedString(
     value,
     appStore.inatApiParams[property],
   );
@@ -539,35 +539,41 @@ export function leafletVisibleLayers(appStore: MapStore, strict = false) {
   return layer_descriptions;
 }
 
-export function addIdToCommaSeparatedString(
-  newId?: number,
-  currentId?: string,
+export function addValueToCommaSeparatedString(
+  newValue?: number | string,
+  currentValue?: string,
 ) {
-  if (newId === undefined) return;
+  if (newValue === undefined) return;
 
-  if (currentId === undefined) {
-    currentId = newId.toString();
+  if (currentValue === undefined) {
+    currentValue = newValue.toString();
   } else {
-    // only add newId to currentId if currentId does not have newId
-    let parts = currentId.split(",").map((i) => Number(i));
-    if (!parts.includes(newId)) {
-      currentId = currentId + "," + newId;
+    // only add newValue to currentValue if currentValue does not have newValue
+    let parts = currentValue.split(",").map((i) => {
+      if (typeof newValue === "number") {
+        return Number(i);
+      } else {
+        return i;
+      }
+    });
+    if (!parts.includes(newValue)) {
+      currentValue = currentValue + "," + newValue;
     }
   }
 
-  return currentId;
+  return currentValue;
 }
 
-export function removeIdFromCommaSeparatedString(
-  newId?: number,
-  currentId?: string,
+export function removeValueFromCommaSeparatedString(
+  newValue?: number,
+  currentValue?: string,
 ) {
-  if (newId === undefined) return;
-  if (currentId === undefined) return;
+  if (newValue === undefined) return;
+  if (currentValue === undefined) return;
 
-  let ids = currentId
+  let ids = currentValue
     .split(",")
-    .filter((id) => Number(id) !== newId)
+    .filter((id) => Number(id) !== newValue)
     .join(",");
   if (ids === "") return;
   return ids;

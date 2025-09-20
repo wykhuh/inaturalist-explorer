@@ -15,7 +15,7 @@ import { loggerUrl } from "../lib/logger.ts";
 import {
   fetchiNatMapDataForTaxon,
   removeOneTaxonFromMap,
-  addIdToCommaSeparatedString,
+  addValueToCommaSeparatedString,
   getObservationsCountForTaxon,
   removeOnePlaceFromStoreAndMap,
 } from "./data_utils.ts";
@@ -168,7 +168,7 @@ export async function placeSelectedHandler(
       ...appStore.inatApiParams,
       taxon_id: taxon.id.toString(),
       colors: taxon.color,
-      place_id: addIdToCommaSeparatedString(
+      place_id: addValueToCommaSeparatedString(
         selection.id,
         appStore.inatApiParams.place_id,
       ),

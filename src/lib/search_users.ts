@@ -10,7 +10,7 @@ import { loggerUrl } from "../lib/logger.ts";
 import type { MapStore } from "../types/app";
 
 import {
-  addIdToCommaSeparatedString,
+  addValueToCommaSeparatedString,
   removeOneUserFromStore,
 } from "./data_utils.ts";
 
@@ -95,7 +95,7 @@ export async function userSelectedHandler(
   appStore.selectedUsers = [...appStore.selectedUsers, selection];
   appStore.inatApiParams = {
     ...appStore.inatApiParams,
-    user_id: addIdToCommaSeparatedString(
+    user_id: addValueToCommaSeparatedString(
       selection.id,
       appStore.inatApiParams.user_id,
     ),

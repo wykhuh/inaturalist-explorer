@@ -9,7 +9,7 @@ import { autocomplete_projects_api } from "../lib/inat_api.ts";
 import type { iNatProjectsAPI } from "../types/inat_api";
 import { loggerUrl } from "../lib/logger.ts";
 import {
-  addIdToCommaSeparatedString,
+  addValueToCommaSeparatedString,
   removeOneProjectFromStore,
 } from "./data_utils.ts";
 import { updateAppUrl } from "./utils.ts";
@@ -87,7 +87,7 @@ export async function projectSelectedHandler(
   appStore.selectedProjects = [...appStore.selectedProjects, selection];
   appStore.inatApiParams = {
     ...appStore.inatApiParams,
-    project_id: addIdToCommaSeparatedString(
+    project_id: addValueToCommaSeparatedString(
       selection.id,
       appStore.inatApiParams.project_id,
     ),

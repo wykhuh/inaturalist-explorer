@@ -4,8 +4,8 @@ import { expect, test, describe } from "vitest";
 import {
   formatTaxonName,
   updateSelectedTaxa,
-  addIdToCommaSeparatedString,
-  removeIdFromCommaSeparatedString,
+  addValueToCommaSeparatedString,
+  removeValueFromCommaSeparatedString,
   removeIdfromInatApiParams,
   normalizeAppParams,
   cleanupObervationsParams,
@@ -362,12 +362,12 @@ describe("updateSelectedTaxa", () => {
   });
 });
 
-describe("addIdToCommaSeparatedString", () => {
+describe("addValueToCommaSeparatedString", () => {
   test("returns id as string if no current id", () => {
     let newId = 10;
     let currentId = undefined;
 
-    let result = addIdToCommaSeparatedString(newId, currentId);
+    let result = addValueToCommaSeparatedString(newId, currentId);
 
     expect(result).toBe("10");
   });
@@ -376,7 +376,7 @@ describe("addIdToCommaSeparatedString", () => {
     let newId = 10;
     let currentId = "20";
 
-    let result = addIdToCommaSeparatedString(newId, currentId);
+    let result = addValueToCommaSeparatedString(newId, currentId);
 
     expect(result).toBe("20,10");
   });
@@ -385,7 +385,7 @@ describe("addIdToCommaSeparatedString", () => {
     let newId = 10;
     let currentId = "20,15";
 
-    let result = addIdToCommaSeparatedString(newId, currentId);
+    let result = addValueToCommaSeparatedString(newId, currentId);
 
     expect(result).toBe("20,15,10");
   });
@@ -394,7 +394,7 @@ describe("addIdToCommaSeparatedString", () => {
     let newId = undefined;
     let currentId = undefined;
 
-    let result = addIdToCommaSeparatedString(newId, currentId);
+    let result = addValueToCommaSeparatedString(newId, currentId);
 
     expect(result).toBe(undefined);
   });
@@ -403,18 +403,18 @@ describe("addIdToCommaSeparatedString", () => {
     let newId = 10;
     let currentId = "20,10";
 
-    let result = addIdToCommaSeparatedString(newId, currentId);
+    let result = addValueToCommaSeparatedString(newId, currentId);
 
     expect(result).toBe("20,10");
   });
 });
 
-describe("removeIdFromCommaSeparatedString", () => {
+describe("removeValueFromCommaSeparatedString", () => {
   test("returns undefined if new id equals current id", () => {
     let newId = 10;
     let currentId = "10";
 
-    let result = removeIdFromCommaSeparatedString(newId, currentId);
+    let result = removeValueFromCommaSeparatedString(newId, currentId);
 
     expect(result).toBe(undefined);
   });
@@ -423,7 +423,7 @@ describe("removeIdFromCommaSeparatedString", () => {
     let newId = 10;
     let currentId = "20,10";
 
-    let result = removeIdFromCommaSeparatedString(newId, currentId);
+    let result = removeValueFromCommaSeparatedString(newId, currentId);
 
     expect(result).toBe("20");
   });
@@ -432,7 +432,7 @@ describe("removeIdFromCommaSeparatedString", () => {
     let newId = 10;
     let currentId = "10,20";
 
-    let result = removeIdFromCommaSeparatedString(newId, currentId);
+    let result = removeValueFromCommaSeparatedString(newId, currentId);
 
     expect(result).toBe("20");
   });
@@ -441,7 +441,7 @@ describe("removeIdFromCommaSeparatedString", () => {
     let newId = 10;
     let currentId = "20,10,15";
 
-    let result = removeIdFromCommaSeparatedString(newId, currentId);
+    let result = removeValueFromCommaSeparatedString(newId, currentId);
 
     expect(result).toBe("20,15");
   });
@@ -450,7 +450,7 @@ describe("removeIdFromCommaSeparatedString", () => {
     let newId = undefined;
     let currentId = undefined;
 
-    let result = removeIdFromCommaSeparatedString(newId, currentId);
+    let result = removeValueFromCommaSeparatedString(newId, currentId);
 
     expect(result).toBe(undefined);
   });
@@ -459,7 +459,7 @@ describe("removeIdFromCommaSeparatedString", () => {
     let newId = 10;
     let currentId = "5";
 
-    let result = removeIdFromCommaSeparatedString(newId, currentId);
+    let result = removeValueFromCommaSeparatedString(newId, currentId);
 
     expect(result).toBe(currentId);
   });

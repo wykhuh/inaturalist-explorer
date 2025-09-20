@@ -41,7 +41,7 @@ import type {
 import {
   addAllTaxaRecordToMapAndStore,
   formatTaxonName,
-  addIdToCommaSeparatedString,
+  addValueToCommaSeparatedString,
 } from "./data_utils";
 import { loggerStore } from "./logger.ts";
 import {
@@ -276,7 +276,7 @@ export function processPlaceData(placeData: PlacesResult, appStore: MapStore) {
   ];
 
   // create comma seperated place_id
-  appStore.inatApiParams.place_id = addIdToCommaSeparatedString(
+  appStore.inatApiParams.place_id = addValueToCommaSeparatedString(
     placeData.id,
     appStore.inatApiParams.place_id,
   );
@@ -340,7 +340,7 @@ export function processProjectData(
   ];
 
   // create comma seperated project_id
-  appStore.inatApiParams.project_id = addIdToCommaSeparatedString(
+  appStore.inatApiParams.project_id = addValueToCommaSeparatedString(
     projectData.id,
     appStore.inatApiParams.project_id,
   );
@@ -357,7 +357,7 @@ function processUserData(userData: UserResult, appStore: MapStore) {
   ];
 
   // create comma seperated user_id
-  appStore.inatApiParams.user_id = addIdToCommaSeparatedString(
+  appStore.inatApiParams.user_id = addValueToCommaSeparatedString(
     userData.id,
     appStore.inatApiParams.user_id,
   );
