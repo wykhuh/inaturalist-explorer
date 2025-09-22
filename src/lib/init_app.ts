@@ -56,6 +56,7 @@ import { setupUserSearch, userSelectedHandler } from "../lib/search_users.ts";
 import { setupTaxaSearch, taxonSelectedHandler } from "../lib/search_taxa.ts";
 import {
   updateCountForAllPlaces,
+  updateCountForAllProjects,
   updateCountForAllTaxa,
   updateTilesForAllTaxa,
 } from "./search_utils.ts";
@@ -170,6 +171,7 @@ export async function initPopulateStore(
 
   await updateCountForAllTaxa(appStore);
   await updateCountForAllPlaces(appStore);
+  await updateCountForAllProjects(appStore);
 
   renderTaxaList(appStore);
   renderPlacesList(appStore);

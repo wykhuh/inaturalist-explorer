@@ -1030,6 +1030,21 @@
     }
   }
 
+  ul#selected-projects-list,
+  ul#selected-places-list {
+    .data {
+      display: grid;
+    }
+
+    .name {
+      line-height: 1.2;
+    }
+
+    .count {
+      font-size: var(--font-size-sm);
+    }
+  }
+
   .filters-count {
     width: 1.5rem;
     height: 1.5rem;

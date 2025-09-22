@@ -16,6 +16,7 @@ import { renderTaxaList } from "../../lib/search_taxa";
 import { setupComponent } from "../../lib/component_utils";
 import type { MapStore } from "../../types/app";
 import { renderPlacesList } from "../../lib/search_places";
+import { renderProjectsList } from "../../lib/search_projects";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -52,6 +53,7 @@ class MyComponent extends HTMLElement {
     await initRenderMap(window.app.store);
     renderTaxaList(window.app.store);
     renderPlacesList(window.app.store);
+    renderProjectsList(window.app.store);
 
     // use store to set values the form on page load
     initFilters(window.app.store);

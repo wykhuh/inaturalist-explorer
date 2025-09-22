@@ -92,6 +92,11 @@ export function createMockServer() {
       } else if (url.includes(`place_id=${sandiego.id}&`)) {
         count = count * 0.4;
       }
+      if (url.includes(`project_id=${project_cnc1.id}&`)) {
+        count = count * 0.7;
+      } else if (url.includes(`project_id=${project_cnc2.id}&`)) {
+        count = count * 0.3;
+      }
 
       return HttpResponse.json({ total_results: count, results: [] });
     }),
@@ -511,14 +516,30 @@ export function expectNoProjects(store: MapStore) {
   expect(store.selectedProjects).toEqual([]);
 }
 
-export function expectProject1(store: MapStore) {
-  expect(store.selectedProjects).toEqual([project_cnc1]);
+export function expectProject1(store: MapStore, count = 0) {
+  let project = structuredClone(project_cnc1);
+  if (count) {
+    project.observations_count = count;
+  }
+  expect(store.selectedProjects).toEqual([project]);
 }
-export function expectProject2(store: MapStore) {
-  expect(store.selectedProjects).toEqual([project_cnc2]);
+export function expectProject2(store: MapStore, count = 0) {
+  let project = structuredClone(project_cnc2);
+  if (count) {
+    project.observations_count = count;
+  }
+  expect(store.selectedProjects).toEqual([project]);
 }
-export function expectProjects(store: MapStore) {
-  expect(store.selectedProjects).toEqual([project_cnc1, project_cnc2]);
+export function expectProjects(store: MapStore, counts = [0, 0]) {
+  let project1 = structuredClone(project_cnc1);
+  let project2 = structuredClone(project_cnc2);
+  if (counts[0] > 0) {
+    project1.observations_count = counts[0];
+  }
+  if (counts[1] > 0) {
+    project2.observations_count = counts[1];
+  }
+  expect(store.selectedProjects).toEqual([project1, project2]);
 }
 
 export function expectUser1(store: MapStore) {

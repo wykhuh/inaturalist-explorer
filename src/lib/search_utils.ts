@@ -3,6 +3,7 @@ import {
   fetchiNatMapDataForTaxon,
   getObservationsCountForPlace,
   getObservationsCountForTaxon,
+  getObservationsCountForProject,
   removeOneTaxonFromMap,
 } from "./data_utils";
 
@@ -41,6 +42,16 @@ export async function updateCountForAllPlaces(appStore: MapStore) {
       place_id: place.id.toString(),
     };
     await getObservationsCountForPlace(place, appStore, paramsTemp);
+  }
+}
+
+export async function updateCountForAllProjects(appStore: MapStore) {
+  for await (const project of appStore.selectedProjects) {
+    let paramsTemp = {
+      ...appStore.inatApiParams,
+      project_id: project.id.toString(),
+    };
+    await getObservationsCountForProject(project, appStore, paramsTemp);
   }
 }
 

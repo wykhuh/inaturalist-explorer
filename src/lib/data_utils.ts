@@ -303,6 +303,19 @@ export function removeOneProjectFromStore(
   removeIdfromInatApiParams(appStore, "project_id", projectId);
 }
 
+export async function getObservationsCountForProject(
+  project: NormalizediNatPlace,
+  appStore: MapStore,
+  paramsTemp: iNatApiParams,
+) {
+  await getObservationsCountForResource(
+    project,
+    "selectedProjects",
+    appStore,
+    paramsTemp,
+  );
+}
+
 // ================
 // selected resource
 // ================

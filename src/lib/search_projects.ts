@@ -10,11 +10,17 @@ import type { iNatProjectsAPI } from "../types/inat_api";
 import { loggerUrl } from "../lib/logger.ts";
 import {
   addValueToCommaSeparatedString,
+  getObservationsCountForProject,
   removeOneProjectFromStore,
 } from "./data_utils.ts";
 import { updateAppUrl } from "./utils.ts";
 import { renderTaxaList } from "./search_taxa.ts";
-import { updateTilesAndCountForAllTaxa } from "./search_utils.ts";
+import {
+  updateCountForAllPlaces,
+  updateCountForAllProjects,
+  updateTilesAndCountForAllTaxa,
+} from "./search_utils.ts";
+import { renderPlacesList } from "./search_places.ts";
 
 export function setupProjectSearch(selector: string) {
   const autoCompleteProjectJS = new autoComplete({
@@ -84,20 +90,29 @@ export async function projectSelectedHandler(
   appStore: MapStore,
 ) {
   // add project to store
-  appStore.selectedProjects = [...appStore.selectedProjects, selection];
+  let project = selection;
+  appStore.selectedProjects = [...appStore.selectedProjects, project];
   appStore.inatApiParams = {
     ...appStore.inatApiParams,
     project_id: addValueToCommaSeparatedString(
-      selection.id,
+      project.id,
       appStore.inatApiParams.project_id,
     ),
   };
 
   // get iNat map tiles for selected place
   await updateTilesAndCountForAllTaxa(appStore);
+  await updateCountForAllPlaces(appStore);
+
+  let paramsTemp = {
+    ...appStore.inatApiParams,
+    project_id: project.id.toString(),
+  };
+  await getObservationsCountForProject(project, appStore, paramsTemp);
 
   renderTaxaList(appStore);
   renderProjectsList(appStore);
+  renderPlacesList(appStore);
   updateAppUrl(window.location, appStore);
   window.dispatchEvent(new Event("observationsChange"));
 }
@@ -107,6 +122,7 @@ export function renderProjectsList(appStore: MapStore) {
   if (!listEl) return;
 
   listEl.innerHTML = "";
+
   appStore.selectedProjects.forEach((project) => {
     let templateEl = document.createElement("x-projects-list-item");
     if (!templateEl) return;
@@ -124,8 +140,11 @@ export async function removeProject(projectId: number, appStore: MapStore) {
 
   // remove existing taxa tiles, and refetch taxa tiles
   await updateTilesAndCountForAllTaxa(appStore);
+  await updateCountForAllPlaces(appStore);
+  await updateCountForAllProjects(appStore);
 
   renderTaxaList(appStore);
+  renderPlacesList(appStore);
   renderProjectsList(appStore);
   updateAppUrl(window.location, appStore);
   window.dispatchEvent(new Event("observationsChange"));

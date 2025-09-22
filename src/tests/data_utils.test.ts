@@ -10,7 +10,7 @@ import {
   normalizeAppParams,
   cleanupObervationsParams,
 } from "../lib/data_utils.ts";
-import type { MapStore, NormalizediNatTaxon } from "../types/app.d.ts";
+import type { NormalizediNatTaxon } from "../types/app.d.ts";
 import { mapStore } from "../lib/store.ts";
 import {
   life,

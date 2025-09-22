@@ -1,6 +1,7 @@
 import { setupComponent } from "../../lib/component_utils.ts";
 import { removeProject } from "../../lib/search_projects.ts";
 import type { NormalizediNatProject } from "../../types/app";
+import { pluralize } from "../../lib/utils.ts";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -24,6 +25,15 @@ class MyComponent extends HTMLElement {
     let nameEl = this.querySelector(".name");
     if (nameEl && project.name) {
       nameEl.textContent = project.name;
+    }
+
+    let countEl = this.querySelector(".count");
+    if (countEl) {
+      countEl.textContent = pluralize(
+        project.observations_count,
+        "observation",
+        true,
+      );
     }
 
     let butttonEl = this.querySelector(".close-button");

@@ -20,8 +20,12 @@ import {
 import { speciesRanks } from "../data/inat_data.ts";
 import { updateAppUrl } from "./utils.ts";
 import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
-import { updateCountForAllPlaces } from "./search_utils.ts";
+import {
+  updateCountForAllPlaces,
+  updateCountForAllProjects,
+} from "./search_utils.ts";
 import { renderPlacesList } from "./search_places.ts";
+import { renderProjectsList } from "./search_projects.ts";
 
 export function setupTaxaSearch(selector: string) {
   const autoCompleteTaxaJS = new autoComplete({
@@ -170,9 +174,11 @@ export async function taxonSelectedHandler(
   await fetchiNatMapDataForTaxon(taxon, appStore, paramsTemp);
   await getObservationsCountForTaxon(taxon, appStore, paramsTemp);
   await updateCountForAllPlaces(appStore);
+  await updateCountForAllProjects(appStore);
 
   renderTaxaList(appStore);
   renderPlacesList(appStore);
+  renderProjectsList(appStore);
   updateAppUrl(window.location, appStore);
   window.dispatchEvent(new Event("observationsChange"));
 }
@@ -198,9 +204,11 @@ export async function removeTaxon(taxonId: number, appStore: MapStore) {
     await addAllTaxaRecordToMapAndStore(appStore);
   }
   await updateCountForAllPlaces(appStore);
+  await updateCountForAllProjects(appStore);
 
   renderTaxaList(appStore);
   renderPlacesList(appStore);
+  renderProjectsList(appStore);
   updateAppUrl(window.location, appStore);
   window.dispatchEvent(new Event("observationsChange"));
 }
