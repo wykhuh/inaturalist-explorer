@@ -55,6 +55,7 @@ import {
 import { setupUserSearch, userSelectedHandler } from "../lib/search_users.ts";
 import { setupTaxaSearch, taxonSelectedHandler } from "../lib/search_taxa.ts";
 import {
+  updateCountForAllPlaces,
   updateCountForAllTaxa,
   updateTilesForAllTaxa,
 } from "./search_utils.ts";
@@ -65,7 +66,7 @@ export async function initPopulateStore(
   appStore: MapStore,
   urlStore: MapStore,
 ) {
-  loggerStore("++ initPopulateStore start");
+  loggerStore("++ initPopulateStore start", appStore.inatApiParams);
 
   // use url store to populate appStore.inatApiParams
   for (const [k, value] of Object.entries(urlStore.inatApiParams)) {
@@ -79,7 +80,6 @@ export async function initPopulateStore(
       appStore.inatApiParams[key] = value;
     }
   }
-
   // use url store to populate store view and and subview
   if (urlStore.currentView) {
     appStore.currentView = urlStore.currentView;
@@ -114,6 +114,11 @@ export async function initPopulateStore(
   } else if (urlStore.inatApiParams.nelat !== undefined) {
     processBBoxData(appStore, urlStore);
   }
+  loggerStore(
+    "++ initPopulateStore selectedPlaces",
+    appStore.inatApiParams,
+    appStore.selectedPlaces,
+  );
 
   // project data
   if (urlStore.selectedProjects?.length > 0) {
@@ -125,6 +130,12 @@ export async function initPopulateStore(
       processProjectData(projectData, appStore);
     }
   }
+  loggerStore(
+    "++ initPopulateStore selectedProjects",
+    appStore.inatApiParams,
+    appStore.selectedProjects,
+  );
+
   // user data
   if (urlStore.selectedUsers?.length > 0) {
     for await (const urlStoreUser of urlStore.selectedUsers) {
@@ -135,6 +146,12 @@ export async function initPopulateStore(
       processUserData(data, appStore);
     }
   }
+  loggerStore(
+    "++ initPopulateStore selectedUsers",
+    appStore.inatApiParams,
+    appStore.selectedUsers,
+  );
+
   // taxa data
   if (urlStore.selectedTaxa && urlStore.selectedTaxa.length > 0) {
     for await (const urlStoreTaxon of urlStore.selectedTaxa) {
@@ -145,8 +162,15 @@ export async function initPopulateStore(
       processTaxonData(taxonData, appStore, urlStore);
     }
   }
+  loggerStore(
+    "++ initPopulateStore selectedTaxa",
+    appStore.inatApiParams,
+    appStore.selectedTaxa,
+  );
 
   await updateCountForAllTaxa(appStore);
+  await updateCountForAllPlaces(appStore);
+
   renderTaxaList(appStore);
   renderPlacesList(appStore);
   renderProjectsList(appStore);
@@ -246,7 +270,6 @@ export function processTaxonData(
     name: taxonData.name,
     default_photo: taxonData.default_photo?.square_url,
     preferred_common_name: taxonData.preferred_common_name,
-    matched_term: taxonData.name,
     rank: taxonData.rank,
     id: taxonData.id,
     color: urlStoreTaxon.color,
@@ -258,6 +281,17 @@ export function processTaxonData(
   taxon.subtitle = subtitle;
 
   appStore.selectedTaxa = [...appStore.selectedTaxa, taxon];
+  appStore.inatApiParams.taxon_id = addValueToCommaSeparatedString(
+    taxonData.id,
+    appStore.inatApiParams.taxon_id,
+  );
+  appStore.inatApiParams.colors = addValueToCommaSeparatedString(
+    urlStoreTaxon.color,
+    appStore.inatApiParams.colors,
+  );
+  if (urlStoreTaxon.color) {
+    appStore.color = urlStoreTaxon.color;
+  }
 }
 
 export function processPlaceData(placeData: PlacesResult, appStore: MapStore) {

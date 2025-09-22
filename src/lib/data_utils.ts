@@ -8,6 +8,10 @@ import type {
   CustomLayer,
   CustomGeoJSON,
   iNatApiParamsKeys,
+  NormalizediNatPlace,
+  MapStoreSelectedResourcesKeys,
+  NormalizediNatProject,
+  NormalizediNatUser,
 } from "../types/app";
 import {
   addOverlayToMap,
@@ -28,12 +32,10 @@ import { mapStore } from "./store.ts";
 import type { SpeciesCountTaxon } from "../types/inat_api";
 import { renderTaxaList } from "./search_taxa.ts";
 import { person2 } from "../assets/icons.ts";
+import { updateTilesAndCountForAllTaxa } from "./search_utils.ts";
 
 // called when user clicks refresh map button
-export async function refreshBoundingBox(
-  appStore: MapStore,
-  placeId: number | undefined = undefined,
-) {
+export async function refreshBoundingBox(appStore: MapStore) {
   let map = appStore.map.map;
   let layerControl = appStore.map.layerControl;
 
@@ -54,38 +56,24 @@ export async function refreshBoundingBox(
   };
 
   // save place to store
-  appStore.selectedPlaces = [bboxPlaceRecord(lngLatCoors)];
+  let place = bboxPlaceRecord(lngLatCoors);
+  appStore.selectedPlaces = [place];
   appStore.placesMapLayers = { "0": [layer as unknown as CustomGeoJSON] };
 
   let bbox = map.getBounds();
   let inatBbox = formatiNatAPIBoundingBoxParams(bbox);
+  appStore.inatApiParams = {
+    ...appStore.inatApiParams,
+    ...inatBbox,
+  };
 
-  // get new map tiles if there are selectedTaxa
-  if (appStore.selectedTaxa.length > 0) {
-    for await (const taxon of appStore.selectedTaxa) {
-      removeOneTaxonFromMap(appStore, taxon.id);
+  await updateTilesAndCountForAllTaxa(appStore);
 
-      appStore.inatApiParams = {
-        ...appStore.inatApiParams,
-        ...inatBbox,
-        taxon_id: taxon.id.toString(),
-        colors: taxon.color,
-      };
+  let paramsTemp = {
+    ...appStore.inatApiParams,
+  };
 
-      if (placeId !== undefined) {
-        appStore.inatApiParams.place_id = placeId.toString();
-      }
-
-      await fetchiNatMapDataForTaxon(taxon, appStore);
-      await getObservationsCountForTaxon(taxon, appStore);
-    }
-    // if no selectedTaxa, add bounding box to inatApiParams
-  } else {
-    appStore.inatApiParams = {
-      ...appStore.inatApiParams,
-      ...inatBbox,
-    };
-  }
+  await getObservationsCountForPlace(place, appStore, paramsTemp);
 
   renderTaxaList(appStore);
   renderPlacesList(appStore);
@@ -97,6 +85,7 @@ export async function refreshBoundingBox(
 export async function fetchiNatMapDataForTaxon(
   taxonObj: NormalizediNatTaxon,
   appStore: MapStore,
+  paramsTemp: iNatApiParams,
 ) {
   let map = appStore.map.map;
   let layerControl = appStore.map.layerControl;
@@ -105,7 +94,7 @@ export async function fetchiNatMapDataForTaxon(
 
   // get iNaturalist map layers
   let { iNatGrid, iNatHeatmap, iNatTaxonRange, iNatPoint } = getiNatMapTiles(
-    appStore.inatApiParams,
+    paramsTemp,
     taxonObj,
   );
 
@@ -139,45 +128,16 @@ export async function fetchiNatMapDataForTaxon(
 // ================
 
 export async function getObservationsCountForTaxon(
-  taxonObj: NormalizediNatTaxon,
+  taxon: NormalizediNatTaxon,
   appStore: MapStore,
+  paramsTemp: iNatApiParams,
 ) {
-  let params = cleanupObervationsParamsForRecord(
-    appStore.inatApiParams,
-  ).toString();
-  let perPage = 0;
-
-  let data = await getObservations(params, perPage);
-  taxonObj.observations_count = data?.total_results;
-
-  // update store.selectedTaxa
-  updateSelectedTaxa(appStore, taxonObj);
-}
-
-export function updateSelectedTaxa(
-  appStore: MapStore,
-  taxonObj: NormalizediNatTaxon,
-) {
-  let temp = [];
-  let ids: number[] = [];
-
-  appStore.selectedTaxa.forEach((selectedTaxon) => {
-    // update existing taxon
-    if (selectedTaxon.id === taxonObj.id) {
-      temp.push(taxonObj);
-      // keep existing taxon
-    } else {
-      temp.push(selectedTaxon);
-    }
-    ids.push(selectedTaxon.id);
-  });
-
-  // add new taxon
-  if (!ids.includes(taxonObj.id)) {
-    temp.push(taxonObj);
-  }
-
-  appStore.selectedTaxa = temp;
+  await getObservationsCountForResource(
+    taxon,
+    "selectedTaxa",
+    appStore,
+    paramsTemp,
+  );
 }
 
 export async function addAllTaxaRecordToMapAndStore(appStore: MapStore) {
@@ -186,9 +146,11 @@ export async function addAllTaxaRecordToMapAndStore(appStore: MapStore) {
     colors: iNatOrange,
     taxon_id: "0",
   };
+  let paramsTemp = appStore.inatApiParams;
+  appStore.color = iNatOrange;
 
-  await fetchiNatMapDataForTaxon(allTaxaRecord, appStore);
-  await getObservationsCountForTaxon(allTaxaRecord, appStore);
+  await fetchiNatMapDataForTaxon(allTaxaRecord, appStore, paramsTemp);
+  await getObservationsCountForTaxon(allTaxaRecord, appStore, paramsTemp);
 
   // set taxon_id after getting map data
   appStore.inatApiParams = {
@@ -248,8 +210,10 @@ export function removeTaxaFromStoreAndMap(appStore: MapStore) {
 
   // remove from store
   delete appStore.inatApiParams.taxon_id;
+  delete appStore.inatApiParams.colors;
   appStore.selectedTaxa = [];
   appStore.taxaMapLayers = {};
+  appStore.color = "";
 }
 
 // ================
@@ -312,6 +276,19 @@ function removePlacesFromStoreAndMap(appStore: MapStore) {
   appStore.selectedPlaces = [];
 }
 
+export async function getObservationsCountForPlace(
+  place: NormalizediNatPlace,
+  appStore: MapStore,
+  paramsTemp: iNatApiParams,
+) {
+  await getObservationsCountForResource(
+    place,
+    "selectedPlaces",
+    appStore,
+    paramsTemp,
+  );
+}
+
 // ================
 // project
 // ================
@@ -324,6 +301,59 @@ export function removeOneProjectFromStore(
     (item) => item.id !== projectId,
   );
   removeIdfromInatApiParams(appStore, "project_id", projectId);
+}
+
+// ================
+// selected resource
+// ================
+
+async function getObservationsCountForResource(
+  record:
+    | NormalizediNatPlace
+    | NormalizediNatTaxon
+    | NormalizediNatProject
+    | NormalizediNatUser,
+  resourceName: MapStoreSelectedResourcesKeys,
+  appStore: MapStore,
+  paramsTemp: iNatApiParams,
+) {
+  let params = cleanupObervationsParamsForRecord(paramsTemp);
+  let perPage = 0;
+  let data = await getObservations(params, perPage);
+  record.observations_count = data?.total_results;
+
+  updateSelectedResource(record, resourceName, appStore);
+}
+
+export function updateSelectedResource(
+  record:
+    | NormalizediNatPlace
+    | NormalizediNatTaxon
+    | NormalizediNatProject
+    | NormalizediNatUser,
+  resourceName: MapStoreSelectedResourcesKeys,
+  appStore: MapStore,
+) {
+  let temp = [];
+  let ids: number[] = [];
+
+  appStore[resourceName].forEach((selectedResource) => {
+    // update existing taxon
+    if (selectedResource.id === record.id) {
+      temp.push(record);
+      // keep existing taxon
+    } else {
+      temp.push(selectedResource);
+    }
+    ids.push(selectedResource.id);
+  });
+
+  // add new record
+  if (!ids.includes(record.id)) {
+    temp.push(record);
+  }
+
+  appStore[resourceName] = temp as any;
 }
 
 // ================
@@ -670,6 +700,9 @@ function cleanupParams(appStore: MapStore) {
   if (params.get("taxon_id") === "0") {
     params.delete("taxon_id");
   }
+  if (params.get("place_id") === "0") {
+    params.delete("place_id");
+  }
 
   return params;
 }
@@ -683,8 +716,11 @@ export function cleanupObervationsParamsForRecord(inatParams: iNatApiParams) {
   if (inatParams.taxon_id === "0") {
     params.delete("taxon_id");
   }
+  if (inatParams.place_id === "0") {
+    params.delete("place_id");
+  }
 
-  return params;
+  return params.toString();
 }
 
 export function cleanupObervationsObserversParams(appStore: MapStore) {

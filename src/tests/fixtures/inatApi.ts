@@ -29,17 +29,15 @@ export let redTaxaAutocompleteResults: AutocompleteTaxaResult[] = [
       id: 11484396,
       license_code: "cc-by-nc-nd",
       attribution: "(c) Zweer de Bruin, some rights reserved (CC BY-NC-ND)",
-      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/11484396/square.jpg",
+      url: "https://inat.com/photos/11484396/square.jpg",
       original_dimensions: {
         height: 1572,
         width: 2048,
       },
       flags: [],
       attribution_name: "Zweer de Bruin",
-      square_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/11484396/square.jpg",
-      medium_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/11484396/medium.jpg",
+      square_url: "https://inat.com/photos/11484396/square.jpg",
+      medium_url: "https://inat.com/photos/11484396/medium.jpg",
     },
     taxon_changes_count: 2,
     taxon_schemes_count: 0,
@@ -74,17 +72,15 @@ export let redTaxaAutocompleteResults: AutocompleteTaxaResult[] = [
       id: 149586607,
       license_code: "cc-by-nc",
       attribution: "(c) Jim Dollar, some rights reserved (CC BY-NC)",
-      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
+      url: "https://inat.com/photos/149586607/square.jpg",
       original_dimensions: {
         height: 1365,
         width: 2048,
       },
       flags: [],
       attribution_name: "Jim Dollar",
-      square_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
-      medium_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/medium.jpg",
+      square_url: "https://inat.com/photos/149586607/square.jpg",
+      medium_url: "https://inat.com/photos/149586607/medium.jpg",
     },
     taxon_changes_count: 0,
     taxon_schemes_count: 0,
@@ -117,17 +113,15 @@ export let redTaxaAutocompleteResults: AutocompleteTaxaResult[] = [
       license_code: "cc-by-nc",
       attribution:
         "(c) John D Reynolds, some rights reserved (CC BY-NC), uploaded by John D Reynolds",
-      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/34859026/square.jpg",
+      url: "https://inat.com/photos/34859026/square.jpg",
       original_dimensions: {
         height: 1365,
         width: 2048,
       },
       flags: [],
       attribution_name: "John D Reynolds",
-      square_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/34859026/square.jpg",
-      medium_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/34859026/medium.jpg",
+      square_url: "https://inat.com/photos/34859026/square.jpg",
+      medium_url: "https://inat.com/photos/34859026/medium.jpg",
     },
     taxon_changes_count: 0,
     taxon_schemes_count: 9,
@@ -161,17 +155,15 @@ export let redTaxaAutocompleteResults: AutocompleteTaxaResult[] = [
       license_code: "cc-by-nc",
       attribution:
         "(c) Laura Keene, some rights reserved (CC BY-NC), uploaded by Laura Keene",
-      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/189434971/square.jpg",
+      url: "https://inat.com/photos/189434971/square.jpg",
       original_dimensions: {
         height: 1429,
         width: 2048,
       },
       flags: [],
       attribution_name: "Laura Keene",
-      square_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/189434971/square.jpg",
-      medium_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/189434971/medium.jpg",
+      square_url: "https://inat.com/photos/189434971/square.jpg",
+      medium_url: "https://inat.com/photos/189434971/medium.jpg",
     },
     taxon_changes_count: 0,
     taxon_schemes_count: 10,
@@ -205,17 +197,15 @@ export let redTaxaAutocompleteResults: AutocompleteTaxaResult[] = [
       license_code: "cc-by-nc",
       attribution:
         "(c) Craig K. Hunt, some rights reserved (CC BY-NC), uploaded by Craig K. Hunt",
-      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/101327658/square.jpg",
+      url: "https://inat.com/photos/101327658/square.jpg",
       original_dimensions: {
         height: 2048,
         width: 1281,
       },
       flags: [],
       attribution_name: "Craig K. Hunt",
-      square_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/101327658/square.jpg",
-      medium_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/101327658/medium.jpg",
+      square_url: "https://inat.com/photos/101327658/square.jpg",
+      medium_url: "https://inat.com/photos/101327658/medium.jpg",
     },
     taxon_changes_count: 2,
     taxon_schemes_count: 9,
@@ -248,17 +238,15 @@ export let redTaxaAutocompleteResults: AutocompleteTaxaResult[] = [
       id: 28027,
       license_code: "cc-by-nc",
       attribution: "(c) Jamie Chavez, some rights reserved (CC BY-NC)",
-      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/28027/square.jpg",
+      url: "https://inat.com/photos/28027/square.jpg",
       original_dimensions: {
         height: 1350,
         width: 1824,
       },
       flags: [],
       attribution_name: "Jamie Chavez",
-      square_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/28027/square.jpg",
-      medium_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/28027/medium.jpg",
+      square_url: "https://inat.com/photos/28027/square.jpg",
+      medium_url: "https://inat.com/photos/28027/medium.jpg",
     },
     taxon_changes_count: 0,
     taxon_schemes_count: 1,
@@ -337,17 +325,15 @@ export let redTaxaAutocompleteResults: AutocompleteTaxaResult[] = [
       license_code: "cc-by-sa",
       attribution:
         "(c) Gilles San Martin, some rights reserved (CC BY-SA), uploaded by Gilles San Martin",
-      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/53928483/square.jpg",
+      url: "https://inat.com/photos/53928483/square.jpg",
       original_dimensions: {
         height: 1529,
         width: 2048,
       },
       flags: [],
       attribution_name: "Gilles San Martin",
-      square_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/53928483/square.jpg",
-      medium_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/53928483/medium.jpg",
+      square_url: "https://inat.com/photos/53928483/square.jpg",
+      medium_url: "https://inat.com/photos/53928483/medium.jpg",
     },
     taxon_changes_count: 1,
     taxon_schemes_count: 4,
@@ -382,17 +368,15 @@ export let redTaxaAutocompleteResults: AutocompleteTaxaResult[] = [
       license_code: "cc-by-nc",
       attribution:
         "(c) James Bailey, some rights reserved (CC BY-NC), uploaded by James Bailey",
-      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/385623143/square.jpeg",
+      url: "https://inat.com/photos/385623143/square.jpeg",
       original_dimensions: {
         height: 1530,
         width: 2048,
       },
       flags: [],
       attribution_name: "James Bailey",
-      square_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/385623143/square.jpeg",
-      medium_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/385623143/medium.jpeg",
+      square_url: "https://inat.com/photos/385623143/square.jpeg",
+      medium_url: "https://inat.com/photos/385623143/medium.jpeg",
     },
     taxon_changes_count: 0,
     taxon_schemes_count: 1,
@@ -425,17 +409,15 @@ export let redTaxaAutocompleteResults: AutocompleteTaxaResult[] = [
       license_code: "cc-by-nc",
       attribution:
         "(c) ðejay (Orkney), some rights reserved (CC BY-NC), uploaded by ðejay (Orkney)",
-      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/28834665/square.jpeg",
+      url: "https://inat.com/photos/28834665/square.jpeg",
       original_dimensions: {
         height: 1639,
         width: 2048,
       },
       flags: [],
       attribution_name: "ðejay (Orkney)",
-      square_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/28834665/square.jpeg",
-      medium_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/28834665/medium.jpeg",
+      square_url: "https://inat.com/photos/28834665/square.jpeg",
+      medium_url: "https://inat.com/photos/28834665/medium.jpeg",
     },
     taxon_changes_count: 2,
     taxon_schemes_count: 2,
@@ -930,17 +912,15 @@ export let coastOakAutocompleteResults: AutocompleteTaxaResult[] = [
       id: 1149511,
       license_code: "cc-by-nc",
       attribution: "(c) dshell, some rights reserved (CC BY-NC)",
-      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/1149511/square.JPG",
+      url: "https://inat.com/photos/1149511/square.JPG",
       original_dimensions: {
         height: 1536,
         width: 2048,
       },
       flags: [],
       attribution_name: "dshell",
-      square_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/1149511/square.JPG",
-      medium_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/1149511/medium.JPG",
+      square_url: "https://inat.com/photos/1149511/square.JPG",
+      medium_url: "https://inat.com/photos/1149511/medium.JPG",
     },
     taxon_changes_count: 0,
     taxon_schemes_count: 3,
@@ -987,17 +967,15 @@ export let coastOakAutocompleteResults: AutocompleteTaxaResult[] = [
       id: 18734105,
       license_code: "cc-by-sa",
       attribution: "(c) Franco Folini, some rights reserved (CC BY-SA)",
-      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/18734105/square.jpg",
+      url: "https://inat.com/photos/18734105/square.jpg",
       original_dimensions: {
         height: 1356,
         width: 2048,
       },
       flags: [],
       attribution_name: "Franco Folini",
-      square_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/18734105/square.jpg",
-      medium_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/18734105/medium.jpg",
+      square_url: "https://inat.com/photos/18734105/square.jpg",
+      medium_url: "https://inat.com/photos/18734105/medium.jpg",
     },
     taxon_changes_count: 0,
     taxon_schemes_count: 5,
@@ -1032,17 +1010,15 @@ export let coastOakAutocompleteResults: AutocompleteTaxaResult[] = [
       license_code: "cc-by-nc",
       attribution:
         "(c) Pedro Alanis, some rights reserved (CC BY-NC), uploaded by Pedro Alanis",
-      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/16450498/square.jpeg",
+      url: "https://inat.com/photos/16450498/square.jpeg",
       original_dimensions: {
         height: 1536,
         width: 2048,
       },
       flags: [],
       attribution_name: "Pedro Alanis",
-      square_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/16450498/square.jpeg",
-      medium_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/16450498/medium.jpeg",
+      square_url: "https://inat.com/photos/16450498/square.jpeg",
+      medium_url: "https://inat.com/photos/16450498/medium.jpeg",
     },
     taxon_changes_count: 0,
     taxon_schemes_count: 3,
@@ -1078,17 +1054,15 @@ export let coastOakAutocompleteResults: AutocompleteTaxaResult[] = [
       license_code: "cc-by-nc",
       attribution:
         "(c) Ricky Taylor, some rights reserved (CC BY-NC), uploaded by Ricky Taylor",
-      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/19070182/square.jpg",
+      url: "https://inat.com/photos/19070182/square.jpg",
       original_dimensions: {
         height: 1705,
         width: 2048,
       },
       flags: [],
       attribution_name: "Ricky Taylor",
-      square_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/19070182/square.jpg",
-      medium_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/19070182/medium.jpg",
+      square_url: "https://inat.com/photos/19070182/square.jpg",
+      medium_url: "https://inat.com/photos/19070182/medium.jpg",
     },
     taxon_changes_count: 0,
     taxon_schemes_count: 1,
@@ -1125,17 +1099,15 @@ export let coastOakAutocompleteResults: AutocompleteTaxaResult[] = [
       license_code: "cc-by-nc",
       attribution:
         "(c) James Bailey, some rights reserved (CC BY-NC), uploaded by James Bailey",
-      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/5095235/square.jpeg",
+      url: "https://inat.com/photos/5095235/square.jpeg",
       original_dimensions: {
         height: 1365,
         width: 2048,
       },
       flags: [],
       attribution_name: "James Bailey",
-      square_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/5095235/square.jpeg",
-      medium_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/5095235/medium.jpeg",
+      square_url: "https://inat.com/photos/5095235/square.jpeg",
+      medium_url: "https://inat.com/photos/5095235/medium.jpeg",
     },
     taxon_changes_count: 1,
     taxon_schemes_count: 6,
@@ -1227,17 +1199,15 @@ export let coastOakAutocompleteResults: AutocompleteTaxaResult[] = [
       id: 215365554,
       license_code: "cc-by-nc",
       attribution: "(c) rebeccabrubaker, some rights reserved (CC BY-NC)",
-      url: "https://inaturalist-open-data.s3.amazonaws.com/photos/215365554/square.jpg",
+      url: "https://inat.com/photos/215365554/square.jpg",
       original_dimensions: {
         height: 2048,
         width: 1536,
       },
       flags: [],
       attribution_name: "rebeccabrubaker",
-      square_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/215365554/square.jpg",
-      medium_url:
-        "https://inaturalist-open-data.s3.amazonaws.com/photos/215365554/medium.jpg",
+      square_url: "https://inat.com/photos/215365554/square.jpg",
+      medium_url: "https://inat.com/photos/215365554/medium.jpg",
     },
     taxon_changes_count: 0,
     taxon_schemes_count: 0,
@@ -2941,17 +2911,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
         id: 149586607,
         license_code: "cc-by-nc",
         attribution: "(c) Jim Dollar, some rights reserved (CC BY-NC)",
-        url: "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
+        url: "https://inat.com/photos/149586607/square.jpg",
         original_dimensions: {
           height: 1365,
           width: 2048,
         },
         flags: [],
         attribution_name: "Jim Dollar",
-        square_url:
-          "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
-        medium_url:
-          "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/medium.jpg",
+        square_url: "https://inat.com/photos/149586607/square.jpg",
+        medium_url: "https://inat.com/photos/149586607/medium.jpg",
       },
       taxon_changes_count: 0,
       taxon_schemes_count: 0,
@@ -2969,7 +2937,7 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             id: 149586607,
             license_code: "cc-by-nc",
             attribution: "(c) Jim Dollar, some rights reserved (CC BY-NC)",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
+            url: "https://inat.com/photos/149586607/square.jpg",
             original_dimensions: {
               height: 1365,
               width: 2048,
@@ -2980,16 +2948,11 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             native_photo_id: "3054351970",
             type: "LocalPhoto",
             attribution_name: "Jim Dollar",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/small.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/medium.jpg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/large.jpg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/original.jpg",
+            square_url: "https://inat.com/photos/149586607/square.jpg",
+            small_url: "https://inat.com/photos/149586607/small.jpg",
+            medium_url: "https://inat.com/photos/149586607/medium.jpg",
+            large_url: "https://inat.com/photos/149586607/large.jpg",
+            original_url: "https://inat.com/photos/149586607/original.jpg",
           },
           taxon: {
             id: 861036,
@@ -3009,17 +2972,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
               id: 149586607,
               license_code: "cc-by-nc",
               attribution: "(c) Jim Dollar, some rights reserved (CC BY-NC)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
+              url: "https://inat.com/photos/149586607/square.jpg",
               original_dimensions: {
                 height: 1365,
                 width: 2048,
               },
               flags: [],
               attribution_name: "Jim Dollar",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/medium.jpg",
+              square_url: "https://inat.com/photos/149586607/square.jpg",
+              medium_url: "https://inat.com/photos/149586607/medium.jpg",
             },
             taxon_changes_count: 0,
             taxon_schemes_count: 0,
@@ -3045,7 +3006,7 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) Douglas Goldman, some rights reserved (CC BY-SA), uploaded by Douglas Goldman",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/96348091/square.jpg",
+            url: "https://inat.com/photos/96348091/square.jpg",
             original_dimensions: {
               height: 1371,
               width: 2048,
@@ -3055,16 +3016,11 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             native_photo_id: null,
             type: "LocalPhoto",
             attribution_name: "Douglas Goldman",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/96348091/square.jpg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/96348091/small.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/96348091/medium.jpg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/96348091/large.jpg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/96348091/original.jpg",
+            square_url: "https://inat.com/photos/96348091/square.jpg",
+            small_url: "https://inat.com/photos/96348091/small.jpg",
+            medium_url: "https://inat.com/photos/96348091/medium.jpg",
+            large_url: "https://inat.com/photos/96348091/large.jpg",
+            original_url: "https://inat.com/photos/96348091/original.jpg",
           },
           taxon: {
             id: 861036,
@@ -3084,17 +3040,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
               id: 149586607,
               license_code: "cc-by-nc",
               attribution: "(c) Jim Dollar, some rights reserved (CC BY-NC)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
+              url: "https://inat.com/photos/149586607/square.jpg",
               original_dimensions: {
                 height: 1365,
                 width: 2048,
               },
               flags: [],
               attribution_name: "Jim Dollar",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/medium.jpg",
+              square_url: "https://inat.com/photos/149586607/square.jpg",
+              medium_url: "https://inat.com/photos/149586607/medium.jpg",
             },
             taxon_changes_count: 0,
             taxon_schemes_count: 0,
@@ -3120,7 +3074,7 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) Douglas Goldman, some rights reserved (CC BY-SA), uploaded by Douglas Goldman",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/107539116/square.jpg",
+            url: "https://inat.com/photos/107539116/square.jpg",
             original_dimensions: {
               height: 1371,
               width: 2048,
@@ -3130,16 +3084,11 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             native_photo_id: null,
             type: "LocalPhoto",
             attribution_name: "Douglas Goldman",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/107539116/square.jpg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/107539116/small.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/107539116/medium.jpg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/107539116/large.jpg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/107539116/original.jpg",
+            square_url: "https://inat.com/photos/107539116/square.jpg",
+            small_url: "https://inat.com/photos/107539116/small.jpg",
+            medium_url: "https://inat.com/photos/107539116/medium.jpg",
+            large_url: "https://inat.com/photos/107539116/large.jpg",
+            original_url: "https://inat.com/photos/107539116/original.jpg",
           },
           taxon: {
             id: 861036,
@@ -3159,17 +3108,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
               id: 149586607,
               license_code: "cc-by-nc",
               attribution: "(c) Jim Dollar, some rights reserved (CC BY-NC)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
+              url: "https://inat.com/photos/149586607/square.jpg",
               original_dimensions: {
                 height: 1365,
                 width: 2048,
               },
               flags: [],
               attribution_name: "Jim Dollar",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/medium.jpg",
+              square_url: "https://inat.com/photos/149586607/square.jpg",
+              medium_url: "https://inat.com/photos/149586607/medium.jpg",
             },
             taxon_changes_count: 0,
             taxon_schemes_count: 0,
@@ -3195,7 +3142,7 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Paul K Davis, some rights reserved (CC BY-NC), uploaded by Paul K Davis",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/167972036/square.jpg",
+            url: "https://inat.com/photos/167972036/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1536,
@@ -3205,16 +3152,11 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             native_photo_id: null,
             type: "LocalPhoto",
             attribution_name: "Paul K Davis",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/167972036/square.jpg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/167972036/small.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/167972036/medium.jpg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/167972036/large.jpg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/167972036/original.jpg",
+            square_url: "https://inat.com/photos/167972036/square.jpg",
+            small_url: "https://inat.com/photos/167972036/small.jpg",
+            medium_url: "https://inat.com/photos/167972036/medium.jpg",
+            large_url: "https://inat.com/photos/167972036/large.jpg",
+            original_url: "https://inat.com/photos/167972036/original.jpg",
           },
           taxon: {
             id: 861036,
@@ -3234,17 +3176,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
               id: 149586607,
               license_code: "cc-by-nc",
               attribution: "(c) Jim Dollar, some rights reserved (CC BY-NC)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
+              url: "https://inat.com/photos/149586607/square.jpg",
               original_dimensions: {
                 height: 1365,
                 width: 2048,
               },
               flags: [],
               attribution_name: "Jim Dollar",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/medium.jpg",
+              square_url: "https://inat.com/photos/149586607/square.jpg",
+              medium_url: "https://inat.com/photos/149586607/medium.jpg",
             },
             taxon_changes_count: 0,
             taxon_schemes_count: 0,
@@ -3270,7 +3210,7 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) Douglas Goldman, some rights reserved (CC BY-SA), uploaded by Douglas Goldman",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/96348131/square.jpg",
+            url: "https://inat.com/photos/96348131/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1371,
@@ -3280,16 +3220,11 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             native_photo_id: null,
             type: "LocalPhoto",
             attribution_name: "Douglas Goldman",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/96348131/square.jpg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/96348131/small.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/96348131/medium.jpg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/96348131/large.jpg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/96348131/original.jpg",
+            square_url: "https://inat.com/photos/96348131/square.jpg",
+            small_url: "https://inat.com/photos/96348131/small.jpg",
+            medium_url: "https://inat.com/photos/96348131/medium.jpg",
+            large_url: "https://inat.com/photos/96348131/large.jpg",
+            original_url: "https://inat.com/photos/96348131/original.jpg",
           },
           taxon: {
             id: 861036,
@@ -3309,17 +3244,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
               id: 149586607,
               license_code: "cc-by-nc",
               attribution: "(c) Jim Dollar, some rights reserved (CC BY-NC)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
+              url: "https://inat.com/photos/149586607/square.jpg",
               original_dimensions: {
                 height: 1365,
                 width: 2048,
               },
               flags: [],
               attribution_name: "Jim Dollar",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/medium.jpg",
+              square_url: "https://inat.com/photos/149586607/square.jpg",
+              medium_url: "https://inat.com/photos/149586607/medium.jpg",
             },
             taxon_changes_count: 0,
             taxon_schemes_count: 0,
@@ -3345,7 +3278,7 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by",
             attribution:
               "(c) Tom Norton, some rights reserved (CC BY), uploaded by Tom Norton",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/33756162/square.jpeg",
+            url: "https://inat.com/photos/33756162/square.jpeg",
             original_dimensions: {
               height: 2048,
               width: 1152,
@@ -3355,16 +3288,11 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             native_photo_id: null,
             type: "LocalPhoto",
             attribution_name: "Tom Norton",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/33756162/square.jpeg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/33756162/small.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/33756162/medium.jpeg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/33756162/large.jpeg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/33756162/original.jpeg",
+            square_url: "https://inat.com/photos/33756162/square.jpeg",
+            small_url: "https://inat.com/photos/33756162/small.jpeg",
+            medium_url: "https://inat.com/photos/33756162/medium.jpeg",
+            large_url: "https://inat.com/photos/33756162/large.jpeg",
+            original_url: "https://inat.com/photos/33756162/original.jpeg",
           },
           taxon: {
             id: 861036,
@@ -3384,17 +3312,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
               id: 149586607,
               license_code: "cc-by-nc",
               attribution: "(c) Jim Dollar, some rights reserved (CC BY-NC)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
+              url: "https://inat.com/photos/149586607/square.jpg",
               original_dimensions: {
                 height: 1365,
                 width: 2048,
               },
               flags: [],
               attribution_name: "Jim Dollar",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/medium.jpg",
+              square_url: "https://inat.com/photos/149586607/square.jpg",
+              medium_url: "https://inat.com/photos/149586607/medium.jpg",
             },
             taxon_changes_count: 0,
             taxon_schemes_count: 0,
@@ -3420,7 +3346,7 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) Douglas Goldman, some rights reserved (CC BY-SA), uploaded by Douglas Goldman",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/165601007/square.jpg",
+            url: "https://inat.com/photos/165601007/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1371,
@@ -3430,16 +3356,11 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             native_photo_id: null,
             type: "LocalPhoto",
             attribution_name: "Douglas Goldman",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/165601007/square.jpg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/165601007/small.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/165601007/medium.jpg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/165601007/large.jpg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/165601007/original.jpg",
+            square_url: "https://inat.com/photos/165601007/square.jpg",
+            small_url: "https://inat.com/photos/165601007/small.jpg",
+            medium_url: "https://inat.com/photos/165601007/medium.jpg",
+            large_url: "https://inat.com/photos/165601007/large.jpg",
+            original_url: "https://inat.com/photos/165601007/original.jpg",
           },
           taxon: {
             id: 861036,
@@ -3459,17 +3380,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
               id: 149586607,
               license_code: "cc-by-nc",
               attribution: "(c) Jim Dollar, some rights reserved (CC BY-NC)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
+              url: "https://inat.com/photos/149586607/square.jpg",
               original_dimensions: {
                 height: 1365,
                 width: 2048,
               },
               flags: [],
               attribution_name: "Jim Dollar",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/medium.jpg",
+              square_url: "https://inat.com/photos/149586607/square.jpg",
+              medium_url: "https://inat.com/photos/149586607/medium.jpg",
             },
             taxon_changes_count: 0,
             taxon_schemes_count: 0,
@@ -3495,7 +3414,7 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Paul K Davis, some rights reserved (CC BY-NC), uploaded by Paul K Davis",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/167971690/square.jpg",
+            url: "https://inat.com/photos/167971690/square.jpg",
             original_dimensions: {
               height: 1536,
               width: 2048,
@@ -3505,16 +3424,11 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             native_photo_id: null,
             type: "LocalPhoto",
             attribution_name: "Paul K Davis",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/167971690/square.jpg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/167971690/small.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/167971690/medium.jpg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/167971690/large.jpg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/167971690/original.jpg",
+            square_url: "https://inat.com/photos/167971690/square.jpg",
+            small_url: "https://inat.com/photos/167971690/small.jpg",
+            medium_url: "https://inat.com/photos/167971690/medium.jpg",
+            large_url: "https://inat.com/photos/167971690/large.jpg",
+            original_url: "https://inat.com/photos/167971690/original.jpg",
           },
           taxon: {
             id: 861036,
@@ -3534,17 +3448,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
               id: 149586607,
               license_code: "cc-by-nc",
               attribution: "(c) Jim Dollar, some rights reserved (CC BY-NC)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
+              url: "https://inat.com/photos/149586607/square.jpg",
               original_dimensions: {
                 height: 1365,
                 width: 2048,
               },
               flags: [],
               attribution_name: "Jim Dollar",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/medium.jpg",
+              square_url: "https://inat.com/photos/149586607/square.jpg",
+              medium_url: "https://inat.com/photos/149586607/medium.jpg",
             },
             taxon_changes_count: 0,
             taxon_schemes_count: 0,
@@ -3570,7 +3482,7 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) Douglas Goldman, some rights reserved (CC BY-SA), uploaded by Douglas Goldman",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/356766039/square.jpg",
+            url: "https://inat.com/photos/356766039/square.jpg",
             original_dimensions: {
               height: 1371,
               width: 2048,
@@ -3580,16 +3492,11 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             native_photo_id: null,
             type: "LocalPhoto",
             attribution_name: "Douglas Goldman",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/356766039/square.jpg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/356766039/small.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/356766039/medium.jpg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/356766039/large.jpg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/356766039/original.jpg",
+            square_url: "https://inat.com/photos/356766039/square.jpg",
+            small_url: "https://inat.com/photos/356766039/small.jpg",
+            medium_url: "https://inat.com/photos/356766039/medium.jpg",
+            large_url: "https://inat.com/photos/356766039/large.jpg",
+            original_url: "https://inat.com/photos/356766039/original.jpg",
           },
           taxon: {
             id: 861036,
@@ -3609,17 +3516,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
               id: 149586607,
               license_code: "cc-by-nc",
               attribution: "(c) Jim Dollar, some rights reserved (CC BY-NC)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
+              url: "https://inat.com/photos/149586607/square.jpg",
               original_dimensions: {
                 height: 1365,
                 width: 2048,
               },
               flags: [],
               attribution_name: "Jim Dollar",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/medium.jpg",
+              square_url: "https://inat.com/photos/149586607/square.jpg",
+              medium_url: "https://inat.com/photos/149586607/medium.jpg",
             },
             taxon_changes_count: 0,
             taxon_schemes_count: 0,
@@ -3645,7 +3550,7 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Janet Wright, some rights reserved (CC BY-NC), uploaded by Janet Wright",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/60123914/square.jpeg",
+            url: "https://inat.com/photos/60123914/square.jpeg",
             original_dimensions: {
               height: 2048,
               width: 1536,
@@ -3655,16 +3560,11 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             native_photo_id: null,
             type: "LocalPhoto",
             attribution_name: "Janet Wright",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/60123914/square.jpeg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/60123914/small.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/60123914/medium.jpeg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/60123914/large.jpeg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/60123914/original.jpeg",
+            square_url: "https://inat.com/photos/60123914/square.jpeg",
+            small_url: "https://inat.com/photos/60123914/small.jpeg",
+            medium_url: "https://inat.com/photos/60123914/medium.jpeg",
+            large_url: "https://inat.com/photos/60123914/large.jpeg",
+            original_url: "https://inat.com/photos/60123914/original.jpeg",
           },
           taxon: {
             id: 861036,
@@ -3684,17 +3584,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
               id: 149586607,
               license_code: "cc-by-nc",
               attribution: "(c) Jim Dollar, some rights reserved (CC BY-NC)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
+              url: "https://inat.com/photos/149586607/square.jpg",
               original_dimensions: {
                 height: 1365,
                 width: 2048,
               },
               flags: [],
               attribution_name: "Jim Dollar",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/medium.jpg",
+              square_url: "https://inat.com/photos/149586607/square.jpg",
+              medium_url: "https://inat.com/photos/149586607/medium.jpg",
             },
             taxon_changes_count: 0,
             taxon_schemes_count: 0,
@@ -3759,17 +3657,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
               id: 149586607,
               license_code: "cc-by-nc",
               attribution: "(c) Jim Dollar, some rights reserved (CC BY-NC)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
+              url: "https://inat.com/photos/149586607/square.jpg",
               original_dimensions: {
                 height: 1365,
                 width: 2048,
               },
               flags: [],
               attribution_name: "Jim Dollar",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/medium.jpg",
+              square_url: "https://inat.com/photos/149586607/square.jpg",
+              medium_url: "https://inat.com/photos/149586607/medium.jpg",
             },
             taxon_changes_count: 0,
             taxon_schemes_count: 0,
@@ -3795,7 +3691,7 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) Douglas Goldman, some rights reserved (CC BY-SA), uploaded by Douglas Goldman",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/53574997/square.jpg",
+            url: "https://inat.com/photos/53574997/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1371,
@@ -3805,16 +3701,11 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             native_photo_id: null,
             type: "LocalPhoto",
             attribution_name: "Douglas Goldman",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/53574997/square.jpg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/53574997/small.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/53574997/medium.jpg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/53574997/large.jpg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/53574997/original.jpg",
+            square_url: "https://inat.com/photos/53574997/square.jpg",
+            small_url: "https://inat.com/photos/53574997/small.jpg",
+            medium_url: "https://inat.com/photos/53574997/medium.jpg",
+            large_url: "https://inat.com/photos/53574997/large.jpg",
+            original_url: "https://inat.com/photos/53574997/original.jpg",
           },
           taxon: {
             id: 861036,
@@ -3834,17 +3725,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
               id: 149586607,
               license_code: "cc-by-nc",
               attribution: "(c) Jim Dollar, some rights reserved (CC BY-NC)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
+              url: "https://inat.com/photos/149586607/square.jpg",
               original_dimensions: {
                 height: 1365,
                 width: 2048,
               },
               flags: [],
               attribution_name: "Jim Dollar",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/square.jpg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/149586607/medium.jpg",
+              square_url: "https://inat.com/photos/149586607/square.jpg",
+              medium_url: "https://inat.com/photos/149586607/medium.jpg",
             },
             taxon_changes_count: 0,
             taxon_schemes_count: 0,
@@ -3929,17 +3818,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) Douglas Goldman, some rights reserved (CC BY-SA), uploaded by Douglas Goldman",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/301768574/square.jpg",
+            url: "https://inat.com/photos/301768574/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1371,
             },
             flags: [],
             attribution_name: "Douglas Goldman",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/301768574/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/301768574/medium.jpg",
+            square_url: "https://inat.com/photos/301768574/square.jpg",
+            medium_url: "https://inat.com/photos/301768574/medium.jpg",
           },
           taxon_changes_count: 3,
           taxon_schemes_count: 2,
@@ -3971,17 +3858,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by",
             attribution:
               "(c) Alan Rockefeller, some rights reserved (CC BY), uploaded by Alan Rockefeller",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/272455964/square.jpg",
+            url: "https://inat.com/photos/272455964/square.jpg",
             original_dimensions: {
               height: 1489,
               width: 2048,
             },
             flags: [],
             attribution_name: "Alan Rockefeller",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/272455964/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/272455964/medium.jpg",
+            square_url: "https://inat.com/photos/272455964/square.jpg",
+            medium_url: "https://inat.com/photos/272455964/medium.jpg",
           },
           taxon_changes_count: 5,
           taxon_schemes_count: 2,
@@ -4013,17 +3898,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Ricardo Arredondo T., some rights reserved (CC BY-NC), uploaded by Ricardo Arredondo T.",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/95003339/square.jpeg",
+            url: "https://inat.com/photos/95003339/square.jpeg",
             original_dimensions: {
               height: 2048,
               width: 2048,
             },
             flags: [],
             attribution_name: "Ricardo Arredondo T.",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/95003339/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/95003339/medium.jpeg",
+            square_url: "https://inat.com/photos/95003339/square.jpeg",
+            medium_url: "https://inat.com/photos/95003339/medium.jpeg",
           },
           taxon_changes_count: 4,
           taxon_schemes_count: 2,
@@ -4055,17 +3938,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Jakob Fahr, some rights reserved (CC BY-NC), uploaded by Jakob Fahr",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/2305595/square.JPG",
+            url: "https://inat.com/photos/2305595/square.JPG",
             original_dimensions: {
               height: 1094,
               width: 1459,
             },
             flags: [],
             attribution_name: "Jakob Fahr",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/2305595/square.JPG",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/2305595/medium.JPG",
+            square_url: "https://inat.com/photos/2305595/square.JPG",
+            medium_url: "https://inat.com/photos/2305595/medium.JPG",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -4097,17 +3978,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Ginevra🌿, some rights reserved (CC BY-NC), uploaded by Ginevra🌿",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/281236060/square.jpeg",
+            url: "https://inat.com/photos/281236060/square.jpeg",
             original_dimensions: {
               height: 2048,
               width: 1536,
             },
             flags: [],
             attribution_name: "Ginevra🌿",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/281236060/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/281236060/medium.jpeg",
+            square_url: "https://inat.com/photos/281236060/square.jpeg",
+            medium_url: "https://inat.com/photos/281236060/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -4141,17 +4020,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by",
             attribution:
               "(c) Miguel Angel Masegosa Martínez, some rights reserved (CC BY)",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/90880312/square.jpg",
+            url: "https://inat.com/photos/90880312/square.jpg",
             original_dimensions: {
               height: 1280,
               width: 2048,
             },
             flags: [],
             attribution_name: "Miguel Angel Masegosa Martínez",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/90880312/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/90880312/medium.jpg",
+            square_url: "https://inat.com/photos/90880312/square.jpg",
+            medium_url: "https://inat.com/photos/90880312/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -4185,17 +4062,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) Douglas Goldman, some rights reserved (CC BY-SA), uploaded by Douglas Goldman",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/56307945/square.jpg",
+            url: "https://inat.com/photos/56307945/square.jpg",
             original_dimensions: {
               height: 1867,
               width: 1600,
             },
             flags: [],
             attribution_name: "Douglas Goldman",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/56307945/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/56307945/medium.jpg",
+            square_url: "https://inat.com/photos/56307945/square.jpg",
+            medium_url: "https://inat.com/photos/56307945/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 1,
@@ -4233,17 +4108,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Susan Elliott, some rights reserved (CC BY-NC), uploaded by Susan Elliott",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/2592222/square.jpg",
+            url: "https://inat.com/photos/2592222/square.jpg",
             original_dimensions: {
               height: 1538,
               width: 2048,
             },
             flags: [],
             attribution_name: "Susan Elliott",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/2592222/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/2592222/medium.jpg",
+            square_url: "https://inat.com/photos/2592222/square.jpg",
+            medium_url: "https://inat.com/photos/2592222/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 0,
@@ -4278,17 +4151,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) Douglas Goldman, some rights reserved (CC BY-SA), uploaded by Douglas Goldman",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/96347415/square.jpg",
+            url: "https://inat.com/photos/96347415/square.jpg",
             original_dimensions: {
               height: 1371,
               width: 2048,
             },
             flags: [],
             attribution_name: "Douglas Goldman",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/96347415/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/96347415/medium.jpg",
+            square_url: "https://inat.com/photos/96347415/square.jpg",
+            medium_url: "https://inat.com/photos/96347415/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 0,
@@ -4323,17 +4194,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Ron Vanderhoff, some rights reserved (CC BY-NC), uploaded by Ron Vanderhoff",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/58499218/square.jpeg",
+            url: "https://inat.com/photos/58499218/square.jpeg",
             original_dimensions: {
               height: 1365,
               width: 2048,
             },
             flags: [],
             attribution_name: "Ron Vanderhoff",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/58499218/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/58499218/medium.jpeg",
+            square_url: "https://inat.com/photos/58499218/square.jpeg",
+            medium_url: "https://inat.com/photos/58499218/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 0,
@@ -4368,17 +4237,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Alex Binck, some rights reserved (CC BY-NC), uploaded by Alex Binck",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/194881776/square.jpg",
+            url: "https://inat.com/photos/194881776/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1536,
             },
             flags: [],
             attribution_name: "Alex Binck",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/194881776/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/194881776/medium.jpg",
+            square_url: "https://inat.com/photos/194881776/square.jpg",
+            medium_url: "https://inat.com/photos/194881776/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 0,
@@ -4413,17 +4280,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Chuck Sexton, some rights reserved (CC BY-NC), uploaded by Chuck Sexton",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/3577860/square.jpg",
+            url: "https://inat.com/photos/3577860/square.jpg",
             original_dimensions: {
               height: 1280,
               width: 1280,
             },
             flags: [],
             attribution_name: "Chuck Sexton",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/3577860/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/3577860/medium.jpg",
+            square_url: "https://inat.com/photos/3577860/square.jpg",
+            medium_url: "https://inat.com/photos/3577860/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 3,
@@ -4459,17 +4324,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Matt Ritter, Ph.D., some rights reserved (CC BY-NC), uploaded by Matt Ritter, Ph.D.",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/91141760/square.jpeg",
+            url: "https://inat.com/photos/91141760/square.jpeg",
             original_dimensions: {
               height: 1536,
               width: 2048,
             },
             flags: [],
             attribution_name: "Matt Ritter, Ph.D.",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/91141760/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/91141760/medium.jpeg",
+            square_url: "https://inat.com/photos/91141760/square.jpeg",
+            medium_url: "https://inat.com/photos/91141760/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 3,
@@ -4551,17 +4414,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Omar Lopez Samperio, some rights reserved (CC BY-NC), uploaded by Omar Lopez Samperio",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/511698526/square.jpg",
+            url: "https://inat.com/photos/511698526/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1542,
             },
             flags: [],
             attribution_name: "Omar Lopez Samperio",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/511698526/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/511698526/medium.jpg",
+            square_url: "https://inat.com/photos/511698526/square.jpg",
+            medium_url: "https://inat.com/photos/511698526/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -4597,17 +4458,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Alejandra Peña Estrada, some rights reserved (CC BY-NC), uploaded by Alejandra Peña Estrada",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/328052081/square.jpeg",
+            url: "https://inat.com/photos/328052081/square.jpeg",
             original_dimensions: {
               height: 2048,
               width: 1536,
             },
             flags: [],
             attribution_name: "Alejandra Peña Estrada",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/328052081/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/328052081/medium.jpeg",
+            square_url: "https://inat.com/photos/328052081/square.jpeg",
+            medium_url: "https://inat.com/photos/328052081/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -4643,17 +4502,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Jesús Niño C., some rights reserved (CC BY-NC), uploaded by Jesús Niño C.",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/168267049/square.jpeg",
+            url: "https://inat.com/photos/168267049/square.jpeg",
             original_dimensions: {
               height: 1365,
               width: 2048,
             },
             flags: [],
             attribution_name: "Jesús Niño C.",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/168267049/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/168267049/medium.jpeg",
+            square_url: "https://inat.com/photos/168267049/square.jpeg",
+            medium_url: "https://inat.com/photos/168267049/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 5,
@@ -4689,17 +4546,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Christian Schwarz, some rights reserved (CC BY-NC), uploaded by Christian Schwarz",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/6823654/square.jpg",
+            url: "https://inat.com/photos/6823654/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 2048,
             },
             flags: [],
             attribution_name: "Christian Schwarz",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/6823654/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/6823654/medium.jpg",
+            square_url: "https://inat.com/photos/6823654/square.jpg",
+            medium_url: "https://inat.com/photos/6823654/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 3,
@@ -4792,17 +4647,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Steven Mlodinow, some rights reserved (CC BY-NC), uploaded by Steven Mlodinow",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/178335455/square.jpg",
+            url: "https://inat.com/photos/178335455/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1872,
             },
             flags: [],
             attribution_name: "Steven Mlodinow",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/178335455/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/178335455/medium.jpg",
+            square_url: "https://inat.com/photos/178335455/square.jpg",
+            medium_url: "https://inat.com/photos/178335455/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -4837,17 +4690,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Bodo Nuñez Oberg, some rights reserved (CC BY-NC), uploaded by Bodo Nuñez Oberg",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/272617526/square.jpg",
+            url: "https://inat.com/photos/272617526/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 2048,
             },
             flags: [],
             attribution_name: "Bodo Nuñez Oberg",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/272617526/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/272617526/medium.jpg",
+            square_url: "https://inat.com/photos/272617526/square.jpg",
+            medium_url: "https://inat.com/photos/272617526/medium.jpg",
           },
           taxon_changes_count: 1,
           taxon_schemes_count: 2,
@@ -4984,17 +4835,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Juan Carlos López Domínguez, some rights reserved (CC BY-NC), uploaded by Juan Carlos López Domínguez",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/18542739/square.jpeg",
+            url: "https://inat.com/photos/18542739/square.jpeg",
             original_dimensions: {
               height: 1600,
               width: 1200,
             },
             flags: [],
             attribution_name: "Juan Carlos López Domínguez",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/18542739/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/18542739/medium.jpeg",
+            square_url: "https://inat.com/photos/18542739/square.jpeg",
+            medium_url: "https://inat.com/photos/18542739/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -5029,17 +4878,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) María Eugenia Mendiola González, some rights reserved (CC BY-SA), uploaded by María Eugenia Mendiola González",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/32883842/square.jpeg",
+            url: "https://inat.com/photos/32883842/square.jpeg",
             original_dimensions: {
               height: 1536,
               width: 2048,
             },
             flags: [],
             attribution_name: "María Eugenia Mendiola González",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/32883842/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/32883842/medium.jpeg",
+            square_url: "https://inat.com/photos/32883842/square.jpeg",
+            medium_url: "https://inat.com/photos/32883842/medium.jpeg",
           },
           taxon_changes_count: 1,
           taxon_schemes_count: 1,
@@ -5074,17 +4921,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) María Eugenia Mendiola González, some rights reserved (CC BY-SA), uploaded by María Eugenia Mendiola González",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/91272199/square.jpeg",
+            url: "https://inat.com/photos/91272199/square.jpeg",
             original_dimensions: {
               height: 1536,
               width: 2048,
             },
             flags: [],
             attribution_name: "María Eugenia Mendiola González",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/91272199/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/91272199/medium.jpeg",
+            square_url: "https://inat.com/photos/91272199/square.jpeg",
+            medium_url: "https://inat.com/photos/91272199/medium.jpeg",
           },
           taxon_changes_count: 1,
           taxon_schemes_count: 2,
@@ -5119,17 +4964,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Diego Manzano Méndez, algunos derechos reservados (CC BY-NC), subido por Diego Manzano Méndez",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/22276217/square.jpeg",
+            url: "https://inat.com/photos/22276217/square.jpeg",
             original_dimensions: {
               height: 2048,
               width: 1536,
             },
             flags: [],
             attribution_name: "Diego Manzano Méndez",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/22276217/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/22276217/medium.jpeg",
+            square_url: "https://inat.com/photos/22276217/square.jpeg",
+            medium_url: "https://inat.com/photos/22276217/medium.jpeg",
           },
           taxon_changes_count: 1,
           taxon_schemes_count: 2,
@@ -5256,17 +5099,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Favian Flores Medina, some rights reserved (CC BY-NC), uploaded by Favian Flores Medina",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/295343041/square.jpeg",
+            url: "https://inat.com/photos/295343041/square.jpeg",
             original_dimensions: {
               height: 2048,
               width: 1536,
             },
             flags: [],
             attribution_name: "Favian Flores Medina",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/295343041/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/295343041/medium.jpeg",
+            square_url: "https://inat.com/photos/295343041/square.jpeg",
+            medium_url: "https://inat.com/photos/295343041/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 3,
@@ -5348,17 +5189,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Carlos G Velazco-Macias, some rights reserved (CC BY-NC), uploaded by Carlos G Velazco-Macias",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/462408738/square.jpeg",
+            url: "https://inat.com/photos/462408738/square.jpeg",
             original_dimensions: {
               height: 1364,
               width: 2048,
             },
             flags: [],
             attribution_name: "Carlos G Velazco-Macias",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/462408738/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/462408738/medium.jpeg",
+            square_url: "https://inat.com/photos/462408738/square.jpeg",
+            medium_url: "https://inat.com/photos/462408738/medium.jpeg",
           },
           taxon_changes_count: 1,
           taxon_schemes_count: 2,
@@ -5404,17 +5243,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Jo'lene Saldivar, some rights reserved (CC BY-NC), uploaded by Jo'lene Saldivar",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/326505000/square.jpg",
+            url: "https://inat.com/photos/326505000/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1536,
             },
             flags: [],
             attribution_name: "Jo'lene Saldivar",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/326505000/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/326505000/medium.jpg",
+            square_url: "https://inat.com/photos/326505000/square.jpg",
+            medium_url: "https://inat.com/photos/326505000/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 3,
@@ -5460,17 +5297,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Eric Hough, some rights reserved (CC BY-NC), uploaded by Eric Hough",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/336560326/square.jpg",
+            url: "https://inat.com/photos/336560326/square.jpg",
             original_dimensions: {
               height: 1271,
               width: 2048,
             },
             flags: [],
             attribution_name: "Eric Hough",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/336560326/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/336560326/medium.jpg",
+            square_url: "https://inat.com/photos/336560326/square.jpg",
+            medium_url: "https://inat.com/photos/336560326/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -5516,17 +5351,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) Jean-Pol GRANDMONT, some rights reserved (CC BY-SA)",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/22845391/square.jpg",
+            url: "https://inat.com/photos/22845391/square.jpg",
             original_dimensions: {
               height: 1365,
               width: 2048,
             },
             flags: [],
             attribution_name: "Jean-Pol GRANDMONT",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/22845391/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/22845391/medium.jpg",
+            square_url: "https://inat.com/photos/22845391/square.jpg",
+            medium_url: "https://inat.com/photos/22845391/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 1,
@@ -5562,17 +5395,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by",
             attribution:
               "(c) Neptalí Ramírez Marcial, some rights reserved (CC BY), uploaded by Neptalí Ramírez Marcial",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/971412/square.JPG",
+            url: "https://inat.com/photos/971412/square.JPG",
             original_dimensions: {
               height: 768,
               width: 1024,
             },
             flags: [],
             attribution_name: "Neptalí Ramírez Marcial",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/971412/square.JPG",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/971412/medium.JPG",
+            square_url: "https://inat.com/photos/971412/square.JPG",
+            medium_url: "https://inat.com/photos/971412/medium.JPG",
           },
           taxon_changes_count: 2,
           taxon_schemes_count: 2,
@@ -5777,17 +5608,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Pedro Nájera Quezada, some rights reserved (CC BY-NC), uploaded by Pedro Nájera Quezada",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/94102685/square.jpeg",
+            url: "https://inat.com/photos/94102685/square.jpeg",
             original_dimensions: {
               height: 1365,
               width: 2048,
             },
             flags: [],
             attribution_name: "Pedro Nájera Quezada",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/94102685/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/94102685/medium.jpeg",
+            square_url: "https://inat.com/photos/94102685/square.jpeg",
+            medium_url: "https://inat.com/photos/94102685/medium.jpeg",
           },
           taxon_changes_count: 1,
           taxon_schemes_count: 1,
@@ -5833,17 +5662,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) Olvin Wilfredo Oyuela, some rights reserved (CC BY-SA), uploaded by Olvin Wilfredo Oyuela",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/155066551/square.jpeg",
+            url: "https://inat.com/photos/155066551/square.jpeg",
             original_dimensions: {
               height: 2048,
               width: 975,
             },
             flags: [],
             attribution_name: "Olvin Wilfredo Oyuela",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/155066551/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/155066551/medium.jpeg",
+            square_url: "https://inat.com/photos/155066551/square.jpeg",
+            medium_url: "https://inat.com/photos/155066551/medium.jpeg",
           },
           taxon_changes_count: 2,
           taxon_schemes_count: 2,
@@ -5878,17 +5705,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Bodo Nuñez Oberg, some rights reserved (CC BY-NC), uploaded by Bodo Nuñez Oberg",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/23438632/square.jpeg",
+            url: "https://inat.com/photos/23438632/square.jpeg",
             original_dimensions: {
               height: 2048,
               width: 2048,
             },
             flags: [],
             attribution_name: "Bodo Nuñez Oberg",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/23438632/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/23438632/medium.jpeg",
+            square_url: "https://inat.com/photos/23438632/square.jpeg",
+            medium_url: "https://inat.com/photos/23438632/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -6127,17 +5952,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Juan Carlos López Domínguez, some rights reserved (CC BY-NC), uploaded by Juan Carlos López Domínguez",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/21742414/square.jpeg",
+            url: "https://inat.com/photos/21742414/square.jpeg",
             original_dimensions: {
               height: 1200,
               width: 1600,
             },
             flags: [],
             attribution_name: "Juan Carlos López Domínguez",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/21742414/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/21742414/medium.jpeg",
+            square_url: "https://inat.com/photos/21742414/square.jpeg",
+            medium_url: "https://inat.com/photos/21742414/medium.jpeg",
           },
           taxon_changes_count: 1,
           taxon_schemes_count: 3,
@@ -6172,17 +5995,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Carlos Jiménez, some rights reserved (CC BY-NC), uploaded by Carlos Jiménez",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/112946579/square.jpeg",
+            url: "https://inat.com/photos/112946579/square.jpeg",
             original_dimensions: {
               height: 1536,
               width: 2048,
             },
             flags: [],
             attribution_name: "Carlos Jiménez",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/112946579/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/112946579/medium.jpeg",
+            square_url: "https://inat.com/photos/112946579/square.jpeg",
+            medium_url: "https://inat.com/photos/112946579/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 3,
@@ -6228,17 +6049,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Antonio Sarabia, some rights reserved (CC BY-NC), uploaded by Antonio Sarabia",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/161422412/square.jpeg",
+            url: "https://inat.com/photos/161422412/square.jpeg",
             original_dimensions: {
               height: 2048,
               width: 1153,
             },
             flags: [],
             attribution_name: "Antonio Sarabia",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/161422412/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/161422412/medium.jpeg",
+            square_url: "https://inat.com/photos/161422412/square.jpeg",
+            medium_url: "https://inat.com/photos/161422412/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -6341,17 +6160,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) Douglas Goldman, some rights reserved (CC BY-SA), uploaded by Douglas Goldman",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/55414376/square.jpg",
+            url: "https://inat.com/photos/55414376/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1371,
             },
             flags: [],
             attribution_name: "Douglas Goldman",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/55414376/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/55414376/medium.jpg",
+            square_url: "https://inat.com/photos/55414376/square.jpg",
+            medium_url: "https://inat.com/photos/55414376/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 1,
@@ -6387,17 +6204,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Luis Humberto Vicente-Rivera, some rights reserved (CC BY-NC), uploaded by Luis Humberto Vicente-Rivera",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/448072597/square.jpeg",
+            url: "https://inat.com/photos/448072597/square.jpeg",
             original_dimensions: {
               height: 1542,
               width: 2048,
             },
             flags: [],
             attribution_name: "Luis Humberto Vicente-Rivera",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/448072597/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/448072597/medium.jpeg",
+            square_url: "https://inat.com/photos/448072597/square.jpeg",
+            medium_url: "https://inat.com/photos/448072597/medium.jpeg",
           },
           taxon_changes_count: 1,
           taxon_schemes_count: 2,
@@ -6432,17 +6247,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Ignacio Torres García, some rights reserved (CC BY-NC), uploaded by Ignacio Torres García",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/5905555/square.jpeg",
+            url: "https://inat.com/photos/5905555/square.jpeg",
             original_dimensions: {
               height: 2048,
               width: 1152,
             },
             flags: [],
             attribution_name: "Ignacio Torres García",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/5905555/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/5905555/medium.jpeg",
+            square_url: "https://inat.com/photos/5905555/square.jpeg",
+            medium_url: "https://inat.com/photos/5905555/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -6477,17 +6290,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) Oscar Alejandro Morales Juárez, some rights reserved (CC BY-SA), uploaded by Oscar Alejandro Morales Juárez",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/329566882/square.jpg",
+            url: "https://inat.com/photos/329566882/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 924,
             },
             flags: [],
             attribution_name: "Oscar Alejandro Morales Juárez",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/329566882/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/329566882/medium.jpg",
+            square_url: "https://inat.com/photos/329566882/square.jpg",
+            medium_url: "https://inat.com/photos/329566882/medium.jpg",
           },
           taxon_changes_count: 1,
           taxon_schemes_count: 2,
@@ -6522,17 +6333,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) Douglas Goldman, some rights reserved (CC BY-SA), uploaded by Douglas Goldman",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/113408671/square.jpg",
+            url: "https://inat.com/photos/113408671/square.jpg",
             original_dimensions: {
               height: 1371,
               width: 2048,
             },
             flags: [],
             attribution_name: "Douglas Goldman",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/113408671/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/113408671/medium.jpg",
+            square_url: "https://inat.com/photos/113408671/square.jpg",
+            medium_url: "https://inat.com/photos/113408671/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 1,
@@ -6613,17 +6422,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) patriciasamperio, some rights reserved (CC BY-NC), uploaded by patriciasamperio",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/52440323/square.jpeg",
+            url: "https://inat.com/photos/52440323/square.jpeg",
             original_dimensions: {
               height: 1536,
               width: 2048,
             },
             flags: [],
             attribution_name: "patriciasamperio",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/52440323/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/52440323/medium.jpeg",
+            square_url: "https://inat.com/photos/52440323/square.jpeg",
+            medium_url: "https://inat.com/photos/52440323/medium.jpeg",
           },
           taxon_changes_count: 1,
           taxon_schemes_count: 1,
@@ -6658,17 +6465,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) Aarón Sandoval, some rights reserved (CC BY-SA), uploaded by Aarón Sandoval",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/449917660/square.jpeg",
+            url: "https://inat.com/photos/449917660/square.jpeg",
             original_dimensions: {
               height: 1536,
               width: 2048,
             },
             flags: [],
             attribution_name: "Aarón Sandoval",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/449917660/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/449917660/medium.jpeg",
+            square_url: "https://inat.com/photos/449917660/square.jpeg",
+            medium_url: "https://inat.com/photos/449917660/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 3,
@@ -6714,17 +6519,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by",
             attribution:
               "(c) Neptalí Ramírez Marcial, some rights reserved (CC BY), uploaded by Neptalí Ramírez Marcial",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/4320534/square.jpg",
+            url: "https://inat.com/photos/4320534/square.jpg",
             original_dimensions: {
               height: 1047,
               width: 1580,
             },
             flags: [],
             attribution_name: "Neptalí Ramírez Marcial",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/4320534/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/4320534/medium.jpg",
+            square_url: "https://inat.com/photos/4320534/square.jpg",
+            medium_url: "https://inat.com/photos/4320534/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -6759,17 +6562,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Luis Andres Jimenez Chargoy, some rights reserved (CC BY-NC), uploaded by Luis Andres Jimenez Chargoy",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/26641281/square.jpeg",
+            url: "https://inat.com/photos/26641281/square.jpeg",
             original_dimensions: {
               height: 2048,
               width: 1536,
             },
             flags: [],
             attribution_name: "Luis Andres Jimenez Chargoy",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/26641281/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/26641281/medium.jpeg",
+            square_url: "https://inat.com/photos/26641281/square.jpeg",
+            medium_url: "https://inat.com/photos/26641281/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -6950,17 +6751,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Christopher Dick, some rights reserved (CC BY-NC), uploaded by Christopher Dick",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/35389976/square.jpg",
+            url: "https://inat.com/photos/35389976/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1536,
             },
             flags: [],
             attribution_name: "Christopher Dick",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/35389976/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/35389976/medium.jpg",
+            square_url: "https://inat.com/photos/35389976/square.jpg",
+            medium_url: "https://inat.com/photos/35389976/medium.jpg",
           },
           taxon_changes_count: 1,
           taxon_schemes_count: 3,
@@ -7006,17 +6805,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Chris Lloyd, some rights reserved (CC BY-NC), uploaded by Chris Lloyd",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/54124232/square.jpg",
+            url: "https://inat.com/photos/54124232/square.jpg",
             original_dimensions: {
               height: 1727,
               width: 2000,
             },
             flags: [],
             attribution_name: "Chris Lloyd",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/54124232/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/54124232/medium.jpg",
+            square_url: "https://inat.com/photos/54124232/square.jpg",
+            medium_url: "https://inat.com/photos/54124232/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -7108,17 +6905,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Leonardo Álvarez-Alcázar, some rights reserved (CC BY-NC), uploaded by Leonardo Álvarez-Alcázar",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/206182151/square.jpeg",
+            url: "https://inat.com/photos/206182151/square.jpeg",
             original_dimensions: {
               height: 1536,
               width: 2048,
             },
             flags: [],
             attribution_name: "Leonardo Álvarez-Alcázar",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/206182151/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/206182151/medium.jpeg",
+            square_url: "https://inat.com/photos/206182151/square.jpeg",
+            medium_url: "https://inat.com/photos/206182151/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -7254,17 +7049,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Heriberto Ávila-González, some rights reserved (CC BY-NC), uploaded by Heriberto Ávila-González",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/87755219/square.jpg",
+            url: "https://inat.com/photos/87755219/square.jpg",
             original_dimensions: {
               height: 1365,
               width: 2048,
             },
             flags: [],
             attribution_name: "Heriberto Ávila-González",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/87755219/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/87755219/medium.jpg",
+            square_url: "https://inat.com/photos/87755219/square.jpg",
+            medium_url: "https://inat.com/photos/87755219/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 1,
@@ -7299,17 +7092,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc-sa",
             attribution:
               "(c) Emmanuel Guevara Lazcano, some rights reserved (CC BY-NC-SA), uploaded by Emmanuel Guevara Lazcano",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/83428333/square.jpeg",
+            url: "https://inat.com/photos/83428333/square.jpeg",
             original_dimensions: {
               height: 2048,
               width: 1536,
             },
             flags: [],
             attribution_name: "Emmanuel Guevara Lazcano",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/83428333/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/83428333/medium.jpeg",
+            square_url: "https://inat.com/photos/83428333/square.jpeg",
+            medium_url: "https://inat.com/photos/83428333/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 3,
@@ -7344,17 +7135,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by",
             attribution:
               "(c) Neptalí Ramírez Marcial, some rights reserved (CC BY), uploaded by Neptalí Ramírez Marcial",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/243008679/square.jpg",
+            url: "https://inat.com/photos/243008679/square.jpg",
             original_dimensions: {
               height: 1114,
               width: 1671,
             },
             flags: [],
             attribution_name: "Neptalí Ramírez Marcial",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/243008679/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/243008679/medium.jpg",
+            square_url: "https://inat.com/photos/243008679/square.jpg",
+            medium_url: "https://inat.com/photos/243008679/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 1,
@@ -7389,17 +7178,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by",
             attribution:
               "(c) Jeff Clark, some rights reserved (CC BY), uploaded by Jeff Clark",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/168025200/square.jpg",
+            url: "https://inat.com/photos/168025200/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1536,
             },
             flags: [],
             attribution_name: "Jeff Clark",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/168025200/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/168025200/medium.jpg",
+            square_url: "https://inat.com/photos/168025200/square.jpg",
+            medium_url: "https://inat.com/photos/168025200/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 1,
@@ -7435,17 +7222,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Heriberto Ávila-González, some rights reserved (CC BY-NC), uploaded by Heriberto Ávila-González",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/13853794/square.jpg",
+            url: "https://inat.com/photos/13853794/square.jpg",
             original_dimensions: {
               height: 1365,
               width: 2048,
             },
             flags: [],
             attribution_name: "Heriberto Ávila-González",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/13853794/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/13853794/medium.jpg",
+            square_url: "https://inat.com/photos/13853794/square.jpg",
+            medium_url: "https://inat.com/photos/13853794/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 3,
@@ -7480,17 +7265,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) Douglas Goldman, some rights reserved (CC BY-SA), uploaded by Douglas Goldman",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/241483948/square.jpg",
+            url: "https://inat.com/photos/241483948/square.jpg",
             original_dimensions: {
               height: 1416,
               width: 2048,
             },
             flags: [],
             attribution_name: "Douglas Goldman",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/241483948/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/241483948/medium.jpg",
+            square_url: "https://inat.com/photos/241483948/square.jpg",
+            medium_url: "https://inat.com/photos/241483948/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 1,
@@ -7581,17 +7364,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Nick Glover, some rights reserved (CC BY-NC), uploaded by Nick Glover",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/131568132/square.jpg",
+            url: "https://inat.com/photos/131568132/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1536,
             },
             flags: [],
             attribution_name: "Nick Glover",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/131568132/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/131568132/medium.jpg",
+            square_url: "https://inat.com/photos/131568132/square.jpg",
+            medium_url: "https://inat.com/photos/131568132/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 1,
@@ -7627,17 +7408,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Heriberto Ávila-González, some rights reserved (CC BY-NC), uploaded by Heriberto Ávila-González",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/56175078/square.jpg",
+            url: "https://inat.com/photos/56175078/square.jpg",
             original_dimensions: {
               height: 1365,
               width: 2048,
             },
             flags: [],
             attribution_name: "Heriberto Ávila-González",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/56175078/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/56175078/medium.jpg",
+            square_url: "https://inat.com/photos/56175078/square.jpg",
+            medium_url: "https://inat.com/photos/56175078/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -7683,17 +7462,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Ana Santiago, some rights reserved (CC BY-NC), uploaded by Ana Santiago",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/211329599/square.jpeg",
+            url: "https://inat.com/photos/211329599/square.jpeg",
             original_dimensions: {
               height: 2048,
               width: 1536,
             },
             flags: [],
             attribution_name: "Ana Santiago",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/211329599/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/211329599/medium.jpeg",
+            square_url: "https://inat.com/photos/211329599/square.jpeg",
+            medium_url: "https://inat.com/photos/211329599/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 3,
@@ -7728,17 +7505,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Joey Santore, some rights reserved (CC BY-NC), uploaded by Joey Santore",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/51370563/square.jpeg",
+            url: "https://inat.com/photos/51370563/square.jpeg",
             original_dimensions: {
               height: 1080,
               width: 1620,
             },
             flags: [],
             attribution_name: "Joey Santore",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/51370563/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/51370563/medium.jpeg",
+            square_url: "https://inat.com/photos/51370563/square.jpeg",
+            medium_url: "https://inat.com/photos/51370563/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -7784,17 +7559,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Ignacio Torres García, some rights reserved (CC BY-NC), uploaded by Ignacio Torres García",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/280989202/square.jpeg",
+            url: "https://inat.com/photos/280989202/square.jpeg",
             original_dimensions: {
               height: 1536,
               width: 2048,
             },
             flags: [],
             attribution_name: "Ignacio Torres García",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/280989202/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/280989202/medium.jpeg",
+            square_url: "https://inat.com/photos/280989202/square.jpeg",
+            medium_url: "https://inat.com/photos/280989202/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 3,
@@ -7829,17 +7602,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) Douglas Goldman, some rights reserved (CC BY-SA), uploaded by Douglas Goldman",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/55349663/square.jpg",
+            url: "https://inat.com/photos/55349663/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1371,
             },
             flags: [],
             attribution_name: "Douglas Goldman",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/55349663/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/55349663/medium.jpg",
+            square_url: "https://inat.com/photos/55349663/square.jpg",
+            medium_url: "https://inat.com/photos/55349663/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 1,
@@ -7875,17 +7646,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by",
             attribution:
               "(c) Neptalí Ramírez Marcial, some rights reserved (CC BY), uploaded by Neptalí Ramírez Marcial",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/134411085/square.jpg",
+            url: "https://inat.com/photos/134411085/square.jpg",
             original_dimensions: {
               height: 1114,
               width: 1671,
             },
             flags: [],
             attribution_name: "Neptalí Ramírez Marcial",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/134411085/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/134411085/medium.jpg",
+            square_url: "https://inat.com/photos/134411085/square.jpg",
+            medium_url: "https://inat.com/photos/134411085/medium.jpg",
           },
           taxon_changes_count: 1,
           taxon_schemes_count: 1,
@@ -7965,17 +7734,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Manlio Martínez Barona, some rights reserved (CC BY-NC), uploaded by Manlio Martínez Barona",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/8118311/square.jpg",
+            url: "https://inat.com/photos/8118311/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1366,
             },
             flags: [],
             attribution_name: "Manlio Martínez Barona",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/8118311/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/8118311/medium.jpg",
+            square_url: "https://inat.com/photos/8118311/square.jpg",
+            medium_url: "https://inat.com/photos/8118311/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -8020,17 +7787,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             id: 221065707,
             license_code: "cc-by-nc",
             attribution: "(c) eric_fuchs, some rights reserved (CC BY-NC)",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/221065707/square.jpg",
+            url: "https://inat.com/photos/221065707/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1536,
             },
             flags: [],
             attribution_name: "eric_fuchs",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/221065707/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/221065707/medium.jpg",
+            square_url: "https://inat.com/photos/221065707/square.jpg",
+            medium_url: "https://inat.com/photos/221065707/medium.jpg",
           },
           taxon_changes_count: 1,
           taxon_schemes_count: 0,
@@ -8077,17 +7842,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by",
             attribution:
               "(c) Juan Antonino Sandoval, some rights reserved (CC BY), uploaded by Juan Antonino Sandoval",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/529914346/square.jpg",
+            url: "https://inat.com/photos/529914346/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1536,
             },
             flags: [],
             attribution_name: "Juan Antonino Sandoval",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/529914346/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/529914346/medium.jpg",
+            square_url: "https://inat.com/photos/529914346/square.jpg",
+            medium_url: "https://inat.com/photos/529914346/medium.jpg",
           },
           taxon_changes_count: 1,
           taxon_schemes_count: 2,
@@ -8177,17 +7940,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             id: 290564964,
             license_code: "cc-by-nc",
             attribution: "(c) elizaldesam, some rights reserved (CC BY-NC)",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/290564964/square.jpg",
+            url: "https://inat.com/photos/290564964/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1536,
             },
             flags: [],
             attribution_name: "elizaldesam",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/290564964/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/290564964/medium.jpg",
+            square_url: "https://inat.com/photos/290564964/square.jpg",
+            medium_url: "https://inat.com/photos/290564964/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -8267,17 +8028,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by",
             attribution:
               "(c) Jeff Clark, some rights reserved (CC BY), uploaded by Jeff Clark",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/203078919/square.jpeg",
+            url: "https://inat.com/photos/203078919/square.jpeg",
             original_dimensions: {
               height: 1536,
               width: 2048,
             },
             flags: [],
             attribution_name: "Jeff Clark",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/203078919/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/203078919/medium.jpeg",
+            square_url: "https://inat.com/photos/203078919/square.jpeg",
+            medium_url: "https://inat.com/photos/203078919/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 1,
@@ -8312,17 +8071,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Samuel Brinker, some rights reserved (CC BY-NC), uploaded by Samuel Brinker",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/11303921/square.jpg",
+            url: "https://inat.com/photos/11303921/square.jpg",
             original_dimensions: {
               height: 1365,
               width: 2048,
             },
             flags: [],
             attribution_name: "Samuel Brinker",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/11303921/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/11303921/medium.jpg",
+            square_url: "https://inat.com/photos/11303921/square.jpg",
+            medium_url: "https://inat.com/photos/11303921/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 1,
@@ -8413,17 +8170,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) César Rodríguez, some rights reserved (CC BY-NC), uploaded by César Rodríguez",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/415414505/square.jpeg",
+            url: "https://inat.com/photos/415414505/square.jpeg",
             original_dimensions: {
               height: 2048,
               width: 1536,
             },
             flags: [],
             attribution_name: "César Rodríguez",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/415414505/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/415414505/medium.jpeg",
+            square_url: "https://inat.com/photos/415414505/square.jpeg",
+            medium_url: "https://inat.com/photos/415414505/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -8514,17 +8269,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Ignacio Torres García, some rights reserved (CC BY-NC), uploaded by Ignacio Torres García",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/282318661/square.jpeg",
+            url: "https://inat.com/photos/282318661/square.jpeg",
             original_dimensions: {
               height: 1536,
               width: 2048,
             },
             flags: [],
             attribution_name: "Ignacio Torres García",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/282318661/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/282318661/medium.jpeg",
+            square_url: "https://inat.com/photos/282318661/square.jpeg",
+            medium_url: "https://inat.com/photos/282318661/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 1,
@@ -8605,17 +8358,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Joey Santore, some rights reserved (CC BY-NC), uploaded by Joey Santore",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/531102596/square.jpg",
+            url: "https://inat.com/photos/531102596/square.jpg",
             original_dimensions: {
               height: 1080,
               width: 1620,
             },
             flags: [],
             attribution_name: "Joey Santore",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/531102596/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/531102596/medium.jpg",
+            square_url: "https://inat.com/photos/531102596/square.jpg",
+            medium_url: "https://inat.com/photos/531102596/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 1,
@@ -8650,17 +8401,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Aldo Zaldivar, some rights reserved (CC BY-NC), uploaded by Aldo Zaldivar",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/233123890/square.jpeg",
+            url: "https://inat.com/photos/233123890/square.jpeg",
             original_dimensions: {
               height: 2048,
               width: 1152,
             },
             flags: [],
             attribution_name: "Aldo Zaldivar",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/233123890/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/233123890/medium.jpeg",
+            square_url: "https://inat.com/photos/233123890/square.jpeg",
+            medium_url: "https://inat.com/photos/233123890/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 3,
@@ -8751,17 +8500,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Ana Gatica Colima, some rights reserved (CC BY-NC), uploaded by Ana Gatica Colima",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/245445011/square.jpeg",
+            url: "https://inat.com/photos/245445011/square.jpeg",
             original_dimensions: {
               height: 1365,
               width: 2048,
             },
             flags: [],
             attribution_name: "Ana Gatica Colima",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/245445011/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/245445011/medium.jpeg",
+            square_url: "https://inat.com/photos/245445011/square.jpeg",
+            medium_url: "https://inat.com/photos/245445011/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -8796,17 +8543,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by",
             attribution:
               "(c) Neptalí Ramírez Marcial, some rights reserved (CC BY), uploaded by Neptalí Ramírez Marcial",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/64625946/square.jpg",
+            url: "https://inat.com/photos/64625946/square.jpg",
             original_dimensions: {
               height: 1200,
               width: 1805,
             },
             flags: [],
             attribution_name: "Neptalí Ramírez Marcial",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/64625946/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/64625946/medium.jpg",
+            square_url: "https://inat.com/photos/64625946/square.jpg",
+            medium_url: "https://inat.com/photos/64625946/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -8897,17 +8642,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Aarón Sandoval, some rights reserved (CC BY-NC), uploaded by Aarón Sandoval",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/406145025/square.jpeg",
+            url: "https://inat.com/photos/406145025/square.jpeg",
             original_dimensions: {
               height: 1536,
               width: 2048,
             },
             flags: [],
             attribution_name: "Aarón Sandoval",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/406145025/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/406145025/medium.jpeg",
+            square_url: "https://inat.com/photos/406145025/square.jpeg",
+            medium_url: "https://inat.com/photos/406145025/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -8998,17 +8741,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Leonardo Álvarez-Alcázar, some rights reserved (CC BY-NC), uploaded by Leonardo Álvarez-Alcázar",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/419133740/square.jpeg",
+            url: "https://inat.com/photos/419133740/square.jpeg",
             original_dimensions: {
               height: 2048,
               width: 1536,
             },
             flags: [],
             attribution_name: "Leonardo Álvarez-Alcázar",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/419133740/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/419133740/medium.jpeg",
+            square_url: "https://inat.com/photos/419133740/square.jpeg",
+            medium_url: "https://inat.com/photos/419133740/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 0,
@@ -9098,17 +8839,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             id: 241238607,
             license_code: "cc-by-nc",
             attribution: "(c) gpalermo, some rights reserved (CC BY-NC)",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/241238607/square.jpg",
+            url: "https://inat.com/photos/241238607/square.jpg",
             original_dimensions: {
               height: 1632,
               width: 2048,
             },
             flags: [],
             attribution_name: "gpalermo",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/241238607/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/241238607/medium.jpg",
+            square_url: "https://inat.com/photos/241238607/square.jpg",
+            medium_url: "https://inat.com/photos/241238607/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 1,
@@ -9218,17 +8957,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Leonardo Campos, some rights reserved (CC BY-NC), uploaded by Leonardo Campos",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/193395936/square.jpeg",
+            url: "https://inat.com/photos/193395936/square.jpeg",
             original_dimensions: {
               height: 1365,
               width: 2048,
             },
             flags: [],
             attribution_name: "Leonardo Campos",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/193395936/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/193395936/medium.jpeg",
+            square_url: "https://inat.com/photos/193395936/square.jpeg",
+            medium_url: "https://inat.com/photos/193395936/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -9365,17 +9102,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) Douglas Goldman, some rights reserved (CC BY-SA), uploaded by Douglas Goldman",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/157414192/square.jpg",
+            url: "https://inat.com/photos/157414192/square.jpg",
             original_dimensions: {
               height: 1371,
               width: 2048,
             },
             flags: [],
             attribution_name: "Douglas Goldman",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/157414192/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/157414192/medium.jpg",
+            square_url: "https://inat.com/photos/157414192/square.jpg",
+            medium_url: "https://inat.com/photos/157414192/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 1,
@@ -9467,17 +9202,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Richard Joyce, some rights reserved (CC BY-NC), uploaded by Richard Joyce",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/107953852/square.jpg",
+            url: "https://inat.com/photos/107953852/square.jpg",
             original_dimensions: {
               height: 1536,
               width: 2048,
             },
             flags: [],
             attribution_name: "Richard Joyce",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/107953852/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/107953852/medium.jpg",
+            square_url: "https://inat.com/photos/107953852/square.jpg",
+            medium_url: "https://inat.com/photos/107953852/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -9512,17 +9245,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) markhbfley, some rights reserved (CC BY-NC), uploaded by markhbfley",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/287129660/square.jpg",
+            url: "https://inat.com/photos/287129660/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1538,
             },
             flags: [],
             attribution_name: "markhbfley",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/287129660/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/287129660/medium.jpg",
+            square_url: "https://inat.com/photos/287129660/square.jpg",
+            medium_url: "https://inat.com/photos/287129660/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -9557,17 +9288,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Antonio Sarabia, some rights reserved (CC BY-NC), uploaded by Antonio Sarabia",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/166735643/square.jpeg",
+            url: "https://inat.com/photos/166735643/square.jpeg",
             original_dimensions: {
               height: 2048,
               width: 1153,
             },
             flags: [],
             attribution_name: "Antonio Sarabia",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/166735643/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/166735643/medium.jpeg",
+            square_url: "https://inat.com/photos/166735643/square.jpeg",
+            medium_url: "https://inat.com/photos/166735643/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 3,
@@ -9602,17 +9331,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by",
             attribution:
               "(c) Guillermo Huerta Ramos, some rights reserved (CC BY), uploaded by Guillermo Huerta Ramos",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/453993310/square.jpg",
+            url: "https://inat.com/photos/453993310/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1536,
             },
             flags: [],
             attribution_name: "Guillermo Huerta Ramos",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/453993310/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/453993310/medium.jpg",
+            square_url: "https://inat.com/photos/453993310/square.jpg",
+            medium_url: "https://inat.com/photos/453993310/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -9658,17 +9385,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Hermann Jesús Cortés Blobaum, some rights reserved (CC BY-NC), uploaded by Hermann Jesús Cortés Blobaum",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/30564784/square.jpg",
+            url: "https://inat.com/photos/30564784/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1536,
             },
             flags: [],
             attribution_name: "Hermann Jesús Cortés Blobaum",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/30564784/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/30564784/medium.jpg",
+            square_url: "https://inat.com/photos/30564784/square.jpg",
+            medium_url: "https://inat.com/photos/30564784/medium.jpg",
           },
           taxon_changes_count: 1,
           taxon_schemes_count: 1,
@@ -9703,17 +9428,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) cperkins406, some rights reserved (CC BY-NC), uploaded by cperkins406",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/251840651/square.jpg",
+            url: "https://inat.com/photos/251840651/square.jpg",
             original_dimensions: {
               height: 1536,
               width: 2048,
             },
             flags: [],
             attribution_name: "cperkins406",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/251840651/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/251840651/medium.jpg",
+            square_url: "https://inat.com/photos/251840651/square.jpg",
+            medium_url: "https://inat.com/photos/251840651/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 1,
@@ -9748,17 +9471,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             id: 568442552,
             license_code: "cc-by-sa",
             attribution: "(c) Krzysztof Golik, some rights reserved (CC BY-SA)",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/568442552/square.jpg",
+            url: "https://inat.com/photos/568442552/square.jpg",
             original_dimensions: {
               height: 1722,
               width: 2048,
             },
             flags: [],
             attribution_name: "Krzysztof Golik",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/568442552/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/568442552/medium.jpg",
+            square_url: "https://inat.com/photos/568442552/square.jpg",
+            medium_url: "https://inat.com/photos/568442552/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 2,
@@ -10146,17 +9867,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) carolina_chun, some rights reserved (CC BY-NC), uploaded by carolina_chun",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/334133219/square.jpeg",
+            url: "https://inat.com/photos/334133219/square.jpeg",
             original_dimensions: {
               height: 1536,
               width: 2048,
             },
             flags: [],
             attribution_name: "carolina_chun",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/334133219/square.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/334133219/medium.jpeg",
+            square_url: "https://inat.com/photos/334133219/square.jpeg",
+            medium_url: "https://inat.com/photos/334133219/medium.jpeg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 3,
@@ -10191,7 +9910,7 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by",
             attribution:
               "(c) \nNorth Carolina State University Vascular Plant Herbarium, some rights reserved (CC BY)",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/289602889/square.jpg",
+            url: "https://inat.com/photos/289602889/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1726,
@@ -10199,10 +9918,8 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             flags: [],
             attribution_name:
               "\nNorth Carolina State University Vascular Plant Herbarium",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/289602889/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/289602889/medium.jpg",
+            square_url: "https://inat.com/photos/289602889/square.jpg",
+            medium_url: "https://inat.com/photos/289602889/medium.jpg",
           },
           taxon_changes_count: 1,
           taxon_schemes_count: 1,
@@ -10282,17 +9999,15 @@ export const redoakTaxaApi: iNatTaxaAPI = {
             license_code: "pd",
             attribution:
               "\nPresident and Fellows of Harvard College, no known copyright restrictions (public domain)",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/290681796/square.jpg",
+            url: "https://inat.com/photos/290681796/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1415,
             },
             flags: [],
             attribution_name: "\nPresident and Fellows of Harvard College",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/290681796/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/290681796/medium.jpg",
+            square_url: "https://inat.com/photos/290681796/square.jpg",
+            medium_url: "https://inat.com/photos/290681796/medium.jpg",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 1,
@@ -10511,17 +10226,15 @@ export const lifeTaxaApi: iNatTaxaAPI = {
         id: 347064198,
         license_code: "cc-by-sa",
         attribution: "(c) Eryn Blaire, some rights reserved (CC BY-SA)",
-        url: "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
+        url: "https://inat.com/photos/347064198/square.jpeg",
         original_dimensions: {
           height: 2048,
           width: 1538,
         },
         flags: [],
         attribution_name: "Eryn Blaire",
-        square_url:
-          "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
-        medium_url:
-          "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/medium.jpeg",
+        square_url: "https://inat.com/photos/347064198/square.jpeg",
+        medium_url: "https://inat.com/photos/347064198/medium.jpeg",
       },
       taxon_changes_count: 3,
       taxon_schemes_count: 2,
@@ -10539,7 +10252,7 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             id: 347064198,
             license_code: "cc-by-sa",
             attribution: "(c) Eryn Blaire, some rights reserved (CC BY-SA)",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
+            url: "https://inat.com/photos/347064198/square.jpeg",
             original_dimensions: {
               height: 2048,
               width: 1538,
@@ -10550,16 +10263,11 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             native_photo_id: "Eukaryota_diversity_1.JPG",
             type: "LocalPhoto",
             attribution_name: "Eryn Blaire",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/small.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/medium.jpeg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/large.jpeg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/original.jpeg",
+            square_url: "https://inat.com/photos/347064198/square.jpeg",
+            small_url: "https://inat.com/photos/347064198/small.jpeg",
+            medium_url: "https://inat.com/photos/347064198/medium.jpeg",
+            large_url: "https://inat.com/photos/347064198/large.jpeg",
+            original_url: "https://inat.com/photos/347064198/original.jpeg",
           },
           taxon: {
             id: 48460,
@@ -10576,17 +10284,15 @@ export const lifeTaxaApi: iNatTaxaAPI = {
               id: 347064198,
               license_code: "cc-by-sa",
               attribution: "(c) Eryn Blaire, some rights reserved (CC BY-SA)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
+              url: "https://inat.com/photos/347064198/square.jpeg",
               original_dimensions: {
                 height: 2048,
                 width: 1538,
               },
               flags: [],
               attribution_name: "Eryn Blaire",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/medium.jpeg",
+              square_url: "https://inat.com/photos/347064198/square.jpeg",
+              medium_url: "https://inat.com/photos/347064198/medium.jpeg",
             },
             taxon_changes_count: 3,
             taxon_schemes_count: 2,
@@ -10610,7 +10316,7 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             id: 59072038,
             license_code: "cc-by-nc-sa",
             attribution: "(c) cesar harada, some rights reserved (CC BY-NC-SA)",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/59072038/square.jpg",
+            url: "https://inat.com/photos/59072038/square.jpg",
             original_dimensions: {
               height: 408,
               width: 500,
@@ -10621,16 +10327,11 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             native_photo_id: "4095866396",
             type: "LocalPhoto",
             attribution_name: "cesar harada",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/59072038/square.jpg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/59072038/small.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/59072038/medium.jpg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/59072038/large.jpg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/59072038/original.jpg",
+            square_url: "https://inat.com/photos/59072038/square.jpg",
+            small_url: "https://inat.com/photos/59072038/small.jpg",
+            medium_url: "https://inat.com/photos/59072038/medium.jpg",
+            large_url: "https://inat.com/photos/59072038/large.jpg",
+            original_url: "https://inat.com/photos/59072038/original.jpg",
           },
           taxon: {
             id: 48460,
@@ -10647,17 +10348,15 @@ export const lifeTaxaApi: iNatTaxaAPI = {
               id: 347064198,
               license_code: "cc-by-sa",
               attribution: "(c) Eryn Blaire, some rights reserved (CC BY-SA)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
+              url: "https://inat.com/photos/347064198/square.jpeg",
               original_dimensions: {
                 height: 2048,
                 width: 1538,
               },
               flags: [],
               attribution_name: "Eryn Blaire",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/medium.jpeg",
+              square_url: "https://inat.com/photos/347064198/square.jpeg",
+              medium_url: "https://inat.com/photos/347064198/medium.jpeg",
             },
             taxon_changes_count: 3,
             taxon_schemes_count: 2,
@@ -10682,7 +10381,7 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Jakob Fahr, some rights reserved (CC BY-NC), uploaded by Jakob Fahr",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/2305596/square.JPG",
+            url: "https://inat.com/photos/2305596/square.JPG",
             original_dimensions: {
               height: 1459,
               width: 1094,
@@ -10692,16 +10391,11 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             native_photo_id: null,
             type: "LocalPhoto",
             attribution_name: "Jakob Fahr",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/2305596/square.JPG",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/2305596/small.JPG",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/2305596/medium.JPG",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/2305596/large.JPG",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/2305596/original.JPG",
+            square_url: "https://inat.com/photos/2305596/square.JPG",
+            small_url: "https://inat.com/photos/2305596/small.JPG",
+            medium_url: "https://inat.com/photos/2305596/medium.JPG",
+            large_url: "https://inat.com/photos/2305596/large.JPG",
+            original_url: "https://inat.com/photos/2305596/original.JPG",
           },
           taxon: {
             id: 48460,
@@ -10718,17 +10412,15 @@ export const lifeTaxaApi: iNatTaxaAPI = {
               id: 347064198,
               license_code: "cc-by-sa",
               attribution: "(c) Eryn Blaire, some rights reserved (CC BY-SA)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
+              url: "https://inat.com/photos/347064198/square.jpeg",
               original_dimensions: {
                 height: 2048,
                 width: 1538,
               },
               flags: [],
               attribution_name: "Eryn Blaire",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/medium.jpeg",
+              square_url: "https://inat.com/photos/347064198/square.jpeg",
+              medium_url: "https://inat.com/photos/347064198/medium.jpeg",
             },
             taxon_changes_count: 3,
             taxon_schemes_count: 2,
@@ -10753,7 +10445,7 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by",
             attribution:
               "(c) dhfischer, some rights reserved (CC BY), uploaded by dhfischer",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/53637930/square.jpg",
+            url: "https://inat.com/photos/53637930/square.jpg",
             original_dimensions: {
               height: 533,
               width: 800,
@@ -10763,16 +10455,11 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             native_photo_id: null,
             type: "LocalPhoto",
             attribution_name: "dhfischer",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/53637930/square.jpg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/53637930/small.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/53637930/medium.jpg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/53637930/large.jpg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/53637930/original.jpg",
+            square_url: "https://inat.com/photos/53637930/square.jpg",
+            small_url: "https://inat.com/photos/53637930/small.jpg",
+            medium_url: "https://inat.com/photos/53637930/medium.jpg",
+            large_url: "https://inat.com/photos/53637930/large.jpg",
+            original_url: "https://inat.com/photos/53637930/original.jpg",
           },
           taxon: {
             id: 48460,
@@ -10789,17 +10476,15 @@ export const lifeTaxaApi: iNatTaxaAPI = {
               id: 347064198,
               license_code: "cc-by-sa",
               attribution: "(c) Eryn Blaire, some rights reserved (CC BY-SA)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
+              url: "https://inat.com/photos/347064198/square.jpeg",
               original_dimensions: {
                 height: 2048,
                 width: 1538,
               },
               flags: [],
               attribution_name: "Eryn Blaire",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/medium.jpeg",
+              square_url: "https://inat.com/photos/347064198/square.jpeg",
+              medium_url: "https://inat.com/photos/347064198/medium.jpeg",
             },
             taxon_changes_count: 3,
             taxon_schemes_count: 2,
@@ -10824,7 +10509,7 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Ockert van Schalkwyk, some rights reserved (CC BY-NC), uploaded by Ockert van Schalkwyk",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/50128814/square.jpg",
+            url: "https://inat.com/photos/50128814/square.jpg",
             original_dimensions: {
               height: 1365,
               width: 2048,
@@ -10834,16 +10519,11 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             native_photo_id: null,
             type: "LocalPhoto",
             attribution_name: "Ockert van Schalkwyk",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/50128814/square.jpg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/50128814/small.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/50128814/medium.jpg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/50128814/large.jpg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/50128814/original.jpg",
+            square_url: "https://inat.com/photos/50128814/square.jpg",
+            small_url: "https://inat.com/photos/50128814/small.jpg",
+            medium_url: "https://inat.com/photos/50128814/medium.jpg",
+            large_url: "https://inat.com/photos/50128814/large.jpg",
+            original_url: "https://inat.com/photos/50128814/original.jpg",
           },
           taxon: {
             id: 48460,
@@ -10860,17 +10540,15 @@ export const lifeTaxaApi: iNatTaxaAPI = {
               id: 347064198,
               license_code: "cc-by-sa",
               attribution: "(c) Eryn Blaire, some rights reserved (CC BY-SA)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
+              url: "https://inat.com/photos/347064198/square.jpeg",
               original_dimensions: {
                 height: 2048,
                 width: 1538,
               },
               flags: [],
               attribution_name: "Eryn Blaire",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/medium.jpeg",
+              square_url: "https://inat.com/photos/347064198/square.jpeg",
+              medium_url: "https://inat.com/photos/347064198/medium.jpeg",
             },
             taxon_changes_count: 3,
             taxon_schemes_count: 2,
@@ -10895,7 +10573,7 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Eric Rude, some rights reserved (CC BY-NC), uploaded by Eric Rude",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/50558440/square.jpg",
+            url: "https://inat.com/photos/50558440/square.jpg",
             original_dimensions: {
               height: 1536,
               width: 2048,
@@ -10905,16 +10583,11 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             native_photo_id: null,
             type: "LocalPhoto",
             attribution_name: "Eric Rude",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/50558440/square.jpg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/50558440/small.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/50558440/medium.jpg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/50558440/large.jpg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/50558440/original.jpg",
+            square_url: "https://inat.com/photos/50558440/square.jpg",
+            small_url: "https://inat.com/photos/50558440/small.jpg",
+            medium_url: "https://inat.com/photos/50558440/medium.jpg",
+            large_url: "https://inat.com/photos/50558440/large.jpg",
+            original_url: "https://inat.com/photos/50558440/original.jpg",
           },
           taxon: {
             id: 48460,
@@ -10931,17 +10604,15 @@ export const lifeTaxaApi: iNatTaxaAPI = {
               id: 347064198,
               license_code: "cc-by-sa",
               attribution: "(c) Eryn Blaire, some rights reserved (CC BY-SA)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
+              url: "https://inat.com/photos/347064198/square.jpeg",
               original_dimensions: {
                 height: 2048,
                 width: 1538,
               },
               flags: [],
               attribution_name: "Eryn Blaire",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/medium.jpeg",
+              square_url: "https://inat.com/photos/347064198/square.jpeg",
+              medium_url: "https://inat.com/photos/347064198/medium.jpeg",
             },
             taxon_changes_count: 3,
             taxon_schemes_count: 2,
@@ -10965,7 +10636,7 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             id: 340834342,
             license_code: "cc-by-sa",
             attribution: "(c) Skye McDavid, some rights reserved (CC BY-SA)",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/340834342/square.jpg",
+            url: "https://inat.com/photos/340834342/square.jpg",
             original_dimensions: {
               height: 1538,
               width: 2048,
@@ -10976,16 +10647,11 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             native_photo_id: "AMNH_5027_Tyrannosaurus_skull_cast.jpg",
             type: "LocalPhoto",
             attribution_name: "Skye McDavid",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/340834342/square.jpg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/340834342/small.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/340834342/medium.jpg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/340834342/large.jpg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/340834342/original.jpg",
+            square_url: "https://inat.com/photos/340834342/square.jpg",
+            small_url: "https://inat.com/photos/340834342/small.jpg",
+            medium_url: "https://inat.com/photos/340834342/medium.jpg",
+            large_url: "https://inat.com/photos/340834342/large.jpg",
+            original_url: "https://inat.com/photos/340834342/original.jpg",
           },
           taxon: {
             id: 48460,
@@ -11002,17 +10668,15 @@ export const lifeTaxaApi: iNatTaxaAPI = {
               id: 347064198,
               license_code: "cc-by-sa",
               attribution: "(c) Eryn Blaire, some rights reserved (CC BY-SA)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
+              url: "https://inat.com/photos/347064198/square.jpeg",
               original_dimensions: {
                 height: 2048,
                 width: 1538,
               },
               flags: [],
               attribution_name: "Eryn Blaire",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/medium.jpeg",
+              square_url: "https://inat.com/photos/347064198/square.jpeg",
+              medium_url: "https://inat.com/photos/347064198/medium.jpeg",
             },
             taxon_changes_count: 3,
             taxon_schemes_count: 2,
@@ -11037,7 +10701,7 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Constanza Farinha Gómez, some rights reserved (CC BY-NC), uploaded by Constanza Farinha Gómez",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/20593402/square.jpeg",
+            url: "https://inat.com/photos/20593402/square.jpeg",
             original_dimensions: {
               height: 1367,
               width: 2048,
@@ -11047,16 +10711,11 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             native_photo_id: null,
             type: "LocalPhoto",
             attribution_name: "Constanza Farinha Gómez",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/20593402/square.jpeg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/20593402/small.jpeg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/20593402/medium.jpeg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/20593402/large.jpeg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/20593402/original.jpeg",
+            square_url: "https://inat.com/photos/20593402/square.jpeg",
+            small_url: "https://inat.com/photos/20593402/small.jpeg",
+            medium_url: "https://inat.com/photos/20593402/medium.jpeg",
+            large_url: "https://inat.com/photos/20593402/large.jpeg",
+            original_url: "https://inat.com/photos/20593402/original.jpeg",
           },
           taxon: {
             id: 48460,
@@ -11073,17 +10732,15 @@ export const lifeTaxaApi: iNatTaxaAPI = {
               id: 347064198,
               license_code: "cc-by-sa",
               attribution: "(c) Eryn Blaire, some rights reserved (CC BY-SA)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
+              url: "https://inat.com/photos/347064198/square.jpeg",
               original_dimensions: {
                 height: 2048,
                 width: 1538,
               },
               flags: [],
               attribution_name: "Eryn Blaire",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/medium.jpeg",
+              square_url: "https://inat.com/photos/347064198/square.jpeg",
+              medium_url: "https://inat.com/photos/347064198/medium.jpeg",
             },
             taxon_changes_count: 3,
             taxon_schemes_count: 2,
@@ -11108,7 +10765,7 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) A. Gray, some rights reserved (CC BY-NC), uploaded by A. Gray",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/170021491/square.jpg",
+            url: "https://inat.com/photos/170021491/square.jpg",
             original_dimensions: {
               height: 1536,
               width: 2048,
@@ -11118,16 +10775,11 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             native_photo_id: null,
             type: "LocalPhoto",
             attribution_name: "A. Gray",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/170021491/square.jpg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/170021491/small.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/170021491/medium.jpg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/170021491/large.jpg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/170021491/original.jpg",
+            square_url: "https://inat.com/photos/170021491/square.jpg",
+            small_url: "https://inat.com/photos/170021491/small.jpg",
+            medium_url: "https://inat.com/photos/170021491/medium.jpg",
+            large_url: "https://inat.com/photos/170021491/large.jpg",
+            original_url: "https://inat.com/photos/170021491/original.jpg",
           },
           taxon: {
             id: 48460,
@@ -11144,17 +10796,15 @@ export const lifeTaxaApi: iNatTaxaAPI = {
               id: 347064198,
               license_code: "cc-by-sa",
               attribution: "(c) Eryn Blaire, some rights reserved (CC BY-SA)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
+              url: "https://inat.com/photos/347064198/square.jpeg",
               original_dimensions: {
                 height: 2048,
                 width: 1538,
               },
               flags: [],
               attribution_name: "Eryn Blaire",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/medium.jpeg",
+              square_url: "https://inat.com/photos/347064198/square.jpeg",
+              medium_url: "https://inat.com/photos/347064198/medium.jpeg",
             },
             taxon_changes_count: 3,
             taxon_schemes_count: 2,
@@ -11179,7 +10829,7 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by",
             attribution:
               "(c) Alexis Tinker-Tsavalas, some rights reserved (CC BY), uploaded by Alexis Tinker-Tsavalas",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/176600140/square.jpg",
+            url: "https://inat.com/photos/176600140/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1638,
@@ -11189,16 +10839,11 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             native_photo_id: null,
             type: "LocalPhoto",
             attribution_name: "Alexis Tinker-Tsavalas",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/176600140/square.jpg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/176600140/small.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/176600140/medium.jpg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/176600140/large.jpg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/176600140/original.jpg",
+            square_url: "https://inat.com/photos/176600140/square.jpg",
+            small_url: "https://inat.com/photos/176600140/small.jpg",
+            medium_url: "https://inat.com/photos/176600140/medium.jpg",
+            large_url: "https://inat.com/photos/176600140/large.jpg",
+            original_url: "https://inat.com/photos/176600140/original.jpg",
           },
           taxon: {
             id: 48460,
@@ -11215,17 +10860,15 @@ export const lifeTaxaApi: iNatTaxaAPI = {
               id: 347064198,
               license_code: "cc-by-sa",
               attribution: "(c) Eryn Blaire, some rights reserved (CC BY-SA)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
+              url: "https://inat.com/photos/347064198/square.jpeg",
               original_dimensions: {
                 height: 2048,
                 width: 1538,
               },
               flags: [],
               attribution_name: "Eryn Blaire",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/medium.jpeg",
+              square_url: "https://inat.com/photos/347064198/square.jpeg",
+              medium_url: "https://inat.com/photos/347064198/medium.jpeg",
             },
             taxon_changes_count: 3,
             taxon_schemes_count: 2,
@@ -11250,7 +10893,7 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) tangatawhenua, some rights reserved (CC BY-NC), uploaded by tangatawhenua",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/3001224/square.JPG",
+            url: "https://inat.com/photos/3001224/square.JPG",
             original_dimensions: {
               height: 800,
               width: 761,
@@ -11260,16 +10903,11 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             native_photo_id: null,
             type: "LocalPhoto",
             attribution_name: "tangatawhenua",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/3001224/square.JPG",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/3001224/small.JPG",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/3001224/medium.JPG",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/3001224/large.JPG",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/3001224/original.JPG",
+            square_url: "https://inat.com/photos/3001224/square.JPG",
+            small_url: "https://inat.com/photos/3001224/small.JPG",
+            medium_url: "https://inat.com/photos/3001224/medium.JPG",
+            large_url: "https://inat.com/photos/3001224/large.JPG",
+            original_url: "https://inat.com/photos/3001224/original.JPG",
           },
           taxon: {
             id: 48460,
@@ -11286,17 +10924,15 @@ export const lifeTaxaApi: iNatTaxaAPI = {
               id: 347064198,
               license_code: "cc-by-sa",
               attribution: "(c) Eryn Blaire, some rights reserved (CC BY-SA)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
+              url: "https://inat.com/photos/347064198/square.jpeg",
               original_dimensions: {
                 height: 2048,
                 width: 1538,
               },
               flags: [],
               attribution_name: "Eryn Blaire",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/medium.jpeg",
+              square_url: "https://inat.com/photos/347064198/square.jpeg",
+              medium_url: "https://inat.com/photos/347064198/medium.jpeg",
             },
             taxon_changes_count: 3,
             taxon_schemes_count: 2,
@@ -11320,7 +10956,7 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             id: 102229489,
             license_code: "cc-by-nc",
             attribution: "(c) mateoalmada, some rights reserved (CC BY-NC)",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/102229489/square.jpg",
+            url: "https://inat.com/photos/102229489/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1536,
@@ -11330,16 +10966,11 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             native_photo_id: null,
             type: "LocalPhoto",
             attribution_name: "mateoalmada",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/102229489/square.jpg",
-            small_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/102229489/small.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/102229489/medium.jpg",
-            large_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/102229489/large.jpg",
-            original_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/102229489/original.jpg",
+            square_url: "https://inat.com/photos/102229489/square.jpg",
+            small_url: "https://inat.com/photos/102229489/small.jpg",
+            medium_url: "https://inat.com/photos/102229489/medium.jpg",
+            large_url: "https://inat.com/photos/102229489/large.jpg",
+            original_url: "https://inat.com/photos/102229489/original.jpg",
           },
           taxon: {
             id: 48460,
@@ -11356,17 +10987,15 @@ export const lifeTaxaApi: iNatTaxaAPI = {
               id: 347064198,
               license_code: "cc-by-sa",
               attribution: "(c) Eryn Blaire, some rights reserved (CC BY-SA)",
-              url: "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
+              url: "https://inat.com/photos/347064198/square.jpeg",
               original_dimensions: {
                 height: 2048,
                 width: 1538,
               },
               flags: [],
               attribution_name: "Eryn Blaire",
-              square_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
-              medium_url:
-                "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/medium.jpeg",
+              square_url: "https://inat.com/photos/347064198/square.jpeg",
+              medium_url: "https://inat.com/photos/347064198/medium.jpeg",
             },
             taxon_changes_count: 3,
             taxon_schemes_count: 2,
@@ -11406,17 +11035,15 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             id: 80678745,
             license_code: "cc0",
             attribution: "no rights reserved, uploaded by Abhas Misraraj",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/80678745/square.jpg",
+            url: "https://inat.com/photos/80678745/square.jpg",
             original_dimensions: {
               height: 2000,
               width: 2000,
             },
             flags: [],
             attribution_name: "Abhas Misraraj",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/80678745/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/80678745/medium.jpg",
+            square_url: "https://inat.com/photos/80678745/square.jpg",
+            medium_url: "https://inat.com/photos/80678745/medium.jpg",
           },
           taxon_changes_count: 7,
           taxon_schemes_count: 2,
@@ -11492,17 +11119,15 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Cho Fungi, some rights reserved (CC BY-NC), uploaded by Cho Fungi",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/260296784/square.jpg",
+            url: "https://inat.com/photos/260296784/square.jpg",
             original_dimensions: {
               height: 1984,
               width: 1587,
             },
             flags: [],
             attribution_name: "Cho Fungi",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/260296784/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/260296784/medium.jpg",
+            square_url: "https://inat.com/photos/260296784/square.jpg",
+            medium_url: "https://inat.com/photos/260296784/medium.jpg",
           },
           taxon_changes_count: 4,
           taxon_schemes_count: 2,
@@ -11535,17 +11160,15 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-nc",
             attribution:
               "(c) Иван Матершев, some rights reserved (CC BY-NC), uploaded by Иван Матершев",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/28906584/square.jpg",
+            url: "https://inat.com/photos/28906584/square.jpg",
             original_dimensions: {
               height: 1500,
               width: 2000,
             },
             flags: [],
             attribution_name: "Иван Матершев",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/28906584/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/28906584/medium.jpg",
+            square_url: "https://inat.com/photos/28906584/square.jpg",
+            medium_url: "https://inat.com/photos/28906584/medium.jpg",
           },
           taxon_changes_count: 6,
           taxon_schemes_count: 2,
@@ -11578,17 +11201,15 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) NOAA's National Ocean Service, some rights reserved (CC BY-SA)",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/131300/square.jpg",
+            url: "https://inat.com/photos/131300/square.jpg",
             original_dimensions: {
               height: 2048,
               width: 1362,
             },
             flags: [],
             attribution_name: "NOAA's National Ocean Service",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/131300/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/131300/medium.jpg",
+            square_url: "https://inat.com/photos/131300/square.jpg",
+            medium_url: "https://inat.com/photos/131300/medium.jpg",
           },
           taxon_changes_count: 1,
           taxon_schemes_count: 2,
@@ -11620,17 +11241,15 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             id: 47562898,
             license_code: "cc-by",
             attribution: "(c) NIAID, some rights reserved (CC BY)",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/47562898/square.jpg",
+            url: "https://inat.com/photos/47562898/square.jpg",
             original_dimensions: {
               height: 1481,
               width: 2048,
             },
             flags: [],
             attribution_name: "NIAID",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/47562898/square.jpg",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/47562898/medium.jpg",
+            square_url: "https://inat.com/photos/47562898/square.jpg",
+            medium_url: "https://inat.com/photos/47562898/medium.jpg",
           },
           taxon_changes_count: 1,
           taxon_schemes_count: 1,
@@ -11662,17 +11281,15 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             license_code: "cc-by-sa",
             attribution:
               "(c) Alexey Solodovnikov, some rights reserved (CC BY-SA)",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/149309220/square.png",
+            url: "https://inat.com/photos/149309220/square.png",
             original_dimensions: {
               height: 2048,
               width: 2048,
             },
             flags: [],
             attribution_name: "Alexey Solodovnikov",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/149309220/square.png",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/149309220/medium.png",
+            square_url: "https://inat.com/photos/149309220/square.png",
+            medium_url: "https://inat.com/photos/149309220/medium.png",
           },
           taxon_changes_count: 3,
           taxon_schemes_count: 1,
@@ -11703,17 +11320,15 @@ export const lifeTaxaApi: iNatTaxaAPI = {
             id: 49424863,
             license_code: "cc-by-sa",
             attribution: "(c) Kaden11a, some rights reserved (CC BY-SA)",
-            url: "https://inaturalist-open-data.s3.amazonaws.com/photos/49424863/square.gif",
+            url: "https://inat.com/photos/49424863/square.gif",
             original_dimensions: {
               height: 265,
               width: 353,
             },
             flags: [],
             attribution_name: "Kaden11a",
-            square_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/49424863/square.gif",
-            medium_url:
-              "https://inaturalist-open-data.s3.amazonaws.com/photos/49424863/medium.gif",
+            square_url: "https://inat.com/photos/49424863/square.gif",
+            medium_url: "https://inat.com/photos/49424863/medium.gif",
           },
           taxon_changes_count: 0,
           taxon_schemes_count: 1,

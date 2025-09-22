@@ -1,5 +1,6 @@
 import { setupComponent } from "../../lib/component_utils.ts";
 import { removePlace } from "../../lib/search_places.ts";
+import { pluralize } from "../../lib/utils.ts";
 import type { NormalizediNatPlace } from "../../types/app";
 
 class MyComponent extends HTMLElement {
@@ -24,6 +25,15 @@ class MyComponent extends HTMLElement {
     let titleEl = this.querySelector(".title");
     if (titleEl && place.name) {
       titleEl.textContent = place.name;
+    }
+
+    let countEl = this.querySelector(".count");
+    if (countEl) {
+      countEl.textContent = pluralize(
+        place.observations_count,
+        "observation",
+        true,
+      );
     }
 
     let butttonEl = this.querySelector(".close-button");

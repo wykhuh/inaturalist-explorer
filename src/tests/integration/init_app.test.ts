@@ -51,9 +51,10 @@ import {
   gridLabel_oaks_bbox_resources,
   gridLabel_life_bbox_resources,
   placeBBoxLabel,
+  allTaxa,
 } from "../test_helpers.ts";
 import type { iNatApiParams } from "../../types/app";
-import { allTaxaRecord, fieldsWithAny } from "../../data/inat_data.ts";
+import { fieldsWithAny } from "../../data/inat_data.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
 import { initPopulateStore, initRenderMap } from "../../lib/init_app.ts";
 import { mapStore } from "../../lib/store.ts";
@@ -106,10 +107,11 @@ describe("initPopulateStore and initRenderMap options", () => {
     let expectedParams: iNatApiParams = {
       verifiable: true,
       spam: false,
-      taxon_id: allTaxaRecord.id.toString(),
+      taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.color).toBe(iNatOrange);
   });
 
   test("updates inatApiParams with values in params ", async () => {
@@ -135,10 +137,11 @@ describe("initPopulateStore and initRenderMap options", () => {
       verifiable: false,
       spam: true,
       photos: false,
-      taxon_id: allTaxaRecord.id.toString(),
+      taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.color).toBe(iNatOrange);
   });
 
   test("ignores invalid params ", async () => {
@@ -163,10 +166,11 @@ describe("initPopulateStore and initRenderMap options", () => {
     let expectedParams: iNatApiParams = {
       spam: false,
       verifiable: true,
-      taxon_id: allTaxaRecord.id.toString(),
+      taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.color).toBe(iNatOrange);
   });
 
   test("loads and renders taxa data with verifiable and spam set to false", async () => {
@@ -195,6 +199,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       spam: false,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.color).toBe(colors[0]);
   });
 
   test("loads and renders taxa data with verifiable and spam set to true", async () => {
@@ -223,6 +228,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       spam: true,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.color).toBe(colors[0]);
   });
 
   test("loads and renders taxa data without verifiable and spam", async () => {
@@ -251,6 +257,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       spam: false,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.color).toBe(colors[0]);
   });
 
   test.each(fieldsWithAny)(
@@ -284,6 +291,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       }
 
       expect(store.inatApiParams).toStrictEqual(expectedParams);
+      expect(store.color).toBe(colors[0]);
     },
   );
 
@@ -313,6 +321,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       spam: false,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.color).toBe(colors[0]);
   });
 
   test("adds observations view and subview to store", async () => {
@@ -331,10 +340,11 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectAllTaxaRecord(store);
     expect(store.inatApiParams).toStrictEqual({
       colors: iNatOrange,
-      taxon_id: allTaxaRecord.id.toString(),
+      taxon_id: allTaxa.id.toString(),
       verifiable: true,
       spam: false,
     });
+    expect(store.color).toBe(iNatOrange);
     expect(store.currentView).toBe("observations");
     expect(store.viewMetadata.observations).toStrictEqual({ subview: "table" });
   });
@@ -355,10 +365,11 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectAllTaxaRecord(store);
     expect(store.inatApiParams).toStrictEqual({
       colors: iNatOrange,
-      taxon_id: allTaxaRecord.id.toString(),
+      taxon_id: allTaxa.id.toString(),
       verifiable: true,
       spam: false,
     });
+    expect(store.color).toBe(iNatOrange);
     expect(store.currentView).toBe("observations");
     expect(store.viewMetadata.observations).toStrictEqual({ subview: "grid" });
   });
@@ -379,10 +390,11 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectAllTaxaRecord(store);
     expect(store.inatApiParams).toStrictEqual({
       colors: iNatOrange,
-      taxon_id: allTaxaRecord.id.toString(),
+      taxon_id: allTaxa.id.toString(),
       verifiable: true,
       spam: false,
     });
+    expect(store.color).toBe(iNatOrange);
     expect(store.currentView).toBe("identifiers");
     expect(store.viewMetadata.identifiers).toStrictEqual({});
   });
@@ -403,13 +415,14 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectAllTaxaRecord(store);
     expect(store.inatApiParams).toStrictEqual({
       colors: iNatOrange,
-      taxon_id: allTaxaRecord.id.toString(),
+      taxon_id: allTaxa.id.toString(),
       verifiable: true,
       spam: false,
       page: 3,
       order: "desc",
       order_by: "id",
     });
+    expect(store.color).toBe(iNatOrange);
     expect(store.viewMetadata).toStrictEqual({
       identifiers: { page: 3, order: "desc", order_by: "id" },
       observers: {},
@@ -452,8 +465,11 @@ describe("initPopulateStore and initRenderMap resources", () => {
       verifiable: true,
       spam: false,
     };
-
     expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.color).toBe(colors[0]);
+    expect(store.selectedTaxa[0].observations_count).toBe(
+      life().observations_count,
+    );
   });
 
   test("loads and renders place data based on url params", async () => {
@@ -470,19 +486,28 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
+      placeLabel_la,
       gridLabel_allTaxaRecord_la,
     ]);
     expectNoRefresh(store);
-    expectAllTaxaRecord(store);
-    expectLosAngelesPlace(store);
+    let allTaxaCount = allTaxa.observations_count * 0.6;
+    expectAllTaxaRecord(store, allTaxaCount);
+    expectLosAngelesPlace(store, allTaxaCount);
     let expectedParams: iNatApiParams = {
       place_id: losangeles.id.toString(),
-      taxon_id: allTaxaRecord.id.toString(),
+      taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
       verifiable: true,
       spam: false,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.color).toBe(iNatOrange);
+    expect(store.selectedTaxa[0].observations_count).toBe(
+      allTaxa.observations_count * 0.6,
+    );
+    expect(store.selectedPlaces[0].observations_count).toBe(
+      allTaxa.observations_count * 0.6,
+    );
   });
 
   test("loads and renders bounding box data based on url params", async () => {
@@ -503,19 +528,26 @@ describe("initPopulateStore and initRenderMap resources", () => {
       refreshBBoxLabel,
       gridLabel_allTaxaRecord,
     ]);
-    expectRefreshPlace(store);
+    expectRefreshPlace(store, allTaxa.observations_count);
     expectAllTaxaRecord(store);
     let expectedParams: iNatApiParams = {
       nelat: 0,
       nelng: 0,
       swlat: 0,
       swlng: 0,
-      taxon_id: allTaxaRecord.id.toString(),
+      taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
       verifiable: true,
       spam: false,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.color).toBe(iNatOrange);
+    expect(store.selectedTaxa[0].observations_count).toBe(
+      allTaxa.observations_count,
+    );
+    expect(store.selectedPlaces[0].observations_count).toBe(
+      allTaxa.observations_count,
+    );
   });
 
   test("loads and renders project data based on url params", async () => {
@@ -539,12 +571,16 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectProject1(store);
     let expectedParams: iNatApiParams = {
       project_id: project_cnc1.id.toString(),
-      taxon_id: allTaxaRecord.id.toString(),
+      taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
       verifiable: true,
       spam: false,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.color).toBe(iNatOrange);
+    expect(store.selectedTaxa[0].observations_count).toBe(
+      allTaxa.observations_count,
+    );
   });
 
   test("loads and renders user data based on url params", async () => {
@@ -568,20 +604,22 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectUser1(store);
     let expectedParams: iNatApiParams = {
       user_id: user1.id.toString(),
-      taxon_id: allTaxaRecord.id.toString(),
+      taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
       verifiable: true,
       spam: false,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.color).toBe(iNatOrange);
+    expect(store.selectedTaxa[0].observations_count).toBe(
+      allTaxa.observations_count,
+    );
   });
 
   test("loads and renders resources and places based on url params", async () => {
     let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
-
-    colorsEncoded;
 
     let searchparams = `?taxon_id=${life().id},${redOak().id}`;
     searchparams += `&place_id=${losangeles.id},${sandiego.id}`;
@@ -597,25 +635,37 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
+      placeLabel_la,
+      placeLabel_sd,
       placeLabel_sd,
       gridLabel_life_places_resources,
       gridLabel_oaks_places_resources,
     ]);
     expectNoRefresh(store);
     expectLifeOakTaxa(store);
-    expect_LA_SD_Place(store);
+    let count = redOak().observations_count + life().observations_count;
+    expect_LA_SD_Place(store, [count * 0.6, count * 0.4]);
     expect_users(store);
-
     let expectedParams: iNatApiParams = {
-      colors: colors[1],
+      colors: `${colors[0]},${colors[1]}`,
+      taxon_id: `${life().id},${redOak().id}`,
       place_id: `${losangeles.id},${sandiego.id}`,
       project_id: `${project_cnc1.id},${project_cnc2.id}`,
       user_id: `${user1.id},${user2.id}`,
-      taxon_id: redOak().id.toString(),
       verifiable: true,
       spam: false,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.color).toBe(colors[1]);
+    expect(store.selectedTaxa[0].observations_count).toBe(
+      life().observations_count,
+    );
+    expect(store.selectedTaxa[1].observations_count).toBe(
+      redOak().observations_count,
+    );
+    let count2 = life().observations_count + redOak().observations_count;
+    expect(store.selectedPlaces[0].observations_count).toBe(count2 * 0.6);
+    expect(store.selectedPlaces[1].observations_count).toBe(count2 * 0.4);
   });
 
   test("loads and renders resources and bounding box based on url params", async () => {
@@ -643,15 +693,15 @@ describe("initPopulateStore and initRenderMap resources", () => {
       gridLabel_life_bbox_resources,
       gridLabel_oaks_bbox_resources,
     ]);
-    expectRefreshPlace(store);
+    let count = life().observations_count + redOak().observations_count;
+    expectRefreshPlace(store, count);
     expectLifeOakTaxa(store);
     expectProjects(store);
     expect_users(store);
-
     let expectedParams: iNatApiParams = {
-      colors: colors[1],
+      colors: `${colors[0]},${colors[1]}`,
+      taxon_id: `${life().id},${redOak().id}`,
       project_id: `${project_cnc1.id},${project_cnc2.id}`,
-      taxon_id: `${redOak().id}`,
       verifiable: true,
       spam: false,
       nelat: 0,
@@ -661,5 +711,14 @@ describe("initPopulateStore and initRenderMap resources", () => {
       user_id: `${user1.id},${user2.id}`,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.color).toBe(colors[1]);
+    expect(store.selectedTaxa[0].observations_count).toBe(
+      life().observations_count,
+    );
+    expect(store.selectedTaxa[1].observations_count).toBe(
+      redOak().observations_count,
+    );
+    let count2 = life().observations_count + redOak().observations_count;
+    expect(store.selectedPlaces[0].observations_count).toBe(count2);
   });
 });

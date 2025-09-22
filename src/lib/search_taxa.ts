@@ -6,10 +6,11 @@ import type {
   MapStore,
 } from "../types/app.d.ts";
 import { autocomplete_taxa_api } from "../lib/inat_api.ts";
-import type { iNatTaxaAPI } from "../types/inat_api";
+import type { iNatAutocompleteTaxaAPI } from "../types/inat_api";
 import { loggerUrl } from "../lib/logger.ts";
 import {
   addAllTaxaRecordToMapAndStore,
+  addValueToCommaSeparatedString,
   fetchiNatMapDataForTaxon,
   formatTaxonName,
   getObservationsCountForTaxon,
@@ -19,6 +20,8 @@ import {
 import { speciesRanks } from "../data/inat_data.ts";
 import { updateAppUrl } from "./utils.ts";
 import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
+import { updateCountForAllPlaces } from "./search_utils.ts";
+import { renderPlacesList } from "./search_places.ts";
 
 export function setupTaxaSearch(selector: string) {
   const autoCompleteTaxaJS = new autoComplete({
@@ -35,7 +38,7 @@ export function setupTaxaSearch(selector: string) {
           let url = `${autocomplete_taxa_api}&per_page=50&q=${query}`;
           loggerUrl(url);
           let res = await fetch(url);
-          let data = (await res.json()) as iNatTaxaAPI;
+          let data = (await res.json()) as iNatAutocompleteTaxaAPI;
           return processAutocompleteTaxa(data, query);
         } catch (error) {
           console.error("setupTaxaSearch ERROR:", error);
@@ -59,7 +62,7 @@ export function setupTaxaSearch(selector: string) {
 }
 
 export function processAutocompleteTaxa(
-  response: iNatTaxaAPI,
+  response: iNatAutocompleteTaxaAPI,
   query: string,
 ): NormalizediNatTaxon[] {
   let taxa = response.results.map((result) => {
@@ -71,9 +74,9 @@ export function processAutocompleteTaxa(
       rank: result.rank,
       id: result.id,
     };
-    let { title, subtitle } = formatTaxonName(data, query);
+    let { title } = formatTaxonName(data, query);
+    // title is the value shown in the input
     data.title = title;
-    data.subtitle = subtitle;
 
     return data;
   });
@@ -120,41 +123,56 @@ export function renderAutocompleteTaxon(
 
 // called by autocomplete search when an taxa option is selected
 export async function taxonSelectedHandler(
-  taxonObj: NormalizediNatTaxon,
+  selection: NormalizediNatTaxon,
   searchTerm: string,
   appStore: MapStore,
 ) {
-  // let map = appStore.map.map;
-  // let layerControl = appStore.map.layerControl;
-  // if (map === null) return;
-  // if (layerControl === null) return;
-
-  // get color for taxon
-  let color = getColor(appStore, defaultColorScheme);
-  taxonObj.color = color;
-
   // remove all taxa if allTaxaRecord is the current taxon
   if (appStore.inatApiParams.taxon_id === "0") {
     removeTaxaFromStoreAndMap(appStore);
   }
 
-  // get display name for taxon
-  let { title, subtitle } = formatTaxonName(taxonObj, searchTerm, false);
-  taxonObj.display_name = title;
-  taxonObj.title = title;
-  taxonObj.subtitle = subtitle;
+  // get display name for taxon without match term
+  delete selection.matched_term;
+  let { title, subtitle } = formatTaxonName(selection, searchTerm, false);
+  let color = getColor(appStore, defaultColorScheme);
 
-  // create params for the iNat map tiles API
+  // save taxa to store
+  let taxon = {
+    ...selection,
+    title,
+    subtitle,
+    color,
+    display_name: title,
+  };
+
+  appStore.selectedTaxa = [...appStore.selectedTaxa, taxon];
   appStore.inatApiParams = {
     ...appStore.inatApiParams,
-    taxon_id: taxonObj.id.toString(),
+    taxon_id: addValueToCommaSeparatedString(
+      taxon.id,
+      appStore.inatApiParams.taxon_id,
+    ),
+    colors: addValueToCommaSeparatedString(
+      taxon.color,
+      appStore.inatApiParams.colors,
+    ),
+  };
+  appStore.color = color;
+
+  // create params for the iNat map tiles API
+  let paramsTemp = {
+    ...appStore.inatApiParams,
+    taxon_id: taxon.id.toString(),
     colors: color,
   };
 
-  await fetchiNatMapDataForTaxon(taxonObj, appStore);
-  await getObservationsCountForTaxon(taxonObj, appStore);
+  await fetchiNatMapDataForTaxon(taxon, appStore, paramsTemp);
+  await getObservationsCountForTaxon(taxon, appStore, paramsTemp);
+  await updateCountForAllPlaces(appStore);
 
   renderTaxaList(appStore);
+  renderPlacesList(appStore);
   updateAppUrl(window.location, appStore);
   window.dispatchEvent(new Event("observationsChange"));
 }
@@ -179,8 +197,10 @@ export async function removeTaxon(taxonId: number, appStore: MapStore) {
   if (appStore.selectedTaxa.length === 0) {
     await addAllTaxaRecordToMapAndStore(appStore);
   }
+  await updateCountForAllPlaces(appStore);
 
   renderTaxaList(appStore);
+  renderPlacesList(appStore);
   updateAppUrl(window.location, appStore);
   window.dispatchEvent(new Event("observationsChange"));
 }

@@ -13,11 +13,9 @@ import type { iNatSearchAPI } from "../types/inat_api";
 import { loggerUrl } from "../lib/logger.ts";
 
 import {
-  fetchiNatMapDataForTaxon,
-  removeOneTaxonFromMap,
   addValueToCommaSeparatedString,
-  getObservationsCountForTaxon,
   removeOnePlaceFromStoreAndMap,
+  getObservationsCountForPlace,
 } from "./data_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
 import { placeTypes } from "../data/inat_data.ts";
@@ -143,16 +141,22 @@ export async function placeSelectedHandler(
   }
 
   // save place to store
-  appStore.selectedPlaces = [
-    ...appStore.selectedPlaces,
-    {
-      id: selection.id,
-      name: selection.name,
-      display_name: selection.display_name,
-      bounding_box: selection.bounding_box,
-      geometry: selection.geometry,
-    },
-  ];
+  let place = {
+    id: selection.id,
+    name: selection.name,
+    display_name: selection.display_name,
+    bounding_box: selection.bounding_box,
+    geometry: selection.geometry,
+  };
+  appStore.selectedPlaces = [...appStore.selectedPlaces, place];
+  appStore.inatApiParams = {
+    ...appStore.inatApiParams,
+    place_id: addValueToCommaSeparatedString(
+      place.id,
+      appStore.inatApiParams.place_id,
+    ),
+  };
+
   if (map) {
     appStore.placesMapLayers = {
       ...appStore.placesMapLayers,
@@ -161,26 +165,17 @@ export async function placeSelectedHandler(
   }
 
   // get iNat map tiles for selected place
-  for await (const taxon of appStore.selectedTaxa) {
-    // remove existing taxon layers from map
-    removeOneTaxonFromMap(appStore, taxon.id);
-    appStore.inatApiParams = {
-      ...appStore.inatApiParams,
-      taxon_id: taxon.id.toString(),
-      colors: taxon.color,
-      place_id: addValueToCommaSeparatedString(
-        selection.id,
-        appStore.inatApiParams.place_id,
-      ),
-    };
+  await updateTilesAndCountForAllTaxa(appStore);
 
-    await fetchiNatMapDataForTaxon(taxon, appStore);
-    await getObservationsCountForTaxon(taxon, appStore);
-  }
+  let paramsTemp = {
+    ...appStore.inatApiParams,
+    place_id: place.id.toString(),
+  };
+  await getObservationsCountForPlace(place, appStore, paramsTemp);
 
-  // zoom to map to fit all selected places
   renderTaxaList(appStore);
   renderPlacesList(appStore);
+  // zoom to map to fit all selected places
   if (map) {
     fitBoundsPlaces(appStore);
   }
@@ -199,6 +194,7 @@ export function renderPlacesList(appStore: MapStore) {
       id: place.id,
       name: place.name,
       display_name: place.display_name,
+      observations_count: place.observations_count,
     });
     listEl.appendChild(templateEl);
   });

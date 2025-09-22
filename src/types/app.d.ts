@@ -24,6 +24,7 @@ export interface MapStore {
   selectedUsers: NormalizediNatUser[];
   selectedProjects: NormalizediNatProject[];
   inatApiParams: iNatApiParams;
+  inatApiParamsTemp?: iNatApiParams;
   color: string;
   map: {
     map: Map | null;
@@ -91,21 +92,30 @@ export type NormalizediNatPlace = {
   id: number;
   place_type?: number;
   place_type_name?: string;
+  observations_count?: number;
 };
 
 export type NormalizediNatProject = {
   id: number;
   name: string;
   slug: string;
+  observations_count?: number;
 };
 
 export type NormalizediNatUser = {
   id: number;
   login: string;
   name: string;
+  observations_count?: number;
 };
 
 export type MapStoreKeys = keyof MapStore;
+
+export type MapStoreSelectedResourcesKeys =
+  | "selectedTaxa"
+  | "selectedPlaces"
+  | "selectedUsers"
+  | "selectedProjects";
 
 interface iNatApiParams extends iNatApiFilterableParams {
   nelat?: number;

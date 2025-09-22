@@ -12,11 +12,12 @@ describe("getColor", () => {
     let result = getColor(store, defaultColorScheme);
 
     expect(result).toBe(defaultColorScheme[0]);
+    expect(store.color).toBe("");
   });
 
   test("returns next color in color array if color is set in store", () => {
     let store = structuredClone(mapStore);
-    store.inatApiParams.colors = defaultColorScheme[2];
+    store.color = defaultColorScheme[2];
 
     let result = getColor(store, defaultColorScheme);
 
@@ -25,7 +26,16 @@ describe("getColor", () => {
 
   test("returns first color in color array if color is last color in array", () => {
     let store = structuredClone(mapStore);
-    store.inatApiParams.colors = defaultColorScheme[5];
+    store.color = defaultColorScheme[5];
+
+    let result = getColor(store, defaultColorScheme);
+
+    expect(result).toBe(defaultColorScheme[0]);
+  });
+
+  test("returns first color in color array if store color is not in color array", () => {
+    let store = structuredClone(mapStore);
+    store.color = "red";
 
     let result = getColor(store, defaultColorScheme);
 

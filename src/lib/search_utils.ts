@@ -1,6 +1,7 @@
 import type { MapStore } from "../types/app";
 import {
   fetchiNatMapDataForTaxon,
+  getObservationsCountForPlace,
   getObservationsCountForTaxon,
   removeOneTaxonFromMap,
 } from "./data_utils";
@@ -10,28 +11,36 @@ export async function updateTilesAndCountForAllTaxa(appStore: MapStore) {
     // remove existing taxon layers from map
     removeOneTaxonFromMap(appStore, taxon.id);
 
-    appStore.inatApiParams = {
+    let paramsTemp = {
       ...appStore.inatApiParams,
       taxon_id: taxon.id.toString(),
       colors: taxon.color,
     };
 
     // get new iNat map tiles
-    await fetchiNatMapDataForTaxon(taxon, appStore);
+    await fetchiNatMapDataForTaxon(taxon, appStore, paramsTemp);
     // fetch new counts from api
-    await getObservationsCountForTaxon(taxon, appStore);
+    await getObservationsCountForTaxon(taxon, appStore, paramsTemp);
   }
 }
 
 export async function updateCountForAllTaxa(appStore: MapStore) {
   for await (const taxon of appStore.selectedTaxa) {
-    appStore.inatApiParams = {
+    let paramsTemp = {
       ...appStore.inatApiParams,
       taxon_id: taxon.id.toString(),
-      colors: taxon.color,
     };
-    // fetch new counts from api
-    await getObservationsCountForTaxon(taxon, appStore);
+    await getObservationsCountForTaxon(taxon, appStore, paramsTemp);
+  }
+}
+
+export async function updateCountForAllPlaces(appStore: MapStore) {
+  for await (const place of appStore.selectedPlaces) {
+    let paramsTemp = {
+      ...appStore.inatApiParams,
+      place_id: place.id.toString(),
+    };
+    await getObservationsCountForPlace(place, appStore, paramsTemp);
   }
 }
 
@@ -40,12 +49,13 @@ export async function updateTilesForAllTaxa(appStore: MapStore) {
     // remove existing taxon layers from map
     removeOneTaxonFromMap(appStore, taxon.id);
 
-    appStore.inatApiParams = {
+    let paramsTemp = {
       ...appStore.inatApiParams,
       taxon_id: taxon.id.toString(),
       colors: taxon.color,
     };
+
     // get new iNat map tiles
-    await fetchiNatMapDataForTaxon(taxon, appStore);
+    await fetchiNatMapDataForTaxon(taxon, appStore, paramsTemp);
   }
 }

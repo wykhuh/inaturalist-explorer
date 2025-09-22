@@ -3,14 +3,14 @@
 import { expect, test, describe } from "vitest";
 import {
   formatTaxonName,
-  updateSelectedTaxa,
+  updateSelectedResource,
   addValueToCommaSeparatedString,
   removeValueFromCommaSeparatedString,
   removeIdfromInatApiParams,
   normalizeAppParams,
   cleanupObervationsParams,
 } from "../lib/data_utils.ts";
-import type { NormalizediNatTaxon } from "../types/app.d.ts";
+import type { MapStore, NormalizediNatTaxon } from "../types/app.d.ts";
 import { mapStore } from "../lib/store.ts";
 import {
   life,
@@ -311,7 +311,7 @@ describe("formatTaxonName", () => {
   });
 });
 
-describe("updateSelectedTaxa", () => {
+describe("updateSelectedResource", () => {
   let taxon1: NormalizediNatTaxon = {
     name: "name 1",
     matched_term: "matched_term 1",
@@ -333,7 +333,7 @@ describe("updateSelectedTaxa", () => {
     let taxon = taxon1;
     let expected = [taxon1];
 
-    updateSelectedTaxa(store, taxon);
+    updateSelectedResource(taxon, "selectedTaxa", store);
 
     expect(store.selectedTaxa).toStrictEqual(expected);
   });
@@ -345,7 +345,7 @@ describe("updateSelectedTaxa", () => {
     let taxon = taxon2;
     let expected = [taxon1, taxon2];
 
-    updateSelectedTaxa(store, taxon);
+    updateSelectedResource(taxon, "selectedTaxa", store);
 
     expect(store.selectedTaxa).toStrictEqual(expected);
   });
@@ -356,7 +356,7 @@ describe("updateSelectedTaxa", () => {
     let taxon = { ...taxon2, observations_count: 33 };
     let expected = [taxon1, { ...taxon2, observations_count: 33 }];
 
-    updateSelectedTaxa(store, taxon);
+    updateSelectedResource(taxon, "selectedTaxa", store);
 
     expect(store.selectedTaxa).toStrictEqual(expected);
   });

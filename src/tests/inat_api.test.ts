@@ -2,14 +2,14 @@
 
 import { expect, test, describe } from "vitest";
 
-import { redOaksSpeciesCount } from "./fixtures/inatApi.js";
+import { redOaksSpeciesCountApi } from "./fixtures/inatApi.js";
 import { getiNatMapTiles } from "../lib/inat_api.js";
 import type { iNatApiParams } from "../types/app.js";
 import { lifeBasic } from "./test_helpers.js";
 import { iNatOrange } from "../lib/map_colors_utils.js";
 
 test("observations species count", () => {
-  let res = redOaksSpeciesCount.results.reduce((prev, current) => {
+  let res = redOaksSpeciesCountApi.results.reduce((prev, current) => {
     return prev + current.count;
   }, 0);
   expect(res).toBe(394602);

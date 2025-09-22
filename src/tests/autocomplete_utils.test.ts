@@ -10,144 +10,48 @@ import {
   processAutocompletePlaces,
   renderAutocompletePlace,
 } from "../lib/search_places.ts";
-import { losAngelesSearchPlaces } from "./fixtures/inatApi.js";
+import {
+  losAngelesSearchApi,
+  redTaxaAutocomplete,
+} from "./fixtures/inatApi.js";
 import type { NormalizediNatPlace } from "../types/app.js";
+import type { iNatAutocompleteTaxaAPI } from "../types/inat_api";
 
 describe("processAutocompleteTaxa", () => {
   test("formats iNat api response", () => {
-    let response = {
+    let response: iNatAutocompleteTaxaAPI = {
       total_results: 2,
       page: 1,
       per_page: 10,
-      results: [
-        {
-          id: 48662,
-          rank: "species",
-          rank_level: 10,
-          iconic_taxon_id: 47158,
-          ancestor_ids: [
-            48460, 1, 47120, 372739, 47158, 184884, 47157, 47224, 47922, 61244,
-            134169, 522900, 48663, 48662,
-          ],
-          is_active: true,
-          name: "Danaus plexippus",
-          parent_id: 48663,
-          ancestry:
-            "48460/1/47120/372739/47158/184884/47157/47224/47922/61244/134169/522900/48663",
-          extinct: false,
-          default_photo: {
-            id: 61756746,
-            license_code: "cc-by",
-            attribution: "(c) Judy Gallagher, some rights reserved (CC BY)",
-            url: "https://inat.com/photos/61756746/square.jpg",
-            original_dimensions: {
-              height: 1365,
-              width: 2048,
-            },
-            flags: [],
-            attribution_name: "Judy Gallagher",
-            square_url: "https://inat.com/photos/61756746/square.jpg",
-            medium_url: "https://inat.com/photos/61756746/medium.jpg",
-          },
-          taxon_changes_count: 1,
-          taxon_schemes_count: 6,
-          observations_count: 403609,
-          flag_counts: {
-            resolved: 14,
-            unresolved: 2,
-          },
-          current_synonymous_taxon_ids: null,
-          atlas_id: 1231,
-          complete_species_count: null,
-          wikipedia_url: "http://en.wikipedia.org/wiki/Monarch_butterfly",
-          matched_term: "Monarch",
-          iconic_taxon_name: "Insecta",
-          preferred_common_name: "Monarch",
-          conservation_status: {
-            id: 298224,
-            place_id: null,
-            source_id: null,
-            user_id: 2001523,
-            authority: "NatureServe",
-            status: "g4",
-            status_name: "apparently secure",
-            geoprivacy: "open",
-            iucn: 20,
-          },
-        },
-        {
-          id: 71338,
-          rank: "family",
-          rank_level: 30,
-          iconic_taxon_id: 3,
-          ancestor_ids: [48460, 1, 2, 355675, 3, 7251, 71338],
-          is_active: true,
-          name: "Monarchidae",
-          parent_id: 7251,
-          ancestry: "48460/1/2/355675/3/7251",
-          extinct: false,
-          default_photo: {
-            id: 23108,
-            license_code: "cc-by-nc-nd",
-            attribution:
-              "(c) Sergey Yeliseev, some rights reserved (CC BY-NC-ND)",
-            url: "https://inat.com/photos/23108/square.jpg",
-            original_dimensions: {
-              height: 695,
-              width: 1024,
-            },
-            flags: [],
-            attribution_name: "Sergey Yeliseev",
-            square_url: "https://inat.com/photos/23108/square.jpg",
-            medium_url: "https://inat.com/photos/23108/medium.jpg",
-          },
-          taxon_changes_count: 1,
-          taxon_schemes_count: 1,
-          observations_count: 49345,
-          flag_counts: {
-            resolved: 0,
-            unresolved: 0,
-          },
-          current_synonymous_taxon_ids: null,
-          atlas_id: null,
-          complete_species_count: 101,
-          wikipedia_url: "http://en.wikipedia.org/wiki/Monarch_flycatcher",
-          complete_rank: "subspecies",
-          matched_term: "Monarchs",
-          iconic_taxon_name: "Aves",
-          preferred_common_name: "Monarch Flycatchers",
-        },
-      ],
+      results: [redTaxaAutocomplete.results[0], redTaxaAutocomplete.results[1]],
     };
     let expected = [
       {
-        default_photo: "https://inat.com/photos/61756746/square.jpg",
-        id: 48662,
-        matched_term: "Monarch",
-        name: "Danaus plexippus",
-        preferred_common_name: "Monarch",
-        rank: "species",
-        title: "Monarch",
-        subtitle: "Danaus plexippus",
+        default_photo: "https://inat.com/photos/11484396/square.jpg",
+        id: 846366,
+        matched_term: "Reduncini",
+        name: "Reduncini",
+        preferred_common_name: "Reduncines",
+        rank: "tribe",
+        title: "Reduncines",
       },
       {
-        default_photo: "https://inat.com/photos/23108/square.jpg",
-        id: 71338,
-        matched_term: "Monarchs",
-        name: "Monarchidae",
-        preferred_common_name: "Monarch Flycatchers",
-        rank: "family",
-        title: "Monarch Flycatchers",
-        subtitle: "Monarchidae",
+        default_photo: "https://inat.com/photos/149586607/square.jpg",
+        id: 861036,
+        matched_term: "red oaks",
+        name: "Lobatae",
+        preferred_common_name: "red oaks",
+        rank: "section",
+        title: "Red Oaks",
       },
     ];
 
-    let results = processAutocompleteTaxa(response, "mon");
+    let results = processAutocompleteTaxa(response, "red");
 
     expect(results).toStrictEqual(expected);
   });
   test("handles records with no common name", () => {
-    let response = {
+    let response: iNatAutocompleteTaxaAPI = {
       total_results: 1,
       page: 1,
       per_page: 10,
@@ -206,7 +110,6 @@ describe("processAutocompleteTaxa", () => {
         rank: "genus",
         id: 339072,
         title: "Prorocentrum",
-        subtitle: undefined,
       },
     ];
 
@@ -215,7 +118,7 @@ describe("processAutocompleteTaxa", () => {
     expect(results).toStrictEqual(expected);
   });
   test("handles records with no photos", () => {
-    let response = {
+    let response: iNatAutocompleteTaxaAPI = {
       total_results: 1,
       page: 1,
       per_page: 10,
@@ -262,7 +165,6 @@ describe("processAutocompleteTaxa", () => {
         preferred_common_name: "California Walnut Angle",
         rank: "species",
         title: "California Walnut Angle",
-        subtitle: "Macaria juglandata",
       },
     ];
 
@@ -474,34 +376,34 @@ describe("renderAutocompleteTaxon", () => {
 
 describe("processAutocompletePlaces", () => {
   test("formats api response", () => {
-    let apiResponse = losAngelesSearchPlaces;
+    let apiResponse = losAngelesSearchApi;
     let results = processAutocompletePlaces(apiResponse);
     let expected = [
       {
         display_name: "Los Angeles County, US, CA",
         name: "Los Angeles",
-        id: losAngelesSearchPlaces.results[0].record.id,
-        geometry: losAngelesSearchPlaces.results[0].record.geometry_geojson,
+        id: losAngelesSearchApi.results[0].record.id,
+        geometry: losAngelesSearchApi.results[0].record.geometry_geojson,
         bounding_box:
-          losAngelesSearchPlaces.results[0].record.bounding_box_geojson,
+          losAngelesSearchApi.results[0].record.bounding_box_geojson,
         place_type_name: "County",
       },
       {
         display_name: "Los Angeles Area (custom), CA, US",
         name: "Los Angeles Area (custom)",
-        id: losAngelesSearchPlaces.results[1].record.id,
-        geometry: losAngelesSearchPlaces.results[1].record.geometry_geojson,
+        id: losAngelesSearchApi.results[1].record.id,
+        geometry: losAngelesSearchApi.results[1].record.geometry_geojson,
         bounding_box:
-          losAngelesSearchPlaces.results[1].record.bounding_box_geojson,
+          losAngelesSearchApi.results[1].record.bounding_box_geojson,
         place_type_name: undefined,
       },
       {
         display_name: "Los Angeles & Ventura Metropolitan Areas",
         name: "Los Angeles & Ventura Metropolitan Areas",
-        id: losAngelesSearchPlaces.results[2].record.id,
-        geometry: losAngelesSearchPlaces.results[2].record.geometry_geojson,
+        id: losAngelesSearchApi.results[2].record.id,
+        geometry: losAngelesSearchApi.results[2].record.geometry_geojson,
         bounding_box:
-          losAngelesSearchPlaces.results[2].record.bounding_box_geojson,
+          losAngelesSearchApi.results[2].record.bounding_box_geojson,
         place_type_name: undefined,
       },
     ];
@@ -514,10 +416,9 @@ describe("renderAutocompletePlace", () => {
     let record: NormalizediNatPlace = {
       name: "Los Angeles",
       display_name: "Los Angeles County, US, CA",
-      id: losAngelesSearchPlaces.results[0].record.id,
-      geometry: losAngelesSearchPlaces.results[0].record
-        .geometry_geojson as any,
-      bounding_box: losAngelesSearchPlaces.results[0].record
+      id: losAngelesSearchApi.results[0].record.id,
+      geometry: losAngelesSearchApi.results[0].record.geometry_geojson as any,
+      bounding_box: losAngelesSearchApi.results[0].record
         .bounding_box_geojson as any,
       place_type_name: "County",
     };

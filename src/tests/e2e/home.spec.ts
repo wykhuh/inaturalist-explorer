@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import {
   redTaxaAutocompleteResults,
-  losAngelesSearchPlaces,
+  losAngelesSearchApi,
 } from "../fixtures/inatApi.ts";
 import { logger } from "../../lib/logger.ts";
 
@@ -27,7 +27,7 @@ test.beforeEach(async ({ page }) => {
   await page.route(
     "https://api.inaturalist.org/v1/search?sources=places**",
     async (route) => {
-      const json = losAngelesSearchPlaces;
+      const json = losAngelesSearchApi;
       await route.fulfill({ json });
     },
   );
@@ -109,7 +109,7 @@ test("search places workflow", async ({ page }) => {
   await expect(page).toHaveScreenshot({ maxDiffPixels: 100 });
 
   // app show list of search results
-  let names = losAngelesSearchPlaces.results.map(
+  let names = losAngelesSearchApi.results.map(
     (result) => result.record.display_name,
   );
   for await (const name of names) {

@@ -56,7 +56,6 @@ export const getiNatMapTiles = (
   taxonObj: NormalizediNatTaxon,
 ): iNatObservationTilesSettings => {
   let dupParams = structuredClone(inatApiParams);
-
   // rename colors to color to work with iNat api
   dupParams.color = dupParams.colors;
   delete dupParams.colors;
@@ -64,6 +63,9 @@ export const getiNatMapTiles = (
   // remove taxon id if it is zero
   if (dupParams.taxon_id === "0") {
     delete dupParams.taxon_id;
+  }
+  if (dupParams.place_id === "0") {
+    delete dupParams.place_id;
   }
   if (dupParams.color === undefined) {
     dupParams.color = iNatOrange;

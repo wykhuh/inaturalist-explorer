@@ -19,6 +19,18 @@ import { placeSelectedHandler } from "../lib/search_places.ts";
 import { projectSelectedHandler } from "../lib/search_projects.ts";
 import { taxonSelectedHandler } from "../lib/search_taxa.ts";
 import { userSelectedHandler } from "../lib/search_users.ts";
+import {
+  cnc1ProjectApi,
+  cnc2ProjectApi,
+  lifeTaxaApi,
+  losangelesPlaceAPI,
+  losAngelesSearchApi,
+  redoakTaxaApi,
+  sandiegoPlaceAPI,
+  sandiegoSearchApi,
+  user1UserApi,
+  user2UserApi,
+} from "./fixtures/inatApi.ts";
 
 export function createMockServer() {
   const handlers = [
@@ -27,98 +39,58 @@ export function createMockServer() {
       return HttpResponse.json({ id: "abc-123456" });
     }),
     http.get("https://api.inaturalist.org/v1/taxa/48460", async (_args) => {
-      let data = {
-        results: [
-          {
-            ...lifeBasic,
-            default_photo: { square_url: lifeBasic.default_photo },
-          },
-        ],
-      };
-      return HttpResponse.json(data);
+      return HttpResponse.json(lifeTaxaApi);
     }),
     http.get("https://api.inaturalist.org/v1/taxa/861036", async (_args) => {
-      let data = {
-        results: [
-          {
-            ...redOakBasic,
-            default_photo: { square_url: redOakBasic.default_photo },
-          },
-        ],
-      };
-      return HttpResponse.json(data);
+      return HttpResponse.json(redoakTaxaApi);
     }),
     http.get("https://api.inaturalist.org/v1/places/962", async (_args) => {
-      let data = {
-        results: [
-          {
-            ...losangeles,
-            bounding_box_geojson: losangeles.bounding_box,
-            geometry_geojson: losangeles.geometry,
-          },
-        ],
-      };
-      return HttpResponse.json(data);
+      return HttpResponse.json(losangelesPlaceAPI);
     }),
     http.get("https://api.inaturalist.org/v1/places/829", async (_args) => {
-      let data = {
-        results: [
-          {
-            ...sandiego,
-            bounding_box_geojson: sandiego.bounding_box,
-            geometry_geojson: sandiego.geometry,
-          },
-        ],
-      };
-      return HttpResponse.json(data);
+      return HttpResponse.json(sandiegoPlaceAPI);
     }),
     http.get(
       "https://api.inaturalist.org/v1/projects/237729",
       async (_args) => {
-        let data = {
-          results: [{ ...project_cnc1, title: project_cnc1.name }],
-        };
-        return HttpResponse.json(data);
+        return HttpResponse.json(cnc1ProjectApi);
       },
     ),
     http.get(
       "https://api.inaturalist.org/v1/projects/229902",
       async (_args) => {
-        let data = {
-          results: [{ ...project_cnc2, title: project_cnc2.name }],
-        };
-        return HttpResponse.json(data);
+        return HttpResponse.json(cnc2ProjectApi);
       },
     ),
     http.get("https://api.inaturalist.org/v1/users/222137", async (_args) => {
-      let data = {
-        results: [{ ...user1 }],
-      };
-      return HttpResponse.json(data);
+      return HttpResponse.json(user1UserApi);
     }),
     http.get("https://api.inaturalist.org/v1/users/677256", async (_args) => {
-      let data = {
-        results: [{ ...user2 }],
-      };
-      return HttpResponse.json(data);
+      return HttpResponse.json(user2UserApi);
     }),
     http.get("https://api.inaturalist.org/v2/observations*", async (_args) => {
       let url = _args.request.url;
       loggerUrl("request.url", url);
+      let count = -999;
 
-      let count = 0;
-      if (url.includes(`taxon_id=${allTaxaRecord.id}&`)) {
-        count = 100000;
+      if (url.includes(`taxon_id=${allTaxa.id}&`)) {
+        count = allTaxa.observations_count;
       } else if (
         url.includes(`taxon_id=${lifeBasic.id}%2C${redOakBasic.id}&`)
       ) {
-        count = 11000;
+        count = life().observations_count + redOak().observations_count;
       } else if (url.includes(`taxon_id=${lifeBasic.id}&`)) {
-        count = 10000;
+        count = life().observations_count;
       } else if (url.includes(`taxon_id=${redOakBasic.id}&`)) {
-        count = 1000;
-      } else {
-        count = 100;
+        count = redOak().observations_count;
+      } else if (!url.includes("taxon_id=")) {
+        count = allTaxa.observations_count;
+      }
+
+      if (url.includes(`place_id=${losangeles.id}&`)) {
+        count = count * 0.6;
+      } else if (url.includes(`place_id=${sandiego.id}&`)) {
+        count = count * 0.4;
       }
 
       return HttpResponse.json({ total_results: count, results: [] });
@@ -248,10 +220,8 @@ export let gridLabel_oaks_bbox_resources =
 
 export let lifeBasic: NormalizediNatTaxon = {
   name: "Life",
-  default_photo:
-    "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
+  default_photo: "https://inat.com/photos/347064198/square.jpeg",
   preferred_common_name: "life",
-  matched_term: "Life",
   rank: "stateofmatter",
   id: 48460,
 };
@@ -271,7 +241,6 @@ export let redOakBasic: NormalizediNatTaxon = {
   name: "Lobatae",
   default_photo: "https://inat.com/photos/149586607/square.jpg",
   preferred_common_name: "red oaks",
-  matched_term: "Lobatae",
   rank: "section",
   id: 861036,
 };
@@ -303,47 +272,29 @@ export function monarch(color = colors[2]) {
     title: "Monarch",
     subtitle: "Danaus plexippus",
     color: color,
-    observations_count: 456789,
+    observations_count: 100,
   };
 }
+
+export const allTaxa = { ...allTaxaRecord, observations_count: 100000 };
 
 export let losangeles: NormalizediNatPlace = {
   display_name: "Los Angeles County, US, CA",
   id: 962,
   name: "Los Angeles",
-  bounding_box: {
-    type: "Polygon",
-    coordinates: [
-      [
-        [-118.951721, 32.75004],
-        [-118.951721, 34.823302],
-        [-117.646374, 34.823302],
-        [-117.646374, 32.75004],
-        [-118.951721, 32.75004],
-      ],
-    ],
-  },
+  geometry: losAngelesSearchApi.results[0].record.geometry_geojson,
+  bounding_box: losAngelesSearchApi.results[0].record.bounding_box_geojson,
 };
 
 export let sandiego: NormalizediNatPlace = {
   id: 829,
   name: "San Diego",
   display_name: "San Diego County, CA, US",
-  bounding_box: {
-    type: "Polygon",
-    coordinates: [
-      [
-        [-117.611081, 32.528832],
-        [-117.611081, 33.505025],
-        [-116.08094, 33.505025],
-        [-116.08094, 32.528832],
-        [-117.611081, 32.528832],
-      ],
-    ],
-  },
+  bounding_box: sandiegoSearchApi.results[0].record.bounding_box_geojson,
+  geometry: sandiegoSearchApi.results[0].record.geometry_geojson,
 };
 
-export let refreshPlace = {
+export let refreshPlace: NormalizediNatPlace = {
   id: 0,
   name: "Custom Boundary",
   display_name: "Custom Boundary",
@@ -360,7 +311,7 @@ export let refreshPlace = {
   },
 };
 
-export let refreshPlaceLA = {
+export let refreshPlaceLA: NormalizediNatPlace = {
   id: 0,
   name: "Custom Boundary",
   display_name: "Custom Boundary",
@@ -436,16 +387,25 @@ export function expectNoTaxa(store: MapStore) {
   expect(store.taxaMapLayers).toStrictEqual({});
 }
 
-export function expectAllTaxaRecord(store: MapStore) {
-  expect(store.selectedTaxa).toStrictEqual([allTaxaRecord]);
+export function expectAllTaxaRecord(store: MapStore, count = 0) {
+  let taxa = structuredClone(allTaxa);
+  if (count > 0) {
+    taxa.observations_count = count;
+  }
+  expect(store.selectedTaxa).toStrictEqual([taxa]);
   expect(store.taxaMapLayers[0].length).toBe(3);
 }
 
-export function expectLifeTaxa(store: MapStore, color = colors[0]) {
-  let lifeTemp = life(color);
-  expect(store.selectedTaxa).toStrictEqual([lifeTemp]);
-  expect(Object.keys(store.taxaMapLayers)).toEqual([lifeTemp.id.toString()]);
-  expect(store.taxaMapLayers[lifeTemp.id].length).toBe(4);
+export function expectLifeTaxa(store: MapStore, count = 0, color = colors[0]) {
+  let taxa = structuredClone(life());
+  if (count > 0) {
+    taxa.observations_count = count;
+  }
+  taxa.color = color;
+
+  expect(store.selectedTaxa).toStrictEqual([taxa]);
+  expect(Object.keys(store.taxaMapLayers)).toEqual([taxa.id.toString()]);
+  expect(store.taxaMapLayers[taxa.id].length).toBe(4);
 }
 
 export function expectOakTaxa(store: MapStore, color = colors[1]) {
@@ -457,18 +417,24 @@ export function expectOakTaxa(store: MapStore, color = colors[1]) {
 
 export function expectLifeOakTaxa(
   store: MapStore,
+  count = [0, 0],
   customColors = [colors[0], colors[1]],
 ) {
-  let lifeTemp = life(customColors[0]);
-  let oakTemp = redOak(customColors[1]);
-
-  expect(store.selectedTaxa).toStrictEqual([lifeTemp, oakTemp]);
+  let taxa1 = life(customColors[0]);
+  let taxa2 = redOak(customColors[1]);
+  if (count[0] > 0) {
+    taxa1.observations_count = count[0];
+  }
+  if (count[1] > 0) {
+    taxa2.observations_count = count[1];
+  }
+  expect(store.selectedTaxa).toStrictEqual([taxa1, taxa2]);
   expect(Object.keys(store.taxaMapLayers)).toEqual([
-    lifeTemp.id.toString(),
-    oakTemp.id.toString(),
+    taxa1.id.toString(),
+    taxa2.id.toString(),
   ]);
-  expect(store.taxaMapLayers[lifeTemp.id].length).toBe(4);
-  expect(store.taxaMapLayers[oakTemp.id].length).toBe(4);
+  expect(store.taxaMapLayers[taxa1.id].length).toBe(4);
+  expect(store.taxaMapLayers[taxa2.id].length).toBe(4);
 }
 
 export function expectNoPlaces(store: MapStore) {
@@ -480,24 +446,41 @@ export function expectNoRefresh(store: MapStore) {
   expect(store.refreshMap.layer).toBeNull();
 }
 
-export function expectLosAngelesPlace(store: MapStore) {
-  expect(store.selectedPlaces).toEqual([losangeles]);
+export function expectLosAngelesPlace(store: MapStore, count = 0) {
+  let place = structuredClone(losangeles);
+  if (count > 0) {
+    place.observations_count = count;
+  }
+  expect(store.selectedPlaces).toEqual([place]);
   expect(Object.keys(store.placesMapLayers)).toStrictEqual([
-    losangeles.id.toString(),
+    place.id.toString(),
   ]);
-  expect(store.placesMapLayers[losangeles.id].length).toBe(1);
+  expect(store.placesMapLayers[place.id].length).toBe(1);
 }
 
-export function expectSanDiegoPlace(store: MapStore) {
-  expect(store.selectedPlaces).toEqual([sandiego]);
+export function expectSanDiegoPlace(store: MapStore, count = 0) {
+  let place = structuredClone(sandiego);
+  if (count > 0) {
+    place.observations_count = count;
+  }
+  expect(store.selectedPlaces).toEqual([place]);
   expect(Object.keys(store.placesMapLayers)).toStrictEqual([
-    sandiego.id.toString(),
+    place.id.toString(),
   ]);
-  expect(store.placesMapLayers[sandiego.id].length).toBe(1);
+  expect(store.placesMapLayers[place.id].length).toBe(1);
 }
 
-export function expect_LA_SD_Place(store: MapStore) {
-  expect(store.selectedPlaces).toEqual([losangeles, sandiego]);
+export function expect_LA_SD_Place(store: MapStore, counts = [0, 0]) {
+  let place1 = structuredClone(losangeles);
+  if (counts[0] > 0) {
+    place1.observations_count = counts[0];
+  }
+  let place2 = structuredClone(sandiego);
+  if (counts[1] > 0) {
+    place2.observations_count = counts[1];
+  }
+
+  expect(store.selectedPlaces).toStrictEqual([place1, place2]);
   expect(Object.keys(store.placesMapLayers)).toStrictEqual([
     sandiego.id.toString(),
     losangeles.id.toString(),
@@ -510,10 +493,13 @@ export function expect_users(store: MapStore) {
   expect(store.selectedUsers).toEqual([user1, user2]);
 }
 
-export function expectRefreshPlace(store: MapStore, type = "zero") {
-  let place: any = refreshPlace;
+export function expectRefreshPlace(store: MapStore, count = 0, type = "zero") {
+  let place = structuredClone(refreshPlace);
   if (type !== "zero") {
-    place = refreshPlaceLA;
+    place = structuredClone(refreshPlaceLA);
+  }
+  if (count > 0) {
+    place.observations_count = count;
   }
   expect(store.refreshMap.layer).toBeDefined();
   expect(store.selectedPlaces).toEqual([place]);
@@ -568,10 +554,12 @@ export async function addResources(store: MapStore) {
   expect(leafletVisibleLayers(store)).toStrictEqual([
     basemapLabel_osm,
     placeLabel_la,
+    placeLabel_la,
     gridLabel_life_la,
   ]);
-  expectLifeTaxa(store);
-  expectLosAngelesPlace(store);
+  let count = life().observations_count * 0.6;
+  expectLifeTaxa(store, count);
+  expectLosAngelesPlace(store, count);
   expect(store.inatApiParams).toStrictEqual({
     taxon_id: life().id.toString(),
     colors: colors[0],
@@ -589,10 +577,12 @@ export async function addResources(store: MapStore) {
   expect(leafletVisibleLayers(store)).toStrictEqual([
     basemapLabel_osm,
     placeLabel_la,
+    placeLabel_la,
     gridLabel_life_la_project1,
   ]);
-  expectLifeTaxa(store);
-  expectLosAngelesPlace(store);
+  let count2 = life().observations_count * 0.6;
+  expectLifeTaxa(store, count2);
+  expectLosAngelesPlace(store, count2);
   expectProject1(store);
   expect(store.inatApiParams).toStrictEqual({
     taxon_id: life().id.toString(),
@@ -613,10 +603,11 @@ export async function addResources(store: MapStore) {
   expect(leafletVisibleLayers(store)).toStrictEqual([
     basemapLabel_osm,
     placeLabel_la,
+    placeLabel_la,
     gridLabel_life_la_project1_user1,
   ]);
-  expectLifeTaxa(store);
-  expectLosAngelesPlace(store);
+  expectLifeTaxa(store, count2);
+  expectLosAngelesPlace(store, count2);
   expectProject1(store);
   expectUser1(store);
   expect(store.inatApiParams).toStrictEqual({

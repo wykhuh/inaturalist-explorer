@@ -181,14 +181,13 @@ export let iNatGreen = "#86a91c";
 export let defaultColorScheme = colorsSixTolBright;
 
 export function getColor(appStore: MapStore, colorArray: string[]) {
-  let color = appStore.inatApiParams.colors;
+  let color = appStore.color;
   if (color === undefined || color === "") {
     color = colorArray[0];
   } else {
     let index = colorArray.indexOf(color);
     color = colorArray[(index + 1) % colorArray.length];
   }
-  appStore.inatApiParams.colors = color;
 
   return color;
 }
