@@ -1232,6 +1232,7 @@ describe("removePlace", () => {
       `?taxon_id=${life().id}&place_id=${losangeles.id}` +
         `&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
     );
+    expectLosAngelesPlace(store, lifeCount * 0.6);
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount * 0.6);
     expect(store.selectedPlaces[0].observations_count).toBe(lifeCount * 0.6);
 

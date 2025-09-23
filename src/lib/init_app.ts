@@ -8,6 +8,7 @@ import type {
   SearchOptions,
   SearchOptionsKeys,
   ObservationViews,
+  NormalizediNatProject,
 } from "../types/app";
 import {
   addLayerToMap,
@@ -42,6 +43,8 @@ import {
   addAllTaxaRecordToMapAndStore,
   formatTaxonName,
   addValueToCommaSeparatedString,
+  renderSelectedPlacesBoundaries,
+  renderSelectedProjectsBoundaries,
 } from "./data_utils";
 import { loggerStore } from "./logger.ts";
 import {
@@ -128,7 +131,12 @@ export async function initPopulateStore(
       if (!projectData) {
         continue;
       }
-      processProjectData(projectData, appStore);
+      let placeData;
+      if (projectData.place_id) {
+        placeData = await getPlaceById(projectData.place_id);
+      }
+
+      processProjectData(projectData, appStore, placeData);
     }
   }
   loggerStore(
@@ -205,20 +213,10 @@ export async function initRenderMap(appStore: MapStore) {
   addLayerToMap(OpenTopo, map, layerControl);
 
   // add places layers
-  appStore.selectedPlaces.forEach((place) => {
-    let options: any = {
-      color: "red",
-      fillColor: "none",
-      layer_description: `place layer: ${place.name}, ${place.id}`,
-    };
-    let layer = L.geoJSON(place.geometry as any, options);
-    layer.addTo(map);
+  renderSelectedPlacesBoundaries(appStore);
 
-    appStore.placesMapLayers = {
-      ...appStore.placesMapLayers,
-      [place.id]: [layer as CustomGeoJSON],
-    };
-  });
+  // add project layers
+  renderSelectedProjectsBoundaries(appStore);
 
   // add bounding box layer
   if (appStore.inatApiParams.nelat !== undefined) {
@@ -318,23 +316,6 @@ export function processPlaceData(placeData: PlacesResult, appStore: MapStore) {
   );
 }
 
-export function addPlaceDataToMap(placeData: PlacesResult, appStore: MapStore) {
-  let map = appStore.map.map;
-  if (!map) return;
-
-  // draw boundaries of selected place
-  let options: any = {
-    color: "red",
-    fillColor: "none",
-    layer_description: `place layer: ${placeData.name}, ${placeData.id}`,
-  };
-  let layer = L.geoJSON(placeData.geometry_geojson as any, options);
-  layer.addTo(map);
-
-  // save place to store
-  appStore.placesMapLayers[placeData.id] = [layer as CustomGeoJSON];
-}
-
 export function processBBoxData(appStore: MapStore, urlStore: MapStore) {
   let lngLatCoors = convertParamsBBoxToLngLat(urlStore.inatApiParams);
   if (!lngLatCoors) return;
@@ -365,15 +346,19 @@ export function addBBoxDataToMap(appStore: MapStore) {
 export function processProjectData(
   projectData: ProjectsResult,
   appStore: MapStore,
+  placeData?: PlacesResult,
 ) {
-  appStore.selectedProjects = [
-    ...appStore.selectedProjects,
-    {
-      id: projectData.id,
-      name: projectData.title,
-      slug: projectData.slug,
-    },
-  ];
+  let project: NormalizediNatProject = {
+    id: projectData.id,
+    name: projectData.title,
+    slug: projectData.slug,
+  };
+
+  if (placeData) {
+    project.geometry = placeData.geometry_geojson;
+    project.bounding_box = placeData.bounding_box_geojson;
+  }
+  appStore.selectedProjects = [...appStore.selectedProjects, project];
 
   // create comma seperated project_id
   appStore.inatApiParams.project_id = addValueToCommaSeparatedString(

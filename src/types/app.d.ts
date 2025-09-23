@@ -21,6 +21,7 @@ export interface MapStore {
   taxaMapLayers: { [index: string]: TileLayer[] };
   selectedPlaces: NormalizediNatPlace[];
   placesMapLayers: { [index: string]: CustomGeoJSON[] };
+  projectsMapLayers?: { [index: string]: CustomGeoJSON[] };
   selectedUsers: NormalizediNatUser[];
   selectedProjects: NormalizediNatProject[];
   inatApiParams: iNatApiParams;
@@ -100,6 +101,9 @@ export type NormalizediNatProject = {
   name: string;
   slug: string;
   observations_count?: number;
+  place_id?: number | null;
+  geometry?: PolygonJson | MultiPolygonJson;
+  bounding_box?: PolygonJson;
 };
 
 export type NormalizediNatUser = {

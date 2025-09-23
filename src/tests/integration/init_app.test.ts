@@ -52,6 +52,7 @@ import {
   gridLabel_life_bbox_resources,
   placeBBoxLabel,
   allTaxa,
+  projectLabel_cnc2,
 } from "../test_helpers.ts";
 import type { iNatApiParams } from "../../types/app";
 import { fieldsWithAny } from "../../data/inat_data.ts";
@@ -634,6 +635,8 @@ describe("initPopulateStore and initRenderMap resources", () => {
       placeLabel_la,
       placeLabel_sd,
       placeLabel_sd,
+      projectLabel_cnc2,
+      projectLabel_cnc2,
       gridLabel_life_places_resources,
       gridLabel_oaks_places_resources,
     ]);
@@ -685,6 +688,8 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeBBoxLabel,
+      projectLabel_cnc2,
+      projectLabel_cnc2,
       refreshBBoxLabel,
       gridLabel_life_bbox_resources,
       gridLabel_oaks_bbox_resources,
@@ -693,6 +698,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectLifeOakTaxa(store);
     expectProjects(store, [count * 0.7, count * 0.3]);
     expect_users(store);
+
     let expectedParams: iNatApiParams = {
       colors: `${colors[0]},${colors[1]}`,
       taxon_id: `${life().id},${redOak().id}`,

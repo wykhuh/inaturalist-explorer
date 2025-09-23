@@ -37,13 +37,25 @@ export function fitBoundsPoints(coordinates: any, map: Map) {
 export function fitBoundsPlaces(appStore: MapStore) {
   let map = appStore.map.map;
   if (!map) return;
-  if (appStore.selectedPlaces.length === 0) return;
+  if (
+    appStore.selectedPlaces.length === 0 &&
+    appStore.selectedProjects.length === 0
+  )
+    return;
 
-  let layers = appStore.selectedPlaces
+  let placesLayers = appStore.selectedPlaces
     .filter((p) => p.bounding_box !== undefined)
     .map((place) => {
       return L.geoJSON(place.bounding_box);
     });
+
+  let projectLayers = appStore.selectedProjects
+    .filter((p) => p.bounding_box !== undefined)
+    .map((place) => {
+      return L.geoJSON(place.bounding_box);
+    });
+
+  let layers = placesLayers.concat(projectLayers);
   if (layers.length > 0) {
     map.fitBounds(L.featureGroup(layers).getBounds());
   }

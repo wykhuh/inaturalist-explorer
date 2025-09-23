@@ -21,6 +21,7 @@ import { taxonSelectedHandler } from "../lib/search_taxa.ts";
 import { userSelectedHandler } from "../lib/search_users.ts";
 import {
   cnc1ProjectApi,
+  cnc2PlaceApi,
   cnc2ProjectApi,
   lifeTaxaApi,
   losangelesPlaceAPI,
@@ -31,6 +32,7 @@ import {
   user1UserApi,
   user2UserApi,
 } from "./fixtures/inatApi.ts";
+import type { PolygonJson } from "../types/inat_api";
 
 export function createMockServer() {
   const handlers = [
@@ -67,6 +69,9 @@ export function createMockServer() {
     }),
     http.get("https://api.inaturalist.org/v1/users/677256", async (_args) => {
       return HttpResponse.json(user2UserApi);
+    }),
+    http.get("https://api.inaturalist.org/v1/places/129542", async (_args) => {
+      return HttpResponse.json(cnc2PlaceApi);
     }),
     http.get("https://api.inaturalist.org/v2/observations*", async (_args) => {
       let url = _args.request.url;
@@ -120,6 +125,9 @@ export let colorsEncoded = ["%234477aa", "%2366ccee", "%23228833"];
 
 export let placeLabel_la = "place layer: Los Angeles, 962";
 export let placeLabel_sd = "place layer: San Diego, 829";
+export let projectLabel_cnc2 =
+  "project layer: City Nature Challenge 2025: Ōtautahi/Christchurch, 229902";
+export let projectLabel_refresh = "project layer: Custom Boundary, 0";
 
 export let gridLabel_life = "overlay: iNat grid, taxon_id 48460";
 export let gridLabel_oaks = "overlay: iNat grid, taxon_id 861036";
@@ -343,6 +351,8 @@ export let project_cnc2: NormalizediNatProject = {
   id: 229902,
   name: "City Nature Challenge 2025: Ōtautahi/Christchurch",
   slug: "city-nature-challenge-2025-otautahi-christchurch",
+  geometry: cnc2PlaceApi.results[0].geometry_geojson as PolygonJson,
+  bounding_box: cnc2PlaceApi.results[0].bounding_box_geojson as PolygonJson,
 };
 
 export let user1: NormalizediNatUser = {
@@ -522,14 +532,22 @@ export function expectProject1(store: MapStore, count = 0) {
     project.observations_count = count;
   }
   expect(store.selectedProjects).toEqual([project]);
+
+  expect(store.projectsMapLayers).toBe(undefined);
 }
+
 export function expectProject2(store: MapStore, count = 0) {
   let project = structuredClone(project_cnc2);
   if (count) {
     project.observations_count = count;
   }
   expect(store.selectedProjects).toEqual([project]);
+
+  if (!store.projectsMapLayers) return;
+  expect(Object.keys(store.projectsMapLayers)).toEqual([project.id.toString()]);
+  expect(store.projectsMapLayers[project.id].length).toBe(10);
 }
+
 export function expectProjects(store: MapStore, counts = [0, 0]) {
   let project1 = structuredClone(project_cnc1);
   let project2 = structuredClone(project_cnc2);
@@ -540,6 +558,12 @@ export function expectProjects(store: MapStore, counts = [0, 0]) {
     project2.observations_count = counts[1];
   }
   expect(store.selectedProjects).toEqual([project1, project2]);
+
+  if (!store.projectsMapLayers) return;
+  expect(Object.keys(store.projectsMapLayers)).toEqual([
+    project2.id.toString(),
+  ]);
+  expect(store.projectsMapLayers[project2.id].length).toBe(1);
 }
 
 export function expectUser1(store: MapStore) {

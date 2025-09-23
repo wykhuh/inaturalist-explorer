@@ -1,5 +1,4 @@
 import autoComplete from "@tarekraafat/autocomplete.js";
-import L from "leaflet";
 
 import type {
   AutoCompleteEvent,
@@ -16,6 +15,7 @@ import {
   addValueToCommaSeparatedString,
   removeOnePlaceFromStoreAndMap,
   getObservationsCountForPlace,
+  renderResourceGeometryLayer,
 } from "./data_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
 import { placeTypes } from "../data/inat_data.ts";
@@ -107,13 +107,7 @@ export async function placeSelectedHandler(
   let layer;
   if (map) {
     // draw boundaries of selected place
-    let options: any = {
-      color: "red",
-      fillColor: "none",
-      layer_description: `place layer: ${selection.name}, ${selection.id}`,
-    };
-    layer = L.geoJSON(selection.geometry as any, options);
-    layer.addTo(map);
+    layer = renderResourceGeometryLayer(selection, map, "place layer");
 
     // remove selected place layer from map
     if (appStore.placesMapLayers) {
@@ -157,7 +151,7 @@ export async function placeSelectedHandler(
     ),
   };
 
-  if (map) {
+  if (map && layer) {
     appStore.placesMapLayers = {
       ...appStore.placesMapLayers,
       [selection.id]: [layer as CustomGeoJSON],

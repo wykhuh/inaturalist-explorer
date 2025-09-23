@@ -4,14 +4,16 @@ import type {
   AutoCompleteEvent,
   NormalizediNatProject,
   MapStore,
+  CustomGeoJSON,
 } from "../types/app.d.ts";
-import { autocomplete_projects_api } from "../lib/inat_api.ts";
+import { autocomplete_projects_api, getPlaceById } from "../lib/inat_api.ts";
 import type { iNatProjectsAPI } from "../types/inat_api";
 import { loggerUrl } from "../lib/logger.ts";
 import {
   addValueToCommaSeparatedString,
   getObservationsCountForProject,
-  removeOneProjectFromStore,
+  removeOneProjectFromStoreAndMap,
+  renderResourceGeometryLayer,
 } from "./data_utils.ts";
 import { updateAppUrl } from "./utils.ts";
 import { renderTaxaList } from "./search_taxa.ts";
@@ -21,6 +23,7 @@ import {
   updateTilesAndCountForAllTaxa,
 } from "./search_utils.ts";
 import { renderPlacesList } from "./search_places.ts";
+import { fitBoundsPlaces } from "./map_utils.ts";
 
 export function setupProjectSearch(selector: string) {
   const autoCompleteProjectJS = new autoComplete({
@@ -68,6 +71,7 @@ export function processAutocompleteProject(
       name: item.title,
       id: item.id,
       slug: item.slug,
+      place_id: item.place_id,
     };
   });
 }
@@ -89,8 +93,42 @@ export async function projectSelectedHandler(
   _query: string,
   appStore: MapStore,
 ) {
-  // add project to store
+  let map = appStore.map.map;
   let project = selection;
+
+  // get place for project; only some projects  have places
+  let place;
+  if (project.place_id) {
+    place = await getPlaceById(project.place_id);
+    if (place) {
+      project.bounding_box = place.bounding_box_geojson;
+      project.geometry = place.geometry_geojson;
+    }
+  }
+
+  let layer;
+  if (map && place) {
+    // draw boundaries of selected place
+    layer = renderResourceGeometryLayer(place, map, "project layer");
+
+    // remove selected place layer from map
+    if (appStore.projectsMapLayers) {
+      let layers = appStore.projectsMapLayers[project.id.toString()];
+      if (layers) {
+        layers.forEach((layer) => {
+          layer.removeFrom(map);
+        });
+      }
+    }
+
+    // add project map layer
+    appStore.projectsMapLayers = {
+      ...appStore.projectsMapLayers,
+      [project.id]: [layer as CustomGeoJSON],
+    };
+  }
+
+  // add project to store
   appStore.selectedProjects = [...appStore.selectedProjects, project];
   appStore.inatApiParams = {
     ...appStore.inatApiParams,
@@ -113,6 +151,12 @@ export async function projectSelectedHandler(
   renderTaxaList(appStore);
   renderProjectsList(appStore);
   renderPlacesList(appStore);
+
+  // zoom to map to fit all selected places
+  if (map) {
+    fitBoundsPlaces(appStore);
+  }
+
   updateAppUrl(window.location, appStore);
   window.dispatchEvent(new Event("observationsChange"));
 }
@@ -136,12 +180,16 @@ export async function removeProject(projectId: number, appStore: MapStore) {
   if (!appStore.selectedProjects) return;
 
   // remove project
-  removeOneProjectFromStore(appStore, projectId);
+  removeOneProjectFromStoreAndMap(appStore, projectId);
 
   // remove existing taxa tiles, and refetch taxa tiles
   await updateTilesAndCountForAllTaxa(appStore);
   await updateCountForAllPlaces(appStore);
   await updateCountForAllProjects(appStore);
+
+  if (appStore.map.map) {
+    fitBoundsPlaces(appStore);
+  }
 
   renderTaxaList(appStore);
   renderPlacesList(appStore);

@@ -1,4 +1,5 @@
 import type { Map, TileLayer } from "leaflet";
+import L from "leaflet";
 
 import type {
   NormalizediNatTaxon,
@@ -289,14 +290,41 @@ export async function getObservationsCountForPlace(
   );
 }
 
+export function renderSelectedPlacesBoundaries(appStore: MapStore) {
+  let map = appStore.map.map;
+  if (!map) return;
+
+  // add places layers
+  appStore.selectedPlaces.forEach((place) => {
+    let layer = renderResourceGeometryLayer(place, map, "place layer");
+
+    appStore.placesMapLayers = {
+      ...appStore.placesMapLayers,
+      [place.id]: [layer as CustomGeoJSON],
+    };
+  });
+}
+
 // ================
 // project
 // ================
 
-export function removeOneProjectFromStore(
+export function removeOneProjectFromStoreAndMap(
   appStore: MapStore,
   projectId: number,
 ) {
+  if (appStore.projectsMapLayers) {
+    let mapLayers = appStore.projectsMapLayers[projectId];
+
+    if (mapLayers) {
+      mapLayers.forEach((layer) => {
+        layer.remove();
+      });
+    }
+
+    delete appStore.projectsMapLayers[projectId];
+  }
+
   appStore.selectedProjects = appStore.selectedProjects.filter(
     (item) => item.id !== projectId,
   );
@@ -314,6 +342,23 @@ export async function getObservationsCountForProject(
     appStore,
     paramsTemp,
   );
+}
+
+export function renderSelectedProjectsBoundaries(appStore: MapStore) {
+  let map = appStore.map.map;
+  if (!map) return;
+
+  // add project layers
+  appStore.selectedProjects.forEach((project) => {
+    if (!project.geometry) return;
+
+    let layer = renderResourceGeometryLayer(project, map, "project layer");
+
+    appStore.projectsMapLayers = {
+      ...appStore.projectsMapLayers,
+      [project.id]: [layer as CustomGeoJSON],
+    };
+  });
 }
 
 // ================
@@ -367,6 +412,21 @@ export function updateSelectedResource(
   }
 
   appStore[resourceName] = temp as any;
+}
+
+export function renderResourceGeometryLayer(
+  resource: NormalizediNatProject | NormalizediNatPlace,
+  map: Map,
+  layerDescription: string,
+): L.GeoJSON {
+  let options: any = {
+    color: "red",
+    fillColor: "none",
+    layer_description: `${layerDescription}: ${resource.name}, ${resource.id}`,
+  };
+  let layer = L.geoJSON(resource.geometry as any, options);
+  layer.addTo(map);
+  return layer;
 }
 
 // ================
