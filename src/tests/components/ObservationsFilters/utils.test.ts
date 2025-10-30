@@ -7,7 +7,7 @@ import {
   updateAppWithFilters,
 } from "../../../components/ObservationsFilters/utils";
 import { mapStore } from "../../../lib/store";
-import { createMockServer } from "../../test_helpers";
+import { createMockServer, defaultParams } from "../../test_helpers";
 
 function createFormData() {
   const formData = new FormData();
@@ -282,10 +282,7 @@ describe("updateAppWithFilters", () => {
 
     await updateAppWithFilters(formData, store);
 
-    expect(store.inatApiParams).toStrictEqual({
-      spam: false,
-      verifiable: true,
-    });
+    expect(store.inatApiParams).toStrictEqual(defaultParams);
     expect(window.location.search).toBe("");
   });
 
@@ -298,8 +295,9 @@ describe("updateAppWithFilters", () => {
 
     expect(store.inatApiParams).toStrictEqual({
       spam: false,
+      locale: "en",
     });
-    expect(window.location.search).toBe("?spam=false");
+    expect(window.location.search).toBe("?spam=false&locale=en");
   });
 
   test("update inatApiParams and url with form data", async () => {
@@ -318,9 +316,10 @@ describe("updateAppWithFilters", () => {
       threatened: true,
       iconic_taxa: "Aves",
       month: "1,2",
+      locale: "en",
     });
     expect(window.location.search).toBe(
-      "?verifiable=false&spam=false&threatened=true&iconic_taxa=Aves&month=1,2",
+      "?verifiable=false&spam=false&locale=en&threatened=true&iconic_taxa=Aves&month=1,2",
     );
   });
 });

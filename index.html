@@ -24,45 +24,26 @@
     <main>
       <x-observations-header data-updatecounts="true"></x-observations-header>
       <div id="wrapper">
-        <div id="site-controls">
-          <button id="sidebar-toggle" class="btn btn-primary">&#8863;</button>
+        <div id="site-controls" class="sidebar-open">
+          <button id="sidebar-toggle">&#9776;</button>
+          <button id="observations-menu-toggle">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="16px"
+              viewBox="0 0 512 512"
+            >
+              <path
+                d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"
+              />
+            </svg>
+          </button>
+          <button id="settings-menu-toggle">&#9881;</button>
         </div>
+
         <section class="two-columns sidebar-open" id="site-layout">
           <div id="sidebar-menu">
-            <div class="form-group">
-              <label>
-                Search for
-                <select id="search-type" name="search-type">
-                  <option selected value="taxa">Species</option>
-                  <option value="places">iNaturalist Places</option>
-                  <option value="projects">Projects</option>
-                  <option value="users">Users</option>
-                </select>
-              </label>
-            </div>
-
-            <div class="form-group">
-              <label
-                >Search
-                <input id="inatAutocomplete" type="text" autocomplete="off" />
-              </label>
-            </div>
-            <div class="dialog-container">
-              <x-filters></x-filters>
-            </div>
-
-            <h2 class="taxa-heading">Species</h2>
-            <ul id="selected-species-list"></ul>
-
-            <h2 class="places-heading" hidden>Places</h2>
-            <ul id="selected-places-list"></ul>
-
-            <h2 class="projects-heading" hidden>Projects</h2>
-            <ul id="selected-projects-list"></ul>
-
-            <h2 class="users-heading" hidden>Users</h2>
-            <ul id="selected-users-list"></ul>
-
+            <x-observations-menu></x-observations-menu>
+            <x-settings-menu></x-settings-menu>
             <div id="display-json">
               <div class="controls"></div>
               <pre id="display-json-wrapper" class="hide"></pre>
@@ -72,5 +53,43 @@
         </section>
       </div>
     </main>
+
+    <template id="observations-menu-template">
+      <div id="observations-menu">
+        <div class="form-group">
+          <label>
+            Search for
+            <select id="search-type" name="search-type">
+              <option selected value="taxa">Species</option>
+              <option value="places">iNaturalist Places</option>
+              <option value="projects">Projects</option>
+              <option value="users">Users</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label
+            >Search
+            <input id="inatAutocomplete" type="text" autocomplete="off" />
+          </label>
+        </div>
+        <div class="dialog-container">
+          <x-filters></x-filters>
+        </div>
+
+        <h2 class="taxa-heading">Species</h2>
+        <ul id="selected-species-list"></ul>
+
+        <h2 class="places-heading" hidden>Places</h2>
+        <ul id="selected-places-list"></ul>
+
+        <h2 class="projects-heading" hidden>Projects</h2>
+        <ul id="selected-projects-list"></ul>
+
+        <h2 class="users-heading" hidden>Users</h2>
+        <ul id="selected-users-list"></ul>
+      </div>
+    </template>
   </body>
 </html>

@@ -180,6 +180,9 @@
     --border-grey: 1px solid var(--clr-gray-400);
     --border-dark-grey: 1px solid var(--clr-gray-700);
 
+    --side-menu-width: 250px;
+    --side-menu-closed-width: 40px;
+
     /* @media (prefers-color-scheme: light) {
       --text-main: var(--clr-brown-700);
       --text-high-contrast: var(--clr-brown-900);
@@ -300,19 +303,28 @@
 
   #home .two-columns {
     display: grid;
-    grid-template-columns: 250px 1fr;
+    grid-template-columns: var(--side-menu-width) 1fr;
 
     @media (max-width: 750px) {
       grid-template-columns: 1fr;
     }
   }
 
+  #site-controls {
+    position: absolute;
+  }
+
   #home .two-columns.sidebar-close {
-    grid-template-columns: 55px 1fr;
+    grid-template-columns: var(--side-menu-closed-width) 1fr;
 
     #sidebar-menu {
-      position: relative;
-      z-index: -1;
+      transform: translateX(calc(var(--side-menu-width) * -1));
+    }
+
+    #observations-menu-toggle,
+    #settings-menu-toggle,
+    #favorites-menu-toggle {
+      display: none;
     }
 
     @media (max-width: 750px) {
@@ -324,25 +336,12 @@
 
       #view-container {
         padding-top: 2.5rem;
-      }
 
-      #map {
-        margin-top: 1rem;
+        #map {
+          margin-top: 1rem;
+        }
       }
     }
-  }
-
-  #sidebar-toggle {
-    font-size: var(--font-size-md);
-    padding: 0.25rem;
-    line-height: 1;
-  }
-
-  #site-controls {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    z-index: 10;
   }
 
   #wrapper {
@@ -445,6 +444,40 @@
     a:focus {
       text-decoration: underline;
     }
+  }
+
+  #site-controls {
+    width: var(--side-menu-width);
+    border-bottom: var(--border-grey);
+
+    button {
+      font-size: var(--font-size-md);
+      border: 0;
+      width: var(--side-menu-closed-width);
+      height: var(--side-menu-closed-width);
+
+      svg {
+        display: inline;
+      }
+    }
+
+    @media (max-width: 750px) {
+      width: 100%;
+    }
+  }
+
+  #site-controls.sidebar-close {
+    #observations-menu-toggle,
+    #settings-menu-toggle,
+    #favorites-menu-toggle {
+      display: none;
+    }
+
+    border: 0;
+  }
+
+  #settings-menu {
+    display: none;
   }
 
   #observations-header {
@@ -927,6 +960,10 @@
 
     h2 {
       font-size: var(--font-size-md);
+      margin: 1rem 0 0.5rem 0;
+    }
+    h3 {
+      font-size: var(--font-size-regular);
       margin: 1rem 0 0.5rem 0;
     }
   }

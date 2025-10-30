@@ -141,7 +141,9 @@ export function removeDefaultParams(searchParams: string) {
   let parts = searchParams.split("&");
 
   let defaultiNatAPiParamas =
-    parts.includes("verifiable=true") && parts.includes("spam=false");
+    parts.includes("verifiable=true") &&
+    parts.includes("spam=false") &&
+    parts.includes("locale=en");
   let defaultView =
     parts.includes("view=observations") && parts.includes("subview=grid");
 
@@ -150,14 +152,18 @@ export function removeDefaultParams(searchParams: string) {
     parts = removeValueFromArray("spam=false", parts);
     parts = removeValueFromArray("view=observations", parts);
     parts = removeValueFromArray("subview=grid", parts);
+    parts = removeValueFromArray("locale=en", parts);
   }
+
   if (defaultView) {
     parts = removeValueFromArray("view=observations", parts);
     parts = removeValueFromArray("subview=grid", parts);
   }
-  if (defaultiNatAPiParamas && parts.length === 2) {
+
+  if (defaultiNatAPiParamas && parts.length === 3) {
     parts = removeValueFromArray("verifiable=true", parts);
     parts = removeValueFromArray("spam=false", parts);
+    parts = removeValueFromArray("locale=en", parts);
   }
 
   return parts.join("&");
@@ -316,6 +322,10 @@ export function decodeAppUrl(searchParams: string) {
     } else {
       store.viewMetadata.observations.page = Number(urlParams.page);
     }
+  }
+
+  if (urlParams.locale) {
+    store.inatApiParams.locale = urlParams.locale;
   }
 
   for (let [key, value] of new URLSearchParams(searchParams)) {

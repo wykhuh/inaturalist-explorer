@@ -60,6 +60,7 @@ export const iNatApiNonFilterableNames = [
   "view",
   "subview",
   "page",
+  "locale",
 ];
 
 export const iNatApiFilterableNames = [

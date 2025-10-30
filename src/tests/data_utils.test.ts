@@ -19,6 +19,7 @@ import {
   redOak,
   redOakBasic,
   sandiego,
+  defaultQuery,
 } from "./test_helpers.ts";
 import {
   canisTaxaAutocompleteResults,
@@ -586,7 +587,7 @@ describe("normalizeAppParams", () => {
   });
 
   test("does not change existing app params", () => {
-    let appParams = "taxon_id=123&verifiable=false&spam=true";
+    let appParams = "taxon_id=123&verifiable=false&spam=true&locale=en";
     let result = normalizeAppParams(appParams);
 
     expect(result.toString()).toBe(appParams);
@@ -616,7 +617,7 @@ describe("cleanupObervationsParams", () => {
     let results = cleanupObervationsParams(store);
 
     expect(results).toStrictEqual(
-      "taxon_id=1%2C2&verifiable=true&spam=false&sounds=true" +
+      `taxon_id=1%2C2&${defaultQuery}&sounds=true` +
         "&order=desc&order_by=id&page=1",
     );
   });
@@ -640,7 +641,7 @@ describe("cleanupObervationsParams", () => {
 
     let results = cleanupObervationsParams(store);
 
-    expect(results).toStrictEqual("verifiable=true&spam=false&sounds=true");
+    expect(results).toStrictEqual(`${defaultQuery}&sounds=true`);
   });
 
   test("ignores view, colors, subview", () => {
@@ -653,7 +654,7 @@ describe("cleanupObervationsParams", () => {
 
     let results = cleanupObervationsParams(store);
 
-    expect(results).toStrictEqual("taxon_id=1&verifiable=true&spam=false");
+    expect(results).toStrictEqual(`taxon_id=1&${defaultQuery}`);
   });
 
   test("uses page, order, order from store to update params", () => {
@@ -668,7 +669,7 @@ describe("cleanupObervationsParams", () => {
     let results = cleanupObervationsParams(store);
 
     expect(results).toStrictEqual(
-      "taxon_id=1&verifiable=true&spam=false&sounds=true&page=3",
+      `taxon_id=1&${defaultQuery}&sounds=true&page=3`,
     );
   });
 });

@@ -1,8 +1,9 @@
 export async function setupComponent(templatePath: string, context: any) {
   const parser = new DOMParser();
   let resp;
+  let path;
   try {
-    let path = `${import.meta.env.VITE_BASE}${templatePath}`;
+    path = `${import.meta.env.VITE_BASE}${templatePath}`;
     resp = await fetch(path);
   } catch (error) {
     console.error("componenr ERROR:", error);

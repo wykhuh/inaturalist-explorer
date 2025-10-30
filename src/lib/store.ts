@@ -9,7 +9,7 @@ export const mapStore: MapStore = {
   placesMapLayers: {},
   selectedProjects: [],
   selectedUsers: [],
-  inatApiParams: { verifiable: true, spam: false },
+  inatApiParams: { verifiable: true, spam: false, locale: "en" },
   color: "",
   map: { map: null, layerControl: null },
   refreshMap: {

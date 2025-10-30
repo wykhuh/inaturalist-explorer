@@ -21,6 +21,7 @@ import {
   sandiego,
   user1,
   user2,
+  defaultQuery,
 } from "./test_helpers.ts";
 import type { MapStore, ObservationViews } from "../types/app";
 import { iNatApiFilterableNames } from "../data/inat_data.ts";
@@ -96,8 +97,7 @@ describe("formatAppUrl", () => {
     let result = formatAppUrl(appStore);
 
     expect(result).toBe(
-      `taxon_id=${life().id}&colors=${colorsEncoded[0]}` +
-        `&verifiable=true&spam=false`,
+      `taxon_id=${life().id}&colors=${colorsEncoded[0]}` + `&${defaultQuery}`,
     );
   });
 
@@ -117,7 +117,7 @@ describe("formatAppUrl", () => {
     expect(result).toBe(
       `taxon_id=${life().id},${redOak().id}` +
         `&colors=${colorsEncoded[0]},${colorsEncoded[1]}` +
-        `&verifiable=true&spam=false`,
+        `&${defaultQuery}`,
     );
   });
 
@@ -134,9 +134,7 @@ describe("formatAppUrl", () => {
 
     let result = formatAppUrl(appStore);
 
-    expect(result).toBe(
-      `place_id=${losangeles.id}` + `&verifiable=true&spam=false`,
-    );
+    expect(result).toBe(`place_id=${losangeles.id}` + `&${defaultQuery}`);
   });
 
   test("format parameters for multiple places", () => {
@@ -153,8 +151,7 @@ describe("formatAppUrl", () => {
     let result = formatAppUrl(appStore);
 
     expect(result).toBe(
-      `place_id=${losangeles.id},${sandiego.id}` +
-        `&verifiable=true&spam=false`,
+      `place_id=${losangeles.id},${sandiego.id}` + `&${defaultQuery}`,
     );
   });
 
@@ -171,9 +168,7 @@ describe("formatAppUrl", () => {
 
     let result = formatAppUrl(appStore);
 
-    expect(result).toBe(
-      `project_id=${project_cnc1.id}` + `&verifiable=true&spam=false`,
-    );
+    expect(result).toBe(`project_id=${project_cnc1.id}` + `&${defaultQuery}`);
   });
 
   test("format parameters for multiple project", () => {
@@ -190,8 +185,7 @@ describe("formatAppUrl", () => {
     let result = formatAppUrl(appStore);
 
     expect(result).toBe(
-      `project_id=${project_cnc1.id},${project_cnc2.id}` +
-        `&verifiable=true&spam=false`,
+      `project_id=${project_cnc1.id},${project_cnc2.id}` + `&${defaultQuery}`,
     );
   });
 
@@ -208,7 +202,7 @@ describe("formatAppUrl", () => {
 
     let result = formatAppUrl(appStore);
 
-    expect(result).toBe(`user_id=${user1.id}` + `&verifiable=true&spam=false`);
+    expect(result).toBe(`user_id=${user1.id}` + `&${defaultQuery}`);
   });
 
   test("format parameters for multiple users", () => {
@@ -224,9 +218,7 @@ describe("formatAppUrl", () => {
 
     let result = formatAppUrl(appStore);
 
-    expect(result).toBe(
-      `user_id=${user1.id},${user2.id}` + `&verifiable=true&spam=false`,
-    );
+    expect(result).toBe(`user_id=${user1.id},${user2.id}` + `&${defaultQuery}`);
   });
 
   test("return params if no selected resources, and inatApiParams has additional params", () => {
@@ -242,7 +234,7 @@ describe("formatAppUrl", () => {
 
     let result = formatAppUrl(appStore);
 
-    expect(result).toBe("verifiable=true&spam=false&photos=true");
+    expect(result).toBe(`${defaultQuery}&photos=true`);
   });
 
   test("ignore invalid params if no selected resources", () => {
@@ -275,7 +267,7 @@ describe("formatAppUrl", () => {
 
     let result = formatAppUrl(appStore);
 
-    expect(result).toBe("place_id=962&verifiable=true&spam=false");
+    expect(result).toBe(`place_id=962&${defaultQuery}`);
   });
 
   test("return params if no selected resources, and spam and verifiable are not default", () => {
@@ -304,7 +296,7 @@ describe("formatAppUrl", () => {
 
       let result = formatAppUrl(appStore);
 
-      expect(result).toBe(`verifiable=true&spam=false&view=${view}`);
+      expect(result).toBe(`${defaultQuery}&view=${view}`);
     },
   );
 
@@ -333,9 +325,7 @@ describe("formatAppUrl", () => {
 
     let result = formatAppUrl(appStore);
 
-    expect(result).toBe(
-      "verifiable=true&spam=false&view=observations&subview=table",
-    );
+    expect(result).toBe(`${defaultQuery}&view=observations&subview=table`);
   });
 
   test("return params for page, order, order_by if observation", () => {
@@ -899,11 +889,30 @@ describe("decodeAppUrl options", () => {
       expect(result).toStrictEqual(expected);
     },
   );
+
+  test("returns object with locale", () => {
+    let searchParams = "?locale=fr";
+    let expected = {
+      inatApiParams: { locale: "fr" },
+      selectedTaxa: [],
+      currentView: "observations",
+      viewMetadata: {
+        observations: {},
+        identifiers: {},
+        observers: {},
+        species: {},
+      },
+    };
+
+    let result = decodeAppUrl(searchParams);
+
+    expect(result).toStrictEqual(expected);
+  });
 });
 
 describe("removeDefaultParams", () => {
   test("return empty string if default inatApiParams and view", () => {
-    let params = "verifiable=true&spam=false&view=observations&subview=grid";
+    let params = `${defaultQuery}` + `&view=observations&subview=grid`;
 
     let result = removeDefaultParams(params);
 
@@ -911,36 +920,35 @@ describe("removeDefaultParams", () => {
   });
 
   test("return view and subview if view observation and subview is table", () => {
-    let params = "verifiable=true&spam=false&view=observations&subview=table";
+    let params = `${defaultQuery}` + `&view=observations&subview=table`;
 
     let result = removeDefaultParams(params);
 
-    expect(result).toBe(
-      "verifiable=true&spam=false&view=observations&subview=table",
-    );
+    expect(result).toBe(`${defaultQuery}&view=observations&subview=table`);
   });
 
   test.each(["species", "identifiers", "observers"])(
     "return view  if view is not observations",
     (view) => {
-      let params = `verifiable=true&spam=false&view=${view}`;
+      let params = `${defaultQuery}&view=${view}`;
 
       let result = removeDefaultParams(params);
 
-      expect(result).toBe(`verifiable=true&spam=false&view=${view}`);
+      expect(result).toBe(`${defaultQuery}&view=${view}`);
     },
   );
 
-  test("return verifiable and spam if not default values", () => {
-    let params = "verifiable=false&spam=true&view=observations&subview=grid";
+  test("return params if not default values", () => {
+    let params =
+      "verifiable=false&spam=true&locale=es&view=observations&subview=grid";
 
     let result = removeDefaultParams(params);
 
-    expect(result).toBe("verifiable=false&spam=true");
+    expect(result).toBe("verifiable=false&spam=true&locale=es");
   });
 
   test("other params if default inatApiParams and view", () => {
-    let params = "verifiable=true&spam=false&view=observations&subview=grid";
+    let params = `${defaultQuery}&view=observations&subview=grid`;
 
     let result = removeDefaultParams(params);
 

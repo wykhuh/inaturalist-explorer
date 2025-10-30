@@ -12,7 +12,11 @@ import {
 import jsdom from "jsdom";
 
 import { mapStore } from "../../../lib/store";
-import { createMockServer } from "../../test_helpers";
+import {
+  createMockServer,
+  defaultQuery,
+  defaultParams,
+} from "../../test_helpers";
 import { updateView } from "../../../components/ObservationsHeader/utils";
 
 const server = createMockServer();
@@ -77,13 +81,8 @@ describe("updateView", () => {
       expect(targetLI?.className).toBe("currentView");
       expect(parentEl?.innerHTML).toBe(`<x-view-${view}></x-view-${view}>`);
       expect(store.currentView).toBe(view);
-      expect(store.inatApiParams).toStrictEqual({
-        spam: false,
-        verifiable: true,
-      });
-      expect(window.location.search).toBe(
-        `?verifiable=true&spam=false&view=${view}`,
-      );
+      expect(store.inatApiParams).toStrictEqual(defaultParams);
+      expect(window.location.search).toBe(`?${defaultQuery}&view=${view}`);
     },
   );
 
@@ -113,15 +112,13 @@ describe("updateView", () => {
     expect(parentEl?.innerHTML).toBe("<x-view-observers></x-view-observers>");
     expect(store.currentView).toBe("observers");
     expect(store.inatApiParams).toStrictEqual({
-      spam: false,
-      verifiable: true,
       page: 10,
       order: "asc",
       order_by: "votes",
+      ...defaultParams,
     });
     expect(window.location.search).toBe(
-      "?verifiable=true&spam=false&page=10&order=asc" +
-        "&order_by=votes&view=observers",
+      `?${defaultQuery}&page=10&order=asc` + "&order_by=votes&view=observers",
     );
   });
 
@@ -150,12 +147,7 @@ describe("updateView", () => {
     expect(targetLI?.className).toBe("currentView");
     expect(parentEl?.innerHTML).toBe("<x-view-observers></x-view-observers>");
     expect(store.currentView).toBe("observers");
-    expect(store.inatApiParams).toStrictEqual({
-      spam: false,
-      verifiable: true,
-    });
-    expect(window.location.search).toBe(
-      "?verifiable=true&spam=false&view=observers",
-    );
+    expect(store.inatApiParams).toStrictEqual(defaultParams);
+    expect(window.location.search).toBe(`?${defaultQuery}&view=observers`);
   });
 });

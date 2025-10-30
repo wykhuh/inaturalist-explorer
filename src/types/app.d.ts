@@ -135,6 +135,7 @@ interface iNatApiParams extends iNatApiFilterableParams {
   page?: number;
   order?: string;
   order_by?: string;
+  locale?: string;
 }
 
 interface iNatApiFilterableParams {
