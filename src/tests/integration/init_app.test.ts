@@ -429,6 +429,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       observations: {
         subview: "grid",
       },
+      name_order: "cs",
     });
     expect(store.currentView).toBe("identifiers");
     expect(store.viewMetadata.identifiers).toStrictEqual({

@@ -69,6 +69,10 @@ class MyComponent extends HTMLElement {
       await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
     });
 
+    window.addEventListener("nameOrderChanged", async () => {
+      await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
+    });
+
     this.subviewHandler(window.app.store);
     this.orderFormHandler();
   }

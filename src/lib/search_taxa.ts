@@ -27,14 +27,14 @@ import {
 import { renderPlacesList } from "./search_places.ts";
 import { renderProjectsList } from "./search_projects.ts";
 
-export function setupTaxaSearch(selector: string) {
+export function setupTaxaSearch(selector: string, appStore: MapStore) {
   const autoCompleteTaxaJS = new autoComplete({
     autocomplete: "off",
     selector: selector,
     placeHolder: "Enter species name",
     threshold: 2,
     searchEngine: (query: string, record: NormalizediNatTaxon) => {
-      return renderAutocompleteTaxon(record, query);
+      return renderAutocompleteTaxon(record, query, appStore);
     },
     data: {
       src: async (query: string) => {
@@ -43,7 +43,7 @@ export function setupTaxaSearch(selector: string) {
           loggerUrl(url);
           let res = await fetch(url);
           let data = (await res.json()) as iNatAutocompleteTaxaAPI;
-          return processAutocompleteTaxa(data, query);
+          return processAutocompleteTaxa(data, query, appStore);
         } catch (error) {
           console.error("setupTaxaSearch ERROR:", error);
         }
@@ -68,6 +68,7 @@ export function setupTaxaSearch(selector: string) {
 export function processAutocompleteTaxa(
   response: iNatAutocompleteTaxaAPI,
   query: string,
+  appStore: MapStore,
 ): NormalizediNatTaxon[] {
   let taxa = response.results.map((result) => {
     let data: NormalizediNatTaxon = {
@@ -78,9 +79,9 @@ export function processAutocompleteTaxa(
       rank: result.rank,
       id: result.id,
     };
-    let { title } = formatTaxonName(data, query);
+    let { title, subtitle } = formatTaxonName(data, appStore, query);
     // title is the value shown in the input
-    data.title = title;
+    data.title = title || subtitle;
 
     return data;
   });
@@ -91,9 +92,10 @@ export function processAutocompleteTaxa(
 export function renderAutocompleteTaxon(
   item: NormalizediNatTaxon,
   inputValue: string,
+  appStore: MapStore,
 ): string {
   let { title, titleAriaLabel, subtitle, subtitleAriaLabel, hasCommonName } =
-    formatTaxonName(item, inputValue);
+    formatTaxonName(item, appStore, inputValue);
 
   let html = `
   <div class="taxa-ac-option" data-testid="taxa-ac-option">
@@ -106,14 +108,19 @@ export function renderAutocompleteTaxon(
 
   html += `
     </div>
-    <div class="taxon-name">
-      <span class="title" aria-label="${titleAriaLabel}">${title}</span>
+    <div class="taxon-name">`;
+
+  if (title) {
+    html += `
+      <span class="title" aria-label="${titleAriaLabel}">${title}</span>`;
+  }
+  html += `
       <span>`;
   if ((item.rank && !speciesRanks.includes(item.rank)) || !hasCommonName) {
     html += `
         <span class="rank" aria-label="taxon rank">${item.rank}</span>`;
   }
-  if (hasCommonName) {
+  if (subtitle) {
     html += `
         <span class="subtitle" aria-label="${subtitleAriaLabel}">${subtitle}</span>`;
   }
@@ -128,7 +135,7 @@ export function renderAutocompleteTaxon(
 // called by autocomplete search when an taxa option is selected
 export async function taxonSelectedHandler(
   selection: NormalizediNatTaxon,
-  searchTerm: string,
+  _searchTerm: string,
   appStore: MapStore,
 ) {
   // remove all taxa if allTaxaRecord is the current taxon
@@ -136,9 +143,7 @@ export async function taxonSelectedHandler(
     removeTaxaFromStoreAndMap(appStore);
   }
 
-  // get display name for taxon without match term
-  delete selection.matched_term;
-  let { title, subtitle } = formatTaxonName(selection, searchTerm, false);
+  let { title, subtitle } = formatTaxonName(selection, appStore);
   let color = getColor(appStore, defaultColorScheme);
 
   // save taxa to store

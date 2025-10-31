@@ -92,10 +92,14 @@ export async function initPopulateStore(
   // populate viewMetadata
   for (let [k, value] of Object.entries(urlStore.viewMetadata)) {
     let key = k as ObservationViews;
-    appStore.viewMetadata[key] = {
-      ...appStore.viewMetadata[key],
-      ...value,
-    };
+    if (typeof value === "string") {
+      appStore.viewMetadata[key] = value as any;
+    } else {
+      appStore.viewMetadata[key] = {
+        ...appStore.viewMetadata[key],
+        ...value,
+      };
+    }
   }
 
   // HACK: trigger store proxy
@@ -275,7 +279,7 @@ export function processTaxonData(
     color: urlStoreTaxon.color,
   };
 
-  let { title, subtitle } = formatTaxonName(taxon, taxon.name as string, false);
+  let { title, subtitle } = formatTaxonName(taxon, appStore);
   taxon.title = title;
   taxon.subtitle = subtitle;
 
@@ -383,7 +387,7 @@ function processUserData(userData: UserResult, appStore: MapStore) {
   );
 }
 
-export function searchSetup() {
+export function searchSetup(appStore: MapStore) {
   let searchSelector = "#inatAutocomplete";
   let searchInputEl = document.querySelector(
     searchSelector,
@@ -415,7 +419,7 @@ export function searchSetup() {
   if (searchInputEl) {
     // when user selects an search result,
     searchInputEl.innerHTML = "";
-    setup = setupTaxaSearch(searchSelector);
+    setup = setupTaxaSearch(searchSelector, appStore);
     selectedHandler = taxonSelectedHandler;
 
     searchInputEl.addEventListener("selection", async function (event: any) {
@@ -439,7 +443,7 @@ export function searchSetup() {
 
       let targetSearch = searchOptions[target.value as SearchOptionsKeys];
 
-      setup = targetSearch.setup(searchSelector);
+      setup = targetSearch.setup(searchSelector, appStore);
       selectedHandler = targetSearch.selectedHandler;
     });
   }

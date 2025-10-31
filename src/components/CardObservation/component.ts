@@ -1,5 +1,5 @@
 import type { ObservationsResult } from "../../types/inat_api";
-import type { DataComponent } from "../../types/app";
+import type { DataComponent, MapStore } from "../../types/app";
 import { formatAvatar, formatTaxonName } from "../../lib/data_utils";
 import { iNatObservationUrl, iNatUserUrl } from "../../data/inat_data";
 import { audio, check, speech, star } from "../../assets/icons";
@@ -17,10 +17,10 @@ class MyComponent extends HTMLElement {
   async render() {
     await setupComponent("/src/components/CardObservation/template.html", this);
 
-    this.renderCard();
+    this.renderCard(window.app.store);
   }
 
-  renderCard() {
+  renderCard(appStore: MapStore) {
     let mediaEl = this.querySelector(".media");
     if (!mediaEl) return;
     let detailsEl = this.querySelector(".details");
@@ -54,7 +54,7 @@ class MyComponent extends HTMLElement {
     let detailsContent = ``;
 
     if (data.taxon) {
-      let { title, subtitle } = formatTaxonName(data.taxon, "", false);
+      let { title, subtitle } = formatTaxonName(data.taxon, appStore);
 
       if (data.user) {
         detailsContent += `<span class="avatar-name">

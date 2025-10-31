@@ -26,6 +26,7 @@ export const mapStore: MapStore = {
     species: {},
     identifiers: {},
     observers: {},
+    name_order: "cs",
   },
 };
 

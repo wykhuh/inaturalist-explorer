@@ -62,7 +62,7 @@ export async function fetchAndRenderData(
     let subviewEl = document.createElement("div");
     subviewEl.className = "observations-subview";
     if (appStore.viewMetadata.observations.subview === "table") {
-      subviewEl.appendChild(createTable(data.results));
+      subviewEl.appendChild(createTable(data.results, appStore));
     } else {
       subviewEl.appendChild(createGrid(data.results));
     }
@@ -95,7 +95,7 @@ async function getAPIData(perPage: number, appStore: MapStore) {
   }
 }
 
-export function createTable(results: ObservationsResult[]) {
+export function createTable(results: ObservationsResult[], appStore: MapStore) {
   let tableEl = document.createElement("table") as HTMLElement;
   tableEl.className = "observations-table table";
 
@@ -164,7 +164,7 @@ export function createTable(results: ObservationsResult[]) {
     let observationContent = ``;
 
     if (row.taxon) {
-      let { title, subtitle } = formatTaxonName(row.taxon, "", false);
+      let { title, subtitle } = formatTaxonName(row.taxon, appStore);
       observationContent += `<span class="title">`;
       observationContent += `<a href="${iNatObservationUrl}/${row.id}">${title}</a>`;
       observationContent += "</span>";
@@ -316,7 +316,9 @@ export function updateSubviewState(
     tableLinkEl.classList.add("current-subview");
     gridLinkEl.classList.remove("current-subview");
 
-    containerEl.appendChild(createTable(appStore.observationsSubviewData));
+    containerEl.appendChild(
+      createTable(appStore.observationsSubviewData, appStore),
+    );
   } else {
     tableLinkEl.classList.remove("current-subview");
     gridLinkEl.classList.add("current-subview");

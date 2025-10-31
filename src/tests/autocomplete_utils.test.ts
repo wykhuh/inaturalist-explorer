@@ -16,8 +16,11 @@ import {
 } from "./fixtures/inatApi.js";
 import type { NormalizediNatPlace } from "../types/app.js";
 import type { iNatAutocompleteTaxaAPI } from "../types/inat_api";
+import { mapStore } from "../lib/store.ts";
 
 describe("processAutocompleteTaxa", () => {
+  let store = structuredClone(mapStore);
+
   test("formats iNat api response", () => {
     let response: iNatAutocompleteTaxaAPI = {
       total_results: 2,
@@ -46,7 +49,7 @@ describe("processAutocompleteTaxa", () => {
       },
     ];
 
-    let results = processAutocompleteTaxa(response, "red");
+    let results = processAutocompleteTaxa(response, "red", store);
 
     expect(results).toStrictEqual(expected);
   });
@@ -113,7 +116,7 @@ describe("processAutocompleteTaxa", () => {
       },
     ];
 
-    let results = processAutocompleteTaxa(response, "pro");
+    let results = processAutocompleteTaxa(response, "pro", store);
 
     expect(results).toStrictEqual(expected);
   });
@@ -168,13 +171,15 @@ describe("processAutocompleteTaxa", () => {
       },
     ];
 
-    let results = processAutocompleteTaxa(response, "cal");
+    let results = processAutocompleteTaxa(response, "cal", store);
 
     expect(results).toStrictEqual(expected);
   });
 });
 
 describe("renderAutocompleteTaxon", () => {
+  let store = structuredClone(mapStore);
+
   test("returns html string that has taxon info", () => {
     let data = {
       name: "Buteo jamaicensis",
@@ -198,7 +203,7 @@ describe("renderAutocompleteTaxon", () => {
     </div>
   </div>`;
 
-    let results = renderAutocompleteTaxon(data, "red");
+    let results = renderAutocompleteTaxon(data, "red", store);
 
     expect(results).toStrictEqual(expected);
   });
@@ -227,7 +232,7 @@ describe("renderAutocompleteTaxon", () => {
     </div>
   </div>`;
 
-    let results = renderAutocompleteTaxon(data, "red");
+    let results = renderAutocompleteTaxon(data, "red", store);
     expect(results).toStrictEqual(expected);
   });
 
@@ -254,7 +259,7 @@ describe("renderAutocompleteTaxon", () => {
     </div>
   </div>`;
 
-    let results = renderAutocompleteTaxon(data, "red");
+    let results = renderAutocompleteTaxon(data, "red", store);
 
     expect(results).toStrictEqual(expected);
   });
@@ -282,7 +287,7 @@ describe("renderAutocompleteTaxon", () => {
     </div>
   </div>`;
 
-    let results = renderAutocompleteTaxon(data, "red");
+    let results = renderAutocompleteTaxon(data, "red", store);
 
     expect(results).toStrictEqual(expected);
   });
@@ -303,14 +308,14 @@ describe("renderAutocompleteTaxon", () => {
       <img class="thumbnail" src="https://inat.com/photos/8518661/square.jpg" alt="">
     </div>
     <div class="taxon-name">
-      <span class="title" aria-label="taxon scientific name">Prorocentrum</span>
       <span>
         <span class="rank" aria-label="taxon rank">genus</span>
+        <span class="subtitle" aria-label="taxon scientific name">Prorocentrum</span>
       </span>
     </div>
   </div>`;
 
-    let results = renderAutocompleteTaxon(data, "red");
+    let results = renderAutocompleteTaxon(data, "red", store);
 
     expect(results).toStrictEqual(expected);
   });
@@ -333,14 +338,14 @@ describe("renderAutocompleteTaxon", () => {
       <img class="thumbnail" src="https://inat.com/photos/8518661/square.jpg" alt="">
     </div>
     <div class="taxon-name">
-      <span class="title" aria-label="taxon scientific name">Speciosae</span>
       <span>
         <span class="rank" aria-label="taxon rank">section</span>
+        <span class="subtitle" aria-label="taxon scientific name">Speciosae</span>
       </span>
     </div>
   </div>`;
 
-    let results = renderAutocompleteTaxon(data, "red");
+    let results = renderAutocompleteTaxon(data, "red", store);
 
     expect(results).toStrictEqual(expected);
   });
@@ -361,14 +366,14 @@ describe("renderAutocompleteTaxon", () => {
       <img class="thumbnail" src="https://inat.com/photos/26078891/square.jpg" alt="">
     </div>
     <div class="taxon-name">
-      <span class="title" aria-label="taxon scientific name">Prorocentrum gracile</span>
       <span>
         <span class="rank" aria-label="taxon rank">species</span>
+        <span class="subtitle" aria-label="taxon scientific name">Prorocentrum gracile</span>
       </span>
     </div>
   </div>`;
 
-    let results = renderAutocompleteTaxon(data, "red");
+    let results = renderAutocompleteTaxon(data, "red", store);
 
     expect(results).toStrictEqual(expected);
   });

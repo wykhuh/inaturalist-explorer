@@ -320,6 +320,7 @@ describe("formatAppUrl", () => {
         observers: {},
         identifiers: {},
         species: {},
+        name_order: "cs",
       },
     };
 
@@ -346,6 +347,7 @@ describe("formatAppUrl", () => {
         identifiers: { page: 2 },
         species: { page: 3 },
         observers: { page: 4 },
+        name_order: "cs",
       },
     };
 
@@ -376,6 +378,7 @@ describe("formatAppUrl", () => {
           identifiers: { page: 11, order: "desc", order_by: "id" },
           species: { page: 12, order: "desc", order_by: "id" },
           observers: { page: 13, order: "desc", order_by: "id" },
+          name_order: "cs",
         },
       };
 

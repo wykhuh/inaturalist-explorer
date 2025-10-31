@@ -1,5 +1,5 @@
 import type { SpeciesCountResult } from "../../types/inat_api";
-import type { DataComponent } from "../../types/app";
+import type { DataComponent, MapStore } from "../../types/app";
 import { pluralize } from "../../lib/utils";
 import { formatTaxonName } from "../../lib/data_utils";
 import { iNatTaxaUrl } from "../../data/inat_data";
@@ -17,12 +17,12 @@ class MyComponent extends HTMLElement {
   async render() {
     await setupComponent("/src/components/CardSpecies/template.html", this);
 
-    this.renderCard();
+    this.renderCard(window.app.store);
   }
 
-  renderCard() {
+  renderCard(appStore: MapStore) {
     let data = (this as DataComponent).data as SpeciesCountResult;
-    let { title, subtitle } = formatTaxonName(data.taxon, "", false);
+    let { title, subtitle } = formatTaxonName(data.taxon, appStore);
 
     let mediaEl = this.querySelector(".media") as HTMLLinkElement;
     if (mediaEl) {

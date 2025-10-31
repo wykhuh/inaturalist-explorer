@@ -28,7 +28,7 @@ window.app = { store: mapStore };
 let viewContainerEl = document.querySelector("#view-container");
 if (viewContainerEl) {
   let urlData = decodeAppUrl(window.location.search);
-  searchSetup();
+  searchSetup(window.app.store);
   searchHeadingSetup();
   await initPopulateStore(window.app.store, urlData);
 

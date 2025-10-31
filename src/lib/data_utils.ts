@@ -564,18 +564,22 @@ function capitalizeFirstLetter(text: string) {
 
 export function formatTaxonName(
   item: NormalizediNatTaxon | SpeciesCountTaxon,
-  inputValue: string,
-  includeMatchedTerm = true,
+  appStore: MapStore,
+  searchTerm = "",
 ) {
+  let includeMatchedTerm = searchTerm.length > 0;
   let hasCommonName = true;
   let title;
   let titleAriaLabel;
   let subtitle;
   let subtitleAriaLabel;
+  let commonName;
+  let scientificName;
+  let rank;
 
   // has common name
   if (item.preferred_common_name) {
-    title = item.preferred_common_name
+    commonName = item.preferred_common_name
       .split(" ")
       .map((word) => {
         if (word !== "and") {
@@ -585,37 +589,57 @@ export function formatTaxonName(
         }
       })
       .join(" ");
-
-    titleAriaLabel = "taxon common name";
-
-    // has scientific name
-    if (item.name) {
-      subtitle = item.name;
-      subtitleAriaLabel = "taxon scientific name";
-
-      // add optional (matched_term)
-      if (includeMatchedTerm && isNormalizediNatTaxon(item)) {
-        if (item.matched_term === item.preferred_common_name) {
-        } else if (item.matched_term === item.name) {
-        } else if (
-          item.matched_term &&
-          !item.preferred_common_name
-            ?.toLowerCase()
-            .includes(inputValue.toLowerCase()) &&
-          !item.name.toLowerCase().includes(inputValue.toLowerCase())
-        ) {
-          title += ` (${capitalizeFirstLetter(item.matched_term)})`;
-        }
-      }
-    }
-    // no common-name
   } else {
     hasCommonName = false;
-    title = item.name;
-    titleAriaLabel = "taxon scientific name";
   }
 
-  return { title, titleAriaLabel, subtitle, subtitleAriaLabel, hasCommonName };
+  // has scientific name
+  if (item.name) {
+    scientificName = item.name;
+  }
+
+  if (item.rank) {
+    rank = item.rank;
+  }
+
+  // add optional (matched_term)
+  if (includeMatchedTerm && isNormalizediNatTaxon(item) && item.matched_term) {
+    if (item.matched_term.toLowerCase() === commonName?.toLowerCase()) {
+    } else if (
+      item.matched_term.toLowerCase() === scientificName?.toLowerCase()
+    ) {
+    } else if (
+      !commonName?.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      !scientificName?.toLowerCase().includes(searchTerm.toLowerCase())
+    ) {
+      commonName += ` (${capitalizeFirstLetter(item.matched_term)})`;
+    }
+  }
+
+  let nameOrder = appStore.viewMetadata.name_order;
+  if (nameOrder === "cs") {
+    title = commonName;
+    titleAriaLabel = commonName ? "taxon common name" : undefined;
+    subtitle = scientificName;
+    subtitleAriaLabel = scientificName ? "taxon scientific name" : undefined;
+  } else if (nameOrder === "sc") {
+    title = scientificName;
+    titleAriaLabel = scientificName ? "taxon scientific name" : undefined;
+    subtitle = commonName;
+    subtitleAriaLabel = commonName ? "taxon common name" : undefined;
+  } else {
+    title = scientificName;
+    titleAriaLabel = scientificName ? "taxon scientific name" : undefined;
+  }
+
+  return {
+    title,
+    titleAriaLabel,
+    subtitle,
+    subtitleAriaLabel,
+    hasCommonName,
+    rank,
+  };
 }
 
 export function leafletVisibleLayers(appStore: MapStore, strict = false) {

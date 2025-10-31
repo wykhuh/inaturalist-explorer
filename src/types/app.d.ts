@@ -51,6 +51,7 @@ export interface MapStore {
     species: ViewOptions;
     identifiers: ViewOptions;
     observers: ViewOptions;
+    name_order: NameOrder;
   };
 }
 
@@ -70,6 +71,7 @@ export type ObservationViews =
   | "observers";
 
 export type ObservationSubviews = "table" | "grid";
+export type NameOrder = "cs" | "sc" | "s";
 
 export type NormalizediNatTaxon = {
   name?: string;
@@ -135,6 +137,7 @@ interface iNatApiParams extends iNatApiFilterableParams {
   order?: string;
   order_by?: string;
   locale?: string;
+  name_order?: NameOrder;
 }
 
 interface iNatApiFilterableParams {

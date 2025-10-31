@@ -26,123 +26,308 @@ import {
   coastOakAutocompleteResults,
   redTaxaAutocompleteResults,
 } from "./fixtures/inatApi.ts";
+import { allTaxaRecord } from "../data/inat_data.ts";
 
 describe("formatTaxonName", () => {
-  describe("query matches common name", () => {
+  let store = structuredClone(mapStore);
+
+  describe("searchTerm matches common name", () => {
+    let searchTerm = "red";
+    let data = {
+      name: "Buteo jamaicensis",
+      default_photo: "https://inat.com/photos/101327658/square.jpg",
+      preferred_common_name: "Red-tailed Hawk",
+      matched_term: "Redtail",
+      rank: "species",
+      id: 5212,
+    };
+
     test("returns object with name data", () => {
-      let query = "red";
-      let data = {
-        name: "Buteo jamaicensis",
-        default_photo: "https://inat.com/photos/101327658/square.jpg",
-        preferred_common_name: "Red-tailed Hawk",
-        matched_term: "Redtail",
-        rank: "species",
-        id: 5212,
-      };
       let expected = {
         hasCommonName: true,
         subtitle: "Buteo jamaicensis",
         subtitleAriaLabel: "taxon scientific name",
         title: "Red-tailed Hawk",
         titleAriaLabel: "taxon common name",
+        rank: "species",
       };
 
-      let results = formatTaxonName(data, query);
+      let results = formatTaxonName(data, store, searchTerm);
+
+      expect(results).toStrictEqual(expected);
+    });
+
+    test("returns object with name data if name_order is sc", () => {
+      let store = structuredClone(mapStore);
+      store.viewMetadata.name_order = "sc";
+
+      let expected = {
+        hasCommonName: true,
+        title: "Buteo jamaicensis",
+        titleAriaLabel: "taxon scientific name",
+        subtitle: "Red-tailed Hawk",
+        subtitleAriaLabel: "taxon common name",
+        rank: "species",
+      };
+
+      let results = formatTaxonName(data, store, searchTerm);
+
+      expect(results).toStrictEqual(expected);
+    });
+
+    test("returns object with name data if name_order is s", () => {
+      let store = structuredClone(mapStore);
+      store.viewMetadata.name_order = "s";
+
+      let expected = {
+        hasCommonName: true,
+        title: "Buteo jamaicensis",
+        titleAriaLabel: "taxon scientific name",
+        subtitle: undefined,
+        subtitleAriaLabel: undefined,
+        rank: "species",
+      };
+
+      let results = formatTaxonName(data, store, searchTerm);
 
       expect(results).toStrictEqual(expected);
     });
   });
 
-  describe("query matches scientific name", () => {
+  describe("searchTerm matches scientific name", () => {
+    let canisQuery = "Canis";
+    let canisData = {
+      name: "Canis familiaris",
+      default_photo: "https://inat.com/photos/117465258/square.jpg",
+      preferred_common_name: "Domestic Dog",
+      matched_term: "Canis",
+      rank: "species",
+      id: 47144,
+    };
+
+    let prorocentrumQuery = "Prorocentrum";
+    let prorocentrumData = {
+      name: "Prorocentrum gracile",
+      default_photo: "https://inat.com/photos/26078891/square.jpg",
+      preferred_common_name: undefined,
+      matched_term: "Prorocentrum gracile",
+      rank: "species",
+      id: 783155,
+    };
+
     test("returns object with name data", () => {
-      let query = "Canis";
-      let data = {
-        name: "Canis familiaris",
-        default_photo: "https://inat.com/photos/117465258/square.jpg",
-        preferred_common_name: "Domestic Dog",
-        matched_term: "Canis",
-        rank: "species",
-        id: 47144,
-      };
+      let searchTerm = canisQuery;
+      let data = canisData;
       let expected = {
         hasCommonName: true,
         subtitle: "Canis familiaris",
         subtitleAriaLabel: "taxon scientific name",
         title: "Domestic Dog",
         titleAriaLabel: "taxon common name",
+        rank: "species",
       };
 
-      let results = formatTaxonName(data, query);
+      let results = formatTaxonName(data, store, searchTerm);
 
       expect(results).toStrictEqual(expected);
     });
 
-    test("returns scientific name as title if no common name", () => {
-      let query = "Prorocentrum";
-      let data = {
-        name: "Prorocentrum gracile",
-        default_photo: "https://inat.com/photos/26078891/square.jpg",
-        preferred_common_name: undefined,
-        matched_term: "Prorocentrum gracile",
+    test("returns object with name data if name_order is sc", () => {
+      let store = structuredClone(mapStore);
+      store.viewMetadata.name_order = "sc";
+
+      let searchTerm = canisQuery;
+      let data = canisData;
+
+      let expected = {
+        hasCommonName: true,
+        title: "Canis familiaris",
+        titleAriaLabel: "taxon scientific name",
+        subtitle: "Domestic Dog",
+        subtitleAriaLabel: "taxon common name",
         rank: "species",
-        id: 783155,
       };
+
+      let results = formatTaxonName(data, store, searchTerm);
+
+      expect(results).toStrictEqual(expected);
+    });
+
+    test("returns object with name data if name_order is s", () => {
+      let store = structuredClone(mapStore);
+      store.viewMetadata.name_order = "s";
+
+      let searchTerm = canisQuery;
+      let data = canisData;
+
+      let expected = {
+        hasCommonName: true,
+        title: "Canis familiaris",
+        titleAriaLabel: "taxon scientific name",
+        subtitle: undefined,
+        subtitleAriaLabel: undefined,
+        rank: "species",
+      };
+
+      let results = formatTaxonName(data, store, searchTerm);
+
+      expect(results).toStrictEqual(expected);
+    });
+
+    test("returns scientific name if no common name", () => {
+      let searchTerm = prorocentrumQuery;
+      let data = prorocentrumData;
+      let expected = {
+        hasCommonName: false,
+        title: undefined,
+        titleAriaLabel: undefined,
+        subtitle: "Prorocentrum gracile",
+        subtitleAriaLabel: "taxon scientific name",
+        rank: "species",
+      };
+
+      let results = formatTaxonName(data, store, searchTerm);
+
+      expect(results).toStrictEqual(expected);
+    });
+
+    test("returns scientific name if no common name and name_order is sc", () => {
+      let store = structuredClone(mapStore);
+      store.viewMetadata.name_order = "sc";
+
+      let searchTerm = prorocentrumQuery;
+      let data = prorocentrumData;
       let expected = {
         hasCommonName: false,
         subtitle: undefined,
         subtitleAriaLabel: undefined,
         title: "Prorocentrum gracile",
         titleAriaLabel: "taxon scientific name",
+        rank: "species",
       };
 
-      let results = formatTaxonName(data, query);
+      let results = formatTaxonName(data, store, searchTerm);
+
+      expect(results).toStrictEqual(expected);
+    });
+
+    test("returns scientific name if no common name and name_order is s", () => {
+      let store = structuredClone(mapStore);
+      store.viewMetadata.name_order = "s";
+
+      let searchTerm = prorocentrumQuery;
+      let data = prorocentrumData;
+      let expected = {
+        hasCommonName: false,
+        subtitle: undefined,
+        subtitleAriaLabel: undefined,
+        title: "Prorocentrum gracile",
+        titleAriaLabel: "taxon scientific name",
+        rank: "species",
+      };
+
+      let results = formatTaxonName(data, store, searchTerm);
+
+      expect(results).toStrictEqual(expected);
+    });
+
+    test("returns object with name data for allTaxaRecord", () => {
+      let data = allTaxaRecord;
+      let expected = {
+        hasCommonName: true,
+        rank: undefined,
+        title: "All Species",
+        titleAriaLabel: "taxon common name",
+        subtitle: undefined,
+        subtitleAriaLabel: undefined,
+      };
+
+      let results = formatTaxonName(data, store);
 
       expect(results).toStrictEqual(expected);
     });
   });
 
-  describe("query matches matched_term", () => {
+  describe("searchTerm matches matched_term", () => {
+    let redQuery = "red";
+    let redData = {
+      name: "Turdus migratorius",
+      default_photo: "https://inat.com/photos/34859026/square.jpg",
+      preferred_common_name: "American Robin",
+      matched_term: "Red Robin",
+      rank: "species",
+      id: 12727,
+    };
+
     test("returns common name (match term) as title", () => {
-      let query = "red";
-      let data = {
-        name: "Turdus migratorius",
-        default_photo: "https://inat.com/photos/34859026/square.jpg",
-        preferred_common_name: "American Robin",
-        matched_term: "Red Robin",
-        rank: "species",
-        id: 12727,
-      };
+      let searchTerm = redQuery;
+      let data = redData;
       let expected = {
         hasCommonName: true,
         subtitle: "Turdus migratorius",
         subtitleAriaLabel: "taxon scientific name",
         title: "American Robin (Red Robin)",
         titleAriaLabel: "taxon common name",
+        rank: "species",
       };
 
-      let results = formatTaxonName(data, query);
+      let results = formatTaxonName(data, store, searchTerm);
 
       expect(results).toStrictEqual(expected);
     });
-    test("returns common name as title if includeMatchedTerm is false", () => {
-      let query = "red";
-      let data = {
-        name: "Turdus migratorius",
-        default_photo: "https://inat.com/photos/34859026/square.jpg",
-        preferred_common_name: "American Robin",
-        matched_term: "Red Robin",
+
+    test("returns common name (match term) as subtitle if name_order is sc", () => {
+      let store = structuredClone(mapStore);
+      store.viewMetadata.name_order = "sc";
+
+      let searchTerm = redQuery;
+      let data = redData;
+      let expected = {
+        hasCommonName: true,
+        title: "Turdus migratorius",
+        titleAriaLabel: "taxon scientific name",
+        subtitle: "American Robin (Red Robin)",
+        subtitleAriaLabel: "taxon common name",
         rank: "species",
-        id: 12727,
       };
+
+      let results = formatTaxonName(data, store, searchTerm);
+
+      expect(results).toStrictEqual(expected);
+    });
+
+    test("returns scientific name as title if name_order is s", () => {
+      let store = structuredClone(mapStore);
+      store.viewMetadata.name_order = "s";
+
+      let searchTerm = redQuery;
+      let data = redData;
+      let expected = {
+        hasCommonName: true,
+        title: "Turdus migratorius",
+        titleAriaLabel: "taxon scientific name",
+        subtitle: undefined,
+        subtitleAriaLabel: undefined,
+        rank: "species",
+      };
+
+      let results = formatTaxonName(data, store, searchTerm);
+
+      expect(results).toStrictEqual(expected);
+    });
+
+    test("returns common name as title if no search term", () => {
+      let data = redData;
       let expected = {
         hasCommonName: true,
         subtitle: "Turdus migratorius",
         subtitleAriaLabel: "taxon scientific name",
         title: "American Robin",
         titleAriaLabel: "taxon common name",
+        rank: "species",
       };
 
-      let results = formatTaxonName(data, query, false);
+      let results = formatTaxonName(data, store);
 
       expect(results).toStrictEqual(expected);
     });
@@ -150,7 +335,7 @@ describe("formatTaxonName", () => {
 
   describe("common name and matched_term are the same", () => {
     test("only include preferred_common_name", () => {
-      let query = "coast oak";
+      let searchTerm = "coast oak";
       let data = {
         name: "Quercus agrifolia oxyadenia",
         default_photo: "https://inat.com/photos/34859026/square.jpg",
@@ -165,9 +350,10 @@ describe("formatTaxonName", () => {
         subtitleAriaLabel: "taxon scientific name",
         title: "Southern Coast Live Oak",
         titleAriaLabel: "taxon common name",
+        rank: "variety",
       };
 
-      let results = formatTaxonName(data, query);
+      let results = formatTaxonName(data, store, searchTerm);
 
       expect(results).toStrictEqual(expected);
     });
@@ -205,7 +391,7 @@ describe("formatTaxonName", () => {
       (processed, common, science, hasCommonName) => {
         let data = processed as NormalizediNatTaxon;
 
-        let res = formatTaxonName(data, "red");
+        let res = formatTaxonName(data, store, "red");
 
         expect(res.title).toBe(common);
         expect(res.subtitle).toBe(science);
@@ -246,7 +432,7 @@ describe("formatTaxonName", () => {
       (processed, common, science, hasCommonName) => {
         let data = processed as NormalizediNatTaxon;
 
-        let res = formatTaxonName(data, "canis");
+        let res = formatTaxonName(data, store, "canis");
 
         expect(res.title).toBe(common);
         expect(res.subtitle).toBe(science);
@@ -302,7 +488,7 @@ describe("formatTaxonName", () => {
       (processed, common, science, hasCommonName) => {
         let data = processed as NormalizediNatTaxon;
 
-        let res = formatTaxonName(data, "coast oak");
+        let res = formatTaxonName(data, store, "coast oak");
 
         expect(res.title).toBe(common);
         expect(res.subtitle).toBe(science);

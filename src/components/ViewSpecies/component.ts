@@ -25,6 +25,10 @@ class MyComponent extends HTMLElement {
     window.addEventListener("localeChanged", async () => {
       await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
     });
+
+    window.addEventListener("nameOrderChanged", async () => {
+      await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
+    });
   }
 }
 

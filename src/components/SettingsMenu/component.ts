@@ -1,6 +1,7 @@
 import { setupComponent } from "../../lib/component_utils";
 import { languageCodes } from "../../data/locale";
 import { updateAppUrl } from "../../lib/utils";
+import type { NameOrder } from "../../types/app";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -14,10 +15,11 @@ class MyComponent extends HTMLElement {
   async render() {
     await setupComponent("/src/components/SettingsMenu/template.html", this);
 
-    this.renderSelect();
+    this.renderLanguageSelect();
+    this.renderNameOrderSelect();
   }
 
-  renderSelect() {
+  renderLanguageSelect() {
     let selectEl = this.querySelector("#language-select");
     if (!selectEl) return;
 
@@ -43,6 +45,32 @@ class MyComponent extends HTMLElement {
         updateAppUrl(window.location, window.app.store);
 
         window.dispatchEvent(new Event("localeChanged"));
+      }
+    });
+  }
+
+  renderNameOrderSelect() {
+    let selectEl = this.querySelector("#name-order-select");
+    if (!selectEl) return;
+
+    let optionsEl = selectEl.querySelectorAll("option");
+    optionsEl.forEach((optionEl) => {
+      if (optionEl.value === window.app.store.viewMetadata.name_order) {
+        optionEl.selected = true;
+      }
+    });
+
+    selectEl.addEventListener("change", (event) => {
+      if (event.target) {
+        let target = event.target as HTMLInputElement;
+        window.app.store.viewMetadata = {
+          ...window.app.store.viewMetadata,
+          name_order: target.value as NameOrder,
+        };
+
+        updateAppUrl(window.location, window.app.store);
+
+        window.dispatchEvent(new Event("nameOrderChanged"));
       }
     });
   }
