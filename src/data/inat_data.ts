@@ -235,18 +235,16 @@ export const lifeTaxon: NormalizediNatTaxon = {
   matched_term: "Life",
   rank: "stateofmatter",
   id: 48460,
-  display_name: "life",
   color: defaultColorScheme[0],
   title: "Life",
   subtitle: "Life",
 };
 
 export const allTaxaRecord: NormalizediNatTaxon = {
-  rank: "allTaxaRecord rank",
   id: 0,
-  display_name: "All species",
   color: iNatOrange,
   title: "All species",
+  preferred_common_name: "All species",
 };
 
 export function bboxPlaceRecord(bbox: LngLat[]): NormalizediNatPlace {

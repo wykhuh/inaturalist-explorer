@@ -245,7 +245,6 @@ export let lifeBasic: NormalizediNatTaxon = {
 export function life(color = colors[0]) {
   return {
     ...lifeBasic,
-    display_name: "Life",
     title: "Life",
     subtitle: "Life",
     color: color,
@@ -264,7 +263,6 @@ export let redOakBasic: NormalizediNatTaxon = {
 export function redOak(color = colors[1]) {
   return {
     ...redOakBasic,
-    display_name: "Red Oaks",
     title: "Red Oaks",
     subtitle: "Lobatae",
     color: color,
@@ -284,7 +282,6 @@ export let monarchBasic: NormalizediNatTaxon = {
 export function monarch(color = colors[2]) {
   return {
     ...monarchBasic,
-    display_name: "Monarch",
     title: "Monarch",
     subtitle: "Danaus plexippus",
     color: color,

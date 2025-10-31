@@ -80,7 +80,6 @@ export type NormalizediNatTaxon = {
   id: number;
   color?: string;
   observations_count?: number;
-  display_name?: string;
   title?: string;
   subtitle?: string;
 };

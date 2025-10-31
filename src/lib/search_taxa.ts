@@ -147,7 +147,6 @@ export async function taxonSelectedHandler(
     title,
     subtitle,
     color,
-    display_name: title,
   };
 
   appStore.selectedTaxa = [...appStore.selectedTaxa, taxon];

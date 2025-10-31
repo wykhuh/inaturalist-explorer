@@ -276,7 +276,6 @@ export function processTaxonData(
   };
 
   let { title, subtitle } = formatTaxonName(taxon, taxon.name as string, false);
-  taxon.display_name = title;
   taxon.title = title;
   taxon.subtitle = subtitle;
 

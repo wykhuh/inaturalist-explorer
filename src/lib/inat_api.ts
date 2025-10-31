@@ -90,7 +90,7 @@ export const getiNatMapTiles = (
         minZoom: 0,
         maxZoom: 21,
         layer_description: formatDescription(inatApiParams, "grid"),
-        control_name: `${taxonObj.display_name} Grid`,
+        control_name: `${taxonObj.title} Grid`,
       },
     },
     iNatPoint: {
@@ -103,7 +103,7 @@ export const getiNatMapTiles = (
         minZoom: 0,
         maxZoom: 21,
         layer_description: formatDescription(inatApiParams, "points"),
-        control_name: `${taxonObj.display_name} Points`,
+        control_name: `${taxonObj.title} Points`,
       },
     },
     iNatTaxonRange: {
@@ -116,7 +116,7 @@ export const getiNatMapTiles = (
         minZoom: 0,
         maxZoom: 21,
         layer_description: formatDescription(inatApiParams, "taxon range"),
-        control_name: `${taxonObj.display_name} Taxon Range`,
+        control_name: `${taxonObj.title} Taxon Range`,
       },
     },
     iNatHeatmap: {
@@ -129,7 +129,7 @@ export const getiNatMapTiles = (
         minZoom: 0,
         maxZoom: 21,
         layer_description: formatDescription(inatApiParams, "heatmap"),
-        control_name: `${taxonObj.display_name} Heatmap`,
+        control_name: `${taxonObj.title} Heatmap`,
       },
     },
   };
