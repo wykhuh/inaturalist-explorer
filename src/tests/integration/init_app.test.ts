@@ -438,6 +438,52 @@ describe("initPopulateStore and initRenderMap options", () => {
       order_by: "id",
     });
   });
+
+  test("adds locale to store", async () => {
+    let store = structuredClone(mapStore);
+
+    expectEmpytMap(store);
+
+    let searchparams = `?locale=es`;
+    let urlData = decodeAppUrl(searchparams);
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expectAllTaxaRecord(store);
+    expect(store.inatApiParams).toStrictEqual({
+      colors: iNatOrange,
+      taxon_id: allTaxa.id.toString(),
+      ...defaultParams,
+      locale: "es",
+    });
+    expect(store.color).toBe(iNatOrange);
+  });
+
+  test("adds name_order to store", async () => {
+    let store = structuredClone(mapStore);
+
+    expectEmpytMap(store);
+
+    let searchparams = `?name_order=sc`;
+    let urlData = decodeAppUrl(searchparams);
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expectAllTaxaRecord(store);
+    expect(store.inatApiParams).toStrictEqual({
+      colors: iNatOrange,
+      taxon_id: allTaxa.id.toString(),
+      ...defaultParams,
+    });
+    expect(store.color).toBe(iNatOrange);
+    expect(store.viewMetadata.name_order).toBe("sc");
+  });
 });
 
 describe("initPopulateStore and initRenderMap resources", () => {

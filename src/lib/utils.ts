@@ -4,6 +4,7 @@ import type {
   iNatApiParamsKeys,
   NormalizediNatTaxon,
   ObservationViews,
+  NameOrder,
 } from "../types/app";
 import {
   bboxPlaceRecord,
@@ -128,6 +129,10 @@ export function formatAppUrl(appStore: MapStore) {
     }
   }
 
+  if (appStore.viewMetadata.name_order) {
+    params.name_order = appStore.viewMetadata.name_order;
+  }
+
   let searchParams = new URLSearchParams(params as any)
     .toString()
     .replaceAll("%2C", ",");
@@ -146,18 +151,23 @@ export function removeDefaultParams(searchParams: string) {
     parts.includes("locale=en");
   let defaultView =
     parts.includes("view=observations") && parts.includes("subview=grid");
+  let defaultNameOrder = parts.includes("name_order=cs");
 
   if (defaultiNatAPiParamas && defaultView) {
     parts = removeValueFromArray("verifiable=true", parts);
     parts = removeValueFromArray("spam=false", parts);
+    parts = removeValueFromArray("locale=en", parts);
     parts = removeValueFromArray("view=observations", parts);
     parts = removeValueFromArray("subview=grid", parts);
-    parts = removeValueFromArray("locale=en", parts);
   }
 
   if (defaultView) {
     parts = removeValueFromArray("view=observations", parts);
     parts = removeValueFromArray("subview=grid", parts);
+  }
+
+  if (defaultNameOrder) {
+    parts = removeValueFromArray("name_order=cs", parts);
   }
 
   if (defaultiNatAPiParamas && parts.length === 3) {
@@ -326,6 +336,9 @@ export function decodeAppUrl(searchParams: string) {
 
   if (urlParams.locale) {
     store.inatApiParams.locale = urlParams.locale;
+  }
+  if (urlParams.name_order) {
+    store.viewMetadata.name_order = urlParams.name_order as NameOrder;
   }
 
   for (let [key, value] of new URLSearchParams(searchParams)) {

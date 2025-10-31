@@ -23,7 +23,7 @@ import {
   user2,
   defaultQuery,
 } from "./test_helpers.ts";
-import type { MapStore, ObservationViews } from "../types/app";
+import type { MapStore, NameOrder, ObservationViews } from "../types/app";
 import { iNatApiFilterableNames } from "../data/inat_data.ts";
 import { validObservationsSubviews, validViews } from "../data/app_data.ts";
 
@@ -328,6 +328,27 @@ describe("formatAppUrl", () => {
 
     expect(result).toBe(`${defaultQuery}&view=observations&subview=table`);
   });
+
+  test.each(["sc", "s"])(
+    "return name_order if name_order is sc or s",
+    (name_order) => {
+      let appStore: MapStore = {
+        ...mapStore,
+        currentView: "observations",
+        viewMetadata: {
+          observations: {},
+          observers: {},
+          identifiers: {},
+          species: {},
+          name_order: name_order as NameOrder,
+        },
+      };
+
+      let result = formatAppUrl(appStore);
+
+      expect(result).toBe(`${defaultQuery}&name_order=${name_order}`);
+    },
+  );
 
   test("return params for page, order, order_by if observation", () => {
     let appStore: MapStore = {
@@ -904,6 +925,26 @@ describe("decodeAppUrl options", () => {
         identifiers: {},
         observers: {},
         species: {},
+      },
+    };
+
+    let result = decodeAppUrl(searchParams);
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("returns object with name_order", () => {
+    let searchParams = "?name_order=sc";
+    let expected = {
+      inatApiParams: {},
+      selectedTaxa: [],
+      currentView: "observations",
+      viewMetadata: {
+        observations: {},
+        identifiers: {},
+        observers: {},
+        species: {},
+        name_order: "sc",
       },
     };
 
