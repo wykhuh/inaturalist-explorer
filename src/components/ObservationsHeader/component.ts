@@ -19,13 +19,6 @@ class MyComponent extends HTMLElement {
         updateCounts(window.app.store);
       }
     });
-
-    window.addEventListener("storePopulated", () => {
-      loggerStore("++ ObservationHeader storePopulated");
-      if (this.dataset.updatecounts === "true") {
-        updateCounts(window.app.store);
-      }
-    });
   }
 
   async render() {
@@ -33,6 +26,12 @@ class MyComponent extends HTMLElement {
       "/src/components/ObservationsHeader/template.html",
       this,
     );
+
+    // execute updateCounts() only after both headers are loaded
+    let headerEls = document.querySelectorAll("#observations-header");
+    if (headerEls.length === 2) {
+      updateCounts(window.app.store);
+    }
 
     let itemEl = this.querySelector(`#${window.app.store.currentView}`);
     itemEl?.classList.add("currentView");

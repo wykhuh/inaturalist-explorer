@@ -99,18 +99,26 @@ async function updateResourceCounts(
 
 export function updateCounts(appStore: MapStore) {
   let params = cleanupObervationsParams(appStore);
-  updateResourceCounts(getObservations, ".observations-count", params);
-  updateResourceCounts(getObservationsSpecies, ".species-count", params);
+  updateResourceCounts(
+    getObservations,
+    "#observations-header .observations-count",
+    params,
+  );
+  updateResourceCounts(
+    getObservationsSpecies,
+    "#observations-header .species-count",
+    params,
+  );
   updateResourceCounts(
     getObservationsIdentifiers,
-    ".identifiers-count",
+    "#observations-header .identifiers-count",
     params,
   );
 
   let observersParams = cleanupObervationsObserversParams(appStore);
   updateResourceCounts(
     getObservationsObservers,
-    ".observers-count",
+    "#observations-header .observers-count",
     observersParams,
   );
 }
