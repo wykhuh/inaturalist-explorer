@@ -90,7 +90,7 @@ async function updateResourceCounts(
   let count = data?.total_results;
 
   let countEls = document.querySelectorAll(selector);
-  if (countEls && count) {
+  if (countEls && count !== undefined) {
     Array.from(countEls).forEach((countEl) => {
       countEl.textContent = count.toLocaleString();
     });
