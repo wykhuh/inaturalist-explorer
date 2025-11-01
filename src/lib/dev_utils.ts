@@ -144,7 +144,8 @@ export function displayUserData(appStore: MapStore, _source: string) {
     } else if (key === "refreshMap") {
       data.refreshMap = formatRefreshMap(appStore);
     } else if (key === "observationsSubviewData") {
-      data.observationsSubviewData = appStore.observationsSubviewData.length;
+      data.observationsSubviewData =
+        appStore.observationsSubviewData?.length || 0;
     } else {
       data[key] = appStore[key];
     }
