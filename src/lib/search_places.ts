@@ -19,9 +19,10 @@ import {
 } from "./data_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
 import { placeTypes } from "../data/inat_data.ts";
-import { updateAppUrl } from "./utils.ts";
-import { renderTaxaList } from "./search_taxa.ts";
-import { updateTilesAndCountForAllTaxa } from "./search_utils.ts";
+import {
+  updateTilesAndCountForAllTaxa,
+  renderSelectedResources,
+} from "./search_utils.ts";
 
 export function setupPlacesSearch(selector: string) {
   const autoCompletePlacesJS = new autoComplete({
@@ -167,14 +168,11 @@ export async function placeSelectedHandler(
   };
   await getObservationsCountForPlace(place, appStore, paramsTemp);
 
-  renderTaxaList(appStore);
-  renderPlacesList(appStore);
   // zoom to map to fit all selected places
   if (map) {
     fitBoundsPlaces(appStore);
   }
-  updateAppUrl(window.location, appStore);
-  window.dispatchEvent(new Event("observationsChange"));
+  renderSelectedResources(appStore);
 }
 
 export function renderPlacesList(appStore: MapStore) {
@@ -204,8 +202,5 @@ export async function removePlace(placeId: number, appStore: MapStore) {
   // remove existing taxa tiles, and refetch taxa tiles
   await updateTilesAndCountForAllTaxa(appStore);
 
-  renderTaxaList(appStore);
-  renderPlacesList(appStore);
-  updateAppUrl(window.location, appStore);
-  window.dispatchEvent(new Event("observationsChange"));
+  renderSelectedResources(appStore);
 }

@@ -18,14 +18,12 @@ import {
   removeTaxaFromStoreAndMap,
   renderTaxonNames,
 } from "./data_utils.ts";
-import { updateAppUrl } from "./utils.ts";
 import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
 import {
   updateCountForAllPlaces,
   updateCountForAllProjects,
+  renderSelectedResources,
 } from "./search_utils.ts";
-import { renderPlacesList } from "./search_places.ts";
-import { renderProjectsList } from "./search_projects.ts";
 
 export function setupTaxaSearch(selector: string, appStore: MapStore) {
   const autoCompleteTaxaJS = new autoComplete({
@@ -163,11 +161,7 @@ export async function taxonSelectedHandler(
   await updateCountForAllPlaces(appStore);
   await updateCountForAllProjects(appStore);
 
-  renderTaxaList(appStore);
-  renderPlacesList(appStore);
-  renderProjectsList(appStore);
-  updateAppUrl(window.location, appStore);
-  window.dispatchEvent(new Event("observationsChange"));
+  renderSelectedResources(appStore);
 }
 
 export function renderTaxaList(appStore: MapStore) {
@@ -193,9 +187,5 @@ export async function removeTaxon(taxonId: number, appStore: MapStore) {
   await updateCountForAllPlaces(appStore);
   await updateCountForAllProjects(appStore);
 
-  renderTaxaList(appStore);
-  renderPlacesList(appStore);
-  renderProjectsList(appStore);
-  updateAppUrl(window.location, appStore);
-  window.dispatchEvent(new Event("observationsChange"));
+  renderSelectedResources(appStore);
 }

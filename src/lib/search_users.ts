@@ -14,9 +14,10 @@ import {
   removeOneUserFromStore,
 } from "./data_utils.ts";
 
-import { updateAppUrl } from "./utils.ts";
-import { renderTaxaList } from "./search_taxa.ts";
-import { updateTilesAndCountForAllTaxa } from "./search_utils.ts";
+import {
+  updateTilesAndCountForAllTaxa,
+  renderSelectedResources,
+} from "./search_utils.ts";
 
 export function setupUserSearch(selector: string) {
   const autoCompleteUsersJS = new autoComplete({
@@ -104,10 +105,7 @@ export async function userSelectedHandler(
   // get iNat map tiles for selected user
   await updateTilesAndCountForAllTaxa(appStore);
 
-  renderTaxaList(appStore);
-  renderUsersList(appStore);
-  updateAppUrl(window.location, appStore);
-  window.dispatchEvent(new Event("observationsChange"));
+  renderSelectedResources(appStore);
 }
 
 export function renderUsersList(appStore: MapStore) {
@@ -132,8 +130,5 @@ export async function removeUser(userId: number, appStore: MapStore) {
   // remove existing taxa tiles, and refetch taxa tiles
   await updateTilesAndCountForAllTaxa(appStore);
 
-  renderTaxaList(appStore);
-  renderUsersList(appStore);
-  updateAppUrl(window.location, appStore);
-  window.dispatchEvent(new Event("observationsChange"));
+  renderSelectedResources(appStore);
 }

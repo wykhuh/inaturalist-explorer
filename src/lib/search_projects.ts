@@ -15,14 +15,12 @@ import {
   removeOneProjectFromStoreAndMap,
   renderResourceGeometryLayer,
 } from "./data_utils.ts";
-import { updateAppUrl } from "./utils.ts";
-import { renderTaxaList } from "./search_taxa.ts";
 import {
   updateCountForAllPlaces,
   updateCountForAllProjects,
   updateTilesAndCountForAllTaxa,
+  renderSelectedResources,
 } from "./search_utils.ts";
-import { renderPlacesList } from "./search_places.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
 
 export function setupProjectSearch(selector: string) {
@@ -148,17 +146,12 @@ export async function projectSelectedHandler(
   };
   await getObservationsCountForProject(project, appStore, paramsTemp);
 
-  renderTaxaList(appStore);
-  renderProjectsList(appStore);
-  renderPlacesList(appStore);
-
   // zoom to map to fit all selected places
   if (map) {
     fitBoundsPlaces(appStore);
   }
 
-  updateAppUrl(window.location, appStore);
-  window.dispatchEvent(new Event("observationsChange"));
+  renderSelectedResources(appStore);
 }
 
 export function renderProjectsList(appStore: MapStore) {
@@ -191,9 +184,5 @@ export async function removeProject(projectId: number, appStore: MapStore) {
     fitBoundsPlaces(appStore);
   }
 
-  renderTaxaList(appStore);
-  renderPlacesList(appStore);
-  renderProjectsList(appStore);
-  updateAppUrl(window.location, appStore);
-  window.dispatchEvent(new Event("observationsChange"));
+  renderSelectedResources(appStore);
 }

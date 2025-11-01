@@ -6,6 +6,11 @@ import {
   getObservationsCountForProject,
   removeOneTaxonFromMap,
 } from "./data_utils";
+import { renderPlacesList } from "./search_places";
+import { renderProjectsList } from "./search_projects";
+import { renderTaxaList } from "./search_taxa";
+import { renderUsersList } from "./search_users";
+import { updateAppUrl } from "./utils";
 
 export async function updateTilesAndCountForAllTaxa(appStore: MapStore) {
   for await (const taxon of appStore.selectedTaxa) {
@@ -68,5 +73,20 @@ export async function updateTilesForAllTaxa(appStore: MapStore) {
 
     // get new iNat map tiles
     await fetchiNatMapDataForTaxon(taxon, appStore, paramsTemp);
+  }
+}
+
+export function renderSelectedResources(
+  appStore: MapStore,
+  doSideEffects = true,
+) {
+  renderTaxaList(appStore);
+  renderPlacesList(appStore);
+  renderProjectsList(appStore);
+  renderUsersList(appStore);
+
+  if (doSideEffects) {
+    updateAppUrl(window.location, appStore);
+    window.dispatchEvent(new Event("observationsChange"));
   }
 }

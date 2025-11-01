@@ -19,7 +19,7 @@ import {
   formatiNatAPIBoundingBoxParams,
   getAndDrawMapBoundingBox,
 } from "./map_utils.ts";
-import { formatAppUrl, updateAppUrl } from "./utils.ts";
+import { formatAppUrl } from "./utils.ts";
 import { getiNatMapTiles, getObservations } from "./inat_api.ts";
 import {
   iNatApiNonFilterableNames,
@@ -27,14 +27,15 @@ import {
   bboxPlaceRecord,
   speciesRanks,
 } from "../data/inat_data.ts";
-import { renderPlacesList } from "./search_places.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
 import { logger, loggerFilters } from "./logger.ts";
 import { mapStore } from "./store.ts";
 import type { ObservationTaxon, SpeciesCountTaxon } from "../types/inat_api";
-import { renderTaxaList } from "./search_taxa.ts";
 import { person2 } from "../assets/icons.ts";
-import { updateTilesAndCountForAllTaxa } from "./search_utils.ts";
+import {
+  updateTilesAndCountForAllTaxa,
+  renderSelectedResources,
+} from "./search_utils.ts";
 
 // called when user clicks refresh map button
 export async function refreshBoundingBox(appStore: MapStore) {
@@ -77,10 +78,7 @@ export async function refreshBoundingBox(appStore: MapStore) {
 
   await getObservationsCountForPlace(place, appStore, paramsTemp);
 
-  renderTaxaList(appStore);
-  renderPlacesList(appStore);
-  updateAppUrl(window.location, appStore);
-  window.dispatchEvent(new Event("observationsChange"));
+  renderSelectedResources(appStore);
 }
 
 // called when user select taxa or place

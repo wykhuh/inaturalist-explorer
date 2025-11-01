@@ -29,10 +29,6 @@ import {
   fieldsWithAny,
   iNatApiNames,
 } from "../data/inat_data.ts";
-import { renderPlacesList } from "./search_places.ts";
-import { renderProjectsList } from "./search_projects.ts";
-import { renderTaxaList } from "./search_taxa.ts";
-import { renderUsersList } from "./search_users.ts";
 import type {
   PlacesResult,
   ProjectsResult,
@@ -58,6 +54,7 @@ import {
 import { setupUserSearch, userSelectedHandler } from "../lib/search_users.ts";
 import { setupTaxaSearch, taxonSelectedHandler } from "../lib/search_taxa.ts";
 import {
+  renderSelectedResources,
   updateCountForAllPlaces,
   updateCountForAllProjects,
   updateCountForAllTaxa,
@@ -185,10 +182,7 @@ export async function initPopulateStore(
   await updateCountForAllPlaces(appStore);
   await updateCountForAllProjects(appStore);
 
-  renderTaxaList(appStore);
-  renderPlacesList(appStore);
-  renderProjectsList(appStore);
-  renderUsersList(appStore);
+  renderSelectedResources(appStore, false);
 
   loggerStore("++ initPopulateStore end");
 

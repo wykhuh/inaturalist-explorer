@@ -12,11 +12,9 @@ import {
 } from "./utils";
 import { loggerStore } from "../../lib/logger";
 import { initRenderMap } from "../../lib/init_app";
-import { renderTaxaList } from "../../lib/search_taxa";
 import { setupComponent } from "../../lib/component_utils";
 import type { MapStore } from "../../types/app";
-import { renderPlacesList } from "../../lib/search_places";
-import { renderProjectsList } from "../../lib/search_projects";
+import { renderSelectedResources } from "../../lib/search_utils";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -51,9 +49,7 @@ class MyComponent extends HTMLElement {
 
     // create new map
     await initRenderMap(window.app.store);
-    renderTaxaList(window.app.store);
-    renderPlacesList(window.app.store);
-    renderProjectsList(window.app.store);
+    renderSelectedResources(window.app.store, false);
 
     // use store to set values the form on page load
     initFilters(window.app.store);

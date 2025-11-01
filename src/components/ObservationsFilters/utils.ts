@@ -9,9 +9,7 @@ import type {
   MapStore,
 } from "../../types/app";
 import { updateStoreUsingFilters } from "../../lib/data_utils";
-import { updateAppUrl } from "../../lib/utils";
 import { loggerFilters } from "../../lib/logger";
-import { renderTaxaList } from "../../lib/search_taxa";
 import {
   setInputChecked,
   setInputDisabled,
@@ -19,7 +17,10 @@ import {
   setSelectedOption,
   setSelectedOptionTrueFalse,
 } from "../../lib/form_utils";
-import { updateTilesAndCountForAllTaxa } from "../../lib/search_utils";
+import {
+  renderSelectedResources,
+  updateTilesAndCountForAllTaxa,
+} from "../../lib/search_utils";
 
 export function processFiltersForm(data: FormData): {
   params: iNatApiParams;
@@ -116,11 +117,7 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
 
   // update UI
   renderFiltersList(data);
-  renderTaxaList(appStore);
-  // update browser url
-
-  updateAppUrl(window.location, appStore);
-  window.dispatchEvent(new Event("observationsChange"));
+  renderSelectedResources(appStore);
 }
 
 // use store to populate the filter form fields on page load
