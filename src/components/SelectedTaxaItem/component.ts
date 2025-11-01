@@ -1,7 +1,8 @@
 import { setupComponent } from "../../lib/component_utils.ts";
+import { renderTaxonNames } from "../../lib/data_utils.ts";
 import { removeTaxon } from "../../lib/search_taxa.ts";
 import { pluralize } from "../../lib/utils.ts";
-import type { NormalizediNatTaxon } from "../../types/app";
+import type { MapStore, NormalizediNatTaxon } from "../../types/app";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -9,10 +10,10 @@ class MyComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    this.render();
+    this.render(window.app.store);
   }
 
-  async render() {
+  async render(appStore: MapStore) {
     if (!this.dataset.taxon) return;
 
     await setupComponent(
@@ -27,23 +28,12 @@ class MyComponent extends HTMLElement {
       swatchEl.style.backgroundColor = taxon.color || "";
     }
 
-    let titleEl = this.querySelector(".title");
-    if (titleEl && taxon.title) {
-      titleEl.textContent = taxon.title;
-    }
+    let detailsEl = this.querySelector(".details");
+    if (detailsEl) {
+      let content = renderTaxonNames(taxon, appStore);
+      content += `<span class="observations-count">${pluralize(taxon.observations_count, "observation", true)}</span>`;
 
-    let subtitleEl = this.querySelector(".subtitle");
-    if (subtitleEl && taxon.subtitle) {
-      subtitleEl.textContent = taxon.subtitle;
-    }
-
-    let countEl = this.querySelector(".count");
-    if (countEl) {
-      countEl.textContent = pluralize(
-        taxon.observations_count,
-        "observation",
-        true,
-      );
+      detailsEl.innerHTML = content;
     }
 
     let butttonEl = this.querySelector(".close-button") as HTMLButtonElement;

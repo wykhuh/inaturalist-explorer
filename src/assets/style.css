@@ -644,9 +644,7 @@
   .identifiers-table,
   .observations-table,
   .observations-grid {
-    .title {
-      font-weight: var(--fw-bold);
-      line-height: 1.25;
+    .details {
       a {
         color: var(--text-main);
         text-decoration: none;
@@ -657,17 +655,17 @@
       }
     }
 
-    .subtitle {
-      font-style: italic;
+    .title {
+      font-weight: var(--fw-bold);
       line-height: 1.25;
-      a {
-        color: var(--text-main);
-        text-decoration: none;
-      }
-      a:hover {
-        color: var(--text-main);
-        text-decoration: underline;
-      }
+    }
+
+    .subtitle {
+      line-height: 1.25;
+    }
+
+    .scientific-name {
+      font-style: italic;
     }
 
     .avatar-name {
@@ -819,6 +817,16 @@
     td.name {
       display: flex;
       flex-direction: column;
+
+      a {
+        color: var(--text-main);
+        text-decoration: none;
+      }
+
+      a:hover {
+        color: var(--text-main);
+        text-decoration: underline;
+      }
     }
 
     td.media {
@@ -976,7 +984,7 @@
     .taxon-name {
       display: grid;
     }
-    .common-name {
+    .title {
       font-weight: var(--fw-bold);
     }
     .scientific-name {
@@ -1041,13 +1049,13 @@
       height: 1rem;
     }
 
-    .data {
+    .details {
       display: grid;
       align-content: center;
       line-height: 1.3;
     }
 
-    .count {
+    .observations-count {
       font-size: var(--font-size-sm);
     }
 

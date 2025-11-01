@@ -16,8 +16,8 @@ import {
   getObservationsCountForTaxon,
   removeOneTaxonFromStoreAndMap,
   removeTaxaFromStoreAndMap,
+  renderTaxonNames,
 } from "./data_utils.ts";
-import { speciesRanks } from "../data/inat_data.ts";
 import { updateAppUrl } from "./utils.ts";
 import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
 import {
@@ -94,9 +94,6 @@ export function renderAutocompleteTaxon(
   inputValue: string,
   appStore: MapStore,
 ): string {
-  let { title, titleAriaLabel, subtitle, subtitleAriaLabel, hasCommonName } =
-    formatTaxonName(item, appStore, inputValue);
-
   let html = `
   <div class="taxa-ac-option" data-testid="taxa-ac-option">
     <div class="thumbnail">`;
@@ -104,28 +101,14 @@ export function renderAutocompleteTaxon(
   if (item.default_photo) {
     html += `
       <img class="thumbnail" src="${item.default_photo}" alt="">`;
+  } else {
   }
 
+  let url = undefined;
   html += `
     </div>
-    <div class="taxon-name">`;
-
-  if (title) {
-    html += `
-      <span class="title" aria-label="${titleAriaLabel}">${title}</span>`;
-  }
-  html += `
-      <span>`;
-  if ((item.rank && !speciesRanks.includes(item.rank)) || !hasCommonName) {
-    html += `
-        <span class="rank" aria-label="taxon rank">${item.rank}</span>`;
-  }
-  if (subtitle) {
-    html += `
-        <span class="subtitle" aria-label="${subtitleAriaLabel}">${subtitle}</span>`;
-  }
-  html += `
-      </span>
+    <div class="taxon-name">
+      ${renderTaxonNames(item, appStore, url, inputValue, false)}
     </div>
   </div>`;
 

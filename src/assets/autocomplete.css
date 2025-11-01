@@ -85,19 +85,7 @@
 }
 
 .autoComplete_wrapper > ul > li {
-  & .title {
-    font-weight: 550;
-    font-size: var(--font-size-sm);
-  }
-
-  & .rank {
-    font-size: var(--font-size-sm);
-  }
-
-  & .subtitle {
-    font-style: italic;
-    font-size: var(--font-size-sm);
-  }
+  font-size: var(--font-size-sm);
 }
 
 .autoComplete_wrapper > ul > li:hover {

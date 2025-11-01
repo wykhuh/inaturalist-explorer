@@ -9,6 +9,7 @@ import {
   removeIdfromInatApiParams,
   normalizeAppParams,
   cleanupObervationsParams,
+  renderTaxonNames,
 } from "../lib/data_utils.ts";
 import type { NormalizediNatTaxon } from "../types/app.d.ts";
 import { mapStore } from "../lib/store.ts";
@@ -495,6 +496,209 @@ describe("formatTaxonName", () => {
         expect(res.hasCommonName).toBe(hasCommonName);
       },
     );
+  });
+});
+
+describe("renderTaxonNames", () => {
+  let store = structuredClone(mapStore);
+
+  let redQuery = "red";
+  let redTaxon = {
+    name: "Turdus migratorius",
+    default_photo: "https://inat.com/photos/34859026/square.jpg",
+    preferred_common_name: "American Robin",
+    matched_term: "Red Robin",
+    rank: "species",
+    id: 12727,
+  };
+
+  test("returns common and scientific name if taxon has common and scientific name", () => {
+    let taxon = redTaxon;
+
+    let results = renderTaxonNames(taxon, store, `taxa/${taxon.id}`);
+
+    let expected = `<a href="taxa/12727" class="title">
+<span class="common-name" aria-label="taxon common name">American Robin</span>
+</a>
+<a href="taxa/12727" class="subtitle">
+(<span class="scientific-name" aria-label="taxon scientific name">Turdus migratorius</span>)
+</a>\n`;
+    expect(results).toStrictEqual(expected);
+  });
+
+  test("returns scientific and common name if name_order is sc", () => {
+    let store = structuredClone(mapStore);
+    store.viewMetadata.name_order = "sc";
+
+    let taxon = redTaxon;
+
+    let results = renderTaxonNames(taxon, store, `taxa/${taxon.id}`);
+
+    let expected = `<a href="taxa/12727" class="title">
+<span class="scientific-name" aria-label="taxon scientific name">Turdus migratorius</span>
+</a>
+<a href="taxa/12727" class="subtitle">
+(<span class="common-name" aria-label="taxon common name">American Robin</span>)
+</a>\n`;
+    expect(results).toStrictEqual(expected);
+  });
+
+  test("returns scientific name if name_order is s", () => {
+    let store = structuredClone(mapStore);
+    store.viewMetadata.name_order = "s";
+
+    let taxon = redTaxon;
+
+    let results = renderTaxonNames(taxon, store, `taxa/${taxon.id}`);
+
+    let expected = `<a href="taxa/12727" class="title">
+<span class="scientific-name" aria-label="taxon scientific name">Turdus migratorius</span>
+</a>\n`;
+    expect(results).toStrictEqual(expected);
+  });
+
+  test("returns names without link if no link and no search term", () => {
+    let taxon = redTaxon;
+
+    let results = renderTaxonNames(taxon, store);
+
+    let expected = `<span class="title">
+<span class="common-name" aria-label="taxon common name">American Robin</span>
+</span>
+<span class="subtitle">
+(<span class="scientific-name" aria-label="taxon scientific name">Turdus migratorius</span>)
+</span>\n`;
+    expect(results).toStrictEqual(expected);
+  });
+
+  test("returns names without link if no link and search term", () => {
+    let searchTerm = redQuery;
+    let taxon = redTaxon;
+
+    let results = renderTaxonNames(taxon, store, undefined, searchTerm);
+
+    let expected = `<span class="title">
+<span class="common-name" aria-label="taxon common name">American Robin (Red Robin)</span>
+</span>
+<span class="subtitle">
+(<span class="scientific-name" aria-label="taxon scientific name">Turdus migratorius</span>)
+</span>\n`;
+    expect(results).toStrictEqual(expected);
+  });
+
+  test("returns common name (match term) as title if search term exists", () => {
+    let searchTerm = redQuery;
+    let taxon = redTaxon;
+
+    let results = renderTaxonNames(
+      taxon,
+      store,
+      `taxa/${taxon.id}`,
+      searchTerm,
+    );
+    let expected = `<a href="taxa/12727" class="title">
+<span class="common-name" aria-label="taxon common name">American Robin (Red Robin)</span>
+</a>
+<a href="taxa/12727" class="subtitle">
+(<span class="scientific-name" aria-label="taxon scientific name">Turdus migratorius</span>)
+</a>\n`;
+    expect(results).toStrictEqual(expected);
+  });
+
+  test("returns scientific name if no common name", () => {
+    let taxon = {
+      name: "Prorocentrum gracile",
+      preferred_common_name: undefined,
+      matched_term: "Prorocentrum gracile",
+      rank: "species",
+      id: 783155,
+    };
+
+    let results = renderTaxonNames(taxon, store, `taxa/${taxon.id}`);
+
+    let expected = `<a href="taxa/783155" class="subtitle">
+(<span class="scientific-name" aria-label="taxon scientific name">Prorocentrum gracile</span>)
+</a>\n`;
+    expect(results).toStrictEqual(expected);
+  });
+
+  test("returns names and rank if rank is higher than species", () => {
+    let taxon = {
+      name: "Canis",
+      preferred_common_name: "Wolves and Dogs",
+      matched_term: "canis",
+      rank: "genus",
+      id: 42044,
+    };
+
+    let results = renderTaxonNames(taxon, store, `taxa/${taxon.id}`);
+
+    let expected = `<a href="taxa/42044" class="title">
+<span class="common-name" aria-label="taxon common name">Wolves and Dogs</span>
+</a>
+<a href="taxa/42044" class="subtitle">
+(<span class="rank" aria-label="taxon rank">Genus</span> <span class="scientific-name" aria-label="taxon scientific name">Canis</span>)
+</a>\n`;
+    expect(results).toStrictEqual(expected);
+  });
+
+  test("returns names and rank if rank is higher than species and name_order is sc", () => {
+    let store = structuredClone(mapStore);
+    store.viewMetadata.name_order = "sc";
+
+    let taxon = {
+      name: "Canis",
+      preferred_common_name: "Wolves and Dogs",
+      matched_term: "canis",
+      rank: "genus",
+      id: 42044,
+    };
+
+    let results = renderTaxonNames(taxon, store, `taxa/${taxon.id}`);
+
+    let expected = `<a href="taxa/42044" class="title">
+<span class="rank" aria-label="taxon rank">Genus</span> <span class="scientific-name" aria-label="taxon scientific name">Canis</span>
+</a>
+<a href="taxa/42044" class="subtitle">
+(<span class="common-name" aria-label="taxon common name">Wolves and Dogs</span>)
+</a>\n`;
+    expect(results).toStrictEqual(expected);
+  });
+
+  test("returns names and rank if rank is higher than species and no link", () => {
+    let taxon = {
+      name: "Canis",
+      preferred_common_name: "Wolves and Dogs",
+      matched_term: "canis",
+      rank: "genus",
+      id: 42044,
+    };
+
+    let results = renderTaxonNames(taxon, store);
+
+    let expected = `<span class="title">
+<span class="common-name" aria-label="taxon common name">Wolves and Dogs</span>
+</span>
+<span class="subtitle">
+(<span class="rank" aria-label="taxon rank">Genus</span> <span class="scientific-name" aria-label="taxon scientific name">Canis</span>)
+</span>\n`;
+    expect(results).toStrictEqual(expected);
+  });
+
+  test("returns name and rank if rank is higher than species and no common name", () => {
+    let taxon = {
+      name: "Roseae",
+      matched_term: "roseae",
+      rank: "section",
+      id: 1023141,
+    };
+
+    let results = renderTaxonNames(taxon, store, `taxa/${taxon.id}`);
+
+    let expected = `<a href="taxa/1023141" class="subtitle">
+(<span class="rank" aria-label="taxon rank">Section</span> <span class="scientific-name" aria-label="taxon scientific name">Roseae</span>)
+</a>\n`;
+    expect(results).toStrictEqual(expected);
   });
 });
 

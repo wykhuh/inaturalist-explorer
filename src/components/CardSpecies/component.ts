@@ -1,7 +1,7 @@
 import type { SpeciesCountResult } from "../../types/inat_api";
 import type { DataComponent, MapStore } from "../../types/app";
 import { pluralize } from "../../lib/utils";
-import { formatTaxonName } from "../../lib/data_utils";
+import { formatTaxonName, renderTaxonNames } from "../../lib/data_utils";
 import { iNatTaxaUrl } from "../../data/inat_data";
 import { setupComponent } from "../../lib/component_utils";
 
@@ -65,11 +65,6 @@ class MyComponent extends HTMLElement {
       imgEl.alt = altText;
     }
 
-    let countEl = this.querySelector(".observations-count");
-    if (countEl) {
-      countEl.textContent = pluralize(data.count, "observation", true);
-    }
-
     let licenseEl = this.querySelector(".licensing");
     let license = data.taxon.default_photo?.license_code;
     if (licenseEl) {
@@ -90,14 +85,16 @@ class MyComponent extends HTMLElement {
       attributionEl.textContent = attribution;
     }
 
-    let titleEl = this.querySelector(".title");
-    if (titleEl && title) {
-      titleEl.innerHTML = `<a href="${iNatTaxaUrl}/${data.taxon.id}">${title}</a>`;
-    }
+    let detailsEl = this.querySelector(".details");
+    if (detailsEl) {
+      let content = renderTaxonNames(
+        data.taxon,
+        appStore,
+        `${iNatTaxaUrl}/${data.taxon.id}`,
+      );
+      content += `<span class="observations-count">${pluralize(data.count, "observation", true)}</span>`;
 
-    let subtitleEl = this.querySelector(".subtitle");
-    if (subtitleEl && subtitle) {
-      subtitleEl.innerHTML = `<a href="${iNatTaxaUrl}/${data.taxon.id}">${subtitle}</a>`;
+      detailsEl.innerHTML = content;
     }
   }
 }

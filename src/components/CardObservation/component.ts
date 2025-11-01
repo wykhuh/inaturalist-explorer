@@ -1,6 +1,6 @@
 import type { ObservationsResult } from "../../types/inat_api";
 import type { DataComponent, MapStore } from "../../types/app";
-import { formatAvatar, formatTaxonName } from "../../lib/data_utils";
+import { formatAvatar, renderTaxonNames } from "../../lib/data_utils";
 import { iNatObservationUrl, iNatUserUrl } from "../../data/inat_data";
 import { audio, check, speech, star } from "../../assets/icons";
 import { setupComponent } from "../../lib/component_utils";
@@ -54,8 +54,6 @@ class MyComponent extends HTMLElement {
     let detailsContent = ``;
 
     if (data.taxon) {
-      let { title, subtitle } = formatTaxonName(data.taxon, appStore);
-
       if (data.user) {
         detailsContent += `<span class="avatar-name">
           <a href="${iNatUserUrl}/${data.user.login}" title="${data.user.login}">
@@ -64,14 +62,12 @@ class MyComponent extends HTMLElement {
         </span>`;
       }
 
-      detailsContent += `<span class="title">`;
-      detailsContent += `<a href="${iNatObservationUrl}/${data.id}">${title}</a>`;
-      detailsContent += "</span>";
-      if (subtitle) {
-        detailsContent += `<span class="subtitle">`;
-        detailsContent += `<a href="${iNatObservationUrl}/${data.id}">${subtitle}</a>`;
-        detailsContent += "</span>";
-      }
+      detailsContent += renderTaxonNames(
+        data.taxon,
+        appStore,
+        `${iNatObservationUrl}/${data.id}`,
+      );
+
       // some obsevations only have sound and no taxa info
     } else {
       detailsContent += `<span class="title">`;

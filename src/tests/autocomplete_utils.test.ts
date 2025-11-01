@@ -196,10 +196,13 @@ describe("renderAutocompleteTaxon", () => {
       <img class="thumbnail" src="https://inat.com/photos/101327658/square.jpg" alt="">
     </div>
     <div class="taxon-name">
-      <span class="title" aria-label="taxon common name">Red-tailed Hawk</span>
-      <span>
-        <span class="subtitle" aria-label="taxon scientific name">Buteo jamaicensis</span>
-      </span>
+      <span class="title">
+<span class="common-name" aria-label="taxon common name">Red-tailed Hawk</span>
+</span>
+<span class="subtitle">
+<span class="scientific-name" aria-label="taxon scientific name">Buteo jamaicensis</span>
+</span>
+
     </div>
   </div>`;
 
@@ -224,11 +227,13 @@ describe("renderAutocompleteTaxon", () => {
       <img class="thumbnail" src="https://inat.com/photos/11484396/square.jpg" alt="">
     </div>
     <div class="taxon-name">
-      <span class="title" aria-label="taxon common name">Reduncines</span>
-      <span>
-        <span class="rank" aria-label="taxon rank">tribe</span>
-        <span class="subtitle" aria-label="taxon scientific name">Reduncini</span>
-      </span>
+      <span class="title">
+<span class="common-name" aria-label="taxon common name">Reduncines</span>
+</span>
+<span class="subtitle">
+<span class="rank" aria-label="taxon rank">Tribe</span> <span class="scientific-name" aria-label="taxon scientific name">Reduncini</span>
+</span>
+
     </div>
   </div>`;
 
@@ -251,11 +256,13 @@ describe("renderAutocompleteTaxon", () => {
     <div class="thumbnail">
     </div>
     <div class="taxon-name">
-      <span class="title" aria-label="taxon common name">Reduncines</span>
-      <span>
-        <span class="rank" aria-label="taxon rank">tribe</span>
-        <span class="subtitle" aria-label="taxon scientific name">Reduncini</span>
-      </span>
+      <span class="title">
+<span class="common-name" aria-label="taxon common name">Reduncines</span>
+</span>
+<span class="subtitle">
+<span class="rank" aria-label="taxon rank">Tribe</span> <span class="scientific-name" aria-label="taxon scientific name">Reduncini</span>
+</span>
+
     </div>
   </div>`;
 
@@ -280,10 +287,13 @@ describe("renderAutocompleteTaxon", () => {
       <img class="thumbnail" src="https://inat.com/photos/34859026/square.jpg" alt="">
     </div>
     <div class="taxon-name">
-      <span class="title" aria-label="taxon common name">American Robin (Red Robin)</span>
-      <span>
-        <span class="subtitle" aria-label="taxon scientific name">Turdus migratorius</span>
-      </span>
+      <span class="title">
+<span class="common-name" aria-label="taxon common name">American Robin (Red Robin)</span>
+</span>
+<span class="subtitle">
+<span class="scientific-name" aria-label="taxon scientific name">Turdus migratorius</span>
+</span>
+
     </div>
   </div>`;
 
@@ -308,10 +318,10 @@ describe("renderAutocompleteTaxon", () => {
       <img class="thumbnail" src="https://inat.com/photos/8518661/square.jpg" alt="">
     </div>
     <div class="taxon-name">
-      <span>
-        <span class="rank" aria-label="taxon rank">genus</span>
-        <span class="subtitle" aria-label="taxon scientific name">Prorocentrum</span>
-      </span>
+      <span class="subtitle">
+<span class="rank" aria-label="taxon rank">Genus</span> <span class="scientific-name" aria-label="taxon scientific name">Prorocentrum</span>
+</span>
+
     </div>
   </div>`;
 
@@ -338,10 +348,10 @@ describe("renderAutocompleteTaxon", () => {
       <img class="thumbnail" src="https://inat.com/photos/8518661/square.jpg" alt="">
     </div>
     <div class="taxon-name">
-      <span>
-        <span class="rank" aria-label="taxon rank">section</span>
-        <span class="subtitle" aria-label="taxon scientific name">Speciosae</span>
-      </span>
+      <span class="subtitle">
+<span class="rank" aria-label="taxon rank">Section</span> <span class="scientific-name" aria-label="taxon scientific name">Speciosae</span>
+</span>
+
     </div>
   </div>`;
 
@@ -366,10 +376,10 @@ describe("renderAutocompleteTaxon", () => {
       <img class="thumbnail" src="https://inat.com/photos/26078891/square.jpg" alt="">
     </div>
     <div class="taxon-name">
-      <span>
-        <span class="rank" aria-label="taxon rank">species</span>
-        <span class="subtitle" aria-label="taxon scientific name">Prorocentrum gracile</span>
-      </span>
+      <span class="subtitle">
+<span class="scientific-name" aria-label="taxon scientific name">Prorocentrum gracile</span>
+</span>
+
     </div>
   </div>`;
 

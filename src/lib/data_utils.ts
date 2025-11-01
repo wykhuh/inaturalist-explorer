@@ -25,12 +25,13 @@ import {
   iNatApiNonFilterableNames,
   allTaxaRecord,
   bboxPlaceRecord,
+  speciesRanks,
 } from "../data/inat_data.ts";
 import { renderPlacesList } from "./search_places.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
 import { logger, loggerFilters } from "./logger.ts";
 import { mapStore } from "./store.ts";
-import type { SpeciesCountTaxon } from "../types/inat_api";
+import type { ObservationTaxon, SpeciesCountTaxon } from "../types/inat_api";
 import { renderTaxaList } from "./search_taxa.ts";
 import { person2 } from "../assets/icons.ts";
 import { updateTilesAndCountForAllTaxa } from "./search_utils.ts";
@@ -640,6 +641,86 @@ export function formatTaxonName(
     hasCommonName,
     rank,
   };
+}
+
+export function renderTaxonNames(
+  taxon: ObservationTaxon | SpeciesCountTaxon | NormalizediNatTaxon,
+  appStore: MapStore,
+  url?: string,
+  searchTerm = "",
+  includeParathesis = true,
+) {
+  let { title, titleAriaLabel, subtitle, subtitleAriaLabel, rank } =
+    formatTaxonName(taxon, appStore, searchTerm);
+
+  let content = "";
+  if (title && titleAriaLabel) {
+    content += renderTaxonName(
+      title,
+      titleAriaLabel,
+      "title",
+      false,
+      rank,
+      url,
+    );
+  }
+  if (subtitle && subtitleAriaLabel) {
+    content += renderTaxonName(
+      subtitle,
+      subtitleAriaLabel,
+      "subtitle",
+      includeParathesis,
+      rank,
+      url,
+    );
+  }
+
+  return content;
+}
+
+function renderTaxonName(
+  name: string,
+  ariaLabel: string,
+  nameType: string,
+  includeParathesis = true,
+  rank?: string,
+  url?: string,
+) {
+  let type =
+    ariaLabel === "taxon common name" ? "common-name" : "scientific-name";
+
+  let content = "";
+  if (url) {
+    content += `<a href="${url}" class="${nameType}">\n`;
+  } else {
+    content += `<span class="${nameType}">\n`;
+  }
+  if (includeParathesis) {
+    content += `(`;
+  }
+  if (type === "scientific-name") {
+    if (rank && !speciesRanks.includes(rank)) {
+      content += `<span class="rank" aria-label="taxon rank">${capitalizeFirstLetter(rank)}</span> `;
+    }
+  }
+
+  content += `<span class="${type}" aria-label="${ariaLabel}">`;
+
+  content += name;
+
+  if (includeParathesis) {
+    content += `</span>)\n`;
+  } else {
+    content += `</span>\n`;
+  }
+
+  if (url) {
+    content += `</a>\n`;
+  } else {
+    content += `</span>\n`;
+  }
+
+  return content;
 }
 
 export function leafletVisibleLayers(appStore: MapStore, strict = false) {

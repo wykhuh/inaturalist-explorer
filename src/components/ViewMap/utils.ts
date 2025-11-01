@@ -10,7 +10,7 @@ import { iNatObservationUrl, iNatUserUrl } from "../../data/inat_data";
 import {
   cleanupObervationsParams,
   formatAvatar,
-  formatTaxonName,
+  renderTaxonNames,
 } from "../../lib/data_utils";
 import { getObservations } from "../../lib/inat_api";
 import { loggerTime } from "../../lib/logger";
@@ -164,15 +164,12 @@ export function createTable(results: ObservationsResult[], appStore: MapStore) {
     let observationContent = ``;
 
     if (row.taxon) {
-      let { title, subtitle } = formatTaxonName(row.taxon, appStore);
-      observationContent += `<span class="title">`;
-      observationContent += `<a href="${iNatObservationUrl}/${row.id}">${title}</a>`;
-      observationContent += "</span>";
-      if (subtitle) {
-        observationContent += `<span class="subtitle">`;
-        observationContent += `<a href="${iNatObservationUrl}/${row.id}">${subtitle}</a>`;
-        observationContent += "</span>";
-      }
+      observationContent += renderTaxonNames(
+        row.taxon,
+        appStore,
+        `${iNatObservationUrl}/${row.id}`,
+      );
+
       // some obsevations only have sound and no tax info
     } else {
       observationContent += `<span class="title">`;
