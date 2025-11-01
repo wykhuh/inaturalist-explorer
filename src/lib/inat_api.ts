@@ -150,6 +150,16 @@ export async function getTaxonById(id: number) {
   }
 }
 
+export async function getTaxa(params: string) {
+  try {
+    let resp = await fetch(`${taxa_api}?${params}`);
+    let data = (await resp.json()) as iNatTaxaAPI;
+    return data.results;
+  } catch (error) {
+    console.error("getTaxonById ERROR:", error);
+  }
+}
+
 export async function getPlaceById(id: number) {
   try {
     let resp = await fetch(places_api + id);

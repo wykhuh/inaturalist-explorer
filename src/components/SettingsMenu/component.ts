@@ -2,6 +2,8 @@ import { setupComponent } from "../../lib/component_utils";
 import { languageCodes } from "../../data/locale";
 import { updateAppUrl } from "../../lib/utils";
 import type { NameOrder } from "../../types/app";
+import { renderTaxaList } from "../../lib/search_taxa";
+import { updateComonNamesByLanguage } from "./utils";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -34,7 +36,7 @@ class MyComponent extends HTMLElement {
       selectEl.appendChild(optionEl);
     });
 
-    selectEl.addEventListener("change", (event) => {
+    selectEl.addEventListener("change", async (event) => {
       if (event.target) {
         let target = event.target as HTMLInputElement;
         window.app.store.inatApiParams = {
@@ -43,6 +45,9 @@ class MyComponent extends HTMLElement {
         };
 
         updateAppUrl(window.location, window.app.store);
+        // make api call to get common name
+        await updateComonNamesByLanguage(window.app.store);
+        renderTaxaList(window.app.store);
 
         window.dispatchEvent(new Event("localeChanged"));
       }
@@ -69,6 +74,7 @@ class MyComponent extends HTMLElement {
         };
 
         updateAppUrl(window.location, window.app.store);
+        renderTaxaList(window.app.store);
 
         window.dispatchEvent(new Event("nameOrderChanged"));
       }
