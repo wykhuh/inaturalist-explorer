@@ -11,6 +11,7 @@ import type { MapStore } from "../types/app";
 
 import {
   addValueToCommaSeparatedString,
+  getObservationsCountForUser,
   removeOneUserFromStore,
 } from "./data_utils.ts";
 
@@ -19,6 +20,7 @@ import {
   renderSelectedResources,
   updateCountForAllPlaces,
   updateCountForAllProjects,
+  updateCountForAllUsersIdentifiers,
 } from "./search_utils.ts";
 
 export function setupUserSearch(selector: string) {
@@ -94,6 +96,7 @@ export async function userSelectedHandler(
   _query: string,
   appStore: MapStore,
 ) {
+  let user = selection;
   // add project to store
   appStore.selectedUsers = [...appStore.selectedUsers, selection];
   appStore.inatApiParams = {
@@ -104,10 +107,15 @@ export async function userSelectedHandler(
     ),
   };
 
-  // get iNat map tiles for selected user
+  let paramsTemp = {
+    ...appStore.inatApiParams,
+    user_id: user.id.toString(),
+  };
+  await getObservationsCountForUser(user, appStore, paramsTemp);
   await updateTilesAndCountForAllTaxa(appStore);
   await updateCountForAllPlaces(appStore);
   await updateCountForAllProjects(appStore);
+  await updateCountForAllUsersIdentifiers(appStore);
 
   renderSelectedResources(appStore);
 }
@@ -135,6 +143,7 @@ export async function removeUser(userId: number, appStore: MapStore) {
   await updateTilesAndCountForAllTaxa(appStore);
   await updateCountForAllPlaces(appStore);
   await updateCountForAllProjects(appStore);
+  await updateCountForAllUsersIdentifiers(appStore);
 
   renderSelectedResources(appStore);
 }

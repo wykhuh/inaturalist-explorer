@@ -21,6 +21,8 @@ import {
   renderSelectedResources,
   updateCountForAllPlaces,
   updateCountForAllProjects,
+  updateCountForAllUsers,
+  updateCountForAllUsersIdentifiers,
   updateTilesAndCountForAllTaxa,
 } from "../../lib/search_utils";
 
@@ -118,6 +120,8 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
   await updateTilesAndCountForAllTaxa(appStore);
   await updateCountForAllPlaces(appStore);
   await updateCountForAllProjects(appStore);
+  await updateCountForAllUsers(appStore);
+  await updateCountForAllUsersIdentifiers(appStore);
 
   // update UI
   renderFiltersList(data);

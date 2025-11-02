@@ -23,6 +23,8 @@ import {
   updateTilesAndCountForAllTaxa,
   renderSelectedResources,
   updateCountForAllProjects,
+  updateCountForAllUsers,
+  updateCountForAllUsersIdentifiers,
 } from "./search_utils.ts";
 
 export function setupPlacesSearch(selector: string) {
@@ -160,15 +162,15 @@ export async function placeSelectedHandler(
     };
   }
 
-  // get iNat map tiles for selected place
-  await updateTilesAndCountForAllTaxa(appStore);
-  await updateCountForAllProjects(appStore);
-
   let paramsTemp = {
     ...appStore.inatApiParams,
     place_id: place.id.toString(),
   };
   await getObservationsCountForPlace(place, appStore, paramsTemp);
+  await updateTilesAndCountForAllTaxa(appStore);
+  await updateCountForAllProjects(appStore);
+  await updateCountForAllUsers(appStore);
+  await updateCountForAllUsersIdentifiers(appStore);
 
   // zoom to map to fit all selected places
   if (map) {
@@ -204,6 +206,8 @@ export async function removePlace(placeId: number, appStore: MapStore) {
   // remove existing taxa tiles, and refetch taxa tiles
   await updateTilesAndCountForAllTaxa(appStore);
   await updateCountForAllProjects(appStore);
+  await updateCountForAllUsers(appStore);
+  await updateCountForAllUsersIdentifiers(appStore);
 
   renderSelectedResources(appStore);
 }

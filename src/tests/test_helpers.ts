@@ -14,11 +14,6 @@ import type {
 import { mapStore } from "../lib/store.ts";
 import { allTaxaRecord } from "../data/inat_data.ts";
 import { loggerUrl } from "../lib/logger.ts";
-import { leafletVisibleLayers } from "../lib/data_utils.ts";
-import { placeSelectedHandler } from "../lib/search_places.ts";
-import { projectSelectedHandler } from "../lib/search_projects.ts";
-import { taxonSelectedHandler } from "../lib/search_taxa.ts";
-import { userSelectedHandler } from "../lib/search_users.ts";
 import {
   cnc1ProjectApi,
   cnc2PlaceApi,
@@ -103,6 +98,16 @@ export function createMockServer() {
         count = count * 0.3;
       }
 
+      if (url.includes(`&ident_user_id=${user1.id}&`)) {
+        count = count * 0.75;
+      }
+
+      if (url.includes(`&user_id=${user1.id}&`)) {
+        count = count * 0.45;
+      } else if (url.includes(`&user_id=${user2.id}&`)) {
+        count = count * 0.55;
+      }
+
       return HttpResponse.json({ total_results: count, results: [] });
     }),
     http.get("https://{*}.tile.openstreetmap.org*", async (_args) => {
@@ -172,6 +177,9 @@ export let gridLabel_allTaxaRecord_user2 =
 export let gridLabel_allTaxaRecord_users =
   "overlay: iNat grid, taxon_id 0, user_id 222137,677256";
 
+export let gridLabel_allTaxaRecord_user1Identifier =
+  "overlay: iNat grid, taxon_id 0, ident_user_id 222137";
+
 export let gridLabel_life_la_user1 =
   "overlay: iNat grid, taxon_id 48460, place_id 962, user_id 222137";
 
@@ -206,6 +214,11 @@ export let gridLabel_life_la_sd_projects_user1 =
 export let gridLabel_oak_la_sd_projects_user1 =
   "overlay: iNat grid, taxon_id 861036, place_id 962,829, project_id 237729,229902, user_id 222137";
 
+export let gridLabel_life_places_projects_users =
+  "overlay: iNat grid, taxon_id 48460, place_id 962,829, project_id 237729,229902, user_id 222137,677256";
+export let gridLabel_oaks_places_projects_users =
+  "overlay: iNat grid, taxon_id 861036, place_id 962,829, project_id 237729,229902, user_id 222137,677256";
+
 export let gridLabel_life_project1 =
   "overlay: iNat grid, taxon_id 48460, project_id 237729";
 export let gridLabel_life_project1_user1 =
@@ -222,9 +235,9 @@ export let gridLabel_oak_places_projects_user1 =
   "overlay: iNat grid, taxon_id 861036, place_id 962,829, project_id 237729,229902, user_id 222137";
 
 export let gridLabel_life_places_resources =
-  "overlay: iNat grid, taxon_id 48460, place_id 962,829, project_id 237729,229902, user_id 222137,677256";
+  "overlay: iNat grid, taxon_id 48460, place_id 962,829, project_id 237729,229902, user_id 222137,677256, ident_user_id 222137";
 export let gridLabel_oaks_places_resources =
-  "overlay: iNat grid, taxon_id 861036, place_id 962,829, project_id 237729,229902, user_id 222137,677256";
+  "overlay: iNat grid, taxon_id 861036, place_id 962,829, project_id 237729,229902, user_id 222137,677256, ident_user_id 222137";
 
 export let gridLabel_life_resource =
   "overlay: iNat grid, taxon_id 48460, place_id 962, project_id 237729, user_id 222137";
@@ -504,10 +517,6 @@ export function expect_LA_SD_Place(store: MapStore, counts = [0, 0]) {
   expect(store.placesMapLayers[sandiego.id].length).toBe(1);
 }
 
-export function expect_users(store: MapStore) {
-  expect(store.selectedUsers).toEqual([user1, user2]);
-}
-
 export function expectRefreshPlace(store: MapStore, count = 0, type = "zero") {
   let place = structuredClone(refreshPlace);
   if (type !== "zero") {
@@ -566,107 +575,46 @@ export function expectProjects(store: MapStore, counts = [0, 0]) {
   expect(store.projectsMapLayers[project2.id].length).toBe(1);
 }
 
-export function expectUser1(store: MapStore) {
-  expect(store.selectedUsers).toEqual([user1]);
-}
-export function expectUser2(store: MapStore) {
-  expect(store.selectedUsers).toEqual([user2]);
-}
-export function expectUsers(store: MapStore) {
-  expect(store.selectedUsers).toEqual([user1, user2]);
+export function expectUser1(store: MapStore, count = 0) {
+  let userA = structuredClone(user1);
+  if (count > 0) {
+    userA.observations_count = count;
+  }
+  expect(store.selectedUsers).toEqual([userA]);
 }
 
-export async function addResources(store: MapStore) {
-  await taxonSelectedHandler(lifeBasic, "life", store);
+export function expectUser2(store: MapStore, count = 0) {
+  let userB = structuredClone(user2);
+  if (count > 0) {
+    userB.observations_count = count;
+  }
+  expect(store.selectedUsers).toEqual([userB]);
+}
 
-  expect(leafletVisibleLayers(store)).toStrictEqual([
-    basemapLabel_osm,
-    gridLabel_life,
-  ]);
-  expectLifeTaxa(store);
-  expect(store.inatApiParams).toStrictEqual({
-    taxon_id: life().id.toString(),
-    colors: colors[0],
-    verifiable: true,
-    spam: false,
-  });
-  expect(window.location.search).toBe(
-    `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
-  );
+export function expectUsers(store: MapStore, counts = [0, 0]) {
+  let userA = structuredClone(user1);
+  if (counts[0] > 0) {
+    userA.observations_count = counts[0];
+  }
+  let userB = structuredClone(user2);
+  if (counts[0] > 0) {
+    userB.observations_count = counts[1];
+  }
+  expect(store.selectedUsers).toEqual([userA, userB]);
+}
 
-  await placeSelectedHandler(losangeles, "los", store);
+export function expectUser1Identifier(store: MapStore, count = 0) {
+  let userA = structuredClone(user1);
+  if (count > 0) {
+    userA.observations_count = count;
+  }
+  expect(store.selectedUsersIdentifiers).toEqual(userA);
+}
 
-  expect(leafletVisibleLayers(store)).toStrictEqual([
-    basemapLabel_osm,
-    placeLabel_la,
-    placeLabel_la,
-    gridLabel_life_la,
-  ]);
-  let count = life().observations_count * 0.6;
-  expectLifeTaxa(store, count);
-  expectLosAngelesPlace(store, count);
-  expect(store.inatApiParams).toStrictEqual({
-    taxon_id: life().id.toString(),
-    colors: colors[0],
-    place_id: losangeles.id.toString(),
-    verifiable: true,
-    spam: false,
-  });
-  expect(window.location.search).toBe(
-    `?taxon_id=${life().id}&place_id=${losangeles.id}&colors=${colorsEncoded[0]}` +
-      `&verifiable=true&spam=false`,
-  );
-
-  await projectSelectedHandler(project_cnc1, "city", store);
-
-  expect(leafletVisibleLayers(store)).toStrictEqual([
-    basemapLabel_osm,
-    placeLabel_la,
-    placeLabel_la,
-    gridLabel_life_la_project1,
-  ]);
-  let count2 = life().observations_count * 0.6;
-  expectLifeTaxa(store, count2);
-  expectLosAngelesPlace(store, count2);
-  expectProject1(store);
-  expect(store.inatApiParams).toStrictEqual({
-    taxon_id: life().id.toString(),
-    colors: colors[0],
-    place_id: losangeles.id.toString(),
-    verifiable: true,
-    spam: false,
-    project_id: project_cnc1.id.toString(),
-  });
-
-  expect(window.location.search).toBe(
-    `?taxon_id=${life().id}&place_id=${losangeles.id}&project_id=${project_cnc1.id}` +
-      `&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
-  );
-
-  await userSelectedHandler(user1, "user", store);
-
-  expect(leafletVisibleLayers(store)).toStrictEqual([
-    basemapLabel_osm,
-    placeLabel_la,
-    placeLabel_la,
-    gridLabel_life_la_project1_user1,
-  ]);
-  expectLifeTaxa(store, count2);
-  expectLosAngelesPlace(store, count2);
-  expectProject1(store);
-  expectUser1(store);
-  expect(store.inatApiParams).toStrictEqual({
-    taxon_id: life().id.toString(),
-    colors: colors[0],
-    place_id: losangeles.id.toString(),
-    verifiable: true,
-    spam: false,
-    project_id: project_cnc1.id.toString(),
-    user_id: user1.id.toString(),
-  });
-
-  expect(window.location.search).toBe(
-    `?taxon_id=${life().id}&place_id=${losangeles.id}&project_id=${project_cnc1.id}` +
-      `&user_id=${user1.id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
-  );
+export function expectUser2Identifier(store: MapStore, count = 0) {
+  let userB = structuredClone(user2);
+  if (count > 0) {
+    userB.observations_count = count;
+  }
+  expect(store.selectedUsersIdentifiers).toEqual(userB);
 }

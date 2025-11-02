@@ -45,7 +45,7 @@ import {
   gridLabel_allTaxaRecord_user1,
   expectUser1,
   user2,
-  expect_users,
+  expectUsers,
   gridLabel_life_places_resources,
   gridLabel_oaks_places_resources,
   gridLabel_oaks_bbox_resources,
@@ -55,6 +55,8 @@ import {
   projectLabel_cnc2,
   defaultParams,
   defaultQuery,
+  expectUser1Identifier,
+  gridLabel_allTaxaRecord_user1Identifier,
 } from "../test_helpers.ts";
 import type { iNatApiParams } from "../../types/app";
 import { fieldsWithAny } from "../../data/inat_data.ts";
@@ -637,8 +639,8 @@ describe("initPopulateStore and initRenderMap resources", () => {
     ]);
     expectNoRefresh(store);
     expectNoPlaces(store);
-    expectAllTaxaRecord(store);
-    expectUser1(store);
+    expectAllTaxaRecord(store, allTaxaCount * 0.45);
+    expectUser1(store, allTaxaCount * 0.45);
     let expectedParams: iNatApiParams = {
       user_id: user1.id.toString(),
       taxon_id: allTaxa.id.toString(),
@@ -647,7 +649,39 @@ describe("initPopulateStore and initRenderMap resources", () => {
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(iNatOrange);
-    expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
+    expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount * 0.45);
+  });
+
+  test("loads and renders user identifier data based on url params", async () => {
+    let store = structuredClone(mapStore);
+
+    expectEmpytMap(store);
+
+    let searchparams = `?ident_user_id=${user1.id}&${defaultQuery}`;
+    let urlData = decodeAppUrl(searchparams);
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    let allTaxaCount = allTaxa.observations_count;
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord_user1Identifier,
+    ]);
+    expectNoRefresh(store);
+    expectNoPlaces(store);
+    // expect(searchparams).toBe("");
+    expectAllTaxaRecord(store, allTaxaCount * 0.75);
+    expectUser1Identifier(store, allTaxaCount * 0.75);
+    let expectedParams: iNatApiParams = {
+      ident_user_id: user1.id,
+      taxon_id: allTaxa.id.toString(),
+      colors: iNatOrange,
+      ...defaultParams,
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.color).toBe(iNatOrange);
+    expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount * 0.75);
   });
 
   test("loads and renders resources and places based on url params", async () => {
@@ -659,6 +693,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     searchparams += `&place_id=${losangeles.id},${sandiego.id}`;
     searchparams += `&project_id=${project_cnc1.id},${project_cnc2.id}`;
     searchparams += `&user_id=${user1.id},${user2.id}`;
+    searchparams += `&ident_user_id=${user1.id}`;
     searchparams += `&colors=${colorsEncoded[0]},${colorsEncoded[1]}`;
     searchparams += `&spam=false&verifiable=true`;
     let urlData = decodeAppUrl(searchparams);
@@ -681,26 +716,34 @@ describe("initPopulateStore and initRenderMap resources", () => {
       gridLabel_oaks_places_resources,
     ]);
     expectNoRefresh(store);
-    expectLifeOakTaxa(store);
-    expect_LA_SD_Place(store, [count * 0.6, count * 0.4]);
-    expect_users(store);
-    expectProjects(store, [count * 0.7, count * 0.3]);
+    expectLifeOakTaxa(store, [lifeCount * 0.75, oakCount * 0.75]);
+    expect_LA_SD_Place(store, [count * 0.6 * 0.75, count * 0.4 * 0.75]);
+    expectUsers(store, [count * 0.45 * 0.75, 4537.5]);
+    expectUser1Identifier(store, count * 0.75);
+    expectProjects(store, [count * 0.7 * 0.75, count * 0.3 * 0.75]);
     let expectedParams: iNatApiParams = {
       colors: `${colors[0]},${colors[1]}`,
       taxon_id: `${life().id},${redOak().id}`,
       place_id: `${losangeles.id},${sandiego.id}`,
       project_id: `${project_cnc1.id},${project_cnc2.id}`,
       user_id: `${user1.id},${user2.id}`,
+      ident_user_id: user1.id,
       ...defaultParams,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(colors[1]);
-    expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
-    expect(store.selectedTaxa[1].observations_count).toBe(oakCount);
-    expect(store.selectedPlaces[0].observations_count).toBe(count * 0.6);
-    expect(store.selectedPlaces[1].observations_count).toBe(count * 0.4);
-    expect(store.selectedProjects[0].observations_count).toBe(count * 0.7);
-    expect(store.selectedProjects[1].observations_count).toBe(count * 0.3);
+    expect(store.selectedTaxa[0].observations_count).toBe(lifeCount * 0.75);
+    expect(store.selectedTaxa[1].observations_count).toBe(oakCount * 0.75);
+    expect(store.selectedPlaces[0].observations_count).toBe(count * 0.6 * 0.75);
+    expect(store.selectedPlaces[1].observations_count).toBe(count * 0.4 * 0.75);
+    expect(store.selectedProjects[0].observations_count).toBe(
+      count * 0.7 * 0.75,
+    );
+    expect(store.selectedProjects[1].observations_count).toBe(
+      count * 0.3 * 0.75,
+    );
+    expect(store.selectedUsers[0].observations_count).toBe(count * 0.45 * 0.75);
+    expect(store.selectedUsers[1].observations_count).toBe(4537.5);
   });
 
   test("loads and renders resources and bounding box based on url params", async () => {
@@ -736,7 +779,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectRefreshPlace(store, count);
     expectLifeOakTaxa(store);
     expectProjects(store, [count * 0.7, count * 0.3]);
-    expect_users(store);
+    expectUsers(store, [count * 0.45, count * 0.55]);
 
     let expectedParams: iNatApiParams = {
       colors: `${colors[0]},${colors[1]}`,

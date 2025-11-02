@@ -48,6 +48,9 @@ function formatDescription(inatApiParams: Params, type: string) {
   if (inatApiParams.user_id) {
     text += `, user_id ${inatApiParams.user_id}`;
   }
+  if (inatApiParams.ident_user_id) {
+    text += `, ident_user_id ${inatApiParams.ident_user_id}`;
+  }
   return text;
 }
 

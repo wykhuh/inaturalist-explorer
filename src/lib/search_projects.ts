@@ -19,6 +19,8 @@ import {
   updateCountForAllPlaces,
   updateTilesAndCountForAllTaxa,
   renderSelectedResources,
+  updateCountForAllUsers,
+  updateCountForAllUsersIdentifiers,
 } from "./search_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
 
@@ -135,15 +137,15 @@ export async function projectSelectedHandler(
     ),
   };
 
-  // get iNat map tiles for selected place
-  await updateTilesAndCountForAllTaxa(appStore);
-  await updateCountForAllPlaces(appStore);
-
   let paramsTemp = {
     ...appStore.inatApiParams,
     project_id: project.id.toString(),
   };
   await getObservationsCountForProject(project, appStore, paramsTemp);
+  await updateTilesAndCountForAllTaxa(appStore);
+  await updateCountForAllPlaces(appStore);
+  await updateCountForAllUsers(appStore);
+  await updateCountForAllUsersIdentifiers(appStore);
 
   // zoom to map to fit all selected places
   if (map) {
@@ -177,6 +179,8 @@ export async function removeProject(projectId: number, appStore: MapStore) {
   // remove existing taxa tiles, and refetch taxa tiles
   await updateTilesAndCountForAllTaxa(appStore);
   await updateCountForAllPlaces(appStore);
+  await updateCountForAllUsers(appStore);
+  await updateCountForAllUsersIdentifiers(appStore);
 
   if (appStore.map.map) {
     fitBoundsPlaces(appStore);

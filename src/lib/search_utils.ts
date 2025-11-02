@@ -5,6 +5,8 @@ import {
   getObservationsCountForTaxon,
   getObservationsCountForProject,
   removeOneTaxonFromMap,
+  getObservationsCountForUser,
+  getObservationsCountForUserIdentifier,
 } from "./data_utils";
 import { renderPlacesList } from "./search_places";
 import { renderProjectsList } from "./search_projects";
@@ -75,6 +77,25 @@ export async function updateTilesForAllTaxa(appStore: MapStore) {
     // get new iNat map tiles
     await fetchiNatMapDataForTaxon(taxon, appStore, paramsTemp);
   }
+}
+
+export async function updateCountForAllUsers(appStore: MapStore) {
+  for await (const user of appStore.selectedUsers) {
+    let paramsTemp = {
+      ...appStore.inatApiParams,
+      user_id: user.id.toString(),
+    };
+    await getObservationsCountForUser(user, appStore, paramsTemp);
+  }
+}
+
+export async function updateCountForAllUsersIdentifiers(appStore: MapStore) {
+  const user = appStore.selectedUsersIdentifiers;
+  let paramsTemp = {
+    ...appStore.inatApiParams,
+    ident_user_id: user.id,
+  };
+  await getObservationsCountForUserIdentifier(user, appStore, paramsTemp);
 }
 
 export function renderSelectedResources(

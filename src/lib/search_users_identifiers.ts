@@ -9,13 +9,17 @@ import { loggerUrl } from "../lib/logger.ts";
 
 import type { MapStore } from "../types/app";
 
-import { removeOneUserIdentifierFromStore } from "./data_utils.ts";
+import {
+  getObservationsCountForUserIdentifier,
+  removeOneUserIdentifierFromStore,
+} from "./data_utils.ts";
 
 import {
   updateTilesAndCountForAllTaxa,
   renderSelectedResources,
   updateCountForAllProjects,
   updateCountForAllPlaces,
+  updateCountForAllUsers,
 } from "./search_utils.ts";
 
 export function setupUserIdentifierSearch(selector: string) {
@@ -93,6 +97,7 @@ export async function userIdentifierSelectedHandler(
   _query: string,
   appStore: MapStore,
 ) {
+  let user = selection;
   // add project to store
   appStore.selectedUsersIdentifiers = selection;
   appStore.inatApiParams = {
@@ -100,10 +105,15 @@ export async function userIdentifierSelectedHandler(
     ident_user_id: selection.id,
   };
 
-  // get iNat map tiles for selected user
+  let paramsTemp = {
+    ...appStore.inatApiParams,
+    ident_user_id: user.id,
+  };
+  await getObservationsCountForUserIdentifier(user, appStore, paramsTemp);
   await updateTilesAndCountForAllTaxa(appStore);
   await updateCountForAllPlaces(appStore);
   await updateCountForAllProjects(appStore);
+  await updateCountForAllUsers(appStore);
 
   renderSelectedResources(appStore);
 }
@@ -131,6 +141,7 @@ export async function removeUserIdentifier(appStore: MapStore) {
   await updateTilesAndCountForAllTaxa(appStore);
   await updateCountForAllPlaces(appStore);
   await updateCountForAllProjects(appStore);
+  await updateCountForAllUsers(appStore);
 
   renderSelectedResources(appStore);
 }

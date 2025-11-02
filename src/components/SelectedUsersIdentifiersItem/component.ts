@@ -1,5 +1,6 @@
 import { setupComponent } from "../../lib/component_utils";
 import { removeUserIdentifier } from "../../lib/search_users_identifiers";
+import { pluralize } from "../../lib/utils";
 import type { NormalizediNatUser } from "../../types/app";
 
 class MyComponent extends HTMLElement {
@@ -28,6 +29,15 @@ class MyComponent extends HTMLElement {
         text += ` (${user.name})`;
       }
       nameEl.textContent = text;
+    }
+
+    let countEl = this.querySelector(".count");
+    if (countEl) {
+      countEl.textContent = pluralize(
+        user.observations_count,
+        "observation",
+        true,
+      );
     }
 
     let butttonEl = this.querySelector(".close-button");

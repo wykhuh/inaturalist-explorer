@@ -23,6 +23,8 @@ import {
   updateCountForAllPlaces,
   updateCountForAllProjects,
   renderSelectedResources,
+  updateCountForAllUsers,
+  updateCountForAllUsersIdentifiers,
 } from "./search_utils.ts";
 
 export function setupTaxaSearch(selector: string, appStore: MapStore) {
@@ -155,11 +157,12 @@ export async function taxonSelectedHandler(
     taxon_id: taxon.id.toString(),
     colors: color,
   };
-
   await fetchiNatMapDataForTaxon(taxon, appStore, paramsTemp);
   await getObservationsCountForTaxon(taxon, appStore, paramsTemp);
   await updateCountForAllPlaces(appStore);
   await updateCountForAllProjects(appStore);
+  await updateCountForAllUsers(appStore);
+  await updateCountForAllUsersIdentifiers(appStore);
 
   renderSelectedResources(appStore);
 }
@@ -186,6 +189,8 @@ export async function removeTaxon(taxonId: number, appStore: MapStore) {
   }
   await updateCountForAllPlaces(appStore);
   await updateCountForAllProjects(appStore);
+  await updateCountForAllUsers(appStore);
+  await updateCountForAllUsersIdentifiers(appStore);
 
   renderSelectedResources(appStore);
 }

@@ -58,6 +58,8 @@ import {
   updateCountForAllPlaces,
   updateCountForAllProjects,
   updateCountForAllTaxa,
+  updateCountForAllUsers,
+  updateCountForAllUsersIdentifiers,
   updateTilesForAllTaxa,
 } from "./search_utils.ts";
 import {
@@ -198,6 +200,8 @@ export async function initPopulateStore(
   await updateCountForAllTaxa(appStore);
   await updateCountForAllPlaces(appStore);
   await updateCountForAllProjects(appStore);
+  await updateCountForAllUsers(appStore);
+  await updateCountForAllUsersIdentifiers(appStore);
 
   renderSelectedResources(appStore, false);
 

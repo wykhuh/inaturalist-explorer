@@ -73,15 +73,19 @@ import {
   gridLabel_oak_la_sd_project1_user1,
   gridLabel_oak_la_sd_projects_user1,
   gridLabel_life_la_sd_projects_user1,
-  addResources,
   allTaxa,
   defaultParams,
   defaultQuery,
+  gridLabel_life_la,
+  gridLabel_life_la_project1,
+  gridLabel_life_places_projects_users,
+  gridLabel_oaks_places_projects_users,
 } from "../test_helpers.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
 import { decodeAppUrl } from "../../lib/utils.ts";
 import { initPopulateStore, initRenderMap } from "../../lib/init_app.ts";
 import { mapStore } from "../../lib/store.ts";
+import { userIdentifierSelectedHandler } from "../../lib/search_users_identifiers.ts";
 
 beforeEach(() => {
   const { JSDOM } = jsdom;
@@ -498,7 +502,7 @@ describe("userSelectedHandler", () => {
     ]);
     expectNoPlaces(store);
     expectNoRefresh(store);
-    expectAllTaxaRecord(store);
+    expectAllTaxaRecord(store, allTaxaCount * 0.45);
     expectUser1(store);
     let expectedParams = {
       colors: iNatOrange,
@@ -508,8 +512,8 @@ describe("userSelectedHandler", () => {
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
     expect(window.location.search).toBe(`?user_id=${user1.id}&${defaultQuery}`);
-    expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
-    expect(store.selectedUsers[0].observations_count).toBe(undefined);
+    expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount * 0.45);
+    expect(store.selectedUsers[0].observations_count).toBe(allTaxaCount * 0.45);
   });
 
   test("add user; add user", async () => {
@@ -528,7 +532,7 @@ describe("userSelectedHandler", () => {
     ]);
     expectNoPlaces(store);
     expectNoRefresh(store);
-    expectAllTaxaRecord(store);
+    expectAllTaxaRecord(store, allTaxaCount * 0.45);
     expectUser1(store);
     let expectedParams = {
       colors: iNatOrange,
@@ -560,8 +564,8 @@ describe("userSelectedHandler", () => {
       `?user_id=${user1.id},${user2.id}&${defaultQuery}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
-    expect(store.selectedUsers[0].observations_count).toBe(undefined);
-    expect(store.selectedUsers[1].observations_count).toBe(undefined);
+    expect(store.selectedUsers[0].observations_count).toBe(allTaxaCount * 0.45);
+    expect(store.selectedUsers[1].observations_count).toBe(allTaxaCount * 0.55);
   });
 });
 
@@ -750,7 +754,7 @@ describe("combos", () => {
       basemapLabel_osm,
       gridLabel_allTaxaRecord_user1,
     ]);
-    expectAllTaxaRecord(store);
+    expectAllTaxaRecord(store, allTaxaCount * 0.45);
     expectUser1(store);
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: allTaxa.id.toString(),
@@ -759,7 +763,7 @@ describe("combos", () => {
       ...defaultParams,
     });
     expect(window.location.search).toBe(`?user_id=${user1.id}&${defaultQuery}`);
-    expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
+    expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount * 0.45);
 
     await refreshBoundingBox(store);
 
@@ -768,9 +772,9 @@ describe("combos", () => {
       refreshBBoxLabel,
       gridLabel_allTaxaRecord_user1,
     ]);
-    expectAllTaxaRecord(store);
+    expectAllTaxaRecord(store, allTaxaCount * 0.45);
     expectUser1(store);
-    expectRefreshPlace(store, allTaxaCount);
+    expectRefreshPlace(store, allTaxaCount * 0.45);
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
@@ -786,8 +790,10 @@ describe("combos", () => {
       `?user_id=${user1.id}&${defaultQuery}` +
         `&nelat=0&nelng=0&swlat=0&swlng=0`,
     );
-    expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
-    expect(store.selectedPlaces[0].observations_count).toBe(allTaxaCount);
+    expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount * 0.45);
+    expect(store.selectedPlaces[0].observations_count).toBe(
+      allTaxaCount * 0.45,
+    );
   });
 
   test(`add place; refresh map; add place`, async () => {
@@ -872,7 +878,7 @@ describe("combos", () => {
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaSDCount);
   });
 
-  test.skip("add taxon x 2; add place x 2; add project x 2; add user x 2", async () => {
+  test.only("add taxon x 2; add place x 2; add project x 2; add user x 2", async () => {
     let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
@@ -880,13 +886,109 @@ describe("combos", () => {
     await initPopulateStore(store, decodeAppUrl(""));
     await initRenderMap(store);
 
-    await addResources(store);
+    await taxonSelectedHandler(lifeBasic, "life", store);
+    let count1 = life().observations_count;
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
+    ]);
+    expectLifeTaxa(store, count1);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id.toString(),
+      colors: colors[0],
+      verifiable: true,
+      spam: false,
+      locale: "en",
+    });
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false&locale=en`,
+    );
+
+    await placeSelectedHandler(losangeles, "los", store);
+    let count2 = count1 * 0.6;
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      placeLabel_la,
+      gridLabel_life_la,
+    ]);
+    expectLifeTaxa(store, count2);
+    expectLosAngelesPlace(store, count2);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id.toString(),
+      colors: colors[0],
+      place_id: losangeles.id.toString(),
+      verifiable: true,
+      spam: false,
+      locale: "en",
+    });
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&place_id=${losangeles.id}&colors=${colorsEncoded[0]}` +
+        `&verifiable=true&spam=false&locale=en`,
+    );
+
+    await projectSelectedHandler(project_cnc1, "city", store);
+    let count3 = count2 * 0.7;
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      placeLabel_la,
+      gridLabel_life_la_project1,
+    ]);
+    expectLifeTaxa(store, count3);
+    expectLosAngelesPlace(store, count3);
+    expectProject1(store, count3);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id.toString(),
+      colors: colors[0],
+      place_id: losangeles.id.toString(),
+      verifiable: true,
+      spam: false,
+      project_id: project_cnc1.id.toString(),
+      locale: "en",
+    });
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&place_id=${losangeles.id}&project_id=${project_cnc1.id}` +
+        `&colors=${colorsEncoded[0]}&verifiable=true&spam=false&locale=en`,
+    );
+
+    await userSelectedHandler(user1, "user", store);
+    let count4 = count3 * 0.45;
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      placeLabel_la,
+      gridLabel_life_la_project1_user1,
+    ]);
+    expectLifeTaxa(store, count4);
+    expectLosAngelesPlace(store, count4);
+    expectProject1(store, count4);
+    expectUser1(store, count4);
+    expect(store.inatApiParams).toStrictEqual({
+      taxon_id: life().id.toString(),
+      colors: colors[0],
+      place_id: losangeles.id.toString(),
+      verifiable: true,
+      spam: false,
+      project_id: project_cnc1.id.toString(),
+      user_id: user1.id.toString(),
+      locale: "en",
+    });
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id}&place_id=${losangeles.id}&project_id=${project_cnc1.id}` +
+        `&user_id=${user1.id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false&locale=en`,
+    );
 
     await taxonSelectedHandler(redOakBasic, "red", store);
-
     let oakCount = redOak().observations_count;
     let lifeCount = life().observations_count;
-    let count = lifeCount + oakCount;
+    let factor5 = 0.6 * 0.7 * 0.45;
+    let count5 = (oakCount + lifeCount) * factor5;
+
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
@@ -894,17 +996,17 @@ describe("combos", () => {
       gridLabel_life_la_project1_user1,
       gridLabel_oak_la_project1_user1,
     ]);
-    expectLifeOakTaxa(store, [lifeCount * 0.6, oakCount * 0.6]);
-    expectLosAngelesPlace(store, count * 0.6);
-    expectProject1(store);
-    expectUser1(store);
+    expectLifeOakTaxa(store, [lifeCount * factor5, oakCount * factor5]);
+    expectLosAngelesPlace(store, count5);
+    expectProject1(store, count5);
+    expectUser1(store, count5);
     expect(store.inatApiParams).toStrictEqual({
+      ...defaultParams,
       taxon_id: `${life().id},${redOak().id}`,
       colors: `${colors[0]},${colors[1]}`,
       place_id: `${losangeles.id}`,
       project_id: `${project_cnc1.id}`,
       user_id: `${user1.id}`,
-      ...defaultParams,
     });
     expect(window.location.search).toBe(
       `?taxon_id=${life().id},${redOak().id}` +
@@ -913,12 +1015,10 @@ describe("combos", () => {
         `&user_id=${user1.id}` +
         `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&${defaultQuery}`,
     );
-    expect(store.selectedTaxa[0].observations_count).toBe(lifeCount * 0.6);
-    expect(store.selectedTaxa[1].observations_count).toBe(oakCount * 0.6);
-    expect(store.selectedPlaces[0].observations_count).toBe(count * 0.6);
-    expect(store.selectedProjects[0].observations_count).toBe(count * 0.6); // HACK
 
     await placeSelectedHandler(sandiego, "san", store);
+    let factor6 = 0.7 * 0.45;
+    let count6 = (oakCount + lifeCount) * factor6;
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -929,17 +1029,17 @@ describe("combos", () => {
       gridLabel_life_la_sd_project1_user1,
       gridLabel_oak_la_sd_project1_user1,
     ]);
-    expectLifeOakTaxa(store, [lifeCount * 0.7, oakCount * 0.7]);
-    expect_LA_SD_Place(store, [count * 0.6, count * 0.4]);
+    expectLifeOakTaxa(store, [lifeCount * factor6, oakCount * factor6]);
+    expect_LA_SD_Place(store, [count6 * 0.6, count6 * 0.4]);
     expectProject1(store);
     expectUser1(store);
     expect(store.inatApiParams).toStrictEqual({
+      ...defaultParams,
       taxon_id: `${life().id},${redOak().id}`,
       colors: `${colors[0]},${colors[1]}`,
       place_id: `${losangeles.id},${sandiego.id}`,
       project_id: `${project_cnc1.id}`,
       user_id: `${user1.id}`,
-      ...defaultParams,
     });
     expect(window.location.search).toBe(
       `?taxon_id=${life().id},${redOak().id}` +
@@ -948,13 +1048,12 @@ describe("combos", () => {
         `&user_id=${user1.id}` +
         `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&${defaultQuery}`,
     );
-    expect(store.selectedTaxa[0].observations_count).toBe(lifeCount * 0.7);
-    expect(store.selectedTaxa[1].observations_count).toBe(oakCount * 0.7);
-    expect(store.selectedPlaces[0].observations_count).toBe(count * 0.6);
-    expect(store.selectedPlaces[1].observations_count).toBe(count * 0.4);
-    expect(store.selectedProjects[0].observations_count).toBe(count * 0.6); // HACK
+    expect(store.selectedProjects[0].observations_count).toBeCloseTo(count6);
+    expect(store.selectedUsers[0].observations_count).toBeCloseTo(count6);
 
     await projectSelectedHandler(project_cnc2, "city", store);
+    let factor7 = 0.45;
+    let count7 = (oakCount + lifeCount) * factor7;
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -965,10 +1064,10 @@ describe("combos", () => {
       gridLabel_life_la_sd_projects_user1,
       gridLabel_oak_la_sd_projects_user1,
     ]);
-    expectLifeOakTaxa(store);
-    expect_LA_SD_Place(store, [count * 0.6, count * 0.4]);
+    expectLifeOakTaxa(store, [lifeCount * factor7, oakCount * factor7]);
+    expect_LA_SD_Place(store, [count7 * 0.6, count7 * 0.4]);
     expectProjects(store);
-    expectUser1(store);
+    expectUser1(store, count7);
     expect(store.inatApiParams).toStrictEqual({
       taxon_id: `${life().id},${redOak().id}`,
       colors: `${colors[0]},${colors[1]}`,
@@ -984,10 +1083,15 @@ describe("combos", () => {
         `&user_id=${user1.id}` +
         `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&${defaultQuery}`,
     );
-    expect(store.selectedProjects[0].observations_count).toBe(count * 0.6); // HACK
-    expect(store.selectedProjects[1].observations_count).toBe(count * 0.3); // HACK
+    expect(store.selectedProjects[0].observations_count).toBeCloseTo(
+      count7 * 0.7,
+    );
+    expect(store.selectedProjects[1].observations_count).toBeCloseTo(
+      count7 * 0.3,
+    );
 
     await userSelectedHandler(user2, "user", store);
+    let count8 = lifeCount + oakCount;
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -995,13 +1099,13 @@ describe("combos", () => {
       placeLabel_la,
       placeLabel_sd,
       placeLabel_sd,
-      gridLabel_life_places_resources,
-      gridLabel_oaks_places_resources,
+      gridLabel_life_places_projects_users,
+      gridLabel_oaks_places_projects_users,
     ]);
-    expectLifeOakTaxa(store);
-    expect_LA_SD_Place(store, [count * 0.6, count * 0.4]);
-    expectProjects(store);
-    expectUsers(store);
+    expectLifeOakTaxa(store, [lifeCount, oakCount]);
+    expect_LA_SD_Place(store, [count8 * 0.6, count8 * 0.4]);
+    expectProjects(store, [count8 * 0.7, count8 * 0.3]);
+    expectUsers(store, [count8 * 0.45, count8 * 0.55]);
     let params8 = {
       taxon_id: `${life().id},${redOak().id}`,
       colors: `${colors[0]},${colors[1]}`,
@@ -1018,12 +1122,48 @@ describe("combos", () => {
         `&user_id=${user1.id},${user2.id}` +
         `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&${defaultQuery}`,
     );
-    expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
-    expect(store.selectedTaxa[1].observations_count).toBe(oakCount);
-    expect(store.selectedPlaces[0].observations_count).toBe(count * 0.6);
-    expect(store.selectedPlaces[1].observations_count).toBe(count * 0.4);
-    expect(store.selectedProjects[0].observations_count).toBe(count * 0.6); // HACK
-    expect(store.selectedProjects[1].observations_count).toBe(count * 0.3); // HACK
+
+    await userIdentifierSelectedHandler(user1, "user", store);
+    let factor9 = 0.75;
+    let count9 = (lifeCount + oakCount) * factor9;
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      placeLabel_la,
+      placeLabel_sd,
+      placeLabel_sd,
+      gridLabel_life_places_resources,
+      gridLabel_oaks_places_resources,
+    ]);
+    expectLifeOakTaxa(store, [lifeCount * factor9, oakCount * factor9]);
+    expect_LA_SD_Place(store, [count9 * 0.6, count9 * 0.4]);
+    expectProjects(store);
+    expectUsers(store, [count9 * 0.45, count9 * 0.55]);
+    let params9 = {
+      ...defaultParams,
+      taxon_id: `${life().id},${redOak().id}`,
+      colors: `${colors[0]},${colors[1]}`,
+      place_id: `${losangeles.id},${sandiego.id}`,
+      project_id: `${project_cnc1.id},${project_cnc2.id}`,
+      user_id: `${user1.id},${user2.id}`,
+      ident_user_id: user1.id,
+    };
+    expect(store.inatApiParams).toStrictEqual(params9);
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id},${redOak().id}` +
+        `&place_id=${losangeles.id},${sandiego.id}` +
+        `&project_id=${project_cnc1.id},${project_cnc2.id}` +
+        `&user_id=${user1.id},${user2.id}` +
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&${defaultQuery}` +
+        `&ident_user_id=${user1.id}`,
+    );
+    expect(store.selectedProjects[0].observations_count).toBeCloseTo(
+      count9 * 0.7,
+    );
+    expect(store.selectedProjects[1].observations_count).toBeCloseTo(
+      count9 * 0.3,
+    );
   });
 });
 
