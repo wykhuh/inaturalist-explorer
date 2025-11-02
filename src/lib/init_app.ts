@@ -60,6 +60,10 @@ import {
   updateCountForAllTaxa,
   updateTilesForAllTaxa,
 } from "./search_utils.ts";
+import {
+  setupUserIdentifierSearch,
+  userIdentifierSelectedHandler,
+} from "./search_users_identifiers.ts";
 
 // populate store with basic view data from app url.
 // used to set view in observation header and subview in obdervation view
@@ -154,6 +158,19 @@ export async function initPopulateStore(
         continue;
       }
       processUserData(data, appStore);
+    }
+  }
+  loggerStore(
+    "++ initPopulateStore selectedUsers",
+    appStore.inatApiParams,
+    appStore.selectedUsers,
+  );
+
+  // user idenifier data
+  if (urlStore.selectedUsersIdentifiers?.id) {
+    let data = await getUserById(urlStore.selectedUsersIdentifiers.id);
+    if (data) {
+      processUserIdentifierData(data, appStore);
     }
   }
   loggerStore(
@@ -381,6 +398,16 @@ function processUserData(userData: UserResult, appStore: MapStore) {
   );
 }
 
+function processUserIdentifierData(userData: UserResult, appStore: MapStore) {
+  appStore.selectedUsersIdentifiers = {
+    id: userData.id,
+    name: userData.name,
+    login: userData.login,
+  };
+
+  appStore.inatApiParams.ident_user_id = userData.id;
+}
+
 export function searchSetup(appStore: MapStore) {
   let searchSelector = "#inatAutocomplete";
   let searchInputEl = document.querySelector(
@@ -402,6 +429,10 @@ export function searchSetup(appStore: MapStore) {
     users: {
       setup: setupUserSearch,
       selectedHandler: userSelectedHandler,
+    },
+    users_identifiers: {
+      setup: setupUserIdentifierSearch,
+      selectedHandler: userIdentifierSelectedHandler,
     },
     taxa: {
       setup: setupTaxaSearch,
@@ -453,6 +484,9 @@ export function searchHeadingSetup() {
   let usersHeading = document.querySelector(
     "#home #sidebar-menu .users-heading",
   ) as HTMLElement;
+  let usersIdentifiersHeading = document.querySelector(
+    "#home #sidebar-menu .users-identifiers-heading",
+  ) as HTMLElement;
 
   window.addEventListener("selectedPlacesChange", () => {
     if (!placesHeading) return;
@@ -468,5 +502,10 @@ export function searchHeadingSetup() {
     if (!usersHeading) return;
     let resource = window.app.store.selectedUsers;
     usersHeading.hidden = resource.length === 0 ? true : false;
+  });
+  window.addEventListener("selectedUsersIdentifiersChange", () => {
+    if (!usersIdentifiersHeading) return;
+    let resource = window.app.store.selectedUsersIdentifiers;
+    usersIdentifiersHeading.hidden = resource.id ? false : true;
   });
 }

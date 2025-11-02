@@ -10,6 +10,7 @@ import { renderPlacesList } from "./search_places";
 import { renderProjectsList } from "./search_projects";
 import { renderTaxaList } from "./search_taxa";
 import { renderUsersList } from "./search_users";
+import { renderUsersIdentifiersList } from "./search_users_identifiers";
 import { updateAppUrl } from "./utils";
 
 export async function updateTilesAndCountForAllTaxa(appStore: MapStore) {
@@ -84,6 +85,7 @@ export function renderSelectedResources(
   renderPlacesList(appStore);
   renderProjectsList(appStore);
   renderUsersList(appStore);
+  renderUsersIdentifiersList(appStore);
 
   if (doSideEffects) {
     updateAppUrl(window.location, appStore);

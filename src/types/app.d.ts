@@ -23,6 +23,7 @@ export interface MapStore {
   placesMapLayers: { [index: string]: CustomGeoJSON[] };
   projectsMapLayers?: { [index: string]: CustomGeoJSON[] };
   selectedUsers: NormalizediNatUser[];
+  selectedUsersIdentifiers: NormalizediNatUser;
   selectedProjects: NormalizediNatProject[];
   inatApiParams: iNatApiParams;
   inatApiParamsTemp?: iNatApiParams;
@@ -133,6 +134,7 @@ interface iNatApiParams extends iNatApiFilterableParams {
   taxon_id?: string; // comma-seperated string
   project_id?: string; // comma-seperated string
   user_id?: string; // comma-seperated string
+  ident_user_id?: number;
   page?: number;
   order?: string;
   order_by?: string;
@@ -335,6 +337,7 @@ type SearchOptions = {
   places: SearchOption;
   projects: SearchOption;
   users: SearchOption;
+  users_identifiers: SearchOption;
   taxa: SearchOption;
 };
 

@@ -1001,7 +1001,8 @@
   ul#selected-species-list,
   ul#selected-places-list,
   ul#selected-projects-list,
-  ul#selected-users-list {
+  ul#selected-users-list,
+  ul#selected-users-identifiers-list {
     padding: 0;
     list-style: none;
 

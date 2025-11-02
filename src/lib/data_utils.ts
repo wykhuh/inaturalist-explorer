@@ -451,6 +451,11 @@ export function removeOneUserFromStore(appStore: MapStore, userId: number) {
   removeIdfromInatApiParams(appStore, "user_id", userId);
 }
 
+export function removeOneUserIdentifierFromStore(appStore: MapStore) {
+  appStore.selectedUsersIdentifiers = {} as NormalizediNatUser;
+  delete appStore.inatApiParams.ident_user_id;
+}
+
 // ================
 // misc
 // ================

@@ -287,6 +287,13 @@ export function decodeAppUrl(searchParams: string) {
     }
   }
 
+  // convert ident_user_id into basic selectedUserIdentifier with id
+  if ("ident_user_id" in urlParams) {
+    let id = urlParams.ident_user_id;
+
+    store.selectedUsersIdentifiers = { id: Number(id) } as any;
+  }
+
   if (urlParams.view && validViews.includes(urlParams.view)) {
     store.currentView = urlParams.view as ObservationViews;
   } else {

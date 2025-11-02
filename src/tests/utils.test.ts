@@ -554,6 +554,30 @@ describe("decodeAppUrl resources", () => {
     expect(result).toStrictEqual(expected);
   });
 
+  test("returns object with user identifier data if user_id is present", () => {
+    let searchParams = "?ident_user_id=1&spam=false&verifiable=true";
+
+    let expected = {
+      inatApiParams: {
+        verifiable: true,
+        spam: false,
+      },
+      selectedTaxa: [],
+      currentView: "observations",
+      viewMetadata: {
+        observations: {},
+        identifiers: {},
+        observers: {},
+        species: {},
+      },
+      selectedUsersIdentifiers: { id: 1 },
+    };
+
+    let result = decodeAppUrl(searchParams);
+
+    expect(result).toStrictEqual(expected);
+  });
+
   test("returns object with bounding box if nelat is present", () => {
     let searchParams = "?place_id=0&nelat=0&nelng=-1&swlat=2&swlng=-3";
 

@@ -1,4 +1,8 @@
-import type { MapStore, MapStoreKeys } from "../types/app.d.ts";
+import type {
+  MapStore,
+  MapStoreKeys,
+  NormalizediNatUser,
+} from "../types/app.d.ts";
 import { displayUserData } from "./dev_utils.ts";
 import { loggerStore } from "./logger.ts";
 
@@ -9,6 +13,7 @@ export const mapStore: MapStore = {
   placesMapLayers: {},
   selectedProjects: [],
   selectedUsers: [],
+  selectedUsersIdentifiers: {} as NormalizediNatUser,
   inatApiParams: { verifiable: true, spam: false, locale: "en" },
   color: "",
   map: { map: null, layerControl: null },
@@ -44,6 +49,8 @@ const proxiedStore = new Proxy(structuredClone(mapStore), {
       window.dispatchEvent(new Event("selectedTaxaChange"));
     } else if (property === "selectedUsers") {
       window.dispatchEvent(new Event("selectedUsersChange"));
+    } else if (property === "selectedUsersIdentifiers") {
+      window.dispatchEvent(new Event("selectedUsersIdentifiersChange"));
     }
 
     return true;
