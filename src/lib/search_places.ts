@@ -22,6 +22,7 @@ import { placeTypes } from "../data/inat_data.ts";
 import {
   updateTilesAndCountForAllTaxa,
   renderSelectedResources,
+  updateCountForAllProjects,
 } from "./search_utils.ts";
 
 export function setupPlacesSearch(selector: string) {
@@ -161,6 +162,7 @@ export async function placeSelectedHandler(
 
   // get iNat map tiles for selected place
   await updateTilesAndCountForAllTaxa(appStore);
+  await updateCountForAllProjects(appStore);
 
   let paramsTemp = {
     ...appStore.inatApiParams,
@@ -201,6 +203,7 @@ export async function removePlace(placeId: number, appStore: MapStore) {
 
   // remove existing taxa tiles, and refetch taxa tiles
   await updateTilesAndCountForAllTaxa(appStore);
+  await updateCountForAllProjects(appStore);
 
   renderSelectedResources(appStore);
 }

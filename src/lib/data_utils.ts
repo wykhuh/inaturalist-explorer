@@ -35,6 +35,7 @@ import { person2 } from "../assets/icons.ts";
 import {
   updateTilesAndCountForAllTaxa,
   renderSelectedResources,
+  updateCountForAllProjects,
 } from "./search_utils.ts";
 
 // called when user clicks refresh map button
@@ -71,6 +72,7 @@ export async function refreshBoundingBox(appStore: MapStore) {
   };
 
   await updateTilesAndCountForAllTaxa(appStore);
+  await updateCountForAllProjects(appStore);
 
   let paramsTemp = {
     ...appStore.inatApiParams,

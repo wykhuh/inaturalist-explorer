@@ -17,6 +17,8 @@ import {
 import {
   updateTilesAndCountForAllTaxa,
   renderSelectedResources,
+  updateCountForAllPlaces,
+  updateCountForAllProjects,
 } from "./search_utils.ts";
 
 export function setupUserSearch(selector: string) {
@@ -104,6 +106,8 @@ export async function userSelectedHandler(
 
   // get iNat map tiles for selected user
   await updateTilesAndCountForAllTaxa(appStore);
+  await updateCountForAllPlaces(appStore);
+  await updateCountForAllProjects(appStore);
 
   renderSelectedResources(appStore);
 }
@@ -129,6 +133,8 @@ export async function removeUser(userId: number, appStore: MapStore) {
 
   // remove existing taxa tiles, and refetch taxa tiles
   await updateTilesAndCountForAllTaxa(appStore);
+  await updateCountForAllPlaces(appStore);
+  await updateCountForAllProjects(appStore);
 
   renderSelectedResources(appStore);
 }

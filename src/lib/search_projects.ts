@@ -17,7 +17,6 @@ import {
 } from "./data_utils.ts";
 import {
   updateCountForAllPlaces,
-  updateCountForAllProjects,
   updateTilesAndCountForAllTaxa,
   renderSelectedResources,
 } from "./search_utils.ts";
@@ -178,7 +177,6 @@ export async function removeProject(projectId: number, appStore: MapStore) {
   // remove existing taxa tiles, and refetch taxa tiles
   await updateTilesAndCountForAllTaxa(appStore);
   await updateCountForAllPlaces(appStore);
-  await updateCountForAllProjects(appStore);
 
   if (appStore.map.map) {
     fitBoundsPlaces(appStore);
