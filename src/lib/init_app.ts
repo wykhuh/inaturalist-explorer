@@ -248,10 +248,10 @@ export async function initRenderMap(appStore: MapStore) {
     appStore.selectedTaxa.length === 0
   ) {
     await addAllTaxaRecordToMapAndStore(appStore);
+  } else {
+    // add taxa tiles for taxon id in url
+    await updateTilesForAllTaxa(appStore);
   }
-
-  // add iNat taxa layers
-  await updateTilesForAllTaxa(appStore);
 
   // return map to previous position when switching views
   if (appStore.map.bounds) {
