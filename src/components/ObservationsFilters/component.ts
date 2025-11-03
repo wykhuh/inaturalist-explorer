@@ -6,7 +6,7 @@ import {
   renderLicenseSelect,
   renderRankSelect,
   renderYearsSelect,
-  renderFiltersList,
+  renderSelectedFiltersList,
 } from "./utils";
 
 class MyComponent extends HTMLElement {
@@ -40,7 +40,7 @@ class MyComponent extends HTMLElement {
     let formEl = this.querySelector("#filters-form") as HTMLFormElement;
     if (formEl) {
       const data = new FormData(formEl);
-      renderFiltersList(data);
+      renderSelectedFiltersList(data);
     }
 
     // close dialog if click ouside of dialog

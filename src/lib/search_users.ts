@@ -1,20 +1,15 @@
 import autoComplete from "@tarekraafat/autocomplete.js";
 
 import type { AutoCompleteEvent, NormalizediNatUser } from "../types/app.d.ts";
-
 import { autocomplete_users_api } from "../lib/inat_api.ts";
 import type { iNatUsersAPI } from "../types/inat_api";
-
 import { loggerUrl } from "../lib/logger.ts";
-
 import type { MapStore } from "../types/app";
-
 import {
   addValueToCommaSeparatedString,
   getObservationsCountForUser,
   removeOneUserFromStore,
 } from "./data_utils.ts";
-
 import {
   updateTilesAndCountForAllTaxa,
   renderSelectedResources,

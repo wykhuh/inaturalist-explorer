@@ -62,7 +62,7 @@ export function processFiltersForm(data: FormData): {
     } else if (value === "false") {
       values[key] = false;
     } else if (value !== "") {
-      values[key] = value as string;
+      values[key] = value.toString().trim();
     } else if (value === "") {
       delete values[key];
     }
@@ -124,7 +124,7 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
   await updateCountForAllUsersIdentifiers(appStore);
 
   // update UI
-  renderFiltersList(data);
+  renderSelectedFiltersList(data);
   renderSelectedResources(appStore);
 }
 
@@ -343,7 +343,7 @@ export function renderYearsSelect() {
   }
 }
 
-export function renderFiltersList(data: FormData) {
+export function renderSelectedFiltersList(data: FormData) {
   let listEl = document.querySelector(".filters-list");
   if (!listEl) return;
 

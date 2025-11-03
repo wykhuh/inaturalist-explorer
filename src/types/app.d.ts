@@ -121,6 +121,13 @@ export type MapStoreSelectedResourcesKeys =
   | "selectedTaxa"
   | "selectedPlaces"
   | "selectedUsers"
+  | "selectedProjects"
+  | "selectedUsersIdentifiers";
+
+export type MapStoreSelectedResourcesArrayKeys =
+  | "selectedTaxa"
+  | "selectedPlaces"
+  | "selectedUsers"
   | "selectedProjects";
 
 interface iNatApiParams extends iNatApiFilterableParams {

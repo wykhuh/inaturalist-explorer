@@ -16,20 +16,18 @@ import "./components/ObservationsMenu/component.ts";
 import "./components/SettingsMenu/component.ts";
 
 import mapStore from "./lib/store.ts";
-import {
-  initPopulateStore,
-  searchHeadingSetup,
-  searchSetup,
-} from "./lib/init_app.ts";
+import { initPopulateStore } from "./lib/init_app.ts";
+
 import { decodeAppUrl } from "./lib/utils.ts";
 import { viewAndTemplateObject } from "./lib/data_utils.ts";
+import { searchHeadingSetup, multisearchSetup } from "./lib/search_utils.ts";
 
 window.app = { store: mapStore };
 
 let viewContainerEl = document.querySelector("#view-container");
 if (viewContainerEl) {
   let urlData = decodeAppUrl(window.location.search);
-  searchSetup(window.app.store);
+  multisearchSetup(window.app.store);
   searchHeadingSetup();
   await initPopulateStore(window.app.store, urlData);
 

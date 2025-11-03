@@ -10,9 +10,9 @@ import type {
   CustomGeoJSON,
   iNatApiParamsKeys,
   NormalizediNatPlace,
-  MapStoreSelectedResourcesKeys,
   NormalizediNatProject,
   NormalizediNatUser,
+  MapStoreSelectedResourcesArrayKeys,
 } from "../types/app";
 import {
   addOverlayToMap,
@@ -402,7 +402,7 @@ async function getObservationsCountForResource(
     | NormalizediNatTaxon
     | NormalizediNatProject
     | NormalizediNatUser,
-  resourceName: MapStoreSelectedResourcesKeys,
+  resourceName: MapStoreSelectedResourcesArrayKeys,
   appStore: MapStore,
   paramsTemp: iNatApiParams,
 ) {
@@ -420,7 +420,7 @@ export function updateSelectedResource(
     | NormalizediNatTaxon
     | NormalizediNatProject
     | NormalizediNatUser,
-  resourceName: MapStoreSelectedResourcesKeys,
+  resourceName: MapStoreSelectedResourcesArrayKeys,
   appStore: MapStore,
 ) {
   let temp = [];

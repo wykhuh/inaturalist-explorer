@@ -1,19 +1,14 @@
 import autoComplete from "@tarekraafat/autocomplete.js";
 
 import type { AutoCompleteEvent, NormalizediNatUser } from "../types/app.d.ts";
-
 import { autocomplete_users_api } from "../lib/inat_api.ts";
 import type { iNatUsersAPI } from "../types/inat_api";
-
 import { loggerUrl } from "../lib/logger.ts";
-
 import type { MapStore } from "../types/app";
-
 import {
   getObservationsCountForUserIdentifier,
   removeOneUserIdentifierFromStore,
 } from "./data_utils.ts";
-
 import {
   updateTilesAndCountForAllTaxa,
   renderSelectedResources,
@@ -21,6 +16,10 @@ import {
   updateCountForAllPlaces,
   updateCountForAllUsers,
 } from "./search_utils.ts";
+import {
+  processAutocompleteUser,
+  renderAutocompleteUser,
+} from "./search_users.ts";
 
 export function setupUserIdentifierSearch(selector: string) {
   const autoCompleteUsersJS = new autoComplete({
@@ -29,7 +28,7 @@ export function setupUserIdentifierSearch(selector: string) {
     placeHolder: "Enter username",
     threshold: 2,
     searchEngine: (_query: string, record: NormalizediNatUser) => {
-      return renderAutocompleteUserIdentifier(record);
+      return renderAutocompleteUser(record);
     },
     data: {
       src: async (query: string) => {
@@ -38,7 +37,7 @@ export function setupUserIdentifierSearch(selector: string) {
           loggerUrl(url);
           let res = await fetch(url);
           let data = (await res.json()) as iNatUsersAPI;
-          return processAutocompleteUserIdentifier(data);
+          return processAutocompleteUser(data);
         } catch (error) {
           console.error("setupUserSearch ERROR:", error);
         }
@@ -58,37 +57,6 @@ export function setupUserIdentifierSearch(selector: string) {
   });
 
   return autoCompleteUsersJS;
-}
-
-export function processAutocompleteUserIdentifier(
-  data: iNatUsersAPI,
-): NormalizediNatUser[] {
-  return data.results.map((item) => {
-    return {
-      id: item.id,
-      login: item.login,
-      name: item.name,
-    };
-  });
-}
-
-export function renderAutocompleteUserIdentifier(
-  item: NormalizediNatUser,
-): string {
-  let html = `
-  <div class="users-ac-option" data-testid="users-ac-option">
-    <div class="user-name">
-    ${item.login}`;
-
-  if (item.name) {
-    html += ` (${item.name})`;
-  }
-
-  html += `
-    </div>
-  </div>`;
-
-  return html;
 }
 
 // called by autocomplete search when an user option is selected
