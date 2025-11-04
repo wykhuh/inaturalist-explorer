@@ -92,6 +92,7 @@ export const iNatApiFilterableNames = [
   "sound_license",
   "sounds",
   "threatened",
+  "unobserved_by_user_id",
   "verifiable",
   "year",
 
@@ -143,7 +144,6 @@ export const iNatApiFilterableNames = [
   "created_d1",
   "created_d2",
   "created_on",
-  "unobserved_by_user_id",
   "apply_project_rules_for",
   "cs",
   "csa",

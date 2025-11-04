@@ -69,7 +69,7 @@ export function createMockServer() {
       return HttpResponse.json(cnc2PlaceApi);
     }),
     http.get("https://api.inaturalist.org/v2/observations*", async (_args) => {
-      let url = _args.request.url;
+      let url = _args.request.url.split("&fields=")[0];
       loggerUrl("request.url", url);
       let count = -999;
 
@@ -87,24 +87,31 @@ export function createMockServer() {
         count = allTaxa.observations_count;
       }
 
-      if (url.includes(`place_id=${losangeles.id}&`)) {
+      if (url.includes(`&place_id=${losangeles.id}%2C${sandiego.id}`)) {
+      } else if (url.includes(`&place_id=${losangeles.id}`)) {
         count = count * 0.6;
-      } else if (url.includes(`place_id=${sandiego.id}&`)) {
+      } else if (url.includes(`&place_id=${sandiego.id}`)) {
         count = count * 0.4;
       }
-      if (url.includes(`project_id=${project_cnc1.id}&`)) {
+
+      if (url.includes(`&project_id=${project_cnc1.id}%2C${project_cnc2.id}`)) {
+      } else if (url.includes(`&project_id=${project_cnc1.id}`)) {
         count = count * 0.7;
-      } else if (url.includes(`project_id=${project_cnc2.id}&`)) {
+      } else if (url.includes(`&project_id=${project_cnc2.id}`)) {
         count = count * 0.3;
       }
 
-      if (url.includes(`&ident_user_id=${user1.id}&`)) {
+      if (url.includes(`&ident_user_id=${user1.id}`)) {
         count = count * 0.75;
       }
+      if (url.includes(`&unobserved_by_user_id=${user1.id}`)) {
+        count = count * 0.65;
+      }
 
-      if (url.includes(`&user_id=${user1.id}&`)) {
+      if (url.includes(`&user_id=${user1.id}%2C${user2.id}`)) {
+      } else if (url.includes(`&user_id=${user1.id}`)) {
         count = count * 0.45;
-      } else if (url.includes(`&user_id=${user2.id}&`)) {
+      } else if (url.includes(`&user_id=${user2.id}`)) {
         count = count * 0.55;
       }
 
@@ -180,6 +187,9 @@ export let gridLabel_allTaxaRecord_users =
 export let gridLabel_allTaxaRecord_user1Identifier =
   "overlay: iNat grid, taxon_id 0, ident_user_id 222137";
 
+export let gridLabel_allTaxaRecord_user1Unobserved =
+  "overlay: iNat grid, taxon_id 0, unobserved_by_user_id 222137";
+
 export let gridLabel_life_la_user1 =
   "overlay: iNat grid, taxon_id 48460, place_id 962, user_id 222137";
 
@@ -234,10 +244,19 @@ export let gridLabel_life_places_projects_user1 =
 export let gridLabel_oak_places_projects_user1 =
   "overlay: iNat grid, taxon_id 861036, place_id 962,829, project_id 237729,229902, user_id 222137";
 
+export let gridLabel_life_places_identifier =
+  "overlay: iNat grid, taxon_id 48460, place_id 962,829, project_id 237729,229902, user_id 222137,677256, " +
+  "ident_user_id 222137";
+export let gridLabel_oaks_places_identifier =
+  "overlay: iNat grid, taxon_id 861036, place_id 962,829, project_id 237729,229902, user_id 222137,677256, " +
+  "ident_user_id 222137";
+
 export let gridLabel_life_places_resources =
-  "overlay: iNat grid, taxon_id 48460, place_id 962,829, project_id 237729,229902, user_id 222137,677256, ident_user_id 222137";
+  "overlay: iNat grid, taxon_id 48460, place_id 962,829, project_id 237729,229902, user_id 222137,677256, " +
+  "ident_user_id 222137, unobserved_by_user_id 222137";
 export let gridLabel_oaks_places_resources =
-  "overlay: iNat grid, taxon_id 861036, place_id 962,829, project_id 237729,229902, user_id 222137,677256, ident_user_id 222137";
+  "overlay: iNat grid, taxon_id 861036, place_id 962,829, project_id 237729,229902, user_id 222137,677256, " +
+  "ident_user_id 222137, unobserved_by_user_id 222137";
 
 export let gridLabel_life_resource =
   "overlay: iNat grid, taxon_id 48460, place_id 962, project_id 237729, user_id 222137";
@@ -611,10 +630,22 @@ export function expectUser1Identifier(store: MapStore, count = 0) {
   expect(store.selectedUsersIdentifiers).toEqual(userA);
 }
 
+export function expectUser1UnobservedByUser(store: MapStore, count = 0) {
+  let userA = structuredClone(user1);
+  if (count > 0) {
+    userA.observations_count = count;
+  }
+  expect(store.selectedUnobservedByUser).toEqual(userA);
+}
+
 export function expectUser2Identifier(store: MapStore, count = 0) {
   let userB = structuredClone(user2);
   if (count > 0) {
     userB.observations_count = count;
   }
   expect(store.selectedUsersIdentifiers).toEqual(userB);
+}
+
+export function roundCounts(number: number) {
+  return Math.round(number * 10) / 10;
 }

@@ -51,6 +51,9 @@ function formatDescription(inatApiParams: Params, type: string) {
   if (inatApiParams.ident_user_id) {
     text += `, ident_user_id ${inatApiParams.ident_user_id}`;
   }
+  if (inatApiParams.unobserved_by_user_id) {
+    text += `, unobserved_by_user_id ${inatApiParams.unobserved_by_user_id}`;
+  }
   return text;
 }
 

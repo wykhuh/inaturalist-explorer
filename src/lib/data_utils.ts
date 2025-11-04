@@ -486,6 +486,11 @@ export function removeOneUserIdentifierFromStore(appStore: MapStore) {
   delete appStore.inatApiParams.ident_user_id;
 }
 
+export function removeOneUnobservedByUserFromStore(appStore: MapStore) {
+  appStore.selectedUnobservedByUser = {} as NormalizediNatUser;
+  delete appStore.inatApiParams.unobserved_by_user_id;
+}
+
 // ================
 // misc
 // ================

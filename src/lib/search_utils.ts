@@ -205,6 +205,19 @@ export function multisearchSetup(appStore: MapStore) {
   });
 }
 
+export function searchSetup(searchSelector: string, selectedHandler: any) {
+  let searchInputEl = document.querySelector(
+    searchSelector,
+  ) as HTMLInputElement;
+  if (!searchInputEl) return;
+
+  searchInputEl.addEventListener("selection", async function (event: any) {
+    let selection = event.detail.selection.value;
+    let query = event.detail.query;
+    await selectedHandler(selection, query, window.app.store);
+  });
+}
+
 function isResourceObject(input: any): input is NormalizediNatUser {
   return !Array.isArray(input);
 }

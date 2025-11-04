@@ -46,8 +46,6 @@ import {
   expectUser1,
   user2,
   expectUsers,
-  gridLabel_life_places_resources,
-  gridLabel_oaks_places_resources,
   gridLabel_oaks_bbox_resources,
   gridLabel_life_bbox_resources,
   placeBBoxLabel,
@@ -57,6 +55,10 @@ import {
   defaultQuery,
   expectUser1Identifier,
   gridLabel_allTaxaRecord_user1Identifier,
+  expectUser1UnobservedByUser,
+  gridLabel_allTaxaRecord_user1Unobserved,
+  gridLabel_life_places_identifier,
+  gridLabel_oaks_places_identifier,
 } from "../test_helpers.ts";
 import type { iNatApiParams } from "../../types/app";
 import { fieldsWithAny } from "../../data/inat_data.ts";
@@ -684,6 +686,36 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount * 0.75);
   });
 
+  test("loads and renders unobserved by user data based on url params", async () => {
+    let store = structuredClone(mapStore);
+
+    expectEmpytMap(store);
+
+    let searchparams = `?unobserved_by_user_id=${user1.id}&${defaultQuery}`;
+    let urlData = decodeAppUrl(searchparams);
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    let allTaxaCount = allTaxa.observations_count;
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord_user1Unobserved,
+    ]);
+    expectNoRefresh(store);
+    expectNoPlaces(store);
+    expectAllTaxaRecord(store, allTaxaCount * 0.65);
+    expectUser1UnobservedByUser(store);
+    let expectedParams: iNatApiParams = {
+      ...defaultParams,
+      unobserved_by_user_id: user1.id,
+      taxon_id: allTaxa.id.toString(),
+      colors: iNatOrange,
+    };
+    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.color).toBe(iNatOrange);
+  });
+
   test("loads and renders resources and places based on url params", async () => {
     let store = structuredClone(mapStore);
 
@@ -712,8 +744,8 @@ describe("initPopulateStore and initRenderMap resources", () => {
       placeLabel_sd,
       projectLabel_cnc2,
       projectLabel_cnc2,
-      gridLabel_life_places_resources,
-      gridLabel_oaks_places_resources,
+      gridLabel_life_places_identifier,
+      gridLabel_oaks_places_identifier,
     ]);
     expectNoRefresh(store);
     expectLifeOakTaxa(store, [lifeCount * 0.75, oakCount * 0.75]);
@@ -767,6 +799,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     let lifeCount = life().observations_count;
     let oakCount = redOak().observations_count;
     let count = oakCount + lifeCount;
+
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeBBoxLabel,
@@ -777,11 +810,12 @@ describe("initPopulateStore and initRenderMap resources", () => {
       gridLabel_oaks_bbox_resources,
     ]);
     expectRefreshPlace(store, count);
-    expectLifeOakTaxa(store);
+    expectLifeOakTaxa(store, [lifeCount, oakCount]);
     expectProjects(store, [count * 0.7, count * 0.3]);
     expectUsers(store, [count * 0.45, count * 0.55]);
 
     let expectedParams: iNatApiParams = {
+      ...defaultParams,
       colors: `${colors[0]},${colors[1]}`,
       taxon_id: `${life().id},${redOak().id}`,
       project_id: `${project_cnc1.id},${project_cnc2.id}`,
@@ -790,14 +824,8 @@ describe("initPopulateStore and initRenderMap resources", () => {
       swlat: 0,
       swlng: 0,
       user_id: `${user1.id},${user2.id}`,
-      ...defaultParams,
     };
     expect(store.inatApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(colors[1]);
-    expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
-    expect(store.selectedTaxa[1].observations_count).toBe(oakCount);
-    expect(store.selectedPlaces[0].observations_count).toBe(count);
-    expect(store.selectedProjects[0].observations_count).toBe(count * 0.7);
-    expect(store.selectedProjects[1].observations_count).toBe(count * 0.3);
   });
 });

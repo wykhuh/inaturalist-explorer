@@ -294,6 +294,12 @@ export function decodeAppUrl(searchParams: string) {
     store.selectedUsersIdentifiers = { id: Number(id) } as any;
   }
 
+  if ("unobserved_by_user_id" in urlParams) {
+    let id = Number(urlParams.unobserved_by_user_id);
+
+    store.selectedUnobservedByUser = { id: Number(id) } as any;
+  }
+
   if (urlParams.view && validViews.includes(urlParams.view)) {
     store.currentView = urlParams.view as ObservationViews;
   } else {
@@ -349,15 +355,19 @@ export function decodeAppUrl(searchParams: string) {
   }
 
   for (let [key, value] of new URLSearchParams(searchParams)) {
-    // convert to boolean
+    // convert string values to boolean and numbers
+    let cleanedValue = value as string | number | boolean;
     if (iNatApiFilterableNames.includes(key)) {
       if (value === "true") {
-        value = true as unknown as string;
+        cleanedValue = true;
       }
       if (value === "false") {
-        value = false as unknown as string;
+        cleanedValue = false;
       }
-      (store.inatApiParams[key as iNatApiParamsKeys] as string) = value;
+      if (/^\d+$/.test(value)) {
+        cleanedValue = Number(value);
+      }
+      store.inatApiParams[key as iNatApiParamsKeys] = cleanedValue;
     }
   }
 

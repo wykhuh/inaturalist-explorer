@@ -159,6 +159,15 @@ export async function initPopulateStore(
       processUserIdentifierData(data, appStore);
     }
   }
+
+  // unobserved user data
+  if (urlStore.selectedUnobservedByUser?.id) {
+    let data = await getUserById(urlStore.selectedUnobservedByUser.id);
+    if (data) {
+      processUnobservedByUserData(data, appStore);
+    }
+  }
+
   loggerStore(
     "++ initPopulateStore selectedUsers",
     appStore.inatApiParams,
@@ -394,4 +403,14 @@ function processUserIdentifierData(userData: UserResult, appStore: MapStore) {
   };
 
   appStore.inatApiParams.ident_user_id = userData.id;
+}
+
+function processUnobservedByUserData(userData: UserResult, appStore: MapStore) {
+  appStore.selectedUnobservedByUser = {
+    id: userData.id,
+    name: userData.name,
+    login: userData.login,
+  };
+
+  appStore.inatApiParams.unobserved_by_user_id = userData.id;
 }

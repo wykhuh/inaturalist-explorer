@@ -80,12 +80,18 @@ import {
   gridLabel_life_la_project1,
   gridLabel_life_places_projects_users,
   gridLabel_oaks_places_projects_users,
+  roundCounts,
+  expectUser1UnobservedByUser,
+  expectUser1Identifier,
+  gridLabel_life_places_identifier,
+  gridLabel_oaks_places_identifier,
 } from "../test_helpers.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
 import { decodeAppUrl } from "../../lib/utils.ts";
 import { initPopulateStore, initRenderMap } from "../../lib/init_app.ts";
 import { mapStore } from "../../lib/store.ts";
 import { userIdentifierSelectedHandler } from "../../lib/search_users_identifiers.ts";
+import { unobservedByUserSelectedHandler } from "../../lib/search_unobserved.ts";
 
 beforeEach(() => {
   const { JSDOM } = jsdom;
@@ -878,7 +884,7 @@ describe("combos", () => {
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaSDCount);
   });
 
-  test.only("add taxon x 2; add place x 2; add project x 2; add user x 2", async () => {
+  test("add taxon x 2; add place x 2; add project x 2; add user x 2", async () => {
     let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
@@ -1133,13 +1139,14 @@ describe("combos", () => {
       placeLabel_la,
       placeLabel_sd,
       placeLabel_sd,
-      gridLabel_life_places_resources,
-      gridLabel_oaks_places_resources,
+      gridLabel_life_places_identifier,
+      gridLabel_oaks_places_identifier,
     ]);
     expectLifeOakTaxa(store, [lifeCount * factor9, oakCount * factor9]);
     expect_LA_SD_Place(store, [count9 * 0.6, count9 * 0.4]);
     expectProjects(store);
     expectUsers(store, [count9 * 0.45, count9 * 0.55]);
+    expectUser1Identifier(store, count9 * 0.45);
     let params9 = {
       ...defaultParams,
       taxon_id: `${life().id},${redOak().id}`,
@@ -1163,6 +1170,64 @@ describe("combos", () => {
     );
     expect(store.selectedProjects[1].observations_count).toBeCloseTo(
       count9 * 0.3,
+    );
+
+    await unobservedByUserSelectedHandler(user1, "user", store);
+    let factor10 = 0.75 * 0.65;
+    let count10 = (lifeCount + oakCount) * factor10;
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      placeLabel_la,
+      placeLabel_sd,
+      placeLabel_sd,
+      gridLabel_life_places_resources,
+      gridLabel_oaks_places_resources,
+    ]);
+    expectLifeOakTaxa(store, [
+      lifeCount * factor10,
+      roundCounts(oakCount * factor10),
+    ]);
+    expect_LA_SD_Place(store, [
+      roundCounts(count10 * 0.6),
+      roundCounts(count10 * 0.4),
+    ]);
+    expectProjects(store);
+    expectUsers(store);
+    expectUser1Identifier(store);
+    expectUser1UnobservedByUser(store);
+    let params10 = {
+      ...defaultParams,
+      taxon_id: `${life().id},${redOak().id}`,
+      colors: `${colors[0]},${colors[1]}`,
+      place_id: `${losangeles.id},${sandiego.id}`,
+      project_id: `${project_cnc1.id},${project_cnc2.id}`,
+      user_id: `${user1.id},${user2.id}`,
+      ident_user_id: user1.id,
+      unobserved_by_user_id: user1.id,
+    };
+    expect(store.inatApiParams).toStrictEqual(params10);
+    expect(window.location.search).toBe(
+      `?taxon_id=${life().id},${redOak().id}` +
+        `&place_id=${losangeles.id},${sandiego.id}` +
+        `&project_id=${project_cnc1.id},${project_cnc2.id}` +
+        `&user_id=${user1.id},${user2.id}` +
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&${defaultQuery}` +
+        `&ident_user_id=${user1.id}` +
+        `&unobserved_by_user_id=${user1.id}`,
+    );
+    expect(store.selectedProjects[0].observations_count).toBeCloseTo(
+      count10 * 0.7,
+    );
+    expect(store.selectedProjects[1].observations_count).toBeCloseTo(
+      count10 * 0.3,
+    );
+    expect(store.selectedUsers[0].observations_count).toBeCloseTo(
+      count10 * 0.45,
+    );
+    expect(store.selectedUsers[1].observations_count).toBeCloseTo(
+      count10 * 0.55,
     );
   });
 });

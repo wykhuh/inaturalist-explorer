@@ -1,6 +1,11 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerStore } from "../../lib/logger";
 import {
+  setupUnobservedByUserSearch,
+  unobservedByUserSelectedHandler,
+} from "../../lib/search_unobserved";
+import { searchSetup } from "../../lib/search_utils";
+import {
   initFilters,
   updateAppWithFilters,
   renderLicenseSelect,
@@ -32,6 +37,8 @@ class MyComponent extends HTMLElement {
     this.renderForm();
     this.formEventHandler();
     renderYearsSelect();
+    setupUnobservedByUserSearch("#unobserved-by-user-search");
+    searchSetup("#unobserved-by-user-search", unobservedByUserSelectedHandler);
 
     // use store to set values the form on page load
     initFilters(window.app.store);
@@ -133,7 +140,7 @@ class MyComponent extends HTMLElement {
         await updateAppWithFilters(data, window.app.store);
       });
 
-      form.addEventListener("change", async (event) => {
+      form.addEventListener("input", async (event) => {
         if (event.target === null) return;
 
         event.preventDefault();

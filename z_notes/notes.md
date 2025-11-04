@@ -143,3 +143,13 @@ https://leaflet-extras.github.io/leaflet-providers/preview/
 ==
 
 https://stackoverflow.com/questions/78270011/insert-a-table-row-with-custom-web-components
+
+==
+
+leaflet errors
+
+https://runebook.dev/en/articles/leaflet/index/tileerrorevent-coords
+
+tileerror does not fire if we add invalid layer to map
+
+tileerror does fire if layer already added to map , and we zoom in and out

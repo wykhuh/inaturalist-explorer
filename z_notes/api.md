@@ -243,3 +243,7 @@ v2 lets you set the returned fields for observations
 ==
 
 https://forum.inaturalist.org/t/ideas-for-a-revamped-explore-observations-search-page/8439/379
+
+==
+
+http://localhost:5173/?taxon_id=1,47126&place_id=962,829&user_id=2902070,81261&colors=%2366ccee,%23228833&locale=en&verifiable=true&spam=false&ident_user_id=150454&page=4

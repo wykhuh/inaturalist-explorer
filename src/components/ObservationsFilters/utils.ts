@@ -280,6 +280,15 @@ export function initFilters(appStore: MapStore) {
       setSelectedOption(`#filters-form select#year option[value='${value}']`);
     });
   }
+
+  if (inatApiParams.unobserved_by_user_id !== undefined) {
+    let inputEl = document.querySelector(
+      "#unobserved-by-user-search",
+    ) as HTMLInputElement;
+    if (inputEl) {
+      inputEl.value = appStore.selectedUnobservedByUser.login;
+    }
+  }
 }
 
 export function renderRankSelect(selectSelector: string, defaultValue: string) {

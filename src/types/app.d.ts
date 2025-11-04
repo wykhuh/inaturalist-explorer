@@ -24,6 +24,7 @@ export interface MapStore {
   projectsMapLayers?: { [index: string]: CustomGeoJSON[] };
   selectedUsers: NormalizediNatUser[];
   selectedUsersIdentifiers: NormalizediNatUser;
+  selectedUnobservedByUser: NormalizediNatUser;
   selectedProjects: NormalizediNatProject[];
   inatApiParams: iNatApiParams;
   inatApiParamsTemp?: iNatApiParams;
@@ -142,6 +143,7 @@ interface iNatApiParams extends iNatApiFilterableParams {
   project_id?: string; // comma-seperated string
   user_id?: string; // comma-seperated string
   ident_user_id?: number;
+  unobserved_by_user_id?: number;
   page?: number;
   order?: string;
   order_by?: string;
@@ -227,7 +229,6 @@ interface iNatApiFilterableParams {
   created_d1?: string; // date-time
   created_d2?: string; // date-time
   created_on?: string; // date
-  unobserved_by_user_id?: number;
   apply_project_rules_for?: string;
   cs?: string;
   csa?: string;
