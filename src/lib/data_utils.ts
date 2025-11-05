@@ -37,7 +37,6 @@ import {
   renderSelectedResources,
   updateCountForAllProjects,
   updateCountForAllUsers,
-  updateCountForAllUsersIdentifiers,
 } from "./search_utils.ts";
 
 // called when user clicks refresh map button
@@ -76,7 +75,6 @@ export async function refreshBoundingBox(appStore: MapStore) {
   await updateTilesAndCountForAllTaxa(appStore);
   await updateCountForAllProjects(appStore);
   await updateCountForAllUsers(appStore);
-  await updateCountForAllUsersIdentifiers(appStore);
 
   let paramsTemp = {
     ...appStore.inatApiParams,
@@ -360,19 +358,6 @@ export async function getObservationsCountForUser(
     appStore,
     paramsTemp,
   );
-}
-
-export async function getObservationsCountForUserIdentifier(
-  user: NormalizediNatUser,
-  appStore: MapStore,
-  paramsTemp: iNatApiParams,
-) {
-  let params = cleanupObervationsParamsForRecord(paramsTemp);
-  let perPage = 0;
-  let data = await getObservations(params, perPage);
-  user.observations_count = data?.total_results;
-
-  appStore.selectedUsersIdentifiers = user;
 }
 
 export function renderSelectedProjectsBoundaries(appStore: MapStore) {

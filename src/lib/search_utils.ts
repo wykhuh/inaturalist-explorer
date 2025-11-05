@@ -12,7 +12,6 @@ import {
   getObservationsCountForProject,
   removeOneTaxonFromMap,
   getObservationsCountForUser,
-  getObservationsCountForUserIdentifier,
 } from "./data_utils";
 
 import { updateAppUrl } from "./utils";
@@ -37,11 +36,6 @@ import {
   taxonSelectedHandler,
   renderTaxaList,
 } from "../lib/search_taxa.ts";
-import {
-  renderUsersIdentifiersList,
-  setupUserIdentifierSearch,
-  userIdentifierSelectedHandler,
-} from "./search_users_identifiers";
 
 export async function updateTilesAndCountForAllTaxa(appStore: MapStore) {
   for await (const taxon of appStore.selectedTaxa) {
@@ -117,15 +111,6 @@ export async function updateCountForAllUsers(appStore: MapStore) {
   }
 }
 
-export async function updateCountForAllUsersIdentifiers(appStore: MapStore) {
-  const user = appStore.selectedUsersIdentifiers;
-  let paramsTemp = {
-    ...appStore.inatApiParams,
-    ident_user_id: user.id,
-  };
-  await getObservationsCountForUserIdentifier(user, appStore, paramsTemp);
-}
-
 export function renderSelectedResources(
   appStore: MapStore,
   doSideEffects = true,
@@ -134,7 +119,6 @@ export function renderSelectedResources(
   renderPlacesList(appStore);
   renderProjectsList(appStore);
   renderUsersList(appStore);
-  renderUsersIdentifiersList(appStore);
 
   if (doSideEffects) {
     updateAppUrl(window.location, appStore);
@@ -166,10 +150,6 @@ export function multisearchSetup(appStore: MapStore) {
     users: {
       setup: setupUserSearch,
       selectedHandler: userSelectedHandler,
-    },
-    users_identifiers: {
-      setup: setupUserIdentifierSearch,
-      selectedHandler: userIdentifierSelectedHandler,
     },
     taxa: {
       setup: setupTaxaSearch,
@@ -246,11 +226,5 @@ export function searchHeadingSetup() {
   });
   window.addEventListener("selectedUsersChange", () => {
     showHideHeader("#home #sidebar-menu .users-heading", "selectedUsers");
-  });
-  window.addEventListener("selectedUsersIdentifiersChange", () => {
-    showHideHeader(
-      "#home #sidebar-menu .users-identifiers-heading",
-      "selectedUsersIdentifiers",
-    );
   });
 }

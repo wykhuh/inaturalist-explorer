@@ -22,7 +22,6 @@ import {
   updateCountForAllPlaces,
   updateCountForAllProjects,
   updateCountForAllUsers,
-  updateCountForAllUsersIdentifiers,
   updateTilesAndCountForAllTaxa,
 } from "../../lib/search_utils";
 
@@ -121,7 +120,6 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
   await updateCountForAllPlaces(appStore);
   await updateCountForAllProjects(appStore);
   await updateCountForAllUsers(appStore);
-  await updateCountForAllUsersIdentifiers(appStore);
 
   // update UI
   renderSelectedFiltersList(data);
@@ -287,6 +285,15 @@ export function initFilters(appStore: MapStore) {
     ) as HTMLInputElement;
     if (inputEl) {
       inputEl.value = appStore.selectedUnobservedByUser.login;
+    }
+  }
+
+  if (inatApiParams.ident_user_id !== undefined) {
+    let inputEl = document.querySelector(
+      "#identifier-search",
+    ) as HTMLInputElement;
+    if (inputEl) {
+      inputEl.value = appStore.selectedUsersIdentifiers.login;
     }
   }
 }

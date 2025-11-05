@@ -15,7 +15,6 @@ import {
   renderSelectedResources,
   updateCountForAllPlaces,
   updateCountForAllProjects,
-  updateCountForAllUsersIdentifiers,
 } from "./search_utils.ts";
 
 export function setupUserSearch(selector: string) {
@@ -110,7 +109,6 @@ export async function userSelectedHandler(
   await updateTilesAndCountForAllTaxa(appStore);
   await updateCountForAllPlaces(appStore);
   await updateCountForAllProjects(appStore);
-  await updateCountForAllUsersIdentifiers(appStore);
 
   renderSelectedResources(appStore);
 }
@@ -138,7 +136,6 @@ export async function removeUser(userId: number, appStore: MapStore) {
   await updateTilesAndCountForAllTaxa(appStore);
   await updateCountForAllPlaces(appStore);
   await updateCountForAllProjects(appStore);
-  await updateCountForAllUsersIdentifiers(appStore);
 
   renderSelectedResources(appStore);
 }

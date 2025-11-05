@@ -674,7 +674,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectNoPlaces(store);
     // expect(searchparams).toBe("");
     expectAllTaxaRecord(store, allTaxaCount * 0.75);
-    expectUser1Identifier(store, allTaxaCount * 0.75);
+    expectUser1Identifier(store);
     let expectedParams: iNatApiParams = {
       ident_user_id: user1.id,
       taxon_id: allTaxa.id.toString(),
@@ -751,7 +751,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectLifeOakTaxa(store, [lifeCount * 0.75, oakCount * 0.75]);
     expect_LA_SD_Place(store, [count * 0.6 * 0.75, count * 0.4 * 0.75]);
     expectUsers(store, [count * 0.45 * 0.75, 4537.5]);
-    expectUser1Identifier(store, count * 0.75);
+    expectUser1Identifier(store);
     expectProjects(store, [count * 0.7 * 0.75, count * 0.3 * 0.75]);
     let expectedParams: iNatApiParams = {
       colors: `${colors[0]},${colors[1]}`,

@@ -3,7 +3,6 @@ import "./components/SelectedTaxaItem/component.ts";
 import "./components/SelectedPlacesItem/component.ts";
 import "./components/SelectedProjectsItem/component.ts";
 import "./components/SelectedUsersItem/component.ts";
-import "./components/SelectedUsersIdentifiersItem/component.ts";
 import "./components/ObservationsFilters/component.ts";
 import "./components/ObservationsHeader/component.ts";
 import "./components/ViewMap/component.ts";

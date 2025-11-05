@@ -4,6 +4,10 @@ import {
   setupUnobservedByUserSearch,
   unobservedByUserSelectedHandler,
 } from "../../lib/search_unobserved";
+import {
+  setupUserIdentifierSearch,
+  userIdentifierSelectedHandler,
+} from "../../lib/search_users_identifiers";
 import { searchSetup } from "../../lib/search_utils";
 import {
   initFilters,
@@ -39,6 +43,8 @@ class MyComponent extends HTMLElement {
     renderYearsSelect();
     setupUnobservedByUserSearch("#unobserved-by-user-search");
     searchSetup("#unobserved-by-user-search", unobservedByUserSelectedHandler);
+    setupUserIdentifierSearch("#identifier-search");
+    searchSetup("#identifier-search", userIdentifierSelectedHandler);
 
     // use store to set values the form on page load
     initFilters(window.app.store);

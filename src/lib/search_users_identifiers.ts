@@ -5,10 +5,7 @@ import { autocomplete_users_api } from "../lib/inat_api.ts";
 import type { iNatUsersAPI } from "../types/inat_api";
 import { loggerUrl } from "../lib/logger.ts";
 import type { MapStore } from "../types/app";
-import {
-  getObservationsCountForUserIdentifier,
-  removeOneUserIdentifierFromStore,
-} from "./data_utils.ts";
+import { removeOneUserIdentifierFromStore } from "./data_utils.ts";
 import {
   updateTilesAndCountForAllTaxa,
   renderSelectedResources,
@@ -65,7 +62,6 @@ export async function userIdentifierSelectedHandler(
   _query: string,
   appStore: MapStore,
 ) {
-  let user = selection;
   // add project to store
   appStore.selectedUsersIdentifiers = selection;
   appStore.inatApiParams = {
@@ -73,30 +69,12 @@ export async function userIdentifierSelectedHandler(
     ident_user_id: selection.id,
   };
 
-  let paramsTemp = {
-    ...appStore.inatApiParams,
-    ident_user_id: user.id,
-  };
-  await getObservationsCountForUserIdentifier(user, appStore, paramsTemp);
   await updateTilesAndCountForAllTaxa(appStore);
   await updateCountForAllPlaces(appStore);
   await updateCountForAllProjects(appStore);
   await updateCountForAllUsers(appStore);
 
   renderSelectedResources(appStore);
-}
-
-export function renderUsersIdentifiersList(appStore: MapStore) {
-  let listEl = document.querySelector("#selected-users-identifiers-list");
-  if (!listEl) return;
-
-  listEl.innerHTML = "";
-  if (appStore.selectedUsersIdentifiers.id) {
-    let templateEl = document.createElement("x-users-identifiers-list-item");
-    if (!templateEl) return;
-    templateEl.dataset.user = JSON.stringify(appStore.selectedUsersIdentifiers);
-    listEl.appendChild(templateEl);
-  }
 }
 
 export async function removeUserIdentifier(appStore: MapStore) {

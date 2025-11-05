@@ -345,7 +345,6 @@ type SearchOptions = {
   places: SearchOption;
   projects: SearchOption;
   users: SearchOption;
-  users_identifiers: SearchOption;
   taxa: SearchOption;
 };
 

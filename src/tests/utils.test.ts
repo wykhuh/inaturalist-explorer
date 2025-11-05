@@ -561,6 +561,7 @@ describe("decodeAppUrl resources", () => {
       inatApiParams: {
         verifiable: true,
         spam: false,
+        ident_user_id: 1,
       },
       selectedTaxa: [],
       currentView: "observations",
@@ -902,6 +903,8 @@ describe("decodeAppUrl options", () => {
       let value;
       if (name === "unobserved_by_user_id") {
         value = 1;
+      } else if (name === "ident_user_id") {
+        value = 1;
       } else {
         value = true;
       }
@@ -923,6 +926,10 @@ describe("decodeAppUrl options", () => {
       if (name == "unobserved_by_user_id") {
         expected.selectedUnobservedByUser = { id: 1 };
         expected.inatApiParams.unobserved_by_user_id = 1;
+      }
+      if (name == "ident_user_id") {
+        expected.selectedUsersIdentifiers = { id: 1 };
+        expected.inatApiParams.ident_user_id = 1;
       }
 
       let result = decodeAppUrl(searchParams);

@@ -24,7 +24,6 @@ import {
   renderSelectedResources,
   updateCountForAllProjects,
   updateCountForAllUsers,
-  updateCountForAllUsersIdentifiers,
 } from "./search_utils.ts";
 
 export function setupPlacesSearch(selector: string) {
@@ -170,7 +169,6 @@ export async function placeSelectedHandler(
   await updateTilesAndCountForAllTaxa(appStore);
   await updateCountForAllProjects(appStore);
   await updateCountForAllUsers(appStore);
-  await updateCountForAllUsersIdentifiers(appStore);
 
   // zoom to map to fit all selected places
   if (map) {
@@ -207,7 +205,6 @@ export async function removePlace(placeId: number, appStore: MapStore) {
   await updateTilesAndCountForAllTaxa(appStore);
   await updateCountForAllProjects(appStore);
   await updateCountForAllUsers(appStore);
-  await updateCountForAllUsersIdentifiers(appStore);
 
   renderSelectedResources(appStore);
 }

@@ -1001,8 +1001,7 @@
   ul#selected-species-list,
   ul#selected-places-list,
   ul#selected-projects-list,
-  ul#selected-users-list,
-  ul#selected-users-identifiers-list {
+  ul#selected-users-list {
     padding: 0;
     list-style: none;
 
@@ -1077,7 +1076,8 @@
   }
 
   ul#selected-projects-list,
-  ul#selected-places-list {
+  ul#selected-places-list,
+  ul#selected-users-list {
     .data {
       display: grid;
     }

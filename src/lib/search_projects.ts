@@ -20,7 +20,6 @@ import {
   updateTilesAndCountForAllTaxa,
   renderSelectedResources,
   updateCountForAllUsers,
-  updateCountForAllUsersIdentifiers,
 } from "./search_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
 
@@ -145,7 +144,6 @@ export async function projectSelectedHandler(
   await updateTilesAndCountForAllTaxa(appStore);
   await updateCountForAllPlaces(appStore);
   await updateCountForAllUsers(appStore);
-  await updateCountForAllUsersIdentifiers(appStore);
 
   // zoom to map to fit all selected places
   if (map) {
@@ -180,7 +178,6 @@ export async function removeProject(projectId: number, appStore: MapStore) {
   await updateTilesAndCountForAllTaxa(appStore);
   await updateCountForAllPlaces(appStore);
   await updateCountForAllUsers(appStore);
-  await updateCountForAllUsersIdentifiers(appStore);
 
   if (appStore.map.map) {
     fitBoundsPlaces(appStore);
