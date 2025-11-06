@@ -522,7 +522,8 @@
     .observations-count,
     .species-count,
     .identifiers-count,
-    .observers-count {
+    .observers-count,
+    .identifications-count {
       font-weight: var(--fw-bold);
     }
 

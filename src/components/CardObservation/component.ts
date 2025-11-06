@@ -31,10 +31,12 @@ class MyComponent extends HTMLElement {
     let mediaContent = "";
 
     if (data.photos.length > 0) {
-      let url = data.photos[0].url.replace("/square.", "/medium.");
-      mediaContent += `<a href="${iNatObservationUrl}/${data.id}">`;
-      mediaContent += `<img src="${url}">`;
-      mediaContent += "</a>";
+      let url = data.photos[0].url?.replace("/square.", "/medium.");
+      if (url) {
+        mediaContent += `<a href="${iNatObservationUrl}/${data.id}">`;
+        mediaContent += `<img src="${url}">`;
+        mediaContent += "</a>";
+      }
     }
     if (data.sounds.length > 0) {
       mediaContent += `<a href="${iNatObservationUrl}/${data.id}">`;

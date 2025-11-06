@@ -4,6 +4,7 @@ import {
   viewAndTemplateObject,
 } from "../../lib/data_utils";
 import {
+  getIdentifications,
   getObservations,
   getObservationsIdentifiers,
   getObservationsObservers,
@@ -112,6 +113,11 @@ export function updateCounts(appStore: MapStore) {
   updateResourceCounts(
     getObservationsIdentifiers,
     "#observations-header .identifiers-count",
+    params,
+  );
+  updateResourceCounts(
+    getIdentifications,
+    "#observations-header .identifications-count",
     params,
   );
 

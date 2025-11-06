@@ -141,10 +141,12 @@ export function createTable(results: ObservationsResult[], appStore: MapStore) {
     let mediaContent = `<div class="${classes.join(" ")}">`;
 
     if (row.photos.length > 0) {
-      let url = row.photos[0].url.replace("/square.", "/medium.");
-      mediaContent += `<a href="${iNatObservationUrl}/${row.id}">`;
-      mediaContent += `<img src="${url}">`;
-      mediaContent += "</a>";
+      let url = row.photos[0].url?.replace("/square.", "/medium.");
+      if (url) {
+        mediaContent += `<a href="${iNatObservationUrl}/${row.id}">`;
+        mediaContent += `<img src="${url}">`;
+        mediaContent += "</a>";
+      }
     }
     if (row.sounds.length > 0) {
       mediaContent += `<a href="${iNatObservationUrl}/${row.id}">`;

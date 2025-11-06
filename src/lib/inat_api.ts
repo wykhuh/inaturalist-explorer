@@ -12,6 +12,7 @@ import type {
   iNatUsersAPI,
   iNatObservationsObserversAPI,
   iNatObservationsIdentifiersAPI,
+  iNatIdentificationsAPI,
 } from "../types/inat_api.d.ts";
 import { normalizeAppParams } from "./data_utils.ts";
 import { loggerUrl } from "./logger.ts";
@@ -26,6 +27,7 @@ export const autocomplete_taxa_api =
   "https://api.inaturalist.org/v1/taxa/autocomplete?";
 
 const observations_api = "https://api.inaturalist.org/v2/observations";
+const identifications_api = "https://api.inaturalist.org/v1/identifications";
 const taxa_api = "https://api.inaturalist.org/v1/taxa/";
 const places_api = "https://api.inaturalist.org/v1/places/";
 // set max-age Cache-Control HTTP header to 30 days
@@ -312,5 +314,19 @@ export async function getObservationsIdentifiers(
     return data;
   } catch (error) {
     console.error("getObservationsIdentifiers ERROR:", error);
+  }
+}
+
+export async function getIdentifications(appParams: string, perPage: number) {
+  let searchParams = normalizeAppParams(appParams);
+  let url =
+    `${identifications_api}/?${searchParams}&ttl=3600` + `&per_page=${perPage}`;
+  try {
+    let resp = await fetch(url);
+    let data = (await resp.json()) as iNatIdentificationsAPI;
+    loggerUrl(url, data.total_results);
+    return data;
+  } catch (error) {
+    console.error("getIdentifications ERROR:", error);
   }
 }

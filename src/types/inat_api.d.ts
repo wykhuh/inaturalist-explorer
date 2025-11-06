@@ -182,47 +182,58 @@ export interface TaxonPhoto {
 }
 
 export interface Photo {
-  id: number;
-  license_code?: string | null;
   attribution: string;
-  url: string;
-  original_dimensions: OriginalDimensions;
+  attribution_name: string;
   flags: any[];
+  hidden?: boolean;
+  id: number;
+  large_url: string;
+  license_code?: string | null;
+  medium_url: string;
+  moderator_actions?: any[];
   native_page_url?: string | null;
   native_photo_id?: string | null;
-  type: string;
-  attribution_name: string;
-  square_url: string;
-  small_url: string;
-  medium_url: string;
-  large_url: string;
+  original_dimensions: OriginalDimensions;
   original_url: string;
+  small_url: string;
+  square_url: string;
+  type: string;
+  url: string;
 }
 
 export interface Taxon {
+  ancestors?: Ancestor[];
+  ancestor_ids: number[];
+  ancestry: string | null;
+  atlas_id: any;
+  complete_rank?: string;
+  complete_species_count: any;
+  created_at?: string;
+  current_synonymous_taxon_ids: any;
+  default_photo: DefaultPhoto | null;
+  endemic?: boolean;
+  extinct: boolean;
+  flag_counts: FlagCounts;
+  iconic_taxon_id: number | null;
+  iconic_taxon_name?: string;
   id: number;
+  introduced?: boolean;
+  is_active: boolean;
+  min_species_ancestry?: string;
+  min_species_taxon_id?: number;
+  name: string;
+  native?: boolean;
+  observations_count: number;
+  parent_id: number | null;
+  photos_locked: boolean;
+  preferred_common_name: string;
   rank: string;
   rank_level: number;
-  iconic_taxon_id: number | null;
-  ancestor_ids: number[];
-  is_active: boolean;
-  name: string;
-  parent_id: number | null;
-  ancestry: string | null;
-  extinct: boolean;
-  default_photo: DefaultPhoto | null;
   taxon_changes_count: number;
   taxon_schemes_count: number;
-  observations_count: number;
-  photos_locked: boolean;
-  flag_counts: FlagCounts;
-  current_synonymous_taxon_ids: any;
-  atlas_id: any;
-  complete_species_count: any;
+  threatened?: boolean;
+  universal_search_rank?: number;
   wikipedia_url: string | null;
-  iconic_taxon_name?: string;
-  preferred_common_name: string;
-  complete_rank?: string;
 }
 
 export interface ConservationStatus {
@@ -356,8 +367,26 @@ export interface CreatedAtDetails {
 }
 
 export interface Identification {
-  id: number;
+  body?: any;
+  category?: string;
+  created_at?: string;
+  created_at_details?: CreatedAtDetails;
   current: boolean;
+  disagreement?: boolean;
+  flags?: any[];
+  hidden?: boolean;
+  id: number;
+  moderator_actions?: any[];
+  own_observation?: boolean;
+  previous_observation_taxon?: Taxon;
+  previous_observation_taxon_id?: number;
+  spam?: boolean;
+  taxon?: Taxon;
+  taxon_change?: any;
+  taxon_id?: number;
+  user?: UserResult;
+  uuid?: string;
+  vision?: boolean;
 }
 
 export interface ObservedOnDetails {
@@ -371,7 +400,11 @@ export interface ObservedOnDetails {
 
 export interface ObservationPhoto {
   id: number;
-  url: string;
+  photo?: Photo;
+  photo_id?: number;
+  position?: number;
+  url?: string;
+  uuid?: string;
 }
 
 export interface ObservationTaxon {
@@ -660,27 +693,28 @@ export interface iNatUsersAPI {
 }
 
 export interface UserResult {
-  id: number;
-  login: string;
-  spam: boolean;
-  suspended: boolean;
+  activity_count: number;
+  annotated_observations_count?: number;
   created_at: string;
+  icon: string;
+  icon_url: string;
+  id: number;
+  identifications_count: number;
+  journal_posts_count: number;
+  login: string;
   login_autocomplete: string;
   login_exact: string;
   name: string;
   name_autocomplete: string;
-  orcid?: string | null;
-  icon: string;
   observations_count: number;
-  identifications_count: number;
-  journal_posts_count: number;
-  activity_count: number;
-  species_count: number;
-  universal_search_rank: number;
+  orcid?: string | null;
+  preferences?: Preferences;
   roles: string[];
   site_id?: number;
-  icon_url: string;
-  annotated_observations_count?: number;
+  spam: boolean;
+  species_count: number;
+  suspended: boolean;
+  universal_search_rank: number;
 }
 
 // ==================
@@ -755,4 +789,125 @@ export interface SiteFeature {
   site_id: number;
   noteworthy: boolean;
   featured_at: string;
+}
+
+// ==================
+// identifications api
+// ==================
+
+export interface iNatIdentificationsAPI {
+  total_results: number;
+  page: number;
+  per_page: number;
+  results: ProjectsResult[];
+}
+
+export type ObservationsIdentificationsResult = {
+  id: number;
+  uuid: string;
+  user: UserBasic;
+  created_at: string;
+  created_at_details: CreatedAtDetails;
+  body: any;
+  category: string;
+  current: boolean;
+  flags: any[];
+  own_observation: boolean;
+  taxon_change: any;
+  vision: boolean;
+  disagreement?: boolean;
+  previous_observation_taxon_id: number;
+  spam: boolean;
+  taxon_id: number;
+  hidden: boolean;
+  current_taxon: boolean;
+  taxon: Taxon;
+  observation: Observation;
+  moderator_actions: any[];
+};
+
+export interface Observation {
+  id: number;
+  site_id: number;
+  created_at: string;
+  created_at_details: CreatedAtDetails;
+  observed_on: string;
+  observed_on_details: ObservedOnDetails;
+  time_observed_at: string;
+  place_ids: number[];
+  quality_grade: string;
+  taxon: Taxon;
+  user_id: number;
+  uuid: string;
+  user: UserResult;
+  captive: boolean;
+  created_time_zone: string;
+  updated_at: string;
+  observed_time_zone: string;
+  time_zone_offset: string;
+  uri: string;
+  description: any;
+  mappable: boolean;
+  species_guess: string;
+  place_guess: string;
+  observed_on_string: string;
+  license_code: string;
+  geoprivacy: any;
+  taxon_geoprivacy: string;
+  map_scale: any;
+  oauth_application_id?: number;
+  community_taxon_id?: number;
+  faves_count: number;
+  cached_votes_total: number;
+  num_identification_agreements: number;
+  num_identification_disagreements: number;
+  identifications_most_agree: boolean;
+  identifications_some_agree: boolean;
+  identifications_most_disagree: boolean;
+  project_ids: any[];
+  project_ids_with_curator_id: any[];
+  project_ids_without_curator_id: any[];
+  reviewed_by: number[];
+  tags: any[];
+  ofvs: any[];
+  annotations: Annotation[];
+  sounds: any[];
+  ident_taxon_ids: number[];
+  identification_disagreements_count: number;
+  identifications_count: number;
+  comments: any[];
+  comments_count: number;
+  obscured: boolean;
+  positional_accuracy: number;
+  public_positional_accuracy: number;
+  location: string;
+  geojson: Geojson;
+  votes: any[];
+  outlinks: any[];
+  owners_identification_from_vision: boolean;
+  preferences: Preferences;
+  flags: any[];
+  quality_metrics: any[];
+  spam: boolean;
+  faves: any[];
+  non_owner_ids: any[];
+  identifications: Identification[];
+  project_observations: any[];
+  observation_photos: ObservationPhoto[];
+  photos: Photo[];
+}
+
+export interface Preferences {
+  prefers_community_taxon?: any;
+}
+
+export interface Annotation {
+  uuid: string;
+  controlled_attribute_id: number;
+  controlled_value_id: number;
+  concatenated_attr_val: string;
+  user_id: number;
+  votes: any[];
+  vote_score: number;
+  user: UserResult;
 }
