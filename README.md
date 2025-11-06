@@ -39,3 +39,7 @@ Start Vite.js server
 ```bash
 npm run dev
 ```
+
+## Build
+
+Since we use fetch for the template files, the template files are not included in vite build. I use rsync in the build script to copy the components template files into `./dist`.

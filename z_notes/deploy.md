@@ -58,3 +58,15 @@ export default defineConfig({
 ==
 
 I harded coded VITE_BASE into the git actions yml file because I could not get secrets to work. VITE_BASE is used for fetch('./path/template.html')
+
+==
+
+https://vite.dev/guide/static-deploy
+
+use cloudflare to host
+
+Since we use fetch for the template files, the template files are not included in vite build. I use rsync in the build script to copy the components template files into `./dist`.
+
+rsync not available on cloudflare so we can't deploy using git repo
+
+need to build locally, then use wrangler package to deploy

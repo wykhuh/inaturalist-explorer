@@ -77,3 +77,16 @@ https://forum.inaturalist.org/t/ideas-for-a-revamped-explore-observations-search
 ==
 
 https://www.maplibrary.org/1254/exploring-map-projection-alternatives-for-web-use/
+
+==
+
+I added new features.
+
+- Add `unobserved_by_user_id` as requested by @deanhester94 to find species not observed by user. Filters > Users > Unobserved by user.
+- Add `ident_user_id` to find observations by identifier. Filters > Users > Identified by user.
+- Add `locale` to set the common name language. Settings > Common Name Language.
+-
+
+Here is an example search for butterflies or dragonflies, in Los Angeles or San Diego, that are observed by hogpotato or biohexx1 , and identified by nlblock.
+
+https://inat-explorer-api.pages.dev/?taxon_id=47792,47157&place_id=962,829&user_id=164822,81261&colors=%2366ccee,%23228833&locale=en&verifiable=true&spam=false&ident_user_id=39752

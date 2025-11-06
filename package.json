@@ -17,7 +17,8 @@
     "cleanup": "npm run type & npm run format",
     "ci": "npm run type & npm run format & npm run test ",
     "build-ghpages": "vite build --base=/inaturalist-explorer && rsync -R ./src/components/**/template.html ./dist",
-    "preview-ghpages": "vite preview --base=/inaturalist-explorer"
+    "preview-ghpages": "vite preview --base=/inaturalist-explorer",
+    "deploy": "npm run build & node node_modules/.bin/wrangler pages deploy dist"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
@@ -31,7 +32,8 @@
     "prettier": "^3.6.2",
     "typescript": "~5.8.3",
     "vite": "^7.1.2",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "wrangler": "^4.46.0"
   },
   "dependencies": {
     "@bramus/pagination-sequence": "^1.2.1",
