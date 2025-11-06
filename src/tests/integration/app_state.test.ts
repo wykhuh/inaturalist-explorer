@@ -908,7 +908,7 @@ describe("combos", () => {
       locale: "en",
     });
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false&locale=en`,
+      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
     );
 
     await placeSelectedHandler(losangeles, "los", store);
@@ -932,7 +932,7 @@ describe("combos", () => {
     });
     expect(window.location.search).toBe(
       `?taxon_id=${life().id}&place_id=${losangeles.id}&colors=${colorsEncoded[0]}` +
-        `&verifiable=true&spam=false&locale=en`,
+        `&verifiable=true&spam=false`,
     );
 
     await projectSelectedHandler(project_cnc1, "city", store);
@@ -958,7 +958,7 @@ describe("combos", () => {
     });
     expect(window.location.search).toBe(
       `?taxon_id=${life().id}&place_id=${losangeles.id}&project_id=${project_cnc1.id}` +
-        `&colors=${colorsEncoded[0]}&verifiable=true&spam=false&locale=en`,
+        `&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
     );
 
     await userSelectedHandler(user1, "user", store);
@@ -986,7 +986,7 @@ describe("combos", () => {
     });
     expect(window.location.search).toBe(
       `?taxon_id=${life().id}&place_id=${losangeles.id}&project_id=${project_cnc1.id}` +
-        `&user_id=${user1.id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false&locale=en`,
+        `&user_id=${user1.id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
     );
 
     await taxonSelectedHandler(redOakBasic, "red", store);

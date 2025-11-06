@@ -410,6 +410,21 @@ describe("formatAppUrl", () => {
       );
     },
   );
+
+  test.each(["es", "fr"])("return params for locale that is not en", (lang) => {
+    let appStore: MapStore = {
+      ...mapStore,
+      inatApiParams: {
+        verifiable: true,
+        spam: false,
+        locale: lang,
+      },
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe("verifiable=true&spam=false&locale=" + lang);
+  });
 });
 
 describe("updateAppUrl", () => {
@@ -1038,7 +1053,7 @@ describe("removeDefaultParams", () => {
   });
 
   test.each(["species", "identifiers", "observers"])(
-    "return view  if view is not observations",
+    "return view if view is not observations",
     (view) => {
       let params = `${defaultQuery}&view=${view}`;
 
@@ -1048,6 +1063,14 @@ describe("removeDefaultParams", () => {
     },
   );
 
+  test("removes locale=en", () => {
+    let params = `${defaultQuery}&locale=en`;
+
+    let result = removeDefaultParams(params);
+
+    expect(result).toBe("");
+  });
+
   test("return params if not default values", () => {
     let params =
       "verifiable=false&spam=true&locale=es&view=observations&subview=grid";
@@ -1055,13 +1078,5 @@ describe("removeDefaultParams", () => {
     let result = removeDefaultParams(params);
 
     expect(result).toBe("verifiable=false&spam=true&locale=es");
-  });
-
-  test("other params if default inatApiParams and view", () => {
-    let params = `${defaultQuery}&view=observations&subview=grid`;
-
-    let result = removeDefaultParams(params);
-
-    expect(result).toBe("");
   });
 });

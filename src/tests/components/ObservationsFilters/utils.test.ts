@@ -297,7 +297,7 @@ describe("updateAppWithFilters", () => {
       spam: false,
       locale: "en",
     });
-    expect(window.location.search).toBe("?spam=false&locale=en");
+    expect(window.location.search).toBe("?spam=false");
   });
 
   test("update inatApiParams and url with form data", async () => {
@@ -319,7 +319,7 @@ describe("updateAppWithFilters", () => {
       locale: "en",
     });
     expect(window.location.search).toBe(
-      "?verifiable=false&spam=false&locale=en&threatened=true&iconic_taxa=Aves&month=1,2",
+      "?verifiable=false&spam=false&threatened=true&iconic_taxa=Aves&month=1,2",
     );
   });
 });

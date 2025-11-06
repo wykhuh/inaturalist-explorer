@@ -133,7 +133,7 @@ export function createMockServer() {
 }
 
 export let defaultParams = { verifiable: true, spam: false, locale: "en" };
-export let defaultQuery = "verifiable=true&spam=false&locale=en";
+export let defaultQuery = "verifiable=true&spam=false";
 
 export let colors = ["#4477aa", "#66ccee", "#228833"];
 export let colorsEncoded = ["%234477aa", "%2366ccee", "%23228833"];

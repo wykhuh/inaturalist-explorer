@@ -146,12 +146,11 @@ export function removeDefaultParams(searchParams: string) {
   let parts = searchParams.split("&");
 
   let defaultiNatAPiParamas =
-    parts.includes("verifiable=true") &&
-    parts.includes("spam=false") &&
-    parts.includes("locale=en");
+    parts.includes("verifiable=true") && parts.includes("spam=false");
   let defaultView =
     parts.includes("view=observations") && parts.includes("subview=grid");
   let defaultNameOrder = parts.includes("name_order=cs");
+  let defaultLocale = parts.includes("locale=en");
 
   if (defaultiNatAPiParamas && defaultView) {
     parts = removeValueFromArray("verifiable=true", parts);
@@ -170,10 +169,13 @@ export function removeDefaultParams(searchParams: string) {
     parts = removeValueFromArray("name_order=cs", parts);
   }
 
-  if (defaultiNatAPiParamas && parts.length === 3) {
+  if (defaultLocale) {
+    parts = removeValueFromArray("locale=en", parts);
+  }
+
+  if (defaultiNatAPiParamas && parts.length === 2) {
     parts = removeValueFromArray("verifiable=true", parts);
     parts = removeValueFromArray("spam=false", parts);
-    parts = removeValueFromArray("locale=en", parts);
   }
 
   return parts.join("&");
