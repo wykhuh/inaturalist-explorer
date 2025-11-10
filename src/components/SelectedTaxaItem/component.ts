@@ -1,5 +1,5 @@
 import { setupComponent } from "../../lib/component_utils.ts";
-import { renderTaxonNames } from "../../lib/data_utils.ts";
+import { renderTaxonNames } from "../../lib/render_utils";
 import { removeTaxon } from "../../lib/search_taxa.ts";
 import { pluralize } from "../../lib/utils.ts";
 import type { MapStore, NormalizediNatTaxon } from "../../types/app";

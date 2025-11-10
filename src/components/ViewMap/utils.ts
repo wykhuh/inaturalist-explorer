@@ -1,17 +1,12 @@
-import {
-  audio,
-  check,
-  circleDot,
-  circleX,
-  speech,
-  star,
-} from "../../assets/icons";
+import { circleDot, circleX } from "../../assets/icons";
 import { iNatObservationUrl, iNatUserUrl } from "../../data/inat_data";
+import { cleanupObervationsParams } from "../../lib/data_utils";
 import {
-  cleanupObervationsParams,
   formatAvatar,
+  renderMedia,
+  renderObservationMetadataCounts,
   renderTaxonNames,
-} from "../../lib/data_utils";
+} from "../../lib/render_utils";
 import { getObservations } from "../../lib/inat_api";
 import { loggerTime } from "../../lib/logger";
 import { createPagination } from "../../lib/pagination";
@@ -133,31 +128,7 @@ export function createTable(results: ObservationsResult[], appStore: MapStore) {
     // media
     let tdEl = document.createElement("td");
     tdEl.className = "media";
-
-    let classes = ["media"];
-    if (row.photos.length === 0 && row.sounds.length > 0) {
-      classes.push("sound-only");
-    }
-    let mediaContent = `<div class="${classes.join(" ")}">`;
-
-    if (row.photos.length > 0) {
-      let url = row.photos[0].url?.replace("/square.", "/medium.");
-      if (url) {
-        mediaContent += `<a href="${iNatObservationUrl}/${row.id}">`;
-        mediaContent += `<img src="${url}">`;
-        mediaContent += "</a>";
-      }
-    }
-    if (row.sounds.length > 0) {
-      mediaContent += `<a href="${iNatObservationUrl}/${row.id}">`;
-      mediaContent += `${audio}`;
-      mediaContent += "</a>";
-    }
-    if (row.photos.length > 1) {
-      mediaContent += `<span class="photos-count">${row.photos.length}</span>`;
-    }
-    mediaContent += "</div>";
-    tdEl.innerHTML = mediaContent;
+    tdEl.innerHTML = renderMedia(row.id, row.photos, row.sounds);
     rowEl.appendChild(tdEl);
 
     // taxon name, observation metadata
@@ -183,32 +154,8 @@ export function createTable(results: ObservationsResult[], appStore: MapStore) {
       observationContent += `<span class="research-grade"><span class="research-grade-badge">Research Grade</span></span>`;
     }
 
-    observationContent += `<span class="metadata-counts">`;
+    observationContent += renderObservationMetadataCounts(row);
 
-    if (row.identifications.length > 0) {
-      let message = `${row.identifications.length} identifications`;
-      observationContent += `
-      <span class="identifications" aria-label="${message}" title="${message}">
-        ${check}<span class="count">${row.identifications.length}</span>
-      </span>`;
-    }
-
-    if (row.comments_count > 0) {
-      let message = `${row.comments_count} comments`;
-      observationContent += `
-      <span class="speech" aria-label="${message}" title="${message}">
-        ${speech}<span class="count">${row.comments_count}</span>
-      </span>`;
-    }
-
-    if (row.faves_count > 0) {
-      let message = `${row.faves_count} favorites`;
-      observationContent += `
-      <span class="favorites" aria-label="${message}" title="${message}">
-        ${star}<span class="count">${row.faves_count}</span>
-      </span>`;
-    }
-    observationContent += `</span>`;
     tdEl.innerHTML = observationContent;
     rowEl.appendChild(tdEl);
 

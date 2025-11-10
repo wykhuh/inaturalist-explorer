@@ -9,8 +9,8 @@ import {
   removeIdfromInatApiParams,
   normalizeAppParams,
   cleanupObervationsParams,
-  renderTaxonNames,
 } from "../lib/data_utils.ts";
+import { renderTaxonNames } from "../lib/render_utils";
 import type { NormalizediNatTaxon } from "../types/app.d.ts";
 import { mapStore } from "../lib/store.ts";
 import {

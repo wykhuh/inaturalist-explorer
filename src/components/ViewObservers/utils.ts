@@ -1,7 +1,5 @@
-import {
-  cleanupObervationsObserversParams,
-  formatAvatar,
-} from "../../lib/data_utils";
+import { cleanupObervationsObserversParams } from "../../lib/data_utils";
+import { formatAvatar } from "../../lib/render_utils";
 import { getObservationsObservers } from "../../lib/inat_api";
 import { iNatUserUrl } from "../../data/inat_data";
 import { loggerTime } from "../../lib/logger";

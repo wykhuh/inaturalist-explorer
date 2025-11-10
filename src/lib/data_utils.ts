@@ -25,13 +25,11 @@ import {
   iNatApiNonFilterableNames,
   allTaxaRecord,
   bboxPlaceRecord,
-  speciesRanks,
 } from "../data/inat_data.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
 import { logger, loggerFilters } from "./logger.ts";
 import { mapStore } from "./store.ts";
-import type { ObservationTaxon, SpeciesCountTaxon } from "../types/inat_api";
-import { person2 } from "../assets/icons.ts";
+import type { SpeciesCountTaxon, Taxon } from "../types/inat_api";
 import {
   updateTilesAndCountForAllTaxa,
   renderSelectedResources,
@@ -579,17 +577,17 @@ export function removeIdfromInatApiParams(
 }
 
 function isNormalizediNatTaxon(
-  record: NormalizediNatTaxon | SpeciesCountTaxon,
+  record: NormalizediNatTaxon | SpeciesCountTaxon | Taxon,
 ): record is NormalizediNatTaxon {
   return "matched_term" in record;
 }
 
-function capitalizeFirstLetter(text: string) {
+export function capitalizeFirstLetter(text: string) {
   return text && text[0].toUpperCase() + text.slice(1);
 }
 
 export function formatTaxonName(
-  item: NormalizediNatTaxon | SpeciesCountTaxon,
+  item: NormalizediNatTaxon | SpeciesCountTaxon | Taxon,
   appStore: MapStore,
   searchTerm = "",
 ) {
@@ -666,86 +664,6 @@ export function formatTaxonName(
     hasCommonName,
     rank,
   };
-}
-
-export function renderTaxonNames(
-  taxon: ObservationTaxon | SpeciesCountTaxon | NormalizediNatTaxon,
-  appStore: MapStore,
-  url?: string,
-  searchTerm = "",
-  includeParathesis = true,
-) {
-  let { title, titleAriaLabel, subtitle, subtitleAriaLabel, rank } =
-    formatTaxonName(taxon, appStore, searchTerm);
-
-  let content = "";
-  if (title && titleAriaLabel) {
-    content += renderTaxonName(
-      title,
-      titleAriaLabel,
-      "title",
-      false,
-      rank,
-      url,
-    );
-  }
-  if (subtitle && subtitleAriaLabel) {
-    content += renderTaxonName(
-      subtitle,
-      subtitleAriaLabel,
-      "subtitle",
-      includeParathesis,
-      rank,
-      url,
-    );
-  }
-
-  return content;
-}
-
-function renderTaxonName(
-  name: string,
-  ariaLabel: string,
-  nameType: string,
-  includeParathesis = true,
-  rank?: string,
-  url?: string,
-) {
-  let type =
-    ariaLabel === "taxon common name" ? "common-name" : "scientific-name";
-
-  let content = "";
-  if (url) {
-    content += `<a href="${url}" class="${nameType}">\n`;
-  } else {
-    content += `<span class="${nameType}">\n`;
-  }
-  if (includeParathesis) {
-    content += `(`;
-  }
-  if (type === "scientific-name") {
-    if (rank && !speciesRanks.includes(rank)) {
-      content += `<span class="rank" aria-label="taxon rank">${capitalizeFirstLetter(rank)}</span> `;
-    }
-  }
-
-  content += `<span class="${type}" aria-label="${ariaLabel}">`;
-
-  content += name;
-
-  if (includeParathesis) {
-    content += `</span>)\n`;
-  } else {
-    content += `</span>\n`;
-  }
-
-  if (url) {
-    content += `</a>\n`;
-  } else {
-    content += `</span>\n`;
-  }
-
-  return content;
 }
 
 export function leafletVisibleLayers(appStore: MapStore, strict = false) {
@@ -851,14 +769,6 @@ export function updateStoreUsingFilters(
     ...appStore.inatApiParams,
     ...filtersResults.params,
   };
-}
-
-export function formatAvatar(imgUrl?: string | null) {
-  if (imgUrl) {
-    return `<img class="avatar" src="${imgUrl}">`;
-  } else {
-    return person2;
-  }
 }
 
 export function normalizeAppParams(appParams: string) {

@@ -16,8 +16,8 @@ import {
   getObservationsCountForTaxon,
   removeOneTaxonFromStoreAndMap,
   removeTaxaFromStoreAndMap,
-  renderTaxonNames,
 } from "./data_utils.ts";
+import { renderTaxonNames } from "./render_utils";
 import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
 import {
   updateCountForAllPlaces,

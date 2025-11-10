@@ -1,8 +1,12 @@
 import type { ObservationsResult } from "../../types/inat_api";
 import type { DataComponent, MapStore } from "../../types/app";
-import { formatAvatar, renderTaxonNames } from "../../lib/data_utils";
+import {
+  formatAvatar,
+  renderMedia,
+  renderObservationMetadataCounts,
+  renderTaxonNames,
+} from "../../lib/render_utils";
 import { iNatObservationUrl, iNatUserUrl } from "../../data/inat_data";
-import { audio, check, speech, star } from "../../assets/icons";
 import { setupComponent } from "../../lib/component_utils";
 
 class MyComponent extends HTMLElement {
@@ -21,37 +25,15 @@ class MyComponent extends HTMLElement {
   }
 
   renderCard(appStore: MapStore) {
-    let mediaEl = this.querySelector(".media");
-    if (!mediaEl) return;
-    let detailsEl = this.querySelector(".details");
-    if (!detailsEl) return;
+    let cardEl = this.querySelector(".card");
+    if (!cardEl) return;
 
     let data = (this as DataComponent).data as ObservationsResult;
 
-    let mediaContent = "";
+    cardEl.innerHTML = renderMedia(data.id, data.photos, data.sounds);
 
-    if (data.photos.length > 0) {
-      let url = data.photos[0].url?.replace("/square.", "/medium.");
-      if (url) {
-        mediaContent += `<a href="${iNatObservationUrl}/${data.id}">`;
-        mediaContent += `<img src="${url}">`;
-        mediaContent += "</a>";
-      }
-    }
-    if (data.sounds.length > 0) {
-      mediaContent += `<a href="${iNatObservationUrl}/${data.id}">`;
-      mediaContent += `${audio}`;
-      mediaContent += "</a>";
-    }
-
-    if (data.photos.length === 0 && data.sounds.length > 0) {
-      mediaEl.classList.add("sound-only");
-    }
-    if (data.photos.length > 1) {
-      mediaContent += `<span class="photos-count">${data.photos.length}</span>`;
-    }
-
-    mediaEl.innerHTML = mediaContent;
+    let detailsEl = document.createElement("div");
+    detailsEl.className = "details";
 
     let detailsContent = ``;
 
@@ -87,41 +69,10 @@ class MyComponent extends HTMLElement {
        </span>`;
     }
 
-    detailsContent += `<span class="metadata-counts">`;
-    if (data.identifications.length > 0) {
-      let message = `${data.identifications.length} identifications`;
-      detailsContent += `
-      <span class="identifications" aria-label="${message}" title="${message}">
-        ${check}<span class="identifications-count">${data.identifications.length}</span>
-      </span>`;
-    }
-
-    if (data.comments_count > 0) {
-      let message = `${data.comments_count} comments`;
-      detailsContent += `
-      <span class="speech" aria-label="${message}" title="${message}">
-        ${speech}<span class="comments-count">${data.comments_count}</span>
-      </span>`;
-    }
-
-    if (data.faves_count > 0) {
-      let message = `${data.faves_count} favorites`;
-      detailsContent += `
-      <span class="favorites" aria-label="${message}" title="${message}">
-        ${star}<span class="favorites-count">${data.faves_count}</span>
-      </span>`;
-    }
-
-    if (data.observed_on) {
-      let date = new Date(data.observed_on).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-      });
-      detailsContent += `<span class="observed">${date}</span>`;
-    }
-    detailsContent += `</span>`;
+    detailsContent += renderObservationMetadataCounts(data, true);
 
     detailsEl.innerHTML = detailsContent;
+    cardEl.appendChild(detailsEl);
   }
 }
 

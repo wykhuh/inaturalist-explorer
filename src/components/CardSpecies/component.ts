@@ -1,9 +1,10 @@
 import type { SpeciesCountResult } from "../../types/inat_api";
 import type { DataComponent, MapStore } from "../../types/app";
 import { pluralize } from "../../lib/utils";
-import { formatTaxonName, renderTaxonNames } from "../../lib/data_utils";
+import { formatTaxonName } from "../../lib/data_utils";
 import { iNatTaxaUrl } from "../../data/inat_data";
 import { setupComponent } from "../../lib/component_utils";
+import { renderTaxonNames } from "../../lib/render_utils";
 
 class MyComponent extends HTMLElement {
   constructor() {

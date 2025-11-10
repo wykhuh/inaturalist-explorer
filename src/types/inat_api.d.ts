@@ -423,6 +423,10 @@ export interface ObservationUser {
   name?: string | null;
 }
 
+export interface ObservationSound {
+  id: number;
+}
+
 export interface iNatObservationsObserversAPI {
   total_results: number;
   page: number;
@@ -871,7 +875,7 @@ export interface Observation {
   tags: any[];
   ofvs: any[];
   annotations: Annotation[];
-  sounds: any[];
+  sounds: ObservationSound[];
   ident_taxon_ids: number[];
   identification_disagreements_count: number;
   identifications_count: number;
