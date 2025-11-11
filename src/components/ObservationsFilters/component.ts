@@ -147,7 +147,11 @@ class MyComponent extends HTMLElement {
       });
 
       form.addEventListener("input", async (event) => {
-        if (event.target === null) return;
+        let target = event.target as HTMLInputElement;
+        if (target === null) return;
+        // ignore changes to search autocomplete
+        if (target.name === "ident_user_id") return;
+        if (target.name === "unobserved_by_user_id") return;
 
         event.preventDefault();
 
