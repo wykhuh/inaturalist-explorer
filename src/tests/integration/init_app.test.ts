@@ -427,6 +427,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     });
     expect(store.color).toBe(iNatOrange);
     expect(store.viewMetadata).toStrictEqual({
+      identifications: {},
       identifiers: { page: 3, order: "desc", order_by: "id" },
       observers: {},
       species: {},

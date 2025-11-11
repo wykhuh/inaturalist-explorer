@@ -3,6 +3,7 @@ export const validViews = [
   "species",
   "identifiers",
   "observers",
+  "identifications",
 ];
 
 export const validObservationsSubviews = ["grid", "table"];

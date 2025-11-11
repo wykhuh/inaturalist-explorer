@@ -80,13 +80,13 @@ https://www.maplibrary.org/1254/exploring-map-projection-alternatives-for-web-us
 
 ==
 
-I added new features.
+Thanks for the feedback!
 
 - Add `unobserved_by_user_id` as requested by @deanhester94 to find species not observed by user. Filters > Users > Unobserved by user.
-- Add `ident_user_id` to find observations by identifier. Filters > Users > Identified by user.
+- Add 'Identifications' view as requested by to show the identifications. Click 'Identifications' in the header.
+- Add `ident_user_id` to find observations by identifier. Filters > Users > Identified by user. Due to limitations of the iNaturalist API, only one user can be selected.
 - Add `locale` to set the common name language. Settings > Common Name Language.
--
 
-Here is an example search for butterflies or dragonflies, in Los Angeles or San Diego, that are observed by hogpotato or biohexx1 , and identified by nlblock.
+Here is an example search for butterflies or dragonflies, in Los Angeles or San Diego, that are observed by hogpotato or biohexx1, and identified by nlblock.
 
-https://inat-explorer-api.pages.dev/?taxon_id=47792,47157&place_id=962,829&user_id=164822,81261&colors=%2366ccee,%23228833&locale=en&verifiable=true&spam=false&ident_user_id=39752
+https://inat-explorer-api.pages.dev/?taxon_id=47792,47157&place_id=962,829&user_id=164822,81261&colors=%2366ccee,%23228833&verifiable=true&spam=false&ident_user_id=39752

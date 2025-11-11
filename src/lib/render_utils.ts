@@ -1,6 +1,7 @@
 import type { NormalizediNatTaxon, MapStore } from "../types/app";
-import { iNatObservationUrl, speciesRanks } from "../data/inat_data.ts";
+import { speciesRanks } from "../data/inat_data.ts";
 import type {
+  Observation,
   ObservationPhoto,
   ObservationSound,
   ObservationsResult,
@@ -8,8 +9,17 @@ import type {
   SpeciesCountTaxon,
   Taxon,
 } from "../types/inat_api";
-import { audio, check, person2, speech, star } from "../assets/icons.ts";
+import {
+  audio,
+  check,
+  mapMarker,
+  mapMarkerObscured,
+  person2,
+  speech,
+  star,
+} from "../assets/icons.ts";
 import { capitalizeFirstLetter, formatTaxonName } from "./data_utils.ts";
+import { logger } from "./logger.ts";
 
 export function formatAvatar(imgUrl?: string | null) {
   if (imgUrl) {
@@ -100,7 +110,7 @@ function renderTaxonName(
 }
 
 export function renderMedia(
-  id: number,
+  inatUrl: string,
   photos: ObservationPhoto[],
   sounds: ObservationSound[],
 ) {
@@ -117,13 +127,18 @@ export function renderMedia(
       url = photos[0].photo?.url;
     }
     if (url) {
-      mediaContent += `<a href="${iNatObservationUrl}/${id}">`;
+      mediaContent += `<a href="${inatUrl}">`;
       mediaContent += `<img src="${url}">`;
       mediaContent += "</a>";
+    } else {
+      logger(photos);
     }
+  } else {
+    logger(photos);
   }
+
   if (sounds.length > 0) {
-    mediaContent += `<a href="${iNatObservationUrl}/${id}">`;
+    mediaContent += `<a href="${inatUrl}">`;
     mediaContent += `${audio}`;
     mediaContent += "</a>";
   }
@@ -135,10 +150,10 @@ export function renderMedia(
 }
 
 export function renderObservationMetadataCounts(
-  data: ObservationsResult,
+  data: ObservationsResult | Observation,
   includeDate = false,
 ) {
-  let detailsContent = `<span class="metadata-counts">`;
+  let detailsContent = `<div class="metadata-counts">`;
   if (data.identifications.length > 0) {
     let message = `${data.identifications.length} identifications`;
     detailsContent += `
@@ -170,7 +185,16 @@ export function renderObservationMetadataCounts(
     });
     detailsContent += `<span class="observed">${date}</span>`;
   }
-  detailsContent += `</span>`;
+  detailsContent += `</div>`;
 
   return detailsContent;
+}
+
+export function renderPlace(place: string, obscured: boolean) {
+  let placeContent = obscured
+    ? `<span class="obscured" aria-label="location is obscured" title="location is obscured">${mapMarkerObscured}</span>`
+    : `<span class="obscured" aria-label="location is public" title="location is public">${mapMarker}</span>`;
+  placeContent += `<span class="place">${place}</span>`;
+
+  return placeContent;
 }

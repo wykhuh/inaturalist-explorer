@@ -790,8 +790,12 @@ export function viewAndTemplateObject(targetView: string) {
     view = "x-view-identifiers";
   } else if (targetView === "observers") {
     view = "x-view-observers";
-  } else {
+  } else if (targetView === "observations") {
     view = "x-view-map";
+  } else if (targetView === "identifications") {
+    view = "x-view-identifications";
+  } else {
+    throw Error("Need to add view /template");
   }
   return view;
 }

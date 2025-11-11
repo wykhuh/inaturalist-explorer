@@ -31,6 +31,7 @@ export const mapStore: MapStore = {
     observations: { subview: "grid" },
     species: {},
     identifiers: {},
+    identifications: {},
     observers: {},
     name_order: "cs",
   },

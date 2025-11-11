@@ -45,7 +45,6 @@ export function updateView(
 
   let templateName = viewAndTemplateObject(targetView);
   let view = document.createElement(templateName);
-
   parentEl.appendChild(view);
 
   // update currentView class in nav
@@ -76,7 +75,6 @@ export function updateView(
   } else {
     delete appStore.inatApiParams.order_by;
   }
-
   updateAppUrl(window.location, appStore);
 }
 

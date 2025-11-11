@@ -312,6 +312,8 @@ export function decodeAppUrl(searchParams: string) {
     if (validObservationsSubviews.includes(urlParams.subview)) {
       store.viewMetadata.observations.subview = urlParams.subview;
     }
+  } else if (urlParams.view === "identifications") {
+    store.viewMetadata.identifications = {};
   }
 
   if (urlParams.order) {
@@ -381,16 +383,21 @@ export function getRandomInt(max: number) {
   return Math.floor(Math.random() * max);
 }
 
-export function formatDate(date: string | null, timezone: string) {
+export function formatDate(date: string | null, timezone?: string) {
   if (!date) return;
 
-  return new Date(date).toLocaleString("en-US", {
-    timeZone: timezone,
+  let options = {
     timeZoneName: "short",
     year: "numeric",
     month: "short",
     day: "numeric",
     hour: "numeric",
     minute: "numeric",
-  });
+  } as any;
+  if (timezone) {
+    options.timeZone = timezone;
+  }
+
+  // TODO: localize date
+  return new Date(date).toLocaleString("en-US", options);
 }

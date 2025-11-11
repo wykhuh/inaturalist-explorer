@@ -1,10 +1,10 @@
-import { circleDot, circleX } from "../../assets/icons";
 import { iNatObservationUrl, iNatUserUrl } from "../../data/inat_data";
 import { cleanupObervationsParams } from "../../lib/data_utils";
 import {
   formatAvatar,
   renderMedia,
   renderObservationMetadataCounts,
+  renderPlace,
   renderTaxonNames,
 } from "../../lib/render_utils";
 import { getObservations } from "../../lib/inat_api";
@@ -127,8 +127,9 @@ export function createTable(results: ObservationsResult[], appStore: MapStore) {
 
     // media
     let tdEl = document.createElement("td");
-    tdEl.className = "media";
-    tdEl.innerHTML = renderMedia(row.id, row.photos, row.sounds);
+    tdEl.className = "media-cell";
+    let url = `${iNatObservationUrl}/${row.id}`;
+    tdEl.innerHTML = renderMedia(url, row.photos, row.sounds);
     rowEl.appendChild(tdEl);
 
     // taxon name, observation metadata
@@ -172,17 +173,16 @@ export function createTable(results: ObservationsResult[], appStore: MapStore) {
     // place
     tdEl = document.createElement("td");
     tdEl.className = "place";
-    let placeContent = row.obscured
-      ? `<span class="obscured" aria-label="location is obscured" title="location is obscured">${circleX}</span>`
-      : `<span class="obscured" aria-label="location is public" title="location is public">${circleDot}</span>`;
-    placeContent += `<span class="place">${row.place_guess}</span>`;
+    let placeContent = renderPlace(row.place_guess, row.obscured);
     tdEl.innerHTML = placeContent;
     rowEl.appendChild(tdEl);
 
     // observed on
     tdEl = document.createElement("td");
     tdEl.className = "observed";
-    tdEl.innerText = ` ${formatDate(row.time_observed_at, row.observed_time_zone)}`;
+    if (row.time_observed_at) {
+      tdEl.innerText = ` ${formatDate(row.time_observed_at, row.observed_time_zone)}`;
+    }
     rowEl.appendChild(tdEl);
 
     // created

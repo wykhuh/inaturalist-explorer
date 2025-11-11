@@ -30,7 +30,8 @@ class MyComponent extends HTMLElement {
 
     let data = (this as DataComponent).data as ObservationsResult;
 
-    cardEl.innerHTML = renderMedia(data.id, data.photos, data.sounds);
+    let url = `${iNatObservationUrl}/${data.id}`;
+    cardEl.innerHTML = renderMedia(url, data.photos, data.sounds);
 
     let detailsEl = document.createElement("div");
     detailsEl.className = "details";

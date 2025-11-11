@@ -53,6 +53,7 @@ export interface MapStore {
     species: ViewOptions;
     identifiers: ViewOptions;
     observers: ViewOptions;
+    identifications: ViewOptions;
     name_order: NameOrder;
   };
 }
@@ -70,7 +71,8 @@ export type ObservationViews =
   | "observations"
   | "species"
   | "identifiers"
-  | "observers";
+  | "observers"
+  | "identifications";
 
 export type ObservationSubviews = "table" | "grid";
 export type NameOrder = "cs" | "sc" | "s";
@@ -112,7 +114,7 @@ export type NormalizediNatProject = {
 export type NormalizediNatUser = {
   id: number;
   login: string;
-  name: string;
+  name: string | null;
   observations_count?: number;
 };
 

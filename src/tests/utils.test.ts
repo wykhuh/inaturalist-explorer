@@ -319,6 +319,7 @@ describe("formatAppUrl", () => {
         observations: { subview: "table" },
         observers: {},
         identifiers: {},
+        identifications: {},
         species: {},
         name_order: "cs",
       },
@@ -339,6 +340,7 @@ describe("formatAppUrl", () => {
           observations: {},
           observers: {},
           identifiers: {},
+          identifications: {},
           species: {},
           name_order: name_order as NameOrder,
         },
@@ -368,6 +370,7 @@ describe("formatAppUrl", () => {
         identifiers: { page: 2 },
         species: { page: 3 },
         observers: { page: 4 },
+        identifications: { page: 5 },
         name_order: "cs",
       },
     };
@@ -379,7 +382,7 @@ describe("formatAppUrl", () => {
     );
   });
 
-  test.each(["identifiers", "species", "observers"])(
+  test.each(["identifiers", "species", "observers", "identifications"])(
     "return params for page, order, order_by if not observation",
     (name) => {
       let appStore: MapStore = {
@@ -399,6 +402,7 @@ describe("formatAppUrl", () => {
           identifiers: { page: 11, order: "desc", order_by: "id" },
           species: { page: 12, order: "desc", order_by: "id" },
           observers: { page: 13, order: "desc", order_by: "id" },
+          identifications: { page: 14, order: "desc", order_by: "id" },
           name_order: "cs",
         },
       };
@@ -824,7 +828,10 @@ describe("decodeAppUrl options", () => {
         observers: {},
         species: {},
       },
-    };
+    } as any;
+    if (view === "identifications") {
+      expected.viewMetadata.identifications = {};
+    }
 
     let result = decodeAppUrl(searchParams);
 
@@ -867,7 +874,10 @@ describe("decodeAppUrl options", () => {
         observers: {},
         species: {},
       },
-    };
+    } as any;
+    if (view === "identifications") {
+      expected.viewMetadata.identifications = {};
+    }
 
     let result = decodeAppUrl(searchParams);
 

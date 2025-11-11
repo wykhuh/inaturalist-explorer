@@ -126,6 +126,7 @@
     --clr-iNat-orange: #f16f3a;
     --clr-iNat-pink: #ff1493;
     --clr-iNat-dark-gray: #565656;
+    --clr-iNat-yellow: #ffee91;
 
     --clr-overlay-dark-400: rgba(0, 0, 0, 0.4);
     --clr-overlay-dark-500: rgba(0, 0, 0, 0.5);
@@ -633,6 +634,7 @@
     }
   }
 
+  .identifications-table-container,
   .identifiers-table-container,
   .observers-table-container,
   .species-list-container,
@@ -640,6 +642,7 @@
     margin: var(--view-container-margins);
   }
 
+  .identifications-table,
   .species-grid,
   .observers-table,
   .identifiers-table,
@@ -689,6 +692,17 @@
       border-radius: 18px;
     }
 
+    .map-marker-icon,
+    .map-marker-obscured-icon {
+      width: 12px;
+      height: 12px;
+      display: inline;
+    }
+
+    .map-marker-obscured-icon {
+      fill: var(--clr-gray-500);
+    }
+
     .person-icon {
       background-color: var(--clr-gray-400);
       g {
@@ -702,6 +716,16 @@
       .research-grade-badge {
         background-color: var(--clr-iNat-green);
         color: var(--clr-white);
+        padding: 3px;
+        font-size: var(--font-size-sm);
+      }
+    }
+
+    .needs-id {
+      margin-top: 0.5rem;
+
+      .needs-id-badge {
+        background-color: var(--clr-iNat-yellow);
         padding: 3px;
         font-size: var(--font-size-sm);
       }
@@ -814,7 +838,8 @@
     }
   }
 
-  .observations-table {
+  .observations-table,
+  .identifications-table {
     td.name {
       display: flex;
       flex-direction: column;
@@ -830,38 +855,15 @@
       }
     }
 
-    td.media {
+    td.media-cell {
       padding: 0;
+    }
 
-      div.media {
-        position: relative;
-        width: 80px;
-        height: 80px;
-        background-color: var(--clr-gray-500);
-      }
-
-      div.media:not(.sound-only) {
-        .audio-icon {
-          --audio-color: var(--clr-overlay-light-900);
-          background-color: var(--clr-overlay-dark-600);
-          top: 0px;
-          right: 0px;
-          width: 25px;
-          height: 25px;
-          position: absolute;
-          padding: 2px;
-        }
-      }
-      div.media.sound-only {
-        .audio-icon {
-          --audio-color: var(--clr-overlay-dark-400);
-          top: 10px;
-          left: 10px;
-          width: 60px;
-          height: 60px;
-          position: absolute;
-        }
-      }
+    div.media {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      background-color: var(--clr-gray-500);
 
       img {
         position: absolute;
@@ -872,13 +874,49 @@
       }
     }
 
-    .obscured {
-      font-size: var(--font-size-heading-sm);
-      margin-right: 4px;
+    div.media:not(.sound-only) {
+      .audio-icon {
+        --audio-color: var(--clr-overlay-light-900);
+        background-color: var(--clr-overlay-dark-600);
+        top: 0px;
+        right: 0px;
+        width: 25px;
+        height: 25px;
+        position: absolute;
+        padding: 2px;
+      }
+    }
+    div.media.sound-only {
+      .audio-icon {
+        --audio-color: var(--clr-overlay-dark-400);
+        top: 10px;
+        left: 10px;
+        width: 60px;
+        height: 60px;
+        position: absolute;
+      }
     }
 
     .avatar-name {
       flex-direction: column;
+    }
+  }
+
+  .identifications-table {
+    td {
+      vertical-align: top;
+      width: 50%;
+    }
+
+    .header {
+      margin-bottom: 0.6rem;
+    }
+    .footer {
+      margin-top: 0.6rem;
+    }
+    .research-grade,
+    .needs-id {
+      margin-top: 0;
     }
   }
 
@@ -955,6 +993,11 @@
       border-radius: 100%;
       border: 2px solid white;
     }
+  }
+
+  .identifications-table .details {
+    display: flex;
+    flex-direction: column;
   }
 }
 
