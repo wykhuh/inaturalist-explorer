@@ -1,4 +1,5 @@
 import {
+  cleanupIdentificationParams,
   cleanupObervationsObserversParams,
   cleanupObervationsParams,
   viewAndTemplateObject,
@@ -113,10 +114,11 @@ export function updateCounts(appStore: MapStore) {
     "#observations-header .identifiers-count",
     params,
   );
+  let identificationParams = cleanupIdentificationParams(appStore);
   updateResourceCounts(
     getIdentifications,
     "#observations-header .identifications-count",
-    params,
+    identificationParams,
   );
 
   let observersParams = cleanupObervationsObserversParams(appStore);

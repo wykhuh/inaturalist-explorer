@@ -800,11 +800,6 @@ export function viewAndTemplateObject(targetView: string) {
   return view;
 }
 
-export function cleanupObervationsParams(appStore: MapStore) {
-  let params = cleanupParams(appStore);
-  return params.toString();
-}
-
 function cleanupParams(appStore: MapStore) {
   let string = formatAppUrl(appStore);
   let params = new URLSearchParams(string);
@@ -840,11 +835,28 @@ export function cleanupObervationsParamsForRecord(inatParams: iNatApiParams) {
   return params.toString();
 }
 
+export function cleanupObervationsParams(appStore: MapStore) {
+  let params = cleanupParams(appStore);
+  return params.toString();
+}
+
 export function cleanupObervationsObserversParams(appStore: MapStore) {
   let params = cleanupParams(appStore);
 
   params.delete("order");
   params.delete("order_by");
+
+  return params.toString();
+}
+
+export function cleanupIdentificationParams(appStore: MapStore) {
+  let params = cleanupParams(appStore);
+
+  let ident_user_id = params.get("ident_user_id");
+  if (ident_user_id) {
+    params.set("user_id", ident_user_id);
+    params.delete("ident_user_id");
+  }
 
   return params.toString();
 }

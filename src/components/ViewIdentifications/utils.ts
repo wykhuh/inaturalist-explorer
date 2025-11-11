@@ -1,4 +1,4 @@
-import { cleanupObervationsParams } from "../../lib/data_utils";
+import { cleanupIdentificationParams } from "../../lib/data_utils";
 import {
   renderMedia,
   renderObservationMetadataCounts,
@@ -67,7 +67,7 @@ async function getAPIData(perPage: number, appStore: MapStore) {
     return identifications;
   }
 
-  let params = cleanupObervationsParams(appStore);
+  let params = cleanupIdentificationParams(appStore);
 
   try {
     let data = await getIdentifications(params, perPage);
