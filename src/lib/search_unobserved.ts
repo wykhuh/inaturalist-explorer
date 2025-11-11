@@ -17,6 +17,7 @@ import {
   renderAutocompleteUser,
 } from "./search_users.ts";
 import { removeOneUnobservedByUserFromStore } from "./data_utils.ts";
+import { renderSelectedFiltersList } from "../components/ObservationsFilters/utils.ts";
 
 export function setupUnobservedByUserSearch(
   selector: string,
@@ -82,6 +83,13 @@ export async function unobservedByUserSelectedHandler(
   await updateCountForAllPlaces(appStore);
   await updateCountForAllProjects(appStore);
   await updateCountForAllUsers(appStore);
+
+  // add unobserved_by_user_id to filters list shown in filters modal
+  const form = document.querySelector("#filters-form") as HTMLFormElement;
+  if (form) {
+    const formData = new FormData(form);
+    renderSelectedFiltersList(formData);
+  }
 
   renderSelectedResources(appStore);
 }
