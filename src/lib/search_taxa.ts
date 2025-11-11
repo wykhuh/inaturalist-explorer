@@ -39,6 +39,9 @@ export function setupTaxaSearch(selector: string, appStore: MapStore) {
       src: async (query: string) => {
         try {
           let url = `${autocomplete_taxa_api}&per_page=50&q=${query}`;
+          if (appStore.inatApiParams.locale) {
+            url += `&locale=${appStore.inatApiParams.locale}`;
+          }
           loggerUrl(url);
           let res = await fetch(url);
           let data = (await res.json()) as iNatAutocompleteTaxaAPI;

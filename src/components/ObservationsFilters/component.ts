@@ -41,9 +41,9 @@ class MyComponent extends HTMLElement {
     this.renderForm();
     this.formEventHandler();
     renderYearsSelect();
-    setupUnobservedByUserSearch("#unobserved-by-user-search");
+    setupUnobservedByUserSearch("#unobserved-by-user-search", window.app.store);
     searchSetup("#unobserved-by-user-search", unobservedByUserSelectedHandler);
-    setupUserIdentifierSearch("#identifier-search");
+    setupUserIdentifierSearch("#identifier-search", window.app.store);
     searchSetup("#identifier-search", userIdentifierSelectedHandler);
 
     // use store to set values the form on page load

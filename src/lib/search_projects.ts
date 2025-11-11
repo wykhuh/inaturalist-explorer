@@ -23,7 +23,7 @@ import {
 } from "./search_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
 
-export function setupProjectSearch(selector: string) {
+export function setupProjectSearch(selector: string, appStore: MapStore) {
   const autoCompleteProjectJS = new autoComplete({
     autocomplete: "off",
     selector: selector,
@@ -36,6 +36,15 @@ export function setupProjectSearch(selector: string) {
       src: async (query: string) => {
         try {
           let url = `${autocomplete_projects_api}&per_page=50&q=${query}`;
+          if (appStore.inatApiParams.place_id) {
+            url += `&place_id=${appStore.inatApiParams.place_id}`;
+          }
+          let usersIds = appStore.inatApiParams.user_id;
+          if (usersIds) {
+            // NOTE: iNaturalist API only allow one id for member_id
+            let member_id = usersIds.split(",")[0];
+            url += `&member_id=${member_id}`;
+          }
           loggerUrl(url);
           let res = await fetch(url);
           let data = (await res.json()) as iNatProjectsAPI;
