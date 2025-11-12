@@ -3,11 +3,11 @@ import { getTaxa } from "../../lib/inat_api";
 import type { MapStore } from "../../types/app";
 
 export async function updateComonNamesByLanguage(appStore: MapStore) {
-  if (appStore.inatApiParams.taxon_id === "0") return;
+  if (appStore.observationsApiParams.taxon_id === "0") return;
 
   let param = {
-    locale: appStore.inatApiParams.locale,
-    id: appStore.inatApiParams.taxon_id,
+    locale: appStore.observationsApiParams.locale,
+    id: appStore.observationsApiParams.taxon_id,
   } as any;
   let stringParam = new URLSearchParams(param).toString();
 

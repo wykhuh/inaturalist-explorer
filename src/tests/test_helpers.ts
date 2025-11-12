@@ -419,7 +419,9 @@ export function setupMapAndStore() {
 }
 
 export function expectEmpytMap(store: MapStore) {
-  expect(store.inatApiParams).toStrictEqual(mapStore.inatApiParams);
+  expect(store.observationsApiParams).toStrictEqual(
+    mapStore.observationsApiParams,
+  );
   expect(store.selectedTaxa).toStrictEqual([]);
   expect(store.taxaMapLayers).toStrictEqual({});
   expect(store.selectedPlaces).toStrictEqual([]);

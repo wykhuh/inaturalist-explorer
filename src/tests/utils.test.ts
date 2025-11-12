@@ -86,8 +86,8 @@ describe("formatAppUrl", () => {
   test("format parameters for one taxon", () => {
     let appStore: MapStore = {
       ...mapStore,
-      inatApiParams: {
-        ...mapStore.inatApiParams,
+      observationsApiParams: {
+        ...mapStore.observationsApiParams,
         taxon_id: life().id.toString(),
         colors: life().color,
       },
@@ -104,8 +104,8 @@ describe("formatAppUrl", () => {
   test("format parameters for multiple taxa", () => {
     let appStore: MapStore = {
       ...mapStore,
-      inatApiParams: {
-        ...mapStore.inatApiParams,
+      observationsApiParams: {
+        ...mapStore.observationsApiParams,
         taxon_id: redOak().id.toString(),
         colors: redOak().color,
       },
@@ -124,8 +124,8 @@ describe("formatAppUrl", () => {
   test("format parameters for one place", () => {
     let appStore: MapStore = {
       ...mapStore,
-      inatApiParams: {
-        ...mapStore.inatApiParams,
+      observationsApiParams: {
+        ...mapStore.observationsApiParams,
         place_id: losangeles.id.toString(),
       },
       selectedTaxa: [],
@@ -140,8 +140,8 @@ describe("formatAppUrl", () => {
   test("format parameters for multiple places", () => {
     let appStore: MapStore = {
       ...mapStore,
-      inatApiParams: {
-        ...mapStore.inatApiParams,
+      observationsApiParams: {
+        ...mapStore.observationsApiParams,
         place_id: `${losangeles.id},${sandiego.id}`,
       },
       selectedTaxa: [],
@@ -158,8 +158,8 @@ describe("formatAppUrl", () => {
   test("format parameters for one project", () => {
     let appStore: MapStore = {
       ...mapStore,
-      inatApiParams: {
-        ...mapStore.inatApiParams,
+      observationsApiParams: {
+        ...mapStore.observationsApiParams,
         project_id: project_cnc1.id.toString(),
       },
       selectedTaxa: [],
@@ -174,8 +174,8 @@ describe("formatAppUrl", () => {
   test("format parameters for multiple project", () => {
     let appStore: MapStore = {
       ...mapStore,
-      inatApiParams: {
-        ...mapStore.inatApiParams,
+      observationsApiParams: {
+        ...mapStore.observationsApiParams,
         project_id: `${project_cnc1.id.toString()},${project_cnc2.id.toString()}`,
       },
       selectedTaxa: [],
@@ -192,8 +192,8 @@ describe("formatAppUrl", () => {
   test("format parameters for one user", () => {
     let appStore: MapStore = {
       ...mapStore,
-      inatApiParams: {
-        ...mapStore.inatApiParams,
+      observationsApiParams: {
+        ...mapStore.observationsApiParams,
         user_id: user1.id.toString(),
       },
       selectedTaxa: [],
@@ -208,8 +208,8 @@ describe("formatAppUrl", () => {
   test("format parameters for multiple users", () => {
     let appStore: MapStore = {
       ...mapStore,
-      inatApiParams: {
-        ...mapStore.inatApiParams,
+      observationsApiParams: {
+        ...mapStore.observationsApiParams,
         user_id: `${user1.id},${user2.id}`,
       },
       selectedTaxa: [],
@@ -221,11 +221,11 @@ describe("formatAppUrl", () => {
     expect(result).toBe(`user_id=${user1.id},${user2.id}` + `&${defaultQuery}`);
   });
 
-  test("return params if no selected resources, and inatApiParams has additional params", () => {
+  test("return params if no selected resources, and observationsApiParams has additional params", () => {
     let appStore: MapStore = {
       ...mapStore,
-      inatApiParams: {
-        ...mapStore.inatApiParams,
+      observationsApiParams: {
+        ...mapStore.observationsApiParams,
         photos: true,
       },
       selectedTaxa: [],
@@ -240,8 +240,8 @@ describe("formatAppUrl", () => {
   test("ignore invalid params if no selected resources", () => {
     let appStore = {
       ...mapStore,
-      inatApiParams: {
-        ...mapStore.inatApiParams,
+      observationsApiParams: {
+        ...mapStore.observationsApiParams,
         foo: "boo",
       },
       selectedTaxa: [],
@@ -256,8 +256,8 @@ describe("formatAppUrl", () => {
   test("ignore invalid params if selected resources", () => {
     let appStore = {
       ...mapStore,
-      inatApiParams: {
-        ...mapStore.inatApiParams,
+      observationsApiParams: {
+        ...mapStore.observationsApiParams,
         foo: "boo",
         place_id: "962",
       },
@@ -273,7 +273,7 @@ describe("formatAppUrl", () => {
   test("return params if no selected resources, and spam and verifiable are not default", () => {
     let appStore: MapStore = {
       ...mapStore,
-      inatApiParams: {
+      observationsApiParams: {
         verifiable: false,
         spam: true,
       },
@@ -355,7 +355,7 @@ describe("formatAppUrl", () => {
   test("return params for page, order, order_by if observation", () => {
     let appStore: MapStore = {
       ...mapStore,
-      inatApiParams: {
+      observationsApiParams: {
         verifiable: true,
         spam: false,
         page: 1,
@@ -387,7 +387,7 @@ describe("formatAppUrl", () => {
     (name) => {
       let appStore: MapStore = {
         ...mapStore,
-        inatApiParams: {
+        observationsApiParams: {
           verifiable: true,
           spam: false,
           page: 1,
@@ -418,7 +418,7 @@ describe("formatAppUrl", () => {
   test.each(["es", "fr"])("return params for locale that is not en", (lang) => {
     let appStore: MapStore = {
       ...mapStore,
-      inatApiParams: {
+      observationsApiParams: {
         verifiable: true,
         spam: false,
         locale: lang,
@@ -447,7 +447,7 @@ describe("updateAppUrl", () => {
     const pushSpy = vi.spyOn(history, "pushState");
     let appStore = {
       ...mapStore,
-      inatApiParams: {
+      observationsApiParams: {
         taxon_id: life().id.toString(),
         colors: life().color,
         spam: false,
@@ -483,7 +483,7 @@ describe("decodeAppUrl resources", () => {
           color: "#eeeeee",
         },
       ],
-      inatApiParams: {
+      observationsApiParams: {
         verifiable: true,
         spam: false,
       },
@@ -506,7 +506,7 @@ describe("decodeAppUrl resources", () => {
 
     let expected = {
       selectedPlaces: [{ id: 987 }],
-      inatApiParams: {
+      observationsApiParams: {
         verifiable: true,
         spam: false,
       },
@@ -530,7 +530,7 @@ describe("decodeAppUrl resources", () => {
 
     let expected = {
       selectedProjects: [{ id: 987 }],
-      inatApiParams: {
+      observationsApiParams: {
         verifiable: true,
         spam: false,
       },
@@ -554,7 +554,7 @@ describe("decodeAppUrl resources", () => {
 
     let expected = {
       selectedUsers: [{ id: 1 }],
-      inatApiParams: {
+      observationsApiParams: {
         verifiable: true,
         spam: false,
       },
@@ -577,7 +577,7 @@ describe("decodeAppUrl resources", () => {
     let searchParams = "?ident_user_id=1&spam=false&verifiable=true";
 
     let expected = {
-      inatApiParams: {
+      observationsApiParams: {
         verifiable: true,
         spam: false,
         ident_user_id: 1,
@@ -602,7 +602,7 @@ describe("decodeAppUrl resources", () => {
     let searchParams = "?unobserved_by_user_id=1&spam=false&verifiable=true";
 
     let expected = {
-      inatApiParams: {
+      observationsApiParams: {
         verifiable: true,
         spam: false,
         unobserved_by_user_id: 1,
@@ -646,7 +646,7 @@ describe("decodeAppUrl resources", () => {
           },
         },
       ],
-      inatApiParams: {
+      observationsApiParams: {
         nelat: 0,
         nelng: -1,
         swlat: 2,
@@ -685,7 +685,7 @@ describe("decodeAppUrl resources", () => {
         selectedPlaces: [{ id: 34 }],
         selectedProjects: [{ id: 56 }],
         selectedUsers: [{ id: 78 }],
-        inatApiParams: {
+        observationsApiParams: {
           verifiable: true,
           spam: false,
         },
@@ -717,7 +717,7 @@ describe("decodeAppUrl options", () => {
           color: "#ffffff",
         },
       ],
-      inatApiParams: {
+      observationsApiParams: {
         verifiable: false,
         spam: false,
       },
@@ -746,7 +746,7 @@ describe("decodeAppUrl options", () => {
           color: "#ffffff",
         },
       ],
-      inatApiParams: {
+      observationsApiParams: {
         verifiable: true,
         spam: true,
       },
@@ -774,7 +774,7 @@ describe("decodeAppUrl options", () => {
           color: "#ffffff",
         },
       ],
-      inatApiParams: {
+      observationsApiParams: {
         verifiable: "any",
       },
       currentView: "observations",
@@ -801,7 +801,7 @@ describe("decodeAppUrl options", () => {
           color: "#ffffff",
         },
       ],
-      inatApiParams: {},
+      observationsApiParams: {},
       currentView: "observations",
       viewMetadata: {
         observations: {},
@@ -820,7 +820,7 @@ describe("decodeAppUrl options", () => {
     let searchParams = "?view=" + view;
     let expected = {
       currentView: view,
-      inatApiParams: {},
+      observationsApiParams: {},
       selectedTaxa: [],
       viewMetadata: {
         observations: {},
@@ -844,7 +844,7 @@ describe("decodeAppUrl options", () => {
       let searchParams = "?view=observations&subview=" + subview;
       let expected = {
         currentView: "observations",
-        inatApiParams: {},
+        observationsApiParams: {},
         selectedTaxa: [],
         viewMetadata: {
           observations: {
@@ -866,7 +866,7 @@ describe("decodeAppUrl options", () => {
     let searchParams = `?view=${view}&subview=foo`;
     let expected = {
       currentView: view,
-      inatApiParams: {},
+      observationsApiParams: {},
       selectedTaxa: [],
       viewMetadata: {
         observations: {},
@@ -887,7 +887,7 @@ describe("decodeAppUrl options", () => {
   test("set params if invalid views and subview", () => {
     let searchParams = "?view=boo&subview=boo";
     let expected = {
-      inatApiParams: {},
+      observationsApiParams: {},
       selectedTaxa: [],
       currentView: "observations",
       viewMetadata: {
@@ -906,7 +906,7 @@ describe("decodeAppUrl options", () => {
   test("ignores invalid params", () => {
     let searchParams = "?foo=boo";
     let expected = {
-      inatApiParams: {},
+      observationsApiParams: {},
       selectedTaxa: [],
       currentView: "observations",
       viewMetadata: {
@@ -923,7 +923,7 @@ describe("decodeAppUrl options", () => {
   });
 
   test.each(ObservationsApiFilterableNames)(
-    "adds valid params to inatApiParams",
+    "adds valid params to observationsApiParams",
     (name) => {
       let value;
       if (name === "unobserved_by_user_id") {
@@ -935,7 +935,7 @@ describe("decodeAppUrl options", () => {
       }
       let searchParams = `?${name}=${value}`;
       let expected = {
-        inatApiParams: { [name]: true },
+        observationsApiParams: { [name]: true },
         selectedTaxa: [],
         currentView: "observations",
         viewMetadata: {
@@ -950,11 +950,11 @@ describe("decodeAppUrl options", () => {
       }
       if (name == "unobserved_by_user_id") {
         expected.selectedUnobservedByUser = { id: 1 };
-        expected.inatApiParams.unobserved_by_user_id = 1;
+        expected.observationsApiParams.unobserved_by_user_id = 1;
       }
       if (name == "ident_user_id") {
         expected.selectedUsersIdentifiers = { id: 1 };
-        expected.inatApiParams.ident_user_id = 1;
+        expected.observationsApiParams.ident_user_id = 1;
       }
 
       let result = decodeAppUrl(searchParams);
@@ -966,7 +966,7 @@ describe("decodeAppUrl options", () => {
   test("returns object with page, order, order_by", () => {
     let searchParams = "?page=2&order=desc&order_by=id";
     let expected = {
-      inatApiParams: { page: 2, order: "desc", order_by: "id" },
+      observationsApiParams: { page: 2, order: "desc", order_by: "id" },
       selectedTaxa: [],
       currentView: "observations",
       viewMetadata: {
@@ -987,7 +987,7 @@ describe("decodeAppUrl options", () => {
     (name) => {
       let searchParams = `?view=${name}&page=2&order=desc&order_by=id`;
       let expected = {
-        inatApiParams: { page: 2, order: "desc", order_by: "id" },
+        observationsApiParams: { page: 2, order: "desc", order_by: "id" },
         selectedTaxa: [],
         currentView: name,
         viewMetadata: {
@@ -1008,7 +1008,7 @@ describe("decodeAppUrl options", () => {
   test("returns object with locale", () => {
     let searchParams = "?locale=fr";
     let expected = {
-      inatApiParams: { locale: "fr" },
+      observationsApiParams: { locale: "fr" },
       selectedTaxa: [],
       currentView: "observations",
       viewMetadata: {
@@ -1027,7 +1027,7 @@ describe("decodeAppUrl options", () => {
   test("returns object with name_order", () => {
     let searchParams = "?name_order=sc";
     let expected = {
-      inatApiParams: {},
+      observationsApiParams: {},
       selectedTaxa: [],
       currentView: "observations",
       viewMetadata: {
@@ -1046,7 +1046,7 @@ describe("decodeAppUrl options", () => {
 });
 
 describe("removeDefaultParams", () => {
-  test("return empty string if default inatApiParams and view", () => {
+  test("return empty string if default observationsApiParams and view", () => {
     let params = `${defaultQuery}` + `&view=observations&subview=grid`;
 
     let result = removeDefaultParams(params);

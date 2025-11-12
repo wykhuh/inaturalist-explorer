@@ -81,7 +81,7 @@ describe("updateView", () => {
       expect(targetLI?.className).toBe("currentView");
       expect(parentEl?.innerHTML).toBe(`<x-view-${view}></x-view-${view}>`);
       expect(store.currentView).toBe(view);
-      expect(store.inatApiParams).toStrictEqual(defaultParams);
+      expect(store.observationsApiParams).toStrictEqual(defaultParams);
       expect(window.location.search).toBe(`?${defaultQuery}&view=${view}`);
     },
   );
@@ -111,7 +111,7 @@ describe("updateView", () => {
     expect(targetLI?.className).toBe("currentView");
     expect(parentEl?.innerHTML).toBe("<x-view-observers></x-view-observers>");
     expect(store.currentView).toBe("observers");
-    expect(store.inatApiParams).toStrictEqual({
+    expect(store.observationsApiParams).toStrictEqual({
       page: 10,
       order: "asc",
       order_by: "votes",
@@ -147,7 +147,7 @@ describe("updateView", () => {
     expect(targetLI?.className).toBe("currentView");
     expect(parentEl?.innerHTML).toBe("<x-view-observers></x-view-observers>");
     expect(store.currentView).toBe("observers");
-    expect(store.inatApiParams).toStrictEqual(defaultParams);
+    expect(store.observationsApiParams).toStrictEqual(defaultParams);
     expect(window.location.search).toBe(`?${defaultQuery}&view=observers`);
   });
 });

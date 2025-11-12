@@ -15,7 +15,7 @@ export const mapStore: MapStore = {
   selectedUsers: [],
   selectedUsersIdentifiers: {} as NormalizediNatUser,
   selectedUnobservedByUser: {} as NormalizediNatUser,
-  inatApiParams: { verifiable: true, spam: false, locale: "en" },
+  observationsApiParams: { verifiable: true, spam: false, locale: "en" },
   color: "",
   map: { map: null, layerControl: null },
   refreshMap: {

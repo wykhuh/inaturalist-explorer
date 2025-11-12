@@ -35,7 +35,7 @@ export function setupUserIdentifierSearch(
       src: async (query: string) => {
         try {
           let url = `${autocomplete_users_api}&per_page=25&q=${query}`;
-          let projectId = appStore.inatApiParams.project_id;
+          let projectId = appStore.observationsApiParams.project_id;
           if (projectId) {
             // NOTE: iNaturlist API only allows one id for project_id
             let firstProjectId = projectId.split(",")[0];
@@ -74,8 +74,8 @@ export async function userIdentifierSelectedHandler(
 ) {
   // add project to store
   appStore.selectedUsersIdentifiers = selection;
-  appStore.inatApiParams = {
-    ...appStore.inatApiParams,
+  appStore.observationsApiParams = {
+    ...appStore.observationsApiParams,
     ident_user_id: selection.id,
   };
 

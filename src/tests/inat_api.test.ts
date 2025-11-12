@@ -18,10 +18,10 @@ test("observations species count", () => {
 describe("getiNatMapTiles", () => {
   let color = new URLSearchParams({ color: iNatOrange });
 
-  test("returns 3 iNaturalist tiles if no inatApiParams", () => {
-    let inatApiParams: ObservationsApiParams = {};
+  test("returns 3 iNaturalist tiles if no observationsApiParams", () => {
+    let observationsApiParams: ObservationsApiParams = {};
     let taxon = lifeBasic;
-    let result = getiNatMapTiles(inatApiParams, taxon);
+    let result = getiNatMapTiles(observationsApiParams, taxon);
 
     expect(result.iNatGrid.url).toBe(
       `https://api.inaturalist.org/v1/grid/{z}/{x}/{y}.png?${color}`,
@@ -36,9 +36,9 @@ describe("getiNatMapTiles", () => {
   });
 
   test("returns 3 iNaturalist tiles if taxon_id is zero", () => {
-    let inatApiParams: ObservationsApiParams = { taxon_id: "0" };
+    let observationsApiParams: ObservationsApiParams = { taxon_id: "0" };
     let taxon = lifeBasic;
-    let result = getiNatMapTiles(inatApiParams, taxon);
+    let result = getiNatMapTiles(observationsApiParams, taxon);
 
     expect(result.iNatGrid.url).toBe(
       `https://api.inaturalist.org/v1/grid/{z}/{x}/{y}.png?${color}`,

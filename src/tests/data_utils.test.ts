@@ -857,30 +857,32 @@ describe("removeValueFromCommaSeparatedString", () => {
 });
 
 describe("removeIdfromInatApiParams", () => {
-  test("if no selectedTaxa, removes taxon_id and colors from inatApiParams", async () => {
+  test("if no selectedTaxa, removes taxon_id and colors from observationsApiParams", async () => {
     let store = structuredClone(mapStore);
     let target_id = 10;
     store.selectedTaxa = [];
-    store.inatApiParams.taxon_id = target_id.toString();
-    store.inatApiParams.colors = "red";
+    store.observationsApiParams.taxon_id = target_id.toString();
+    store.observationsApiParams.colors = "red";
 
     removeIdfromInatApiParams(store, "taxon_id", target_id);
 
-    expect(store.inatApiParams.taxon_id).toBeUndefined();
-    expect(store.inatApiParams.colors).toBeUndefined();
+    expect(store.observationsApiParams.taxon_id).toBeUndefined();
+    expect(store.observationsApiParams.colors).toBeUndefined();
   });
 
   test("if target_id not in selectedTaxa, set taxon_id and color to last item in selectedTaxa", async () => {
     let store = structuredClone(mapStore);
     let target_id = 10;
     store.selectedTaxa = [lifeBasic, redOakBasic];
-    store.inatApiParams.taxon_id = target_id.toString();
-    store.inatApiParams.colors = "red";
+    store.observationsApiParams.taxon_id = target_id.toString();
+    store.observationsApiParams.colors = "red";
 
     removeIdfromInatApiParams(store, "taxon_id", target_id);
 
-    expect(store.inatApiParams.taxon_id).toBe(redOakBasic.id.toString());
-    expect(store.inatApiParams.colors).toBe(redOakBasic.color);
+    expect(store.observationsApiParams.taxon_id).toBe(
+      redOakBasic.id.toString(),
+    );
+    expect(store.observationsApiParams.colors).toBe(redOakBasic.color);
   });
 
   test("if target_id is the same as the last item in selectedTaxa, do nothing", async () => {
@@ -888,48 +890,48 @@ describe("removeIdfromInatApiParams", () => {
     let target_id = redOak().id;
 
     store.selectedTaxa = [life(), redOak()];
-    store.inatApiParams.taxon_id = redOak().id.toString();
-    store.inatApiParams.colors = redOak().color;
+    store.observationsApiParams.taxon_id = redOak().id.toString();
+    store.observationsApiParams.colors = redOak().color;
 
     removeIdfromInatApiParams(store, "taxon_id", target_id);
 
-    expect(store.inatApiParams.taxon_id).toBe(redOak().id.toString());
-    expect(store.inatApiParams.colors).toBe(redOak().color);
+    expect(store.observationsApiParams.taxon_id).toBe(redOak().id.toString());
+    expect(store.observationsApiParams.colors).toBe(redOak().color);
   });
 
   test("if target_id is in selectedTaxa, set taxon_id and color to last item in selectedTaxa", async () => {
     let store = structuredClone(mapStore);
     let target_id = life().id;
     store.selectedTaxa = [life(), redOak()];
-    store.inatApiParams.taxon_id = life().id.toString();
-    store.inatApiParams.colors = life().color;
+    store.observationsApiParams.taxon_id = life().id.toString();
+    store.observationsApiParams.colors = life().color;
 
     removeIdfromInatApiParams(store, "taxon_id", target_id);
 
-    expect(store.inatApiParams.taxon_id).toBe(redOak().id.toString());
-    expect(store.inatApiParams.colors).toBe(redOak().color);
+    expect(store.observationsApiParams.taxon_id).toBe(redOak().id.toString());
+    expect(store.observationsApiParams.colors).toBe(redOak().color);
   });
 
-  test("if no selectedPlaces, removes place_id from inatApiParams", async () => {
+  test("if no selectedPlaces, removes place_id from observationsApiParams", async () => {
     let store = structuredClone(mapStore);
     let target_id = 10;
     store.selectedPlaces = [];
-    store.inatApiParams.place_id = target_id.toString();
+    store.observationsApiParams.place_id = target_id.toString();
 
     removeIdfromInatApiParams(store, "place_id", target_id);
 
-    expect(store.inatApiParams.place_id).toBeUndefined();
+    expect(store.observationsApiParams.place_id).toBeUndefined();
   });
 
-  test("if target_id is not in selectedPlaces, removes id from inatApiParams.place_id", async () => {
+  test("if target_id is not in selectedPlaces, removes id from observationsApiParams.place_id", async () => {
     let store = structuredClone(mapStore);
     let target_id = 10;
     store.selectedPlaces = [losangeles, sandiego];
-    store.inatApiParams.place_id = `${target_id},${losangeles.id},${sandiego.id}`;
+    store.observationsApiParams.place_id = `${target_id},${losangeles.id},${sandiego.id}`;
 
     removeIdfromInatApiParams(store, "place_id", target_id);
 
-    expect(store.inatApiParams.place_id).toBe(
+    expect(store.observationsApiParams.place_id).toBe(
       `${losangeles.id},${sandiego.id}`,
     );
   });
@@ -938,11 +940,11 @@ describe("removeIdfromInatApiParams", () => {
     let store = structuredClone(mapStore);
     let target_id = sandiego.id;
     store.selectedPlaces = [losangeles, sandiego];
-    store.inatApiParams.place_id = `${losangeles.id},${sandiego.id}`;
+    store.observationsApiParams.place_id = `${losangeles.id},${sandiego.id}`;
 
     removeIdfromInatApiParams(store, "place_id", target_id);
 
-    expect(store.inatApiParams.place_id).toBe(
+    expect(store.observationsApiParams.place_id).toBe(
       `${losangeles.id},${sandiego.id}`,
     );
   });
@@ -951,11 +953,11 @@ describe("removeIdfromInatApiParams", () => {
     let store = structuredClone(mapStore);
     let target_id = losangeles.id;
     store.selectedPlaces = [losangeles, sandiego];
-    store.inatApiParams.place_id = `${losangeles.id},${sandiego.id}`;
+    store.observationsApiParams.place_id = `${losangeles.id},${sandiego.id}`;
 
     removeIdfromInatApiParams(store, "place_id", target_id);
 
-    expect(store.inatApiParams.place_id).toBe(
+    expect(store.observationsApiParams.place_id).toBe(
       `${losangeles.id},${sandiego.id}`,
     );
   });
@@ -995,10 +997,10 @@ describe("cleanupObervationsParams", () => {
 
   test("returns params if params are valid properites for iNat API", () => {
     let store = structuredClone(mapStore);
-    store.inatApiParams.sounds = true;
-    store.inatApiParams.order = "desc";
-    store.inatApiParams.order_by = "id";
-    store.inatApiParams.page = 1;
+    store.observationsApiParams.sounds = true;
+    store.observationsApiParams.order = "desc";
+    store.observationsApiParams.order_by = "id";
+    store.observationsApiParams.page = 1;
     store.selectedTaxa = [
       { id: 1, color: "red" },
       { id: 2, color: "blue" },
@@ -1014,7 +1016,7 @@ describe("cleanupObervationsParams", () => {
 
   test("ignores params if params are not properites for iNat API", () => {
     let store = structuredClone(mapStore);
-    (store.inatApiParams as any).foo = true;
+    (store.observationsApiParams as any).foo = true;
 
     let results = cleanupObervationsParams(store);
 
@@ -1023,9 +1025,9 @@ describe("cleanupObervationsParams", () => {
 
   test("ignores taxon_id and place_id when they are 0", () => {
     let store = structuredClone(mapStore);
-    store.inatApiParams.sounds = true;
-    store.inatApiParams.taxon_id = "0";
-    store.inatApiParams.place_id = "0";
+    store.observationsApiParams.sounds = true;
+    store.observationsApiParams.taxon_id = "0";
+    store.observationsApiParams.place_id = "0";
     store.selectedTaxa = [{ id: 0, color: "red" }];
     store.selectedPlaces = [{ id: 0 }];
 
@@ -1036,8 +1038,8 @@ describe("cleanupObervationsParams", () => {
 
   test("ignores view, colors, subview", () => {
     let store = structuredClone(mapStore);
-    store.inatApiParams.taxon_id = "1";
-    store.inatApiParams.colors = "red";
+    store.observationsApiParams.taxon_id = "1";
+    store.observationsApiParams.colors = "red";
     store.selectedTaxa = [{ id: 1, color: "red" }];
     store.currentView = "observations";
     store.viewMetadata.observations.subview = "table";
@@ -1049,11 +1051,11 @@ describe("cleanupObervationsParams", () => {
 
   test("uses page, order, order from store to update params", () => {
     let store = structuredClone(mapStore);
-    store.inatApiParams.sounds = true;
-    store.inatApiParams.taxon_id = "1";
-    store.inatApiParams.colors = "red";
+    store.observationsApiParams.sounds = true;
+    store.observationsApiParams.taxon_id = "1";
+    store.observationsApiParams.colors = "red";
     store.selectedTaxa = [{ id: 1, color: "red" }];
-    store.inatApiParams.page = 3;
+    store.observationsApiParams.page = 3;
     store.currentView = "observations";
 
     let results = cleanupObervationsParams(store);

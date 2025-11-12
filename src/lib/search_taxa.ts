@@ -39,8 +39,8 @@ export function setupTaxaSearch(selector: string, appStore: MapStore) {
       src: async (query: string) => {
         try {
           let url = `${autocomplete_taxa_api}&per_page=50&q=${query}`;
-          if (appStore.inatApiParams.locale) {
-            url += `&locale=${appStore.inatApiParams.locale}`;
+          if (appStore.observationsApiParams.locale) {
+            url += `&locale=${appStore.observationsApiParams.locale}`;
           }
           loggerUrl(url);
           let res = await fetch(url);
@@ -124,7 +124,7 @@ export async function taxonSelectedHandler(
   appStore: MapStore,
 ) {
   // remove all taxa if allTaxaRecord is the current taxon
-  if (appStore.inatApiParams.taxon_id === "0") {
+  if (appStore.observationsApiParams.taxon_id === "0") {
     removeTaxaFromStoreAndMap(appStore);
   }
 
@@ -140,22 +140,22 @@ export async function taxonSelectedHandler(
   };
 
   appStore.selectedTaxa = [...appStore.selectedTaxa, taxon];
-  appStore.inatApiParams = {
-    ...appStore.inatApiParams,
+  appStore.observationsApiParams = {
+    ...appStore.observationsApiParams,
     taxon_id: addValueToCommaSeparatedString(
       taxon.id,
-      appStore.inatApiParams.taxon_id,
+      appStore.observationsApiParams.taxon_id,
     ),
     colors: addValueToCommaSeparatedString(
       taxon.color,
-      appStore.inatApiParams.colors,
+      appStore.observationsApiParams.colors,
     ),
   };
   appStore.color = color;
 
   // create params for the iNat map tiles API
   let paramsTemp = {
-    ...appStore.inatApiParams,
+    ...appStore.observationsApiParams,
     taxon_id: taxon.id.toString(),
     colors: color,
   };

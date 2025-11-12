@@ -16,7 +16,7 @@ describe("updating observation filters", () => {
     let store = structuredClone(mapStore);
     let formData = createFormData();
 
-    expect(store.inatApiParams).toStrictEqual(defaultParams);
+    expect(store.observationsApiParams).toStrictEqual(defaultParams);
 
     formData.append("verifiable", "true");
 
@@ -29,7 +29,7 @@ describe("updating observation filters", () => {
 
     updateStoreUsingFilters(store, filterResults);
 
-    expect(store.inatApiParams).toStrictEqual(defaultParams);
+    expect(store.observationsApiParams).toStrictEqual(defaultParams);
     expect(store.formFilters).toStrictEqual(filterResults);
   });
 
@@ -49,7 +49,7 @@ describe("updating observation filters", () => {
 
     updateStoreUsingFilters(store, filterResults1);
 
-    expect(store.inatApiParams).toStrictEqual({
+    expect(store.observationsApiParams).toStrictEqual({
       iconic_taxa: "Aves,Fungi",
       ...defaultParams,
     });
@@ -66,7 +66,7 @@ describe("updating observation filters", () => {
 
     updateStoreUsingFilters(store, filterResults2);
 
-    expect(store.inatApiParams).toStrictEqual({
+    expect(store.observationsApiParams).toStrictEqual({
       iconic_taxa: "Fungi",
       ...defaultParams,
     });
@@ -88,7 +88,7 @@ describe("updating observation filters", () => {
 
     updateStoreUsingFilters(store, filterResults1);
 
-    expect(store.inatApiParams).toStrictEqual({
+    expect(store.observationsApiParams).toStrictEqual({
       sounds: true,
       ...defaultParams,
     });
@@ -104,7 +104,7 @@ describe("updating observation filters", () => {
 
     updateStoreUsingFilters(store, filterResults2);
 
-    expect(store.inatApiParams).toStrictEqual({
+    expect(store.observationsApiParams).toStrictEqual({
       sounds: false,
       ...defaultParams,
     });
@@ -120,14 +120,14 @@ describe("updating observation filters", () => {
 
     updateStoreUsingFilters(store, filterResults3);
 
-    expect(store.inatApiParams).toStrictEqual(defaultParams);
+    expect(store.observationsApiParams).toStrictEqual(defaultParams);
   });
 
   test(`set verifiable false; set verifiable to blank; set verifiable false;`, () => {
     let store = structuredClone(mapStore);
     let formData = createFormData();
 
-    expect(store.inatApiParams).toStrictEqual(defaultParams);
+    expect(store.observationsApiParams).toStrictEqual(defaultParams);
 
     formData.append("verifiable", "false");
 
@@ -140,7 +140,7 @@ describe("updating observation filters", () => {
 
     updateStoreUsingFilters(store, filterResults1);
 
-    expect(store.inatApiParams).toStrictEqual({
+    expect(store.observationsApiParams).toStrictEqual({
       verifiable: false,
       spam: false,
       locale: "en",
@@ -157,7 +157,7 @@ describe("updating observation filters", () => {
 
     updateStoreUsingFilters(store, filterResults2);
 
-    expect(store.inatApiParams).toStrictEqual({
+    expect(store.observationsApiParams).toStrictEqual({
       spam: false,
       locale: "en",
     });
@@ -173,7 +173,7 @@ describe("updating observation filters", () => {
 
     updateStoreUsingFilters(store, filterResults3);
 
-    expect(store.inatApiParams).toStrictEqual(defaultParams);
+    expect(store.observationsApiParams).toStrictEqual(defaultParams);
 
     expect(store.formFilters).toStrictEqual(filterResults3);
   });

@@ -129,10 +129,10 @@ export async function placeSelectedHandler(
       appStore.refreshMap.layer.removeFrom(map);
       appStore.refreshMap.layer = null;
     }
-    delete appStore.inatApiParams.swlat;
-    delete appStore.inatApiParams.swlng;
-    delete appStore.inatApiParams.nelat;
-    delete appStore.inatApiParams.nelng;
+    delete appStore.observationsApiParams.swlat;
+    delete appStore.observationsApiParams.swlng;
+    delete appStore.observationsApiParams.nelat;
+    delete appStore.observationsApiParams.nelng;
     appStore.selectedPlaces = appStore.selectedPlaces.filter((p) => p.id !== 0);
     delete appStore.placesMapLayers["0"];
   }
@@ -146,11 +146,11 @@ export async function placeSelectedHandler(
     geometry: selection.geometry,
   };
   appStore.selectedPlaces = [...appStore.selectedPlaces, place];
-  appStore.inatApiParams = {
-    ...appStore.inatApiParams,
+  appStore.observationsApiParams = {
+    ...appStore.observationsApiParams,
     place_id: addValueToCommaSeparatedString(
       place.id,
-      appStore.inatApiParams.place_id,
+      appStore.observationsApiParams.place_id,
     ),
   };
 
@@ -162,7 +162,7 @@ export async function placeSelectedHandler(
   }
 
   let paramsTemp = {
-    ...appStore.inatApiParams,
+    ...appStore.observationsApiParams,
     place_id: place.id.toString(),
   };
   await getObservationsCountForPlace(place, appStore, paramsTemp);

@@ -26,8 +26,8 @@ export interface MapStore {
   selectedUsersIdentifiers: NormalizediNatUser;
   selectedUnobservedByUser: NormalizediNatUser;
   selectedProjects: NormalizediNatProject[];
-  inatApiParams: ObservationsApiParams;
-  inatApiParamsTemp?: ObservationsApiParams;
+  observationsApiParams: ObservationsApiParams;
+  observationsApiParamsTemp?: ObservationsApiParams;
   color: string;
   map: {
     map: Map | null;

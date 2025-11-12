@@ -109,7 +109,7 @@ export function formatAppUrl(appStore: MapStore) {
     "user_id",
     "colors",
   ];
-  Object.entries(appStore.inatApiParams).forEach(([key, value]) => {
+  Object.entries(appStore.observationsApiParams).forEach(([key, value]) => {
     if (processedKeys.includes(key)) {
     } else {
       if (params && ObservationsApiNames.includes(key)) {
@@ -201,7 +201,7 @@ export function updateAppUrl(url_location: Location, appStore: MapStore) {
 export function decodeAppUrl(searchParams: string) {
   const urlParams = Object.fromEntries(new URLSearchParams(searchParams));
   let store = {
-    inatApiParams: {},
+    observationsApiParams: {},
     viewMetadata: {
       observations: {},
       identifiers: {},
@@ -251,7 +251,7 @@ export function decodeAppUrl(searchParams: string) {
     }
   }
   if ("nelat" in urlParams) {
-    store.inatApiParams = {
+    store.observationsApiParams = {
       nelat: Number(urlParams.nelat),
       nelng: Number(urlParams.nelng),
       swlat: Number(urlParams.swlat),
@@ -318,7 +318,7 @@ export function decodeAppUrl(searchParams: string) {
 
   if (urlParams.order) {
     if (orderValues.includes(urlParams.order)) {
-      store.inatApiParams.order = urlParams.order;
+      store.observationsApiParams.order = urlParams.order;
     }
     if (urlParams.view && validViews.includes(urlParams.view)) {
       store.viewMetadata[urlParams.view as ObservationViews].order =
@@ -330,7 +330,7 @@ export function decodeAppUrl(searchParams: string) {
 
   if (urlParams.order_by) {
     if (observationsOrderByValues.includes(urlParams.order_by)) {
-      store.inatApiParams.order_by = urlParams.order_by;
+      store.observationsApiParams.order_by = urlParams.order_by;
     }
     if (urlParams.view && validViews.includes(urlParams.view)) {
       store.viewMetadata[urlParams.view as ObservationViews].order_by =
@@ -341,7 +341,7 @@ export function decodeAppUrl(searchParams: string) {
   }
 
   if (urlParams.page) {
-    store.inatApiParams.page = Number(urlParams.page);
+    store.observationsApiParams.page = Number(urlParams.page);
     if (urlParams.view && validViews.includes(urlParams.view)) {
       store.viewMetadata[urlParams.view as ObservationViews].page = Number(
         urlParams.page,
@@ -352,7 +352,7 @@ export function decodeAppUrl(searchParams: string) {
   }
 
   if (urlParams.locale) {
-    store.inatApiParams.locale = urlParams.locale;
+    store.observationsApiParams.locale = urlParams.locale;
   }
   if (urlParams.name_order) {
     store.viewMetadata.name_order = urlParams.name_order as NameOrder;
@@ -371,7 +371,8 @@ export function decodeAppUrl(searchParams: string) {
       if (/^\d+$/.test(value)) {
         cleanedValue = Number(value);
       }
-      store.inatApiParams[key as ObservationsApiParamsKeys] = cleanedValue;
+      store.observationsApiParams[key as ObservationsApiParamsKeys] =
+        cleanedValue;
     }
   }
 

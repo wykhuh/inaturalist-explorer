@@ -65,8 +65,8 @@ export async function refreshBoundingBox(appStore: MapStore) {
 
   let bbox = map.getBounds();
   let inatBbox = formatiNatAPIBoundingBoxParams(bbox);
-  appStore.inatApiParams = {
-    ...appStore.inatApiParams,
+  appStore.observationsApiParams = {
+    ...appStore.observationsApiParams,
     ...inatBbox,
   };
 
@@ -75,7 +75,7 @@ export async function refreshBoundingBox(appStore: MapStore) {
   await updateCountForAllUsers(appStore);
 
   let paramsTemp = {
-    ...appStore.inatApiParams,
+    ...appStore.observationsApiParams,
   };
 
   await getObservationsCountForPlace(place, appStore, paramsTemp);
@@ -143,20 +143,20 @@ export async function getObservationsCountForTaxon(
 }
 
 export async function addAllTaxaRecordToMapAndStore(appStore: MapStore) {
-  appStore.inatApiParams = {
-    ...appStore.inatApiParams,
+  appStore.observationsApiParams = {
+    ...appStore.observationsApiParams,
     colors: iNatOrange,
     taxon_id: "0",
   };
-  let paramsTemp = appStore.inatApiParams;
+  let paramsTemp = appStore.observationsApiParams;
   appStore.color = iNatOrange;
 
   await fetchiNatMapDataForTaxon(allTaxaRecord, appStore, paramsTemp);
   await getObservationsCountForTaxon(allTaxaRecord, appStore, paramsTemp);
 
   // set taxon_id after getting map data
-  appStore.inatApiParams = {
-    ...appStore.inatApiParams,
+  appStore.observationsApiParams = {
+    ...appStore.observationsApiParams,
     taxon_id: "0",
     colors: iNatOrange,
   };
@@ -211,8 +211,8 @@ export function removeTaxaFromStoreAndMap(appStore: MapStore) {
   }
 
   // remove from store
-  delete appStore.inatApiParams.taxon_id;
-  delete appStore.inatApiParams.colors;
+  delete appStore.observationsApiParams.taxon_id;
+  delete appStore.observationsApiParams.colors;
   appStore.selectedTaxa = [];
   appStore.taxaMapLayers = {};
   appStore.color = "";
@@ -232,13 +232,13 @@ export async function removeOnePlaceFromStoreAndMap(
     (place) => place.id !== placeId,
   );
 
-  // update inatApiParams for bounding box
+  // update observationsApiParams for bounding box
   if (placeId === 0) {
-    delete appStore.inatApiParams.nelat;
-    delete appStore.inatApiParams.nelng;
-    delete appStore.inatApiParams.swlat;
-    delete appStore.inatApiParams.swlng;
-    // update inatApiParams for places
+    delete appStore.observationsApiParams.nelat;
+    delete appStore.observationsApiParams.nelng;
+    delete appStore.observationsApiParams.swlat;
+    delete appStore.observationsApiParams.swlng;
+    // update observationsApiParams for places
   } else {
     removeIdfromInatApiParams(appStore, "place_id", placeId);
   }
@@ -270,11 +270,11 @@ function removePlacesFromStoreAndMap(appStore: MapStore) {
 
   // remove from store
   appStore.placesMapLayers = {};
-  delete appStore.inatApiParams.place_id;
-  delete appStore.inatApiParams.nelat;
-  delete appStore.inatApiParams.nelng;
-  delete appStore.inatApiParams.swlat;
-  delete appStore.inatApiParams.swlng;
+  delete appStore.observationsApiParams.place_id;
+  delete appStore.observationsApiParams.nelat;
+  delete appStore.observationsApiParams.nelng;
+  delete appStore.observationsApiParams.swlat;
+  delete appStore.observationsApiParams.swlng;
   appStore.selectedPlaces = [];
 }
 
@@ -466,12 +466,12 @@ export function removeOneUserFromStore(appStore: MapStore, userId: number) {
 
 export function removeOneUserIdentifierFromStore(appStore: MapStore) {
   appStore.selectedUsersIdentifiers = {} as NormalizediNatUser;
-  delete appStore.inatApiParams.ident_user_id;
+  delete appStore.observationsApiParams.ident_user_id;
 }
 
 export function removeOneUnobservedByUserFromStore(appStore: MapStore) {
   appStore.selectedUnobservedByUser = {} as NormalizediNatUser;
-  delete appStore.inatApiParams.unobserved_by_user_id;
+  delete appStore.observationsApiParams.unobserved_by_user_id;
 }
 
 // ================
@@ -480,27 +480,27 @@ export function removeOneUnobservedByUserFromStore(appStore: MapStore) {
 
 function removeTaxonId(appStore: MapStore) {
   if (appStore.selectedTaxa.length == 0) {
-    delete appStore.inatApiParams.taxon_id;
-    delete appStore.inatApiParams.colors;
+    delete appStore.observationsApiParams.taxon_id;
+    delete appStore.observationsApiParams.colors;
     // get id of last taxa is selectedTaxa
   } else {
     let lastTaxon = appStore.selectedTaxa[appStore.selectedTaxa.length - 1];
-    appStore.inatApiParams.taxon_id = lastTaxon.id.toString();
-    appStore.inatApiParams.colors = lastTaxon.color;
+    appStore.observationsApiParams.taxon_id = lastTaxon.id.toString();
+    appStore.observationsApiParams.colors = lastTaxon.color;
   }
 }
 
-function setinatApiParams(
+function setobservationsApiParams(
   appStore: MapStore,
   property: ObservationsApiParamsKeys,
   value: any,
 ) {
   let ids = removeValueFromCommaSeparatedString(
     value,
-    appStore.inatApiParams[property],
+    appStore.observationsApiParams[property],
   );
   if (ids) {
-    appStore.inatApiParams[property] = ids;
+    appStore.observationsApiParams[property] = ids;
   }
 }
 
@@ -510,13 +510,13 @@ function removePlaceId(
   value: any,
 ) {
   if (appStore.selectedPlaces.length === 0) {
-    delete appStore.inatApiParams.place_id;
+    delete appStore.observationsApiParams.place_id;
   } else {
     let lastPlace = appStore.selectedPlaces[appStore.selectedPlaces.length - 1];
     if (lastPlace.id === value) {
     } else if (appStore.selectedPlaces.map((p) => p.id).includes(value)) {
     } else {
-      setinatApiParams(appStore, property, value);
+      setobservationsApiParams(appStore, property, value);
     }
   }
 }
@@ -527,14 +527,14 @@ function removeProjectId(
   value: any,
 ) {
   if (appStore.selectedProjects.length === 0) {
-    delete appStore.inatApiParams.project_id;
+    delete appStore.observationsApiParams.project_id;
   } else {
     let lastRecord =
       appStore.selectedProjects[appStore.selectedProjects.length - 1];
     if (lastRecord.id === value) {
     } else if (appStore.selectedProjects.map((p) => p.id).includes(value)) {
     } else {
-      setinatApiParams(appStore, property, value);
+      setobservationsApiParams(appStore, property, value);
     }
   }
 }
@@ -545,13 +545,13 @@ function removeUserId(
   value: any,
 ) {
   if (appStore.selectedUsers.length === 0) {
-    delete appStore.inatApiParams.user_id;
+    delete appStore.observationsApiParams.user_id;
   } else {
     let lastRecord = appStore.selectedUsers[appStore.selectedUsers.length - 1];
     if (lastRecord.id === value) {
     } else if (appStore.selectedUsers.map((p) => p.id).includes(value)) {
     } else {
-      setinatApiParams(appStore, property, value);
+      setobservationsApiParams(appStore, property, value);
     }
   }
 }
@@ -740,11 +740,11 @@ export function updateStoreUsingFilters(
   // update store formFilters
   appStore.formFilters = filtersResults;
   loggerFilters("------------ updateStoreUsingFilters");
-  loggerFilters("default:", mapStore.inatApiParams);
-  loggerFilters("appStore:", appStore.inatApiParams);
+  loggerFilters("default:", mapStore.observationsApiParams);
+  loggerFilters("appStore:", appStore.observationsApiParams);
   loggerFilters("filtersResults", filtersResults);
 
-  for (let [k, _value] of Object.entries(appStore.inatApiParams)) {
+  for (let [k, _value] of Object.entries(appStore.observationsApiParams)) {
     let key = k as ObservationsApiParamsKeys;
     loggerFilters(key, _value);
 
@@ -755,18 +755,20 @@ export function updateStoreUsingFilters(
 
     if (key === "verifiable") {
       if (filtersResults.params.verifiable === undefined) {
-        delete appStore.inatApiParams[key];
+        delete appStore.observationsApiParams[key];
       }
     } else if (key === "spam") {
-    } else if (appStore.inatApiParams[key] !== filtersResults.params[key]) {
+    } else if (
+      appStore.observationsApiParams[key] !== filtersResults.params[key]
+    ) {
       if (filtersResults.params[key] === undefined) {
-        delete appStore.inatApiParams[key];
+        delete appStore.observationsApiParams[key];
       }
     }
   }
 
-  appStore.inatApiParams = {
-    ...appStore.inatApiParams,
+  appStore.observationsApiParams = {
+    ...appStore.observationsApiParams,
     ...filtersResults.params,
   };
 }

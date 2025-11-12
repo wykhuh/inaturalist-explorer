@@ -116,11 +116,11 @@ describe("initPopulateStore and initRenderMap options", () => {
       colors: iNatOrange,
       ...defaultParams,
     };
-    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(iNatOrange);
   });
 
-  test("updates inatApiParams with values in params ", async () => {
+  test("updates observationsApiParams with values in params ", async () => {
     let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
@@ -147,7 +147,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       colors: iNatOrange,
       locale: "en",
     };
-    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(iNatOrange);
   });
 
@@ -175,7 +175,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       colors: iNatOrange,
       ...defaultParams,
     };
-    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(iNatOrange);
   });
 
@@ -205,7 +205,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       spam: false,
       locale: "en",
     };
-    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(colors[0]);
   });
 
@@ -235,7 +235,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       spam: true,
       locale: "en",
     };
-    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(colors[0]);
   });
 
@@ -263,7 +263,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       taxon_id: life().id.toString(),
       ...defaultParams,
     };
-    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(colors[0]);
   });
 
@@ -298,7 +298,7 @@ describe("initPopulateStore and initRenderMap options", () => {
         expectedParams.verifiable = true;
       }
 
-      expect(store.inatApiParams).toStrictEqual(expectedParams);
+      expect(store.observationsApiParams).toStrictEqual(expectedParams);
       expect(store.color).toBe(colors[0]);
     },
   );
@@ -327,7 +327,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       taxon_id: life().id.toString(),
       ...defaultParams,
     };
-    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(colors[0]);
   });
 
@@ -345,7 +345,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectAllTaxaRecord(store);
-    expect(store.inatApiParams).toStrictEqual({
+    expect(store.observationsApiParams).toStrictEqual({
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       ...defaultParams,
@@ -369,7 +369,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectAllTaxaRecord(store);
-    expect(store.inatApiParams).toStrictEqual({
+    expect(store.observationsApiParams).toStrictEqual({
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       ...defaultParams,
@@ -393,7 +393,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectAllTaxaRecord(store);
-    expect(store.inatApiParams).toStrictEqual({
+    expect(store.observationsApiParams).toStrictEqual({
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       ...defaultParams,
@@ -417,7 +417,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectAllTaxaRecord(store);
-    expect(store.inatApiParams).toStrictEqual({
+    expect(store.observationsApiParams).toStrictEqual({
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       page: 3,
@@ -458,7 +458,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectAllTaxaRecord(store);
-    expect(store.inatApiParams).toStrictEqual({
+    expect(store.observationsApiParams).toStrictEqual({
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       ...defaultParams,
@@ -481,7 +481,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectAllTaxaRecord(store);
-    expect(store.inatApiParams).toStrictEqual({
+    expect(store.observationsApiParams).toStrictEqual({
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       ...defaultParams,
@@ -516,7 +516,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       taxon_id: life().id.toString(),
       ...defaultParams,
     };
-    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(colors[0]);
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
   });
@@ -548,7 +548,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       colors: iNatOrange,
       ...defaultParams,
     };
-    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(iNatOrange);
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaLACount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaLACount);
@@ -584,7 +584,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       colors: iNatOrange,
       ...defaultParams,
     };
-    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(iNatOrange);
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaCount);
@@ -616,7 +616,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       colors: iNatOrange,
       ...defaultParams,
     };
-    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(iNatOrange);
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaProjectCount);
     expect(store.selectedProjects[0].observations_count).toBe(
@@ -650,7 +650,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       colors: iNatOrange,
       ...defaultParams,
     };
-    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(iNatOrange);
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount * 0.45);
   });
@@ -682,7 +682,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       colors: iNatOrange,
       ...defaultParams,
     };
-    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(iNatOrange);
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount * 0.75);
   });
@@ -713,7 +713,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
     };
-    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(iNatOrange);
   });
 
@@ -763,7 +763,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       ident_user_id: user1.id,
       ...defaultParams,
     };
-    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(colors[1]);
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount * 0.75);
     expect(store.selectedTaxa[1].observations_count).toBe(oakCount * 0.75);
@@ -826,7 +826,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       swlng: 0,
       user_id: `${user1.id},${user2.id}`,
     };
-    expect(store.inatApiParams).toStrictEqual(expectedParams);
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(colors[1]);
   });
 });

@@ -99,8 +99,8 @@ https://stackoverflow.com/questions/40722882/css-native-variables-not-working-in
 
 ==
 
-deleting and setting a property in inatApiParams does not trigger the
-an update in proxy store. Need to replace inatApiParams to trigger
+deleting and setting a property in observationsApiParams does not trigger the
+an update in proxy store. Need to replace observationsApiParams to trigger
 an update in proxy store.
 
 ==

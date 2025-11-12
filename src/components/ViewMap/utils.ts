@@ -214,8 +214,8 @@ export function createGrid(results: ObservationsResult[]) {
 }
 
 export async function paginationcCallback(num: number) {
-  window.app.store.inatApiParams = {
-    ...window.app.store.inatApiParams,
+  window.app.store.observationsApiParams = {
+    ...window.app.store.observationsApiParams,
     page: num,
   };
   window.app.store.viewMetadata.observations = {
@@ -278,16 +278,16 @@ export function updateSubviewState(
 
 // use store to populate the filter form fields on page load
 export function initFilters(appStore: MapStore) {
-  let { inatApiParams } = appStore;
+  let { observationsApiParams } = appStore;
 
-  if (inatApiParams.order !== undefined) {
+  if (observationsApiParams.order !== undefined) {
     setSelectedOption(
-      `#order-form select#order option[value='${inatApiParams.order}']`,
+      `#order-form select#order option[value='${observationsApiParams.order}']`,
     );
   }
-  if (inatApiParams.order_by !== undefined) {
+  if (observationsApiParams.order_by !== undefined) {
     setSelectedOption(
-      `#order-form select#order_by option[value='${inatApiParams.order_by}']`,
+      `#order-form select#order_by option[value='${observationsApiParams.order_by}']`,
     );
   }
 }
@@ -305,11 +305,11 @@ export async function updateOrderState(data: FormData, appStore: MapStore) {
   });
 
   if (orderBy === "created_at" && order === "desc") {
-    delete appStore.inatApiParams.order_by;
-    delete appStore.inatApiParams.order;
+    delete appStore.observationsApiParams.order_by;
+    delete appStore.observationsApiParams.order;
   } else {
-    appStore.inatApiParams.order_by = orderBy;
-    appStore.inatApiParams.order = order;
+    appStore.observationsApiParams.order_by = orderBy;
+    appStore.observationsApiParams.order = order;
   }
   if (appStore.currentView) {
     appStore.viewMetadata[appStore.currentView].order = order;

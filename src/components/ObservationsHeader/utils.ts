@@ -58,23 +58,23 @@ export function updateView(
 
   let page = appStore.viewMetadata[targetView]?.page;
   if (page) {
-    appStore.inatApiParams.page = page;
+    appStore.observationsApiParams.page = page;
   } else {
-    delete appStore.inatApiParams.page;
+    delete appStore.observationsApiParams.page;
   }
 
   let order = appStore.viewMetadata[targetView]?.order;
   if (order) {
-    appStore.inatApiParams.order = order;
+    appStore.observationsApiParams.order = order;
   } else {
-    delete appStore.inatApiParams.order;
+    delete appStore.observationsApiParams.order;
   }
 
   let order_by = appStore.viewMetadata[targetView]?.order_by;
   if (order_by) {
-    appStore.inatApiParams.order_by = order_by;
+    appStore.observationsApiParams.order_by = order_by;
   } else {
-    delete appStore.inatApiParams.order_by;
+    delete appStore.observationsApiParams.order_by;
   }
   updateAppUrl(window.location, appStore);
 }

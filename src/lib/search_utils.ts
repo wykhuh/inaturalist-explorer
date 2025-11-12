@@ -43,7 +43,7 @@ export async function updateTilesAndCountForAllTaxa(appStore: MapStore) {
     removeOneTaxonFromMap(appStore, taxon.id);
 
     let paramsTemp = {
-      ...appStore.inatApiParams,
+      ...appStore.observationsApiParams,
       taxon_id: taxon.id.toString(),
       colors: taxon.color,
     };
@@ -58,7 +58,7 @@ export async function updateTilesAndCountForAllTaxa(appStore: MapStore) {
 export async function updateCountForAllTaxa(appStore: MapStore) {
   for await (const taxon of appStore.selectedTaxa) {
     let paramsTemp = {
-      ...appStore.inatApiParams,
+      ...appStore.observationsApiParams,
       taxon_id: taxon.id.toString(),
     };
     await getObservationsCountForTaxon(taxon, appStore, paramsTemp);
@@ -68,7 +68,7 @@ export async function updateCountForAllTaxa(appStore: MapStore) {
 export async function updateCountForAllPlaces(appStore: MapStore) {
   for await (const place of appStore.selectedPlaces) {
     let paramsTemp = {
-      ...appStore.inatApiParams,
+      ...appStore.observationsApiParams,
       place_id: place.id.toString(),
     };
     await getObservationsCountForPlace(place, appStore, paramsTemp);
@@ -78,7 +78,7 @@ export async function updateCountForAllPlaces(appStore: MapStore) {
 export async function updateCountForAllProjects(appStore: MapStore) {
   for await (const project of appStore.selectedProjects) {
     let paramsTemp = {
-      ...appStore.inatApiParams,
+      ...appStore.observationsApiParams,
       project_id: project.id.toString(),
     };
     await getObservationsCountForProject(project, appStore, paramsTemp);
@@ -91,7 +91,7 @@ export async function updateTilesForAllTaxa(appStore: MapStore) {
     removeOneTaxonFromMap(appStore, taxon.id);
 
     let paramsTemp = {
-      ...appStore.inatApiParams,
+      ...appStore.observationsApiParams,
       taxon_id: taxon.id.toString(),
       colors: taxon.color,
     };
@@ -104,7 +104,7 @@ export async function updateTilesForAllTaxa(appStore: MapStore) {
 export async function updateCountForAllUsers(appStore: MapStore) {
   for await (const user of appStore.selectedUsers) {
     let paramsTemp = {
-      ...appStore.inatApiParams,
+      ...appStore.observationsApiParams,
       user_id: user.id.toString(),
     };
     await getObservationsCountForUser(user, appStore, paramsTemp);

@@ -113,7 +113,7 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
   // get values from form data
   let results = processFiltersForm(data);
 
-  // update store inatApiParams with form values
+  // update store observationsApiParams with form values
   updateStoreUsingFilters(appStore, results);
 
   await updateTilesAndCountForAllTaxa(appStore);
@@ -128,158 +128,170 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
 
 // use store to populate the filter form fields on page load
 export function initFilters(appStore: MapStore) {
-  let { inatApiParams } = appStore;
+  let { observationsApiParams } = appStore;
 
-  if (inatApiParams.captive !== undefined) {
+  if (observationsApiParams.captive !== undefined) {
     setSelectedOptionTrueFalse(
       "#filters-form",
       "captive",
-      inatApiParams.captive,
+      observationsApiParams.captive,
     );
   }
 
-  if (inatApiParams.d1 !== undefined) {
+  if (observationsApiParams.d1 !== undefined) {
     setInputChecked("#filters-form input#range_date", true);
     setInputDisabled("#filters-form input#d1", false);
-    setInputValue("#filters-form input#d1", inatApiParams.d1);
+    setInputValue("#filters-form input#d1", observationsApiParams.d1);
   }
-  if (inatApiParams.d2 !== undefined) {
+  if (observationsApiParams.d2 !== undefined) {
     setInputChecked("#filters-form input#range_date", true);
     setInputDisabled("#filters-form input#d2", false);
-    setInputValue("#filters-form input#d2", inatApiParams.d2);
+    setInputValue("#filters-form input#d2", observationsApiParams.d2);
   }
 
-  if (inatApiParams.endemic !== undefined) {
+  if (observationsApiParams.endemic !== undefined) {
     setSelectedOptionTrueFalse(
       "#filters-form",
       "endemic",
-      inatApiParams.endemic,
+      observationsApiParams.endemic,
     );
   }
 
-  if (inatApiParams.hrank !== undefined) {
+  if (observationsApiParams.hrank !== undefined) {
     setSelectedOption(
-      `#filters-form select#hrank option[value='${inatApiParams.hrank}']`,
+      `#filters-form select#hrank option[value='${observationsApiParams.hrank}']`,
     );
   }
 
-  if (inatApiParams.iconic_taxa !== undefined) {
-    inatApiParams.iconic_taxa.split(",").forEach((value) => {
+  if (observationsApiParams.iconic_taxa !== undefined) {
+    observationsApiParams.iconic_taxa.split(",").forEach((value) => {
       setInputChecked(`#filters-form input#${value}`, true);
     });
   }
 
-  if (inatApiParams.identified !== undefined) {
+  if (observationsApiParams.identified !== undefined) {
     setSelectedOptionTrueFalse(
       "#filters-form",
       "identified",
-      inatApiParams.identified,
+      observationsApiParams.identified,
     );
   }
 
-  if (inatApiParams.introduced !== undefined) {
+  if (observationsApiParams.introduced !== undefined) {
     setSelectedOptionTrueFalse(
       "#filters-form",
       "introduced",
-      inatApiParams.introduced,
+      observationsApiParams.introduced,
     );
   }
 
-  if (inatApiParams.license !== undefined) {
-    inatApiParams.license.split(",").forEach((value) => {
+  if (observationsApiParams.license !== undefined) {
+    observationsApiParams.license.split(",").forEach((value) => {
       setSelectedOption(
         `#filters-form select#license option[value='${value}']`,
       );
     });
   }
 
-  if (inatApiParams.lrank !== undefined) {
+  if (observationsApiParams.lrank !== undefined) {
     setSelectedOption(
-      `#filters-form select#lrank option[value='${inatApiParams.lrank}']`,
+      `#filters-form select#lrank option[value='${observationsApiParams.lrank}']`,
     );
   }
 
-  if (inatApiParams.month !== undefined) {
+  if (observationsApiParams.month !== undefined) {
     setInputChecked("#filters-form input#months_date", true);
     setInputDisabled("#filters-form select#month", false);
-    inatApiParams.month.split(",").forEach((value) => {
+    observationsApiParams.month.split(",").forEach((value) => {
       setSelectedOption(`#filters-form select#month option[value='${value}']`);
     });
   }
 
-  if (inatApiParams.native !== undefined) {
-    setSelectedOptionTrueFalse("#filters-form", "native", inatApiParams.native);
+  if (observationsApiParams.native !== undefined) {
+    setSelectedOptionTrueFalse(
+      "#filters-form",
+      "native",
+      observationsApiParams.native,
+    );
   }
 
-  if (inatApiParams.on !== undefined) {
+  if (observationsApiParams.on !== undefined) {
     setInputChecked("#filters-form input#exact_date", true);
     setInputDisabled("#filters-form input#on", false);
-    setInputValue("#filters-form input#on", inatApiParams.on);
+    setInputValue("#filters-form input#on", observationsApiParams.on);
   }
 
-  if (inatApiParams.photo_license !== undefined) {
-    inatApiParams.photo_license.split(",").forEach((value) => {
+  if (observationsApiParams.photo_license !== undefined) {
+    observationsApiParams.photo_license.split(",").forEach((value) => {
       setSelectedOption(
         `#filters-form select#photo_license option[value='${value}']`,
       );
     });
   }
 
-  if (inatApiParams.photos !== undefined) {
-    setSelectedOptionTrueFalse("#filters-form", "photos", inatApiParams.photos);
+  if (observationsApiParams.photos !== undefined) {
+    setSelectedOptionTrueFalse(
+      "#filters-form",
+      "photos",
+      observationsApiParams.photos,
+    );
   }
 
-  if (inatApiParams.popular !== undefined) {
+  if (observationsApiParams.popular !== undefined) {
     setSelectedOptionTrueFalse(
       "#filters-form",
       "popular",
-      inatApiParams.popular,
+      observationsApiParams.popular,
     );
   }
 
-  if (inatApiParams.quality_grade !== undefined) {
+  if (observationsApiParams.quality_grade !== undefined) {
     setSelectedOption(
-      `#filters-form select#quality_grade option[value='${inatApiParams.quality_grade}']`,
+      `#filters-form select#quality_grade option[value='${observationsApiParams.quality_grade}']`,
     );
   }
 
-  if (inatApiParams.sound_license !== undefined) {
-    inatApiParams.sound_license.split(",").forEach((value) => {
+  if (observationsApiParams.sound_license !== undefined) {
+    observationsApiParams.sound_license.split(",").forEach((value) => {
       setSelectedOption(
         `#filters-form select#sound_license option[value='${value}']`,
       );
     });
   }
 
-  if (inatApiParams.sounds !== undefined) {
-    setSelectedOptionTrueFalse("#filters-form", "sounds", inatApiParams.sounds);
+  if (observationsApiParams.sounds !== undefined) {
+    setSelectedOptionTrueFalse(
+      "#filters-form",
+      "sounds",
+      observationsApiParams.sounds,
+    );
   }
 
-  if (inatApiParams.threatened !== undefined) {
+  if (observationsApiParams.threatened !== undefined) {
     setSelectedOptionTrueFalse(
       "#filters-form",
       "threatened",
-      inatApiParams.threatened,
+      observationsApiParams.threatened,
     );
   }
 
-  if (inatApiParams.verifiable !== undefined) {
+  if (observationsApiParams.verifiable !== undefined) {
     setSelectedOptionTrueFalse(
       "#filters-form",
       "verifiable",
-      inatApiParams.verifiable as boolean,
+      observationsApiParams.verifiable as boolean,
     );
   }
 
-  if (inatApiParams.year !== undefined) {
+  if (observationsApiParams.year !== undefined) {
     setInputChecked("#filters-form input#years_date", true);
     setInputDisabled("#filters-form select#year", false);
-    inatApiParams.year.split(",").forEach((value) => {
+    observationsApiParams.year.split(",").forEach((value) => {
       setSelectedOption(`#filters-form select#year option[value='${value}']`);
     });
   }
 
-  if (inatApiParams.unobserved_by_user_id !== undefined) {
+  if (observationsApiParams.unobserved_by_user_id !== undefined) {
     let inputEl = document.querySelector(
       "#unobserved-by-user-search",
     ) as HTMLInputElement;
@@ -288,7 +300,7 @@ export function initFilters(appStore: MapStore) {
     }
   }
 
-  if (inatApiParams.ident_user_id !== undefined) {
+  if (observationsApiParams.ident_user_id !== undefined) {
     let inputEl = document.querySelector(
       "#identifier-search",
     ) as HTMLInputElement;

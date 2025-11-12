@@ -228,8 +228,8 @@ function formatIdentification(row: IdentificationsResult, appStore: MapStore) {
 }
 
 export async function paginationcCallback(num: number) {
-  window.app.store.inatApiParams = {
-    ...window.app.store.inatApiParams,
+  window.app.store.observationsApiParams = {
+    ...window.app.store.observationsApiParams,
     page: num,
   };
   window.app.store.viewMetadata.identifications = {

@@ -42,7 +42,7 @@ export async function fetchAndRenderData(
     );
     containerEl.appendChild(pagination1);
 
-    let page = appStore.inatApiParams.page || 1;
+    let page = appStore.observationsApiParams.page || 1;
     let tableEl = createTable(data.results, page, perPage);
     containerEl.appendChild(tableEl);
 
@@ -123,8 +123,8 @@ function createTable(
 }
 
 export async function paginationcCallback(num: number) {
-  window.app.store.inatApiParams = {
-    ...window.app.store.inatApiParams,
+  window.app.store.observationsApiParams = {
+    ...window.app.store.observationsApiParams,
     page: num,
   };
   window.app.store.viewMetadata.identifiers = {

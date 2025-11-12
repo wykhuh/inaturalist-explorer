@@ -30,7 +30,7 @@ export function setupUserSearch(selector: string, appStore: MapStore) {
       src: async (query: string) => {
         try {
           let url = `${autocomplete_users_api}&per_page=25&q=${query}`;
-          let projectId = appStore.inatApiParams.project_id;
+          let projectId = appStore.observationsApiParams.project_id;
           if (projectId) {
             // NOTE: iNaturlist API only allows one id for project_id
             let firstProjectId = projectId.split(",")[0];
@@ -99,16 +99,16 @@ export async function userSelectedHandler(
   let user = selection;
   // add project to store
   appStore.selectedUsers = [...appStore.selectedUsers, selection];
-  appStore.inatApiParams = {
-    ...appStore.inatApiParams,
+  appStore.observationsApiParams = {
+    ...appStore.observationsApiParams,
     user_id: addValueToCommaSeparatedString(
       selection.id,
-      appStore.inatApiParams.user_id,
+      appStore.observationsApiParams.user_id,
     ),
   };
 
   let paramsTemp = {
-    ...appStore.inatApiParams,
+    ...appStore.observationsApiParams,
     user_id: user.id.toString(),
   };
   await getObservationsCountForUser(user, appStore, paramsTemp);

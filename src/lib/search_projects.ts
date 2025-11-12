@@ -36,10 +36,10 @@ export function setupProjectSearch(selector: string, appStore: MapStore) {
       src: async (query: string) => {
         try {
           let url = `${autocomplete_projects_api}&per_page=50&q=${query}`;
-          if (appStore.inatApiParams.place_id) {
-            url += `&place_id=${appStore.inatApiParams.place_id}`;
+          if (appStore.observationsApiParams.place_id) {
+            url += `&place_id=${appStore.observationsApiParams.place_id}`;
           }
-          let usersIds = appStore.inatApiParams.user_id;
+          let usersIds = appStore.observationsApiParams.user_id;
           if (usersIds) {
             // NOTE: iNaturalist API only allow one id for member_id
             let member_id = usersIds.split(",")[0];
@@ -137,16 +137,16 @@ export async function projectSelectedHandler(
 
   // add project to store
   appStore.selectedProjects = [...appStore.selectedProjects, project];
-  appStore.inatApiParams = {
-    ...appStore.inatApiParams,
+  appStore.observationsApiParams = {
+    ...appStore.observationsApiParams,
     project_id: addValueToCommaSeparatedString(
       project.id,
-      appStore.inatApiParams.project_id,
+      appStore.observationsApiParams.project_id,
     ),
   };
 
   let paramsTemp = {
-    ...appStore.inatApiParams,
+    ...appStore.observationsApiParams,
     project_id: project.id.toString(),
   };
   await getObservationsCountForProject(project, appStore, paramsTemp);

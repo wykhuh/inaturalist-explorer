@@ -29,7 +29,7 @@ class MyComponent extends HTMLElement {
       let optionEl = document.createElement("option");
       optionEl.value = lang.code;
       optionEl.textContent = lang.name;
-      if (lang.code === window.app.store.inatApiParams.locale) {
+      if (lang.code === window.app.store.observationsApiParams.locale) {
         optionEl.selected = true;
       }
 
@@ -39,8 +39,8 @@ class MyComponent extends HTMLElement {
     selectEl.addEventListener("change", async (event) => {
       if (event.target) {
         let target = event.target as HTMLInputElement;
-        window.app.store.inatApiParams = {
-          ...window.app.store.inatApiParams,
+        window.app.store.observationsApiParams = {
+          ...window.app.store.observationsApiParams,
           locale: target.value,
         };
 

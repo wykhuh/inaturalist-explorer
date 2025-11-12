@@ -275,32 +275,32 @@ describe("processFiltersForm", () => {
 });
 
 describe("updateAppWithFilters", () => {
-  test("returns original inatApiParams and empty params if form is not changed", async () => {
+  test("returns original observationsApiParams and empty params if form is not changed", async () => {
     let store = structuredClone(mapStore);
     let formData = new FormData();
     formData.set("verifiable", "true");
 
     await updateAppWithFilters(formData, store);
 
-    expect(store.inatApiParams).toStrictEqual(defaultParams);
+    expect(store.observationsApiParams).toStrictEqual(defaultParams);
     expect(window.location.search).toBe("");
   });
 
-  test("removes verifiable from inatApiParams and url if verifiable has no value", async () => {
+  test("removes verifiable from observationsApiParams and url if verifiable has no value", async () => {
     let store = structuredClone(mapStore);
     let formData = new FormData();
     formData.set("verifiable", "");
 
     await updateAppWithFilters(formData, store);
 
-    expect(store.inatApiParams).toStrictEqual({
+    expect(store.observationsApiParams).toStrictEqual({
       spam: false,
       locale: "en",
     });
     expect(window.location.search).toBe("?spam=false");
   });
 
-  test("update inatApiParams and url with form data", async () => {
+  test("update observationsApiParams and url with form data", async () => {
     let store = structuredClone(mapStore);
     let formData = new FormData();
     formData.set("verifiable", "false");
@@ -310,7 +310,7 @@ describe("updateAppWithFilters", () => {
 
     await updateAppWithFilters(formData, store);
 
-    expect(store.inatApiParams).toStrictEqual({
+    expect(store.observationsApiParams).toStrictEqual({
       spam: false,
       verifiable: false,
       threatened: true,

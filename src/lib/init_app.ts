@@ -56,18 +56,18 @@ export async function initPopulateStore(
   appStore: MapStore,
   urlStore: MapStore,
 ) {
-  loggerStore("++ initPopulateStore start", appStore.inatApiParams);
+  loggerStore("++ initPopulateStore start", appStore.observationsApiParams);
 
-  // use url store to populate appStore.inatApiParams
-  for (const [k, value] of Object.entries(urlStore.inatApiParams)) {
+  // use url store to populate appStore.observationsApiParams
+  for (const [k, value] of Object.entries(urlStore.observationsApiParams)) {
     let key = k as ObservationsApiParamsKeys;
     // ignore params whose value is any
     if (fieldsWithAny.includes(key) && value === "any") {
-      delete appStore.inatApiParams[key];
-      // add valid params to inatApiParams
+      delete appStore.observationsApiParams[key];
+      // add valid params to observationsApiParams
     } else if (ObservationsApiNames.includes(key)) {
-      delete appStore.inatApiParams[key];
-      appStore.inatApiParams[key] = value;
+      delete appStore.observationsApiParams[key];
+      appStore.observationsApiParams[key] = value;
     }
   }
   // use url store to populate store view and and subview
@@ -89,13 +89,13 @@ export async function initPopulateStore(
   }
 
   // HACK: trigger store proxy
-  appStore.inatApiParams = appStore.inatApiParams;
+  appStore.observationsApiParams = appStore.observationsApiParams;
   appStore.viewMetadata = appStore.viewMetadata;
 
   // places data
   if (
     urlStore.selectedPlaces?.length > 0 &&
-    urlStore.inatApiParams.nelat === undefined
+    urlStore.observationsApiParams.nelat === undefined
   ) {
     for await (const urlStorePlace of urlStore.selectedPlaces) {
       let placeData = await getPlaceById(urlStorePlace.id);
@@ -105,12 +105,12 @@ export async function initPopulateStore(
       processPlaceData(placeData, appStore);
     }
     // get bounding box data
-  } else if (urlStore.inatApiParams.nelat !== undefined) {
+  } else if (urlStore.observationsApiParams.nelat !== undefined) {
     processBBoxData(appStore, urlStore);
   }
   loggerStore(
     "++ initPopulateStore selectedPlaces",
-    appStore.inatApiParams,
+    appStore.observationsApiParams,
     appStore.selectedPlaces,
   );
 
@@ -131,7 +131,7 @@ export async function initPopulateStore(
   }
   loggerStore(
     "++ initPopulateStore selectedProjects",
-    appStore.inatApiParams,
+    appStore.observationsApiParams,
     appStore.selectedProjects,
   );
 
@@ -147,7 +147,7 @@ export async function initPopulateStore(
   }
   loggerStore(
     "++ initPopulateStore selectedUsers",
-    appStore.inatApiParams,
+    appStore.observationsApiParams,
     appStore.selectedUsers,
   );
 
@@ -169,7 +169,7 @@ export async function initPopulateStore(
 
   loggerStore(
     "++ initPopulateStore selectedUsers",
-    appStore.inatApiParams,
+    appStore.observationsApiParams,
     appStore.selectedUsers,
   );
 
@@ -185,7 +185,7 @@ export async function initPopulateStore(
   }
   loggerStore(
     "++ initPopulateStore selectedTaxa",
-    appStore.inatApiParams,
+    appStore.observationsApiParams,
     appStore.selectedTaxa,
   );
 
@@ -229,7 +229,7 @@ export async function initRenderMap(appStore: MapStore) {
   renderSelectedProjectsBoundaries(appStore);
 
   // add bounding box layer
-  if (appStore.inatApiParams.nelat !== undefined) {
+  if (appStore.observationsApiParams.nelat !== undefined) {
     addBBoxDataToMap(appStore);
   }
 
@@ -290,13 +290,13 @@ export function processTaxonData(
   taxon.subtitle = subtitle;
 
   appStore.selectedTaxa = [...appStore.selectedTaxa, taxon];
-  appStore.inatApiParams.taxon_id = addValueToCommaSeparatedString(
+  appStore.observationsApiParams.taxon_id = addValueToCommaSeparatedString(
     taxonData.id,
-    appStore.inatApiParams.taxon_id,
+    appStore.observationsApiParams.taxon_id,
   );
-  appStore.inatApiParams.colors = addValueToCommaSeparatedString(
+  appStore.observationsApiParams.colors = addValueToCommaSeparatedString(
     urlStoreTaxon.color,
-    appStore.inatApiParams.colors,
+    appStore.observationsApiParams.colors,
   );
   if (urlStoreTaxon.color) {
     appStore.color = urlStoreTaxon.color;
@@ -319,20 +319,20 @@ export function processPlaceData(placeData: PlacesResult, appStore: MapStore) {
   ];
 
   // create comma seperated place_id
-  appStore.inatApiParams.place_id = addValueToCommaSeparatedString(
+  appStore.observationsApiParams.place_id = addValueToCommaSeparatedString(
     placeData.id,
-    appStore.inatApiParams.place_id,
+    appStore.observationsApiParams.place_id,
   );
 }
 
 export function processBBoxData(appStore: MapStore, urlStore: MapStore) {
-  let lngLatCoors = convertParamsBBoxToLngLat(urlStore.inatApiParams);
+  let lngLatCoors = convertParamsBBoxToLngLat(urlStore.observationsApiParams);
   if (!lngLatCoors) return;
 
-  appStore.inatApiParams.nelat = urlStore.inatApiParams.nelat;
-  appStore.inatApiParams.nelng = urlStore.inatApiParams.nelng;
-  appStore.inatApiParams.swlat = urlStore.inatApiParams.swlat;
-  appStore.inatApiParams.swlng = urlStore.inatApiParams.swlng;
+  appStore.observationsApiParams.nelat = urlStore.observationsApiParams.nelat;
+  appStore.observationsApiParams.nelng = urlStore.observationsApiParams.nelng;
+  appStore.observationsApiParams.swlat = urlStore.observationsApiParams.swlat;
+  appStore.observationsApiParams.swlng = urlStore.observationsApiParams.swlng;
 
   appStore.selectedPlaces = [bboxPlaceRecord(lngLatCoors)];
 }
@@ -340,7 +340,7 @@ export function processBBoxData(appStore: MapStore, urlStore: MapStore) {
 export function addBBoxDataToMap(appStore: MapStore) {
   let map = appStore.map.map;
   if (!map) return;
-  let lngLatCoors = convertParamsBBoxToLngLat(appStore.inatApiParams);
+  let lngLatCoors = convertParamsBBoxToLngLat(appStore.observationsApiParams);
   if (!lngLatCoors) return;
 
   let layer = drawMapBoundingBox(map, lngLatCoors) as any;
@@ -370,9 +370,9 @@ export function processProjectData(
   appStore.selectedProjects = [...appStore.selectedProjects, project];
 
   // create comma seperated project_id
-  appStore.inatApiParams.project_id = addValueToCommaSeparatedString(
+  appStore.observationsApiParams.project_id = addValueToCommaSeparatedString(
     projectData.id,
-    appStore.inatApiParams.project_id,
+    appStore.observationsApiParams.project_id,
   );
 }
 
@@ -387,9 +387,9 @@ function processUserData(userData: UserResult, appStore: MapStore) {
   ];
 
   // create comma seperated user_id
-  appStore.inatApiParams.user_id = addValueToCommaSeparatedString(
+  appStore.observationsApiParams.user_id = addValueToCommaSeparatedString(
     userData.id,
-    appStore.inatApiParams.user_id,
+    appStore.observationsApiParams.user_id,
   );
 }
 
@@ -400,7 +400,7 @@ function processUserIdentifierData(userData: UserResult, appStore: MapStore) {
     login: userData.login,
   };
 
-  appStore.inatApiParams.ident_user_id = userData.id;
+  appStore.observationsApiParams.ident_user_id = userData.id;
 }
 
 function processUnobservedByUserData(userData: UserResult, appStore: MapStore) {
@@ -410,5 +410,5 @@ function processUnobservedByUserData(userData: UserResult, appStore: MapStore) {
     login: userData.login,
   };
 
-  appStore.inatApiParams.unobserved_by_user_id = userData.id;
+  appStore.observationsApiParams.unobserved_by_user_id = userData.id;
 }
