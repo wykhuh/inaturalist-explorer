@@ -187,4 +187,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("x-observations-filters", MyComponent);
+customElements.define("x-identifications-filters", MyComponent);

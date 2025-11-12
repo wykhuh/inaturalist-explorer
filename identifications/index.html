@@ -8,25 +8,20 @@
     <title>iNaturalist Explorer</title>
     <script type="module" src="/src/main.ts"></script>
     <script type="module">
-      if (import.meta.env.VITE_BASE === "/inaturalist-explorer") {
-        let head = document.querySelector("head");
-        if (head) {
-          let base = document.createElement("base");
-          base.href = "https://wykhuh.github.io/inaturalist-explorer/";
-          head.appendChild(base);
-        }
-      }
+      window.app.store.record_type = "identifications";
     </script>
   </head>
   <body id="home">
     <x-header></x-header>
 
     <main>
-      <x-observations-header data-updatecounts="true"></x-observations-header>
+      <x-identifications-header
+        data-updatecounts="true"
+      ></x-identifications-header>
       <div id="wrapper">
         <div id="site-controls" class="sidebar-open">
           <button id="sidebar-toggle" title="Toggle sidebar">&#9776;</button>
-          <button id="observations-menu-toggle" title="Observations">
+          <button id="identifications-menu-toggle" title="Identifications">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="16px"
@@ -42,7 +37,7 @@
 
         <section class="two-columns sidebar-open" id="site-layout">
           <div id="sidebar-menu">
-            <x-observations-menu></x-observations-menu>
+            <x-identifications-menu></x-identifications-menu>
             <x-settings-menu></x-settings-menu>
             <div id="display-json">
               <div class="controls"></div>
@@ -54,16 +49,15 @@
       </div>
     </main>
 
-    <template id="observations-menu-template">
-      <div id="observations-menu">
+    <template id="identifications-menu-template">
+      <div id="identifications-menu">
         <div class="form-group">
           <label>
             Search for
             <select id="search-type" name="search-type">
               <option selected value="taxa">Species</option>
               <option value="places">iNaturalist Places</option>
-              <option value="projects">Projects</option>
-              <option value="users">Users (observer)</option>
+              <option value="users">Users (identifiers)</option>
             </select>
           </label>
         </div>
@@ -75,7 +69,7 @@
           </label>
         </div>
         <div class="dialog-container">
-          <x-observations-filters></x-observations-filters>
+          <x-identifications-filters></x-identifications-filters>
         </div>
 
         <h2 class="taxa-heading">Species</h2>

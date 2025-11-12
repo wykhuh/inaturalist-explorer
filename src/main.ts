@@ -5,6 +5,8 @@ import "./components/SelectedProjectsItem/component.ts";
 import "./components/SelectedUsersItem/component.ts";
 import "./components/ObservationsFilters/component.ts";
 import "./components/ObservationsHeader/component.ts";
+import "./components/IdentificationsFilters/component.ts";
+import "./components/IdentificationsHeader/component.ts";
 import "./components/ViewMap/component.ts";
 import "./components/ViewSpecies/component.ts";
 import "./components/ViewIdentifiers/component.ts";
@@ -13,6 +15,7 @@ import "./components/ViewObservers/component.ts";
 import "./components/CardSpecies/component.ts";
 import "./components/CardObservation/component.ts";
 import "./components/ObservationsMenu/component.ts";
+import "./components/IdentificationsMenu/component.ts";
 import "./components/SettingsMenu/component.ts";
 
 import mapStore from "./lib/store.ts";
