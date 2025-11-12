@@ -51,7 +51,7 @@ export const speciesRanks = [
   "form",
 ];
 
-export const iNatApiNonFilterableNames = [
+export const ObservationsApiNonFilterableNames = [
   "nelat",
   "nelng",
   "swlat",
@@ -68,7 +68,7 @@ export const iNatApiNonFilterableNames = [
   "locale",
 ];
 
-export const iNatApiFilterableNames = [
+export const ObservationsApiFilterableNames = [
   "captive",
   "d1",
   "d2",
@@ -163,8 +163,8 @@ export const iNatApiFilterableNames = [
   "spam",
 ];
 
-export const iNatApiNames = iNatApiNonFilterableNames.concat(
-  iNatApiFilterableNames,
+export const ObservationsApiNames = ObservationsApiNonFilterableNames.concat(
+  ObservationsApiFilterableNames,
 );
 
 export const CCLicenses = [

@@ -24,7 +24,7 @@ import {
   defaultQuery,
 } from "./test_helpers.ts";
 import type { MapStore, NameOrder, ObservationViews } from "../types/app";
-import { iNatApiFilterableNames } from "../data/inat_data.ts";
+import { ObservationsApiFilterableNames } from "../data/inat_data.ts";
 import { validObservationsSubviews, validViews } from "../data/app_data.ts";
 
 describe("hexToRgb", () => {
@@ -922,7 +922,7 @@ describe("decodeAppUrl options", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test.each(iNatApiFilterableNames)(
+  test.each(ObservationsApiFilterableNames)(
     "adds valid params to inatApiParams",
     (name) => {
       let value;

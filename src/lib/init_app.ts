@@ -4,7 +4,7 @@ import type {
   NormalizediNatTaxon,
   MapStore,
   CustomGeoJSON,
-  iNatApiParamsKeys,
+  ObservationsApiParamsKeys,
   ObservationViews,
   NormalizediNatProject,
 } from "../types/app";
@@ -25,7 +25,7 @@ import {
 import {
   bboxPlaceRecord,
   fieldsWithAny,
-  iNatApiNames,
+  ObservationsApiNames,
 } from "../data/inat_data.ts";
 import type {
   PlacesResult,
@@ -60,12 +60,12 @@ export async function initPopulateStore(
 
   // use url store to populate appStore.inatApiParams
   for (const [k, value] of Object.entries(urlStore.inatApiParams)) {
-    let key = k as iNatApiParamsKeys;
+    let key = k as ObservationsApiParamsKeys;
     // ignore params whose value is any
     if (fieldsWithAny.includes(key) && value === "any") {
       delete appStore.inatApiParams[key];
       // add valid params to inatApiParams
-    } else if (iNatApiNames.includes(key)) {
+    } else if (ObservationsApiNames.includes(key)) {
       delete appStore.inatApiParams[key];
       appStore.inatApiParams[key] = value;
     }

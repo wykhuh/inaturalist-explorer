@@ -60,7 +60,7 @@ import {
   gridLabel_life_places_identifier,
   gridLabel_oaks_places_identifier,
 } from "../test_helpers.ts";
-import type { iNatApiParams } from "../../types/app";
+import type { ObservationsApiParams } from "../../types/app";
 import { fieldsWithAny } from "../../data/inat_data.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
 import { initPopulateStore, initRenderMap } from "../../lib/init_app.ts";
@@ -111,7 +111,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoRefresh(store);
     expectAllTaxaRecord(store);
 
-    let expectedParams: iNatApiParams = {
+    let expectedParams: ObservationsApiParams = {
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
       ...defaultParams,
@@ -139,7 +139,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoRefresh(store);
     expectAllTaxaRecord(store);
 
-    let expectedParams: iNatApiParams = {
+    let expectedParams: ObservationsApiParams = {
       verifiable: false,
       spam: true,
       photos: false,
@@ -170,7 +170,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoRefresh(store);
     expectAllTaxaRecord(store);
 
-    let expectedParams: iNatApiParams = {
+    let expectedParams: ObservationsApiParams = {
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
       ...defaultParams,
@@ -198,7 +198,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoRefresh(store);
     expectLifeTaxa(store);
 
-    let expectedParams: iNatApiParams = {
+    let expectedParams: ObservationsApiParams = {
       colors: colors[0],
       taxon_id: life().id.toString(),
       verifiable: false,
@@ -228,7 +228,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoRefresh(store);
     expectLifeTaxa(store);
 
-    let expectedParams: iNatApiParams = {
+    let expectedParams: ObservationsApiParams = {
       colors: colors[0],
       taxon_id: life().id.toString(),
       verifiable: true,
@@ -258,7 +258,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoRefresh(store);
     expectLifeTaxa(store);
 
-    let expectedParams: iNatApiParams = {
+    let expectedParams: ObservationsApiParams = {
       colors: colors[0],
       taxon_id: life().id.toString(),
       ...defaultParams,
@@ -288,7 +288,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       expectNoRefresh(store);
       expectLifeTaxa(store);
 
-      let expectedParams: iNatApiParams = {
+      let expectedParams: ObservationsApiParams = {
         colors: colors[0],
         taxon_id: life().id.toString(),
         spam: false,
@@ -322,7 +322,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoRefresh(store);
     expectLifeTaxa(store);
 
-    let expectedParams: iNatApiParams = {
+    let expectedParams: ObservationsApiParams = {
       colors: colors[0],
       taxon_id: life().id.toString(),
       ...defaultParams,
@@ -511,7 +511,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectLifeTaxa(store);
-    let expectedParams: iNatApiParams = {
+    let expectedParams: ObservationsApiParams = {
       colors: colors[0],
       taxon_id: life().id.toString(),
       ...defaultParams,
@@ -542,7 +542,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectNoRefresh(store);
     expectAllTaxaRecord(store, allTaxaLACount);
     expectLosAngelesPlace(store, allTaxaLACount);
-    let expectedParams: iNatApiParams = {
+    let expectedParams: ObservationsApiParams = {
       place_id: losangeles.id.toString(),
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
@@ -575,7 +575,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     ]);
     expectRefreshPlace(store, allTaxaCount);
     expectAllTaxaRecord(store);
-    let expectedParams: iNatApiParams = {
+    let expectedParams: ObservationsApiParams = {
       nelat: 0,
       nelng: 0,
       swlat: 0,
@@ -610,7 +610,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectNoPlaces(store);
     expectAllTaxaRecord(store, allTaxaProjectCount);
     expectProject1(store, allTaxaProjectCount);
-    let expectedParams: iNatApiParams = {
+    let expectedParams: ObservationsApiParams = {
       project_id: project_cnc1.id.toString(),
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
@@ -644,7 +644,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectNoPlaces(store);
     expectAllTaxaRecord(store, allTaxaCount * 0.45);
     expectUser1(store, allTaxaCount * 0.45);
-    let expectedParams: iNatApiParams = {
+    let expectedParams: ObservationsApiParams = {
       user_id: user1.id.toString(),
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
@@ -676,7 +676,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     // expect(searchparams).toBe("");
     expectAllTaxaRecord(store, allTaxaCount * 0.75);
     expectUser1Identifier(store);
-    let expectedParams: iNatApiParams = {
+    let expectedParams: ObservationsApiParams = {
       ident_user_id: user1.id,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
@@ -707,7 +707,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectNoPlaces(store);
     expectAllTaxaRecord(store, allTaxaCount * 0.65);
     expectUser1UnobservedByUser(store);
-    let expectedParams: iNatApiParams = {
+    let expectedParams: ObservationsApiParams = {
       ...defaultParams,
       unobserved_by_user_id: user1.id,
       taxon_id: allTaxa.id.toString(),
@@ -754,7 +754,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectUsers(store, [count * 0.45 * 0.75, 4537.5]);
     expectUser1Identifier(store);
     expectProjects(store, [count * 0.7 * 0.75, count * 0.3 * 0.75]);
-    let expectedParams: iNatApiParams = {
+    let expectedParams: ObservationsApiParams = {
       colors: `${colors[0]},${colors[1]}`,
       taxon_id: `${life().id},${redOak().id}`,
       place_id: `${losangeles.id},${sandiego.id}`,
@@ -815,7 +815,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectProjects(store, [count * 0.7, count * 0.3]);
     expectUsers(store, [count * 0.45, count * 0.55]);
 
-    let expectedParams: iNatApiParams = {
+    let expectedParams: ObservationsApiParams = {
       ...defaultParams,
       colors: `${colors[0]},${colors[1]}`,
       taxon_id: `${life().id},${redOak().id}`,

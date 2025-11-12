@@ -4,11 +4,11 @@ import L from "leaflet";
 import type {
   NormalizediNatTaxon,
   MapStore,
-  iNatApiParams,
+  ObservationsApiParams,
   CustomLayerOptions,
   CustomLayer,
   CustomGeoJSON,
-  iNatApiParamsKeys,
+  ObservationsApiParamsKeys,
   NormalizediNatPlace,
   NormalizediNatProject,
   NormalizediNatUser,
@@ -22,7 +22,7 @@ import {
 import { formatAppUrl } from "./utils.ts";
 import { getiNatMapTiles, getObservations } from "./inat_api.ts";
 import {
-  iNatApiNonFilterableNames,
+  ObservationsApiNonFilterableNames,
   allTaxaRecord,
   bboxPlaceRecord,
 } from "../data/inat_data.ts";
@@ -87,7 +87,7 @@ export async function refreshBoundingBox(appStore: MapStore) {
 export async function fetchiNatMapDataForTaxon(
   taxonObj: NormalizediNatTaxon,
   appStore: MapStore,
-  paramsTemp: iNatApiParams,
+  paramsTemp: ObservationsApiParams,
 ) {
   let map = appStore.map.map;
   let layerControl = appStore.map.layerControl;
@@ -132,7 +132,7 @@ export async function fetchiNatMapDataForTaxon(
 export async function getObservationsCountForTaxon(
   taxon: NormalizediNatTaxon,
   appStore: MapStore,
-  paramsTemp: iNatApiParams,
+  paramsTemp: ObservationsApiParams,
 ) {
   await getObservationsCountForResource(
     taxon,
@@ -281,7 +281,7 @@ function removePlacesFromStoreAndMap(appStore: MapStore) {
 export async function getObservationsCountForPlace(
   place: NormalizediNatPlace,
   appStore: MapStore,
-  paramsTemp: iNatApiParams,
+  paramsTemp: ObservationsApiParams,
 ) {
   await getObservationsCountForResource(
     place,
@@ -335,7 +335,7 @@ export function removeOneProjectFromStoreAndMap(
 export async function getObservationsCountForProject(
   project: NormalizediNatPlace,
   appStore: MapStore,
-  paramsTemp: iNatApiParams,
+  paramsTemp: ObservationsApiParams,
 ) {
   await getObservationsCountForResource(
     project,
@@ -348,7 +348,7 @@ export async function getObservationsCountForProject(
 export async function getObservationsCountForUser(
   user: NormalizediNatUser,
   appStore: MapStore,
-  paramsTemp: iNatApiParams,
+  paramsTemp: ObservationsApiParams,
 ) {
   await getObservationsCountForResource(
     user,
@@ -387,7 +387,7 @@ async function getObservationsCountForResource(
     | NormalizediNatUser,
   resourceName: MapStoreSelectedResourcesArrayKeys,
   appStore: MapStore,
-  paramsTemp: iNatApiParams,
+  paramsTemp: ObservationsApiParams,
 ) {
   let params = cleanupObervationsParamsForRecord(paramsTemp);
   let perPage = 0;
@@ -492,7 +492,7 @@ function removeTaxonId(appStore: MapStore) {
 
 function setinatApiParams(
   appStore: MapStore,
-  property: iNatApiParamsKeys,
+  property: ObservationsApiParamsKeys,
   value: any,
 ) {
   let ids = removeValueFromCommaSeparatedString(
@@ -506,7 +506,7 @@ function setinatApiParams(
 
 function removePlaceId(
   appStore: MapStore,
-  property: iNatApiParamsKeys,
+  property: ObservationsApiParamsKeys,
   value: any,
 ) {
   if (appStore.selectedPlaces.length === 0) {
@@ -523,7 +523,7 @@ function removePlaceId(
 
 function removeProjectId(
   appStore: MapStore,
-  property: iNatApiParamsKeys,
+  property: ObservationsApiParamsKeys,
   value: any,
 ) {
   if (appStore.selectedProjects.length === 0) {
@@ -541,7 +541,7 @@ function removeProjectId(
 
 function removeUserId(
   appStore: MapStore,
-  property: iNatApiParamsKeys,
+  property: ObservationsApiParamsKeys,
   value: any,
 ) {
   if (appStore.selectedUsers.length === 0) {
@@ -558,7 +558,7 @@ function removeUserId(
 
 export function removeIdfromInatApiParams(
   appStore: MapStore,
-  property: iNatApiParamsKeys,
+  property: ObservationsApiParamsKeys,
   value: any,
 ) {
   if (property === "taxon_id") {
@@ -733,7 +733,7 @@ export function removeValueFromCommaSeparatedString(
 export function updateStoreUsingFilters(
   appStore: MapStore,
   filtersResults: {
-    params: iNatApiParams;
+    params: ObservationsApiParams;
     string: string;
   },
 ) {
@@ -745,11 +745,11 @@ export function updateStoreUsingFilters(
   loggerFilters("filtersResults", filtersResults);
 
   for (let [k, _value] of Object.entries(appStore.inatApiParams)) {
-    let key = k as iNatApiParamsKeys;
+    let key = k as ObservationsApiParamsKeys;
     loggerFilters(key, _value);
 
     // ignore params that can't be changed in the filter modal
-    if (iNatApiNonFilterableNames.includes(key)) {
+    if (ObservationsApiNonFilterableNames.includes(key)) {
       continue;
     }
 
@@ -819,7 +819,9 @@ function cleanupParams(appStore: MapStore) {
   return params;
 }
 
-export function cleanupObervationsParamsForRecord(inatParams: iNatApiParams) {
+export function cleanupObervationsParamsForRecord(
+  inatParams: ObservationsApiParams,
+) {
   let params = new URLSearchParams(inatParams as any);
   params.delete("colors");
   params.delete("view");

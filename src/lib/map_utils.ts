@@ -6,7 +6,7 @@ import type {
   LeafletBounds,
   LngLat,
   Coordinates,
-  iNatApiParams,
+  ObservationsApiParams,
   ObservationTilesSetting,
 } from "../types/app.d.ts";
 import { refreshBoundingBox } from "./data_utils.ts";
@@ -414,7 +414,7 @@ export function convertBoundsObjectToLngLat(bounds: LeafletBounds): LngLat[] {
 }
 
 export function convertParamsBBoxToLngLat(
-  params: iNatApiParams,
+  params: ObservationsApiParams,
 ): LngLat[] | undefined {
   const { nelng, nelat, swlng, swlat } = params;
   if (nelng === undefined) return;

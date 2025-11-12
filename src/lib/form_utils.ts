@@ -1,4 +1,4 @@
-import type { iNatApiParamsKeys } from "../types/app";
+import type { ObservationsApiParamsKeys } from "../types/app";
 
 export function setSelectedOption(selector: string) {
   let el = document.querySelector(selector) as HTMLOptionElement;
@@ -9,7 +9,7 @@ export function setSelectedOption(selector: string) {
 
 export function setSelectedOptionTrueFalse(
   form: string,
-  property: iNatApiParamsKeys,
+  property: ObservationsApiParamsKeys,
   value: boolean,
 ) {
   setSelectedOption(`${form} select#${property} option[value='${value}']`);

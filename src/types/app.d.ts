@@ -26,8 +26,8 @@ export interface MapStore {
   selectedUsersIdentifiers: NormalizediNatUser;
   selectedUnobservedByUser: NormalizediNatUser;
   selectedProjects: NormalizediNatProject[];
-  inatApiParams: iNatApiParams;
-  inatApiParamsTemp?: iNatApiParams;
+  inatApiParams: ObservationsApiParams;
+  inatApiParamsTemp?: ObservationsApiParams;
   color: string;
   map: {
     map: Map | null;
@@ -40,7 +40,7 @@ export interface MapStore {
     layer: CustomPolygon | null;
   };
   formFilters: {
-    params: iNatApiParams;
+    params: ObservationsApiParams;
     string: string;
   };
   iNatStats: {
@@ -133,7 +133,7 @@ export type MapStoreSelectedResourcesArrayKeys =
   | "selectedUsers"
   | "selectedProjects";
 
-interface iNatApiParams extends iNatApiFilterableParams {
+interface ObservationsApiParams extends ObservationsApiFilterableParams {
   nelat?: number;
   nelng?: number;
   swlat?: number;
@@ -153,7 +153,7 @@ interface iNatApiParams extends iNatApiFilterableParams {
   name_order?: NameOrder;
 }
 
-interface iNatApiFilterableParams {
+interface ObservationsApiFilterableParams {
   captive?: boolean;
   d1?: string; // date
   d2?: string; // date
@@ -249,8 +249,9 @@ interface iNatApiFilterableParams {
   reviewed?: boolean;
 }
 
-export type iNatApiParamsKeys = keyof iNatApiParams;
-export type iNatApiFilterableParamsKeys = keyof iNatApiFilterableParams;
+export type ObservationsApiParamsKeys = keyof ObservationsApiParams;
+export type ObservationsApiFilterableParamsKeys =
+  keyof ObservationsApiFilterableParams;
 
 export interface AutoCompleteEvent {
   detail: {

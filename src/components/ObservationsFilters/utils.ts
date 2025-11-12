@@ -4,8 +4,8 @@ import {
   taxonRanks,
 } from "../../data/inat_data";
 import type {
-  iNatApiParams,
-  iNatApiParamsKeys,
+  ObservationsApiParams,
+  ObservationsApiParamsKeys,
   MapStore,
 } from "../../types/app";
 import { updateStoreUsingFilters } from "../../lib/data_utils";
@@ -26,16 +26,16 @@ import {
 } from "../../lib/search_utils";
 
 export function processFiltersForm(data: FormData): {
-  params: iNatApiParams;
+  params: ObservationsApiParams;
   string: string;
 } {
   // convert form data into object that can be use with URLSearchParams
-  let values: iNatApiParams = {};
+  let values: ObservationsApiParams = {};
   loggerFilters("----------- processFiltersForm");
 
   for (const [k, value] of data) {
     // HACK: get rid of typescript errors for values[key]
-    let key = k as iNatApiParamsKeys;
+    let key = k as ObservationsApiParamsKeys;
     loggerFilters(key, value);
 
     // ignore fields

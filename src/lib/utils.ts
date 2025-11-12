@@ -1,15 +1,15 @@
 import type {
   MapStore,
-  iNatApiParams,
-  iNatApiParamsKeys,
+  ObservationsApiParams,
+  ObservationsApiParamsKeys,
   NormalizediNatTaxon,
   ObservationViews,
   NameOrder,
 } from "../types/app";
 import {
   bboxPlaceRecord,
-  iNatApiFilterableNames,
-  iNatApiNames,
+  ObservationsApiFilterableNames,
+  ObservationsApiNames,
   observationsOrderByValues,
   orderValues,
 } from "../data/inat_data";
@@ -84,7 +84,7 @@ export function formatAppUrl(appStore: MapStore) {
     .map((r) => r.color)
     .join(",");
 
-  let params: iNatApiParams = {};
+  let params: ObservationsApiParams = {};
 
   if (taxaIds.length > 0) {
     params.taxon_id = taxaIds;
@@ -112,8 +112,8 @@ export function formatAppUrl(appStore: MapStore) {
   Object.entries(appStore.inatApiParams).forEach(([key, value]) => {
     if (processedKeys.includes(key)) {
     } else {
-      if (params && iNatApiNames.includes(key)) {
-        params[key as iNatApiParamsKeys] = value as any;
+      if (params && ObservationsApiNames.includes(key)) {
+        params[key as ObservationsApiParamsKeys] = value as any;
       }
     }
   });
@@ -361,7 +361,7 @@ export function decodeAppUrl(searchParams: string) {
   for (let [key, value] of new URLSearchParams(searchParams)) {
     // convert string values to boolean and numbers
     let cleanedValue = value as string | number | boolean;
-    if (iNatApiFilterableNames.includes(key)) {
+    if (ObservationsApiFilterableNames.includes(key)) {
       if (value === "true") {
         cleanedValue = true;
       }
@@ -371,7 +371,7 @@ export function decodeAppUrl(searchParams: string) {
       if (/^\d+$/.test(value)) {
         cleanedValue = Number(value);
       }
-      store.inatApiParams[key as iNatApiParamsKeys] = cleanedValue;
+      store.inatApiParams[key as ObservationsApiParamsKeys] = cleanedValue;
     }
   }
 
