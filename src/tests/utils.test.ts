@@ -438,7 +438,7 @@ describe("updateAppUrl", () => {
 
     updateAppUrl(global.window.location, appStore);
 
-    expect(pushSpy).toHaveBeenCalledWith({}, "", "http://localhost:3000");
+    expect(pushSpy).toHaveBeenCalledWith({}, "", "http://localhost:3000/");
 
     pushSpy.mockRestore();
   });
@@ -460,7 +460,7 @@ describe("updateAppUrl", () => {
     expect(pushSpy).toHaveBeenCalledWith(
       {},
       "",
-      `http://localhost:3000?taxon_id=${life().id}&colors=${colorsEncoded[0]}&spam=false`,
+      `http://localhost:3000/?taxon_id=${life().id}&colors=${colorsEncoded[0]}&spam=false`,
     );
 
     pushSpy.mockRestore();
