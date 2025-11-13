@@ -481,7 +481,8 @@
     display: none;
   }
 
-  #observations-header {
+  #observations-header,
+  #identifications-header {
     padding: 0 1rem;
     background-color: var(--clr-iNat-dark-gray);
     color: var(--clr-white);
@@ -491,7 +492,8 @@
     }
   }
 
-  #observations-nav {
+  #observations-nav,
+  #identifications-nav {
     display: flex;
     align-items: center;
 
@@ -1167,7 +1169,8 @@
       gap: 1rem;
       border-bottom: var(--border-dark-grey);
 
-      #observations-header {
+      #observations-header,
+      #identifications-header {
         background-color: var(--clr-white);
         color: var(--text-main);
 

@@ -167,6 +167,56 @@ export const ObservationsApiNames = ObservationsApiNonFilterableNames.concat(
   ObservationsApiFilterableNames,
 );
 
+export const IdentificationsApiNonFilterableNames = [
+  "place_id", // array string
+  "taxon_id", // array string
+  "observation_taxon_id", // array string
+  "user_id", // array integer
+  "page",
+  "per_page",
+];
+
+export const IdentificationsApiFilterableNames = [
+  "current_taxon",
+  "own_observation",
+  "is_change",
+  "taxon_active",
+  "observation_taxon_active",
+  "id",
+  "rank",
+  "observation_rank",
+  "user_login", // array string
+  "current",
+  "category", // array string
+  "quality_grade", // array string
+  "taxon_change_id", // array string
+  "iconic_taxon_id", // array string
+  "observation_iconic_taxon_id", // array string
+  "lrank",
+  "hrank",
+  "observation_lrank",
+  "observation_hrank",
+  "without_taxon_id", // array string
+  "without_observation_taxon_id", // array string
+  "d1",
+  "d2",
+  "observation_created_d1",
+  "observation_created_d2",
+  "observed_d1",
+  "observed_d2",
+  "id_above",
+  "id_below",
+  "order",
+  "order_by", // created_at,
+  "only_id",
+  "taxon_of",
+];
+
+export const IdentificationsApiNames =
+  IdentificationsApiNonFilterableNames.concat(
+    IdentificationsApiFilterableNames,
+  );
+
 export const CCLicenses = [
   "cc0",
   "cc-by",

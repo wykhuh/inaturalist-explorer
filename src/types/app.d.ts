@@ -56,6 +56,7 @@ export interface MapStore {
     identifications: ViewOptions;
     name_order: NameOrder;
   };
+  record_type: "observations" | "identifications";
 }
 
 type ViewOptions = {

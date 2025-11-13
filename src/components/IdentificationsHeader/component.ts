@@ -1,6 +1,6 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerStore } from "../../lib/logger";
-import { updateCounts, viewChangeHandler } from "./utils";
+import { updateIdentificationsCounts, viewChangeHandler } from "./utils";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -12,11 +12,11 @@ class MyComponent extends HTMLElement {
     this.render();
 
     // app uses two <x-identifications-header>;
-    // only execute updateCounts() for instance that has updatecounts="true"
+    // only execute updateIdentificationsCounts() for instance that has updatecounts="true"
     window.addEventListener("identificationsChange", () => {
       loggerStore("++ ObservationHeader identificationsChange");
       if (this.dataset.updatecounts === "true") {
-        updateCounts(window.app.store);
+        updateIdentificationsCounts(window.app.store);
       }
     });
   }
@@ -27,10 +27,12 @@ class MyComponent extends HTMLElement {
       this,
     );
 
-    // execute updateCounts() only after both headers are loaded
+    // execute updateIdentificationsCounts() only after both headers are loaded
     let headerEls = document.querySelectorAll("#identifications-header");
+    console.log("IdentificationsHeader render", headerEls.length);
+
     if (headerEls.length === 2) {
-      updateCounts(window.app.store);
+      updateIdentificationsCounts(window.app.store);
     }
 
     let itemEl = this.querySelector(`#${window.app.store.currentView}`);

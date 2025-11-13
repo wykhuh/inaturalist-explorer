@@ -35,6 +35,7 @@ export const mapStore: MapStore = {
     observers: {},
     name_order: "cs",
   },
+  record_type: "observations",
 };
 
 const proxiedStore = new Proxy(structuredClone(mapStore), {

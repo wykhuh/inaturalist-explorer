@@ -83,21 +83,21 @@ async function updateResourceCounts(
   dataFn: any,
   selector: string,
   searchParams: string,
+  perPage = 0,
 ) {
-  let perPage = 0;
+  let countEls = document.querySelectorAll(selector);
+  if (countEls.length === 0) return;
 
   let data = await dataFn(searchParams, perPage);
   let count = data?.total_results;
+  if (count == undefined) return;
 
-  let countEls = document.querySelectorAll(selector);
-  if (countEls && count !== undefined) {
-    Array.from(countEls).forEach((countEl) => {
-      countEl.textContent = count.toLocaleString();
-    });
-  }
+  Array.from(countEls).forEach((countEl) => {
+    countEl.textContent = count.toLocaleString();
+  });
 }
 
-export function updateCounts(appStore: MapStore) {
+export function updateObservationsCounts(appStore: MapStore) {
   let params = cleanupObervationsParams(appStore);
   updateResourceCounts(
     getObservations,

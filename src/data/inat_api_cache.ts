@@ -1,5 +1,5 @@
 import type {
-  iNatIdentificationsAPI,
+  IdentificationsAPI,
   iNatObservationsAPI,
   iNatObservationsIdentifiersAPI,
   iNatObservationsObserversAPI,
@@ -4742,7 +4742,7 @@ export const observationsDemoLA: iNatObservationsAPI = {
   ],
 };
 
-export const identifications: iNatIdentificationsAPI = {
+export const identifications: IdentificationsAPI = {
   total_results: 650398786,
   page: 1,
   per_page: 24,

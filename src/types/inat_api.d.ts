@@ -798,7 +798,7 @@ export interface SiteFeature {
 // identifications api
 // ==================
 
-export interface iNatIdentificationsAPI {
+export interface IdentificationsAPI {
   total_results: number;
   page: number;
   per_page: number;
@@ -828,6 +828,27 @@ export type IdentificationsResult = {
   uuid: string;
   vision: boolean;
 };
+
+export interface IdentificationsSpeciesCountAPI {
+  total_results: number;
+  page: number;
+  per_page: number;
+  results: IdentificationsResult[];
+}
+
+export interface IdentificationsObserversAPI {
+  total_results: number;
+  page: number;
+  per_page: number;
+  results: IdentificationsResult[];
+}
+
+export interface IdentificationsIdentifiersAPI {
+  total_results: number;
+  page: number;
+  per_page: number;
+  results: IdentificationsResult[];
+}
 
 export interface Observation {
   annotations: Annotation[];

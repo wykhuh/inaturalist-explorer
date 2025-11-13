@@ -12,7 +12,10 @@ import type {
   iNatUsersAPI,
   iNatObservationsObserversAPI,
   iNatObservationsIdentifiersAPI,
-  iNatIdentificationsAPI,
+  IdentificationsAPI,
+  IdentificationsIdentifiersAPI,
+  IdentificationsObserversAPI,
+  IdentificationsSpeciesCountAPI,
 } from "../types/inat_api.d.ts";
 import { normalizeAppParams } from "./data_utils.ts";
 import { loggerUrl } from "./logger.ts";
@@ -326,10 +329,64 @@ export async function getIdentifications(appParams: string, perPage: number) {
     `${identifications_api}/?${searchParams}&ttl=3600` + `&per_page=${perPage}`;
   try {
     let resp = await fetch(url);
-    let data = (await resp.json()) as iNatIdentificationsAPI;
+    let data = (await resp.json()) as IdentificationsAPI;
     loggerUrl(url, data.total_results);
     return data;
   } catch (error) {
     console.error("getIdentifications ERROR:", error);
+  }
+}
+
+export async function getIdentificationsSpecies(
+  appParams: string,
+  perPage: number,
+) {
+  let searchParams = normalizeAppParams(appParams);
+  let url =
+    `${identifications_api}/species_counts?${searchParams}&ttl=3600` +
+    `&per_page=${perPage}`;
+  try {
+    let resp = await fetch(url);
+    let data = (await resp.json()) as IdentificationsSpeciesCountAPI;
+    loggerUrl(url, data.total_results);
+    return data;
+  } catch (error) {
+    console.error("getIdentificationsSpecies ERROR:", error);
+  }
+}
+
+export async function getIdentificationsObservers(
+  appParams: string,
+  perPage: number,
+) {
+  let searchParams = normalizeAppParams(appParams);
+  let url =
+    `${identifications_api}/observers?${searchParams}&ttl=3600` +
+    `&per_page=${perPage}`;
+  try {
+    let resp = await fetch(url);
+    let data = (await resp.json()) as IdentificationsObserversAPI;
+    loggerUrl(url, data.total_results);
+    return data;
+  } catch (error) {
+    console.error("getIdentificationsObservers ERROR:", error);
+  }
+}
+
+export async function getIdentificationsIdentifiers(
+  appParams: string,
+  perPage: number,
+) {
+  let searchParams = normalizeAppParams(appParams);
+  let url =
+    `${identifications_api}/identifiers?${searchParams}&ttl=3600` +
+    `&per_page=${perPage}`;
+  try {
+    let resp = await fetch(url);
+    let data = (await resp.json()) as IdentificationsIdentifiersAPI;
+    loggerUrl(url, data.total_results);
+    return data;
+  } catch (error) {
+    console.error("getIdentificationsIdentifiers ERROR:", error);
   }
 }

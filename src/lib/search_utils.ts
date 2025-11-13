@@ -122,7 +122,11 @@ export function renderSelectedResources(
 
   if (doSideEffects) {
     updateAppUrl(window.location, appStore);
-    window.dispatchEvent(new Event("observationsChange"));
+    if (appStore.record_type === "identifications") {
+      window.dispatchEvent(new Event("identificationsChange"));
+    } else {
+      window.dispatchEvent(new Event("observationsChange"));
+    }
   }
 }
 

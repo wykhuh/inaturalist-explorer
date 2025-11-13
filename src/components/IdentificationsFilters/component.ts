@@ -33,7 +33,7 @@ class MyComponent extends HTMLElement {
 
   async render() {
     await setupComponent(
-      "/src/components/ObservationsFilters/template.html",
+      "/src/components/IdentificationsFilters/template.html",
       this,
     );
 

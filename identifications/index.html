@@ -55,7 +55,8 @@
           <label>
             Search for
             <select id="search-type" name="search-type">
-              <option selected value="taxa">Species</option>
+              <option selected value="taxa">Identification Species</option>
+              <option value="observation-taxa">Observation Species</option>
               <option value="places">iNaturalist Places</option>
               <option value="users">Users (identifiers)</option>
             </select>
@@ -75,13 +76,13 @@
         <h2 class="taxa-heading">Species</h2>
         <ul id="selected-species-list"></ul>
 
+        <h2 class="observation-taxa-heading" hidden>Observation Species</h2>
+        <ul id="selected-observation-species-list"></ul>
+
         <h2 class="places-heading" hidden>Places</h2>
         <ul id="selected-places-list"></ul>
 
-        <h2 class="projects-heading" hidden>Projects</h2>
-        <ul id="selected-projects-list"></ul>
-
-        <h2 class="users-heading" hidden>Users (observer)</h2>
+        <h2 class="users-heading" hidden>Users (identifiers)</h2>
         <ul id="selected-users-list"></ul>
       </div>
     </template>

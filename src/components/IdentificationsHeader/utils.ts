@@ -1,15 +1,14 @@
 import {
   cleanupIdentificationParams,
-  cleanupObervationsObserversParams,
   cleanupObervationsParams,
   viewAndTemplateObject,
 } from "../../lib/data_utils";
 import {
   getIdentifications,
   getObservations,
-  getObservationsIdentifiers,
-  getObservationsObservers,
-  getObservationsSpecies,
+  getIdentificationsIdentifiers,
+  getIdentificationsObservers,
+  getIdentificationsSpecies,
 } from "../../lib/inat_api";
 import { updateAppUrl } from "../../lib/utils";
 import type { MapStore, ObservationViews } from "../../types/app";
@@ -83,48 +82,51 @@ async function updateResourceCounts(
   dataFn: any,
   selector: string,
   searchParams: string,
+  perPage = 0,
 ) {
-  let perPage = 0;
+  let countEls = document.querySelectorAll(selector);
+  if (countEls.length === 0) return;
 
   let data = await dataFn(searchParams, perPage);
   let count = data?.total_results;
+  if (count == undefined) return;
 
-  let countEls = document.querySelectorAll(selector);
-  if (countEls && count !== undefined) {
-    Array.from(countEls).forEach((countEl) => {
-      countEl.textContent = count.toLocaleString();
-    });
-  }
+  Array.from(countEls).forEach((countEl) => {
+    countEl.textContent = count.toLocaleString();
+  });
 }
 
-export function updateCounts(appStore: MapStore) {
+export function updateIdentificationsCounts(appStore: MapStore) {
   let params = cleanupObervationsParams(appStore);
   updateResourceCounts(
     getObservations,
-    "#observations-header .observations-count",
+    "#identifications-header .observations-count",
     params,
   );
-  updateResourceCounts(
-    getObservationsSpecies,
-    "#observations-header .species-count",
-    params,
-  );
-  updateResourceCounts(
-    getObservationsIdentifiers,
-    "#observations-header .identifiers-count",
-    params,
-  );
+
   let identificationParams = cleanupIdentificationParams(appStore);
   updateResourceCounts(
     getIdentifications,
-    "#observations-header .identifications-count",
+    "#identifications-header .identifications-count",
     identificationParams,
   );
 
-  let observersParams = cleanupObervationsObserversParams(appStore);
   updateResourceCounts(
-    getObservationsObservers,
-    "#observations-header .observers-count",
-    observersParams,
+    getIdentificationsIdentifiers,
+    "#identifications-header .identifiers-count",
+    identificationParams,
+  );
+
+  updateResourceCounts(
+    getIdentificationsSpecies,
+    "#identifications-header .species-count",
+    identificationParams,
+  );
+
+  updateResourceCounts(
+    getIdentificationsObservers,
+    "#identifications-header .observers-count",
+    identificationParams,
+    1, // 0 per pages causes an server error for /idenifications/observers
   );
 }
