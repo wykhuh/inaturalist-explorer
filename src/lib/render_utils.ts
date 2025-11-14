@@ -198,3 +198,26 @@ export function renderPlace(place: string, obscured: boolean) {
 
   return placeContent;
 }
+
+export function renderQualityGrade(quality_grade: string) {
+  let content = "";
+  if (quality_grade === "research") {
+    content += `<div class="quality-grade">
+      <span class="research-grade-badge badge">Research Grade</span>
+     </div>`;
+  } else if (quality_grade === "needs_id") {
+    content += `<div class="quality-grade">
+      <span class="needs-id-badge badge">Needs ID</span>
+    </div>`;
+  } else if (quality_grade === "casual") {
+    content += `<div class="quality-grade">
+      <span class="casual-badge badge">Casual</span>
+    </div>`;
+  } else {
+    content += `<div class="quality-grade">
+      <span class="badge"></span>
+    </div>`;
+  }
+
+  return content;
+}

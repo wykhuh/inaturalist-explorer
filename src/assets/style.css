@@ -712,24 +712,26 @@
       }
     }
 
-    .research-grade {
+    .quality-grade {
       margin-top: 0.5rem;
+
+      .badge {
+        padding: 3px;
+        font-size: var(--font-size-sm);
+        white-space: nowrap;
+      }
 
       .research-grade-badge {
         background-color: var(--clr-iNat-green);
         color: var(--clr-white);
-        padding: 3px;
-        font-size: var(--font-size-sm);
       }
-    }
-
-    .needs-id {
-      margin-top: 0.5rem;
 
       .needs-id-badge {
         background-color: var(--clr-iNat-yellow);
-        padding: 3px;
-        font-size: var(--font-size-sm);
+      }
+
+      .casual-badge {
+        background-color: var(--clr-warning);
       }
     }
 

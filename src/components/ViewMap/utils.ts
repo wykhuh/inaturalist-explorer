@@ -5,6 +5,7 @@ import {
   renderMedia,
   renderObservationMetadataCounts,
   renderPlace,
+  renderQualityGrade,
   renderTaxonNames,
 } from "../../lib/render_utils";
 import { getObservations } from "../../lib/inat_api";
@@ -151,10 +152,7 @@ export function createTable(results: ObservationsResult[], appStore: MapStore) {
       observationContent += "</span>";
     }
 
-    if (row.quality_grade === "research") {
-      observationContent += `<span class="research-grade"><span class="research-grade-badge">Research Grade</span></span>`;
-    }
-
+    observationContent += renderQualityGrade(row.quality_grade);
     observationContent += renderObservationMetadataCounts(row);
 
     tdEl.innerHTML = observationContent;

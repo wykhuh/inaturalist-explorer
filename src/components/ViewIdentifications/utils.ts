@@ -3,6 +3,7 @@ import {
   renderMedia,
   renderObservationMetadataCounts,
   renderPlace,
+  renderQualityGrade,
   renderTaxonNames,
 } from "../../lib/render_utils";
 import { getIdentifications } from "../../lib/inat_api";
@@ -174,19 +175,7 @@ function formatObservation(row: IdentificationsResult, appStore: MapStore) {
 
   content += `<div class="footer">`;
   content += `<div class="place">${renderPlace(observation.place_guess, observation.obscured)} </div>`;
-
-  if (observation.quality_grade === "research") {
-    content += `<div class="research-grade">
-        <span class="research-grade-badge">Research Grade</span>
-       </div>`;
-  } else if (observation.quality_grade === "needs_id") {
-    content += `<div class="needs-id">
-        <span class="needs-id-badge">Needs ID</span>
-       </div>`;
-  } else {
-    content += `<div>${observation.quality_grade}</div>`;
-  }
-
+  content += renderQualityGrade(observation.quality_grade);
   content += renderObservationMetadataCounts(observation);
   content += `</div>`;
 

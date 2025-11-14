@@ -4,6 +4,7 @@ import {
   formatAvatar,
   renderMedia,
   renderObservationMetadataCounts,
+  renderQualityGrade,
   renderTaxonNames,
 } from "../../lib/render_utils";
 import { iNatObservationUrl, iNatUserUrl } from "../../data/inat_data";
@@ -60,15 +61,7 @@ class MyComponent extends HTMLElement {
       detailsContent += "</span>";
     }
 
-    if (data.quality_grade === "research") {
-      detailsContent += `<span class="research-grade">
-        <span class="research-grade-badge">Research Grade</span>
-       </span>`;
-    } else {
-      detailsContent += `<span class="research-grade">
-         <span></span>
-       </span>`;
-    }
+    detailsContent += renderQualityGrade(data.quality_grade);
 
     detailsContent += renderObservationMetadataCounts(data, true);
 
