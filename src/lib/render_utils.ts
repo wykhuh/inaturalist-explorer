@@ -14,6 +14,7 @@ import {
   check,
   mapMarker,
   mapMarkerObscured,
+  noPhoto,
   person2,
   speech,
   star,
@@ -142,6 +143,11 @@ export function renderMedia(
     mediaContent += `${audio}`;
     mediaContent += "</a>";
   }
+
+  if (sounds.length === 0 && photos.length === 0) {
+    mediaContent += noPhoto;
+  }
+
   if (photos.length > 1) {
     mediaContent += `<span class="photos-count">${photos.length}</span>`;
   }

@@ -619,6 +619,18 @@
       stroke: var(--audio-color) !important;
     }
   }
+
+  .no-photo {
+    --no-photo-color: var(--clr-gray-800);
+
+    path:nth-of-type(1) {
+      fill: var(--no-photo-color);
+    }
+
+    path:nth-of-type(2) {
+      stroke: var(--no-photo-color);
+    }
+  }
 }
 
 @layer views {
@@ -876,6 +888,14 @@
         width: 80px;
         height: 80px;
       }
+
+      .no-photo {
+        top: 10px;
+        left: 10px;
+        width: 60px;
+        height: 60px;
+        position: absolute;
+      }
     }
 
     div.media:not(.sound-only) {
@@ -948,6 +968,12 @@
       }
       img:hover {
         opacity: 0.7;
+      }
+
+      .no-photo {
+        padding: 50px;
+        width: 100%;
+        height: 250px;
       }
     }
 
