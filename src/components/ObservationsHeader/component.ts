@@ -58,12 +58,6 @@ class MyComponent extends HTMLElement {
       store,
       this,
     );
-    viewChangeHandler(
-      "#observations-header #identifications",
-      "identifications",
-      store,
-      this,
-    );
   }
 }
 
