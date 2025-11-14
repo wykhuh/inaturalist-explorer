@@ -362,4 +362,5 @@ type Spinner = {
 
 export interface DataComponent extends HTMLElement {
   data?: any;
+  record_type: "observations" | "identifications";
 }

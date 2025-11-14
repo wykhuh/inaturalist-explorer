@@ -36,6 +36,7 @@ import {
   updateCountForAllProjects,
   updateCountForAllUsers,
 } from "./search_utils.ts";
+import { isNormalizediNatTaxon } from "../types/utils.ts";
 
 // called when user clicks refresh map button
 export async function refreshBoundingBox(appStore: MapStore) {
@@ -576,12 +577,6 @@ export function removeIdfromInatApiParams(
   }
 }
 
-function isNormalizediNatTaxon(
-  record: NormalizediNatTaxon | SpeciesCountTaxon | Taxon,
-): record is NormalizediNatTaxon {
-  return "matched_term" in record;
-}
-
 export function capitalizeFirstLetter(text: string) {
   return text && text[0].toUpperCase() + text.slice(1);
 }
@@ -861,6 +856,15 @@ export function cleanupIdentificationParams(appStore: MapStore) {
     params.set("user_id", ident_user_id);
     params.delete("ident_user_id");
   }
+
+  return params.toString();
+}
+
+export function cleanupIdentificationsObserversParams(appStore: MapStore) {
+  let params = cleanupParams(appStore);
+
+  params.delete("order");
+  params.delete("order_by");
 
   return params.toString();
 }

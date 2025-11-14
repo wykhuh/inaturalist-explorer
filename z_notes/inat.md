@@ -90,3 +90,30 @@ Thanks for the feedback!
 Here is an example search for butterflies or dragonflies, in Los Angeles or San Diego, that are observed by hogpotato or biohexx1, and identified by nlblock.
 
 https://inat-explorer-api.pages.dev/?taxon_id=47792,47157&place_id=962,829&user_id=164822,81261&colors=%2366ccee,%23228833&verifiable=true&spam=false&ident_user_id=39752
+
+==
+
+Green Tree Frog
+(Pelodryas caerulea)
+
+http://localhost:5173/?taxon_id=1633145&place_id=962
+http://localhost:5173/identifications/?taxon_id=1633145&place_id=962
+
+2 casual observations, 3 idenifications
+
+==
+
+(Acnemia varipennis)
+
+http://localhost:5173/identifications/?taxon_id=1554704&place_id=962
+
+3 research grade observations, 6 identifications
+
+==
+
+http://localhost:5173/identifications/?taxon_id=55276&place_id=962
+
+Candy Cap
+(Lactarius rubidus)
+
+27 observations, 54 idenifications

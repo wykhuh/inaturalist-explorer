@@ -1,6 +1,5 @@
 import type {
   MapStore,
-  NormalizediNatUser,
   MapStoreSelectedResourcesKeys,
   SearchOptions,
   SearchOptionsKeys,
@@ -36,6 +35,7 @@ import {
   taxonSelectedHandler,
   renderTaxaList,
 } from "../lib/search_taxa.ts";
+import { isResourceObject } from "../types/utils.ts";
 
 export async function updateTilesAndCountForAllTaxa(appStore: MapStore) {
   for await (const taxon of appStore.selectedTaxa) {
@@ -200,10 +200,6 @@ export function searchSetup(searchSelector: string, selectedHandler: any) {
     let query = event.detail.query;
     await selectedHandler(selection, query, window.app.store);
   });
-}
-
-function isResourceObject(input: any): input is NormalizediNatUser {
-  return !Array.isArray(input);
 }
 
 function showHideHeader(

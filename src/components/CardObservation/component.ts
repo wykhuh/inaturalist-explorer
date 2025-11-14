@@ -29,7 +29,7 @@ class MyComponent extends HTMLElement {
     let cardEl = this.querySelector(".card");
     if (!cardEl) return;
 
-    let data = (this as DataComponent).data as ObservationsResult;
+    let data = (this as unknown as DataComponent).data as ObservationsResult;
 
     let url = `${iNatObservationUrl}/${data.id}`;
     cardEl.innerHTML = renderMedia(url, data.photos, data.sounds);

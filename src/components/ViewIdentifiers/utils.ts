@@ -1,11 +1,17 @@
-import { cleanupObervationsParams } from "../../lib/data_utils";
+import {
+  cleanupIdentificationParams,
+  cleanupObervationsParams,
+} from "../../lib/data_utils";
 import { formatAvatar } from "../../lib/render_utils";
-import { getObservationsIdentifiers } from "../../lib/inat_api";
+import {
+  getIdentificationsIdentifiers,
+  getObservationsIdentifiers,
+} from "../../lib/inat_api";
 import { iNatUserUrl } from "../../data/inat_data";
 import { loggerTime } from "../../lib/logger";
 import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";
-import type { ObservationsIdentifiersResult } from "../../types/inat_api";
+import type { ResourceIdentifiersResult } from "../../types/inat_api";
 import { updateAppUrl } from "../../lib/utils";
 import type { MapStore } from "../../types/app";
 import { identifiers } from "../../data/inat_api_cache";
@@ -62,11 +68,15 @@ async function getAPIData(perPage: number, appStore: MapStore) {
     return identifiers;
   }
 
-  let params = cleanupObervationsParams(appStore);
-
   try {
-    let data = await getObservationsIdentifiers(params, perPage);
-    if (!data) return;
+    let data;
+    if (appStore.record_type === "identifications") {
+      let params = cleanupIdentificationParams(appStore);
+      data = await getIdentificationsIdentifiers(params, perPage);
+    } else {
+      let params = cleanupObervationsParams(appStore);
+      data = await getObservationsIdentifiers(params, perPage);
+    }
 
     return data;
   } catch (error) {
@@ -75,7 +85,7 @@ async function getAPIData(perPage: number, appStore: MapStore) {
 }
 
 function createTable(
-  results: ObservationsIdentifiersResult[],
+  results: ResourceIdentifiersResult[],
   currentPage: number,
   perPage: number,
 ) {

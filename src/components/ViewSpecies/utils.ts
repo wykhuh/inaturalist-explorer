@@ -1,12 +1,21 @@
 import { threatenedSpecies } from "../../data/inat_api_cache";
-import { cleanupObervationsParams } from "../../lib/data_utils";
-import { getObservationsSpecies } from "../../lib/inat_api";
+import {
+  cleanupIdentificationParams,
+  cleanupObervationsParams,
+} from "../../lib/data_utils";
+import {
+  getIdentificationsSpecies,
+  getObservationsSpecies,
+} from "../../lib/inat_api";
 import { loggerTime } from "../../lib/logger";
 import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";
 import { updateAppUrl } from "../../lib/utils";
 import type { DataComponent, MapStore } from "../../types/app";
-import type { SpeciesCountResult } from "../../types/inat_api";
+import type {
+  IdentificationsResult,
+  ResourceSpeciesCountResult,
+} from "../../types/inat_api";
 
 export let perPage = 48;
 
@@ -40,7 +49,7 @@ export async function fetchAndRenderData(
     );
     containerEl.appendChild(pagination1);
 
-    let tableEl = createGrid(data.results);
+    let tableEl = createGrid(data.results, appStore);
     containerEl.appendChild(tableEl);
 
     let pagination2El = createPagination(
@@ -58,10 +67,15 @@ async function getAPIData(perPage: number, appStore: MapStore) {
     return threatenedSpecies;
   }
 
-  let params = cleanupObervationsParams(appStore);
   try {
-    let data = await getObservationsSpecies(params, perPage);
-    if (!data) return;
+    let data;
+    if (appStore.record_type === "identifications") {
+      let params = cleanupIdentificationParams(appStore);
+      data = await getIdentificationsSpecies(params, perPage);
+    } else {
+      let params = cleanupObervationsParams(appStore);
+      data = await getObservationsSpecies(params, perPage);
+    }
 
     return data;
   } catch (error) {
@@ -69,7 +83,10 @@ async function getAPIData(perPage: number, appStore: MapStore) {
   }
 }
 
-function createGrid(results: SpeciesCountResult[]) {
+function createGrid(
+  results: ResourceSpeciesCountResult[] | IdentificationsResult[],
+  appStore: MapStore,
+) {
   let containerEl = document.createElement("div");
   containerEl.className = "species-grid grid-auto-fill";
 
@@ -78,6 +95,7 @@ function createGrid(results: SpeciesCountResult[]) {
       "x-card-species",
     ) as unknown as DataComponent;
     cardEl.data = row;
+    cardEl.record_type = appStore.record_type;
     containerEl.appendChild(cardEl);
   });
 

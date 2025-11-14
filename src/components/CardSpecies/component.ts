@@ -1,4 +1,4 @@
-import type { SpeciesCountResult } from "../../types/inat_api";
+import type { ResourceSpeciesCountResult } from "../../types/inat_api";
 import type { DataComponent, MapStore } from "../../types/app";
 import { pluralize } from "../../lib/utils";
 import { formatTaxonName } from "../../lib/data_utils";
@@ -22,7 +22,10 @@ class MyComponent extends HTMLElement {
   }
 
   renderCard(appStore: MapStore) {
-    let data = (this as DataComponent).data as SpeciesCountResult;
+    let data = (this as unknown as DataComponent)
+      .data as ResourceSpeciesCountResult;
+    let record_type = (this as unknown as DataComponent).record_type;
+
     let { title, subtitle } = formatTaxonName(data.taxon, appStore);
 
     let mediaEl = this.querySelector(".media") as HTMLLinkElement;
@@ -93,7 +96,7 @@ class MyComponent extends HTMLElement {
         appStore,
         `${iNatTaxaUrl}/${data.taxon.id}`,
       );
-      content += `<span class="observations-count">${pluralize(data.count, "observation", true)}</span>`;
+      content += `<span class="observations-count">${pluralize(data.count, record_type, true)}</span>`;
 
       detailsEl.innerHTML = content;
     }

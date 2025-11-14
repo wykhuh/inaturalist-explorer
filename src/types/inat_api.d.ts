@@ -444,10 +444,10 @@ export interface iNatObservationsIdentifiersAPI {
   total_results: number;
   page: number;
   per_page: number;
-  results: ObservationsIdentifiersResult[];
+  results: ResourceIdentifiersResult[];
 }
 
-export interface ObservationsIdentifiersResult {
+export interface ResourceIdentifiersResult {
   count: number;
   user: ObservationUser;
 }
@@ -456,10 +456,10 @@ export interface iNatObservationsSpeciesCountAPI {
   total_results: number;
   page: number;
   per_page: number;
-  results: SpeciesCountResult[];
+  results: ResourceSpeciesCountResult[];
 }
 
-export interface SpeciesCountResult {
+export interface ResourceSpeciesCountResult {
   count: number;
   taxon: SpeciesCountTaxon;
 }
@@ -833,21 +833,26 @@ export interface IdentificationsSpeciesCountAPI {
   total_results: number;
   page: number;
   per_page: number;
-  results: IdentificationsResult[];
+  results: ResourceSpeciesCountResult[];
 }
 
 export interface IdentificationsObserversAPI {
   total_results: number;
   page: number;
   per_page: number;
-  results: IdentificationsResult[];
+  results: IdentificationsObserversResult[];
+}
+
+export interface IdentificationsObserversResult {
+  count: number;
+  user: ObservationUser;
 }
 
 export interface IdentificationsIdentifiersAPI {
   total_results: number;
   page: number;
   per_page: number;
-  results: IdentificationsResult[];
+  results: ResourceIdentifiersResult[];
 }
 
 export interface Observation {
