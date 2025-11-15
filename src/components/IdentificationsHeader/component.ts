@@ -8,7 +8,7 @@ class MyComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    loggerStore("++ ObservationHeader render");
+    loggerStore("++ IdentificationsHeader render");
     this.render();
 
     // app uses two <x-identifications-header>;

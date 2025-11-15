@@ -24,11 +24,17 @@ class MyComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    window.addEventListener("storePopulated", () => {
-      loggerStore("++ ObservationFilters render");
+    // only execute listener once since this component is loaded each
+    // time identification page is loaded
+    window.addEventListener(
+      "storePopulated",
+      () => {
+        loggerStore("++ IdentificationsFilters render");
 
-      this.render();
-    });
+        this.render();
+      },
+      { once: true },
+    );
   }
 
   async render() {

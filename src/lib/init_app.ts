@@ -39,16 +39,20 @@ import {
   addValueToCommaSeparatedString,
   renderSelectedPlacesBoundaries,
   renderSelectedProjectsBoundaries,
+  viewAndTemplateObject,
 } from "./data_utils";
 import { loggerStore } from "./logger.ts";
 import {
+  multisearchSetup,
   renderSelectedResources,
+  searchHeadingSetup,
   updateCountForAllPlaces,
   updateCountForAllProjects,
   updateCountForAllTaxa,
   updateCountForAllUsers,
   updateTilesForAllTaxa,
 } from "./search_utils.ts";
+import { decodeAppUrl } from "./utils.ts";
 
 // populate store with basic view data from app url.
 // used to set view in observation header and subview in obdervation view
@@ -158,6 +162,11 @@ export async function initPopulateStore(
       processUserIdentifierData(data, appStore);
     }
   }
+  loggerStore(
+    "++ initPopulateStore selectedUsersIdentifiers",
+    appStore.observationsApiParams,
+    appStore.selectedUsersIdentifiers,
+  );
 
   // unobserved user data
   if (urlStore.selectedUnobservedByUser?.id) {
@@ -168,9 +177,9 @@ export async function initPopulateStore(
   }
 
   loggerStore(
-    "++ initPopulateStore selectedUsers",
+    "++ initPopulateStore selectedUnobservedByUser",
     appStore.observationsApiParams,
-    appStore.selectedUsers,
+    appStore.selectedUnobservedByUser,
   );
 
   // taxa data
@@ -411,4 +420,92 @@ function processUnobservedByUserData(userData: UserResult, appStore: MapStore) {
   };
 
   appStore.observationsApiParams.unobserved_by_user_id = userData.id;
+}
+
+function toggleSidebarHandler() {
+  let toggleEl = document.querySelector("#sidebar-toggle") as HTMLButtonElement;
+  if (!toggleEl) return;
+  let siteLayoutEl = document.querySelector("#site-layout") as HTMLElement;
+  if (!siteLayoutEl) return;
+  let siteControlsEl = document.querySelector("#site-controls") as HTMLElement;
+  if (!siteControlsEl) return;
+
+  toggleEl.addEventListener("click", (event) => {
+    let target = event.target as HTMLElement;
+    if (target === null) return;
+
+    if (siteLayoutEl.classList.contains("sidebar-open")) {
+      siteLayoutEl.classList.replace("sidebar-open", "sidebar-close");
+      siteControlsEl.classList.replace("sidebar-open", "sidebar-close");
+    } else {
+      siteLayoutEl.classList.replace("sidebar-close", "sidebar-open");
+      siteControlsEl.classList.replace("sidebar-close", "sidebar-open");
+    }
+  });
+}
+
+function toggleObservationsHandler() {
+  let toggleEl = document.querySelector(
+    "#observations-menu-toggle",
+  ) as HTMLButtonElement;
+  if (!toggleEl) return;
+
+  toggleEl.addEventListener("click", (event) => {
+    let target = event.target as HTMLElement;
+    if (target === null) return;
+
+    showMenu("#observations-menu");
+    hideMenu("#settings-menu");
+    hideMenu("#favorites-menu");
+  });
+}
+
+function toggleSettingsHandler() {
+  let toggleEl = document.querySelector(
+    "#settings-menu-toggle",
+  ) as HTMLButtonElement;
+  if (!toggleEl) return;
+
+  toggleEl.addEventListener("click", (event) => {
+    let target = event.target as HTMLElement;
+    if (target === null) return;
+
+    hideMenu("#observations-menu");
+    showMenu("#settings-menu");
+    hideMenu("#favorites-menu");
+  });
+}
+
+function hideMenu(selector: string) {
+  let menuEl = document.querySelector(selector) as HTMLElement;
+  if (!menuEl) return;
+
+  menuEl.style.display = "none";
+}
+
+function showMenu(selector: string) {
+  let menuEl = document.querySelector(selector) as HTMLElement;
+  if (!menuEl) return;
+
+  menuEl.style.display = "block";
+}
+
+export async function initApp() {
+  let urlData = decodeAppUrl(window.location.search);
+  multisearchSetup(window.app.store);
+  searchHeadingSetup();
+  await initPopulateStore(window.app.store, urlData);
+
+  let viewContainerEl = document.querySelector("#view-container");
+  if (!viewContainerEl) return;
+
+  if (window.app.store.currentView) {
+    let templateName = viewAndTemplateObject(window.app.store.currentView);
+    let view = document.createElement(templateName);
+    viewContainerEl.appendChild(view);
+  }
+
+  toggleSidebarHandler();
+  toggleObservationsHandler();
+  toggleSettingsHandler();
 }

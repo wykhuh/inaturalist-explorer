@@ -1,9 +1,13 @@
+import { loggerStore } from "../../lib/logger";
+
 class MyComponent extends HTMLElement {
   constructor() {
     super();
   }
 
   connectedCallback() {
+    loggerStore("++ ObservationsMenu render");
+
     // use inline template instead of fetch template since we need to initialize
     // autocomplete search on page load
     const template = document.getElementById(

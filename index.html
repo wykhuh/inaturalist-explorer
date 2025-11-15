@@ -19,9 +19,33 @@
     </script>
   </head>
   <body id="home">
-    <x-header></x-header>
+    <header id="site-header">
+      <div class="wrapper-fullwidth">
+        <nav id="site-nav">
+          <span>iNaturalist Explorer</span>
+          <ul>
+            <li>
+              <a href="/" class="navlink" data-record-type="observations"
+                >Observations</a
+              >
+            </li>
+            <li>
+              <a
+                href="/identifications/"
+                class="navlink"
+                data-record-type="identifications"
+                >Identifications</a
+              >
+            </li>
+            <li><a href="/about/" class="navlink">About</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main></main>
 
-    <main>
+    <!-- observations -->
+    <template id="page-observations-template">
       <x-observations-header data-updatecounts="true"></x-observations-header>
       <div id="wrapper">
         <div id="site-controls" class="sidebar-open">
@@ -44,15 +68,12 @@
           <div id="sidebar-menu">
             <x-observations-menu></x-observations-menu>
             <x-settings-menu></x-settings-menu>
-            <div id="display-json">
-              <div class="controls"></div>
-              <pre id="display-json-wrapper" class="hide"></pre>
-            </div>
+            <x-appstore-viewer></x-appstore-viewer>
           </div>
           <div id="view-container"></div>
         </section>
       </div>
-    </main>
+    </template>
 
     <template id="observations-menu-template">
       <div id="observations-menu">
@@ -89,6 +110,157 @@
 
         <h2 class="users-heading" hidden>Users (observer)</h2>
         <ul id="selected-users-list"></ul>
+      </div>
+    </template>
+
+    <!-- identifications -->
+    <template id="page-identifications-template">
+      <x-identifications-header
+        data-updatecounts="true"
+      ></x-identifications-header>
+      <div id="wrapper">
+        <div id="site-controls" class="sidebar-open">
+          <button id="sidebar-toggle" title="Toggle sidebar">&#9776;</button>
+          <button id="identifications-menu-toggle" title="Identifications">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="16px"
+              viewBox="0 0 512 512"
+            >
+              <path
+                d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"
+              />
+            </svg>
+          </button>
+          <button id="settings-menu-toggle" title="Settings">&#9881;</button>
+        </div>
+
+        <section class="two-columns sidebar-open" id="site-layout">
+          <div id="sidebar-menu">
+            <x-identifications-menu></x-identifications-menu>
+            <x-settings-menu></x-settings-menu>
+            <x-appstore-viewer></x-appstore-viewer>
+          </div>
+          <div id="view-container"></div>
+        </section>
+      </div>
+    </template>
+
+    <template id="identifications-menu-template">
+      <div id="identifications-menu">
+        <div class="form-group">
+          <label>
+            Search for
+            <select id="search-type" name="search-type">
+              <option selected value="taxa">Species</option>
+              <option value="places">iNaturalist Places</option>
+              <option value="users">Users (identifiers)</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label
+            >Search
+            <input id="inatAutocomplete" type="text" autocomplete="off" />
+          </label>
+        </div>
+        <div class="dialog-container">
+          <x-identifications-filters></x-identifications-filters>
+        </div>
+
+        <h2 class="taxa-heading">Species</h2>
+        <ul id="selected-species-list"></ul>
+
+        <h2 class="observation-taxa-heading" hidden>Observation Species</h2>
+        <ul id="selected-observation-species-list"></ul>
+
+        <h2 class="places-heading" hidden>Places</h2>
+        <ul id="selected-places-list"></ul>
+
+        <h2 class="users-heading" hidden>Users (identifiers)</h2>
+        <ul id="selected-users-list"></ul>
+      </div>
+    </template>
+
+    <!-- about -->
+    <template id="page-about-template">
+      <div id="wrapper" class="flow">
+        <h1>About</h1>
+        <p>
+          iNaturalist Explorer is a opensource website that lets people explore
+          iNaturalist data. This site adds some features that
+          <a href="https://www.inaturalist.org/observations"
+            >iNaturalist Explore Observations</a
+          >
+          page does not have.
+        </p>
+        <h2>Features</h2>
+        <ul>
+          <li>Search for multiple species, places, projects, and people</li>
+          <li>Add more filters</li>
+          <li>Group the filters by categories</li>
+          <li>Mobile friendly layout</li>
+          <li>
+            Pagination for observations, species, identifiers, and observers
+          </li>
+          <li>
+            Show iNaturalist maps as grid, points, heatmap and taxon range
+          </li>
+          <li>
+            This site gets data from the iNaturalist API. As a result, the urls
+            for the site are compatible with iNaturalist API. You can copy and
+            paste the query params (stuff after the ?) from the site, and use
+            them for the iNaturalist API. The only properties not compatible are
+            colors, view, and subview.
+
+            <p>
+              For instance, this is the URL query params for all monarchs in
+              California.
+            </p>
+            <div>
+              <code
+                >taxon_id=48662&place_id=14&colors=%234477aa&verifiable=true&spam=false</code
+              >
+            </div>
+            <p>
+              You can copy the query params and use them for the
+              <a
+                href="https://api.inaturalist.org/v1/observations?taxon_id=48662&place_id=14&colors=%234477aa&verifiable=true&spam=false"
+                >iNaturalist "observations" API</a
+              >
+            </p>
+          </li>
+        </ul>
+        <h2>Techinical Details</h2>
+        <p>
+          This static site is built using JavaScript/TypeScript, CSS, and HTML.
+          I wanted to use the built-in features of JavaScript, CSS, HTML, and
+          keep third party libraries to a minimum. This site uses TypeScript and
+          three libraries (<a href="https://leafletjs.com/">Leaflet</a>,
+          <a href="https://tarekraafat.github.io/autoComplete.js/"
+            >Autocomplete.js</a
+          >, and
+          <a href="https://github.com/bramus/js-pagination-sequence"
+            >Pagination Sequence</a
+          >) to create site. This is the most complex project I've built without
+          a website or CSS framework. I also wanted to keep costs low as
+          possible so this is a static site that is hosted on Github.
+        </p>
+        <ul>
+          <li>
+            <a href="https://github.com/wykhuh/inaturalist-explorer"
+              >Github Repo</a
+            >
+          </li>
+        </ul>
+      </div>
+    </template>
+
+    <template id="appstore-viewer-template">
+      <div id="display-json">
+        <div class="controls"><button>show appstore</button></div>
+        <pre id="display-json-wrapper" class="hide"></pre>
       </div>
     </template>
   </body>

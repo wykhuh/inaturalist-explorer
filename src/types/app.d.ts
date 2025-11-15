@@ -12,9 +12,14 @@ import type { PolygonJson, MultiPolygonJson } from "./inat_api";
 
 declare global {
   interface Window {
-    app: { store: MapStore };
+    app: { store: MapStore; router: RouterType };
   }
 }
+
+type RouterType = {
+  init: () => void;
+  go: (route: string, addToHistory?: boolean) => void;
+};
 
 export interface MapStore {
   selectedTaxa: NormalizediNatTaxon[];
@@ -56,7 +61,7 @@ export interface MapStore {
     identifications: ViewOptions;
     name_order: NameOrder;
   };
-  record_type: "observations" | "identifications";
+  record_type: "observations" | "identifications" | "other";
 }
 
 type ViewOptions = {
@@ -362,5 +367,5 @@ type Spinner = {
 
 export interface DataComponent extends HTMLElement {
   data?: any;
-  record_type: "observations" | "identifications";
+  record_type: "observations" | "identifications" | "other";
 }

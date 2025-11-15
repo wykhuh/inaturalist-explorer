@@ -1,9 +1,9 @@
+import { displayAppstoreData } from "../components/AppstoreViewer/utils.ts";
 import type {
   MapStore,
   MapStoreKeys,
   NormalizediNatUser,
 } from "../types/app.d.ts";
-import { displayUserData } from "./dev_utils.ts";
 import { loggerStore } from "./logger.ts";
 
 export const mapStore: MapStore = {
@@ -43,7 +43,8 @@ const proxiedStore = new Proxy(structuredClone(mapStore), {
     target[property] = value;
 
     loggerStore(`proxy store.${property} changed`);
-    displayUserData(proxiedStore, `proxiedStore ${property}`);
+
+    displayAppstoreData(proxiedStore, `proxiedStore ${property}`);
     if (property === "selectedPlaces") {
       window.dispatchEvent(new Event("selectedPlacesChange"));
     } else if (property === "selectedProjects") {

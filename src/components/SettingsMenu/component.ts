@@ -4,6 +4,7 @@ import { updateAppUrl } from "../../lib/utils";
 import type { NameOrder } from "../../types/app";
 import { renderTaxaList } from "../../lib/search_taxa";
 import { updateComonNamesByLanguage } from "./utils";
+import { loggerStore } from "../../lib/logger";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -11,6 +12,8 @@ class MyComponent extends HTMLElement {
   }
 
   connectedCallback() {
+    loggerStore("++ SettingsMenu render");
+
     this.render();
   }
 
