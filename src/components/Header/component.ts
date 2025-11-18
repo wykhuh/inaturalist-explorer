@@ -1,4 +1,4 @@
-import { loggerStore } from "../../lib/logger";
+import { loggerRender } from "../../lib/logger";
 import { setupComponent } from "../../lib/component_utils";
 
 class MyComponent extends HTMLElement {
@@ -6,7 +6,7 @@ class MyComponent extends HTMLElement {
     super();
   }
   connectedCallback() {
-    loggerStore("++ Header render");
+    loggerRender("++ Header render");
 
     setupComponent("/src/components/Header/template.html", this);
   }

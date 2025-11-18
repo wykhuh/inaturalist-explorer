@@ -1,5 +1,5 @@
 import { setupComponent } from "../../lib/component_utils";
-import { loggerStore } from "../../lib/logger";
+import { loggerRender } from "../../lib/logger";
 import { fetchAndRenderData, paginationcCallback, perPage } from "./utils";
 
 class MyComponent extends HTMLElement {
@@ -8,7 +8,7 @@ class MyComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    loggerStore("++ ViewIdentifications render");
+    loggerRender("++ ViewIdentifications connectedCallback");
 
     this.render();
   }

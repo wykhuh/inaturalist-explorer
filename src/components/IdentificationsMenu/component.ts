@@ -1,4 +1,4 @@
-import { loggerStore } from "../../lib/logger";
+import { loggerRender } from "../../lib/logger";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -6,7 +6,7 @@ class MyComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    loggerStore("++ IdentificationsMenu render");
+    loggerRender("++ IdentificationsMenu connectedCallback");
 
     // use inline template instead of fetch template since we need to initialize
     // autocomplete search on page load

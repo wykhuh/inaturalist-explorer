@@ -39,3 +39,9 @@ export function loggerStore(...args: any) {
 
   console.log(...args);
 }
+export function loggerRender(...args: any) {
+  const log = import.meta.env.VITE_LOGGER_RENDER;
+  if (!log || log === "false") return;
+
+  console.log(...args);
+}

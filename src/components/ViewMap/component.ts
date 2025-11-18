@@ -10,7 +10,7 @@ import {
   updateSubviewState,
   updateOrderState,
 } from "./utils";
-import { loggerStore } from "../../lib/logger";
+import { loggerRender } from "../../lib/logger";
 import { initRenderMap } from "../../lib/init_app";
 import { setupComponent } from "../../lib/component_utils";
 import type { MapStore } from "../../types/app";
@@ -22,7 +22,7 @@ class MyComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    loggerStore("++ ViewMap render");
+    loggerRender("++ ViewMap connectedCallback");
     this.render();
   }
 

@@ -1,5 +1,6 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerStore } from "../../lib/logger";
+import { loggerRender } from "../../lib/logger";
 import { updateObservationsCounts, viewChangeHandler } from "./utils";
 
 class MyComponent extends HTMLElement {
@@ -8,7 +9,8 @@ class MyComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    loggerStore("++ ObservationHeader render");
+    loggerRender("++ ObservationHeader connectedCallback");
+
     this.render();
 
     // app uses two <x-observations-header>;

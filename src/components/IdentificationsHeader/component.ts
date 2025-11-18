@@ -1,5 +1,6 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerStore } from "../../lib/logger";
+import { loggerRender } from "../../lib/logger";
 import { updateIdentificationsCounts, viewChangeHandler } from "./utils";
 
 class MyComponent extends HTMLElement {
@@ -8,7 +9,7 @@ class MyComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    loggerStore("++ IdentificationsHeader render");
+    loggerRender("++ IdentificationsHeader connectedCallback");
     this.render();
 
     // app uses two <x-identifications-header>;

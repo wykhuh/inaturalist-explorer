@@ -1,4 +1,4 @@
-import { loggerStore } from "../lib/logger";
+import { loggerRender } from "../lib/logger";
 
 export class PageIdentifications extends HTMLElement {
   constructor() {
@@ -6,7 +6,7 @@ export class PageIdentifications extends HTMLElement {
   }
 
   connectedCallback() {
-    loggerStore("++ PageIdentifications render");
+    loggerRender("++ PageIdentifications render");
 
     const template = document.getElementById(
       "page-identifications-template",

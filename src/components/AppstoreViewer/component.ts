@@ -1,4 +1,4 @@
-import { loggerStore } from "../../lib/logger";
+import { loggerRender } from "../../lib/logger";
 
 export class MyComponent extends HTMLElement {
   constructor() {
@@ -6,7 +6,7 @@ export class MyComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    loggerStore("++ AppstoreViewer render");
+    loggerRender("++ AppstoreViewer render");
 
     const template = document.getElementById(
       "appstore-viewer-template",

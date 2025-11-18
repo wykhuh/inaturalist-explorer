@@ -1,4 +1,4 @@
-import { loggerStore } from "../lib/logger";
+import { loggerRender } from "../lib/logger";
 
 export class PageAbout extends HTMLElement {
   constructor() {
@@ -6,7 +6,7 @@ export class PageAbout extends HTMLElement {
   }
 
   connectedCallback() {
-    loggerStore("++ PageAbout render");
+    loggerRender("++ PageAbout render");
 
     const template = document.getElementById(
       "page-about-template",
