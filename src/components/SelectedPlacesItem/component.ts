@@ -1,4 +1,5 @@
 import { setupComponent } from "../../lib/component_utils.ts";
+import { loggerRender } from "../../lib/logger.ts";
 import { removePlace } from "../../lib/search_places.ts";
 import { pluralize } from "../../lib/utils.ts";
 import type { NormalizediNatPlace } from "../../types/app";
@@ -14,6 +15,7 @@ class MyComponent extends HTMLElement {
 
   async render() {
     if (!this.dataset.place) return;
+    loggerRender("++ SelectedPlacesItem render");
 
     await setupComponent(
       "/src/components/SelectedPlacesItem/template.html",

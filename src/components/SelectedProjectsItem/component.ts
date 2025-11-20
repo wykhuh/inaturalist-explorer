@@ -2,6 +2,7 @@ import { setupComponent } from "../../lib/component_utils.ts";
 import { removeProject } from "../../lib/search_projects.ts";
 import type { NormalizediNatProject } from "../../types/app";
 import { pluralize } from "../../lib/utils.ts";
+import { loggerRender } from "../../lib/logger.ts";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -14,6 +15,7 @@ class MyComponent extends HTMLElement {
 
   async render() {
     if (!this.dataset.project) return;
+    loggerRender("++ SelectedProjectsItem render");
 
     await setupComponent(
       "/src/components/SelectedProjectsItem/template.html",

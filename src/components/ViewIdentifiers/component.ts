@@ -1,5 +1,5 @@
 import { setupComponent } from "../../lib/component_utils";
-import { loggerRender } from "../../lib/logger";
+import { loggerEvent, loggerRender } from "../../lib/logger";
 import { fetchAndRenderData, paginationcCallback, perPage } from "./utils";
 
 class MyComponent extends HTMLElement {
@@ -11,16 +11,31 @@ class MyComponent extends HTMLElement {
     loggerRender("++ ViewIdentifiers connectedCallback");
 
     this.render();
+
+    window.addEventListener("observationsChange", this);
+    window.addEventListener("identificationsChange", this);
+  }
+
+  disconnectedCallback() {
+    loggerRender("++ ViewIdentifiers disconnectedCallback");
+
+    window.addEventListener("observationsChange", this);
+    window.addEventListener("identificationsChange", this);
+  }
+
+  handleEvent(event: Event) {
+    let resourceChanges = ["observationsChange", "identificationsChange"];
+    if (resourceChanges.includes(event.type)) {
+      loggerEvent(`++ ViewIdentifiers ${event.type}`);
+      fetchAndRenderData(perPage, paginationcCallback, window.app.store);
+    }
   }
 
   async render() {
+    loggerRender("++ ViewIdentifiers render");
     await setupComponent("/src/components/ViewIdentifiers/template.html", this);
 
     await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
-
-    window.addEventListener("observationsChange", async () => {
-      await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
-    });
   }
 }
 

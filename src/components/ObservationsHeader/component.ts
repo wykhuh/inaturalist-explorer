@@ -1,6 +1,5 @@
 import { setupComponent } from "../../lib/component_utils";
-import { loggerStore } from "../../lib/logger";
-import { loggerRender } from "../../lib/logger";
+import { loggerEvent, loggerRender } from "../../lib/logger";
 import { updateObservationsCounts, viewChangeHandler } from "./utils";
 
 class MyComponent extends HTMLElement {
@@ -13,17 +12,29 @@ class MyComponent extends HTMLElement {
 
     this.render();
 
-    // app uses two <x-observations-header>;
-    // only execute updateObservationsCounts() for instance that has updatecounts="true"
-    window.addEventListener("observationsChange", () => {
-      loggerStore("++ ObservationHeader observationsChange");
+    window.addEventListener("observationsChange", this);
+  }
+
+  disconnectedCallback() {
+    loggerRender("++ ObservationHeader disconnectedCallback");
+
+    window.removeEventListener("observationsChange", this);
+  }
+
+  handleEvent(event: Event) {
+    if (event.type === "observationsChange") {
+      // app uses two <x-identifications-header>;
+      // only execute for instance that has updatecounts="true"
       if (this.dataset.updatecounts === "true") {
+        loggerEvent("++ ObservationHeader observationsChange");
         updateObservationsCounts(window.app.store);
       }
-    });
+    }
   }
 
   async render() {
+    loggerRender("++ ObservationHeader render");
+
     await setupComponent(
       "/src/components/ObservationsHeader/template.html",
       this,
@@ -31,9 +42,12 @@ class MyComponent extends HTMLElement {
 
     // execute updateObservationsCounts() only after both headers are loaded
     let headerEls = document.querySelectorAll("#observations-header");
-    console.log("ObservationsHeader render", headerEls.length);
 
     if (headerEls.length === 2) {
+      loggerRender(
+        "++ ObservationsHeader update header counts",
+        headerEls.length,
+      );
       updateObservationsCounts(window.app.store);
     }
 

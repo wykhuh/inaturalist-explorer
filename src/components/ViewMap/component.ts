@@ -10,7 +10,7 @@ import {
   updateSubviewState,
   updateOrderState,
 } from "./utils";
-import { loggerRender } from "../../lib/logger";
+import { loggerEvent, loggerRender } from "../../lib/logger";
 import { initRenderMap } from "../../lib/init_app";
 import { setupComponent } from "../../lib/component_utils";
 import type { MapStore } from "../../types/app";
@@ -23,10 +23,18 @@ class MyComponent extends HTMLElement {
 
   connectedCallback() {
     loggerRender("++ ViewMap connectedCallback");
+
     this.render();
+
+    window.addEventListener("observationsChange", this);
+    window.addEventListener("localeChanged", this);
+    window.addEventListener("nameOrderChanged", this);
+    window.addEventListener("identificationsChange", this);
   }
 
   disconnectedCallback() {
+    loggerRender("++ ViewMap disconnectedCallback");
+
     if (window.app.store.map.map) {
       // save map bounds before switching views so app can return to this map location
       window.app.store.map.bounds = window.app.store.map.map.getBounds();
@@ -40,11 +48,29 @@ class MyComponent extends HTMLElement {
       window.app.store.map.layerControl.remove();
       window.app.store.map.layerControl = null;
     }
-
     window.app.store.map;
+
+    window.removeEventListener("observationsChange", this);
+    window.removeEventListener("localeChanged", this);
+    window.removeEventListener("nameOrderChanged", this);
+    window.removeEventListener("identificationsChange", this);
+  }
+
+  handleEvent(event: Event) {
+    let resourceChanges = [
+      "observationsChange",
+      "identificationsChange",
+      "localeChanged",
+      "nameOrderChanged",
+    ];
+    if (resourceChanges.includes(event.type)) {
+      loggerEvent(`++ ViewMap ${event.type}`);
+      fetchAndRenderData(perPage, paginationcCallback, window.app.store);
+    }
   }
 
   async render() {
+    loggerRender("++ ViewMap render");
     await setupComponent("/src/components/ViewMap/template.html", this);
 
     // create new map
@@ -56,18 +82,6 @@ class MyComponent extends HTMLElement {
 
     // load observation data for grid/table
     await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
-
-    window.addEventListener("observationsChange", async () => {
-      await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
-    });
-
-    window.addEventListener("localeChanged", async () => {
-      await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
-    });
-
-    window.addEventListener("nameOrderChanged", async () => {
-      await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
-    });
 
     this.subviewHandler(window.app.store);
     this.orderFormHandler();

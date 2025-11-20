@@ -1,4 +1,5 @@
 import { setupComponent } from "../../lib/component_utils";
+import { loggerRender } from "../../lib/logger";
 import { removeUser } from "../../lib/search_users";
 import { pluralize } from "../../lib/utils";
 import type { NormalizediNatUser } from "../../types/app";
@@ -14,6 +15,7 @@ class MyComponent extends HTMLElement {
 
   async render() {
     if (!this.dataset.user) return;
+    loggerRender("++ SelectedUsersItem render");
 
     await setupComponent(
       "/src/components/SelectedUsersItem/template.html",

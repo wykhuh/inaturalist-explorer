@@ -1,6 +1,5 @@
 import { setupComponent } from "../../lib/component_utils";
-import { loggerStore } from "../../lib/logger";
-import { loggerRender } from "../../lib/logger";
+import { loggerEvent, loggerRender } from "../../lib/logger";
 import { updateIdentificationsCounts, viewChangeHandler } from "./utils";
 
 class MyComponent extends HTMLElement {
@@ -10,19 +9,32 @@ class MyComponent extends HTMLElement {
 
   connectedCallback() {
     loggerRender("++ IdentificationsHeader connectedCallback");
+
     this.render();
 
-    // app uses two <x-identifications-header>;
-    // only execute updateIdentificationsCounts() for instance that has updatecounts="true"
-    window.addEventListener("identificationsChange", () => {
-      loggerStore("++ ObservationHeader identificationsChange");
+    window.addEventListener("identificationsChange", this);
+  }
+
+  disconnectedCallback() {
+    loggerRender("++ IdentificationsHeader disconnectedCallback");
+
+    window.removeEventListener("identificationsChange", this);
+  }
+
+  handleEvent(event: Event) {
+    if (event.type === "identificationsChange") {
+      // app uses two <x-identifications-header>;
+      // only execute for instance that has updatecounts="true"
       if (this.dataset.updatecounts === "true") {
+        loggerEvent("++ IdentificationHeader identificationsChange");
         updateIdentificationsCounts(window.app.store);
       }
-    });
+    }
   }
 
   async render() {
+    loggerRender("++ IdentificationHeader render");
+
     await setupComponent(
       "/src/components/IdentificationsHeader/template.html",
       this,
@@ -30,9 +42,12 @@ class MyComponent extends HTMLElement {
 
     // execute updateIdentificationsCounts() only after both headers are loaded
     let headerEls = document.querySelectorAll("#identifications-header");
-    console.log("IdentificationsHeader render", headerEls.length);
 
     if (headerEls.length === 2) {
+      loggerRender(
+        "++ IdentificationsHeader update header counts",
+        headerEls.length,
+      );
       updateIdentificationsCounts(window.app.store);
     }
 

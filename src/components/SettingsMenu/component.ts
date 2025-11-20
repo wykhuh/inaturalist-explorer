@@ -18,6 +18,8 @@ class MyComponent extends HTMLElement {
   }
 
   async render() {
+    loggerRender("++ SettingsMenu render");
+
     await setupComponent("/src/components/SettingsMenu/template.html", this);
 
     this.renderLanguageSelect();

@@ -1,4 +1,5 @@
 import { setupComponent } from "../../lib/component_utils.ts";
+import { loggerRender } from "../../lib/logger.ts";
 import { renderTaxonNames } from "../../lib/render_utils";
 import { removeTaxon } from "../../lib/search_taxa.ts";
 import { pluralize } from "../../lib/utils.ts";
@@ -15,6 +16,7 @@ class MyComponent extends HTMLElement {
 
   async render(appStore: MapStore) {
     if (!this.dataset.taxon) return;
+    loggerRender("++ SelectedTaxaItem render");
 
     await setupComponent(
       "/src/components/SelectedTaxaItem/template.html",

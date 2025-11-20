@@ -1,5 +1,5 @@
 import { setupComponent } from "../../lib/component_utils";
-import { loggerStore } from "../../lib/logger";
+import { loggerEvent, loggerRender } from "../../lib/logger";
 import {
   setupUnobservedByUserSearch,
   unobservedByUserSelectedHandler,
@@ -24,20 +24,18 @@ class MyComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    // only execute listener once since this component is loaded each
-    // time identification page is loaded
-    window.addEventListener(
-      "storePopulated",
-      () => {
-        loggerStore("++ IdentificationsFilters render");
+    loggerRender("++ IdentificationsFilters connectedCallback");
 
-        this.render();
-      },
-      { once: true },
-    );
+    this.render();
+  }
+
+  disconnectedCallback() {
+    loggerRender("++ IdentificationsFilters disconnectedCallback");
   }
 
   async render() {
+    loggerRender("++ IdentificationsFilters render");
+
     await setupComponent(
       "/src/components/IdentificationsFilters/template.html",
       this,

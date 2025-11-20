@@ -6,7 +6,7 @@ export class MyComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    loggerRender("++ AppstoreViewer render");
+    loggerRender("++ AppstoreViewer connectedCallback");
 
     const template = document.getElementById(
       "appstore-viewer-template",
@@ -19,6 +19,8 @@ export class MyComponent extends HTMLElement {
   }
 
   render() {
+    loggerRender("++ AppstoreViewer render");
+
     let displayJsonWrapperEl = this.querySelector("#display-json-wrapper");
     if (!displayJsonWrapperEl) return;
 
