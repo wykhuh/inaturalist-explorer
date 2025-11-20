@@ -390,6 +390,12 @@ async function getObservationsCountForResource(
   appStore: MapStore,
   paramsTemp: ObservationsApiParams,
 ) {
+  if (import.meta.env.VITE_CACHE === "true") {
+    record.observations_count = -888;
+    updateSelectedResource(record, resourceName, appStore);
+    return;
+  }
+
   let params = cleanupObervationsParamsForRecord(paramsTemp);
   let perPage = 0;
   let data = await getObservations(params, perPage);

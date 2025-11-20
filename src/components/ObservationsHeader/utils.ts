@@ -86,6 +86,13 @@ async function updateResourceCounts(
   let countEls = document.querySelectorAll(selector);
   if (countEls.length === 0) return;
 
+  if (import.meta.env.VITE_CACHE === "true") {
+    Array.from(countEls).forEach((countEl) => {
+      countEl.textContent = "-999";
+    });
+    return;
+  }
+
   let data = await dataFn(searchParams, perPage);
   let count = data?.total_results;
   if (count == undefined) return;
