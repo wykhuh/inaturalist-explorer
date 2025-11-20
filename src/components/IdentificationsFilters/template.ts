@@ -1,4 +1,6 @@
-<template>
+import { html } from "../../lib/component_utils";
+
+export const template = html`
   <button id="filters-btn" class="btn-primary">Filters</button>
   <span class="filters-count"></span>
   <dialog class="filters-modal">
@@ -350,4 +352,4 @@
       </form>
     </div>
   </dialog>
-</template>
+`;

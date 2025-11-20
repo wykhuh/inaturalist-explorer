@@ -4,6 +4,7 @@ import { renderTaxonNames } from "../../lib/render_utils";
 import { removeTaxon } from "../../lib/search_taxa.ts";
 import { pluralize } from "../../lib/utils.ts";
 import type { MapStore, NormalizediNatTaxon } from "../../types/app";
+import { template } from "./template";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -18,10 +19,7 @@ class MyComponent extends HTMLElement {
     if (!this.dataset.taxon) return;
     loggerRender("++ SelectedTaxaItem render");
 
-    await setupComponent(
-      "/src/components/SelectedTaxaItem/template.html",
-      this,
-    );
+    setupComponent(template, this);
 
     let taxon = JSON.parse(this.dataset.taxon) as NormalizediNatTaxon;
 

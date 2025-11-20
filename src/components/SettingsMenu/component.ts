@@ -5,6 +5,7 @@ import type { NameOrder } from "../../types/app";
 import { renderTaxaList } from "../../lib/search_taxa";
 import { updateComonNamesByLanguage } from "./utils";
 import { loggerRender } from "../../lib/logger";
+import { template } from "./template";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -20,7 +21,7 @@ class MyComponent extends HTMLElement {
   async render() {
     loggerRender("++ SettingsMenu render");
 
-    await setupComponent("/src/components/SettingsMenu/template.html", this);
+    setupComponent(template, this);
 
     this.renderLanguageSelect();
     this.renderNameOrderSelect();

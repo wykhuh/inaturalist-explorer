@@ -1,4 +1,6 @@
-<template>
+import { html } from "../../lib/component_utils";
+
+export const template = html`
   <div id="map"></div>
   <div id="observations-list-controls">
     <div>
@@ -29,4 +31,4 @@
 
   <span class="loader"></span>
   <div class="observations-list-container"></div>
-</template>
+`;

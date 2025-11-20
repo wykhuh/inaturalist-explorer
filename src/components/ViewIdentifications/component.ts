@@ -1,6 +1,7 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import { fetchAndRenderData, paginationcCallback, perPage } from "./utils";
+import { template } from "./template";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -39,10 +40,7 @@ class MyComponent extends HTMLElement {
 
   async render() {
     loggerRender("++ ViewIdentifications render");
-    await setupComponent(
-      "/src/components/ViewIdentifications/template.html",
-      this,
-    );
+    setupComponent(template, this);
 
     await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
   }

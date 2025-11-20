@@ -1,0 +1,68 @@
+import { html } from "../../lib/component_utils";
+
+export const template = html`
+  <div id="wrapper" class="flow">
+    <h1>About</h1>
+    <p>
+      iNaturalist Explorer is a opensource website that lets people explore
+      iNaturalist data. This site adds some features that
+      <a href="https://www.inaturalist.org/observations"
+        >iNaturalist Explore Observations</a
+      >
+      page does not have.
+    </p>
+    <h2>Features</h2>
+    <ul>
+      <li>Search for multiple species, places, projects, and people</li>
+      <li>Add more filters</li>
+      <li>Group the filters by categories</li>
+      <li>Mobile friendly layout</li>
+      <li>Pagination for observations, species, identifiers, and observers</li>
+      <li>Show iNaturalist maps as grid, points, heatmap and taxon range</li>
+      <li>
+        This site gets data from the iNaturalist API. As a result, the urls for
+        the site are compatible with iNaturalist API. You can copy and paste the
+        query params (stuff after the ?) from the site, and use them for the
+        iNaturalist API. The only properties not compatible are colors, view,
+        and subview.
+
+        <p>
+          For instance, this is the URL query params for all monarchs in
+          California.
+        </p>
+        <div>
+          <code
+            >taxon_id=48662&place_id=14&colors=%234477aa&verifiable=true&spam=false</code
+          >
+        </div>
+        <p>
+          You can copy the query params and use them for the
+          <a
+            href="https://api.inaturalist.org/v1/observations?taxon_id=48662&place_id=14&colors=%234477aa&verifiable=true&spam=false"
+            >iNaturalist "observations" API</a
+          >
+        </p>
+      </li>
+    </ul>
+    <h2>Techinical Details</h2>
+    <p>
+      This static site is built using JavaScript/TypeScript, CSS, and HTML. I
+      wanted to use the built-in features of JavaScript, CSS, HTML, and keep
+      third party libraries to a minimum. This site uses TypeScript and three
+      libraries (<a href="https://leafletjs.com/">Leaflet</a>,
+      <a href="https://tarekraafat.github.io/autoComplete.js/"
+        >Autocomplete.js</a
+      >, and
+      <a href="https://github.com/bramus/js-pagination-sequence"
+        >Pagination Sequence</a
+      >) to create site. This is the most complex project I've built without a
+      website or CSS framework. I also wanted to keep costs low as possible so
+      this is a static site that is hosted on Github.
+    </p>
+    <ul>
+      <li>
+        <a href="https://github.com/wykhuh/inaturalist-explorer">Github Repo</a>
+      </li>
+    </ul>
+  </div>
+`;

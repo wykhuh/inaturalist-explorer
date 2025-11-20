@@ -2,6 +2,7 @@ import "leaflet/dist/leaflet.css";
 import "../../assets/leaflet.css";
 import "../../assets/autocomplete.css";
 
+import { template } from "./template";
 import {
   fetchAndRenderData,
   initFilters,
@@ -71,7 +72,7 @@ class MyComponent extends HTMLElement {
 
   async render() {
     loggerRender("++ ViewMap render");
-    await setupComponent("/src/components/ViewMap/template.html", this);
+    setupComponent(template, this);
 
     // create new map
     await initRenderMap(window.app.store);

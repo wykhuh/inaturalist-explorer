@@ -17,9 +17,9 @@ import "./components/CardObservation/component.ts";
 import "./components/ObservationsMenu/component.ts";
 import "./components/IdentificationsMenu/component.ts";
 import "./components/SettingsMenu/component.ts";
-import "./components/PageAbout.ts";
-import "./components/PageIdentifications.ts";
-import "./components/PageObservations.ts";
+import "./components/PageAbout/component.ts";
+import "./components/PageIdentifications/component.ts";
+import "./components/PageObservations/component.ts";
 import "./components/AppstoreViewer/component.ts";
 
 import mapStore from "./lib/store.ts";

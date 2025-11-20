@@ -1,4 +1,6 @@
+import { setupComponent } from "../../lib/component_utils";
 import { loggerRender } from "../../lib/logger";
+import { template } from "./template";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -8,15 +10,7 @@ class MyComponent extends HTMLElement {
   connectedCallback() {
     loggerRender("++ IdentificationsMenu connectedCallback");
 
-    // use inline template instead of fetch template since we need to initialize
-    // autocomplete search on page load
-    const template = document.getElementById(
-      "identifications-menu-template",
-    ) as HTMLTemplateElement;
-    if (template) {
-      const content = template.content.cloneNode(true);
-      this.appendChild(content);
-    }
+    setupComponent(template, this);
   }
 }
 

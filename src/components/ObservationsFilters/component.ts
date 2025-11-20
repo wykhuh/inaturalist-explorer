@@ -17,6 +17,7 @@ import {
   renderYearsSelect,
   renderSelectedFiltersList,
 } from "./utils";
+import { template } from "./template";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -36,10 +37,7 @@ class MyComponent extends HTMLElement {
   async render() {
     loggerRender("++ ObservationFilters render");
 
-    await setupComponent(
-      "/src/components/ObservationsFilters/template.html",
-      this,
-    );
+    setupComponent(template, this);
 
     this.renderModal();
     this.renderForm();

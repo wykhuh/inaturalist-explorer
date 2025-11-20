@@ -1,6 +1,7 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import { updateObservationsCounts, viewChangeHandler } from "./utils";
+import { template } from "./template";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -35,10 +36,7 @@ class MyComponent extends HTMLElement {
   async render() {
     loggerRender("++ ObservationHeader render");
 
-    await setupComponent(
-      "/src/components/ObservationsHeader/template.html",
-      this,
-    );
+    setupComponent(template, this);
 
     // execute updateObservationsCounts() only after both headers are loaded
     let headerEls = document.querySelectorAll("#observations-header");

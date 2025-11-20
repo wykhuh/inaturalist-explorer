@@ -1,15 +1,13 @@
-<template>
-  <div id="identifications-header">
-    <nav id="identifications-nav">
-      <h1>Identifications</h1>
+import { html } from "../../lib/component_utils";
+
+export const template = html`
+  <div id="observations-header">
+    <nav id="observations-nav">
+      <h1>Observations</h1>
       <ul>
         <li id="observations">
           <span class="observations-count">&nbsp;</span
           ><span>Observations</span>
-        </li>
-        <li id="identifications">
-          <span class="identifications-count">&nbsp;</span
-          ><span>Identifications</span>
         </li>
         <li id="species">
           <span class="species-count">&nbsp;</span><span>Species</span>
@@ -23,4 +21,4 @@
       </ul>
     </nav>
   </div>
-</template>
+`;

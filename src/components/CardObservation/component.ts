@@ -9,6 +9,7 @@ import {
 } from "../../lib/render_utils";
 import { iNatObservationUrl, iNatUserUrl } from "../../data/inat_data";
 import { setupComponent } from "../../lib/component_utils";
+import { template } from "./template";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -20,7 +21,7 @@ class MyComponent extends HTMLElement {
   }
 
   async render() {
-    await setupComponent("/src/components/CardObservation/template.html", this);
+    setupComponent(template, this);
 
     this.renderCard(window.app.store);
   }

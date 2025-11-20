@@ -3,6 +3,7 @@ import { removeProject } from "../../lib/search_projects.ts";
 import type { NormalizediNatProject } from "../../types/app";
 import { pluralize } from "../../lib/utils.ts";
 import { loggerRender } from "../../lib/logger.ts";
+import { template } from "./template";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -17,10 +18,7 @@ class MyComponent extends HTMLElement {
     if (!this.dataset.project) return;
     loggerRender("++ SelectedProjectsItem render");
 
-    await setupComponent(
-      "/src/components/SelectedProjectsItem/template.html",
-      this,
-    );
+    setupComponent(template, this);
 
     let project = JSON.parse(this.dataset.project) as NormalizediNatProject;
 

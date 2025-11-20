@@ -3,6 +3,7 @@ import { loggerRender } from "../../lib/logger";
 import { removeUser } from "../../lib/search_users";
 import { pluralize } from "../../lib/utils";
 import type { NormalizediNatUser } from "../../types/app";
+import { template } from "./template";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -17,10 +18,7 @@ class MyComponent extends HTMLElement {
     if (!this.dataset.user) return;
     loggerRender("++ SelectedUsersItem render");
 
-    await setupComponent(
-      "/src/components/SelectedUsersItem/template.html",
-      this,
-    );
+    setupComponent(template, this);
 
     let user = JSON.parse(this.dataset.user) as NormalizediNatUser;
 

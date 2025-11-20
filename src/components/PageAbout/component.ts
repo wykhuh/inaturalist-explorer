@@ -2,16 +2,16 @@ import { setupComponent } from "../../lib/component_utils";
 import { loggerRender } from "../../lib/logger";
 import { template } from "./template";
 
-class MyComponent extends HTMLElement {
+export class PageAbout extends HTMLElement {
   constructor() {
     super();
   }
 
   connectedCallback() {
-    loggerRender("++ ObservationsMenu connectedCallback");
+    loggerRender("++ PageAbout render");
 
     setupComponent(template, this);
   }
 }
 
-customElements.define("x-observations-menu", MyComponent);
+customElements.define("x-page-about", PageAbout);

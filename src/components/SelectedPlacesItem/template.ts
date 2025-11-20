@@ -1,4 +1,6 @@
-<template>
+import { html } from "../../lib/component_utils";
+
+export const template = html`
   <li class="place-list-item" data-testid="place-list-item">
     <div class="data">
       <span class="title"></span>
@@ -9,4 +11,4 @@
     </button>
   </li>
   <style></style>
-</template>
+`;

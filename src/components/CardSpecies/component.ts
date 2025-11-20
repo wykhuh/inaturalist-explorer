@@ -5,6 +5,7 @@ import { formatTaxonName } from "../../lib/data_utils";
 import { iNatTaxaUrl } from "../../data/inat_data";
 import { setupComponent } from "../../lib/component_utils";
 import { renderTaxonNames } from "../../lib/render_utils";
+import { template } from "./template";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -16,7 +17,7 @@ class MyComponent extends HTMLElement {
   }
 
   async render() {
-    await setupComponent("/src/components/CardSpecies/template.html", this);
+    setupComponent(template, this);
 
     this.renderCard(window.app.store);
   }

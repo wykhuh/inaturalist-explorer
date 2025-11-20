@@ -1,6 +1,7 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import { updateIdentificationsCounts, viewChangeHandler } from "./utils";
+import { template } from "./template";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -35,10 +36,7 @@ class MyComponent extends HTMLElement {
   async render() {
     loggerRender("++ IdentificationHeader render");
 
-    await setupComponent(
-      "/src/components/IdentificationsHeader/template.html",
-      this,
-    );
+    setupComponent(template, this);
 
     // execute updateIdentificationsCounts() only after both headers are loaded
     let headerEls = document.querySelectorAll("#identifications-header");
