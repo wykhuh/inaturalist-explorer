@@ -27,11 +27,21 @@ class MyComponent extends HTMLElement {
   connectedCallback() {
     loggerRender("++ IdentificationsFilters connectedCallback");
 
-    this.render();
+    window.addEventListener("storePopulated", this);
   }
 
   disconnectedCallback() {
     loggerRender("++ IdentificationsFilters disconnectedCallback");
+
+    window.removeEventListener("storePopulated", this);
+  }
+
+  handleEvent(event: Event) {
+    if (event.type === "storePopulated") {
+      loggerEvent("++ IdentificationsFilters storePopulated");
+
+      this.render();
+    }
   }
 
   async render() {

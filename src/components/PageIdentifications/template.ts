@@ -1,6 +1,7 @@
 import { html } from "../../lib/component_utils";
 
 export const template = html`
+  <x-site-header></x-site-header>
   <x-identifications-header data-updatecounts="true"></x-identifications-header>
   <div id="wrapper">
     <div id="site-controls" class="sidebar-open">

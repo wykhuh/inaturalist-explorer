@@ -8,7 +8,7 @@ export class PageAbout extends HTMLElement {
   }
 
   connectedCallback() {
-    loggerRender("++ PageAbout render");
+    loggerRender("++ PageAbout connectedCallback");
 
     setupComponent(template, this);
   }

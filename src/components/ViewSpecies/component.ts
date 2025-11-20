@@ -22,10 +22,10 @@ class MyComponent extends HTMLElement {
   disconnectedCallback() {
     loggerRender("++ ViewSpecies disconnectedCallback");
 
-    window.addEventListener("observationsChange", this);
-    window.addEventListener("identificationsChange", this);
-    window.addEventListener("localeChanged", this);
-    window.addEventListener("nameOrderChanged", this);
+    window.removeEventListener("observationsChange", this);
+    window.removeEventListener("identificationsChange", this);
+    window.removeEventListener("localeChanged", this);
+    window.removeEventListener("nameOrderChanged", this);
   }
 
   handleEvent(event: Event) {

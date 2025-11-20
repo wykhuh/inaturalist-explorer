@@ -124,7 +124,7 @@ export function renderSelectedResources(
     updateAppUrl(window.location, appStore);
     if (appStore.record_type === "identifications") {
       window.dispatchEvent(new Event("identificationsChange"));
-    } else {
+    } else if (appStore.record_type === "observations") {
       window.dispatchEvent(new Event("observationsChange"));
     }
   }
@@ -176,8 +176,10 @@ export function multisearchSetup(appStore: MapStore) {
     let target = event.target as HTMLInputElement;
     if (target === null) return;
 
-    // remove event listerner for autocomplete search
+    // unInit comes from autocomplete library. unInit removes event listerners
+    // for autocomplete search
     setup.unInit();
+
     // clear search input
     searchInputEl.innerHTML = "";
     searchInputEl.value = "";
@@ -202,7 +204,7 @@ export function searchSetup(searchSelector: string, selectedHandler: any) {
   });
 }
 
-function showHideHeader(
+export function showHideHeader(
   selector: string,
   storeResource: MapStoreSelectedResourcesKeys,
 ) {
@@ -217,14 +219,14 @@ function showHideHeader(
   }
 }
 
-export function searchHeadingSetup() {
-  window.addEventListener("selectedPlacesChange", () => {
-    showHideHeader("#home #sidebar-menu .places-heading", "selectedPlaces");
-  });
-  window.addEventListener("selectedProjectsChange", () => {
-    showHideHeader("#home #sidebar-menu .projects-heading", "selectedProjects");
-  });
-  window.addEventListener("selectedUsersChange", () => {
-    showHideHeader("#home #sidebar-menu .users-heading", "selectedUsers");
-  });
+export function showHideUsersHeader() {
+  showHideHeader("#sidebar-menu .users-heading", "selectedUsers");
+}
+
+export function showHideProjectsHeader() {
+  showHideHeader("#sidebar-menu .projects-heading", "selectedProjects");
+}
+
+export function showHidePlacesHeader() {
+  showHideHeader("#sidebar-menu .places-heading", "selectedPlaces");
 }

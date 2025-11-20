@@ -20,8 +20,8 @@ class MyComponent extends HTMLElement {
   disconnectedCallback() {
     loggerRender("++ ViewObservers disconnectedCallback");
 
-    window.addEventListener("observationsChange", this);
-    window.addEventListener("identificationsChange", this);
+    window.removeEventListener("observationsChange", this);
+    window.removeEventListener("identificationsChange", this);
   }
 
   handleEvent(event: Event) {

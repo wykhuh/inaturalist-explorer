@@ -41,11 +41,10 @@ import {
   renderSelectedProjectsBoundaries,
   viewAndTemplateObject,
 } from "./data_utils";
-import { loggerStore } from "./logger.ts";
+import { loggerEvent, loggerRender, loggerStore } from "./logger.ts";
 import {
   multisearchSetup,
   renderSelectedResources,
-  searchHeadingSetup,
   updateCountForAllPlaces,
   updateCountForAllProjects,
   updateCountForAllTaxa,
@@ -60,7 +59,7 @@ export async function initPopulateStore(
   appStore: MapStore,
   urlStore: MapStore,
 ) {
-  loggerStore("++ initPopulateStore start", appStore.observationsApiParams);
+  loggerStore("++ initPopulateStore start");
 
   // use url store to populate appStore.observationsApiParams
   for (const [k, value] of Object.entries(urlStore.observationsApiParams)) {
@@ -112,11 +111,7 @@ export async function initPopulateStore(
   } else if (urlStore.observationsApiParams.nelat !== undefined) {
     processBBoxData(appStore, urlStore);
   }
-  loggerStore(
-    "++ initPopulateStore selectedPlaces",
-    appStore.observationsApiParams,
-    appStore.selectedPlaces,
-  );
+  loggerStore("++ initPopulateStore selectedPlaces", appStore.selectedPlaces);
 
   // project data
   if (urlStore.selectedProjects?.length > 0) {
@@ -135,7 +130,6 @@ export async function initPopulateStore(
   }
   loggerStore(
     "++ initPopulateStore selectedProjects",
-    appStore.observationsApiParams,
     appStore.selectedProjects,
   );
 
@@ -149,12 +143,8 @@ export async function initPopulateStore(
       processUserData(data, appStore);
     }
   }
-  loggerStore(
-    "++ initPopulateStore selectedUsers",
-    appStore.observationsApiParams,
-    appStore.selectedUsers,
-  );
 
+  loggerStore("++ initPopulateStore selectedUsers", appStore.selectedUsers);
   // user idenifier data
   if (urlStore.selectedUsersIdentifiers?.id) {
     let data = await getUserById(urlStore.selectedUsersIdentifiers.id);
@@ -164,7 +154,6 @@ export async function initPopulateStore(
   }
   loggerStore(
     "++ initPopulateStore selectedUsersIdentifiers",
-    appStore.observationsApiParams,
     appStore.selectedUsersIdentifiers,
   );
 
@@ -178,7 +167,6 @@ export async function initPopulateStore(
 
   loggerStore(
     "++ initPopulateStore selectedUnobservedByUser",
-    appStore.observationsApiParams,
     appStore.selectedUnobservedByUser,
   );
 
@@ -192,11 +180,6 @@ export async function initPopulateStore(
       processTaxonData(taxonData, appStore, urlStore);
     }
   }
-  loggerStore(
-    "++ initPopulateStore selectedTaxa",
-    appStore.observationsApiParams,
-    appStore.selectedTaxa,
-  );
 
   await updateCountForAllTaxa(appStore);
   await updateCountForAllPlaces(appStore);
@@ -208,7 +191,7 @@ export async function initPopulateStore(
   loggerStore("++ initPopulateStore end");
 
   window.dispatchEvent(new Event("storePopulated"));
-  loggerStore("dispatch observationsChange");
+  loggerEvent("dispatch storePopulated");
 }
 
 export async function initRenderMap(appStore: MapStore) {
@@ -491,19 +474,21 @@ function showMenu(selector: string) {
 }
 
 export async function initApp() {
-  let urlData = decodeAppUrl(window.location.search);
-  multisearchSetup(window.app.store);
-  searchHeadingSetup();
-  await initPopulateStore(window.app.store, urlData);
+  loggerRender("initApp");
 
   let viewContainerEl = document.querySelector("#view-container");
   if (!viewContainerEl) return;
 
-  if (window.app.store.currentView) {
-    let templateName = viewAndTemplateObject(window.app.store.currentView);
-    let view = document.createElement(templateName);
-    viewContainerEl.appendChild(view);
-  }
+  let appStore = window.app.store;
+  if (!appStore.currentView) return;
+
+  let urlData = decodeAppUrl(window.location.search);
+  multisearchSetup(appStore);
+  await initPopulateStore(appStore, urlData);
+
+  let templateName = viewAndTemplateObject(appStore.currentView);
+  let view = document.createElement(templateName);
+  viewContainerEl.appendChild(view);
 
   toggleSidebarHandler();
   toggleObservationsHandler();

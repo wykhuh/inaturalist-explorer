@@ -8,7 +8,7 @@ export class PageIdentifications extends HTMLElement {
   }
 
   connectedCallback() {
-    loggerRender("++ PageIdentifications render");
+    loggerRender("++ PageIdentifications connectedCallback");
 
     setupComponent(template, this);
   }

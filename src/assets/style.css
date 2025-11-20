@@ -302,7 +302,7 @@
     margin-top: var(--flow-space, 1em);
   }
 
-  #home .two-columns {
+  .two-columns {
     display: grid;
     grid-template-columns: var(--side-menu-width) 1fr;
 
@@ -315,7 +315,7 @@
     position: absolute;
   }
 
-  #home .two-columns.sidebar-close {
+  .two-columns.sidebar-close {
     grid-template-columns: var(--side-menu-closed-width) 1fr;
 
     #sidebar-menu {
@@ -350,7 +350,7 @@
     background: var(--clr-white);
   }
 
-  #about #wrapper {
+  x-page-about #wrapper {
     max-width: 1000px;
     margin: 0 auto 2rem auto;
 
@@ -488,6 +488,7 @@
     color: var(--clr-white);
 
     h1 {
+      font-size: var(--font-size-heading-sm);
       color: var(--clr-white);
     }
   }

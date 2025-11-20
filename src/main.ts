@@ -1,4 +1,3 @@
-import "./components/Header/component.ts";
 import "./components/SelectedTaxaItem/component.ts";
 import "./components/SelectedPlacesItem/component.ts";
 import "./components/SelectedProjectsItem/component.ts";
@@ -21,6 +20,7 @@ import "./components/PageAbout/component.ts";
 import "./components/PageIdentifications/component.ts";
 import "./components/PageObservations/component.ts";
 import "./components/AppstoreViewer/component.ts";
+import "./components/Header/component.ts";
 
 import mapStore from "./lib/store.ts";
 import Router from "./lib/router.ts";
@@ -28,26 +28,8 @@ import { initApp } from "./lib/init_app.ts";
 
 window.app = { store: mapStore, router: Router };
 
-window.addEventListener(
-  "appPageLoaded",
-  (event: CustomEventInit<{ route: string }>) => {
-    if (!event.detail) return;
-    event.detail.route;
-    console.log("Whoop!", event.detail.route);
-
-    switch (event.detail.route) {
-      case "/":
-        window.app.store.record_type = "observations";
-        initApp();
-        break;
-      case "/identifications/":
-        window.app.store.record_type = "identifications";
-        initApp();
-        break;
-      default:
-        window.app.store.record_type = "other";
-    }
-  },
-);
-
+// router.init() loads page components
 window.app.router.init();
+
+// initApp() load iNaturalist data and populate app.store
+initApp();

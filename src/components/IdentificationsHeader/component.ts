@@ -13,22 +13,39 @@ class MyComponent extends HTMLElement {
 
     this.render();
 
+    window.addEventListener("navResourceChange", this);
+    window.addEventListener("storePopulated", this);
     window.addEventListener("identificationsChange", this);
   }
 
   disconnectedCallback() {
     loggerRender("++ IdentificationsHeader disconnectedCallback");
 
+    window.removeEventListener("navResourceChange", this);
+    window.removeEventListener("storePopulated", this);
     window.removeEventListener("identificationsChange", this);
   }
 
   handleEvent(event: Event) {
-    if (event.type === "identificationsChange") {
+    let countEvents = [
+      "identificationsChange",
+      "storePopulated",
+      "navResourceChange",
+    ];
+    if (countEvents.includes(event.type)) {
       // app uses two <x-identifications-header>;
       // only execute for instance that has updatecounts="true"
       if (this.dataset.updatecounts === "true") {
-        loggerEvent("++ IdentificationHeader identificationsChange");
+        loggerEvent(`++ IdentificationHeader ${event.type}`);
         updateIdentificationsCounts(window.app.store);
+      }
+    }
+
+    let viewEvents = ["storePopulated", "navResourceChange"];
+    if (viewEvents.includes(event.type)) {
+      let itemEl = this.querySelector(`#${window.app.store.currentView}`);
+      if (itemEl) {
+        itemEl?.classList.add("currentView");
       }
     }
   }
@@ -37,20 +54,6 @@ class MyComponent extends HTMLElement {
     loggerRender("++ IdentificationHeader render");
 
     setupComponent(template, this);
-
-    // execute updateIdentificationsCounts() only after both headers are loaded
-    let headerEls = document.querySelectorAll("#identifications-header");
-
-    if (headerEls.length === 2) {
-      loggerRender(
-        "++ IdentificationsHeader update header counts",
-        headerEls.length,
-      );
-      updateIdentificationsCounts(window.app.store);
-    }
-
-    let itemEl = this.querySelector(`#${window.app.store.currentView}`);
-    itemEl?.classList.add("currentView");
 
     let store = window.app.store;
     viewChangeHandler(

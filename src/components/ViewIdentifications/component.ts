@@ -26,7 +26,7 @@ class MyComponent extends HTMLElement {
     window.removeEventListener("nameOrderChanged", this);
   }
 
-  handleEvent(event: Event) {
+  handleEvent(event: CustomEvent) {
     let resourceChanges = [
       "identificationsChange",
       "localeChanged",

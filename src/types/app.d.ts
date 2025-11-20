@@ -18,7 +18,7 @@ declare global {
 
 type RouterType = {
   init: () => void;
-  go: (route: string, addToHistory?: boolean) => void;
+  go: (path: string, params?: string, addToHistory?: boolean) => void;
 };
 
 export interface MapStore {
@@ -61,8 +61,10 @@ export interface MapStore {
     identifications: ViewOptions;
     name_order: NameOrder;
   };
-  record_type: "observations" | "identifications" | "other";
+  record_type: RecordTypes;
 }
+
+type RecordTypes = "observations" | "identifications" | "other";
 
 type ViewOptions = {
   page?: number;
@@ -367,5 +369,5 @@ type Spinner = {
 
 export interface DataComponent extends HTMLElement {
   data?: any;
-  record_type: "observations" | "identifications" | "other";
+  record_type: RecordTypes;
 }

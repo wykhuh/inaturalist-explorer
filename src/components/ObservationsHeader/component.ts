@@ -13,22 +13,39 @@ class MyComponent extends HTMLElement {
 
     this.render();
 
+    window.addEventListener("navResourceChange", this);
+    window.addEventListener("storePopulated", this);
     window.addEventListener("observationsChange", this);
   }
 
   disconnectedCallback() {
     loggerRender("++ ObservationHeader disconnectedCallback");
 
+    window.removeEventListener("navResourceChange", this);
+    window.removeEventListener("storePopulated", this);
     window.removeEventListener("observationsChange", this);
   }
 
   handleEvent(event: Event) {
-    if (event.type === "observationsChange") {
+    let countEvents = [
+      "observationsChange",
+      "storePopulated",
+      "navResourceChange",
+    ];
+    if (countEvents.includes(event.type)) {
       // app uses two <x-identifications-header>;
       // only execute for instance that has updatecounts="true"
       if (this.dataset.updatecounts === "true") {
-        loggerEvent("++ ObservationHeader observationsChange");
+        loggerEvent(`++ ObservationHeader ${event.type}`);
         updateObservationsCounts(window.app.store);
+      }
+    }
+
+    let viewEvents = ["storePopulated", "navResourceChange"];
+    if (viewEvents.includes(event.type)) {
+      let itemEl = this.querySelector(`#${window.app.store.currentView}`);
+      if (itemEl) {
+        itemEl?.classList.add("currentView");
       }
     }
   }
@@ -37,20 +54,6 @@ class MyComponent extends HTMLElement {
     loggerRender("++ ObservationHeader render");
 
     setupComponent(template, this);
-
-    // execute updateObservationsCounts() only after both headers are loaded
-    let headerEls = document.querySelectorAll("#observations-header");
-
-    if (headerEls.length === 2) {
-      loggerRender(
-        "++ ObservationsHeader update header counts",
-        headerEls.length,
-      );
-      updateObservationsCounts(window.app.store);
-    }
-
-    let itemEl = this.querySelector(`#${window.app.store.currentView}`);
-    itemEl?.classList.add("currentView");
 
     let store = window.app.store;
     viewChangeHandler(

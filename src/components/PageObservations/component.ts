@@ -8,7 +8,7 @@ export class PageObservations extends HTMLElement {
   }
 
   connectedCallback() {
-    loggerRender("++ PageObservations render");
+    loggerRender("++ PageObservations connectedCallback");
 
     setupComponent(template, this);
   }

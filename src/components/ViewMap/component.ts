@@ -15,7 +15,6 @@ import { loggerEvent, loggerRender } from "../../lib/logger";
 import { initRenderMap } from "../../lib/init_app";
 import { setupComponent } from "../../lib/component_utils";
 import type { MapStore } from "../../types/app";
-import { renderSelectedResources } from "../../lib/search_utils";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -49,7 +48,6 @@ class MyComponent extends HTMLElement {
       window.app.store.map.layerControl.remove();
       window.app.store.map.layerControl = null;
     }
-    window.app.store.map;
 
     window.removeEventListener("observationsChange", this);
     window.removeEventListener("localeChanged", this);
@@ -64,6 +62,7 @@ class MyComponent extends HTMLElement {
       "localeChanged",
       "nameOrderChanged",
     ];
+
     if (resourceChanges.includes(event.type)) {
       loggerEvent(`++ ViewMap ${event.type}`);
       fetchAndRenderData(perPage, paginationcCallback, window.app.store);
@@ -76,7 +75,6 @@ class MyComponent extends HTMLElement {
 
     // create new map
     await initRenderMap(window.app.store);
-    renderSelectedResources(window.app.store, false);
 
     // use store to set values the form on page load
     initFilters(window.app.store);

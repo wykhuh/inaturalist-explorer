@@ -1,4 +1,6 @@
-<template>
+import { html } from "../../lib/component_utils";
+
+export const template = html`
   <header id="site-header">
     <div class="wrapper-fullwidth">
       <nav id="site-nav">
@@ -17,9 +19,11 @@
               >Identifications</a
             >
           </li>
-          <li><a href="/about/" class="navlink">About</a></li>
+          <li>
+            <a href="/about/" class="navlink" data-record-type="other">About</a>
+          </li>
         </ul>
       </nav>
     </div>
   </header>
-</template>
+`;

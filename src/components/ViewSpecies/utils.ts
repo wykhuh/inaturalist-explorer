@@ -72,7 +72,7 @@ async function getAPIData(perPage: number, appStore: MapStore) {
     if (appStore.record_type === "identifications") {
       let params = cleanupIdentificationParams(appStore);
       data = await getIdentificationsSpecies(params, perPage);
-    } else {
+    } else if (appStore.record_type === "observations") {
       let params = cleanupObervationsParams(appStore);
       data = await getObservationsSpecies(params, perPage);
     }
