@@ -71,4 +71,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("x-card-observation", MyComponent);
+customElements.define("card-observation", MyComponent);

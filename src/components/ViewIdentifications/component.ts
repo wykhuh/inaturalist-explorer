@@ -46,4 +46,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("x-view-identifications", MyComponent);
+customElements.define("view-identifications", MyComponent);

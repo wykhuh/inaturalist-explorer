@@ -40,4 +40,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("x-view-identifiers", MyComponent);
+customElements.define("view-identifiers", MyComponent);

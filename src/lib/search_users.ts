@@ -125,7 +125,7 @@ export function renderUsersList(appStore: MapStore) {
 
   listEl.innerHTML = "";
   appStore.selectedUsers.forEach((user) => {
-    let templateEl = document.createElement("x-users-list-item");
+    let templateEl = document.createElement("users-list-item");
     if (!templateEl) return;
     templateEl.dataset.user = JSON.stringify(user);
     listEl.appendChild(templateEl);

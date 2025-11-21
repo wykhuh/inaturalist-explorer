@@ -34,4 +34,4 @@ export class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("x-appstore-viewer", MyComponent);
+customElements.define("appstore-viewer", MyComponent);

@@ -125,4 +125,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("x-view-map", MyComponent);
+customElements.define("view-map", MyComponent);

@@ -88,4 +88,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("x-site-header", MyComponent);
+customElements.define("site-header", MyComponent);

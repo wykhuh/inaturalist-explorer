@@ -51,4 +51,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("x-users-list-item", MyComponent);
+customElements.define("users-list-item", MyComponent);

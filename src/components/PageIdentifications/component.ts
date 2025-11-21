@@ -14,4 +14,4 @@ export class PageIdentifications extends HTMLElement {
   }
 }
 
-customElements.define("x-page-identifications", PageIdentifications);
+customElements.define("page-identifications", PageIdentifications);

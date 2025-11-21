@@ -40,4 +40,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("x-view-observers", MyComponent);
+customElements.define("view-observers", MyComponent);

@@ -49,4 +49,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("x-view-species", MyComponent);
+customElements.define("view-species", MyComponent);

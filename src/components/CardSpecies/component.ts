@@ -104,4 +104,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("x-card-species", MyComponent);
+customElements.define("card-species", MyComponent);

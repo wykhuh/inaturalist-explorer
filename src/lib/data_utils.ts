@@ -788,15 +788,15 @@ export function normalizeAppParams(appParams: string) {
 export function viewAndTemplateObject(targetView: string) {
   let view;
   if (targetView === "species") {
-    view = "x-view-species";
+    view = "view-species";
   } else if (targetView === "identifiers") {
-    view = "x-view-identifiers";
+    view = "view-identifiers";
   } else if (targetView === "observers") {
-    view = "x-view-observers";
+    view = "view-observers";
   } else if (targetView === "observations") {
-    view = "x-view-map";
+    view = "view-map";
   } else if (targetView === "identifications") {
-    view = "x-view-identifications";
+    view = "view-identifications";
   } else {
     throw Error("Need to add view /template");
   }

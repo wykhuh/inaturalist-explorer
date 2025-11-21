@@ -1,8 +1,8 @@
 import { html } from "../../lib/component_utils";
 
 export const template = html`
-  <x-site-header></x-site-header>
-  <x-observations-header data-updatecounts="true"></x-observations-header>
+  <site-header></site-header>
+  <observations-header data-updatecounts="true"></observations-header>
   <div id="wrapper">
     <div id="site-controls" class="sidebar-open">
       <button id="sidebar-toggle" title="Toggle sidebar">&#9776;</button>
@@ -22,9 +22,9 @@ export const template = html`
 
     <section class="two-columns sidebar-open" id="site-layout">
       <div id="sidebar-menu">
-        <x-observations-menu></x-observations-menu>
-        <x-settings-menu></x-settings-menu>
-        <x-appstore-viewer></x-appstore-viewer>
+        <observations-menu></observations-menu>
+        <settings-menu></settings-menu>
+        <appstore-viewer></appstore-viewer>
       </div>
       <div id="view-container"></div>
     </section>

@@ -20,7 +20,7 @@ export const template = html`
       </label>
     </div>
     <div class="dialog-container">
-      <x-identifications-filters></x-identifications-filters>
+      <identifications-filters></identifications-filters>
     </div>
 
     <h2 class="taxa-heading">Species</h2>

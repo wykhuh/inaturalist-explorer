@@ -92,7 +92,7 @@ function createGrid(
 
   results.forEach((row) => {
     let cardEl = document.createElement(
-      "x-card-species",
+      "card-species",
     ) as unknown as DataComponent;
     cardEl.data = row;
     cardEl.record_type = appStore.record_type;

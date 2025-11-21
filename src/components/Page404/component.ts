@@ -14,4 +14,4 @@ export class PageAbout extends HTMLElement {
   }
 }
 
-customElements.define("x-page-404", PageAbout);
+customElements.define("page-404", PageAbout);

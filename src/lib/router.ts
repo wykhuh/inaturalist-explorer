@@ -20,16 +20,16 @@ const Router: RouterType = {
     let pageElement = null;
     switch (path) {
       case "/":
-        pageElement = document.createElement("x-page-observations");
+        pageElement = document.createElement("page-observations");
         break;
       case "/identifications/":
-        pageElement = document.createElement("x-page-identifications");
+        pageElement = document.createElement("page-identifications");
         break;
       case "/about/":
-        pageElement = document.createElement("x-page-about");
+        pageElement = document.createElement("page-about");
         break;
       default:
-        pageElement = document.createElement("x-page-404");
+        pageElement = document.createElement("page-404");
     }
 
     loggerRender("pageElement:", pageElement);

@@ -79,7 +79,7 @@ describe("updateView", () => {
 
       expect(oldLI?.className).toBe("");
       expect(targetLI?.className).toBe("currentView");
-      expect(parentEl?.innerHTML).toBe(`<x-view-${view}></x-view-${view}>`);
+      expect(parentEl?.innerHTML).toBe(`<view-${view}></view-${view}>`);
       expect(store.currentView).toBe(view);
       expect(store.observationsApiParams).toStrictEqual(defaultParams);
       expect(window.location.search).toBe(`?${defaultQuery}&view=${view}`);
@@ -109,7 +109,7 @@ describe("updateView", () => {
 
     expect(oldLI?.className).toBe("");
     expect(targetLI?.className).toBe("currentView");
-    expect(parentEl?.innerHTML).toBe("<x-view-observers></x-view-observers>");
+    expect(parentEl?.innerHTML).toBe("<view-observers></view-observers>");
     expect(store.currentView).toBe("observers");
     expect(store.observationsApiParams).toStrictEqual({
       page: 10,
@@ -145,7 +145,7 @@ describe("updateView", () => {
 
     expect(oldLI?.className).toBe("");
     expect(targetLI?.className).toBe("currentView");
-    expect(parentEl?.innerHTML).toBe("<x-view-observers></x-view-observers>");
+    expect(parentEl?.innerHTML).toBe("<view-observers></view-observers>");
     expect(store.currentView).toBe("observers");
     expect(store.observationsApiParams).toStrictEqual(defaultParams);
     expect(window.location.search).toBe(`?${defaultQuery}&view=observers`);

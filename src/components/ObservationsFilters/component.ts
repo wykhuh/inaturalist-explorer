@@ -199,4 +199,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("x-observations-filters", MyComponent);
+customElements.define("observations-filters", MyComponent);

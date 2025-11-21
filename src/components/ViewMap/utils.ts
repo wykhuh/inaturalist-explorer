@@ -202,7 +202,7 @@ export function createGrid(results: ObservationsResult[]) {
 
   results.forEach((row) => {
     let cardEl = document.createElement(
-      "x-card-observation",
+      "card-observation",
     ) as unknown as DataComponent;
     cardEl.data = row;
     containerEl.appendChild(cardEl);

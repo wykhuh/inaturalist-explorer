@@ -174,7 +174,7 @@ export function renderTaxaList(appStore: MapStore) {
 
   listEl.innerHTML = "";
   appStore.selectedTaxa.forEach((taxon) => {
-    let templateEl = document.createElement("x-species-list-item");
+    let templateEl = document.createElement("species-list-item");
     templateEl.dataset.taxon = JSON.stringify(taxon);
     listEl.appendChild(templateEl);
   });

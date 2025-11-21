@@ -21,7 +21,7 @@ export const template = html`
       </label>
     </div>
     <div class="dialog-container">
-      <x-observations-filters></x-observations-filters>
+      <observations-filters></observations-filters>
     </div>
 
     <h2 class="taxa-heading">Species</h2>

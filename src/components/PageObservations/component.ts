@@ -14,4 +14,4 @@ export class PageObservations extends HTMLElement {
   }
 }
 
-customElements.define("x-page-observations", PageObservations);
+customElements.define("page-observations", PageObservations);

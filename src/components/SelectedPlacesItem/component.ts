@@ -47,4 +47,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("x-places-list-item", MyComponent);
+customElements.define("places-list-item", MyComponent);

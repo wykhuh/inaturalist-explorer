@@ -169,7 +169,7 @@ export function renderProjectsList(appStore: MapStore) {
   listEl.innerHTML = "";
 
   appStore.selectedProjects.forEach((project) => {
-    let templateEl = document.createElement("x-projects-list-item");
+    let templateEl = document.createElement("projects-list-item");
     if (!templateEl) return;
     templateEl.dataset.project = JSON.stringify(project);
     listEl.appendChild(templateEl);

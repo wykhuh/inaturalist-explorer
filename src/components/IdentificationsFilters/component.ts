@@ -199,4 +199,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("x-identifications-filters", MyComponent);
+customElements.define("identifications-filters", MyComponent);

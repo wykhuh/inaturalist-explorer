@@ -6,7 +6,7 @@ export const template = html`
   <dialog class="filters-modal">
     <div>
       <div class="modal-header">
-        <x-identifications-header></x-identifications-header>
+        <identifications-header></identifications-header>
         <div><button class="close-btn btn-primary">Close</button></div>
       </div>
       <ol class="filters-list"></ol>

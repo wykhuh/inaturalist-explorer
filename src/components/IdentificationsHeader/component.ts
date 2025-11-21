@@ -33,7 +33,7 @@ class MyComponent extends HTMLElement {
       "navResourceChange",
     ];
     if (countEvents.includes(event.type)) {
-      // app uses two <x-identifications-header>;
+      // app uses two <identifications-header>;
       // only execute for instance that has updatecounts="true"
       if (this.dataset.updatecounts === "true") {
         loggerEvent(`++ IdentificationHeader ${event.type}`);
@@ -89,4 +89,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("x-identifications-header", MyComponent);
+customElements.define("identifications-header", MyComponent);

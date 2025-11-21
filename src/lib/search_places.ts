@@ -183,7 +183,7 @@ export function renderPlacesList(appStore: MapStore) {
 
   listEl.innerHTML = "";
   appStore.selectedPlaces.forEach((place) => {
-    let templateEl = document.createElement("x-places-list-item");
+    let templateEl = document.createElement("places-list-item");
     templateEl.dataset.place = JSON.stringify({
       id: place.id,
       name: place.name,

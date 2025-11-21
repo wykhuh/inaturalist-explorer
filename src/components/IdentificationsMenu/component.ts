@@ -45,4 +45,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("x-identifications-menu", MyComponent);
+customElements.define("identifications-menu", MyComponent);

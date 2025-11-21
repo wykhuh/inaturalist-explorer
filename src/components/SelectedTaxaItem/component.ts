@@ -53,4 +53,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("x-species-list-item", MyComponent);
+customElements.define("species-list-item", MyComponent);

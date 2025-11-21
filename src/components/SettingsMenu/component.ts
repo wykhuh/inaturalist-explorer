@@ -88,4 +88,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("x-settings-menu", MyComponent);
+customElements.define("settings-menu", MyComponent);
