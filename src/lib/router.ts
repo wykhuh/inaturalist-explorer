@@ -28,6 +28,8 @@ const Router: RouterType = {
       case "/about/":
         pageElement = document.createElement("x-page-about");
         break;
+      default:
+        pageElement = document.createElement("x-page-404");
     }
 
     loggerRender("pageElement:", pageElement);
