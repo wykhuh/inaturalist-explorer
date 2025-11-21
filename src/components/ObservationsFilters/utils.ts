@@ -305,7 +305,7 @@ export function initFilters(appStore: MapStore) {
       "#identifier-search",
     ) as HTMLInputElement;
     if (inputEl) {
-      inputEl.value = appStore.selectedUsersIdentifiers.login;
+      inputEl.value = appStore.selectedUsersIdentifiers[0].login;
     }
   }
 }

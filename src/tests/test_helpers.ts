@@ -629,7 +629,7 @@ export function expectUser1Identifier(store: MapStore, count = 0) {
   if (count > 0) {
     userA.observations_count = count;
   }
-  expect(store.selectedUsersIdentifiers).toEqual(userA);
+  expect(store.selectedUsersIdentifiers).toEqual([userA]);
 }
 
 export function expectUser1UnobservedByUser(store: MapStore, count = 0) {

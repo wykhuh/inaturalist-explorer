@@ -13,7 +13,7 @@ export const mapStore: MapStore = {
   placesMapLayers: {},
   selectedProjects: [],
   selectedUsers: [],
-  selectedUsersIdentifiers: {} as NormalizediNatUser,
+  selectedUsersIdentifiers: [],
   selectedUnobservedByUser: {} as NormalizediNatUser,
   observationsApiParams: { verifiable: true, spam: false, locale: "en" },
   color: "",

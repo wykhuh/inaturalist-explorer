@@ -471,9 +471,14 @@ export function removeOneUserFromStore(appStore: MapStore, userId: number) {
   removeIdfromInatApiParams(appStore, "user_id", userId);
 }
 
-export function removeOneUserIdentifierFromStore(appStore: MapStore) {
-  appStore.selectedUsersIdentifiers = {} as NormalizediNatUser;
-  delete appStore.observationsApiParams.ident_user_id;
+export function removeOneUserIdentifierFromStore(
+  appStore: MapStore,
+  userId: number,
+) {
+  appStore.selectedUsersIdentifiers = appStore.selectedUsersIdentifiers.filter(
+    (item) => item.id !== userId,
+  );
+  removeIdfromInatApiParams(appStore, "ident_user_id", userId);
 }
 
 export function removeOneUnobservedByUserFromStore(appStore: MapStore) {
@@ -693,13 +698,16 @@ export function leafletVisibleLayers(appStore: MapStore, strict = false) {
 
 export function addValueToCommaSeparatedString(
   newValue?: number | string,
-  currentValue?: string,
+  currentValue?: string | number,
 ) {
   if (newValue === undefined) return;
 
   if (currentValue === undefined) {
     currentValue = newValue.toString();
   } else {
+    if (typeof currentValue === "number") {
+      currentValue = currentValue.toString();
+    }
     // only add newValue to currentValue if currentValue does not have newValue
     let parts = currentValue.split(",").map((i) => {
       if (typeof newValue === "number") {

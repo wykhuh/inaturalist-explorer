@@ -673,11 +673,10 @@ describe("initPopulateStore and initRenderMap resources", () => {
     ]);
     expectNoRefresh(store);
     expectNoPlaces(store);
-    // expect(searchparams).toBe("");
     expectAllTaxaRecord(store, allTaxaCount * 0.75);
     expectUser1Identifier(store);
     let expectedParams: ObservationsApiParams = {
-      ident_user_id: user1.id,
+      ident_user_id: `${user1.id}`,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
       ...defaultParams,
@@ -760,7 +759,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       place_id: `${losangeles.id},${sandiego.id}`,
       project_id: `${project_cnc1.id},${project_cnc2.id}`,
       user_id: `${user1.id},${user2.id}`,
-      ident_user_id: user1.id,
+      ident_user_id: `${user1.id}`,
       ...defaultParams,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);

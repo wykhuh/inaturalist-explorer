@@ -590,7 +590,7 @@ describe("decodeAppUrl resources", () => {
         observers: {},
         species: {},
       },
-      selectedUsersIdentifiers: { id: 1 },
+      selectedUsersIdentifiers: [{ id: 1 }],
     };
 
     let result = decodeAppUrl(searchParams);
@@ -953,7 +953,7 @@ describe("decodeAppUrl options", () => {
         expected.observationsApiParams.unobserved_by_user_id = 1;
       }
       if (name == "ident_user_id") {
-        expected.selectedUsersIdentifiers = { id: 1 };
+        expected.selectedUsersIdentifiers = [{ id: 1 }];
         expected.observationsApiParams.ident_user_id = 1;
       }
 

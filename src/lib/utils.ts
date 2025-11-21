@@ -292,9 +292,17 @@ export function decodeAppUrl(searchParams: string) {
 
   // convert ident_user_id into basic selectedUserIdentifier with id
   if ("ident_user_id" in urlParams) {
-    let id = urlParams.ident_user_id;
+    let ids = urlParams.ident_user_id.split(",");
 
-    store.selectedUsersIdentifiers = { id: Number(id) } as any;
+    let users = ids
+      .map((id) => {
+        return { id: Number(id) };
+      })
+      .filter((p) => p);
+
+    if (users) {
+      store.selectedUsersIdentifiers = users as any;
+    }
   }
 
   if ("unobserved_by_user_id" in urlParams) {

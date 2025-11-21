@@ -28,7 +28,7 @@ export interface MapStore {
   placesMapLayers: { [index: string]: CustomGeoJSON[] };
   projectsMapLayers?: { [index: string]: CustomGeoJSON[] };
   selectedUsers: NormalizediNatUser[];
-  selectedUsersIdentifiers: NormalizediNatUser;
+  selectedUsersIdentifiers: NormalizediNatUser[];
   selectedUnobservedByUser: NormalizediNatUser;
   selectedProjects: NormalizediNatProject[];
   observationsApiParams: ObservationsApiParams;
@@ -152,7 +152,7 @@ interface ObservationsApiParams extends ObservationsApiFilterableParams {
   taxon_id?: string; // comma-seperated string
   project_id?: string; // comma-seperated string
   user_id?: string; // comma-seperated string
-  ident_user_id?: number;
+  ident_user_id?: string; // comma-seperated string
   unobserved_by_user_id?: number;
   page?: number;
   order?: string;

@@ -144,14 +144,20 @@ export async function initPopulateStore(
     }
   }
 
-  loggerStore("++ initPopulateStore selectedUsers", appStore.selectedUsers);
-  // user idenifier data
-  if (urlStore.selectedUsersIdentifiers?.id) {
-    let data = await getUserById(urlStore.selectedUsersIdentifiers.id);
-    if (data) {
+  loggerStore(
+    "++ initPopulateStore selectedUsersIdentifiers",
+    appStore.selectedUsersIdentifiers,
+  );
+  if (urlStore.selectedUsersIdentifiers?.length > 0) {
+    for await (const urlStoreUser of urlStore.selectedUsersIdentifiers) {
+      let data = await getUserById(urlStoreUser.id);
+      if (!data) {
+        continue;
+      }
       processUserIdentifierData(data, appStore);
     }
   }
+
   loggerStore(
     "++ initPopulateStore selectedUsersIdentifiers",
     appStore.selectedUsersIdentifiers,
@@ -386,13 +392,19 @@ function processUserData(userData: UserResult, appStore: MapStore) {
 }
 
 function processUserIdentifierData(userData: UserResult, appStore: MapStore) {
-  appStore.selectedUsersIdentifiers = {
-    id: userData.id,
-    name: userData.name,
-    login: userData.login,
-  };
+  appStore.selectedUsersIdentifiers = [
+    ...appStore.selectedUsersIdentifiers,
+    {
+      id: userData.id,
+      name: userData.name,
+      login: userData.login,
+    },
+  ];
 
-  appStore.observationsApiParams.ident_user_id = userData.id;
+  appStore.observationsApiParams.ident_user_id = addValueToCommaSeparatedString(
+    userData.id,
+    appStore.observationsApiParams.ident_user_id,
+  );
 }
 
 function processUnobservedByUserData(userData: UserResult, appStore: MapStore) {

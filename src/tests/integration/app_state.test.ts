@@ -1154,7 +1154,7 @@ describe("combos", () => {
       place_id: `${losangeles.id},${sandiego.id}`,
       project_id: `${project_cnc1.id},${project_cnc2.id}`,
       user_id: `${user1.id},${user2.id}`,
-      ident_user_id: user1.id,
+      ident_user_id: `${user1.id}`,
     };
     expect(store.observationsApiParams).toStrictEqual(params9);
     expect(window.location.search).toBe(
@@ -1204,7 +1204,7 @@ describe("combos", () => {
       place_id: `${losangeles.id},${sandiego.id}`,
       project_id: `${project_cnc1.id},${project_cnc2.id}`,
       user_id: `${user1.id},${user2.id}`,
-      ident_user_id: user1.id,
+      ident_user_id: `${user1.id}`,
       unobserved_by_user_id: user1.id,
     };
     expect(store.observationsApiParams).toStrictEqual(params10);

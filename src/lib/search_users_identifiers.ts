@@ -5,7 +5,10 @@ import { autocomplete_users_api } from "../lib/inat_api.ts";
 import type { iNatUsersAPI } from "../types/inat_api";
 import { loggerUrl } from "../lib/logger.ts";
 import type { MapStore } from "../types/app";
-import { removeOneUserIdentifierFromStore } from "./data_utils.ts";
+import {
+  addValueToCommaSeparatedString,
+  removeOneUserIdentifierFromStore,
+} from "./data_utils.ts";
 import {
   updateTilesAndCountForAllTaxa,
   renderSelectedResources,
@@ -72,11 +75,17 @@ export async function userIdentifierSelectedHandler(
   _query: string,
   appStore: MapStore,
 ) {
-  // add project to store
-  appStore.selectedUsersIdentifiers = selection;
+  // add user to store
+  appStore.selectedUsersIdentifiers = [
+    ...appStore.selectedUsersIdentifiers,
+    selection,
+  ];
   appStore.observationsApiParams = {
     ...appStore.observationsApiParams,
-    ident_user_id: selection.id,
+    ident_user_id: addValueToCommaSeparatedString(
+      selection.id,
+      appStore.observationsApiParams.ident_user_id,
+    ),
   };
 
   await updateTilesAndCountForAllTaxa(appStore);
@@ -94,11 +103,11 @@ export async function userIdentifierSelectedHandler(
   renderSelectedResources(appStore);
 }
 
-export async function removeUserIdentifier(appStore: MapStore) {
-  if (!appStore.selectedUsers) return;
+export async function removeUserIdentifier(userId: number, appStore: MapStore) {
+  if (!appStore.selectedUsersIdentifiers) return;
 
   // remove user
-  removeOneUserIdentifierFromStore(appStore);
+  removeOneUserIdentifierFromStore(appStore, userId);
 
   // remove existing taxa tiles, and refetch taxa tiles
   await updateTilesAndCountForAllTaxa(appStore);
