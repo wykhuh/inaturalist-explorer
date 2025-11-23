@@ -37,54 +37,6 @@ import {
 } from "../lib/search_taxa.ts";
 import { isResourceObject } from "../types/utils.ts";
 
-export async function updateTilesAndCountForAllTaxa(appStore: MapStore) {
-  for await (const taxon of appStore.selectedTaxa) {
-    // remove existing taxon layers from map
-    removeOneTaxonFromMap(appStore, taxon.id);
-
-    let paramsTemp = {
-      ...appStore.observationsApiParams,
-      taxon_id: taxon.id.toString(),
-      colors: taxon.color,
-    };
-
-    // get new iNat map tiles
-    await fetchiNatMapDataForTaxon(taxon, appStore, paramsTemp);
-    // fetch new counts from api
-    await getObservationsCountForTaxon(taxon, appStore, paramsTemp);
-  }
-}
-
-export async function updateCountForAllTaxa(appStore: MapStore) {
-  for await (const taxon of appStore.selectedTaxa) {
-    let paramsTemp = {
-      ...appStore.observationsApiParams,
-      taxon_id: taxon.id.toString(),
-    };
-    await getObservationsCountForTaxon(taxon, appStore, paramsTemp);
-  }
-}
-
-export async function updateCountForAllPlaces(appStore: MapStore) {
-  for await (const place of appStore.selectedPlaces) {
-    let paramsTemp = {
-      ...appStore.observationsApiParams,
-      place_id: place.id.toString(),
-    };
-    await getObservationsCountForPlace(place, appStore, paramsTemp);
-  }
-}
-
-export async function updateCountForAllProjects(appStore: MapStore) {
-  for await (const project of appStore.selectedProjects) {
-    let paramsTemp = {
-      ...appStore.observationsApiParams,
-      project_id: project.id.toString(),
-    };
-    await getObservationsCountForProject(project, appStore, paramsTemp);
-  }
-}
-
 export async function updateTilesForAllTaxa(appStore: MapStore) {
   for await (const taxon of appStore.selectedTaxa) {
     // remove existing taxon layers from map
@@ -101,11 +53,81 @@ export async function updateTilesForAllTaxa(appStore: MapStore) {
   }
 }
 
-export async function updateCountForAllUsers(appStore: MapStore) {
+export async function updateObservationsCountFor(
+  ignoreResource: MapStoreSelectedResourcesKeys | "all",
+  appStore: MapStore,
+) {
+  let resources = [
+    "selectedTaxa",
+    "selectedPlaces",
+    "selectedProjects",
+    "selectedUsers",
+    "selectedUsersIdentifiers",
+  ];
+
+  let targetResources = resources.filter((r) => r != ignoreResource);
+  for await (const res of targetResources) {
+    if (res === "selectedTaxa") {
+      await updateObservationsCountForAllTaxa(appStore);
+    } else if (res === "selectedPlaces") {
+      await updateObservationsCountForAllPlaces(appStore);
+    } else if (res === "selectedProjects") {
+      await updateObservationsCountForAllProjects(appStore);
+    } else if (res === "selectedUsers") {
+      await updateObservationsCountForAllUsers(appStore);
+    } else if (res === "selectedUsersIdentifiers") {
+      await updateObservationsCountForAllUsers(appStore);
+    }
+  }
+}
+
+async function updateObservationsCountForAllTaxa(appStore: MapStore) {
+  for await (const taxon of appStore.selectedTaxa) {
+    let paramsTemp = {
+      ...appStore.observationsApiParams,
+      taxon_id: taxon.id.toString(),
+    };
+    await getObservationsCountForTaxon(taxon, appStore, paramsTemp);
+  }
+}
+
+async function updateObservationsCountForAllPlaces(appStore: MapStore) {
+  for await (const place of appStore.selectedPlaces) {
+    let paramsTemp = {
+      ...appStore.observationsApiParams,
+      place_id: place.id.toString(),
+    };
+    await getObservationsCountForPlace(place, appStore, paramsTemp);
+  }
+}
+
+async function updateObservationsCountForAllProjects(appStore: MapStore) {
+  for await (const project of appStore.selectedProjects) {
+    let paramsTemp = {
+      ...appStore.observationsApiParams,
+      project_id: project.id.toString(),
+    };
+    await getObservationsCountForProject(project, appStore, paramsTemp);
+  }
+}
+
+async function updateObservationsCountForAllUsers(appStore: MapStore) {
   for await (const user of appStore.selectedUsers) {
     let paramsTemp = {
       ...appStore.observationsApiParams,
       user_id: user.id.toString(),
+    };
+    await getObservationsCountForUser(user, appStore, paramsTemp);
+  }
+}
+
+export async function updateObservationsCountForAllUsersIdentifiers(
+  appStore: MapStore,
+) {
+  for await (const user of appStore.selectedUsersIdentifiers) {
+    let paramsTemp = {
+      ...appStore.observationsApiParams,
+      ident_user_id: user.id.toString(),
     };
     await getObservationsCountForUser(user, appStore, paramsTemp);
   }

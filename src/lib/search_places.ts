@@ -20,10 +20,9 @@ import {
 import { fitBoundsPlaces } from "./map_utils.ts";
 import { placeTypes } from "../data/inat_data.ts";
 import {
-  updateTilesAndCountForAllTaxa,
+  updateTilesForAllTaxa,
   renderSelectedResources,
-  updateCountForAllProjects,
-  updateCountForAllUsers,
+  updateObservationsCountFor,
 } from "./search_utils.ts";
 
 export function setupPlacesSearch(selector: string) {
@@ -166,9 +165,8 @@ export async function placeSelectedHandler(
     place_id: place.id.toString(),
   };
   await getObservationsCountForPlace(place, appStore, paramsTemp);
-  await updateTilesAndCountForAllTaxa(appStore);
-  await updateCountForAllProjects(appStore);
-  await updateCountForAllUsers(appStore);
+  await updateTilesForAllTaxa(appStore);
+  await updateObservationsCountFor("selectedPlaces", appStore);
 
   // zoom to map to fit all selected places
   if (map) {
@@ -202,9 +200,8 @@ export async function removePlace(placeId: number, appStore: MapStore) {
   await removeOnePlaceFromStoreAndMap(appStore, placeId);
 
   // remove existing taxa tiles, and refetch taxa tiles
-  await updateTilesAndCountForAllTaxa(appStore);
-  await updateCountForAllProjects(appStore);
-  await updateCountForAllUsers(appStore);
+  await updateTilesForAllTaxa(appStore);
+  await updateObservationsCountFor("selectedPlaces", appStore);
 
   renderSelectedResources(appStore);
 }

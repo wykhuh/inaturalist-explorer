@@ -45,10 +45,7 @@ import { loggerEvent, loggerRender, loggerStore } from "./logger.ts";
 import {
   multisearchSetup,
   renderSelectedResources,
-  updateCountForAllPlaces,
-  updateCountForAllProjects,
-  updateCountForAllTaxa,
-  updateCountForAllUsers,
+  updateObservationsCountFor,
   updateTilesForAllTaxa,
 } from "./search_utils.ts";
 import { decodeAppUrl } from "./utils.ts";
@@ -187,10 +184,7 @@ export async function initPopulateStore(
     }
   }
 
-  await updateCountForAllTaxa(appStore);
-  await updateCountForAllPlaces(appStore);
-  await updateCountForAllProjects(appStore);
-  await updateCountForAllUsers(appStore);
+  await updateObservationsCountFor("all", appStore);
 
   renderSelectedResources(appStore, false);
 

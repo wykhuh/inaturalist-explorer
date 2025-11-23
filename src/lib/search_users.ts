@@ -11,10 +11,9 @@ import {
   removeOneUserFromStore,
 } from "./data_utils.ts";
 import {
-  updateTilesAndCountForAllTaxa,
+  updateTilesForAllTaxa,
   renderSelectedResources,
-  updateCountForAllPlaces,
-  updateCountForAllProjects,
+  updateObservationsCountFor,
 } from "./search_utils.ts";
 
 export function setupUserSearch(selector: string, appStore: MapStore) {
@@ -112,9 +111,8 @@ export async function userSelectedHandler(
     user_id: user.id.toString(),
   };
   await getObservationsCountForUser(user, appStore, paramsTemp);
-  await updateTilesAndCountForAllTaxa(appStore);
-  await updateCountForAllPlaces(appStore);
-  await updateCountForAllProjects(appStore);
+  await updateTilesForAllTaxa(appStore);
+  await updateObservationsCountFor("selectedUsers", appStore);
 
   renderSelectedResources(appStore);
 }
@@ -139,9 +137,8 @@ export async function removeUser(userId: number, appStore: MapStore) {
   removeOneUserFromStore(appStore, userId);
 
   // remove existing taxa tiles, and refetch taxa tiles
-  await updateTilesAndCountForAllTaxa(appStore);
-  await updateCountForAllPlaces(appStore);
-  await updateCountForAllProjects(appStore);
+  await updateTilesForAllTaxa(appStore);
+  await updateObservationsCountFor("selectedUsers", appStore);
 
   renderSelectedResources(appStore);
 }

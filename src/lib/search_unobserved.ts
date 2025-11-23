@@ -6,11 +6,9 @@ import type { iNatUsersAPI } from "../types/inat_api";
 import { loggerUrl } from "../lib/logger.ts";
 import type { MapStore } from "../types/app";
 import {
-  updateTilesAndCountForAllTaxa,
+  updateTilesForAllTaxa,
   renderSelectedResources,
-  updateCountForAllProjects,
-  updateCountForAllPlaces,
-  updateCountForAllUsers,
+  updateObservationsCountFor,
 } from "./search_utils.ts";
 import {
   processAutocompleteUser,
@@ -79,10 +77,8 @@ export async function unobservedByUserSelectedHandler(
     unobserved_by_user_id: selection.id,
   };
 
-  await updateTilesAndCountForAllTaxa(appStore);
-  await updateCountForAllPlaces(appStore);
-  await updateCountForAllProjects(appStore);
-  await updateCountForAllUsers(appStore);
+  await updateTilesForAllTaxa(appStore);
+  await updateObservationsCountFor("all", appStore);
 
   // add unobserved_by_user_id to filters list shown in filters modal
   const form = document.querySelector("#filters-form") as HTMLFormElement;
@@ -101,10 +97,8 @@ export async function removeUnobservedByUser(appStore: MapStore) {
   removeOneUnobservedByUserFromStore(appStore);
 
   // remove existing taxa tiles, and refetch taxa tiles
-  await updateTilesAndCountForAllTaxa(appStore);
-  await updateCountForAllPlaces(appStore);
-  await updateCountForAllProjects(appStore);
-  await updateCountForAllUsers(appStore);
+  await updateTilesForAllTaxa(appStore);
+  await updateObservationsCountFor("all", appStore);
 
   renderSelectedResources(appStore);
 }

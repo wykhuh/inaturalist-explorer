@@ -10,11 +10,9 @@ import {
   removeOneUserIdentifierFromStore,
 } from "./data_utils.ts";
 import {
-  updateTilesAndCountForAllTaxa,
   renderSelectedResources,
-  updateCountForAllProjects,
-  updateCountForAllPlaces,
-  updateCountForAllUsers,
+  updateObservationsCountFor,
+  updateTilesForAllTaxa,
 } from "./search_utils.ts";
 import {
   processAutocompleteUser,
@@ -88,10 +86,8 @@ export async function userIdentifierSelectedHandler(
     ),
   };
 
-  await updateTilesAndCountForAllTaxa(appStore);
-  await updateCountForAllPlaces(appStore);
-  await updateCountForAllProjects(appStore);
-  await updateCountForAllUsers(appStore);
+  await updateTilesForAllTaxa(appStore);
+  await updateObservationsCountFor("selectedUsersIdentifiers", appStore);
 
   // add ident_user_id to filters list shown in filters modal
   const form = document.querySelector("#filters-form") as HTMLFormElement;
@@ -110,10 +106,8 @@ export async function removeUserIdentifier(userId: number, appStore: MapStore) {
   removeOneUserIdentifierFromStore(appStore, userId);
 
   // remove existing taxa tiles, and refetch taxa tiles
-  await updateTilesAndCountForAllTaxa(appStore);
-  await updateCountForAllPlaces(appStore);
-  await updateCountForAllProjects(appStore);
-  await updateCountForAllUsers(appStore);
+  await updateTilesForAllTaxa(appStore);
+  await updateObservationsCountFor("selectedUsersIdentifiers", appStore);
 
   renderSelectedResources(appStore);
 }

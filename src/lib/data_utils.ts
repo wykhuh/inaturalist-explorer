@@ -31,10 +31,9 @@ import { logger, loggerFilters } from "./logger.ts";
 import { mapStore } from "./store.ts";
 import type { SpeciesCountTaxon, Taxon } from "../types/inat_api";
 import {
-  updateTilesAndCountForAllTaxa,
+  updateTilesForAllTaxa,
   renderSelectedResources,
-  updateCountForAllProjects,
-  updateCountForAllUsers,
+  updateObservationsCountFor,
 } from "./search_utils.ts";
 import { isNormalizediNatTaxon } from "../types/utils.ts";
 
@@ -71,9 +70,8 @@ export async function refreshBoundingBox(appStore: MapStore) {
     ...inatBbox,
   };
 
-  await updateTilesAndCountForAllTaxa(appStore);
-  await updateCountForAllProjects(appStore);
-  await updateCountForAllUsers(appStore);
+  await updateTilesForAllTaxa(appStore);
+  await updateObservationsCountFor("selectedPlaces", appStore);
 
   let paramsTemp = {
     ...appStore.observationsApiParams,

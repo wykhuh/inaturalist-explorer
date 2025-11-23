@@ -19,10 +19,8 @@ import {
 } from "../../lib/form_utils";
 import {
   renderSelectedResources,
-  updateCountForAllPlaces,
-  updateCountForAllProjects,
-  updateCountForAllUsers,
-  updateTilesAndCountForAllTaxa,
+  updateObservationsCountFor,
+  updateTilesForAllTaxa,
 } from "../../lib/search_utils";
 
 export function processFiltersForm(data: FormData): {
@@ -116,10 +114,8 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
   // update store observationsApiParams with form values
   updateStoreUsingFilters(appStore, results);
 
-  await updateTilesAndCountForAllTaxa(appStore);
-  await updateCountForAllPlaces(appStore);
-  await updateCountForAllProjects(appStore);
-  await updateCountForAllUsers(appStore);
+  await updateTilesForAllTaxa(appStore);
+  await updateObservationsCountFor("all", appStore);
 
   // update UI
   renderSelectedFiltersList(data);

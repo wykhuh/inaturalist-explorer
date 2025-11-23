@@ -16,10 +16,9 @@ import {
   renderResourceGeometryLayer,
 } from "./data_utils.ts";
 import {
-  updateCountForAllPlaces,
-  updateTilesAndCountForAllTaxa,
+  updateTilesForAllTaxa,
   renderSelectedResources,
-  updateCountForAllUsers,
+  updateObservationsCountFor,
 } from "./search_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
 
@@ -150,9 +149,8 @@ export async function projectSelectedHandler(
     project_id: project.id.toString(),
   };
   await getObservationsCountForProject(project, appStore, paramsTemp);
-  await updateTilesAndCountForAllTaxa(appStore);
-  await updateCountForAllPlaces(appStore);
-  await updateCountForAllUsers(appStore);
+  await updateTilesForAllTaxa(appStore);
+  await updateObservationsCountFor("selectedProjects", appStore);
 
   // zoom to map to fit all selected places
   if (map) {
@@ -184,9 +182,8 @@ export async function removeProject(projectId: number, appStore: MapStore) {
   removeOneProjectFromStoreAndMap(appStore, projectId);
 
   // remove existing taxa tiles, and refetch taxa tiles
-  await updateTilesAndCountForAllTaxa(appStore);
-  await updateCountForAllPlaces(appStore);
-  await updateCountForAllUsers(appStore);
+  await updateTilesForAllTaxa(appStore);
+  await updateObservationsCountFor("selectedProjects", appStore);
 
   if (appStore.map.map) {
     fitBoundsPlaces(appStore);
