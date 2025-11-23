@@ -75,17 +75,26 @@ export async function userIdentifierSelectedHandler(
   appStore: MapStore,
 ) {
   // add user to store
-  appStore.selectedUsersIdentifiers = [
-    ...appStore.selectedUsersIdentifiers,
-    selection,
-  ];
-  appStore.observationsApiParams = {
-    ...appStore.observationsApiParams,
-    ident_user_id: addValueToCommaSeparatedString(
-      selection.id,
-      appStore.observationsApiParams.ident_user_id,
-    ),
-  };
+
+  if (appStore.record_type === "identifications") {
+    appStore.selectedUsersIdentifiers = [
+      ...appStore.selectedUsersIdentifiers,
+      selection,
+    ];
+    appStore.observationsApiParams = {
+      ...appStore.observationsApiParams,
+      ident_user_id: addValueToCommaSeparatedString(
+        selection.id,
+        appStore.observationsApiParams.ident_user_id,
+      ),
+    };
+  } else {
+    appStore.selectedUsersIdentifiers = [selection];
+    appStore.observationsApiParams = {
+      ...appStore.observationsApiParams,
+      ident_user_id: selection.id.toString(),
+    };
+  }
 
   let paramsTemp = {
     ...appStore.observationsApiParams,
@@ -110,12 +119,28 @@ export function renderUsersIdentifiersList(appStore: MapStore) {
   if (!listEl) return;
 
   listEl.innerHTML = "";
-  appStore.selectedUsersIdentifiers.forEach((user) => {
+  if (appStore.record_type === "identifications") {
+    appStore.selectedUsersIdentifiers.forEach((user) => {
+      let templateEl = document.createElement("users-list-item");
+      templateEl.dataset.user = JSON.stringify(user);
+      templateEl.dataset.user_type = "identifier";
+      listEl.appendChild(templateEl);
+    });
+  } else if (
+    appStore.record_type === "observations" &&
+    appStore.selectedUsersIdentifiers.length > 0
+  ) {
+    // NOTE: only show last identifier since iNat observations API only allows
+    // one identifier
+    let user =
+      appStore.selectedUsersIdentifiers[
+        appStore.selectedUsersIdentifiers.length - 1
+      ];
     let templateEl = document.createElement("users-list-item");
     templateEl.dataset.user = JSON.stringify(user);
     templateEl.dataset.user_type = "identifier";
     listEl.appendChild(templateEl);
-  });
+  }
 }
 
 export async function removeUserIdentifier(userId: number, appStore: MapStore) {

@@ -294,15 +294,7 @@ export function decodeAppUrl(searchParams: string) {
   if ("ident_user_id" in urlParams) {
     let ids = urlParams.ident_user_id.split(",");
 
-    let users = ids
-      .map((id) => {
-        return { id: Number(id) };
-      })
-      .filter((p) => p);
-
-    if (users) {
-      store.selectedUsersIdentifiers = users as any;
-    }
+    store.selectedUsersIdentifiers = [{ id: Number(ids[0]) }] as any;
   }
 
   if ("unobserved_by_user_id" in urlParams) {

@@ -44,7 +44,11 @@ class Header extends HTMLElement {
     let target = event.target as HTMLInputElement;
     if (!target) return;
 
+    let recordType = target.dataset.recordType as RecordTypes;
     const path = target.getAttribute("href");
+
+    // NOTE: record_type must be set before rendering the UI
+    this.appStore.record_type = recordType;
 
     // change url and load new page
     if (path) {
@@ -71,11 +75,6 @@ class Header extends HTMLElement {
         itemEl.classList.add("currentView");
       }
     }
-
-    let recordType = target.dataset.recordType as RecordTypes;
-
-    // set store.record_type
-    this.appStore.record_type = recordType;
 
     // emit event
     if (recordType === "identifications" || recordType === "observations") {
