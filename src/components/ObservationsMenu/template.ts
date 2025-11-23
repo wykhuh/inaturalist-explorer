@@ -9,7 +9,8 @@ export const template = html`
           <option selected value="taxa">Species</option>
           <option value="places">iNaturalist Places</option>
           <option value="projects">Projects</option>
-          <option value="users">Users (observer)</option>
+          <option value="users">Observers</option>
+          <option value="usersIdentifiers">Identifier</option>
         </select>
       </label>
     </div>
@@ -33,7 +34,11 @@ export const template = html`
     <h2 class="projects-heading" hidden>Projects</h2>
     <ul id="selected-projects-list"></ul>
 
-    <h2 class="users-heading" hidden>Users (observer)</h2>
+    <h2 class="users-heading" hidden>Observers</h2>
     <ul id="selected-users-list"></ul>
+
+    <h2 class="users-identifiers-heading" hidden>Identifier*</h2>
+    <p>* Only one identifier allowed for observations</p>
+    <ul id="selected-users-identifiers-list"></ul>
   </div>
 `;

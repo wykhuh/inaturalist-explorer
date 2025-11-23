@@ -11,6 +11,7 @@ import {
   getObservationsCountForProject,
   removeOneTaxonFromMap,
   getObservationsCountForUser,
+  getObservationsCountForUserIdentifier,
 } from "./data_utils";
 
 import { updateAppUrl } from "./utils";
@@ -36,6 +37,11 @@ import {
   renderTaxaList,
 } from "../lib/search_taxa.ts";
 import { isResourceObject } from "../types/utils.ts";
+import {
+  renderUsersIdentifiersList,
+  setupUserIdentifierSearch,
+  userIdentifierSelectedHandler,
+} from "./search_users_identifiers.ts";
 
 export async function updateTilesForAllTaxa(appStore: MapStore) {
   for await (const taxon of appStore.selectedTaxa) {
@@ -76,7 +82,7 @@ export async function updateObservationsCountFor(
     } else if (res === "selectedUsers") {
       await updateObservationsCountForAllUsers(appStore);
     } else if (res === "selectedUsersIdentifiers") {
-      await updateObservationsCountForAllUsers(appStore);
+      await updateObservationsCountForAllUsersIdentifiers(appStore);
     }
   }
 }
@@ -129,7 +135,7 @@ export async function updateObservationsCountForAllUsersIdentifiers(
       ...appStore.observationsApiParams,
       ident_user_id: user.id.toString(),
     };
-    await getObservationsCountForUser(user, appStore, paramsTemp);
+    await getObservationsCountForUserIdentifier(user, appStore, paramsTemp);
   }
 }
 
@@ -141,6 +147,7 @@ export function renderSelectedResources(
   renderPlacesList(appStore);
   renderProjectsList(appStore);
   renderUsersList(appStore);
+  renderUsersIdentifiersList(appStore);
 
   if (doSideEffects) {
     updateAppUrl(window.location, appStore);
@@ -180,6 +187,10 @@ export function multisearchSetup(appStore: MapStore) {
     taxa: {
       setup: setupTaxaSearch,
       selectedHandler: taxonSelectedHandler,
+    },
+    usersIdentifiers: {
+      setup: setupUserIdentifierSearch,
+      selectedHandler: userIdentifierSelectedHandler,
     },
   };
 
@@ -243,6 +254,13 @@ export function showHideHeader(
 
 export function showHideUsersHeader() {
   showHideHeader("#sidebar-menu .users-heading", "selectedUsers");
+}
+
+export function showHideUsersIdentifiersHeader() {
+  showHideHeader(
+    "#sidebar-menu .users-identifiers-heading",
+    "selectedUsersIdentifiers",
+  );
 }
 
 export function showHideProjectsHeader() {

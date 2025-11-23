@@ -1,6 +1,7 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerRender } from "../../lib/logger";
 import { removeUser } from "../../lib/search_users";
+import { removeUserIdentifier } from "../../lib/search_users_identifiers";
 import { pluralize } from "../../lib/utils";
 import type { NormalizediNatUser } from "../../types/app";
 import { template } from "./template";
@@ -16,12 +17,14 @@ class SelectedUsersItem extends HTMLElement {
 
   async render() {
     if (!this.dataset.user) return;
+    let userType = this.dataset.user_type;
+    if (!userType) return;
+
     loggerRender("++ SelectedUsersItem render");
 
     setupComponent(template, this);
 
     let user = JSON.parse(this.dataset.user) as NormalizediNatUser;
-
     let nameEl = this.querySelector(".name");
     if (nameEl && user.login) {
       let text = user.login;
@@ -35,7 +38,7 @@ class SelectedUsersItem extends HTMLElement {
     if (countEl) {
       countEl.textContent = pluralize(
         user.observations_count,
-        "observation",
+        userType === "observer" ? "observation" : "identification",
         true,
       );
     }
@@ -44,7 +47,11 @@ class SelectedUsersItem extends HTMLElement {
     if (butttonEl) {
       butttonEl.addEventListener("click", async function () {
         if (user.id !== undefined) {
-          await removeUser(user.id, window.app.store);
+          if (userType === "observer") {
+            await removeUser(user.id, window.app.store);
+          } else {
+            await removeUserIdentifier(user.id, window.app.store);
+          }
         }
       });
     }

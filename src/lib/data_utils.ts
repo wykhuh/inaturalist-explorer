@@ -357,6 +357,19 @@ export async function getObservationsCountForUser(
   );
 }
 
+export async function getObservationsCountForUserIdentifier(
+  user: NormalizediNatUser,
+  appStore: MapStore,
+  paramsTemp: ObservationsApiParams,
+) {
+  await getObservationsCountForResource(
+    user,
+    "selectedUsersIdentifiers",
+    appStore,
+    paramsTemp,
+  );
+}
+
 export function renderSelectedProjectsBoundaries(appStore: MapStore) {
   let map = appStore.map.map;
   if (!map) return;
@@ -566,6 +579,28 @@ function removeUserId(
   }
 }
 
+function removeUserIdentifierId(
+  appStore: MapStore,
+  property: ObservationsApiParamsKeys,
+  value: any,
+) {
+  if (appStore.selectedUsersIdentifiers.length === 0) {
+    delete appStore.observationsApiParams.ident_user_id;
+  } else {
+    let lastRecord =
+      appStore.selectedUsersIdentifiers[
+        appStore.selectedUsersIdentifiers.length - 1
+      ];
+    if (lastRecord.id === value) {
+    } else if (
+      appStore.selectedUsersIdentifiers.map((p) => p.id).includes(value)
+    ) {
+    } else {
+      setobservationsApiParams(appStore, property, value);
+    }
+  }
+}
+
 export function removeIdfromInatApiParams(
   appStore: MapStore,
   property: ObservationsApiParamsKeys,
@@ -579,6 +614,8 @@ export function removeIdfromInatApiParams(
     removeProjectId(appStore, "project_id", value);
   } else if (property === "user_id") {
     removeUserId(appStore, "user_id", value);
+  } else if (property === "ident_user_id") {
+    removeUserIdentifierId(appStore, "user_id", value);
   } else {
     throw new Error(
       `removeIdfromInatApiParams not implemented for ${property}`,

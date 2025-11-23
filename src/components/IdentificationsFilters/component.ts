@@ -28,17 +28,20 @@ class IdentificationsFilters extends HTMLElement {
     loggerRender("++ IdentificationsFilters connectedCallback");
 
     window.addEventListener("storePopulated", this);
+    window.addEventListener("navResourceChange", this);
   }
 
   disconnectedCallback() {
     loggerRender("++ IdentificationsFilters disconnectedCallback");
 
     window.removeEventListener("storePopulated", this);
+    window.removeEventListener("navResourceChange", this);
   }
 
   handleEvent(event: Event) {
-    if (event.type === "storePopulated") {
-      loggerEvent("++ IdentificationsFilters storePopulated");
+    let events = ["navResourceChange", "storePopulated"];
+    if (events.includes(event.type)) {
+      loggerEvent(`++ IdentificationsFilters ${event.type}`);
 
       this.render();
     }
@@ -162,7 +165,6 @@ class IdentificationsFilters extends HTMLElement {
         let target = event.target as HTMLInputElement;
         if (target === null) return;
         // ignore changes to search autocomplete
-        if (target.name === "ident_user_id") return;
         if (target.name === "unobserved_by_user_id") return;
 
         event.preventDefault();

@@ -295,15 +295,6 @@ export function initFilters(appStore: MapStore) {
       inputEl.value = appStore.selectedUnobservedByUser.login;
     }
   }
-
-  if (observationsApiParams.ident_user_id !== undefined) {
-    let inputEl = document.querySelector(
-      "#identifier-search",
-    ) as HTMLInputElement;
-    if (inputEl) {
-      inputEl.value = appStore.selectedUsersIdentifiers[0].login;
-    }
-  }
 }
 
 export function renderRankSelect(selectSelector: string, defaultValue: string) {

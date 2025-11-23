@@ -139,6 +139,7 @@ export type MapStoreSelectedResourcesArrayKeys =
   | "selectedTaxa"
   | "selectedPlaces"
   | "selectedUsers"
+  | "selectedUsersIdentifiers"
   | "selectedProjects";
 
 interface ObservationsApiParams extends ObservationsApiFilterableParams {
@@ -356,6 +357,7 @@ type SearchOptions = {
   places: SearchOption;
   projects: SearchOption;
   users: SearchOption;
+  usersIdentifiers: SearchOption;
   taxa: SearchOption;
 };
 

@@ -16,6 +16,7 @@ import type {
   IdentificationsIdentifiersAPI,
   IdentificationsObserversAPI,
   IdentificationsSpeciesCountAPI,
+  UserResult,
 } from "../types/inat_api.d.ts";
 import { normalizeAppParams } from "./data_utils.ts";
 import { loggerUrl } from "./logger.ts";
@@ -195,6 +196,10 @@ export async function getProjectById(id: number) {
 }
 
 export async function getUserById(id: number) {
+  if (import.meta.env.VITE_CACHE === "true") {
+    return { login: `user${id}`, name: `user ${id}`, id: id } as UserResult;
+  }
+
   try {
     let resp = await fetch(users_api + id);
     let data = (await resp.json()) as iNatUsersAPI;

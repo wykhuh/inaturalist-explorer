@@ -8,7 +8,8 @@ export const template = html`
         <select id="search-type" name="search-type">
           <option selected value="taxa">Species</option>
           <option value="places">iNaturalist Places</option>
-          <option value="users">Users (identifiers)</option>
+          <option value="users">Observers</option>
+          <option value="usersIdentifiers">Identifiers</option>
         </select>
       </label>
     </div>
@@ -32,7 +33,7 @@ export const template = html`
     <h2 class="places-heading" hidden>Places</h2>
     <ul id="selected-places-list"></ul>
 
-    <h2 class="users-heading" hidden>Users (identifiers)</h2>
+    <h2 class="users-heading" hidden>Identifiers</h2>
     <ul id="selected-users-list"></ul>
   </div>
 `;

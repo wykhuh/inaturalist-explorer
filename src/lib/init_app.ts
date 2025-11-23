@@ -43,7 +43,6 @@ import {
 } from "./data_utils";
 import { loggerEvent, loggerRender, loggerStore } from "./logger.ts";
 import {
-  multisearchSetup,
   renderSelectedResources,
   updateObservationsCountFor,
   updateTilesForAllTaxa,
@@ -489,7 +488,6 @@ export async function initApp() {
   if (!appStore.currentView) return;
 
   let urlData = decodeAppUrl(window.location.search);
-  multisearchSetup(appStore);
   await initPopulateStore(appStore, urlData);
 
   let templateName = viewAndTemplateObject(appStore.currentView);

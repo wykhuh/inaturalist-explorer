@@ -7,6 +7,7 @@ import { loggerUrl } from "../lib/logger.ts";
 import type { MapStore } from "../types/app";
 import {
   addValueToCommaSeparatedString,
+  getObservationsCountForUserIdentifier,
   removeOneUserIdentifierFromStore,
 } from "./data_utils.ts";
 import {
@@ -86,6 +87,11 @@ export async function userIdentifierSelectedHandler(
     ),
   };
 
+  let paramsTemp = {
+    ...appStore.observationsApiParams,
+    ident_user_id: selection.id.toString(),
+  };
+  await getObservationsCountForUserIdentifier(selection, appStore, paramsTemp);
   await updateTilesForAllTaxa(appStore);
   await updateObservationsCountFor("selectedUsersIdentifiers", appStore);
 
@@ -97,6 +103,19 @@ export async function userIdentifierSelectedHandler(
   }
 
   renderSelectedResources(appStore);
+}
+
+export function renderUsersIdentifiersList(appStore: MapStore) {
+  let listEl = document.querySelector("#selected-users-identifiers-list");
+  if (!listEl) return;
+
+  listEl.innerHTML = "";
+  appStore.selectedUsersIdentifiers.forEach((user) => {
+    let templateEl = document.createElement("users-list-item");
+    templateEl.dataset.user = JSON.stringify(user);
+    templateEl.dataset.user_type = "identifier";
+    listEl.appendChild(templateEl);
+  });
 }
 
 export async function removeUserIdentifier(userId: number, appStore: MapStore) {

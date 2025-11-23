@@ -27,18 +27,21 @@ class ObservationFilters extends HTMLElement {
   connectedCallback() {
     loggerRender("++ ObservationFilters connectedCallback");
 
+    window.addEventListener("navResourceChange", this);
     window.addEventListener("storePopulated", this);
   }
 
   disconnectedCallback() {
     loggerRender("++ ObservationFilters disconnectedCallback");
 
+    window.removeEventListener("navResourceChange", this);
     window.removeEventListener("storePopulated", this);
   }
 
   handleEvent(event: Event) {
-    if (event.type === "storePopulated") {
-      loggerEvent("++ ObservationFilters storePopulated");
+    let events = ["navResourceChange", "storePopulated"];
+    if (events.includes(event.type)) {
+      loggerEvent(`++ ObservationFilters ${event.type}`);
 
       this.render();
     }

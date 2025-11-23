@@ -6,6 +6,7 @@ import {
   showHidePlacesHeader,
   showHideProjectsHeader,
   showHideUsersHeader,
+  showHideUsersIdentifiersHeader,
 } from "../../lib/search_utils";
 import type { MapStore } from "../../types/app";
 import { template } from "./template";
@@ -25,6 +26,10 @@ class IdentificationsMenu extends HTMLElement {
     window.addEventListener("selectedPlacesChange", showHidePlacesHeader);
     window.addEventListener("selectedProjectsChange", showHideProjectsHeader);
     window.addEventListener("selectedUsersChange", showHideUsersHeader);
+    window.addEventListener(
+      "selectedUsersIdentifiersChange",
+      showHideUsersIdentifiersHeader,
+    );
   }
 
   disconnectedCallback() {
@@ -34,6 +39,10 @@ class IdentificationsMenu extends HTMLElement {
       showHideProjectsHeader,
     );
     window.removeEventListener("selectedUsersChange", showHideUsersHeader);
+    window.removeEventListener(
+      "selectedUsersIdentifiersChange",
+      showHideUsersIdentifiersHeader,
+    );
   }
 
   render(appStore: MapStore) {
@@ -41,6 +50,7 @@ class IdentificationsMenu extends HTMLElement {
     showHidePlacesHeader();
     showHideProjectsHeader();
     showHideUsersHeader();
+    showHideUsersIdentifiersHeader();
     renderSelectedResources(appStore, false);
   }
 }

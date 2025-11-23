@@ -124,8 +124,8 @@ export function renderUsersList(appStore: MapStore) {
   listEl.innerHTML = "";
   appStore.selectedUsers.forEach((user) => {
     let templateEl = document.createElement("users-list-item");
-    if (!templateEl) return;
     templateEl.dataset.user = JSON.stringify(user);
+    templateEl.dataset.user_type = "observer";
     listEl.appendChild(templateEl);
   });
 }
