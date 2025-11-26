@@ -19,7 +19,7 @@ import {
 } from "./utils";
 import { template } from "./template";
 
-class MyComponent extends HTMLElement {
+class IdentificationsFilters extends HTMLElement {
   constructor() {
     super();
   }
@@ -199,4 +199,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("identifications-filters", MyComponent);
+customElements.define("identifications-filters", IdentificationsFilters);

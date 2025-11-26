@@ -3,7 +3,7 @@ import { loggerEvent, loggerRender } from "../../lib/logger";
 import { fetchAndRenderData, paginationcCallback, perPage } from "./utils";
 import { template } from "./template";
 
-class MyComponent extends HTMLElement {
+class ViewObservers extends HTMLElement {
   constructor() {
     super();
   }
@@ -40,4 +40,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("view-observers", MyComponent);
+customElements.define("view-observers", ViewObservers);

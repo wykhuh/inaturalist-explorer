@@ -6,7 +6,7 @@ import { pluralize } from "../../lib/utils.ts";
 import type { MapStore, NormalizediNatTaxon } from "../../types/app";
 import { template } from "./template";
 
-class MyComponent extends HTMLElement {
+class SelectedTaxaItem extends HTMLElement {
   constructor() {
     super();
   }
@@ -53,4 +53,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("species-list-item", MyComponent);
+customElements.define("species-list-item", SelectedTaxaItem);

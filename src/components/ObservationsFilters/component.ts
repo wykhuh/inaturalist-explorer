@@ -19,7 +19,7 @@ import {
 } from "./utils";
 import { template } from "./template";
 
-class MyComponent extends HTMLElement {
+class ObservationFilters extends HTMLElement {
   constructor() {
     super();
   }
@@ -199,4 +199,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("observations-filters", MyComponent);
+customElements.define("observations-filters", ObservationFilters);

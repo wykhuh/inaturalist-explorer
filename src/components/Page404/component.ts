@@ -2,7 +2,7 @@ import { setupComponent } from "../../lib/component_utils";
 import { loggerRender } from "../../lib/logger";
 import { template } from "./template";
 
-export class PageAbout extends HTMLElement {
+export class Page404 extends HTMLElement {
   constructor() {
     super();
   }
@@ -14,4 +14,4 @@ export class PageAbout extends HTMLElement {
   }
 }
 
-customElements.define("page-404", PageAbout);
+customElements.define("page-404", Page404);

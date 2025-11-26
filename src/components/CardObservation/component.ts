@@ -11,7 +11,7 @@ import { iNatObservationUrl, iNatUserUrl } from "../../data/inat_data";
 import { setupComponent } from "../../lib/component_utils";
 import { template } from "./template";
 
-class MyComponent extends HTMLElement {
+class CardObservation extends HTMLElement {
   constructor() {
     super();
   }
@@ -71,4 +71,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("card-observation", MyComponent);
+customElements.define("card-observation", CardObservation);

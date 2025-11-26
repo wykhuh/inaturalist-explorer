@@ -5,7 +5,7 @@ import { pluralize } from "../../lib/utils.ts";
 import type { NormalizediNatPlace } from "../../types/app";
 import { template } from "./template";
 
-class MyComponent extends HTMLElement {
+class SelectedPlacesItem extends HTMLElement {
   constructor() {
     super();
   }
@@ -47,4 +47,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("places-list-item", MyComponent);
+customElements.define("places-list-item", SelectedPlacesItem);

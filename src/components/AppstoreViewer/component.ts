@@ -2,7 +2,7 @@ import { setupComponent } from "../../lib/component_utils";
 import { loggerRender } from "../../lib/logger";
 import { template } from "./template";
 
-export class MyComponent extends HTMLElement {
+export class AppstoreViewer extends HTMLElement {
   constructor() {
     super();
   }
@@ -34,4 +34,4 @@ export class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("appstore-viewer", MyComponent);
+customElements.define("appstore-viewer", AppstoreViewer);

@@ -7,7 +7,7 @@ import { setupComponent } from "../../lib/component_utils";
 import { renderTaxonNames } from "../../lib/render_utils";
 import { template } from "./template";
 
-class MyComponent extends HTMLElement {
+class CardSpecies extends HTMLElement {
   constructor() {
     super();
   }
@@ -104,4 +104,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("card-species", MyComponent);
+customElements.define("card-species", CardSpecies);

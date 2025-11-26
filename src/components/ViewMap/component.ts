@@ -16,7 +16,7 @@ import { initRenderMap } from "../../lib/init_app";
 import { setupComponent } from "../../lib/component_utils";
 import type { MapStore } from "../../types/app";
 
-class MyComponent extends HTMLElement {
+class ViewMap extends HTMLElement {
   constructor() {
     super();
   }
@@ -125,4 +125,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("view-map", MyComponent);
+customElements.define("view-map", ViewMap);

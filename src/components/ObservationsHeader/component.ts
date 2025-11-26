@@ -3,7 +3,7 @@ import { loggerEvent, loggerRender } from "../../lib/logger";
 import { updateObservationsCounts, viewChangeHandler } from "./utils";
 import { template } from "./template";
 
-class MyComponent extends HTMLElement {
+class ObservationHeader extends HTMLElement {
   constructor() {
     super();
   }
@@ -78,4 +78,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("observations-header", MyComponent);
+customElements.define("observations-header", ObservationHeader);

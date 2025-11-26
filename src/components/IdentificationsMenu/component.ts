@@ -10,7 +10,7 @@ import {
 import type { MapStore } from "../../types/app";
 import { template } from "./template";
 
-class MyComponent extends HTMLElement {
+class IdentificationsMenu extends HTMLElement {
   constructor() {
     super();
   }
@@ -45,4 +45,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("identifications-menu", MyComponent);
+customElements.define("identifications-menu", IdentificationsMenu);

@@ -3,7 +3,7 @@ import { loggerEvent, loggerRender } from "../../lib/logger";
 import { updateIdentificationsCounts, viewChangeHandler } from "./utils";
 import { template } from "./template";
 
-class MyComponent extends HTMLElement {
+class IdentificationsHeader extends HTMLElement {
   constructor() {
     super();
   }
@@ -89,4 +89,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("identifications-header", MyComponent);
+customElements.define("identifications-header", IdentificationsHeader);

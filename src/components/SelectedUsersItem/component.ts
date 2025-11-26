@@ -5,7 +5,7 @@ import { pluralize } from "../../lib/utils";
 import type { NormalizediNatUser } from "../../types/app";
 import { template } from "./template";
 
-class MyComponent extends HTMLElement {
+class SelectedUsersItem extends HTMLElement {
   constructor() {
     super();
   }
@@ -51,4 +51,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("users-list-item", MyComponent);
+customElements.define("users-list-item", SelectedUsersItem);

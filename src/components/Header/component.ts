@@ -6,7 +6,7 @@ import type { RecordTypes } from "../../types/app";
 import { template } from "./template";
 
 // Header component is loaded before window.app.store is set
-class MyComponent extends HTMLElement {
+class Header extends HTMLElement {
   constructor() {
     super();
   }
@@ -88,4 +88,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("site-header", MyComponent);
+customElements.define("site-header", Header);

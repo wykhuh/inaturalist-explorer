@@ -7,7 +7,7 @@ import { updateComonNamesByLanguage } from "./utils";
 import { loggerRender } from "../../lib/logger";
 import { template } from "./template";
 
-class MyComponent extends HTMLElement {
+class SettingsMenu extends HTMLElement {
   constructor() {
     super();
   }
@@ -88,4 +88,4 @@ class MyComponent extends HTMLElement {
   }
 }
 
-customElements.define("settings-menu", MyComponent);
+customElements.define("settings-menu", SettingsMenu);
