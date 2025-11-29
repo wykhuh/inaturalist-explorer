@@ -5,6 +5,8 @@ import {
   renderSelectedResources,
   showHidePlacesHeader,
   showHideProjectsHeader,
+  showHideTaxaHeader,
+  showHideTaxaIdentifiedHeader,
   showHideUsersHeader,
   showHideUsersIdentifiersHeader,
 } from "../../lib/search_utils";
@@ -23,6 +25,11 @@ class IdentificationsMenu extends HTMLElement {
 
     this.render(window.app.store);
 
+    window.addEventListener("selectedTaxaChange", showHideTaxaHeader);
+    window.addEventListener(
+      "selectedTaxaIdentifiedChange",
+      showHideTaxaIdentifiedHeader,
+    );
     window.addEventListener("selectedPlacesChange", showHidePlacesHeader);
     window.addEventListener("selectedProjectsChange", showHideProjectsHeader);
     window.addEventListener("selectedUsersChange", showHideUsersHeader);
@@ -33,6 +40,11 @@ class IdentificationsMenu extends HTMLElement {
   }
 
   disconnectedCallback() {
+    window.addEventListener("selectedTaxaChange", showHideTaxaHeader);
+    window.addEventListener(
+      "selectedTaxaIdentifiedChange",
+      showHideTaxaIdentifiedHeader,
+    );
     window.removeEventListener("selectedPlacesChange", showHidePlacesHeader);
     window.removeEventListener(
       "selectedProjectsChange",
@@ -47,6 +59,7 @@ class IdentificationsMenu extends HTMLElement {
 
   render(appStore: MapStore) {
     multisearchSetup(appStore);
+    showHideTaxaIdentifiedHeader();
     showHidePlacesHeader();
     showHideProjectsHeader();
     showHideUsersHeader();

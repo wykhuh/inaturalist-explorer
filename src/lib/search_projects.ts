@@ -11,14 +11,14 @@ import type { iNatProjectsAPI } from "../types/inat_api";
 import { loggerUrl } from "../lib/logger.ts";
 import {
   addValueToCommaSeparatedString,
-  getObservationsCountForProject,
+  updateObservationsCountForOne,
   removeOneProjectFromStoreAndMap,
   renderResourceGeometryLayer,
 } from "./data_utils.ts";
 import {
   updateTilesForAllTaxa,
   renderSelectedResources,
-  updateObservationsCountFor,
+  updateObservationsCountForAll,
 } from "./search_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
 
@@ -148,9 +148,14 @@ export async function projectSelectedHandler(
     ...appStore.observationsApiParams,
     project_id: project.id.toString(),
   };
-  await getObservationsCountForProject(project, appStore, paramsTemp);
+  await updateObservationsCountForOne(
+    project,
+    "selectedProjects",
+    appStore,
+    paramsTemp,
+  );
   await updateTilesForAllTaxa(appStore);
-  await updateObservationsCountFor("selectedProjects", appStore);
+  await updateObservationsCountForAll("selectedProjects", appStore);
 
   // zoom to map to fit all selected places
   if (map) {
@@ -182,7 +187,7 @@ export async function removeProject(projectId: number, appStore: MapStore) {
 
   // remove existing taxa tiles, and refetch taxa tiles
   await updateTilesForAllTaxa(appStore);
-  await updateObservationsCountFor("selectedProjects", appStore);
+  await updateObservationsCountForAll("selectedProjects", appStore);
 
   if (appStore.map.map) {
     fitBoundsPlaces(appStore);

@@ -62,6 +62,7 @@ export const ObservationsApiNonFilterableNames = [
   "taxon_id",
   "project_id",
   "user_id",
+  "ident_user_id",
   "view",
   "subview",
   "page",
@@ -76,7 +77,6 @@ export const ObservationsApiFilterableNames = [
   "hrank",
   "iconic_taxa",
   "identified",
-  "ident_user_id",
   "introduced",
   "license",
   "lrank",
@@ -177,33 +177,35 @@ export const IdentificationsApiNonFilterableNames = [
 ];
 
 export const IdentificationsApiFilterableNames = [
-  "current_taxon",
-  "own_observation",
-  "is_change",
-  "taxon_active",
-  "observation_taxon_active",
-  "id",
   "rank",
   "observation_rank",
-  "user_login", // array string
-  "current",
-  "category", // array string
   "quality_grade", // array string
-  "taxon_change_id", // array string
   "iconic_taxon_id", // array string
   "observation_iconic_taxon_id", // array string
   "lrank",
   "hrank",
   "observation_lrank",
   "observation_hrank",
-  "without_taxon_id", // array string
-  "without_observation_taxon_id", // array string
   "d1",
   "d2",
   "observation_created_d1",
   "observation_created_d2",
   "observed_d1",
   "observed_d2",
+
+  // TODO: needs to be implemented
+  "current_taxon",
+  "own_observation",
+  "is_change",
+  "taxon_active",
+  "observation_taxon_active",
+  "id",
+  "user_login", // array string
+  "current",
+  "category", // array string
+  "taxon_change_id", // array string
+  "without_taxon_id", // array string
+  "without_observation_taxon_id", // array string
   "id_above",
   "id_below",
   "order",

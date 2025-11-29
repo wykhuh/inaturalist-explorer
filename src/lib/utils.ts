@@ -69,7 +69,14 @@ export function pluralize(
 }
 
 export function formatAppUrl(appStore: MapStore) {
+  let isIdentifications = appStore.record_type === "identifications";
+  let isObservations = appStore.record_type === "observations";
+
   let taxaIds = appStore.selectedTaxa
+    .filter((r) => r.id !== 0)
+    .map((r) => r.id)
+    .join(",");
+  let taxaIdentifiedIds = appStore.selectedTaxaIdentified
     .filter((r) => r.id !== 0)
     .map((r) => r.id)
     .join(",");
@@ -79,6 +86,9 @@ export function formatAppUrl(appStore: MapStore) {
     .join(",");
   let projectsIds = appStore.selectedProjects.map((r) => r.id).join(",");
   let usersIds = appStore.selectedUsers.map((r) => r.id).join(",");
+  let usersIdentifiersIds = appStore.selectedUsersIdentifiers
+    .map((r) => r.id)
+    .join(",");
   let colors = appStore.selectedTaxa
     .filter((r) => r.id !== 0)
     .map((r) => r.color)
@@ -87,7 +97,16 @@ export function formatAppUrl(appStore: MapStore) {
   let params: ObservationsApiParams = {};
 
   if (taxaIds.length > 0) {
-    params.taxon_id = taxaIds;
+    if (isIdentifications) {
+      params.observation_taxon_id = taxaIds;
+    } else {
+      params.taxon_id = taxaIds;
+    }
+  }
+  if (taxaIdentifiedIds.length > 0) {
+    if (isIdentifications) {
+      params.taxon_id = taxaIdentifiedIds;
+    }
   }
   if (placesIds) {
     params.place_id = placesIds;
@@ -95,8 +114,17 @@ export function formatAppUrl(appStore: MapStore) {
   if (projectsIds) {
     params.project_id = projectsIds;
   }
-  if (usersIds) {
-    params.user_id = usersIds;
+  if (usersIds.length > 0) {
+    if (isObservations) {
+      params.user_id = usersIds;
+    }
+  }
+  if (usersIdentifiersIds.length > 0) {
+    if (isObservations) {
+      params.ident_user_id = usersIdentifiersIds;
+    } else {
+      params.user_id = usersIdentifiersIds;
+    }
   }
   if (colors.length > 0) {
     params.colors = colors;
@@ -104,9 +132,11 @@ export function formatAppUrl(appStore: MapStore) {
 
   let processedKeys = [
     "taxon_id",
+    "observation_taxon_id",
     "place_id",
     "project_id",
     "user_id",
+    "ident_user_id",
     "colors",
   ];
   Object.entries(appStore.observationsApiParams).forEach(([key, value]) => {
@@ -199,7 +229,7 @@ export function updateAppUrl(url_location: Location, appStore: MapStore) {
   window.history.pushState({}, "", url);
 }
 
-export function decodeAppUrl(searchParams: string) {
+export function decodeAppUrl(searchParams: string, path = "/") {
   const urlParams = Object.fromEntries(new URLSearchParams(searchParams));
   let store = {
     observationsApiParams: {},
@@ -210,25 +240,61 @@ export function decodeAppUrl(searchParams: string) {
       species: {},
     },
   } as MapStore;
+  let isObservations = true;
 
-  // convert taxon_id into basic selectedTaxa with id and color
-  let taxa: NormalizediNatTaxon[] = [];
-  if ("taxon_id" in urlParams) {
-    let ids = urlParams.taxon_id.split(",");
-    let colors = urlParams.colors
-      ? urlParams.colors.split(",")
-      : defaultColorScheme;
-    ids.forEach((id, i) => {
-      taxa.push({
-        id: Number(id),
-        color: colors[i],
-      });
-      if (i === ids.length - 1) {
-        store.color = colors[i];
-      }
-    });
+  if (path === "/identifications/") {
+    store.record_type = "identifications";
+    isObservations = false;
+  } else {
+    store.record_type = "observations";
   }
-  store.selectedTaxa = taxa;
+
+  // convert observation_taxon_id into selectedTaxa
+  if ("observation_taxon_id" in urlParams) {
+    if (!isObservations) {
+      let taxa: NormalizediNatTaxon[] = [];
+      let ids = urlParams.observation_taxon_id.split(",");
+      let colors = urlParams.colors
+        ? urlParams.colors.split(",")
+        : defaultColorScheme;
+      ids.forEach((id, i) => {
+        taxa.push({
+          id: Number(id),
+          color: colors[i],
+        });
+      });
+      store.color = colors[ids.length - 1];
+
+      store.selectedTaxa = taxa;
+    }
+  }
+
+  // convert taxon_id into basic selectedTaxa or selectedTaxaIdentified id
+  if ("taxon_id" in urlParams) {
+    let taxa: NormalizediNatTaxon[] = [];
+    let ids = urlParams.taxon_id.split(",");
+
+    if (isObservations) {
+      let colors = urlParams.colors
+        ? urlParams.colors.split(",")
+        : defaultColorScheme;
+      ids.forEach((id, i) => {
+        taxa.push({
+          id: Number(id),
+          color: colors[i],
+        });
+      });
+      store.color = colors[ids.length - 1];
+      store.selectedTaxa = taxa;
+    } else {
+      ids.forEach((id) => {
+        taxa.push({
+          id: Number(id),
+        });
+      });
+      store.selectedTaxaIdentified = taxa;
+    }
+  }
 
   // convert place_id into basic selectedPlaces with id or bbox
   if ("place_id" in urlParams && urlParams.place_id !== "any") {
@@ -285,22 +351,28 @@ export function decodeAppUrl(searchParams: string) {
       })
       .filter((p) => p);
 
-    if (users) {
+    if (isObservations) {
       store.selectedUsers = users as any;
+    } else {
+      store.selectedUsersIdentifiers = users as any;
     }
   }
 
   // convert ident_user_id into basic selectedUserIdentifier with id
   if ("ident_user_id" in urlParams) {
-    let ids = urlParams.ident_user_id.split(",");
+    if (isObservations) {
+      let ids = urlParams.ident_user_id.split(",");
 
-    store.selectedUsersIdentifiers = [{ id: Number(ids[0]) }] as any;
+      store.selectedUsersIdentifiers = [{ id: Number(ids[0]) }] as any;
+    }
   }
 
   if ("unobserved_by_user_id" in urlParams) {
-    let id = Number(urlParams.unobserved_by_user_id);
+    if (isObservations) {
+      let id = Number(urlParams.unobserved_by_user_id);
 
-    store.selectedUnobservedByUser = { id: Number(id) } as any;
+      store.selectedUnobservedByUser = { id: Number(id) } as any;
+    }
   }
 
   if (urlParams.view && validViews.includes(urlParams.view)) {
@@ -376,7 +448,6 @@ export function decodeAppUrl(searchParams: string) {
         cleanedValue;
     }
   }
-
   return store;
 }
 

@@ -8,6 +8,7 @@ import { loggerStore } from "./logger.ts";
 
 export const mapStore: MapStore = {
   selectedTaxa: [],
+  selectedTaxaIdentified: [],
   taxaMapLayers: {},
   selectedPlaces: [],
   placesMapLayers: {},
@@ -51,6 +52,8 @@ const proxiedStore = new Proxy(structuredClone(mapStore), {
       window.dispatchEvent(new Event("selectedProjectsChange"));
     } else if (property === "selectedTaxa") {
       window.dispatchEvent(new Event("selectedTaxaChange"));
+    } else if (property === "selectedTaxaIdentified") {
+      window.dispatchEvent(new Event("selectedTaxaIdentifiedChange"));
     } else if (property === "selectedUsers") {
       window.dispatchEvent(new Event("selectedUsersChange"));
     } else if (property === "selectedUsersIdentifiers") {

@@ -6,12 +6,8 @@ import type {
 } from "../types/app";
 import {
   fetchiNatMapDataForTaxon,
-  getObservationsCountForPlace,
-  getObservationsCountForTaxon,
-  getObservationsCountForProject,
+  updateObservationsCountForOne,
   removeOneTaxonFromMap,
-  getObservationsCountForUser,
-  getObservationsCountForUserIdentifier,
 } from "./data_utils";
 
 import { updateAppUrl } from "./utils";
@@ -42,6 +38,11 @@ import {
   setupUserIdentifierSearch,
   userIdentifierSelectedHandler,
 } from "./search_users_identifiers.ts";
+import {
+  renderTaxaIdentifiedList,
+  setupTaxaIdentifiedSearch,
+  taxonIdentifiedSelectedHandler,
+} from "./search_taxa_identified.ts";
 
 export async function updateTilesForAllTaxa(appStore: MapStore) {
   for await (const taxon of appStore.selectedTaxa) {
@@ -54,88 +55,64 @@ export async function updateTilesForAllTaxa(appStore: MapStore) {
       colors: taxon.color,
     };
 
+    // NOTE: iNat observations API only allows one ident_user_id value
+    let identifierId = appStore.observationsApiParams.ident_user_id;
+    if (identifierId && appStore.record_type === "observations") {
+      identifierId = identifierId.split(",")[0];
+      paramsTemp.ident_user_id = identifierId;
+    }
+
     // get new iNat map tiles
     await fetchiNatMapDataForTaxon(taxon, appStore, paramsTemp);
   }
 }
 
-export async function updateObservationsCountFor(
+export async function updateObservationsCountForAll(
   ignoreResource: MapStoreSelectedResourcesKeys | "all",
   appStore: MapStore,
 ) {
   let resources = [
     "selectedTaxa",
+    "selectedTaxaIdentified",
     "selectedPlaces",
     "selectedProjects",
     "selectedUsers",
     "selectedUsersIdentifiers",
-  ];
+  ] as MapStoreSelectedResourcesKeys[];
 
   let targetResources = resources.filter((r) => r != ignoreResource);
   for await (const res of targetResources) {
-    if (res === "selectedTaxa") {
-      await updateObservationsCountForAllTaxa(appStore);
-    } else if (res === "selectedPlaces") {
-      await updateObservationsCountForAllPlaces(appStore);
-    } else if (res === "selectedProjects") {
-      await updateObservationsCountForAllProjects(appStore);
-    } else if (res === "selectedUsers") {
-      await updateObservationsCountForAllUsers(appStore);
-    } else if (res === "selectedUsersIdentifiers") {
-      await updateObservationsCountForAllUsersIdentifiers(appStore);
-    }
+    await updateObservationsCountForResource(res, appStore);
   }
 }
 
-async function updateObservationsCountForAllTaxa(appStore: MapStore) {
-  for await (const taxon of appStore.selectedTaxa) {
-    let paramsTemp = {
-      ...appStore.observationsApiParams,
-      taxon_id: taxon.id.toString(),
-    };
-    await getObservationsCountForTaxon(taxon, appStore, paramsTemp);
-  }
-}
-
-async function updateObservationsCountForAllPlaces(appStore: MapStore) {
-  for await (const place of appStore.selectedPlaces) {
-    let paramsTemp = {
-      ...appStore.observationsApiParams,
-      place_id: place.id.toString(),
-    };
-    await getObservationsCountForPlace(place, appStore, paramsTemp);
-  }
-}
-
-async function updateObservationsCountForAllProjects(appStore: MapStore) {
-  for await (const project of appStore.selectedProjects) {
-    let paramsTemp = {
-      ...appStore.observationsApiParams,
-      project_id: project.id.toString(),
-    };
-    await getObservationsCountForProject(project, appStore, paramsTemp);
-  }
-}
-
-async function updateObservationsCountForAllUsers(appStore: MapStore) {
-  for await (const user of appStore.selectedUsers) {
-    let paramsTemp = {
-      ...appStore.observationsApiParams,
-      user_id: user.id.toString(),
-    };
-    await getObservationsCountForUser(user, appStore, paramsTemp);
-  }
-}
-
-export async function updateObservationsCountForAllUsersIdentifiers(
+async function updateObservationsCountForResource(
+  resource: MapStoreSelectedResourcesKeys,
   appStore: MapStore,
 ) {
-  for await (const user of appStore.selectedUsersIdentifiers) {
+  let idField = "";
+  if (resource === "selectedPlaces") {
+    idField = "place_id";
+  } else if (resource === "selectedProjects") {
+    idField = "project_id";
+  } else if (resource === "selectedTaxa") {
+    idField = "taxon_id";
+  } else if (resource === "selectedTaxaIdentified") {
+    idField = "taxon_id";
+  } else if (resource === "selectedUsers") {
+    idField = "user_id";
+  } else if (resource === "selectedUsersIdentifiers") {
+    idField = "ident_user_id";
+  } else {
+    throw Error("invalid selected resource: " + resource);
+  }
+
+  for await (const record of appStore[resource]) {
     let paramsTemp = {
       ...appStore.observationsApiParams,
-      ident_user_id: user.id.toString(),
+      [idField]: record.id.toString(),
     };
-    await getObservationsCountForUserIdentifier(user, appStore, paramsTemp);
+    await updateObservationsCountForOne(record, resource, appStore, paramsTemp);
   }
 }
 
@@ -144,6 +121,7 @@ export function renderSelectedResources(
   doSideEffects = true,
 ) {
   renderTaxaList(appStore);
+  renderTaxaIdentifiedList(appStore);
   renderPlacesList(appStore);
   renderProjectsList(appStore);
   renderUsersList(appStore);
@@ -191,6 +169,10 @@ export function multisearchSetup(appStore: MapStore) {
     usersIdentifiers: {
       setup: setupUserIdentifierSearch,
       selectedHandler: userIdentifierSelectedHandler,
+    },
+    taxaIdentified: {
+      setup: setupTaxaIdentifiedSearch,
+      selectedHandler: taxonIdentifiedSelectedHandler,
     },
   };
 
@@ -269,4 +251,15 @@ export function showHideProjectsHeader() {
 
 export function showHidePlacesHeader() {
   showHideHeader("#sidebar-menu .places-heading", "selectedPlaces");
+}
+
+export function showHideTaxaHeader() {
+  showHideHeader("#sidebar-menu .taxa-heading", "selectedTaxa");
+}
+
+export function showHideTaxaIdentifiedHeader() {
+  showHideHeader(
+    "#sidebar-menu .taxa-identified-heading",
+    "selectedTaxaIdentified",
+  );
 }

@@ -128,7 +128,7 @@ describe("formatAppUrl", () => {
         ...mapStore.observationsApiParams,
         place_id: losangeles.id.toString(),
       },
-      selectedTaxa: [],
+
       selectedPlaces: [losangeles],
     };
 
@@ -144,7 +144,7 @@ describe("formatAppUrl", () => {
         ...mapStore.observationsApiParams,
         place_id: `${losangeles.id},${sandiego.id}`,
       },
-      selectedTaxa: [],
+
       selectedPlaces: [losangeles, sandiego],
     };
 
@@ -162,7 +162,7 @@ describe("formatAppUrl", () => {
         ...mapStore.observationsApiParams,
         project_id: project_cnc1.id.toString(),
       },
-      selectedTaxa: [],
+
       selectedProjects: [project_cnc1],
     };
 
@@ -178,7 +178,7 @@ describe("formatAppUrl", () => {
         ...mapStore.observationsApiParams,
         project_id: `${project_cnc1.id.toString()},${project_cnc2.id.toString()}`,
       },
-      selectedTaxa: [],
+
       selectedProjects: [project_cnc1, project_cnc2],
     };
 
@@ -196,7 +196,7 @@ describe("formatAppUrl", () => {
         ...mapStore.observationsApiParams,
         user_id: user1.id.toString(),
       },
-      selectedTaxa: [],
+
       selectedUsers: [user1],
     };
 
@@ -212,7 +212,7 @@ describe("formatAppUrl", () => {
         ...mapStore.observationsApiParams,
         user_id: `${user1.id},${user2.id}`,
       },
-      selectedTaxa: [],
+
       selectedUsers: [user1, user2],
     };
 
@@ -228,7 +228,7 @@ describe("formatAppUrl", () => {
         ...mapStore.observationsApiParams,
         photos: true,
       },
-      selectedTaxa: [],
+
       selectedPlaces: [],
     };
 
@@ -244,7 +244,7 @@ describe("formatAppUrl", () => {
         ...mapStore.observationsApiParams,
         foo: "boo",
       },
-      selectedTaxa: [],
+
       selectedPlaces: [],
     };
 
@@ -261,7 +261,7 @@ describe("formatAppUrl", () => {
         foo: "boo",
         place_id: "962",
       },
-      selectedTaxa: [],
+
       selectedPlaces: [losangeles],
     };
 
@@ -277,7 +277,7 @@ describe("formatAppUrl", () => {
         verifiable: false,
         spam: true,
       },
-      selectedTaxa: [],
+
       selectedPlaces: [],
     };
 
@@ -362,7 +362,7 @@ describe("formatAppUrl", () => {
         order: "desc",
         order_by: "id",
       },
-      selectedTaxa: [],
+
       selectedPlaces: [],
       currentView: "observations",
       viewMetadata: {
@@ -394,7 +394,7 @@ describe("formatAppUrl", () => {
           order: "desc",
           order_by: "id",
         },
-        selectedTaxa: [],
+
         selectedPlaces: [],
         currentView: name as any,
         viewMetadata: {
@@ -488,6 +488,7 @@ describe("decodeAppUrl resources", () => {
         spam: false,
       },
       currentView: "observations",
+      record_type: "observations",
       viewMetadata: {
         observations: {},
         identifiers: {},
@@ -496,7 +497,7 @@ describe("decodeAppUrl resources", () => {
       },
     };
 
-    let result = decodeAppUrl(searchParams);
+    let result = decodeAppUrl(searchParams, "/");
 
     expect(result).toStrictEqual(expected);
   });
@@ -510,8 +511,9 @@ describe("decodeAppUrl resources", () => {
         verifiable: true,
         spam: false,
       },
-      selectedTaxa: [],
+
       currentView: "observations",
+      record_type: "observations",
       viewMetadata: {
         observations: {},
         identifiers: {},
@@ -520,7 +522,7 @@ describe("decodeAppUrl resources", () => {
       },
     };
 
-    let result = decodeAppUrl(searchParams);
+    let result = decodeAppUrl(searchParams, "/");
 
     expect(result).toStrictEqual(expected);
   });
@@ -534,8 +536,9 @@ describe("decodeAppUrl resources", () => {
         verifiable: true,
         spam: false,
       },
-      selectedTaxa: [],
+
       currentView: "observations",
+      record_type: "observations",
       viewMetadata: {
         observations: {},
         identifiers: {},
@@ -544,7 +547,7 @@ describe("decodeAppUrl resources", () => {
       },
     };
 
-    let result = decodeAppUrl(searchParams);
+    let result = decodeAppUrl(searchParams, "/");
 
     expect(result).toStrictEqual(expected);
   });
@@ -558,8 +561,9 @@ describe("decodeAppUrl resources", () => {
         verifiable: true,
         spam: false,
       },
-      selectedTaxa: [],
+
       currentView: "observations",
+      record_type: "observations",
       viewMetadata: {
         observations: {},
         identifiers: {},
@@ -568,7 +572,7 @@ describe("decodeAppUrl resources", () => {
       },
     };
 
-    let result = decodeAppUrl(searchParams);
+    let result = decodeAppUrl(searchParams, "/");
 
     expect(result).toStrictEqual(expected);
   });
@@ -580,10 +584,10 @@ describe("decodeAppUrl resources", () => {
       observationsApiParams: {
         verifiable: true,
         spam: false,
-        ident_user_id: 1,
       },
-      selectedTaxa: [],
+
       currentView: "observations",
+      record_type: "observations",
       viewMetadata: {
         observations: {},
         identifiers: {},
@@ -593,7 +597,7 @@ describe("decodeAppUrl resources", () => {
       selectedUsersIdentifiers: [{ id: 1 }],
     };
 
-    let result = decodeAppUrl(searchParams);
+    let result = decodeAppUrl(searchParams, "/");
 
     expect(result).toStrictEqual(expected);
   });
@@ -607,8 +611,9 @@ describe("decodeAppUrl resources", () => {
         spam: false,
         unobserved_by_user_id: 1,
       },
-      selectedTaxa: [],
+
       currentView: "observations",
+      record_type: "observations",
       viewMetadata: {
         observations: {},
         identifiers: {},
@@ -618,7 +623,7 @@ describe("decodeAppUrl resources", () => {
       selectedUnobservedByUser: { id: 1 },
     };
 
-    let result = decodeAppUrl(searchParams);
+    let result = decodeAppUrl(searchParams, "/");
 
     expect(result).toStrictEqual(expected);
   });
@@ -627,7 +632,6 @@ describe("decodeAppUrl resources", () => {
     let searchParams = "?place_id=0&nelat=0&nelng=-1&swlat=2&swlng=-3";
 
     let expected = {
-      selectedTaxa: [],
       selectedPlaces: [
         {
           id: 0,
@@ -653,6 +657,7 @@ describe("decodeAppUrl resources", () => {
         swlng: -3,
       },
       currentView: "observations",
+      record_type: "observations",
       viewMetadata: {
         observations: {},
         identifiers: {},
@@ -661,7 +666,7 @@ describe("decodeAppUrl resources", () => {
       },
     };
 
-    let result = decodeAppUrl(searchParams);
+    let result = decodeAppUrl(searchParams, "/");
 
     expect(result).toStrictEqual(expected);
   });
@@ -690,6 +695,7 @@ describe("decodeAppUrl resources", () => {
           spam: false,
         },
         currentView: "observations",
+        record_type: "observations",
         viewMetadata: {
           observations: {},
           identifiers: {},
@@ -698,7 +704,7 @@ describe("decodeAppUrl resources", () => {
         },
       };
 
-      let result = decodeAppUrl(searchParams);
+      let result = decodeAppUrl(searchParams, "/");
 
       expect(result).toStrictEqual(expected);
     },
@@ -722,6 +728,7 @@ describe("decodeAppUrl options", () => {
         spam: false,
       },
       currentView: "observations",
+      record_type: "observations",
       viewMetadata: {
         observations: {},
         identifiers: {},
@@ -730,7 +737,7 @@ describe("decodeAppUrl options", () => {
       },
     };
 
-    let result = decodeAppUrl(searchParams);
+    let result = decodeAppUrl(searchParams, "/");
 
     expect(result).toStrictEqual(expected);
   });
@@ -751,6 +758,7 @@ describe("decodeAppUrl options", () => {
         spam: true,
       },
       currentView: "observations",
+      record_type: "observations",
       viewMetadata: {
         observations: {},
         identifiers: {},
@@ -759,7 +767,7 @@ describe("decodeAppUrl options", () => {
       },
     };
 
-    let result = decodeAppUrl(searchParams);
+    let result = decodeAppUrl(searchParams, "/");
 
     expect(result).toStrictEqual(expected);
   });
@@ -778,6 +786,7 @@ describe("decodeAppUrl options", () => {
         verifiable: "any",
       },
       currentView: "observations",
+      record_type: "observations",
       viewMetadata: {
         observations: {},
         identifiers: {},
@@ -786,7 +795,7 @@ describe("decodeAppUrl options", () => {
       },
     };
 
-    let result = decodeAppUrl(searchParams);
+    let result = decodeAppUrl(searchParams, "/");
 
     expect(result).toStrictEqual(expected);
   });
@@ -803,6 +812,7 @@ describe("decodeAppUrl options", () => {
       ],
       observationsApiParams: {},
       currentView: "observations",
+      record_type: "observations",
       viewMetadata: {
         observations: {},
         identifiers: {},
@@ -811,7 +821,7 @@ describe("decodeAppUrl options", () => {
       },
     };
 
-    let result = decodeAppUrl(searchParams);
+    let result = decodeAppUrl(searchParams, "/");
 
     expect(result).toStrictEqual(expected);
   });
@@ -820,8 +830,9 @@ describe("decodeAppUrl options", () => {
     let searchParams = "?view=" + view;
     let expected = {
       currentView: view,
+      record_type: "observations",
       observationsApiParams: {},
-      selectedTaxa: [],
+
       viewMetadata: {
         observations: {},
         identifiers: {},
@@ -833,7 +844,7 @@ describe("decodeAppUrl options", () => {
       expected.viewMetadata.identifications = {};
     }
 
-    let result = decodeAppUrl(searchParams);
+    let result = decodeAppUrl(searchParams, "/");
 
     expect(result).toStrictEqual(expected);
   });
@@ -844,8 +855,8 @@ describe("decodeAppUrl options", () => {
       let searchParams = "?view=observations&subview=" + subview;
       let expected = {
         currentView: "observations",
+        record_type: "observations",
         observationsApiParams: {},
-        selectedTaxa: [],
         viewMetadata: {
           observations: {
             subview: subview,
@@ -856,7 +867,7 @@ describe("decodeAppUrl options", () => {
         },
       };
 
-      let result = decodeAppUrl(searchParams);
+      let result = decodeAppUrl(searchParams, "/");
 
       expect(result).toStrictEqual(expected);
     },
@@ -866,8 +877,9 @@ describe("decodeAppUrl options", () => {
     let searchParams = `?view=${view}&subview=foo`;
     let expected = {
       currentView: view,
+      record_type: "observations",
       observationsApiParams: {},
-      selectedTaxa: [],
+
       viewMetadata: {
         observations: {},
         identifiers: {},
@@ -879,7 +891,7 @@ describe("decodeAppUrl options", () => {
       expected.viewMetadata.identifications = {};
     }
 
-    let result = decodeAppUrl(searchParams);
+    let result = decodeAppUrl(searchParams, "/");
 
     expect(result).toStrictEqual(expected);
   });
@@ -888,8 +900,9 @@ describe("decodeAppUrl options", () => {
     let searchParams = "?view=boo&subview=boo";
     let expected = {
       observationsApiParams: {},
-      selectedTaxa: [],
+
       currentView: "observations",
+      record_type: "observations",
       viewMetadata: {
         observations: {},
         identifiers: {},
@@ -898,7 +911,7 @@ describe("decodeAppUrl options", () => {
       },
     };
 
-    let result = decodeAppUrl(searchParams);
+    let result = decodeAppUrl(searchParams, "/");
 
     expect(result).toStrictEqual(expected);
   });
@@ -907,8 +920,9 @@ describe("decodeAppUrl options", () => {
     let searchParams = "?foo=boo";
     let expected = {
       observationsApiParams: {},
-      selectedTaxa: [],
+
       currentView: "observations",
+      record_type: "observations",
       viewMetadata: {
         observations: {},
         identifiers: {},
@@ -917,7 +931,7 @@ describe("decodeAppUrl options", () => {
       },
     };
 
-    let result = decodeAppUrl(searchParams);
+    let result = decodeAppUrl(searchParams, "/");
 
     expect(result).toStrictEqual(expected);
   });
@@ -936,8 +950,9 @@ describe("decodeAppUrl options", () => {
       let searchParams = `?${name}=${value}`;
       let expected = {
         observationsApiParams: { [name]: true },
-        selectedTaxa: [],
+
         currentView: "observations",
+        record_type: "observations",
         viewMetadata: {
           observations: {},
           identifiers: {},
@@ -957,7 +972,7 @@ describe("decodeAppUrl options", () => {
         expected.observationsApiParams.ident_user_id = 1;
       }
 
-      let result = decodeAppUrl(searchParams);
+      let result = decodeAppUrl(searchParams, "/");
 
       expect(result).toStrictEqual(expected);
     },
@@ -967,8 +982,9 @@ describe("decodeAppUrl options", () => {
     let searchParams = "?page=2&order=desc&order_by=id";
     let expected = {
       observationsApiParams: { page: 2, order: "desc", order_by: "id" },
-      selectedTaxa: [],
+
       currentView: "observations",
+      record_type: "observations",
       viewMetadata: {
         observations: { page: 2, order: "desc", order_by: "id" },
         identifiers: {},
@@ -977,7 +993,7 @@ describe("decodeAppUrl options", () => {
       },
     };
 
-    let result = decodeAppUrl(searchParams);
+    let result = decodeAppUrl(searchParams, "/");
 
     expect(result).toStrictEqual(expected);
   });
@@ -988,8 +1004,9 @@ describe("decodeAppUrl options", () => {
       let searchParams = `?view=${name}&page=2&order=desc&order_by=id`;
       let expected = {
         observationsApiParams: { page: 2, order: "desc", order_by: "id" },
-        selectedTaxa: [],
+
         currentView: name,
+        record_type: "observations",
         viewMetadata: {
           observations: {},
           identifiers: {},
@@ -999,7 +1016,7 @@ describe("decodeAppUrl options", () => {
         },
       };
 
-      let result = decodeAppUrl(searchParams);
+      let result = decodeAppUrl(searchParams, "/");
 
       expect(result).toStrictEqual(expected);
     },
@@ -1009,8 +1026,9 @@ describe("decodeAppUrl options", () => {
     let searchParams = "?locale=fr";
     let expected = {
       observationsApiParams: { locale: "fr" },
-      selectedTaxa: [],
+
       currentView: "observations",
+      record_type: "observations",
       viewMetadata: {
         observations: {},
         identifiers: {},
@@ -1019,7 +1037,7 @@ describe("decodeAppUrl options", () => {
       },
     };
 
-    let result = decodeAppUrl(searchParams);
+    let result = decodeAppUrl(searchParams, "/");
 
     expect(result).toStrictEqual(expected);
   });
@@ -1028,8 +1046,9 @@ describe("decodeAppUrl options", () => {
     let searchParams = "?name_order=sc";
     let expected = {
       observationsApiParams: {},
-      selectedTaxa: [],
+
       currentView: "observations",
+      record_type: "observations",
       viewMetadata: {
         observations: {},
         identifiers: {},
@@ -1039,7 +1058,71 @@ describe("decodeAppUrl options", () => {
       },
     };
 
-    let result = decodeAppUrl(searchParams);
+    let result = decodeAppUrl(searchParams, "/");
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("returns object with record_type = 'identifications' if identifications path", () => {
+    let path = "/identifications/";
+    let searchParams = "";
+    let expected = {
+      observationsApiParams: {},
+      currentView: "observations",
+      record_type: "identifications",
+      viewMetadata: {
+        observations: {},
+        identifiers: {},
+        observers: {},
+        species: {},
+      },
+    };
+
+    let result = decodeAppUrl(searchParams, path);
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("returns object with selectedTaxaIdentified and selectedTaxa if identifications path", () => {
+    let path = "/identifications/";
+    let searchParams = "?taxon_id=1&observation_taxon_id=2";
+    let expected = {
+      observationsApiParams: {},
+      selectedTaxaIdentified: [{ id: 1 }],
+      selectedTaxa: [{ id: 2, color: "#4477aa" }],
+      currentView: "observations",
+      record_type: "identifications",
+      viewMetadata: {
+        observations: {},
+        identifiers: {},
+        observers: {},
+        species: {},
+      },
+      color: "#4477aa",
+    };
+
+    let result = decodeAppUrl(searchParams, path);
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("returns object with selectedUsersIdentifiers if identifications path", () => {
+    let path = "/identifications/";
+    let searchParams = "?user_id=1";
+    let expected = {
+      observationsApiParams: {},
+      selectedUsersIdentifiers: [{ id: 1 }],
+      currentView: "observations",
+      record_type: "identifications",
+      viewMetadata: {
+        observations: {},
+        identifiers: {},
+        observers: {},
+        species: {},
+      },
+    };
+
+    let result = decodeAppUrl(searchParams, path);
 
     expect(result).toStrictEqual(expected);
   });

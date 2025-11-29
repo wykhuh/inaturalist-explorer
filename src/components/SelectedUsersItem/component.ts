@@ -3,7 +3,7 @@ import { loggerRender } from "../../lib/logger";
 import { removeUser } from "../../lib/search_users";
 import { removeUserIdentifier } from "../../lib/search_users_identifiers";
 import { pluralize } from "../../lib/utils";
-import type { NormalizediNatUser } from "../../types/app";
+import type { MapStore, NormalizediNatUser } from "../../types/app";
 import { template } from "./template";
 
 class SelectedUsersItem extends HTMLElement {
@@ -12,10 +12,10 @@ class SelectedUsersItem extends HTMLElement {
   }
 
   connectedCallback() {
-    this.render();
+    this.render(window.app.store);
   }
 
-  async render() {
+  async render(appStore: MapStore) {
     if (!this.dataset.user) return;
     let userType = this.dataset.user_type;
     if (!userType) return;
@@ -38,7 +38,9 @@ class SelectedUsersItem extends HTMLElement {
     if (countEl) {
       countEl.textContent = pluralize(
         user.observations_count,
-        userType === "observer" ? "observation" : "identification",
+        appStore.record_type === "observations"
+          ? "observation"
+          : "identification",
         true,
       );
     }

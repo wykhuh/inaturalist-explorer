@@ -45,7 +45,7 @@ import {
 import { loggerEvent, loggerRender, loggerStore } from "./logger.ts";
 import {
   renderSelectedResources,
-  updateObservationsCountFor,
+  updateObservationsCountForAll,
   updateTilesForAllTaxa,
 } from "./search_utils.ts";
 import { decodeAppUrl } from "./utils.ts";
@@ -57,6 +57,10 @@ export async function initPopulateStore(
   urlStore: MapStore,
 ) {
   loggerStore("++ initPopulateStore start");
+
+  if (urlStore.record_type) {
+    appStore.record_type = urlStore.record_type;
+  }
 
   // use url store to populate appStore.observationsApiParams
   for (const [k, value] of Object.entries(urlStore.observationsApiParams)) {
@@ -186,7 +190,21 @@ export async function initPopulateStore(
     await addAllTaxaRecordToStore(appStore);
   }
 
-  await updateObservationsCountFor("all", appStore);
+  // taxa data
+  if (
+    urlStore.selectedTaxaIdentified &&
+    urlStore.selectedTaxaIdentified.length > 0
+  ) {
+    for await (const urlStoreTaxon of urlStore.selectedTaxaIdentified) {
+      let taxonData = await getTaxonById(urlStoreTaxon.id);
+      if (!taxonData) {
+        continue;
+      }
+      processTaxonIdentifiedData(taxonData, appStore, urlStore);
+    }
+  }
+
+  await updateObservationsCountForAll("all", appStore);
 
   renderSelectedResources(appStore, false);
 
@@ -295,6 +313,37 @@ export function processTaxonData(
   if (urlStoreTaxon.color) {
     appStore.color = urlStoreTaxon.color;
   }
+}
+
+export function processTaxonIdentifiedData(
+  taxonData: TaxaResult,
+  appStore: MapStore,
+  urlStore: MapStore,
+) {
+  let urlStoreTaxon = urlStore.selectedTaxaIdentified.find(
+    (t) => t.id === taxonData.id,
+  );
+  if (!urlStoreTaxon) return;
+
+  // create taxon object
+  let taxon: NormalizediNatTaxon = {
+    name: taxonData.name,
+    default_photo: taxonData.default_photo?.square_url,
+    preferred_common_name: taxonData.preferred_common_name,
+    rank: taxonData.rank,
+    id: taxonData.id,
+  };
+
+  let { title, subtitle } = formatTaxonName(taxon, appStore);
+  taxon.title = title;
+  taxon.subtitle = subtitle;
+
+  appStore.selectedTaxaIdentified = [...appStore.selectedTaxaIdentified, taxon];
+  appStore.observationsApiParams.observation_taxon_id =
+    addValueToCommaSeparatedString(
+      taxonData.id,
+      appStore.observationsApiParams.observation_taxon_id,
+    );
 }
 
 export function processPlaceData(placeData: PlacesResult, appStore: MapStore) {
@@ -490,7 +539,7 @@ export async function initApp() {
   let appStore = window.app.store;
   if (!appStore.currentView) return;
 
-  let urlData = decodeAppUrl(window.location.search);
+  let urlData = decodeAppUrl(window.location.search, window.location.pathname);
   await initPopulateStore(appStore, urlData);
 
   let templateName = viewAndTemplateObject(appStore.currentView);

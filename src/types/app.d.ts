@@ -23,6 +23,7 @@ type RouterType = {
 
 export interface MapStore {
   selectedTaxa: NormalizediNatTaxon[];
+  selectedTaxaIdentified: NormalizediNatTaxon[];
   taxaMapLayers: { [index: string]: TileLayer[] };
   selectedPlaces: NormalizediNatPlace[];
   placesMapLayers: { [index: string]: CustomGeoJSON[] };
@@ -94,6 +95,7 @@ export type NormalizediNatTaxon = {
   id: number;
   color?: string;
   observations_count?: number;
+  identifications_count?: number;
   title?: string;
   subtitle?: string;
 };
@@ -107,6 +109,7 @@ export type NormalizediNatPlace = {
   place_type?: number;
   place_type_name?: string;
   observations_count?: number;
+  identifications_count?: number;
 };
 
 export type NormalizediNatProject = {
@@ -114,6 +117,7 @@ export type NormalizediNatProject = {
   name: string;
   slug: string;
   observations_count?: number;
+  identifications_count?: number;
   place_id?: number | null;
   geometry?: PolygonJson | MultiPolygonJson;
   bounding_box?: PolygonJson;
@@ -124,23 +128,18 @@ export type NormalizediNatUser = {
   login: string;
   name: string | null;
   observations_count?: number;
+  identifications_count?: number;
 };
 
 export type MapStoreKeys = keyof MapStore;
 
 export type MapStoreSelectedResourcesKeys =
   | "selectedTaxa"
+  | "selectedTaxaIdentified"
   | "selectedPlaces"
   | "selectedUsers"
   | "selectedProjects"
   | "selectedUsersIdentifiers";
-
-export type MapStoreSelectedResourcesArrayKeys =
-  | "selectedTaxa"
-  | "selectedPlaces"
-  | "selectedUsers"
-  | "selectedUsersIdentifiers"
-  | "selectedProjects";
 
 interface ObservationsApiParams extends ObservationsApiFilterableParams {
   nelat?: number;
@@ -151,6 +150,7 @@ interface ObservationsApiParams extends ObservationsApiFilterableParams {
   per_page?: number;
   place_id?: string; // comma-seperated string
   taxon_id?: string; // comma-seperated string
+  observation_taxon_id?: string; // comma-seperated string
   project_id?: string; // comma-seperated string
   user_id?: string; // comma-seperated string
   ident_user_id?: string; // comma-seperated string
@@ -359,6 +359,7 @@ type SearchOptions = {
   users: SearchOption;
   usersIdentifiers: SearchOption;
   taxa: SearchOption;
+  taxaIdentified: SearchOption;
 };
 
 type SearchOption = { setup: any; selectedHandler: any };

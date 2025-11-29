@@ -2,6 +2,7 @@ import { setupComponent } from "../../lib/component_utils.ts";
 import { loggerRender } from "../../lib/logger.ts";
 import { renderTaxonNames } from "../../lib/render_utils";
 import { removeTaxon } from "../../lib/search_taxa.ts";
+import { removeTaxonIdentified } from "../../lib/search_taxa_identified.ts";
 import { pluralize } from "../../lib/utils.ts";
 import type { MapStore, NormalizediNatTaxon } from "../../types/app";
 import { template } from "./template";
@@ -17,6 +18,9 @@ class SelectedTaxaItem extends HTMLElement {
 
   async render(appStore: MapStore) {
     if (!this.dataset.taxon) return;
+    let taxonType = this.dataset.taxon_type;
+    if (!taxonType) return;
+
     loggerRender("++ SelectedTaxaItem render");
 
     setupComponent(template, this);
@@ -45,7 +49,9 @@ class SelectedTaxaItem extends HTMLElement {
     // don't add event listener for allTaxaRecord with id = 0
     if (butttonEl && taxon.id !== 0) {
       butttonEl.addEventListener("click", async function () {
-        if (taxon.id) {
+        if (taxonType == "identified") {
+          await removeTaxonIdentified(taxon.id, window.app.store);
+        } else {
           await removeTaxon(taxon.id, window.app.store);
         }
       });

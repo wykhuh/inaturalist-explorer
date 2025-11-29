@@ -153,3 +153,21 @@ https://runebook.dev/en/articles/leaflet/index/tileerrorevent-coords
 tileerror does not fire if we add invalid layer to map
 
 tileerror does fire if layer already added to map , and we zoom in and out
+
+==
+
+decodeAppUrl
+
+- handle both observations and identifications
+
+initApp,
+
+- fill both observationsApiParams and identificationsApiParams
+
+updateAppUrl
+
+- handle both observations and identifications
+
+when connecting to API
+
+- use observationsApiParams or identificationsApiParams

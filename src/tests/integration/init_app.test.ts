@@ -59,6 +59,7 @@ import {
   gridLabel_allTaxaRecord_user1Unobserved,
   gridLabel_life_places_identifier,
   gridLabel_oaks_places_identifier,
+  expectOakTaxa,
 } from "../test_helpers.ts";
 import type { ObservationsApiParams } from "../../types/app";
 import { fieldsWithAny } from "../../data/inat_data.ts";
@@ -98,7 +99,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectEmpytMap(store);
 
     let searchparams = "";
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -126,7 +127,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectEmpytMap(store);
 
     let searchparams = "?verifiable=false&spam=true&photos=false";
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -157,7 +158,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectEmpytMap(store);
 
     let searchparams = "?boo=true&foo=any";
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -185,7 +186,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectEmpytMap(store);
 
     let searchparams = `?taxon_id=${life().id}&verifiable=false&spam=false`;
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -215,7 +216,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectEmpytMap(store);
 
     let searchparams = `?taxon_id=${life().id}&verifiable=true&spam=true`;
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -245,7 +246,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectEmpytMap(store);
 
     let searchparams = `?taxon_id=${life().id}`;
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -275,7 +276,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       expectEmpytMap(store);
 
       let searchparams = `?taxon_id=${life().id}&${field}=any`;
-      let urlData = decodeAppUrl(searchparams);
+      let urlData = decodeAppUrl(searchparams, "/");
 
       await initPopulateStore(store, urlData);
       await initRenderMap(store);
@@ -309,7 +310,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectEmpytMap(store);
 
     let searchparams = `?taxon_id=${life().id}&${defaultQuery}`;
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -337,7 +338,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectEmpytMap(store);
 
     let searchparams = `?view=observations&subview=table`;
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -361,7 +362,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectEmpytMap(store);
 
     let searchparams = `?view=observations`;
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -385,7 +386,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectEmpytMap(store);
 
     let searchparams = `?view=identifiers`;
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -409,7 +410,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectEmpytMap(store);
 
     let searchparams = `?view=identifiers&page=3&order=desc&order_by=id`;
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -450,7 +451,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectEmpytMap(store);
 
     let searchparams = `?locale=es`;
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -473,7 +474,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectEmpytMap(store);
 
     let searchparams = `?name_order=sc`;
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -498,7 +499,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectEmpytMap(store);
 
     let searchparams = `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}`;
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -527,7 +528,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectEmpytMap(store);
 
     let searchparams = `?place_id=${losangeles.id}&${defaultQuery}`;
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -561,7 +562,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
 
     let searchparams =
       "?spam=false&verifiable=true&nelat=0&nelng=0&swlat=0&swlng=0";
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -596,7 +597,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectEmpytMap(store);
 
     let searchparams = `?project_id=${project_cnc1.id}&${defaultQuery}`;
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -630,7 +631,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectEmpytMap(store);
 
     let searchparams = `?user_id=${user1.id}&${defaultQuery}`;
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -661,7 +662,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectEmpytMap(store);
 
     let searchparams = `?ident_user_id=${user1.id}&${defaultQuery}`;
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -674,7 +675,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectNoRefresh(store);
     expectNoPlaces(store);
     expectAllTaxaRecord(store, allTaxaCount * 0.75);
-    expectUser1Identifier(store);
+    expectUser1Identifier(store, allTaxaCount * 0.75);
     let expectedParams: ObservationsApiParams = {
       ident_user_id: `${user1.id}`,
       taxon_id: allTaxa.id.toString(),
@@ -692,7 +693,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectEmpytMap(store);
 
     let searchparams = `?unobserved_by_user_id=${user1.id}&${defaultQuery}`;
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -728,7 +729,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     searchparams += `&ident_user_id=${user1.id}`;
     searchparams += `&colors=${colorsEncoded[0]},${colorsEncoded[1]}`;
     searchparams += `&spam=false&verifiable=true`;
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -751,7 +752,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectLifeOakTaxa(store, [lifeCount * 0.75, oakCount * 0.75]);
     expect_LA_SD_Place(store, [count * 0.6 * 0.75, count * 0.4 * 0.75]);
     expectUsers(store, [count * 0.45 * 0.75, 4537.5]);
-    expectUser1Identifier(store);
+    expectUser1Identifier(store, count * 0.75);
     expectProjects(store, [count * 0.7 * 0.75, count * 0.3 * 0.75]);
     let expectedParams: ObservationsApiParams = {
       colors: `${colors[0]},${colors[1]}`,
@@ -791,7 +792,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     searchparams += `&user_id=${user1.id},${user2.id}`;
     searchparams += `&colors=${colorsEncoded[0]},${colorsEncoded[1]}`;
     searchparams += `&spam=false&verifiable=true`;
-    let urlData = decodeAppUrl(searchparams);
+    let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
@@ -827,5 +828,44 @@ describe("initPopulateStore and initRenderMap resources", () => {
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(colors[1]);
+  });
+});
+
+describe("initPopulateStore and initRenderMap resources for identifications", () => {
+  test.skip("loads and renders taxa data based on url params", async () => {
+    let store = structuredClone(mapStore);
+
+    expectEmpytMap(store);
+
+    let searchparams = `?taxon_id=${life().id}&observation_taxon_id=${redOak().id}&${defaultQuery}`;
+    let urlData = decodeAppUrl(searchparams, "/identifications/");
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expectLifeTaxa(store);
+    expectOakTaxa(store);
+    let expectedParams: ObservationsApiParams = {
+      colors: "#4477aa",
+      taxon_id: redOak().id.toString(),
+      ...defaultParams,
+    };
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
+    expect(store.color).toBe("");
+    expect(store.selectedTaxa).toStrictEqual([
+      { ...redOak(), color: "#4477aa" },
+    ]);
+    let lifeExpect = {
+      default_photo: "https://inat.com/photos/347064198/square.jpeg",
+      id: 48460,
+      name: "Life",
+      preferred_common_name: "life",
+      rank: "stateofmatter",
+      subtitle: "Life",
+      title: "Life",
+    };
+    expect(store.selectedTaxaIdentified).toStrictEqual([lifeExpect]);
   });
 });

@@ -8,7 +8,7 @@ import type { MapStore } from "../types/app";
 import {
   updateTilesForAllTaxa,
   renderSelectedResources,
-  updateObservationsCountFor,
+  updateObservationsCountForAll,
 } from "./search_utils.ts";
 import {
   processAutocompleteUser,
@@ -78,7 +78,7 @@ export async function unobservedByUserSelectedHandler(
   };
 
   await updateTilesForAllTaxa(appStore);
-  await updateObservationsCountFor("all", appStore);
+  await updateObservationsCountForAll("all", appStore);
 
   // add unobserved_by_user_id to filters list shown in filters modal
   const form = document.querySelector("#filters-form") as HTMLFormElement;
@@ -98,7 +98,7 @@ export async function removeUnobservedByUser(appStore: MapStore) {
 
   // remove existing taxa tiles, and refetch taxa tiles
   await updateTilesForAllTaxa(appStore);
-  await updateObservationsCountFor("all", appStore);
+  await updateObservationsCountForAll("all", appStore);
 
   renderSelectedResources(appStore);
 }

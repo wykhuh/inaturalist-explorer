@@ -85,6 +85,8 @@ export function createMockServer() {
         count = redOak().observations_count;
       } else if (!url.includes("taxon_id=")) {
         count = allTaxa.observations_count;
+      } else if (url.includes(`observation_taxon_id=${lifeBasic.id}&`)) {
+        count = life().observations_count;
       }
 
       if (url.includes(`&place_id=${losangeles.id}%2C${sandiego.id}`)) {

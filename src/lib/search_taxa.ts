@@ -14,15 +14,15 @@ import {
   addValueToCommaSeparatedString,
   fetchiNatMapDataForTaxon,
   formatTaxonName,
-  getObservationsCountForTaxon,
   removeOneTaxonFromStoreAndMap,
   removeTaxaFromStoreAndMap,
+  updateObservationsCountForOne,
 } from "./data_utils.ts";
 import { renderTaxonNames } from "./render_utils";
 import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
 import {
   renderSelectedResources,
-  updateObservationsCountFor,
+  updateObservationsCountForAll,
 } from "./search_utils.ts";
 
 export function setupTaxaSearch(selector: string, appStore: MapStore) {
@@ -159,8 +159,13 @@ export async function taxonSelectedHandler(
     colors: color,
   };
   await fetchiNatMapDataForTaxon(taxon, appStore, paramsTemp);
-  await getObservationsCountForTaxon(taxon, appStore, paramsTemp);
-  await updateObservationsCountFor("selectedTaxa", appStore);
+  await updateObservationsCountForOne(
+    taxon,
+    "selectedTaxa",
+    appStore,
+    paramsTemp,
+  );
+  await updateObservationsCountForAll("selectedTaxa", appStore);
 
   renderSelectedResources(appStore);
 }
@@ -173,6 +178,8 @@ export function renderTaxaList(appStore: MapStore) {
   appStore.selectedTaxa.forEach((taxon) => {
     let templateEl = document.createElement("species-list-item");
     templateEl.dataset.taxon = JSON.stringify(taxon);
+    templateEl.dataset.taxon_type = "observation";
+
     listEl.appendChild(templateEl);
   });
 }
@@ -186,7 +193,7 @@ export async function removeTaxon(taxonId: number, appStore: MapStore) {
     await addAllTaxaRecordToStore(appStore);
     await addAllTaxaRecordToMap(appStore);
   }
-  await updateObservationsCountFor("selectedTaxa", appStore);
+  await updateObservationsCountForAll("selectedTaxa", appStore);
 
   renderSelectedResources(appStore);
 }

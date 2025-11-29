@@ -91,7 +91,5 @@ export function displayAppstoreData(appStore: MapStore, _source: string) {
     }
   });
 
-  if (displayJsonWrapperEl) {
-    displayJson(data, displayJsonWrapperEl);
-  }
+  displayJson(data, displayJsonWrapperEl);
 }

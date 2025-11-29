@@ -14,7 +14,7 @@ import { loggerUrl } from "../lib/logger.ts";
 import {
   addValueToCommaSeparatedString,
   removeOnePlaceFromStoreAndMap,
-  getObservationsCountForPlace,
+  updateObservationsCountForOne,
   renderResourceGeometryLayer,
 } from "./data_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
@@ -22,7 +22,7 @@ import { placeTypes } from "../data/inat_data.ts";
 import {
   updateTilesForAllTaxa,
   renderSelectedResources,
-  updateObservationsCountFor,
+  updateObservationsCountForAll,
 } from "./search_utils.ts";
 
 export function setupPlacesSearch(selector: string) {
@@ -164,9 +164,14 @@ export async function placeSelectedHandler(
     ...appStore.observationsApiParams,
     place_id: place.id.toString(),
   };
-  await getObservationsCountForPlace(place, appStore, paramsTemp);
+  await updateObservationsCountForOne(
+    place,
+    "selectedPlaces",
+    appStore,
+    paramsTemp,
+  );
   await updateTilesForAllTaxa(appStore);
-  await updateObservationsCountFor("selectedPlaces", appStore);
+  await updateObservationsCountForAll("selectedPlaces", appStore);
 
   // zoom to map to fit all selected places
   if (map) {
@@ -201,7 +206,7 @@ export async function removePlace(placeId: number, appStore: MapStore) {
 
   // remove existing taxa tiles, and refetch taxa tiles
   await updateTilesForAllTaxa(appStore);
-  await updateObservationsCountFor("selectedPlaces", appStore);
+  await updateObservationsCountForAll("selectedPlaces", appStore);
 
   renderSelectedResources(appStore);
 }

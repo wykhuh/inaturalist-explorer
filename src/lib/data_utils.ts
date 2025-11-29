@@ -12,7 +12,7 @@ import type {
   NormalizediNatPlace,
   NormalizediNatProject,
   NormalizediNatUser,
-  MapStoreSelectedResourcesArrayKeys,
+  MapStoreSelectedResourcesKeys,
 } from "../types/app";
 import {
   addOverlayToMap,
@@ -20,7 +20,11 @@ import {
   getAndDrawMapBoundingBox,
 } from "./map_utils.ts";
 import { formatAppUrl } from "./utils.ts";
-import { getiNatMapTiles, getObservations } from "./inat_api.ts";
+import {
+  getIdentifications,
+  getiNatMapTiles,
+  getObservations,
+} from "./inat_api.ts";
 import {
   ObservationsApiNonFilterableNames,
   allTaxaRecord,
@@ -33,7 +37,7 @@ import type { SpeciesCountTaxon, Taxon } from "../types/inat_api";
 import {
   updateTilesForAllTaxa,
   renderSelectedResources,
-  updateObservationsCountFor,
+  updateObservationsCountForAll,
 } from "./search_utils.ts";
 import { isNormalizediNatTaxon } from "../types/utils.ts";
 
@@ -71,13 +75,18 @@ export async function refreshBoundingBox(appStore: MapStore) {
   };
 
   await updateTilesForAllTaxa(appStore);
-  await updateObservationsCountFor("selectedPlaces", appStore);
+  await updateObservationsCountForAll("selectedPlaces", appStore);
 
   let paramsTemp = {
     ...appStore.observationsApiParams,
   };
 
-  await getObservationsCountForPlace(place, appStore, paramsTemp);
+  await updateObservationsCountForOne(
+    place,
+    "selectedPlaces",
+    appStore,
+    paramsTemp,
+  );
 
   renderSelectedResources(appStore);
 }
@@ -128,19 +137,6 @@ export async function fetchiNatMapDataForTaxon(
 // taxon
 // ================
 
-export async function getObservationsCountForTaxon(
-  taxon: NormalizediNatTaxon,
-  appStore: MapStore,
-  paramsTemp: ObservationsApiParams,
-) {
-  await getObservationsCountForResource(
-    taxon,
-    "selectedTaxa",
-    appStore,
-    paramsTemp,
-  );
-}
-
 export async function addAllTaxaRecordToStore(appStore: MapStore) {
   appStore.observationsApiParams = {
     ...appStore.observationsApiParams,
@@ -149,13 +145,12 @@ export async function addAllTaxaRecordToStore(appStore: MapStore) {
   };
   appStore.color = iNatOrange;
 
-  await getObservationsCountForTaxon(
+  await updateObservationsCountForOne(
     allTaxaRecord,
+    "selectedTaxa",
     appStore,
     appStore.observationsApiParams,
   );
-
-  appStore.selectedTaxa = [allTaxaRecord];
 }
 
 export async function addAllTaxaRecordToMap(appStore: MapStore) {
@@ -221,6 +216,17 @@ export function removeTaxaFromStoreAndMap(appStore: MapStore) {
   appStore.color = "";
 }
 
+export function removeOneTaxonIdentifiedFromStore(
+  appStore: MapStore,
+  taxonId: number,
+) {
+  appStore.selectedTaxaIdentified = appStore.selectedTaxaIdentified.filter(
+    (taxon) => taxon.id !== taxonId,
+  );
+
+  removeIdfromInatApiParams(appStore, "taxon_id", taxonId);
+}
+
 // ================
 // place
 // ================
@@ -281,19 +287,6 @@ function removePlacesFromStoreAndMap(appStore: MapStore) {
   appStore.selectedPlaces = [];
 }
 
-export async function getObservationsCountForPlace(
-  place: NormalizediNatPlace,
-  appStore: MapStore,
-  paramsTemp: ObservationsApiParams,
-) {
-  await getObservationsCountForResource(
-    place,
-    "selectedPlaces",
-    appStore,
-    paramsTemp,
-  );
-}
-
 export function renderSelectedPlacesBoundaries(appStore: MapStore) {
   let map = appStore.map.map;
   if (!map) return;
@@ -335,45 +328,6 @@ export function removeOneProjectFromStoreAndMap(
   removeIdfromInatApiParams(appStore, "project_id", projectId);
 }
 
-export async function getObservationsCountForProject(
-  project: NormalizediNatPlace,
-  appStore: MapStore,
-  paramsTemp: ObservationsApiParams,
-) {
-  await getObservationsCountForResource(
-    project,
-    "selectedProjects",
-    appStore,
-    paramsTemp,
-  );
-}
-
-export async function getObservationsCountForUser(
-  user: NormalizediNatUser,
-  appStore: MapStore,
-  paramsTemp: ObservationsApiParams,
-) {
-  await getObservationsCountForResource(
-    user,
-    "selectedUsers",
-    appStore,
-    paramsTemp,
-  );
-}
-
-export async function getObservationsCountForUserIdentifier(
-  user: NormalizediNatUser,
-  appStore: MapStore,
-  paramsTemp: ObservationsApiParams,
-) {
-  await getObservationsCountForResource(
-    user,
-    "selectedUsersIdentifiers",
-    appStore,
-    paramsTemp,
-  );
-}
-
 export function renderSelectedProjectsBoundaries(appStore: MapStore) {
   let map = appStore.map.map;
   if (!map) return;
@@ -395,28 +349,72 @@ export function renderSelectedProjectsBoundaries(appStore: MapStore) {
 // selected resource
 // ================
 
-async function getObservationsCountForResource(
+export async function updateObservationsCountForOne(
+  record:
+    | NormalizediNatUser
+    | NormalizediNatProject
+    | NormalizediNatPlace
+    | NormalizediNatTaxon,
+  resource: MapStoreSelectedResourcesKeys,
+  appStore: MapStore,
+  paramsTemp: ObservationsApiParams,
+) {
+  await getObservationsCountForRecord(record, paramsTemp);
+
+  updateSelectedResource(record, resource, appStore);
+}
+
+async function getObservationsCountForRecord(
   record:
     | NormalizediNatPlace
     | NormalizediNatTaxon
     | NormalizediNatProject
     | NormalizediNatUser,
-  resourceName: MapStoreSelectedResourcesArrayKeys,
-  appStore: MapStore,
   paramsTemp: ObservationsApiParams,
 ) {
   if (import.meta.env.VITE_CACHE === "true") {
     record.observations_count = -888;
-    updateSelectedResource(record, resourceName, appStore);
-    return;
+    return record;
   }
 
-  let params = cleanupObervationsParamsForRecord(paramsTemp);
+  let params = cleanupObervationsParamsForRecord(paramsTemp).toString();
   let perPage = 0;
   let data = await getObservations(params, perPage);
   record.observations_count = data?.total_results;
 
-  updateSelectedResource(record, resourceName, appStore);
+  return record;
+}
+
+export async function updateIdentificationsCountForOne(
+  record: NormalizediNatPlace | NormalizediNatTaxon | NormalizediNatUser,
+  resource: MapStoreSelectedResourcesKeys,
+  appStore: MapStore,
+  paramsTemp: ObservationsApiParams,
+) {
+  await getIdentificationsCountForRecord(record, paramsTemp);
+
+  updateSelectedResource(record, resource, appStore);
+}
+
+async function getIdentificationsCountForRecord(
+  record:
+    | NormalizediNatPlace
+    | NormalizediNatTaxon
+    | NormalizediNatProject
+    | NormalizediNatUser,
+  paramsTemp: ObservationsApiParams,
+) {
+  if (import.meta.env.VITE_CACHE === "true") {
+    record.identifications_count = -555;
+    return record;
+  }
+
+  let params = cleanupIdentificationsParamsForRecord(paramsTemp);
+  let perPage = 0;
+  let data = await getIdentifications(params, perPage);
+  record.identifications_count = data?.total_results;
+
+  return record;
 }
 
 export function updateSelectedResource(
@@ -425,29 +423,29 @@ export function updateSelectedResource(
     | NormalizediNatTaxon
     | NormalizediNatProject
     | NormalizediNatUser,
-  resourceName: MapStoreSelectedResourcesArrayKeys,
+  resourceName: MapStoreSelectedResourcesKeys,
   appStore: MapStore,
 ) {
-  let temp = [];
+  let records = [];
   let ids: number[] = [];
 
   appStore[resourceName].forEach((selectedResource) => {
     // update existing taxon
     if (selectedResource.id === record.id) {
-      temp.push(record);
+      records.push(record);
       // keep existing taxon
     } else {
-      temp.push(selectedResource);
+      records.push(selectedResource);
     }
     ids.push(selectedResource.id);
   });
 
   // add new record
   if (!ids.includes(record.id)) {
-    temp.push(record);
+    records.push(record);
   }
 
-  appStore[resourceName] = temp as any;
+  appStore[resourceName] = records as any;
 }
 
 export function renderResourceGeometryLayer(
@@ -869,7 +867,23 @@ function cleanupParams(appStore: MapStore) {
   return params;
 }
 
-export function cleanupObervationsParamsForRecord(
+function cleanupObervationsParamsForRecord(inatParams: ObservationsApiParams) {
+  let params = new URLSearchParams(inatParams as any);
+  params.delete("colors");
+  params.delete("view");
+  params.delete("subview");
+
+  if (inatParams.taxon_id === "0") {
+    params.delete("taxon_id");
+  }
+  if (inatParams.place_id === "0") {
+    params.delete("place_id");
+  }
+
+  return params.toString();
+}
+
+function cleanupIdentificationsParamsForRecord(
   inatParams: ObservationsApiParams,
 ) {
   let params = new URLSearchParams(inatParams as any);
@@ -889,6 +903,12 @@ export function cleanupObervationsParamsForRecord(
 
 export function cleanupObervationsParams(appStore: MapStore) {
   let params = cleanupParams(appStore);
+  let observation_taxon_id = params.get("observation_taxon_id");
+  if (observation_taxon_id) {
+    params.set("taxon_id", observation_taxon_id);
+    params.delete("observation_taxon_id");
+  }
+
   return params.toString();
 }
 
