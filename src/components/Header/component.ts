@@ -57,6 +57,8 @@ class Header extends HTMLElement {
       this.appStore.observationsApiParams = this.appStore.observationsApiParams;
     }
 
+    updateAppUrl(window.location, window.app.store);
+
     // load view
     let viewContainerEl = document.querySelector("#view-container");
     if (viewContainerEl && this.appStore.currentView) {
@@ -70,7 +72,6 @@ class Header extends HTMLElement {
     // does not exist on home page
     if (path === "/" && this.appStore.currentView === "identifications") {
       this.appStore.currentView = "observations";
-      updateAppUrl(window.location, this.appStore);
 
       let itemEl = document.querySelector(`#observations-nav #observations`);
       if (itemEl) {
