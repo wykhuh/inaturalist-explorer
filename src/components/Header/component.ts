@@ -53,6 +53,8 @@ class Header extends HTMLElement {
     // change url and load new page
     if (path) {
       window.app.router.go(path, location.search);
+      // HACK: trigger proxy store
+      this.appStore.observationsApiParams = this.appStore.observationsApiParams;
     }
 
     // load view
