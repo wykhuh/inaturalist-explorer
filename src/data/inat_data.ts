@@ -282,6 +282,9 @@ export const placeTypes: PlaceTypes = {
   "1020": "Delegation",
 };
 
+// BUG: tests are not importing defaultColorScheme correctly, so need to use
+// hexcolor
+let color = defaultColorScheme ? defaultColorScheme[0] : "#4477aa";
 export const lifeTaxon: NormalizediNatTaxon = {
   name: "Life",
   default_photo:
@@ -290,7 +293,7 @@ export const lifeTaxon: NormalizediNatTaxon = {
   matched_term: "Life",
   rank: "stateofmatter",
   id: 48460,
-  color: defaultColorScheme[0],
+  color: color,
   title: "Life",
   subtitle: "Life",
 };
