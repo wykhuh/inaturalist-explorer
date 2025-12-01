@@ -11,14 +11,16 @@ import type { iNatProjectsAPI } from "../types/inat_api";
 import { loggerUrl } from "../lib/logger.ts";
 import {
   addValueToCommaSeparatedString,
-  updateObservationsCountForOne,
   removeOneProjectFromStoreAndMap,
   renderResourceGeometryLayer,
 } from "./data_utils.ts";
 import {
+  updateObservationsCountForAll,
+  updateObservationsCountForOne,
+} from "./count_utils.ts";
+import {
   updateTilesForAllTaxa,
   renderSelectedResources,
-  updateObservationsCountForAll,
 } from "./search_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
 

@@ -1,4 +1,4 @@
-import { cleanupIdentificationParams } from "../../lib/data_utils";
+import { cleanupIdentificationParams } from "../../lib/cleanup_params_utils";
 import {
   renderMedia,
   renderObservationMetadataCounts,

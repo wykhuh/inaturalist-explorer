@@ -16,14 +16,14 @@ import {
   formatTaxonName,
   removeOneTaxonFromStoreAndMap,
   removeTaxaFromStoreAndMap,
-  updateObservationsCountForOne,
 } from "./data_utils.ts";
+import {
+  updateObservationsCountForOne,
+  updateObservationsCountForAll,
+} from "./count_utils.ts";
 import { renderTaxonNames } from "./render_utils";
 import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
-import {
-  renderSelectedResources,
-  updateObservationsCountForAll,
-} from "./search_utils.ts";
+import { renderSelectedResources } from "./search_utils.ts";
 
 export function setupTaxaSearch(selector: string, appStore: MapStore) {
   const autoCompleteTaxaJS = new autoComplete({

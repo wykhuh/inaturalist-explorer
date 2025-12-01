@@ -7,13 +7,15 @@ import { loggerUrl } from "../lib/logger.ts";
 import type { MapStore } from "../types/app";
 import {
   addValueToCommaSeparatedString,
-  updateObservationsCountForOne,
   removeOneUserFromStore,
 } from "./data_utils.ts";
 import {
+  updateObservationsCountForOne,
+  updateObservationsCountForAll,
+} from "./count_utils.ts";
+import {
   updateTilesForAllTaxa,
   renderSelectedResources,
-  updateObservationsCountForAll,
 } from "./search_utils.ts";
 
 export function setupUserSearch(selector: string, appStore: MapStore) {

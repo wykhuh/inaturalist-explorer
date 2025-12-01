@@ -8,7 +8,6 @@ import type { MapStore } from "../types/app";
 import {
   updateTilesForAllTaxa,
   renderSelectedResources,
-  updateObservationsCountForAll,
 } from "./search_utils.ts";
 import {
   processAutocompleteUser,
@@ -16,6 +15,7 @@ import {
 } from "./search_users.ts";
 import { removeOneUnobservedByUserFromStore } from "./data_utils.ts";
 import { renderSelectedFiltersList } from "../components/ObservationsFilters/utils.ts";
+import { updateObservationsCountForAll } from "./count_utils.ts";
 
 export function setupUnobservedByUserSearch(
   selector: string,

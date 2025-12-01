@@ -2,7 +2,7 @@ import { threatenedSpecies } from "../../data/inat_api_cache";
 import {
   cleanupIdentificationParams,
   cleanupObervationsParams,
-} from "../../lib/data_utils";
+} from "../../lib/cleanup_params_utils";
 import {
   getIdentificationsSpecies,
   getObservationsSpecies,

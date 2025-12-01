@@ -4,11 +4,9 @@ import {
   formatTaxonName,
   removeOneTaxonIdentifiedFromStore,
 } from "./data_utils.ts";
-import {
-  renderSelectedResources,
-  updateObservationsCountForAll,
-} from "./search_utils.ts";
+import { renderSelectedResources } from "./search_utils.ts";
 import { setupTaxaSearch } from "./search_taxa.ts";
+import { updateObservationsCountForAll } from "./count_utils.ts";
 
 export function setupTaxaIdentifiedSearch(
   selector: string,

@@ -1,5 +1,5 @@
 import { iNatObservationUrl, iNatUserUrl } from "../../data/inat_data";
-import { cleanupObervationsParams } from "../../lib/data_utils";
+import { cleanupObervationsParams } from "../../lib/cleanup_params_utils";
 import {
   formatAvatar,
   renderMedia,

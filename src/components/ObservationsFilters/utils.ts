@@ -19,9 +19,9 @@ import {
 } from "../../lib/form_utils";
 import {
   renderSelectedResources,
-  updateObservationsCountForAll,
   updateTilesForAllTaxa,
 } from "../../lib/search_utils";
+import { updateObservationsCountForAll } from "../../lib/count_utils";
 
 export function processFiltersForm(data: FormData): {
   params: ObservationsApiParams;

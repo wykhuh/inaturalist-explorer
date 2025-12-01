@@ -1,7 +1,7 @@
 import {
   cleanupIdentificationsObserversParams,
   cleanupObervationsObserversParams,
-} from "../../lib/data_utils";
+} from "../../lib/cleanup_params_utils";
 import { formatAvatar } from "../../lib/render_utils";
 import {
   getIdentificationsObservers,

@@ -14,15 +14,17 @@ import { loggerUrl } from "../lib/logger.ts";
 import {
   addValueToCommaSeparatedString,
   removeOnePlaceFromStoreAndMap,
-  updateObservationsCountForOne,
   renderResourceGeometryLayer,
 } from "./data_utils.ts";
+import {
+  updateObservationsCountForAll,
+  updateObservationsCountForOne,
+} from "./count_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
 import { placeTypes } from "../data/inat_data.ts";
 import {
   updateTilesForAllTaxa,
   renderSelectedResources,
-  updateObservationsCountForAll,
 } from "./search_utils.ts";
 
 export function setupPlacesSearch(selector: string) {

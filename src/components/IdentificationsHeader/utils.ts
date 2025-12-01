@@ -1,7 +1,7 @@
 import {
   cleanupIdentificationParams,
   cleanupObervationsParams,
-} from "../../lib/data_utils";
+} from "../../lib/cleanup_params_utils";
 import {
   getIdentifications,
   getObservations,

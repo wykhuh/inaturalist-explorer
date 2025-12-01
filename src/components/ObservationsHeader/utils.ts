@@ -1,8 +1,7 @@
 import {
   cleanupObervationsObserversParams,
   cleanupObervationsParams,
-  viewAndTemplateObject,
-} from "../../lib/data_utils";
+} from "../../lib/cleanup_params_utils";
 import {
   getObservations,
   getObservationsIdentifiers,

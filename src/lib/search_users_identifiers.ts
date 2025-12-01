@@ -2,12 +2,14 @@ import type { NormalizediNatUser } from "../types/app.d.ts";
 import type { MapStore } from "../types/app";
 import {
   addValueToCommaSeparatedString,
-  updateObservationsCountForOne,
   removeOneUserIdentifierFromStore,
 } from "./data_utils.ts";
 import {
-  renderSelectedResources,
+  updateObservationsCountForOne,
   updateObservationsCountForAll,
+} from "./count_utils.ts";
+import {
+  renderSelectedResources,
   updateTilesForAllTaxa,
 } from "./search_utils.ts";
 import { setupUserSearch } from "./search_users.ts";
