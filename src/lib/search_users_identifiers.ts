@@ -4,10 +4,7 @@ import {
   addValueToCommaSeparatedString,
   removeOneUserIdentifierFromStore,
 } from "./data_utils.ts";
-import {
-  updateObservationsCountForOne,
-  updateObservationsCountForAll,
-} from "./count_utils.ts";
+import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
 import {
   renderSelectedResources,
   updateTilesForAllTaxa,
@@ -56,14 +53,14 @@ export async function userIdentifierSelectedHandler(
     ...appStore.observationsApiParams,
     ident_user_id: selection.id.toString(),
   };
-  await updateObservationsCountForOne(
+  await updateCountForOne(
     selection,
     "selectedUsersIdentifiers",
     appStore,
     paramsTemp,
   );
   await updateTilesForAllTaxa(appStore);
-  await updateObservationsCountForAll("selectedUsersIdentifiers", appStore);
+  await updateCountForAll("selectedUsersIdentifiers", appStore);
 
   // add ident_user_id to filters list shown in filters modal
   const form = document.querySelector("#filters-form") as HTMLFormElement;
@@ -113,7 +110,7 @@ export async function removeUserIdentifier(userId: number, appStore: MapStore) {
 
   // remove existing taxa tiles, and refetch taxa tiles
   await updateTilesForAllTaxa(appStore);
-  await updateObservationsCountForAll("selectedUsersIdentifiers", appStore);
+  await updateCountForAll("selectedUsersIdentifiers", appStore);
 
   renderSelectedResources(appStore);
 }

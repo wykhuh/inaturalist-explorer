@@ -34,10 +34,7 @@ import {
   renderSelectedResources,
 } from "./search_utils.ts";
 import { isNormalizediNatTaxon } from "../types/utils.ts";
-import {
-  updateObservationsCountForOne,
-  updateObservationsCountForAll,
-} from "./count_utils.ts";
+import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
 
 // called when user clicks refresh map button
 export async function refreshBoundingBox(appStore: MapStore) {
@@ -73,18 +70,13 @@ export async function refreshBoundingBox(appStore: MapStore) {
   };
 
   await updateTilesForAllTaxa(appStore);
-  await updateObservationsCountForAll("selectedPlaces", appStore);
+  await updateCountForAll("selectedPlaces", appStore);
 
   let paramsTemp = {
     ...appStore.observationsApiParams,
   };
 
-  await updateObservationsCountForOne(
-    place,
-    "selectedPlaces",
-    appStore,
-    paramsTemp,
-  );
+  await updateCountForOne(place, "selectedPlaces", appStore, paramsTemp);
 
   renderSelectedResources(appStore);
 }
@@ -143,7 +135,7 @@ export async function addAllTaxaRecordToStore(appStore: MapStore) {
   };
   appStore.color = iNatOrange;
 
-  await updateObservationsCountForOne(
+  await updateCountForOne(
     allTaxaRecord,
     "selectedTaxa",
     appStore,

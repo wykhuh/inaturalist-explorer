@@ -16,10 +16,7 @@ import {
   removeOnePlaceFromStoreAndMap,
   renderResourceGeometryLayer,
 } from "./data_utils.ts";
-import {
-  updateObservationsCountForAll,
-  updateObservationsCountForOne,
-} from "./count_utils.ts";
+import { updateCountForAll, updateCountForOne } from "./count_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
 import { placeTypes } from "../data/inat_data.ts";
 import {
@@ -166,14 +163,9 @@ export async function placeSelectedHandler(
     ...appStore.observationsApiParams,
     place_id: place.id.toString(),
   };
-  await updateObservationsCountForOne(
-    place,
-    "selectedPlaces",
-    appStore,
-    paramsTemp,
-  );
+  await updateCountForOne(place, "selectedPlaces", appStore, paramsTemp);
   await updateTilesForAllTaxa(appStore);
-  await updateObservationsCountForAll("selectedPlaces", appStore);
+  await updateCountForAll("selectedPlaces", appStore);
 
   // zoom to map to fit all selected places
   if (map) {
@@ -208,7 +200,7 @@ export async function removePlace(placeId: number, appStore: MapStore) {
 
   // remove existing taxa tiles, and refetch taxa tiles
   await updateTilesForAllTaxa(appStore);
-  await updateObservationsCountForAll("selectedPlaces", appStore);
+  await updateCountForAll("selectedPlaces", appStore);
 
   renderSelectedResources(appStore);
 }

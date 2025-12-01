@@ -21,7 +21,7 @@ import {
   renderSelectedResources,
   updateTilesForAllTaxa,
 } from "../../lib/search_utils";
-import { updateObservationsCountForAll } from "../../lib/count_utils";
+import { updateCountForAll } from "../../lib/count_utils";
 
 export function processFiltersForm(data: FormData): {
   params: ObservationsApiParams;
@@ -115,7 +115,7 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
   updateStoreUsingFilters(appStore, results);
 
   await updateTilesForAllTaxa(appStore);
-  await updateObservationsCountForAll("all", appStore);
+  await updateCountForAll("all", appStore);
 
   // update UI
   renderSelectedFiltersList(data);

@@ -14,10 +14,7 @@ import {
   removeOneProjectFromStoreAndMap,
   renderResourceGeometryLayer,
 } from "./data_utils.ts";
-import {
-  updateObservationsCountForAll,
-  updateObservationsCountForOne,
-} from "./count_utils.ts";
+import { updateCountForAll, updateCountForOne } from "./count_utils.ts";
 import {
   updateTilesForAllTaxa,
   renderSelectedResources,
@@ -150,14 +147,9 @@ export async function projectSelectedHandler(
     ...appStore.observationsApiParams,
     project_id: project.id.toString(),
   };
-  await updateObservationsCountForOne(
-    project,
-    "selectedProjects",
-    appStore,
-    paramsTemp,
-  );
+  await updateCountForOne(project, "selectedProjects", appStore, paramsTemp);
   await updateTilesForAllTaxa(appStore);
-  await updateObservationsCountForAll("selectedProjects", appStore);
+  await updateCountForAll("selectedProjects", appStore);
 
   // zoom to map to fit all selected places
   if (map) {
@@ -189,7 +181,7 @@ export async function removeProject(projectId: number, appStore: MapStore) {
 
   // remove existing taxa tiles, and refetch taxa tiles
   await updateTilesForAllTaxa(appStore);
-  await updateObservationsCountForAll("selectedProjects", appStore);
+  await updateCountForAll("selectedProjects", appStore);
 
   if (appStore.map.map) {
     fitBoundsPlaces(appStore);

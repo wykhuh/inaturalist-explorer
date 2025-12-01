@@ -15,7 +15,7 @@ import {
 } from "./search_users.ts";
 import { removeOneUnobservedByUserFromStore } from "./data_utils.ts";
 import { renderSelectedFiltersList } from "../components/ObservationsFilters/utils.ts";
-import { updateObservationsCountForAll } from "./count_utils.ts";
+import { updateCountForAll } from "./count_utils.ts";
 
 export function setupUnobservedByUserSearch(
   selector: string,
@@ -78,7 +78,7 @@ export async function unobservedByUserSelectedHandler(
   };
 
   await updateTilesForAllTaxa(appStore);
-  await updateObservationsCountForAll("all", appStore);
+  await updateCountForAll("all", appStore);
 
   // add unobserved_by_user_id to filters list shown in filters modal
   const form = document.querySelector("#filters-form") as HTMLFormElement;
@@ -98,7 +98,7 @@ export async function removeUnobservedByUser(appStore: MapStore) {
 
   // remove existing taxa tiles, and refetch taxa tiles
   await updateTilesForAllTaxa(appStore);
-  await updateObservationsCountForAll("all", appStore);
+  await updateCountForAll("all", appStore);
 
   renderSelectedResources(appStore);
 }

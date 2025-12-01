@@ -48,7 +48,7 @@ import {
   updateTilesForAllTaxa,
 } from "./search_utils.ts";
 import { decodeAppUrl } from "./utils.ts";
-import { updateObservationsCountForAll } from "./count_utils.ts";
+import { updateCountForAll } from "./count_utils.ts";
 
 // populate store with basic view data from app url.
 // used to set view in observation header and subview in obdervation view
@@ -204,7 +204,7 @@ export async function initPopulateStore(
     }
   }
 
-  await updateObservationsCountForAll("all", appStore);
+  await updateCountForAll("all", appStore);
 
   renderSelectedResources(appStore, false);
 

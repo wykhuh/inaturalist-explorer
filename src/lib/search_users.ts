@@ -9,10 +9,7 @@ import {
   addValueToCommaSeparatedString,
   removeOneUserFromStore,
 } from "./data_utils.ts";
-import {
-  updateObservationsCountForOne,
-  updateObservationsCountForAll,
-} from "./count_utils.ts";
+import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
 import {
   updateTilesForAllTaxa,
   renderSelectedResources,
@@ -112,14 +109,9 @@ export async function userSelectedHandler(
     ...appStore.observationsApiParams,
     user_id: user.id.toString(),
   };
-  await updateObservationsCountForOne(
-    user,
-    "selectedUsers",
-    appStore,
-    paramsTemp,
-  );
+  await updateCountForOne(user, "selectedUsers", appStore, paramsTemp);
   await updateTilesForAllTaxa(appStore);
-  await updateObservationsCountForAll("selectedUsers", appStore);
+  await updateCountForAll("selectedUsers", appStore);
 
   renderSelectedResources(appStore);
 }
@@ -145,7 +137,7 @@ export async function removeUser(userId: number, appStore: MapStore) {
 
   // remove existing taxa tiles, and refetch taxa tiles
   await updateTilesForAllTaxa(appStore);
-  await updateObservationsCountForAll("selectedUsers", appStore);
+  await updateCountForAll("selectedUsers", appStore);
 
   renderSelectedResources(appStore);
 }

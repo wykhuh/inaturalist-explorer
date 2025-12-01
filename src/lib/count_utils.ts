@@ -25,15 +25,9 @@ export async function updateCountForOne(
   paramsTemp: ObservationsApiParams,
 ) {
   await updateObservationsCountForOne(record, resource, appStore, paramsTemp);
-  await updateIdentificationsCountForOne(
-    record,
-    resource,
-    appStore,
-    paramsTemp,
-  );
 }
 
-export async function updateObservationsCountForOne(
+async function updateObservationsCountForOne(
   record:
     | NormalizediNatUser
     | NormalizediNatProject
@@ -101,7 +95,14 @@ async function getIdentificationsCountForRecord(
   return record;
 }
 
-export async function updateObservationsCountForAll(
+export async function updateCountForAll(
+  ignoreResource: MapStoreSelectedResourcesKeys | "all",
+  appStore: MapStore,
+) {
+  await updateObservationsCountForAll(ignoreResource, appStore);
+}
+
+async function updateObservationsCountForAll(
   ignoreResource: MapStoreSelectedResourcesKeys | "all",
   appStore: MapStore,
 ) {

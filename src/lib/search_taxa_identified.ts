@@ -6,7 +6,7 @@ import {
 } from "./data_utils.ts";
 import { renderSelectedResources } from "./search_utils.ts";
 import { setupTaxaSearch } from "./search_taxa.ts";
-import { updateObservationsCountForAll } from "./count_utils.ts";
+import { updateCountForAll } from "./count_utils.ts";
 
 export function setupTaxaIdentifiedSearch(
   selector: string,
@@ -41,7 +41,7 @@ export async function taxonIdentifiedSelectedHandler(
     ),
   };
 
-  await updateObservationsCountForAll("selectedTaxaIdentified", appStore);
+  await updateCountForAll("selectedTaxaIdentified", appStore);
 
   renderSelectedResources(appStore);
 }
@@ -66,7 +66,7 @@ export async function removeTaxonIdentified(
 ) {
   removeOneTaxonIdentifiedFromStore(appStore, taxonId);
 
-  await updateObservationsCountForAll("selectedTaxaIdentified", appStore);
+  await updateCountForAll("selectedTaxaIdentified", appStore);
 
   renderSelectedResources(appStore);
 }

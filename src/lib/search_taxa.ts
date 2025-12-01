@@ -17,10 +17,7 @@ import {
   removeOneTaxonFromStoreAndMap,
   removeTaxaFromStoreAndMap,
 } from "./data_utils.ts";
-import {
-  updateObservationsCountForOne,
-  updateObservationsCountForAll,
-} from "./count_utils.ts";
+import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
 import { renderTaxonNames } from "./render_utils";
 import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
 import { renderSelectedResources } from "./search_utils.ts";
@@ -159,13 +156,8 @@ export async function taxonSelectedHandler(
     colors: color,
   };
   await fetchiNatMapDataForTaxon(taxon, appStore, paramsTemp);
-  await updateObservationsCountForOne(
-    taxon,
-    "selectedTaxa",
-    appStore,
-    paramsTemp,
-  );
-  await updateObservationsCountForAll("selectedTaxa", appStore);
+  await updateCountForOne(taxon, "selectedTaxa", appStore, paramsTemp);
+  await updateCountForAll("selectedTaxa", appStore);
 
   renderSelectedResources(appStore);
 }
@@ -193,7 +185,7 @@ export async function removeTaxon(taxonId: number, appStore: MapStore) {
     await addAllTaxaRecordToStore(appStore);
     await addAllTaxaRecordToMap(appStore);
   }
-  await updateObservationsCountForAll("selectedTaxa", appStore);
+  await updateCountForAll("selectedTaxa", appStore);
 
   renderSelectedResources(appStore);
 }
