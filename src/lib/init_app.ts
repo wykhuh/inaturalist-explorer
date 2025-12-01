@@ -34,12 +34,13 @@ import type {
   UserResult,
 } from "../types/inat_api";
 import {
-  addAllTaxaRecordToMapAndStore,
   formatTaxonName,
   addValueToCommaSeparatedString,
   renderSelectedPlacesBoundaries,
   renderSelectedProjectsBoundaries,
   viewAndTemplateObject,
+  addAllTaxaRecordToMap,
+  addAllTaxaRecordToStore,
 } from "./data_utils";
 import { loggerEvent, loggerRender, loggerStore } from "./logger.ts";
 import {
@@ -181,6 +182,8 @@ export async function initPopulateStore(
       }
       processTaxonData(taxonData, appStore, urlStore);
     }
+  } else {
+    await addAllTaxaRecordToStore(appStore);
   }
 
   await updateObservationsCountFor("all", appStore);
@@ -229,7 +232,7 @@ export async function initRenderMap(appStore: MapStore) {
     appStore.selectedTaxa === undefined ||
     appStore.selectedTaxa.length === 0
   ) {
-    await addAllTaxaRecordToMapAndStore(appStore);
+    await addAllTaxaRecordToMap(appStore);
   } else {
     // add taxa tiles for taxon id in url
     await updateTilesForAllTaxa(appStore);

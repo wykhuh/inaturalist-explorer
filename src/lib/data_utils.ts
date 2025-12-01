@@ -141,25 +141,29 @@ export async function getObservationsCountForTaxon(
   );
 }
 
-export async function addAllTaxaRecordToMapAndStore(appStore: MapStore) {
+export async function addAllTaxaRecordToStore(appStore: MapStore) {
   appStore.observationsApiParams = {
     ...appStore.observationsApiParams,
     colors: iNatOrange,
     taxon_id: "0",
   };
-  let paramsTemp = appStore.observationsApiParams;
   appStore.color = iNatOrange;
 
-  await fetchiNatMapDataForTaxon(allTaxaRecord, appStore, paramsTemp);
-  await getObservationsCountForTaxon(allTaxaRecord, appStore, paramsTemp);
+  await getObservationsCountForTaxon(
+    allTaxaRecord,
+    appStore,
+    appStore.observationsApiParams,
+  );
 
-  // set taxon_id after getting map data
-  appStore.observationsApiParams = {
-    ...appStore.observationsApiParams,
-    taxon_id: "0",
-    colors: iNatOrange,
-  };
   appStore.selectedTaxa = [allTaxaRecord];
+}
+
+export async function addAllTaxaRecordToMap(appStore: MapStore) {
+  await fetchiNatMapDataForTaxon(
+    allTaxaRecord,
+    appStore,
+    appStore.observationsApiParams,
+  );
 }
 
 export function removeOneTaxonFromStoreAndMap(
