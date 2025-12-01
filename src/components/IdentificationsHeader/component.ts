@@ -1,7 +1,8 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
-import { updateIdentificationsCounts, viewChangeHandler } from "./utils";
+import { updateCountsHeader } from "./utils";
 import { template } from "./template";
+import { viewChangeHandler } from "../ObservationsHeader/shared_utils";
 
 class IdentificationsHeader extends HTMLElement {
   constructor() {
@@ -37,7 +38,7 @@ class IdentificationsHeader extends HTMLElement {
       // only execute for instance that has updatecounts="true"
       if (this.dataset.updatecounts === "true") {
         loggerEvent(`++ IdentificationHeader ${event.type}`);
-        updateIdentificationsCounts(window.app.store);
+        updateCountsHeader(window.app.store);
       }
     }
 

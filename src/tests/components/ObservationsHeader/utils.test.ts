@@ -17,7 +17,7 @@ import {
   defaultQuery,
   defaultParams,
 } from "../../test_helpers";
-import { updateView } from "../../../components/ObservationsHeader/utils";
+import { updateView } from "../../../components/ObservationsHeader/shared_utils";
 
 const server = createMockServer();
 

@@ -1,7 +1,8 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
-import { updateObservationsCounts, viewChangeHandler } from "./utils";
+import { updateCountsHeader } from "./utils";
 import { template } from "./template";
+import { viewChangeHandler } from "./shared_utils";
 
 class ObservationHeader extends HTMLElement {
   constructor() {
@@ -37,7 +38,7 @@ class ObservationHeader extends HTMLElement {
       // only execute for instance that has updatecounts="true"
       if (this.dataset.updatecounts === "true") {
         loggerEvent(`++ ObservationHeader ${event.type}`);
-        updateObservationsCounts(window.app.store);
+        updateCountsHeader(window.app.store);
       }
     }
 
