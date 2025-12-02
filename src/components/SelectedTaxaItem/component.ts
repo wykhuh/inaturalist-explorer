@@ -35,8 +35,11 @@ class SelectedTaxaItem extends HTMLElement {
     let detailsEl = this.querySelector(".details");
     if (detailsEl) {
       let content = renderTaxonNames(taxon, appStore);
-      content += `<span class="observations-count">${pluralize(taxon.observations_count, "observation", true)}</span>`;
-
+      if (appStore.record_type === "observations") {
+        content += `<span class="count">${pluralize(taxon.observations_count, "observation", true)}</span>`;
+      } else {
+        content += `<span class="count">${pluralize(taxon.identifications_count, "identification", true)}</span>`;
+      }
       detailsEl.innerHTML = content;
     }
 

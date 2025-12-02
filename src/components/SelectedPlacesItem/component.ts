@@ -1,8 +1,8 @@
 import { setupComponent } from "../../lib/component_utils.ts";
 import { loggerRender } from "../../lib/logger.ts";
 import { removePlace } from "../../lib/search_places.ts";
-import { pluralize } from "../../lib/utils.ts";
-import type { NormalizediNatPlace } from "../../types/app";
+import { renderSelectedCounts } from "../../lib/selected_items_utils.ts";
+import type { MapStore, NormalizediNatPlace } from "../../types/app";
 import { template } from "./template";
 
 class SelectedPlacesItem extends HTMLElement {
@@ -11,10 +11,10 @@ class SelectedPlacesItem extends HTMLElement {
   }
 
   connectedCallback() {
-    this.render();
+    this.render(window.app.store);
   }
 
-  async render() {
+  async render(appStore: MapStore) {
     if (!this.dataset.place) return;
     loggerRender("++ SelectedPlacesItem render");
 
@@ -27,14 +27,7 @@ class SelectedPlacesItem extends HTMLElement {
       titleEl.textContent = place.name;
     }
 
-    let countEl = this.querySelector(".count");
-    if (countEl) {
-      countEl.textContent = pluralize(
-        place.observations_count,
-        "observation",
-        true,
-      );
-    }
+    renderSelectedCounts(place, appStore, this);
 
     let butttonEl = this.querySelector(".close-button");
     if (butttonEl) {

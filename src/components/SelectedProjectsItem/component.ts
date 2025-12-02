@@ -1,9 +1,9 @@
 import { setupComponent } from "../../lib/component_utils.ts";
 import { removeProject } from "../../lib/search_projects.ts";
-import type { NormalizediNatProject } from "../../types/app";
-import { pluralize } from "../../lib/utils.ts";
+import type { MapStore, NormalizediNatProject } from "../../types/app";
 import { loggerRender } from "../../lib/logger.ts";
 import { template } from "./template";
+import { renderSelectedCounts } from "../../lib/selected_items_utils.ts";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -11,10 +11,10 @@ class MyComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    this.render();
+    this.render(window.app.store);
   }
 
-  async render() {
+  async render(appStore: MapStore) {
     if (!this.dataset.project) return;
     loggerRender("++ SelectedProjectsItem render");
 
@@ -27,14 +27,7 @@ class MyComponent extends HTMLElement {
       nameEl.textContent = project.name;
     }
 
-    let countEl = this.querySelector(".count");
-    if (countEl) {
-      countEl.textContent = pluralize(
-        project.observations_count,
-        "observation",
-        true,
-      );
-    }
+    renderSelectedCounts(project, appStore, this);
 
     let butttonEl = this.querySelector(".close-button");
     if (butttonEl) {

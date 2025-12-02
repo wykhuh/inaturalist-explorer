@@ -2,7 +2,7 @@ import { setupComponent } from "../../lib/component_utils";
 import { loggerRender } from "../../lib/logger";
 import { removeUser } from "../../lib/search_users";
 import { removeUserIdentifier } from "../../lib/search_users_identifiers";
-import { pluralize } from "../../lib/utils";
+import { renderSelectedCounts } from "../../lib/selected_items_utils";
 import type { MapStore, NormalizediNatUser } from "../../types/app";
 import { template } from "./template";
 
@@ -34,16 +34,7 @@ class SelectedUsersItem extends HTMLElement {
       nameEl.textContent = text;
     }
 
-    let countEl = this.querySelector(".count");
-    if (countEl) {
-      countEl.textContent = pluralize(
-        user.observations_count,
-        appStore.record_type === "observations"
-          ? "observation"
-          : "identification",
-        true,
-      );
-    }
+    renderSelectedCounts(user, appStore, this);
 
     let butttonEl = this.querySelector(".close-button");
     if (butttonEl) {

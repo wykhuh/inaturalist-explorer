@@ -24,7 +24,16 @@ export async function updateCountForOne(
   appStore: MapStore,
   paramsTemp: ObservationsApiParams,
 ) {
-  await updateObservationsCountForOne(record, resource, appStore, paramsTemp);
+  if (appStore.record_type === "observations") {
+    await updateObservationsCountForOne(record, resource, appStore, paramsTemp);
+  } else {
+    await updateIdentificationsCountForOne(
+      record,
+      resource,
+      appStore,
+      paramsTemp,
+    );
+  }
 }
 
 async function updateObservationsCountForOne(
@@ -99,7 +108,11 @@ export async function updateCountForAll(
   ignoreResource: MapStoreSelectedResourcesKeys | "all",
   appStore: MapStore,
 ) {
-  await updateObservationsCountForAll(ignoreResource, appStore);
+  if (appStore.record_type === "observations") {
+    await updateObservationsCountForAll(ignoreResource, appStore);
+  } else {
+    await updateIdentificationsCountForAll(ignoreResource, appStore);
+  }
 }
 
 async function updateObservationsCountForAll(
@@ -116,8 +129,8 @@ async function updateObservationsCountForAll(
   ] as MapStoreSelectedResourcesKeys[];
 
   let targetResources = resources.filter((r) => r != ignoreResource);
-  for await (const res of targetResources) {
-    await updateObservationsCountForResource(res, appStore);
+  for await (const resource of targetResources) {
+    await updateObservationsCountForResource(resource, appStore);
   }
 }
 
@@ -125,6 +138,54 @@ async function updateObservationsCountForResource(
   resource: MapStoreSelectedResourcesKeys,
   appStore: MapStore,
 ) {
+  let idField = getIdFieldForResource(resource);
+  for await (const record of appStore[resource]) {
+    let paramsTemp = {
+      ...appStore.observationsApiParams,
+      [idField]: record.id.toString(),
+    };
+    await updateObservationsCountForOne(record, resource, appStore, paramsTemp);
+  }
+}
+
+async function updateIdentificationsCountForAll(
+  ignoreResource: MapStoreSelectedResourcesKeys | "all",
+  appStore: MapStore,
+) {
+  let resources = [
+    "selectedTaxa",
+    "selectedTaxaIdentified",
+    "selectedPlaces",
+    "selectedUsers",
+    "selectedUsersIdentifiers",
+  ] as MapStoreSelectedResourcesKeys[];
+
+  let targetResources = resources.filter((r) => r != ignoreResource);
+  for await (const resource of targetResources) {
+    await updateIdentificationsCountForResource(resource, appStore);
+  }
+}
+
+async function updateIdentificationsCountForResource(
+  resource: MapStoreSelectedResourcesKeys,
+  appStore: MapStore,
+) {
+  let idField = getIdFieldForResource(resource);
+  for await (const record of appStore[resource]) {
+    let paramsTemp = {
+      ...appStore.observationsApiParams,
+      [idField]: record.id.toString(),
+    };
+    await updateIdentificationsCountForOne(
+      record,
+      resource,
+      appStore,
+      paramsTemp,
+    );
+  }
+}
+
+function getIdFieldForResource(resource: MapStoreSelectedResourcesKeys) {
   let idField = "";
   if (resource === "selectedPlaces") {
     idField = "place_id";
@@ -141,12 +202,5 @@ async function updateObservationsCountForResource(
   } else {
     throw Error("invalid selected resource: " + resource);
   }
-
-  for await (const record of appStore[resource]) {
-    let paramsTemp = {
-      ...appStore.observationsApiParams,
-      [idField]: record.id.toString(),
-    };
-    await updateObservationsCountForOne(record, resource, appStore, paramsTemp);
-  }
+  return idField;
 }
