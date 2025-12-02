@@ -1,6 +1,9 @@
 import { setupComponent } from "../../lib/component_utils.ts";
 import { loggerRender } from "../../lib/logger.ts";
 import { renderTaxonNames } from "../../lib/render_utils";
+// BUG: if data_utils is imported before render_utils, there is import error
+// with defaultColorScheme
+import { isObservationsCheck } from "../../lib/data_utils.ts";
 import { removeTaxon } from "../../lib/search_taxa.ts";
 import { removeTaxonIdentified } from "../../lib/search_taxa_identified.ts";
 import { pluralize } from "../../lib/utils.ts";
@@ -35,7 +38,7 @@ class SelectedTaxaItem extends HTMLElement {
     let detailsEl = this.querySelector(".details");
     if (detailsEl) {
       let content = renderTaxonNames(taxon, appStore);
-      if (appStore.record_type === "observations") {
+      if (isObservationsCheck(appStore)) {
         content += `<span class="count">${pluralize(taxon.observations_count, "observation", true)}</span>`;
       } else {
         content += `<span class="count">${pluralize(taxon.identifications_count, "identification", true)}</span>`;

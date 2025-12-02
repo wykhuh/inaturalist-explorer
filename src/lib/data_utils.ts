@@ -769,3 +769,11 @@ export function viewAndTemplateObject(targetView: string) {
   }
   return view;
 }
+
+export function isIdentificationsCheck(appStore: MapStore) {
+  return appStore.record_type === "identifications";
+}
+
+export function isObservationsCheck(appStore: MapStore) {
+  return appStore.record_type === "observations";
+}

@@ -4,7 +4,12 @@ import type {
   SearchOptions,
   SearchOptionsKeys,
 } from "../types/app";
-import { fetchiNatMapDataForTaxon, removeOneTaxonFromMap } from "./data_utils";
+import {
+  fetchiNatMapDataForTaxon,
+  isIdentificationsCheck,
+  isObservationsCheck,
+  removeOneTaxonFromMap,
+} from "./data_utils";
 
 import { updateAppUrl } from "./utils";
 
@@ -53,7 +58,7 @@ export async function updateTilesForAllTaxa(appStore: MapStore) {
 
     // NOTE: iNat observations API only allows one ident_user_id value
     let identifierId = appStore.observationsApiParams.ident_user_id;
-    if (identifierId && appStore.record_type === "observations") {
+    if (identifierId && isObservationsCheck(appStore)) {
       identifierId = identifierId.split(",")[0];
       paramsTemp.ident_user_id = identifierId;
     }
@@ -76,9 +81,9 @@ export function renderSelectedResources(
 
   if (doSideEffects) {
     updateAppUrl(window.location, appStore);
-    if (appStore.record_type === "identifications") {
+    if (isIdentificationsCheck(appStore)) {
       window.dispatchEvent(new Event("identificationsChange"));
-    } else if (appStore.record_type === "observations") {
+    } else if (isObservationsCheck(appStore)) {
       window.dispatchEvent(new Event("observationsChange"));
     }
   }

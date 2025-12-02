@@ -4,6 +4,10 @@ import {
   cleanupObervationsParams,
 } from "../../lib/cleanup_params_utils";
 import {
+  isIdentificationsCheck,
+  isObservationsCheck,
+} from "../../lib/data_utils";
+import {
   getIdentificationsSpecies,
   getObservationsSpecies,
 } from "../../lib/inat_api";
@@ -69,10 +73,10 @@ async function getAPIData(perPage: number, appStore: MapStore) {
 
   try {
     let data;
-    if (appStore.record_type === "identifications") {
+    if (isIdentificationsCheck(appStore)) {
       let params = cleanupIdentificationParams(appStore);
       data = await getIdentificationsSpecies(params, perPage);
-    } else if (appStore.record_type === "observations") {
+    } else if (isObservationsCheck(appStore)) {
       let params = cleanupObervationsParams(appStore);
       data = await getObservationsSpecies(params, perPage);
     }

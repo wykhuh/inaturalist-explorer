@@ -2,6 +2,8 @@ import type { NormalizediNatUser } from "../types/app.d.ts";
 import type { MapStore } from "../types/app";
 import {
   addValueToCommaSeparatedString,
+  isIdentificationsCheck,
+  isObservationsCheck,
   removeOneUserIdentifierFromStore,
 } from "./data_utils.ts";
 import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
@@ -29,7 +31,7 @@ export async function userIdentifierSelectedHandler(
 ) {
   // add user to store
 
-  if (appStore.record_type === "identifications") {
+  if (isIdentificationsCheck(appStore)) {
     appStore.selectedUsersIdentifiers = [
       ...appStore.selectedUsersIdentifiers,
       selection,
@@ -77,7 +79,7 @@ export function renderUsersIdentifiersList(appStore: MapStore) {
   if (!listEl) return;
 
   listEl.innerHTML = "";
-  if (appStore.record_type === "identifications") {
+  if (isIdentificationsCheck(appStore)) {
     appStore.selectedUsersIdentifiers.forEach((user) => {
       let templateEl = document.createElement("users-list-item");
       templateEl.dataset.user = JSON.stringify(user);
@@ -85,7 +87,7 @@ export function renderUsersIdentifiersList(appStore: MapStore) {
       listEl.appendChild(templateEl);
     });
   } else if (
-    appStore.record_type === "observations" &&
+    isObservationsCheck(appStore) &&
     appStore.selectedUsersIdentifiers.length > 0
   ) {
     // NOTE: only show last identifier since iNat observations API only allows

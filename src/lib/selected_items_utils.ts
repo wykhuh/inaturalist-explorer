@@ -5,6 +5,7 @@ import type {
   NormalizediNatTaxon,
   NormalizediNatUser,
 } from "../types/app";
+import { isObservationsCheck } from "./data_utils";
 import { pluralize } from "./utils";
 
 export function renderSelectedCounts(
@@ -19,7 +20,7 @@ export function renderSelectedCounts(
   let countEl = context.querySelector(".count");
   if (!countEl) return;
 
-  if (appStore.record_type === "observations") {
+  if (isObservationsCheck(appStore)) {
     countEl.textContent = pluralize(
       record.observations_count,
       "observation",

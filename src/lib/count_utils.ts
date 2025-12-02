@@ -12,7 +12,7 @@ import {
   cleanupIdentificationsParamsForRecord,
   cleanupObervationsParamsForRecord,
 } from "./cleanup_params_utils.ts";
-import { updateSelectedResource } from "./data_utils.ts";
+import { isObservationsCheck, updateSelectedResource } from "./data_utils.ts";
 
 export async function updateCountForOne(
   record:
@@ -24,7 +24,7 @@ export async function updateCountForOne(
   appStore: MapStore,
   paramsTemp: ObservationsApiParams,
 ) {
-  if (appStore.record_type === "observations") {
+  if (isObservationsCheck(appStore)) {
     await updateObservationsCountForOne(record, resource, appStore, paramsTemp);
   } else {
     await updateIdentificationsCountForOne(
@@ -108,7 +108,7 @@ export async function updateCountForAll(
   ignoreResource: MapStoreSelectedResourcesKeys | "all",
   appStore: MapStore,
 ) {
-  if (appStore.record_type === "observations") {
+  if (isObservationsCheck(appStore)) {
     await updateObservationsCountForAll(ignoreResource, appStore);
   } else {
     await updateIdentificationsCountForAll(ignoreResource, appStore);

@@ -19,6 +19,10 @@ import { updateAppUrl } from "../../lib/utils";
 import type { MapStore } from "../../types/app";
 import { observers } from "../../data/inat_api_cache";
 import { isIdentificationsObserversResult } from "../../types/utils";
+import {
+  isIdentificationsCheck,
+  isObservationsCheck,
+} from "../../lib/data_utils";
 
 export let perPage = 100;
 
@@ -79,10 +83,10 @@ async function getAPIData(perPage: number, appStore: MapStore) {
 
   try {
     let data;
-    if (appStore.record_type === "identifications") {
+    if (isIdentificationsCheck(appStore)) {
       let params = cleanupIdentificationsObserversParams(appStore);
       data = await getIdentificationsObservers(params, perPage);
-    } else if (appStore.record_type === "observations") {
+    } else if (isObservationsCheck(appStore)) {
       let params = cleanupObervationsObserversParams(appStore);
       data = await getObservationsObservers(params, perPage);
     }
