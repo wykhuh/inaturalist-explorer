@@ -1,4 +1,5 @@
 import "./components/SelectedTaxaItem/component.ts";
+import "./components/SelectedTaxaIdentifiedItem/component.ts";
 import "./components/SelectedPlacesItem/component.ts";
 import "./components/SelectedProjectsItem/component.ts";
 import "./components/SelectedUsersItem/component.ts";

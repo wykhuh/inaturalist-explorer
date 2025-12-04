@@ -11,6 +11,7 @@ import type { iNatProjectsAPI } from "../types/inat_api";
 import { loggerUrl } from "../lib/logger.ts";
 import {
   addValueToCommaSeparatedString,
+  isObservationsCheck,
   removeOneProjectFromStoreAndMap,
   renderResourceGeometryLayer,
 } from "./data_utils.ts";
@@ -98,6 +99,9 @@ export async function projectSelectedHandler(
   _query: string,
   appStore: MapStore,
 ) {
+  let isObservations = isObservationsCheck(appStore);
+  if (!isObservations) return;
+
   let map = appStore.map.map;
   let project = selection;
 

@@ -29,6 +29,96 @@ import {
 } from "./fixtures/inatApi.ts";
 import type { PolygonJson } from "../types/inat_api";
 
+function adjustCount(url: string, count: number) {
+  let lifeCount = life().observations_count as number;
+  let oakCount = redOak().observations_count as number;
+  let allCount = allTaxa.observations_count;
+
+  if (new RegExp(`[&?]taxon_id=${allTaxa.id}`).test(url)) {
+    count = allCount;
+  } else if (
+    new RegExp(`[&?]taxon_id=${lifeBasic.id}%2C${redOakBasic.id}`).test(url)
+  ) {
+    count = lifeCount + oakCount;
+  } else if (new RegExp(`[&?]taxon_id=${lifeBasic.id}`).test(url)) {
+    count = lifeCount;
+  } else if (new RegExp(`[&?]taxon_id=${redOakBasic.id}`).test(url)) {
+    count = oakCount;
+  } else if (!new RegExp(`[&?]taxon_id=`).test(url)) {
+    count = allCount;
+  }
+
+  count = adjustCountMore(url, count);
+
+  if (url.includes(`&ident_user_id=${user1.id}`)) {
+    count = count * 0.75;
+  }
+  if (url.includes(`&unobserved_by_user_id=${user1.id}`)) {
+    count = count * 0.65;
+  }
+
+  return Math.round(count);
+}
+
+function adjustCountIdentification(url: string, count: number) {
+  let lifeCount = lifeIdentification().identifications_count as number;
+  let oakCount = redOakIdentification().identifications_count as number;
+  let allCount = allTaxaIdentification.identification_count;
+
+  if (new RegExp(`[?&](observation_)?taxon_id=${allTaxa.id}`).test(url)) {
+    count = allCount;
+  } else if (
+    new RegExp(
+      `[?&](observation_)?taxon_id=${lifeBasic.id}%2C${redOakBasic.id}`,
+    ).test(url)
+  ) {
+    count = lifeCount + oakCount;
+  } else if (
+    new RegExp(`[?&](observation_)?taxon_id=${lifeBasic.id}`).test(url)
+  ) {
+    count = lifeCount;
+  } else if (
+    new RegExp(`[?&](observation_)?taxon_id=${redOakBasic.id}`).test(url)
+  ) {
+    count = oakCount;
+  } else {
+    count = allCount;
+  }
+
+  count = adjustCountMore(url, count);
+
+  return Math.round(count);
+}
+
+function adjustCountMore(url: string, count: number) {
+  if (new RegExp(`[&?]place_id=${losangeles.id}%2C${sandiego.id}`).test(url)) {
+  } else if (new RegExp(`[&?]place_id=${losangeles.id}`).test(url)) {
+    count = count * 0.6;
+  } else if (new RegExp(`[&?]place_id=${sandiego.id}`).test(url)) {
+    count = count * 0.4;
+  }
+
+  if (
+    new RegExp(`[&?]project_id=${project_cnc1.id}%2C${project_cnc2.id}`).test(
+      url,
+    )
+  ) {
+  } else if (new RegExp(`[&?]project_id=${project_cnc1.id}`).test(url)) {
+    count = count * 0.7;
+  } else if (new RegExp(`[&?]project_id=${project_cnc2.id}`).test(url)) {
+    count = count * 0.3;
+  }
+
+  if (new RegExp(`[&?]user_id=${user1.id}%2C${user2.id}`).test(url)) {
+  } else if (new RegExp(`[&?]user_id=${user1.id}`).test(url)) {
+    count = count * 0.45;
+  } else if (new RegExp(`[&?]user_id=${user2.id}`).test(url)) {
+    count = count * 0.55;
+  }
+
+  return count;
+}
+
 export function createMockServer() {
   const handlers = [
     http.get("https://api.inaturalist.org/v1/grid*", async (_args) => {
@@ -71,54 +161,19 @@ export function createMockServer() {
     http.get("https://api.inaturalist.org/v2/observations*", async (_args) => {
       let url = _args.request.url.split("&fields=")[0];
       loggerUrl("request.url", url);
-      let count = -999;
-
-      if (url.includes(`taxon_id=${allTaxa.id}&`)) {
-        count = allTaxa.observations_count;
-      } else if (
-        url.includes(`taxon_id=${lifeBasic.id}%2C${redOakBasic.id}&`)
-      ) {
-        count = life().observations_count + redOak().observations_count;
-      } else if (url.includes(`taxon_id=${lifeBasic.id}&`)) {
-        count = life().observations_count;
-      } else if (url.includes(`taxon_id=${redOakBasic.id}&`)) {
-        count = redOak().observations_count;
-      } else if (!url.includes("taxon_id=")) {
-        count = allTaxa.observations_count;
-      } else if (url.includes(`observation_taxon_id=${lifeBasic.id}&`)) {
-        count = life().observations_count;
-      }
-
-      if (url.includes(`&place_id=${losangeles.id}%2C${sandiego.id}`)) {
-      } else if (url.includes(`&place_id=${losangeles.id}`)) {
-        count = count * 0.6;
-      } else if (url.includes(`&place_id=${sandiego.id}`)) {
-        count = count * 0.4;
-      }
-
-      if (url.includes(`&project_id=${project_cnc1.id}%2C${project_cnc2.id}`)) {
-      } else if (url.includes(`&project_id=${project_cnc1.id}`)) {
-        count = count * 0.7;
-      } else if (url.includes(`&project_id=${project_cnc2.id}`)) {
-        count = count * 0.3;
-      }
-
-      if (url.includes(`&ident_user_id=${user1.id}`)) {
-        count = count * 0.75;
-      }
-      if (url.includes(`&unobserved_by_user_id=${user1.id}`)) {
-        count = count * 0.65;
-      }
-
-      if (url.includes(`&user_id=${user1.id}%2C${user2.id}`)) {
-      } else if (url.includes(`&user_id=${user1.id}`)) {
-        count = count * 0.45;
-      } else if (url.includes(`&user_id=${user2.id}`)) {
-        count = count * 0.55;
-      }
+      let count = adjustCount(url, -999);
 
       return HttpResponse.json({ total_results: count, results: [] });
     }),
+    http.get(
+      "https://api.inaturalist.org/v1/identifications/*",
+      async (_args) => {
+        let url = _args.request.url;
+        let count = adjustCountIdentification(url, -999);
+
+        return HttpResponse.json({ total_results: count, results: [] });
+      },
+    ),
     http.get("https://{*}.tile.openstreetmap.org*", async (_args) => {
       loggerUrl("request.url", _args.request.url);
       return HttpResponse.json({ total_results: 123456, results: [] });
@@ -188,6 +243,8 @@ export let gridLabel_allTaxaRecord_users =
 
 export let gridLabel_allTaxaRecord_user1Identifier =
   "overlay: iNat grid, taxon_id 0, ident_user_id 222137";
+export let gridLabel_allTaxaRecord_user2Identifier =
+  "overlay: iNat grid, taxon_id 0, ident_user_id 677256";
 
 export let gridLabel_allTaxaRecord_user1Unobserved =
   "overlay: iNat grid, taxon_id 0, unobserved_by_user_id 222137";
@@ -283,7 +340,14 @@ export function life(color = colors[0]) {
     subtitle: "Life",
     color: color,
     observations_count: 10000,
-  };
+  } as NormalizediNatTaxon;
+}
+
+export function lifeIdentification() {
+  let taxon = life();
+  taxon.identifications_count = 2 * (taxon.observations_count as number);
+  delete taxon.observations_count;
+  return taxon;
 }
 
 export let redOakBasic: NormalizediNatTaxon = {
@@ -301,7 +365,14 @@ export function redOak(color = colors[1]) {
     subtitle: "Lobatae",
     color: color,
     observations_count: 1000,
-  };
+  } as NormalizediNatTaxon;
+}
+
+export function redOakIdentification() {
+  let taxon = redOak();
+  taxon.identifications_count = 2 * (taxon.observations_count as number);
+  delete taxon.observations_count;
+  return taxon;
 }
 
 export let monarchBasic: NormalizediNatTaxon = {
@@ -323,7 +394,15 @@ export function monarch(color = colors[2]) {
   };
 }
 
-export const allTaxa = { ...allTaxaRecord, observations_count: 100000 };
+export const allTaxa = {
+  ...allTaxaRecord,
+  observations_count: 100000,
+};
+
+export const allTaxaIdentification = {
+  ...allTaxaRecord,
+  identification_count: 200000,
+};
 
 export let losangeles: NormalizediNatPlace = {
   display_name: "Los Angeles County, US, CA",
@@ -435,13 +514,22 @@ export function expectEmpytMap(store: MapStore) {
 
 export function expectNoTaxa(store: MapStore) {
   expect(store.selectedTaxa).toStrictEqual([]);
+  expect(store.selectedTaxa).toStrictEqual([]);
   expect(store.taxaMapLayers).toStrictEqual({});
+}
+
+export function expectNoTaxaIdentification(store: MapStore) {
+  expect(store.selectedTaxa).toStrictEqual([]);
+  expect(store.selectedTaxaIdentified).toStrictEqual([]);
+  expect(Object.keys(store.taxaMapLayers)).toStrictEqual([
+    allTaxa.id.toString(),
+  ]);
 }
 
 export function expectAllTaxaRecord(store: MapStore, count = 0) {
   let taxa = structuredClone(allTaxa);
   if (count > 0) {
-    taxa.observations_count = count;
+    taxa.observations_count = Math.round(count);
   }
   expect(store.selectedTaxa).toStrictEqual([taxa]);
   expect(store.taxaMapLayers[0].length).toBe(3);
@@ -450,13 +538,44 @@ export function expectAllTaxaRecord(store: MapStore, count = 0) {
 export function expectLifeTaxa(store: MapStore, count = 0, color = colors[0]) {
   let taxa = structuredClone(life());
   if (count > 0) {
-    taxa.observations_count = count;
+    taxa.observations_count = Math.round(count);
   }
   taxa.color = color;
 
   expect(store.selectedTaxa).toStrictEqual([taxa]);
   expect(Object.keys(store.taxaMapLayers)).toEqual([taxa.id.toString()]);
   expect(store.taxaMapLayers[taxa.id].length).toBe(4);
+}
+
+export function expectLifeTaxaIdentification(store: MapStore, count = 0) {
+  let taxa = structuredClone(life());
+  delete taxa.observations_count;
+  if (count > 0) {
+    taxa.identifications_count = Math.round(count);
+  }
+
+  expect(store.selectedTaxa).toStrictEqual([taxa]);
+  expect(Object.keys(store.taxaMapLayers)).toEqual([
+    allTaxa.id.toString(),
+    life().id.toString(),
+  ]);
+  expect(store.taxaMapLayers[allTaxa.id].length).toBe(3);
+  expect(store.taxaMapLayers[life().id].length).toBe(4);
+}
+
+export function expectLifeTaxaIdentifiedIdentification(
+  store: MapStore,
+  count = 0,
+) {
+  let taxa = structuredClone(life());
+  delete taxa.observations_count;
+  delete taxa.color;
+  if (count > 0) {
+    taxa.identifications_count = count;
+  }
+
+  expect(store.selectedTaxaIdentified).toStrictEqual([taxa]);
+  expect(Object.keys(store.taxaMapLayers)).toEqual(["0"]);
 }
 
 export function expectOakTaxa(store: MapStore, color = colors[1]) {
@@ -488,6 +607,32 @@ export function expectLifeOakTaxa(
   expect(store.taxaMapLayers[taxa2.id].length).toBe(4);
 }
 
+export function expectLifeOakTaxaIdentifications(
+  store: MapStore,
+  count = [0, 0],
+) {
+  let taxa1 = life();
+  delete taxa1.observations_count;
+  let taxa2 = redOak();
+  delete taxa2.observations_count;
+
+  if (count[0] > 0) {
+    taxa1.identifications_count = count[0];
+  }
+  if (count[1] > 0) {
+    taxa2.identifications_count = count[1];
+  }
+  expect(store.selectedTaxa).toStrictEqual([taxa1, taxa2]);
+  expect(Object.keys(store.taxaMapLayers)).toEqual([
+    allTaxaRecord.id.toString(),
+    taxa1.id.toString(),
+    taxa2.id.toString(),
+  ]);
+  expect(store.taxaMapLayers[allTaxaRecord.id].length).toBe(3);
+  expect(store.taxaMapLayers[taxa1.id].length).toBe(4);
+  expect(store.taxaMapLayers[taxa2.id].length).toBe(4);
+}
+
 export function expectNoPlaces(store: MapStore) {
   expect(store.selectedPlaces).toStrictEqual([]);
   expect(store.placesMapLayers).toStrictEqual({});
@@ -500,7 +645,22 @@ export function expectNoRefresh(store: MapStore) {
 export function expectLosAngelesPlace(store: MapStore, count = 0) {
   let place = structuredClone(losangeles);
   if (count > 0) {
-    place.observations_count = count;
+    place.observations_count = Math.round(count);
+  }
+  expect(store.selectedPlaces).toEqual([place]);
+  expect(Object.keys(store.placesMapLayers)).toStrictEqual([
+    place.id.toString(),
+  ]);
+  expect(store.placesMapLayers[place.id].length).toBe(1);
+}
+
+export function expectLosAngelesPlaceIdentifications(
+  store: MapStore,
+  count = 0,
+) {
+  let place = structuredClone(losangeles);
+  if (count > 0) {
+    place.identifications_count = count;
   }
   expect(store.selectedPlaces).toEqual([place]);
   expect(Object.keys(store.placesMapLayers)).toStrictEqual([
@@ -512,7 +672,7 @@ export function expectLosAngelesPlace(store: MapStore, count = 0) {
 export function expectSanDiegoPlace(store: MapStore, count = 0) {
   let place = structuredClone(sandiego);
   if (count > 0) {
-    place.observations_count = count;
+    place.observations_count = Math.round(count);
   }
   expect(store.selectedPlaces).toEqual([place]);
   expect(Object.keys(store.placesMapLayers)).toStrictEqual([
@@ -540,13 +700,40 @@ export function expect_LA_SD_Place(store: MapStore, counts = [0, 0]) {
   expect(store.placesMapLayers[sandiego.id].length).toBe(1);
 }
 
+export function expect_LA_SD_Place_Identifications(
+  store: MapStore,
+  counts = [0, 0],
+) {
+  let place1 = structuredClone(losangeles);
+  if (counts[0] > 0) {
+    place1.identifications_count = counts[0];
+  }
+  let place2 = structuredClone(sandiego);
+  if (counts[1] > 0) {
+    place2.identifications_count = counts[1];
+  }
+
+  expect(store.selectedPlaces).toStrictEqual([place1, place2]);
+  expect(Object.keys(store.placesMapLayers)).toStrictEqual([
+    sandiego.id.toString(),
+    losangeles.id.toString(),
+  ]);
+  expect(store.placesMapLayers[losangeles.id].length).toBe(1);
+  expect(store.placesMapLayers[sandiego.id].length).toBe(1);
+}
+
+export function expectNoUsers(store: MapStore) {
+  expect(store.selectedUsers).toStrictEqual([]);
+  expect(store.selectedUsersIdentifiers).toStrictEqual([]);
+}
+
 export function expectRefreshPlace(store: MapStore, count = 0, type = "zero") {
   let place = structuredClone(refreshPlace);
   if (type !== "zero") {
     place = structuredClone(refreshPlaceLA);
   }
   if (count > 0) {
-    place.observations_count = count;
+    place.observations_count = Math.round(count);
   }
   expect(store.refreshMap.layer).toBeDefined();
   expect(store.selectedPlaces).toEqual([place]);
@@ -561,7 +748,7 @@ export function expectNoProjects(store: MapStore) {
 export function expectProject1(store: MapStore, count = 0) {
   let project = structuredClone(project_cnc1);
   if (count) {
-    project.observations_count = count;
+    project.observations_count = Math.round(count);
   }
   expect(store.selectedProjects).toEqual([project]);
 
@@ -571,7 +758,7 @@ export function expectProject1(store: MapStore, count = 0) {
 export function expectProject2(store: MapStore, count = 0) {
   let project = structuredClone(project_cnc2);
   if (count) {
-    project.observations_count = count;
+    project.observations_count = Math.round(count);
   }
   expect(store.selectedProjects).toEqual([project]);
 
@@ -584,10 +771,10 @@ export function expectProjects(store: MapStore, counts = [0, 0]) {
   let project1 = structuredClone(project_cnc1);
   let project2 = structuredClone(project_cnc2);
   if (counts[0] > 0) {
-    project1.observations_count = counts[0];
+    project1.observations_count = Math.round(counts[0]);
   }
   if (counts[1] > 0) {
-    project2.observations_count = counts[1];
+    project2.observations_count = Math.round(counts[1]);
   }
   expect(store.selectedProjects).toEqual([project1, project2]);
 
@@ -601,7 +788,7 @@ export function expectProjects(store: MapStore, counts = [0, 0]) {
 export function expectUser1(store: MapStore, count = 0) {
   let userA = structuredClone(user1);
   if (count > 0) {
-    userA.observations_count = count;
+    userA.observations_count = Math.round(count);
   }
   expect(store.selectedUsers).toEqual([userA]);
 }
@@ -609,7 +796,7 @@ export function expectUser1(store: MapStore, count = 0) {
 export function expectUser2(store: MapStore, count = 0) {
   let userB = structuredClone(user2);
   if (count > 0) {
-    userB.observations_count = count;
+    userB.observations_count = Math.round(count);
   }
   expect(store.selectedUsers).toEqual([userB]);
 }
@@ -617,11 +804,11 @@ export function expectUser2(store: MapStore, count = 0) {
 export function expectUsers(store: MapStore, counts = [0, 0]) {
   let userA = structuredClone(user1);
   if (counts[0] > 0) {
-    userA.observations_count = counts[0];
+    userA.observations_count = Math.round(counts[0]);
   }
   let userB = structuredClone(user2);
   if (counts[0] > 0) {
-    userB.observations_count = counts[1];
+    userB.observations_count = Math.round(counts[1]);
   }
   expect(store.selectedUsers).toEqual([userA, userB]);
 }
@@ -629,15 +816,28 @@ export function expectUsers(store: MapStore, counts = [0, 0]) {
 export function expectUser1Identifier(store: MapStore, count = 0) {
   let userA = structuredClone(user1);
   if (count > 0) {
-    userA.observations_count = count;
+    userA.observations_count = Math.round(count);
   }
   expect(store.selectedUsersIdentifiers).toEqual([userA]);
+}
+
+export function expectUserIdentifiers(store: MapStore, counts = [0, 0]) {
+  let userA = structuredClone(user1);
+  let userB = structuredClone(user2);
+
+  if (counts[0] > 0) {
+    userA.observations_count = counts[0];
+  }
+  if (counts[1] > 0) {
+    userB.observations_count = counts[1];
+  }
+  expect(store.selectedUsersIdentifiers).toEqual([userA, userB]);
 }
 
 export function expectUser1UnobservedByUser(store: MapStore, count = 0) {
   let userA = structuredClone(user1);
   if (count > 0) {
-    userA.observations_count = count;
+    userA.observations_count = Math.round(count);
   }
   expect(store.selectedUnobservedByUser).toEqual(userA);
 }
@@ -645,7 +845,7 @@ export function expectUser1UnobservedByUser(store: MapStore, count = 0) {
 export function expectUser2Identifier(store: MapStore, count = 0) {
   let userB = structuredClone(user2);
   if (count > 0) {
-    userB.observations_count = count;
+    userB.observations_count = Math.round(count);
   }
   expect(store.selectedUsersIdentifiers).toEqual(userB);
 }

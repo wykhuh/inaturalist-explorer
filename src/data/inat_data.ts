@@ -4,7 +4,7 @@ import type {
   NormalizediNatTaxon,
   PlaceTypes,
 } from "../types/app";
-import { defaultColorScheme, iNatOrange } from "../lib/map_colors_utils.ts";
+import { defaultColorScheme, iNatOrange } from "../lib/map_colors_utils";
 
 export const taxonRanks = [
   "kingdom",
@@ -177,23 +177,24 @@ export const IdentificationsApiNonFilterableNames = [
 ];
 
 export const IdentificationsApiFilterableNames = [
-  "rank",
-  "observation_rank",
-  "quality_grade", // array string
-  "iconic_taxon_id", // array string
-  "observation_iconic_taxon_id", // array string
-  "lrank",
-  "hrank",
-  "observation_lrank",
-  "observation_hrank",
   "d1",
   "d2",
-  "observation_created_d1",
-  "observation_created_d2",
+  "iconic_taxon_id", // array string
+  "lrank",
+  "hrank",
+
   "observed_d1",
   "observed_d2",
+  "observation_iconic_taxon_id", // array string
+  "observation_lrank",
+  "observation_hrank",
+  "quality_grade",
 
   // TODO: needs to be implemented
+  "rank",
+  "observation_rank",
+  "observation_created_d1",
+  "observation_created_d2",
   "current_taxon",
   "own_observation",
   "is_change",

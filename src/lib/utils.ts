@@ -5,9 +5,11 @@ import type {
   NormalizediNatTaxon,
   ObservationViews,
   NameOrder,
+  IdentificationsApiParamsKeys,
 } from "../types/app";
 import {
   bboxPlaceRecord,
+  IdentificationsApiFilterableNames,
   ObservationsApiFilterableNames,
   ObservationsApiNames,
   observationsOrderByValues,
@@ -234,6 +236,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   const urlParams = Object.fromEntries(new URLSearchParams(searchParams));
   let store = {
     observationsApiParams: {},
+    identificationsApiParams: {},
     viewMetadata: {
       observations: {},
       identifiers: {},
@@ -318,13 +321,14 @@ export function decodeAppUrl(searchParams: string, path = "/") {
       store.selectedPlaces = places as any;
     }
   }
-  if ("nelat" in urlParams) {
-    store.observationsApiParams = {
+  if (isObservations && "nelat" in urlParams) {
+    let coords = {
       nelat: Number(urlParams.nelat),
       nelng: Number(urlParams.nelng),
       swlat: Number(urlParams.swlat),
       swlng: Number(urlParams.swlng),
     };
+    store.observationsApiParams = coords;
   }
 
   // convert project_id into basic selectedProject with id
@@ -391,7 +395,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   }
 
   if (urlParams.order) {
-    if (orderValues.includes(urlParams.order)) {
+    if (isObservations && orderValues.includes(urlParams.order)) {
       store.observationsApiParams.order = urlParams.order;
     }
     if (urlParams.view && validViews.includes(urlParams.view)) {
@@ -403,7 +407,10 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   }
 
   if (urlParams.order_by) {
-    if (observationsOrderByValues.includes(urlParams.order_by)) {
+    if (
+      isObservations &&
+      observationsOrderByValues.includes(urlParams.order_by)
+    ) {
       store.observationsApiParams.order_by = urlParams.order_by;
     }
     if (urlParams.view && validViews.includes(urlParams.view)) {
@@ -415,7 +422,9 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   }
 
   if (urlParams.page) {
-    store.observationsApiParams.page = Number(urlParams.page);
+    if (isObservations) {
+      store.observationsApiParams.page = Number(urlParams.page);
+    }
     if (urlParams.view && validViews.includes(urlParams.view)) {
       store.viewMetadata[urlParams.view as ObservationViews].page = Number(
         urlParams.page,
@@ -425,7 +434,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     }
   }
 
-  if (urlParams.locale) {
+  if (isObservations && urlParams.locale) {
     store.observationsApiParams.locale = urlParams.locale;
   }
   if (urlParams.name_order) {
@@ -433,23 +442,58 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   }
 
   for (let [key, value] of new URLSearchParams(searchParams)) {
-    // convert string values to boolean and numbers
-    let cleanedValue = value as string | number | boolean;
-    if (ObservationsApiFilterableNames.includes(key)) {
-      if (value === "true") {
-        cleanedValue = true;
-      }
-      if (value === "false") {
-        cleanedValue = false;
-      }
-      if (/^\d+$/.test(value)) {
-        cleanedValue = Number(value);
-      }
-      store.observationsApiParams[key as ObservationsApiParamsKeys] =
-        cleanedValue;
+    if (isObservations) {
+      setUrlStoreValuesObservations(key, value, store);
+    } else {
+      setUrlStoreValuesIdentifications(key, value, store);
     }
   }
   return store;
+}
+
+// convert string values to boolean and numbers
+function setUrlStoreValuesObservations(
+  key: string,
+  value: string,
+  appStore: MapStore,
+) {
+  let cleanedValue = value as string | number | boolean;
+
+  if (ObservationsApiFilterableNames.includes(key)) {
+    if (value === "true") {
+      cleanedValue = true;
+    }
+    if (value === "false") {
+      cleanedValue = false;
+    }
+    if (/^\d+$/.test(value)) {
+      cleanedValue = Number(value);
+    }
+    appStore.observationsApiParams[key as ObservationsApiParamsKeys] =
+      cleanedValue;
+  }
+}
+
+function setUrlStoreValuesIdentifications(
+  key: string,
+  value: string,
+  appStore: MapStore,
+) {
+  let cleanedValue = value as string | number | boolean;
+
+  if (IdentificationsApiFilterableNames.includes(key)) {
+    if (value === "true") {
+      cleanedValue = true;
+    }
+    if (value === "false") {
+      cleanedValue = false;
+    }
+    if (/^\d+$/.test(value)) {
+      cleanedValue = Number(value);
+    }
+    appStore.identificationsApiParams[key as IdentificationsApiParamsKeys] =
+      cleanedValue;
+  }
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random

@@ -2,11 +2,12 @@ import type { NormalizediNatTaxon, MapStore } from "../types/app.d.ts";
 import {
   addValueToCommaSeparatedString,
   formatTaxonName,
+  isObservationsCheck,
   removeOneTaxonIdentifiedFromStore,
 } from "./data_utils.ts";
 import { renderSelectedResources } from "./search_utils.ts";
 import { setupTaxaSearch } from "./search_taxa.ts";
-import { updateCountForAll } from "./count_utils.ts";
+import { updateCountForAll, updateCountForOne } from "./count_utils.ts";
 
 export function setupTaxaIdentifiedSearch(
   selector: string,
@@ -23,6 +24,9 @@ export async function taxonIdentifiedSelectedHandler(
   _searchTerm: string,
   appStore: MapStore,
 ) {
+  let isObservations = isObservationsCheck(appStore);
+  if (isObservations) return;
+
   let { title, subtitle } = formatTaxonName(selection, appStore);
 
   // save taxa to store
@@ -33,16 +37,26 @@ export async function taxonIdentifiedSelectedHandler(
   };
 
   appStore.selectedTaxaIdentified = [...appStore.selectedTaxaIdentified, taxon];
-  appStore.observationsApiParams = {
-    ...appStore.observationsApiParams,
+  appStore.identificationsApiParams = {
+    ...appStore.identificationsApiParams,
     taxon_id: addValueToCommaSeparatedString(
       taxon.id,
-      appStore.observationsApiParams.taxon_id,
+      appStore.identificationsApiParams.taxon_id,
     ),
   };
 
-  await updateCountForAll("selectedTaxaIdentified", appStore);
+  let recordParams = {
+    ...appStore.identificationsApiParams,
+    taxon_id: taxon.id.toString(),
+  };
+  await updateCountForOne(
+    taxon,
+    "selectedTaxaIdentified",
+    appStore,
+    recordParams,
+  );
 
+  await updateCountForAll("selectedTaxaIdentified", appStore);
   renderSelectedResources(appStore);
 }
 
@@ -52,9 +66,8 @@ export function renderTaxaIdentifiedList(appStore: MapStore) {
 
   listEl.innerHTML = "";
   appStore.selectedTaxaIdentified.forEach((taxon) => {
-    let templateEl = document.createElement("species-list-item");
+    let templateEl = document.createElement("species-identified-list-item");
     templateEl.dataset.taxon = JSON.stringify(taxon);
-    templateEl.dataset.taxon_type = "identified";
     listEl.appendChild(templateEl);
   });
 }
@@ -66,7 +79,6 @@ export async function removeTaxonIdentified(
 ) {
   removeOneTaxonIdentifiedFromStore(appStore, taxonId);
 
-  await updateCountForAll("selectedTaxaIdentified", appStore);
-
+  await updateCountForAll("all", appStore);
   renderSelectedResources(appStore);
 }

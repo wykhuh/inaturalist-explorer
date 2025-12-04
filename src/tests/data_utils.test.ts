@@ -12,14 +12,7 @@ import {
 import { renderTaxonNames } from "../lib/render_utils";
 import type { NormalizediNatTaxon } from "../types/app.d.ts";
 import { mapStore } from "../lib/store.ts";
-import {
-  life,
-  lifeBasic,
-  losangeles,
-  redOak,
-  redOakBasic,
-  sandiego,
-} from "./test_helpers.ts";
+import { life, losangeles, redOak, sandiego } from "./test_helpers.ts";
 import {
   canisTaxaAutocompleteResults,
   coastOakAutocompleteResults,
@@ -858,56 +851,50 @@ describe("removeIdfromInatApiParams", () => {
   test("if no selectedTaxa, removes taxon_id and colors from observationsApiParams", async () => {
     let store = structuredClone(mapStore);
     let target_id = 10;
+    let target_color = "red";
     store.selectedTaxa = [];
     store.observationsApiParams.taxon_id = target_id.toString();
-    store.observationsApiParams.colors = "red";
+    store.observationsApiParams.colors = target_color;
 
-    removeIdfromInatApiParams(store, "taxon_id", target_id);
+    removeIdfromInatApiParams(store, "selectedTaxa", target_id);
 
     expect(store.observationsApiParams.taxon_id).toBeUndefined();
     expect(store.observationsApiParams.colors).toBeUndefined();
   });
 
-  test("if target_id not in selectedTaxa, set taxon_id and color to last item in selectedTaxa", async () => {
+  test("if target_id not in selectedTaxa, remove target id and color from observationsApiParams", async () => {
     let store = structuredClone(mapStore);
     let target_id = 10;
-    store.selectedTaxa = [lifeBasic, redOakBasic];
-    store.observationsApiParams.taxon_id = target_id.toString();
-    store.observationsApiParams.colors = "red";
+    let target_color = "red";
+    store.selectedTaxa = [life(), redOak()];
+    store.observationsApiParams.taxon_id = `${life().id},${target_id},${redOak().id}`;
+    store.observationsApiParams.colors = `${life().color},${target_color},${redOak().color}`;
 
-    removeIdfromInatApiParams(store, "taxon_id", target_id);
+    removeIdfromInatApiParams(store, "selectedTaxa", target_id);
 
     expect(store.observationsApiParams.taxon_id).toBe(
-      redOakBasic.id.toString(),
+      `${life().id},${redOak().id}`,
     );
-    expect(store.observationsApiParams.colors).toBe(redOakBasic.color);
+    expect(store.observationsApiParams.colors).toBe(
+      `${life().color},${redOak().color}`,
+    );
   });
 
-  test("if target_id is the same as the last item in selectedTaxa, do nothing", async () => {
-    let store = structuredClone(mapStore);
-    let target_id = redOak().id;
-
-    store.selectedTaxa = [life(), redOak()];
-    store.observationsApiParams.taxon_id = redOak().id.toString();
-    store.observationsApiParams.colors = redOak().color;
-
-    removeIdfromInatApiParams(store, "taxon_id", target_id);
-
-    expect(store.observationsApiParams.taxon_id).toBe(redOak().id.toString());
-    expect(store.observationsApiParams.colors).toBe(redOak().color);
-  });
-
-  test("if target_id is in selectedTaxa, set taxon_id and color to last item in selectedTaxa", async () => {
+  test("if target_id in selectedTaxa, do nothing", async () => {
     let store = structuredClone(mapStore);
     let target_id = life().id;
     store.selectedTaxa = [life(), redOak()];
-    store.observationsApiParams.taxon_id = life().id.toString();
-    store.observationsApiParams.colors = life().color;
+    store.observationsApiParams.taxon_id = `${life().id},${redOak().id}`;
+    store.observationsApiParams.colors = `${life().color},${redOak().color}`;
 
-    removeIdfromInatApiParams(store, "taxon_id", target_id);
+    removeIdfromInatApiParams(store, "selectedTaxa", target_id);
 
-    expect(store.observationsApiParams.taxon_id).toBe(redOak().id.toString());
-    expect(store.observationsApiParams.colors).toBe(redOak().color);
+    expect(store.observationsApiParams.taxon_id).toBe(
+      `${life().id},${redOak().id}`,
+    );
+    expect(store.observationsApiParams.colors).toBe(
+      `${life().color},${redOak().color}`,
+    );
   });
 
   test("if no selectedPlaces, removes place_id from observationsApiParams", async () => {
@@ -916,31 +903,18 @@ describe("removeIdfromInatApiParams", () => {
     store.selectedPlaces = [];
     store.observationsApiParams.place_id = target_id.toString();
 
-    removeIdfromInatApiParams(store, "place_id", target_id);
+    removeIdfromInatApiParams(store, "selectedPlaces", target_id);
 
     expect(store.observationsApiParams.place_id).toBeUndefined();
   });
 
-  test("if target_id is not in selectedPlaces, removes id from observationsApiParams.place_id", async () => {
+  test("if target_id is not in selectedPlaces, removes id from observationsApiParams", async () => {
     let store = structuredClone(mapStore);
     let target_id = 10;
     store.selectedPlaces = [losangeles, sandiego];
     store.observationsApiParams.place_id = `${target_id},${losangeles.id},${sandiego.id}`;
 
-    removeIdfromInatApiParams(store, "place_id", target_id);
-
-    expect(store.observationsApiParams.place_id).toBe(
-      `${losangeles.id},${sandiego.id}`,
-    );
-  });
-
-  test("if target_id is the same as the last item in selectedPlaces, do nothing", async () => {
-    let store = structuredClone(mapStore);
-    let target_id = sandiego.id;
-    store.selectedPlaces = [losangeles, sandiego];
-    store.observationsApiParams.place_id = `${losangeles.id},${sandiego.id}`;
-
-    removeIdfromInatApiParams(store, "place_id", target_id);
+    removeIdfromInatApiParams(store, "selectedPlaces", target_id);
 
     expect(store.observationsApiParams.place_id).toBe(
       `${losangeles.id},${sandiego.id}`,
@@ -949,11 +923,11 @@ describe("removeIdfromInatApiParams", () => {
 
   test("if target_id is in selectedPlaces, do nothing", async () => {
     let store = structuredClone(mapStore);
-    let target_id = losangeles.id;
+    let target_id = sandiego.id;
     store.selectedPlaces = [losangeles, sandiego];
     store.observationsApiParams.place_id = `${losangeles.id},${sandiego.id}`;
 
-    removeIdfromInatApiParams(store, "place_id", target_id);
+    removeIdfromInatApiParams(store, "selectedPlaces", target_id);
 
     expect(store.observationsApiParams.place_id).toBe(
       `${losangeles.id},${sandiego.id}`,

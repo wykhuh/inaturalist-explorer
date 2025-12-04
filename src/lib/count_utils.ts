@@ -46,7 +46,7 @@ async function updateObservationsCountForOne(
   appStore: MapStore,
   paramsTemp: ObservationsApiParams,
 ) {
-  await getObservationsCountForRecord(record, paramsTemp);
+  await getObservationsCountForRecord(record, paramsTemp, appStore);
 
   updateSelectedResource(record, resource, appStore);
 }
@@ -58,6 +58,7 @@ async function getObservationsCountForRecord(
     | NormalizediNatProject
     | NormalizediNatUser,
   paramsTemp: ObservationsApiParams,
+  appStore: MapStore,
 ) {
   if (import.meta.env.VITE_CACHE === "true") {
     record.observations_count = -888;
@@ -67,8 +68,11 @@ async function getObservationsCountForRecord(
   let params = cleanupObervationsParamsForRecord(paramsTemp).toString();
   let perPage = 0;
   let data = await getObservations(params, perPage);
-  record.observations_count = data?.total_results;
-
+  if (isObservationsCheck(appStore)) {
+    record.observations_count = data?.total_results;
+  } else {
+    record.identifications_count = data?.total_results;
+  }
   return record;
 }
 
@@ -138,7 +142,7 @@ async function updateObservationsCountForResource(
   resource: MapStoreSelectedResourcesKeys,
   appStore: MapStore,
 ) {
-  let idField = getIdFieldForResource(resource);
+  let idField = getIdFieldForResource(resource, appStore);
   for await (const record of appStore[resource]) {
     let paramsTemp = {
       ...appStore.observationsApiParams,
@@ -170,10 +174,10 @@ async function updateIdentificationsCountForResource(
   resource: MapStoreSelectedResourcesKeys,
   appStore: MapStore,
 ) {
-  let idField = getIdFieldForResource(resource);
+  let idField = getIdFieldForResource(resource, appStore);
   for await (const record of appStore[resource]) {
     let paramsTemp = {
-      ...appStore.observationsApiParams,
+      ...appStore.identificationsApiParams,
       [idField]: record.id.toString(),
     };
     await updateIdentificationsCountForOne(
@@ -185,20 +189,36 @@ async function updateIdentificationsCountForResource(
   }
 }
 
-function getIdFieldForResource(resource: MapStoreSelectedResourcesKeys) {
+function getIdFieldForResource(
+  resource: MapStoreSelectedResourcesKeys,
+  appStore: MapStore,
+) {
+  let isObservation = isObservationsCheck(appStore);
   let idField = "";
   if (resource === "selectedPlaces") {
     idField = "place_id";
   } else if (resource === "selectedProjects") {
     idField = "project_id";
   } else if (resource === "selectedTaxa") {
-    idField = "taxon_id";
+    if (isObservation) {
+      idField = "taxon_id";
+    } else {
+      idField = "observation_taxon_id";
+    }
   } else if (resource === "selectedTaxaIdentified") {
-    idField = "taxon_id";
+    if (!isObservation) {
+      idField = "taxon_id";
+    }
   } else if (resource === "selectedUsers") {
-    idField = "user_id";
+    if (isObservation) {
+      idField = "user_id";
+    }
   } else if (resource === "selectedUsersIdentifiers") {
-    idField = "ident_user_id";
+    if (isObservation) {
+      idField = "ident_user_id";
+    } else {
+      idField = "user_id";
+    }
   } else {
     throw Error("invalid selected resource: " + resource);
   }

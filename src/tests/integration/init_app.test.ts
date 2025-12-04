@@ -59,10 +59,25 @@ import {
   gridLabel_allTaxaRecord_user1Unobserved,
   gridLabel_life_places_identifier,
   gridLabel_oaks_places_identifier,
-  expectOakTaxa,
+  redOakBasic,
+  lifeBasic,
+  expectNoProjects,
+  expectNoUsers,
+  expectNoTaxaIdentification,
+  allTaxaIdentification,
+  lifeIdentification,
+  redOakIdentification,
 } from "../test_helpers.ts";
-import type { ObservationsApiParams } from "../../types/app";
-import { fieldsWithAny } from "../../data/inat_data.ts";
+import type {
+  IdentificationsApiParams,
+  ObservationsApiParams,
+} from "../../types/app";
+import {
+  allTaxaRecord,
+  fieldsWithAny,
+  IdentificationsApiFilterableNames,
+  ObservationsApiFilterableNames,
+} from "../../data/inat_data.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
 import { initPopulateStore, initRenderMap } from "../../lib/init_app.ts";
 import { mapStore } from "../../lib/store.ts";
@@ -113,44 +128,45 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectAllTaxaRecord(store);
 
     let expectedParams: ObservationsApiParams = {
-      taxon_id: allTaxa.id.toString(),
-      colors: iNatOrange,
       ...defaultParams,
-    };
-    expect(store.observationsApiParams).toStrictEqual(expectedParams);
-    expect(store.color).toBe(iNatOrange);
-  });
-
-  test("updates observationsApiParams with values in params ", async () => {
-    let store = structuredClone(mapStore);
-
-    expectEmpytMap(store);
-
-    let searchparams = "?verifiable=false&spam=true&photos=false";
-    let urlData = decodeAppUrl(searchparams, "/");
-
-    await initPopulateStore(store, urlData);
-    await initRenderMap(store);
-
-    expect(leafletVisibleLayers(store)).toStrictEqual([
-      basemapLabel_osm,
-      gridLabel_allTaxaRecord,
-    ]);
-    expectNoPlaces(store);
-    expectNoRefresh(store);
-    expectAllTaxaRecord(store);
-
-    let expectedParams: ObservationsApiParams = {
-      verifiable: false,
-      spam: true,
-      photos: false,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
-      locale: "en",
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(iNatOrange);
   });
+
+  test.each([ObservationsApiFilterableNames])(
+    "updates observationsApiParams with filterable params ",
+    async (param) => {
+      let store = structuredClone(mapStore);
+
+      expectEmpytMap(store);
+
+      let searchparams = `?${param}=true`;
+      let urlData = decodeAppUrl(searchparams, "/");
+
+      await initPopulateStore(store, urlData);
+      await initRenderMap(store);
+
+      expect(leafletVisibleLayers(store)).toStrictEqual([
+        basemapLabel_osm,
+        gridLabel_allTaxaRecord,
+      ]);
+      expectNoPlaces(store);
+      expectNoRefresh(store);
+      expectAllTaxaRecord(store);
+
+      let expectedParams: ObservationsApiParams = {
+        ...defaultParams,
+        colors: iNatOrange,
+        taxon_id: allTaxaRecord.id.toString(),
+        [param]: true,
+      };
+      expect(store.observationsApiParams).toStrictEqual(expectedParams);
+      expect(store.color).toBe(iNatOrange);
+    },
+  );
 
   test("ignores invalid params ", async () => {
     let store = structuredClone(mapStore);
@@ -172,9 +188,9 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectAllTaxaRecord(store);
 
     let expectedParams: ObservationsApiParams = {
+      ...defaultParams,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
-      ...defaultParams,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(iNatOrange);
@@ -185,7 +201,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = `?taxon_id=${life().id}&verifiable=false&spam=false`;
+    let searchparams = `?locale=en&taxon_id=${life().id}&verifiable=false&spam=false`;
     let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
@@ -215,7 +231,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = `?taxon_id=${life().id}&verifiable=true&spam=true`;
+    let searchparams = `?locale=en&taxon_id=${life().id}&verifiable=true&spam=true`;
     let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
@@ -245,7 +261,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = `?taxon_id=${life().id}`;
+    let searchparams = `?locale=en&taxon_id=${life().id}`;
     let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
@@ -260,9 +276,9 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectLifeTaxa(store);
 
     let expectedParams: ObservationsApiParams = {
+      ...defaultParams,
       colors: colors[0],
       taxon_id: life().id.toString(),
-      ...defaultParams,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(colors[0]);
@@ -275,7 +291,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
       expectEmpytMap(store);
 
-      let searchparams = `?taxon_id=${life().id}&${field}=any`;
+      let searchparams = `?locale=en&taxon_id=${life().id}&${field}=any`;
       let urlData = decodeAppUrl(searchparams, "/");
 
       await initPopulateStore(store, urlData);
@@ -309,7 +325,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = `?taxon_id=${life().id}&${defaultQuery}`;
+    let searchparams = `?locale=en&taxon_id=${life().id}&${defaultQuery}`;
     let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
@@ -324,9 +340,9 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectLifeTaxa(store);
 
     let expectedParams: ObservationsApiParams = {
+      ...defaultParams,
       colors: colors[0],
       taxon_id: life().id.toString(),
-      ...defaultParams,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(colors[0]);
@@ -337,7 +353,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = `?view=observations&subview=table`;
+    let searchparams = `?locale=en&view=observations&subview=table`;
     let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
@@ -347,9 +363,9 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoRefresh(store);
     expectAllTaxaRecord(store);
     expect(store.observationsApiParams).toStrictEqual({
+      ...defaultParams,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
-      ...defaultParams,
     });
     expect(store.color).toBe(iNatOrange);
     expect(store.currentView).toBe("observations");
@@ -361,7 +377,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = `?view=observations`;
+    let searchparams = `?locale=en&view=observations`;
     let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
@@ -371,9 +387,9 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoRefresh(store);
     expectAllTaxaRecord(store);
     expect(store.observationsApiParams).toStrictEqual({
+      ...defaultParams,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
-      ...defaultParams,
     });
     expect(store.color).toBe(iNatOrange);
     expect(store.currentView).toBe("observations");
@@ -385,7 +401,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = `?view=identifiers`;
+    let searchparams = `?locale=en&view=identifiers`;
     let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
@@ -395,9 +411,9 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoRefresh(store);
     expectAllTaxaRecord(store);
     expect(store.observationsApiParams).toStrictEqual({
+      ...defaultParams,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
-      ...defaultParams,
     });
     expect(store.color).toBe(iNatOrange);
     expect(store.currentView).toBe("identifiers");
@@ -409,7 +425,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = `?view=identifiers&page=3&order=desc&order_by=id`;
+    let searchparams = `?locale=en&view=identifiers&page=3&order=desc&order_by=id`;
     let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
@@ -419,12 +435,12 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoRefresh(store);
     expectAllTaxaRecord(store);
     expect(store.observationsApiParams).toStrictEqual({
+      ...defaultParams,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       page: 3,
       order: "desc",
       order_by: "id",
-      ...defaultParams,
     });
     expect(store.color).toBe(iNatOrange);
     expect(store.viewMetadata).toStrictEqual({
@@ -460,9 +476,9 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoRefresh(store);
     expectAllTaxaRecord(store);
     expect(store.observationsApiParams).toStrictEqual({
+      ...defaultParams,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
-      ...defaultParams,
       locale: "es",
     });
     expect(store.color).toBe(iNatOrange);
@@ -473,7 +489,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = `?name_order=sc`;
+    let searchparams = `?locale=en&name_order=sc`;
     let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
@@ -483,9 +499,9 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoRefresh(store);
     expectAllTaxaRecord(store);
     expect(store.observationsApiParams).toStrictEqual({
+      ...defaultParams,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
-      ...defaultParams,
     });
     expect(store.color).toBe(iNatOrange);
     expect(store.viewMetadata.name_order).toBe("sc");
@@ -498,7 +514,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}`;
+    let searchparams = `?locale=en&taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}`;
     let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
@@ -513,9 +529,9 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectNoRefresh(store);
     expectLifeTaxa(store);
     let expectedParams: ObservationsApiParams = {
+      ...defaultParams,
       colors: colors[0],
       taxon_id: life().id.toString(),
-      ...defaultParams,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(colors[0]);
@@ -527,7 +543,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = `?place_id=${losangeles.id}&${defaultQuery}`;
+    let searchparams = `?locale=en&place_id=${losangeles.id}&${defaultQuery}`;
     let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
@@ -544,10 +560,10 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectAllTaxaRecord(store, allTaxaLACount);
     expectLosAngelesPlace(store, allTaxaLACount);
     let expectedParams: ObservationsApiParams = {
+      ...defaultParams,
       place_id: losangeles.id.toString(),
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
-      ...defaultParams,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(iNatOrange);
@@ -577,13 +593,13 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectRefreshPlace(store, allTaxaCount);
     expectAllTaxaRecord(store);
     let expectedParams: ObservationsApiParams = {
+      ...defaultParams,
       nelat: 0,
       nelng: 0,
       swlat: 0,
       swlng: 0,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
-      ...defaultParams,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(iNatOrange);
@@ -596,7 +612,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = `?project_id=${project_cnc1.id}&${defaultQuery}`;
+    let searchparams = `?locale=en&project_id=${project_cnc1.id}&${defaultQuery}`;
     let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
@@ -612,10 +628,10 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectAllTaxaRecord(store, allTaxaProjectCount);
     expectProject1(store, allTaxaProjectCount);
     let expectedParams: ObservationsApiParams = {
+      ...defaultParams,
       project_id: project_cnc1.id.toString(),
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
-      ...defaultParams,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(iNatOrange);
@@ -630,7 +646,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = `?user_id=${user1.id}&${defaultQuery}`;
+    let searchparams = `?locale=en&user_id=${user1.id}&${defaultQuery}`;
     let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
@@ -646,10 +662,10 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectAllTaxaRecord(store, allTaxaCount * 0.45);
     expectUser1(store, allTaxaCount * 0.45);
     let expectedParams: ObservationsApiParams = {
+      ...defaultParams,
       user_id: user1.id.toString(),
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
-      ...defaultParams,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(iNatOrange);
@@ -661,7 +677,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = `?ident_user_id=${user1.id}&${defaultQuery}`;
+    let searchparams = `?locale=en&ident_user_id=${user1.id}&${defaultQuery}`;
     let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
@@ -677,10 +693,10 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectAllTaxaRecord(store, allTaxaCount * 0.75);
     expectUser1Identifier(store, allTaxaCount * 0.75);
     let expectedParams: ObservationsApiParams = {
+      ...defaultParams,
       ident_user_id: `${user1.id}`,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
-      ...defaultParams,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(iNatOrange);
@@ -692,7 +708,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = `?unobserved_by_user_id=${user1.id}&${defaultQuery}`;
+    let searchparams = `?locale=en&unobserved_by_user_id=${user1.id}&${defaultQuery}`;
     let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
@@ -722,7 +738,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = `?taxon_id=${life().id},${redOak().id}`;
+    let searchparams = `?locale=en&taxon_id=${life().id},${redOak().id}`;
     searchparams += `&place_id=${losangeles.id},${sandiego.id}`;
     searchparams += `&project_id=${project_cnc1.id},${project_cnc2.id}`;
     searchparams += `&user_id=${user1.id},${user2.id}`;
@@ -734,8 +750,8 @@ describe("initPopulateStore and initRenderMap resources", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    let lifeCount = life().observations_count;
-    let oakCount = redOak().observations_count;
+    let lifeCount = life().observations_count as number;
+    let oakCount = redOak().observations_count as number;
     let count = oakCount + lifeCount;
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -755,28 +771,40 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectUser1Identifier(store, count * 0.75);
     expectProjects(store, [count * 0.7 * 0.75, count * 0.3 * 0.75]);
     let expectedParams: ObservationsApiParams = {
+      ...defaultParams,
       colors: `${colors[0]},${colors[1]}`,
       taxon_id: `${life().id},${redOak().id}`,
       place_id: `${losangeles.id},${sandiego.id}`,
       project_id: `${project_cnc1.id},${project_cnc2.id}`,
       user_id: `${user1.id},${user2.id}`,
       ident_user_id: `${user1.id}`,
-      ...defaultParams,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(colors[1]);
-    expect(store.selectedTaxa[0].observations_count).toBe(lifeCount * 0.75);
-    expect(store.selectedTaxa[1].observations_count).toBe(oakCount * 0.75);
-    expect(store.selectedPlaces[0].observations_count).toBe(count * 0.6 * 0.75);
-    expect(store.selectedPlaces[1].observations_count).toBe(count * 0.4 * 0.75);
-    expect(store.selectedProjects[0].observations_count).toBe(
+    expect(store.selectedTaxa[0].observations_count).toBeCloseTo(
+      lifeCount * 0.75,
+    );
+    expect(store.selectedTaxa[1].observations_count).toBeCloseTo(
+      oakCount * 0.75,
+    );
+    expect(store.selectedPlaces[0].observations_count).toBeCloseTo(
+      count * 0.6 * 0.75,
+    );
+    expect(store.selectedPlaces[1].observations_count).toBeCloseTo(
+      count * 0.4 * 0.75,
+    );
+    expect(store.selectedProjects[0].observations_count).toBeCloseTo(
       count * 0.7 * 0.75,
     );
-    expect(store.selectedProjects[1].observations_count).toBe(
+    expect(store.selectedProjects[1].observations_count).toBeCloseTo(
       count * 0.3 * 0.75,
     );
-    expect(store.selectedUsers[0].observations_count).toBe(count * 0.45 * 0.75);
-    expect(store.selectedUsers[1].observations_count).toBe(4537.5);
+    expect(store.selectedUsers[0].observations_count).toBeCloseTo(
+      Math.round(count * 0.45 * 0.75),
+    );
+    expect(store.selectedUsers[1].observations_count).toBeCloseTo(
+      Math.round(count * 0.55 * 0.75),
+    );
   });
 
   test("loads and renders resources and bounding box based on url params", async () => {
@@ -786,7 +814,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
 
     colorsEncoded;
 
-    let searchparams = `?taxon_id=${life().id},${redOak().id}`;
+    let searchparams = `?locale=en&taxon_id=${life().id},${redOak().id}`;
     searchparams += `&nelat=0&nelng=0&swlat=0&swlng=0`;
     searchparams += `&project_id=${project_cnc1.id},${project_cnc2.id}`;
     searchparams += `&user_id=${user1.id},${user2.id}`;
@@ -797,8 +825,8 @@ describe("initPopulateStore and initRenderMap resources", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    let lifeCount = life().observations_count;
-    let oakCount = redOak().observations_count;
+    let lifeCount = life().observations_count as number;
+    let oakCount = redOak().observations_count as number;
     let count = oakCount + lifeCount;
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -831,13 +859,41 @@ describe("initPopulateStore and initRenderMap resources", () => {
   });
 });
 
-describe("initPopulateStore and initRenderMap resources for identifications", () => {
-  test.skip("loads and renders taxa data based on url params", async () => {
+describe("initPopulateStore and initRenderMap options with identifications", () => {
+  test.each([IdentificationsApiFilterableNames])(
+    "adds filterable params to identificationsApiParams",
+    async (param) => {
+      let store = structuredClone(mapStore);
+
+      let searchparams = `?${param}=true`;
+      let urlData = decodeAppUrl(searchparams, "/identifications/");
+      await initPopulateStore(store, urlData);
+      await initRenderMap(store);
+
+      expectNoPlaces(store);
+      expectNoRefresh(store);
+      expectNoProjects(store);
+      expectNoTaxaIdentification(store);
+      expect(store.selectedTaxa).toStrictEqual([]);
+      expect(store.selectedTaxaIdentified).toStrictEqual([]);
+      expect(store.selectedUsers).toStrictEqual([]);
+      expect(store.selectedUsersIdentifiers).toStrictEqual;
+      expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+      expect(store.identificationsApiParams).toStrictEqual({ [param]: true });
+    },
+  );
+});
+
+describe("initPopulateStore and initRenderMap resources with identifications", () => {
+  test("loads and renders taxa data based on url params", async () => {
     let store = structuredClone(mapStore);
+    store.record_type == "identifications";
+
+    let life = lifeIdentification();
 
     expectEmpytMap(store);
 
-    let searchparams = `?taxon_id=${life().id}&observation_taxon_id=${redOak().id}&${defaultQuery}`;
+    let searchparams = `?locale=en&observation_taxon_id=${lifeBasic.id}&${defaultQuery}`;
     let urlData = decodeAppUrl(searchparams, "/identifications/");
 
     await initPopulateStore(store, urlData);
@@ -845,27 +901,146 @@ describe("initPopulateStore and initRenderMap resources for identifications", ()
 
     expectNoPlaces(store);
     expectNoRefresh(store);
-    expectLifeTaxa(store);
-    expectOakTaxa(store);
+    expectNoProjects(store);
+    expect(store.selectedTaxa).toStrictEqual([life]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([]);
+    expect(store.selectedUsers).toStrictEqual([]);
+    expect(store.selectedUsersIdentifiers).toStrictEqual([]);
+    expect(Object.keys(store.taxaMapLayers)).toEqual([life.id.toString()]);
+    expect(store.taxaMapLayers[life.id].length).toBe(4);
+
     let expectedParams: ObservationsApiParams = {
-      colors: "#4477aa",
-      taxon_id: redOak().id.toString(),
       ...defaultParams,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
-    expect(store.color).toBe("");
-    expect(store.selectedTaxa).toStrictEqual([
-      { ...redOak(), color: "#4477aa" },
-    ]);
-    let lifeExpect = {
-      default_photo: "https://inat.com/photos/347064198/square.jpeg",
-      id: 48460,
-      name: "Life",
-      preferred_common_name: "life",
-      rank: "stateofmatter",
-      subtitle: "Life",
-      title: "Life",
+
+    expect(store.color).toBe(life.color);
+  });
+
+  test("loads and renders taxa identified data based on url params", async () => {
+    let store = structuredClone(mapStore);
+    store.record_type == "identifications";
+
+    let life = lifeIdentification();
+    delete life.color;
+
+    expectEmpytMap(store);
+
+    let searchparams = `?locale=en&taxon_id=${lifeBasic.id}&${defaultQuery}`;
+    let urlData = decodeAppUrl(searchparams, "/identifications/");
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expectNoProjects(store);
+    expect(store.selectedTaxaIdentified).toStrictEqual([life]);
+    expect(store.selectedTaxa).toStrictEqual([]);
+    expect(store.selectedUsers).toStrictEqual([]);
+    expect(store.selectedUsersIdentifiers).toStrictEqual([]);
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    let expectedParams2: IdentificationsApiParams = {
+      taxon_id: life.id.toString(),
     };
-    expect(store.selectedTaxaIdentified).toStrictEqual([lifeExpect]);
+    expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
+    expect(store.color).toBe("");
+  });
+
+  test("loads and renders user data based on url params", async () => {
+    let store = structuredClone(mapStore);
+
+    let userA = structuredClone(user1);
+    userA.identifications_count =
+      allTaxaIdentification.identification_count * 0.45;
+
+    expectEmpytMap(store);
+
+    let searchparams = `?locale=en&user_id=${userA.id}&${defaultQuery}`;
+    let urlData = decodeAppUrl(searchparams, "/identifications/");
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expectNoProjects(store);
+    expect(store.selectedTaxa).toStrictEqual([]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([]);
+    expect(store.selectedUsers).toStrictEqual([]);
+    expect(store.selectedUsersIdentifiers).toStrictEqual([userA]);
+
+    expect(Object.keys(store.taxaMapLayers)).toEqual(["0"]);
+    expect(store.taxaMapLayers[allTaxaRecord.id].length).toBe(3);
+
+    let expectedParams: ObservationsApiParams = {
+      ...defaultParams,
+    };
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
+
+    let expectedParams2: IdentificationsApiParams = {
+      user_id: userA.id.toString(),
+    };
+    expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
+  });
+
+  test("loads and renders places data based on url params", async () => {
+    let store = structuredClone(mapStore);
+
+    let placeA = structuredClone(losangeles);
+    placeA.identifications_count =
+      allTaxaIdentification.identification_count * 0.6;
+
+    expectEmpytMap(store);
+
+    let searchparams = `?locale=en&place_id=${placeA.id}&${defaultQuery}`;
+    let urlData = decodeAppUrl(searchparams, "/identifications/");
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expect(store.selectedPlaces).toStrictEqual([placeA]);
+    expectNoRefresh(store);
+    expectNoProjects(store);
+    expect(store.selectedTaxa).toStrictEqual([]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([]);
+    expectNoUsers(store);
+
+    expect(Object.keys(store.taxaMapLayers)).toEqual(["0"]);
+    expect(store.taxaMapLayers[allTaxaRecord.id].length).toBe(3);
+
+    let expectedParams: ObservationsApiParams = {
+      ...defaultParams,
+    };
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
+
+    let expectedParams2: IdentificationsApiParams = {
+      place_id: placeA.id.toString(),
+    };
+    expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
+  });
+
+  test("does not load project data based on url params", async () => {
+    let store = structuredClone(mapStore);
+
+    expectEmpytMap(store);
+
+    let searchparams = `?locale=en&project_id=${project_cnc1.id}&${defaultQuery}`;
+    let urlData = decodeAppUrl(searchparams, "/identifications/");
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expectNoProjects(store);
+    expect(store.selectedTaxa).toStrictEqual([]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([]);
+    expect(Object.keys(store.taxaMapLayers)).toEqual(["0"]);
+    expect(store.taxaMapLayers[allTaxaRecord.id].length).toBe(3);
+    expectNoUsers(store);
+
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    expect(store.identificationsApiParams).toStrictEqual({});
   });
 });

@@ -34,6 +34,7 @@ export interface MapStore {
   selectedProjects: NormalizediNatProject[];
   observationsApiParams: ObservationsApiParams;
   observationsApiParamsTemp?: ObservationsApiParams;
+  identificationsApiParams: IdentificationsApiParams;
   color: string;
   map: {
     map: Map | null;
@@ -140,6 +141,10 @@ export type MapStoreSelectedResourcesKeys =
   | "selectedUsers"
   | "selectedProjects"
   | "selectedUsersIdentifiers";
+
+export type MapStoreParamsKeys =
+  | "observationsApiParams"
+  | "identificationsApiParams";
 
 interface ObservationsApiParams extends ObservationsApiFilterableParams {
   nelat?: number;
@@ -261,6 +266,37 @@ interface ObservationsApiFilterableParams {
 export type ObservationsApiParamsKeys = keyof ObservationsApiParams;
 export type ObservationsApiFilterableParamsKeys =
   keyof ObservationsApiFilterableParams;
+
+interface IdentificationsApiParams extends IdentificationsApiFilterableParams {
+  place_id?: string; // comma-seperated string
+  taxon_id?: string; // comma-seperated string
+  observation_taxon_id?: string; // comma-seperated string
+  user_id?: string; // comma-seperated string
+  page?: number;
+  per_page?: number;
+}
+
+interface IdentificationsApiFilterableParams {
+  d1?: string; // date
+  d2?: string; // date
+  iconic_taxon_id?: string; // comma-seperated string
+  hrank?: TaxonRanks; // one value
+  lrank?: TaxonRanks; // one value
+
+  observed_d1?: string; // date
+  observed_d2?: string; // date
+  observation_iconic_taxon_id?: string; // comma-seperated string
+  observation_hrank?: TaxonRanks; // one value
+  observation_lrank?: TaxonRanks; // one value
+  quality_grade?: "casual" | "needs_id" | "research";
+
+  view?: string;
+  subview?: string;
+}
+
+export type IdentificationsApiParamsKeys = keyof IdentificationsApiParams;
+export type IdentificationsApiFilterableParamsKeys =
+  keyof IdentificationsApiFilterableParams;
 
 export interface AutoCompleteEvent {
   detail: {

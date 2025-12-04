@@ -10,5 +10,4 @@ export const template = html`
       &#215;
     </button>
   </li>
-  <style></style>
 `;

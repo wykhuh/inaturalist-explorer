@@ -13,6 +13,8 @@ import { loggerUrl } from "../lib/logger.ts";
 
 import {
   addValueToCommaSeparatedString,
+  getResourceApiParams,
+  isObservationsCheck,
   removeOnePlaceFromStoreAndMap,
   renderResourceGeometryLayer,
 } from "./data_utils.ts";
@@ -102,9 +104,9 @@ export async function placeSelectedHandler(
   _query: string,
   appStore: MapStore,
 ) {
-  let map = appStore.map.map;
-  // if (!map) return;
+  let isObservations = isObservationsCheck(appStore);
 
+  let map = appStore.map.map;
   let layer;
   if (map) {
     // draw boundaries of selected place
@@ -127,10 +129,12 @@ export async function placeSelectedHandler(
       appStore.refreshMap.layer.removeFrom(map);
       appStore.refreshMap.layer = null;
     }
-    delete appStore.observationsApiParams.swlat;
-    delete appStore.observationsApiParams.swlng;
-    delete appStore.observationsApiParams.nelat;
-    delete appStore.observationsApiParams.nelng;
+    if (isObservations) {
+      delete appStore.observationsApiParams.swlat;
+      delete appStore.observationsApiParams.swlng;
+      delete appStore.observationsApiParams.nelat;
+      delete appStore.observationsApiParams.nelng;
+    }
     appStore.selectedPlaces = appStore.selectedPlaces.filter((p) => p.id !== 0);
     delete appStore.placesMapLayers["0"];
   }
@@ -143,12 +147,14 @@ export async function placeSelectedHandler(
     bounding_box: selection.bounding_box,
     geometry: selection.geometry,
   };
+
+  let resourceApiParams = getResourceApiParams(isObservations);
   appStore.selectedPlaces = [...appStore.selectedPlaces, place];
-  appStore.observationsApiParams = {
-    ...appStore.observationsApiParams,
+  appStore[resourceApiParams] = {
+    ...appStore[resourceApiParams],
     place_id: addValueToCommaSeparatedString(
       place.id,
-      appStore.observationsApiParams.place_id,
+      appStore[resourceApiParams].place_id,
     ),
   };
 
@@ -160,7 +166,7 @@ export async function placeSelectedHandler(
   }
 
   let paramsTemp = {
-    ...appStore.observationsApiParams,
+    ...appStore[resourceApiParams],
     place_id: place.id.toString(),
   };
   await updateCountForOne(place, "selectedPlaces", appStore, paramsTemp);
@@ -186,6 +192,7 @@ export function renderPlacesList(appStore: MapStore) {
       name: place.name,
       display_name: place.display_name,
       observations_count: place.observations_count,
+      identifications_count: place.identifications_count,
     });
     listEl.appendChild(templateEl);
   });

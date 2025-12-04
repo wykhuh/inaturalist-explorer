@@ -29,32 +29,46 @@ export async function userIdentifierSelectedHandler(
   _query: string,
   appStore: MapStore,
 ) {
+  let isObservations = isObservationsCheck(appStore);
+
   // add user to store
 
-  if (isIdentificationsCheck(appStore)) {
-    appStore.selectedUsersIdentifiers = [
-      ...appStore.selectedUsersIdentifiers,
-      selection,
-    ];
-    appStore.observationsApiParams = {
-      ...appStore.observationsApiParams,
-      ident_user_id: addValueToCommaSeparatedString(
-        selection.id,
-        appStore.observationsApiParams.ident_user_id,
-      ),
-    };
-  } else {
+  if (isObservations) {
     appStore.selectedUsersIdentifiers = [selection];
+
     appStore.observationsApiParams = {
       ...appStore.observationsApiParams,
       ident_user_id: selection.id.toString(),
     };
+  } else {
+    appStore.selectedUsersIdentifiers = [
+      ...appStore.selectedUsersIdentifiers,
+      selection,
+    ];
+
+    appStore.identificationsApiParams = {
+      ...appStore.identificationsApiParams,
+      user_id: addValueToCommaSeparatedString(
+        selection.id,
+        appStore.identificationsApiParams.user_id,
+      ),
+    };
   }
 
-  let paramsTemp = {
-    ...appStore.observationsApiParams,
-    ident_user_id: selection.id.toString(),
-  };
+  let paramsTemp = {};
+
+  if (isObservations) {
+    paramsTemp = {
+      ...appStore.observationsApiParams,
+      ident_user_id: selection.id.toString(),
+    };
+  } else {
+    paramsTemp = {
+      ...appStore.identificationsApiParams,
+      user_id: selection.id.toString(),
+    };
+  }
+
   await updateCountForOne(
     selection,
     "selectedUsersIdentifiers",

@@ -7,6 +7,7 @@ import type {
   ObservationsApiParamsKeys,
   ObservationViews,
   NormalizediNatProject,
+  IdentificationsApiParamsKeys,
 } from "../types/app";
 import {
   addLayerToMap,
@@ -25,6 +26,7 @@ import {
 import {
   bboxPlaceRecord,
   fieldsWithAny,
+  IdentificationsApiNames,
   ObservationsApiNames,
 } from "../data/inat_data.ts";
 import type {
@@ -41,6 +43,9 @@ import {
   viewAndTemplateObject,
   addAllTaxaRecordToMap,
   addAllTaxaRecordToStore,
+  isObservationsCheck,
+  isIdentificationsCheck,
+  getResourceApiParams,
 } from "./data_utils";
 import { loggerEvent, loggerRender, loggerStore } from "./logger.ts";
 import {
@@ -57,23 +62,17 @@ export async function initPopulateStore(
   urlStore: MapStore,
 ) {
   loggerStore("++ initPopulateStore start");
-
   if (urlStore.record_type) {
     appStore.record_type = urlStore.record_type;
   }
+  let isObservations = isObservationsCheck(appStore);
 
-  // use url store to populate appStore.observationsApiParams
-  for (const [k, value] of Object.entries(urlStore.observationsApiParams)) {
-    let key = k as ObservationsApiParamsKeys;
-    // ignore params whose value is any
-    if (fieldsWithAny.includes(key) && value === "any") {
-      delete appStore.observationsApiParams[key];
-      // add valid params to observationsApiParams
-    } else if (ObservationsApiNames.includes(key)) {
-      delete appStore.observationsApiParams[key];
-      appStore.observationsApiParams[key] = value;
-    }
+  if (isObservations) {
+    populateObservationsApiParams(appStore, urlStore);
+  } else {
+    populateIdentificationsApiParams(appStore, urlStore);
   }
+
   // use url store to populate store view and and subview
   if (urlStore.currentView) {
     appStore.currentView = urlStore.currentView;
@@ -94,7 +93,6 @@ export async function initPopulateStore(
 
   // HACK: trigger store proxy
   appStore.observationsApiParams = appStore.observationsApiParams;
-  appStore.viewMetadata = appStore.viewMetadata;
 
   // places data
   if (
@@ -186,7 +184,7 @@ export async function initPopulateStore(
       }
       processTaxonData(taxonData, appStore, urlStore);
     }
-  } else {
+  } else if (urlStore.record_type === "observations") {
     await addAllTaxaRecordToStore(appStore);
   }
 
@@ -212,6 +210,39 @@ export async function initPopulateStore(
 
   window.dispatchEvent(new Event("storePopulated"));
   loggerEvent("dispatch storePopulated");
+}
+
+function populateObservationsApiParams(appStore: MapStore, urlStore: MapStore) {
+  // use url store to populate appStore.observationsApiParams
+  for (const [k, value] of Object.entries(urlStore.observationsApiParams)) {
+    let key = k as ObservationsApiParamsKeys;
+    // ignore params whose value is any
+    if (fieldsWithAny.includes(key) && value === "any") {
+      delete appStore.observationsApiParams[key];
+      // add valid params to observationsApiParams
+    } else if (ObservationsApiNames.includes(key)) {
+      delete appStore.observationsApiParams[key];
+      appStore.observationsApiParams[key] = value;
+    }
+  }
+}
+
+function populateIdentificationsApiParams(
+  appStore: MapStore,
+  urlStore: MapStore,
+) {
+  // use url store to populate appStore.identificationsApiParams
+  for (const [k, value] of Object.entries(urlStore.identificationsApiParams)) {
+    let key = k as IdentificationsApiParamsKeys;
+    // ignore params whose value is any
+    if (fieldsWithAny.includes(key) && value === "any") {
+      delete appStore.identificationsApiParams[key];
+      // add valid params to identificationsApiParams
+    } else if (IdentificationsApiNames.includes(key)) {
+      delete appStore.identificationsApiParams[key];
+      appStore.identificationsApiParams[key] = value;
+    }
+  }
 }
 
 export async function initRenderMap(appStore: MapStore) {
@@ -287,6 +318,8 @@ export function processTaxonData(
   let urlStoreTaxon = urlStore.selectedTaxa.find((t) => t.id === taxonData.id);
   if (!urlStoreTaxon) return;
 
+  let isObservations = isObservationsCheck(appStore);
+
   // create taxon object
   let taxon: NormalizediNatTaxon = {
     name: taxonData.name,
@@ -302,14 +335,24 @@ export function processTaxonData(
   taxon.subtitle = subtitle;
 
   appStore.selectedTaxa = [...appStore.selectedTaxa, taxon];
-  appStore.observationsApiParams.taxon_id = addValueToCommaSeparatedString(
-    taxonData.id,
-    appStore.observationsApiParams.taxon_id,
-  );
-  appStore.observationsApiParams.colors = addValueToCommaSeparatedString(
-    urlStoreTaxon.color,
-    appStore.observationsApiParams.colors,
-  );
+
+  if (isObservations) {
+    appStore.observationsApiParams.taxon_id = addValueToCommaSeparatedString(
+      taxonData.id,
+      appStore.observationsApiParams.taxon_id,
+    );
+    appStore.observationsApiParams.colors = addValueToCommaSeparatedString(
+      urlStoreTaxon.color,
+      appStore.observationsApiParams.colors,
+    );
+  } else {
+    appStore.identificationsApiParams.observation_taxon_id =
+      addValueToCommaSeparatedString(
+        taxonData.id,
+        appStore.identificationsApiParams.observation_taxon_id,
+      );
+  }
+
   if (urlStoreTaxon.color) {
     appStore.color = urlStoreTaxon.color;
   }
@@ -320,6 +363,8 @@ export function processTaxonIdentifiedData(
   appStore: MapStore,
   urlStore: MapStore,
 ) {
+  if (isObservationsCheck(appStore)) return;
+
   let urlStoreTaxon = urlStore.selectedTaxaIdentified.find(
     (t) => t.id === taxonData.id,
   );
@@ -339,16 +384,17 @@ export function processTaxonIdentifiedData(
   taxon.subtitle = subtitle;
 
   appStore.selectedTaxaIdentified = [...appStore.selectedTaxaIdentified, taxon];
-  appStore.observationsApiParams.observation_taxon_id =
-    addValueToCommaSeparatedString(
-      taxonData.id,
-      appStore.observationsApiParams.observation_taxon_id,
-    );
+
+  appStore.identificationsApiParams.taxon_id = addValueToCommaSeparatedString(
+    taxonData.id,
+    appStore.identificationsApiParams.taxon_id,
+  );
 }
 
 export function processPlaceData(placeData: PlacesResult, appStore: MapStore) {
-  // save place to store
+  let isObservations = isObservationsCheck(appStore);
 
+  // save place to store
   let bbox = placeData.bounding_box_geojson;
   appStore.selectedPlaces = [
     ...appStore.selectedPlaces,
@@ -361,14 +407,16 @@ export function processPlaceData(placeData: PlacesResult, appStore: MapStore) {
     },
   ];
 
+  let resourceApiParams = getResourceApiParams(isObservations);
   // create comma seperated place_id
-  appStore.observationsApiParams.place_id = addValueToCommaSeparatedString(
+  appStore[resourceApiParams].place_id = addValueToCommaSeparatedString(
     placeData.id,
-    appStore.observationsApiParams.place_id,
+    appStore[resourceApiParams].place_id,
   );
 }
 
 export function processBBoxData(appStore: MapStore, urlStore: MapStore) {
+  if (!isObservationsCheck(appStore)) return;
   let lngLatCoors = convertParamsBBoxToLngLat(urlStore.observationsApiParams);
   if (!lngLatCoors) return;
 
@@ -400,6 +448,8 @@ export function processProjectData(
   appStore: MapStore,
   placeData?: PlacesResult,
 ) {
+  if (isIdentificationsCheck(appStore)) return;
+
   let project: NormalizediNatProject = {
     id: projectData.id,
     name: projectData.title,
@@ -420,6 +470,8 @@ export function processProjectData(
 }
 
 function processUserData(userData: UserResult, appStore: MapStore) {
+  if (isIdentificationsCheck(appStore)) return;
+
   appStore.selectedUsers = [
     ...appStore.selectedUsers,
     {
@@ -446,13 +498,23 @@ function processUserIdentifierData(userData: UserResult, appStore: MapStore) {
     },
   ];
 
-  appStore.observationsApiParams.ident_user_id = addValueToCommaSeparatedString(
-    userData.id,
-    appStore.observationsApiParams.ident_user_id,
-  );
+  if (isObservationsCheck(appStore)) {
+    appStore.observationsApiParams.ident_user_id =
+      addValueToCommaSeparatedString(
+        userData.id,
+        appStore.observationsApiParams.ident_user_id,
+      );
+  } else {
+    appStore.identificationsApiParams.user_id = addValueToCommaSeparatedString(
+      userData.id,
+      appStore.identificationsApiParams.user_id,
+    );
+  }
 }
 
 function processUnobservedByUserData(userData: UserResult, appStore: MapStore) {
+  if (isIdentificationsCheck(appStore)) return;
+
   appStore.selectedUnobservedByUser = {
     id: userData.id,
     name: userData.name,

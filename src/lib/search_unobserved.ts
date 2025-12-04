@@ -13,7 +13,10 @@ import {
   processAutocompleteUser,
   renderAutocompleteUser,
 } from "./search_users.ts";
-import { removeOneUnobservedByUserFromStore } from "./data_utils.ts";
+import {
+  isObservationsCheck,
+  removeOneUnobservedByUserFromStore,
+} from "./data_utils.ts";
 import { renderSelectedFiltersList } from "../components/ObservationsFilters/utils.ts";
 import { updateCountForAll } from "./count_utils.ts";
 
@@ -70,6 +73,9 @@ export async function unobservedByUserSelectedHandler(
   _query: string,
   appStore: MapStore,
 ) {
+  let isObservations = isObservationsCheck(appStore);
+  if (!isObservations) return;
+
   // add project to store
   appStore.selectedUnobservedByUser = selection;
   appStore.observationsApiParams = {

@@ -7,6 +7,7 @@ import { loggerUrl } from "../lib/logger.ts";
 import type { MapStore } from "../types/app";
 import {
   addValueToCommaSeparatedString,
+  isObservationsCheck,
   removeOneUserFromStore,
 } from "./data_utils.ts";
 import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
@@ -94,9 +95,14 @@ export async function userSelectedHandler(
   _query: string,
   appStore: MapStore,
 ) {
+  let isObservations = isObservationsCheck(appStore);
+  if (!isObservations) return;
+
   let user = selection;
-  // add project to store
+
+  // add user to store
   appStore.selectedUsers = [...appStore.selectedUsers, selection];
+
   appStore.observationsApiParams = {
     ...appStore.observationsApiParams,
     user_id: addValueToCommaSeparatedString(

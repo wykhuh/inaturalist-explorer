@@ -117,3 +117,97 @@ Candy Cap
 (Lactarius rubidus)
 
 27 observations, 54 idenifications
+
+==
+
+Golden-crowned Sparrow at Mt. San Antonio Wildlife Sanctuary 
+
+https://api.inaturalist.org/v1/identifications/?place_id=201657&per_page=0&observation_taxon_id=9185
+
+{
+    "total_results": 3,
+    "page": 1,
+    "per_page": 0,
+    "results": []
+}
+
+https://api.inaturalist.org/v1/identifications/?place_id=201657&per_page=0&taxon_id=9185
+
+{
+    "total_results": 2,
+    "page": 1,
+    "per_page": 0,
+    "results": []
+}
+
+https://www.inaturalist.org/observations/249243630
+
+Golden-crowned Sparrow
+Zonotrichia atricapilla
+Research Grade, 3
+
+Activity
+grasshopper_enjoyer suggested an ID
+Zonotrichia Sparrows
+Genus Zonotrichia
+
+bridgetspencer suggested an ID
+Golden-crowned Sparrow
+Zonotrichia atricapilla
+
+david99 suggested an ID
+Golden-crowned Sparrow
+Zonotrichia atricapilla
+
+~~
+
+
+Band-tailed Pigeon  at at Mt. San Antonio Wildlife Sanctuary 
+
+https://api.inaturalist.org/v1/identifications/?place_id=201657&per_page=0&taxon_id=3108
+{
+    "total_results": 5,
+    "page": 1,
+    "per_page": 0,
+    "results": []
+}
+
+https://api.inaturalist.org/v1/identifications/?place_id=201657&per_page=0&observation_taxon_id=3108
+{
+    "total_results": 6,
+    "page": 1,
+    "per_page": 0,
+    "results": []
+}
+
+
+https://www.inaturalist.org/observations?place_id=201657&taxon_id=3108
+research grade, 4
+research grade, 2
+
+
+https://www.inaturalist.org/observations/257737465
+drewskipoo suggested an ID
+Pigeons and Doves
+Family Columbidae
+
+thomasabenson suggested an ID
+Band-tailed Pigeon
+Patagioenas fasciata
+
+david99 suggested an ID
+Band-tailed Pigeon
+Patagioenas fasciata
+
+karakaxa suggested an ID
+Band-tailed Pigeon
+Patagioenas fasciata
+
+https://www.inaturalist.org/observations/214124343
+drewskipoo suggested an ID
+Band-tailed Pigeon
+Patagioenas fasciata
+
+locomotive suggested an ID
+Band-tailed Pigeon
+Patagioenas fasciata
