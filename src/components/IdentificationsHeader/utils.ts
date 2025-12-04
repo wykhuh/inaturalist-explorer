@@ -12,6 +12,10 @@ import {
 import type { MapStore } from "../../types/app";
 import { updateResourceCounts } from "../ObservationsHeader/shared_utils";
 
+function nullObservations(_searchParams = "", _perPage = 0) {
+  return { total_results: "--" };
+}
+
 export function updateCountsHeader(appStore: MapStore) {
   // NOTE: use tempStore with record_type = "observations" since observations
   // has different search params than identifications
@@ -19,11 +23,19 @@ export function updateCountsHeader(appStore: MapStore) {
   tempStore.record_type = "observations";
   let params = cleanupObervationsParams(tempStore);
 
-  updateResourceCounts(
-    getObservations,
-    "#identifications-header .observations-count",
-    params,
-  );
+  if (appStore.selectedTaxa.length === 0) {
+    updateResourceCounts(
+      nullObservations,
+      "#identifications-header .observations-count",
+      params,
+    );
+  } else {
+    updateResourceCounts(
+      getObservations,
+      "#identifications-header .observations-count",
+      params,
+    );
+  }
 
   let identificationParams = cleanupIdentificationParams(appStore);
   updateResourceCounts(

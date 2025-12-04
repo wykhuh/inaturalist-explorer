@@ -24,7 +24,7 @@ export const template = html`
       <identifications-filters></identifications-filters>
     </div>
 
-    <h2 class="taxa-heading">Observed Species</h2>
+    <h2 class="taxa-heading" hidden>Observed Species</h2>
     <ul id="selected-species-list"></ul>
 
     <h2 class="taxa-identified-heading" hidden>Identified Species</h2>
