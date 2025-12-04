@@ -80,7 +80,6 @@ import {
   gridLabel_life_la_project1,
   gridLabel_life_places_projects_users,
   gridLabel_oaks_places_projects_users,
-  roundCounts,
   expectUser1UnobservedByUser,
   expectUser1Identifier,
   gridLabel_life_places_identifier,
@@ -94,7 +93,6 @@ import {
   gridLabel_allTaxaRecord_user1Identifier,
   gridLabel_allTaxaRecord_user2Identifier,
   expectUserIdentifiers,
-  expectAllTaxaRecordIdentification,
   expectLifeTaxaIdentifiedIdentification,
   lifeIdentification,
   redOakIdentification,
@@ -1413,7 +1411,6 @@ describe("taxonSelectedHandler with identifications", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord,
       gridLabel_life,
     ]);
     expectNoPlaces(store);
@@ -1447,7 +1444,6 @@ describe("taxonSelectedHandler with identifications", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord,
       gridLabel_life,
     ]);
     expectNoPlaces(store);
@@ -1470,7 +1466,6 @@ describe("taxonSelectedHandler with identifications", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord,
       gridLabel_life,
       gridLabel_oaks,
     ]);
@@ -1507,10 +1502,7 @@ describe("taxonIdentifiedSelectedHandler with identifications", () => {
     await initRenderMap(store);
     await taxonIdentifiedSelectedHandler(lifeBasic, "life", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
-      basemapLabel_osm,
-      gridLabel_allTaxaRecord,
-    ]);
+    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectNoProjects(store);
@@ -1541,7 +1533,6 @@ describe("placeSelectedHandler with identifications", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord,
       placeLabel_la,
       placeLabel_la,
     ]);
@@ -1574,7 +1565,6 @@ describe("placeSelectedHandler with identifications", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord,
       placeLabel_la,
       placeLabel_la,
     ]);
@@ -1597,7 +1587,6 @@ describe("placeSelectedHandler with identifications", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord,
       placeLabel_la,
       placeLabel_la,
       placeLabel_sd,
@@ -1630,10 +1619,7 @@ describe("projectSelectedHandler with identifications", () => {
     await initRenderMap(store);
     await projectSelectedHandler(project_cnc1, "city", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
-      basemapLabel_osm,
-      gridLabel_allTaxaRecord,
-    ]);
+    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectNoTaxaIdentification(store);
@@ -1655,10 +1641,7 @@ describe("userSelectedHandler with identifications", () => {
     await initRenderMap(store);
     await userSelectedHandler(user1, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
-      basemapLabel_osm,
-      gridLabel_allTaxaRecord,
-    ]);
+    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectNoProjects(store);
@@ -1683,10 +1666,7 @@ describe("userIdentifierSelectedHandler with identifications", () => {
     await initRenderMap(store);
     await userIdentifierSelectedHandler(user1, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
-      basemapLabel_osm,
-      gridLabel_allTaxaRecord,
-    ]);
+    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectNoProjects(store);
@@ -1717,11 +1697,7 @@ describe("userIdentifierSelectedHandler with identifications", () => {
     await initRenderMap(store);
     await userIdentifierSelectedHandler(user1, "user", store);
 
-    let allTaxaCount = allTaxa.observations_count;
-    expect(leafletVisibleLayers(store)).toStrictEqual([
-      basemapLabel_osm,
-      gridLabel_allTaxaRecord,
-    ]);
+    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectNoProjects(store);
@@ -1743,10 +1719,7 @@ describe("userIdentifierSelectedHandler with identifications", () => {
 
     await userIdentifierSelectedHandler(user2, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
-      basemapLabel_osm,
-      gridLabel_allTaxaRecord,
-    ]);
+    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectNoProjects(store);

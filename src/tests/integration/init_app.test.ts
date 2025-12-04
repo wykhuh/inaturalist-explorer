@@ -59,14 +59,12 @@ import {
   gridLabel_allTaxaRecord_user1Unobserved,
   gridLabel_life_places_identifier,
   gridLabel_oaks_places_identifier,
-  redOakBasic,
   lifeBasic,
   expectNoProjects,
   expectNoUsers,
   expectNoTaxaIdentification,
   allTaxaIdentification,
   lifeIdentification,
-  redOakIdentification,
 } from "../test_helpers.ts";
 import type {
   IdentificationsApiParams,
@@ -969,9 +967,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expect(store.selectedTaxaIdentified).toStrictEqual([]);
     expect(store.selectedUsers).toStrictEqual([]);
     expect(store.selectedUsersIdentifiers).toStrictEqual([userA]);
-
-    expect(Object.keys(store.taxaMapLayers)).toEqual(["0"]);
-    expect(store.taxaMapLayers[allTaxaRecord.id].length).toBe(3);
+    expect(store.taxaMapLayers).toEqual({});
 
     let expectedParams: ObservationsApiParams = {
       ...defaultParams,
@@ -1005,9 +1001,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expect(store.selectedTaxa).toStrictEqual([]);
     expect(store.selectedTaxaIdentified).toStrictEqual([]);
     expectNoUsers(store);
-
-    expect(Object.keys(store.taxaMapLayers)).toEqual(["0"]);
-    expect(store.taxaMapLayers[allTaxaRecord.id].length).toBe(3);
+    expect(store.taxaMapLayers).toEqual({});
 
     let expectedParams: ObservationsApiParams = {
       ...defaultParams,
@@ -1036,8 +1030,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expectNoProjects(store);
     expect(store.selectedTaxa).toStrictEqual([]);
     expect(store.selectedTaxaIdentified).toStrictEqual([]);
-    expect(Object.keys(store.taxaMapLayers)).toEqual(["0"]);
-    expect(store.taxaMapLayers[allTaxaRecord.id].length).toBe(3);
+    expect(store.taxaMapLayers).toEqual({});
     expectNoUsers(store);
 
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });

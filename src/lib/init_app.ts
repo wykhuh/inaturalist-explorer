@@ -281,7 +281,9 @@ export async function initRenderMap(appStore: MapStore) {
     appStore.selectedTaxa === undefined ||
     appStore.selectedTaxa.length === 0
   ) {
-    await addAllTaxaRecordToMap(appStore);
+    if (isObservationsCheck(appStore)) {
+      await addAllTaxaRecordToMap(appStore);
+    }
   } else {
     // add taxa tiles for taxon id in url
     await updateTilesForAllTaxa(appStore);

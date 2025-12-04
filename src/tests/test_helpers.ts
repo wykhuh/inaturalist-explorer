@@ -521,9 +521,7 @@ export function expectNoTaxa(store: MapStore) {
 export function expectNoTaxaIdentification(store: MapStore) {
   expect(store.selectedTaxa).toStrictEqual([]);
   expect(store.selectedTaxaIdentified).toStrictEqual([]);
-  expect(Object.keys(store.taxaMapLayers)).toStrictEqual([
-    allTaxa.id.toString(),
-  ]);
+  expect(store.taxaMapLayers).toStrictEqual({});
 }
 
 export function expectAllTaxaRecord(store: MapStore, count = 0) {
@@ -555,11 +553,7 @@ export function expectLifeTaxaIdentification(store: MapStore, count = 0) {
   }
 
   expect(store.selectedTaxa).toStrictEqual([taxa]);
-  expect(Object.keys(store.taxaMapLayers)).toEqual([
-    allTaxa.id.toString(),
-    life().id.toString(),
-  ]);
-  expect(store.taxaMapLayers[allTaxa.id].length).toBe(3);
+  expect(Object.keys(store.taxaMapLayers)).toEqual([life().id.toString()]);
   expect(store.taxaMapLayers[life().id].length).toBe(4);
 }
 
@@ -575,7 +569,7 @@ export function expectLifeTaxaIdentifiedIdentification(
   }
 
   expect(store.selectedTaxaIdentified).toStrictEqual([taxa]);
-  expect(Object.keys(store.taxaMapLayers)).toEqual(["0"]);
+  expect(store.taxaMapLayers).toStrictEqual({});
 }
 
 export function expectOakTaxa(store: MapStore, color = colors[1]) {
@@ -624,11 +618,9 @@ export function expectLifeOakTaxaIdentifications(
   }
   expect(store.selectedTaxa).toStrictEqual([taxa1, taxa2]);
   expect(Object.keys(store.taxaMapLayers)).toEqual([
-    allTaxaRecord.id.toString(),
     taxa1.id.toString(),
     taxa2.id.toString(),
   ]);
-  expect(store.taxaMapLayers[allTaxaRecord.id].length).toBe(3);
   expect(store.taxaMapLayers[taxa1.id].length).toBe(4);
   expect(store.taxaMapLayers[taxa2.id].length).toBe(4);
 }
