@@ -4,9 +4,9 @@ import {
   taxonRanks,
 } from "../../data/inat_data";
 import type {
-  ObservationsApiParams,
-  ObservationsApiParamsKeys,
   MapStore,
+  IdentificationsApiParams,
+  IdentificationsApiParamsKeys,
 } from "../../types/app";
 import { updateStoreUsingFilters } from "../../lib/data_utils";
 import { loggerFilters } from "../../lib/logger";
@@ -24,32 +24,20 @@ import {
 import { updateCountForAll } from "../../lib/count_utils";
 
 export function processFiltersForm(data: FormData): {
-  params: ObservationsApiParams;
+  params: IdentificationsApiParams;
   string: string;
 } {
   // convert form data into object that can be use with URLSearchParams
-  let values: ObservationsApiParams = {};
+  let values: IdentificationsApiParams = {};
   loggerFilters("----------- processFiltersForm");
 
   for (const [k, value] of data) {
     // HACK: get rid of typescript errors for values[key]
-    let key = k as ObservationsApiParamsKeys;
+    let key = k as IdentificationsApiParamsKeys;
     loggerFilters(key, value);
 
     // ignore fields
-    if (
-      [
-        "on",
-        "d1",
-        "d2",
-        "month",
-        "year",
-        "iconic_taxa",
-        "license",
-        "photo_license",
-        "sound_license",
-      ].includes(key)
-    ) {
+    if (["iconic_taxon_id", "observation_iconic_taxon_id"].includes(key)) {
       // ignore value "on"
     } else if (value === "on") {
       // convert boolean strings to boolean
@@ -66,37 +54,13 @@ export function processFiltersForm(data: FormData): {
   }
 
   // handle comma-separated params
-  if (data.getAll("iconic_taxa").length > 0) {
-    values.iconic_taxa = data.getAll("iconic_taxa").join(",");
+  if (data.getAll("iconic_taxon_id").length > 0) {
+    values.iconic_taxon_id = data.getAll("iconic_taxon_id").join(",");
   }
-  let licenses = data.getAll("license");
-  if (licenses.length > 0 && licenses[0] != "") {
-    values.license = licenses.join(",");
-  }
-  let photo_licenses = data.getAll("photo_license");
-  if (photo_licenses.length > 0 && photo_licenses[0] != "") {
-    values.photo_license = photo_licenses.join(",");
-  }
-  let sound_licenses = data.getAll("sound_license");
-  if (sound_licenses.length > 0 && sound_licenses[0] != "") {
-    values.sound_license = sound_licenses.join(",");
-  }
-
-  // handle observed date
-  if (data.get("on")) {
-    values.on = data.get("on") as string;
-  }
-  if (data.get("d1")) {
-    values.d1 = data.get("d1") as string;
-  }
-  if (data.get("d2") && data.get("d2")) {
-    values.d2 = data.get("d2") as string;
-  }
-  if (data.getAll("month").filter((m) => m !== "").length > 0) {
-    values.month = data.getAll("month").join(",");
-  }
-  if (data.getAll("year").filter((y) => y !== "").length > 0) {
-    values.year = data.getAll("year").join(",");
+  if (data.getAll("observation_iconic_taxon_id").length > 0) {
+    values.observation_iconic_taxon_id = data
+      .getAll("observation_iconic_taxon_id")
+      .join(",");
   }
 
   return {
@@ -110,9 +74,12 @@ export function processFiltersForm(data: FormData): {
 export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
   // get values from form data
   let results = processFiltersForm(data);
+  console.log(results.params);
 
   // update store observationsApiParams with form values
   updateStoreUsingFilters(appStore, results);
+  console.log("observationsApiParams", appStore.observationsApiParams);
+  console.log("identificationsApiParams", appStore.identificationsApiParams);
 
   await updateTilesForSelectedTaxa(appStore);
   await updateCountForAll("all", appStore);

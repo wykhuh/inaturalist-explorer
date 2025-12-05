@@ -15,185 +15,25 @@ export const template = html`
         <div class="fields">
           <!-- column 1 -->
           <div>
-            <fieldset class="observation-status">
-              <legend>Observation Status</legend>
-              <div class="form-group">
-                <label for="verifiable">Verifiable</label>
-                <select id="verifiable" name="verifiable">
-                  <option></option>
-                  <option value="true" selected>True</option>
-                  <option value="false">False</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="captive">Captive</label>
-                <select id="captive" name="captive">
-                  <option></option>
-                  <option value="true">Captive</option>
-                  <option value="false">Wild</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="quality_grade">Quality Grade</label>
-                <select id="quality_grade" name="quality_grade">
-                  <option></option>
-                  <option value="research">Research Grade</option>
-                  <option value="needs_id">Needs Id</option>
-                  <option value="casual">Casual</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="popular">Popular</label>
-                <select id="popular" name="popular">
-                  <option></option>
-                  <option value="true">True</option>
-                  <option value="false">False</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="identified">Identified</label>
-                <select id="identified" name="identified">
-                  <option></option>
-                  <option value="true">True</option>
-                  <option value="false">False</option>
-                </select>
-              </div>
-            </fieldset>
-
-            <fieldset class="media">
-              <legend>Media</legend>
-              <div class="form-group">
-                <label for="sounds">Has Sounds</label>
-                <select id="sounds" name="sounds">
-                  <option></option>
-                  <option value="true">True</option>
-                  <option value="false">False</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="photos">Has Photos</label>
-                <select id="photos" name="photos">
-                  <option></option>
-                  <option value="true">True</option>
-                  <option value="false">False</option>
-                </select>
-              </div>
-            </fieldset>
-
-            <fieldset class="licensing">
-              <legend>Licensing</legend>
-              <div class="form-group multiselect">
-                <label for="license">License</label>
-                <select id="license" name="license" multiple></select>
-              </div>
-              <div class="form-group multiselect">
-                <label for="photo_license">Photo License</label>
-                <select
-                  id="photo_license"
-                  name="photo_license"
-                  multiple
-                ></select>
-              </div>
-              <div class="form-group multiselect">
-                <label for="sound_license">Sound License</label>
-                <select
-                  id="sound_license"
-                  name="sound_license"
-                  multiple
-                ></select>
-              </div>
-            </fieldset>
-          </div>
-          <!-- column 2 -->
-          <div>
             <fieldset class="date-observed">
-              <legend>Date Observed</legend>
+              <legend>Date Identified</legend>
               <div class="form-group">
-                <input type="radio" name="date_observed" id="any_date" />
-                <label for="any_date">Any</label>
-              </div>
-              <div class="form-group">
-                <input type="radio" name="date_observed" id="exact_date" />
-                <label for="exact_date">Exact Date</label>
-                <input type="date" name="on" id="on" disabled />
+                <label for="d1">Start Date</label>
+                <input type="date" name="d1" id="d1" />
               </div>
               <div class="form-group">
-                <input type="radio" name="date_observed" id="range_date" />
-                <label for="range_date">Range</label>
-
-                <div class="form-group">
-                  <label for="d1">Start Date</label>
-                  <input type="date" name="d1" id="d1" disabled />
-                </div>
-                <div class="form-group">
-                  <label for="d2">End Date</label>
-                  <input type="date" name="d2" id="d2" disabled />
-                </div>
-              </div>
-              <div class="form-group multiselect">
-                <input type="radio" name="date_observed" id="months_date" />
-                <label for="months_date">Months</label>
-                <select name="month" id="month" multiple disabled>
-                  <option value="">Select months</option>
-                  <option value="1">Janurary</option>
-                  <option value="2">February</option>
-                  <option value="3">March</option>
-                  <option value="4">April</option>
-                  <option value="5">May</option>
-                  <option value="6">June</option>
-                  <option value="7">July</option>
-                  <option value="8">August</option>
-                  <option value="9">September</option>
-                  <option value="10">October</option>
-                  <option value="11">November</option>
-                  <option value="12">December</option>
-                </select>
-              </div>
-
-              <div class="form-group multiselect">
-                <input type="radio" name="date_observed" id="years_date" />
-                <label for="years_date">Years</label>
-                <select name="year" id="year" multiple disabled></select>
+                <label for="d2">End Date</label>
+                <input type="date" name="d2" id="d2" />
               </div>
             </fieldset>
-
-            <fieldset class="users">
-              <legend>Users</legend>
-              <div class="form-group">
-                <label for="identifier-search">Identified by user </label>
-                <input
-                  name="ident_user_id"
-                  id="identifier-search"
-                  type="text"
-                  autocomplete="off"
-                />
-              </div>
-
-              <div class="form-group">
-                <label for="unobserved-by-user-search"
-                  >Unobserved by user</label
-                >
-                <input
-                  name="unobserved_by_user_id"
-                  id="unobserved-by-user-search"
-                  type="text"
-                  autocomplete="off"
-                />
-              </div>
-            </fieldset>
-          </div>
-          <!-- column 3 -->
-          <div>
             <fieldset class="iconic_taxa">
-              <legend>Categories</legend>
+              <legend>Identification Categories</legend>
               <div class="form-group">
                 <input
                   type="checkbox"
                   id="Aves"
                   value="Aves"
-                  name="iconic_taxa"
+                  name="iconic_taxon_id"
                 />
                 <label for="Aves">Aves</label>
               </div>
@@ -202,7 +42,7 @@ export const template = html`
                   type="checkbox"
                   id="Amphibia"
                   value="Amphibia"
-                  name="iconic_taxa"
+                  name="iconic_taxon_id"
                 />
                 <label for="Amphibia">Amphibia</label>
               </div>
@@ -211,7 +51,7 @@ export const template = html`
                   type="checkbox"
                   id="Reptilia"
                   value="Reptilia"
-                  name="iconic_taxa"
+                  name="iconic_taxon_id"
                 />
                 <label for="Reptilia">Reptilia</label>
               </div>
@@ -220,7 +60,7 @@ export const template = html`
                   type="checkbox"
                   id="Mammalia"
                   value="Mammalia"
-                  name="iconic_taxa"
+                  name="iconic_taxon_id"
                 />
                 <label for="Mammalia">Mammalia</label>
               </div>
@@ -229,7 +69,7 @@ export const template = html`
                   type="checkbox"
                   id="Actinopterygii"
                   value="Actinopterygii"
-                  name="iconic_taxa"
+                  name="iconic_taxon_id"
                 />
                 <label for="Actinopterygii">Actinopterygii</label>
               </div>
@@ -238,7 +78,7 @@ export const template = html`
                   type="checkbox"
                   id="Mollusca"
                   value="Mollusca"
-                  name="iconic_taxa"
+                  name="iconic_taxon_id"
                 />
                 <label for="Mollusca">Mollusca</label>
               </div>
@@ -247,7 +87,7 @@ export const template = html`
                   type="checkbox"
                   id="Arachnida"
                   value="Arachnida"
-                  name="iconic_taxa"
+                  name="iconic_taxon_id"
                 />
                 <label for="Arachnida">Arachnida</label>
               </div>
@@ -256,7 +96,7 @@ export const template = html`
                   type="checkbox"
                   id="Insecta"
                   value="Insecta"
-                  name="iconic_taxa"
+                  name="iconic_taxon_id"
                 />
                 <label for="Insecta">Insecta</label>
               </div>
@@ -265,7 +105,7 @@ export const template = html`
                   type="checkbox"
                   id="Plantae"
                   value="Plantae"
-                  name="iconic_taxa"
+                  name="iconic_taxon_id"
                 />
                 <label for="Plantae">Plantae</label>
               </div>
@@ -274,7 +114,7 @@ export const template = html`
                   type="checkbox"
                   id="Fungi"
                   value="Fungi"
-                  name="iconic_taxa"
+                  name="iconic_taxon_id"
                 />
                 <label for="Fungi">Fungi</label>
               </div>
@@ -283,7 +123,7 @@ export const template = html`
                   type="checkbox"
                   id="Protozoa"
                   value="Protozoa"
-                  name="iconic_taxa"
+                  name="iconic_taxon_id"
                 />
                 <label for="Protozoa">Protozoa</label>
               </div>
@@ -292,13 +132,13 @@ export const template = html`
                   type="checkbox"
                   id="unknown"
                   value="unknown"
-                  name="iconic_taxa"
+                  name="iconic_taxon_id"
                 />
                 <label for="unknown">unknown</label>
               </div>
             </fieldset>
             <fieldset class="rank">
-              <legend>Rank</legend>
+              <legend>Identification Rank</legend>
               <div class="form-group">
                 <label for="hrank">High Rank</label>
                 <select id="hrank" name="hrank"></select>
@@ -308,38 +148,159 @@ export const template = html`
                 <select id="lrank" name="lrank"></select>
               </div>
             </fieldset>
-            <fieldset class="species-status">
-              <legend>Species Status</legend>
+          </div>
+          <!-- column 2 -->
+          <div>
+            <fieldset class="date-observed">
+              <legend>Date Observed</legend>
+
               <div class="form-group">
-                <label for="threatened">Threatened</label>
-                <select id="threatened" name="threatened">
-                  <option></option>
-                  <option value="true">True</option>
-                  <option value="false">False</option>
-                </select>
+                <label for="observed_d1">Start Date</label>
+                <input type="date" name="observed_d1" id="observed_d1" />
               </div>
               <div class="form-group">
-                <label for="introduced">Introduced</label>
-                <select id="introduced" name="introduced">
-                  <option></option>
-                  <option value="true">True</option>
-                  <option value="false">False</option>
-                </select>
+                <label for="observed_d2">End Date</label>
+                <input type="date" name="observed_d2" id="observed_d2" />
+              </div>
+            </fieldset>
+            <fieldset class="iconic_taxa">
+              <legend>Observation Categories</legend>
+              <div class="form-group">
+                <input
+                  type="checkbox"
+                  id="Aves2"
+                  value="Aves"
+                  name="observation_iconic_taxon_id"
+                />
+                <label for="Aves2">Aves</label>
               </div>
               <div class="form-group">
-                <label for="native">Native</label>
-                <select id="native" name="native">
-                  <option></option>
-                  <option value="true">True</option>
-                  <option value="false">False</option>
-                </select>
+                <input
+                  type="checkbox"
+                  id="Amphibia2"
+                  value="Amphibia"
+                  name="observation_iconic_taxon_id"
+                />
+                <label for="Amphibia2">Amphibia</label>
               </div>
               <div class="form-group">
-                <label for="endemic">Endemic</label>
-                <select id="endemic" name="endemic">
+                <input
+                  type="checkbox"
+                  id="Reptilia2"
+                  value="Reptilia"
+                  name="observation_iconic_taxon_id"
+                />
+                <label for="Reptilia2">Reptilia</label>
+              </div>
+              <div class="form-group">
+                <input
+                  type="checkbox"
+                  id="Mammalia2"
+                  value="Mammalia"
+                  name="observation_iconic_taxon_id"
+                />
+                <label for="Mammalia2">Mammalia</label>
+              </div>
+              <div class="form-group">
+                <input
+                  type="checkbox"
+                  id="Actinopterygii2"
+                  value="Actinopterygii"
+                  name="observation_iconic_taxon_id"
+                />
+                <label for="Actinopterygii2">Actinopterygii</label>
+              </div>
+              <div class="form-group">
+                <input
+                  type="checkbox"
+                  id="Mollusca2"
+                  value="Mollusca"
+                  name="observation_iconic_taxon_id"
+                />
+                <label for="Mollusca2">Mollusca</label>
+              </div>
+              <div class="form-group">
+                <input
+                  type="checkbox"
+                  id="Arachnida2"
+                  value="Arachnida"
+                  name="observation_iconic_taxon_id"
+                />
+                <label for="Arachnida2">Arachnida</label>
+              </div>
+              <div class="form-group">
+                <input
+                  type="checkbox"
+                  id="Insecta2"
+                  value="Insecta"
+                  name="observation_iconic_taxon_id"
+                />
+                <label for="Insecta2">Insecta</label>
+              </div>
+              <div class="form-group">
+                <input
+                  type="checkbox"
+                  id="Plantae2"
+                  value="Plantae"
+                  name="observation_iconic_taxon_id"
+                />
+                <label for="Plantae2">Plantae</label>
+              </div>
+              <div class="form-group">
+                <input
+                  type="checkbox"
+                  id="Fungi2"
+                  value="Fungi"
+                  name="observation_iconic_taxon_id"
+                />
+                <label for="Fungi2">Fungi</label>
+              </div>
+              <div class="form-group">
+                <input
+                  type="checkbox"
+                  id="Protozoa2"
+                  value="Protozoa"
+                  name="observation_iconic_taxon_id"
+                />
+                <label for="Protozoa2">Protozoa</label>
+              </div>
+              <div class="form-group">
+                <input
+                  type="checkbox"
+                  id="unknown2"
+                  value="unknown"
+                  name="observation_iconic_taxon_id"
+                />
+                <label for="unknown2">unknown</label>
+              </div>
+            </fieldset>
+            <fieldset class="rank">
+              <legend>Observations Rank</legend>
+              <div class="form-group">
+                <label for="observation_hrank">High Rank</label>
+                <select
+                  id="observation_hrank"
+                  name="observation_hrank"
+                ></select>
+              </div>
+              <div class="form-group">
+                <label for="observation_lrank">Low Rank</label>
+                <select
+                  id="observation_lrank"
+                  name="observation_lrank"
+                ></select>
+              </div>
+            </fieldset>
+            <fieldset class="observation-status">
+              <legend>Observation Status</legend>
+
+              <div class="form-group">
+                <label for="quality_grade">Quality Grade</label>
+                <select id="quality_grade" name="quality_grade">
                   <option></option>
-                  <option value="true">True</option>
-                  <option value="false">False</option>
+                  <option value="research">Research Grade</option>
+                  <option value="needs_id">Needs Id</option>
+                  <option value="casual">Casual</option>
                 </select>
               </div>
             </fieldset>

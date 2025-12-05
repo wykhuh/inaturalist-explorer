@@ -1,20 +1,9 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import {
-  setupUnobservedByUserSearch,
-  unobservedByUserSelectedHandler,
-} from "../../lib/search_unobserved";
-import {
-  setupUserIdentifierSearch,
-  userIdentifierSelectedHandler,
-} from "../../lib/search_users_identifiers";
-import { searchSetup } from "../../lib/search_utils";
-import {
   initFilters,
   updateAppWithFilters,
-  renderLicenseSelect,
   renderRankSelect,
-  renderYearsSelect,
   renderSelectedFiltersList,
 } from "./utils";
 import { template } from "./template";
@@ -55,11 +44,6 @@ class IdentificationsFilters extends HTMLElement {
     this.renderModal();
     this.renderForm();
     this.formEventHandler();
-    renderYearsSelect();
-    setupUnobservedByUserSearch("#unobserved-by-user-search", window.app.store);
-    searchSetup("#unobserved-by-user-search", unobservedByUserSelectedHandler);
-    setupUserIdentifierSearch("#identifier-search", window.app.store);
-    searchSetup("#identifier-search", userIdentifierSelectedHandler);
 
     // use store to set values the form on page load
     initFilters(window.app.store);
@@ -86,72 +70,12 @@ class IdentificationsFilters extends HTMLElement {
   renderForm() {
     renderRankSelect("#hrank", "");
     renderRankSelect("#lrank", "");
-
-    renderLicenseSelect("#license", "All");
-    renderLicenseSelect("#photo_license", "All");
-    renderLicenseSelect("#sound_license", "All");
+    renderRankSelect("#observation_hrank", "");
+    renderRankSelect("#observation_lrank", "");
   }
 
   formEventHandler() {
-    const inputs = document.querySelectorAll(
-      "#filters-form input",
-    ) as NodeListOf<HTMLInputElement>;
     const form = document.querySelector("#filters-form") as HTMLFormElement;
-
-    const onInput = document.querySelector(
-      "#filters-form input[name='on']",
-    ) as HTMLInputElement;
-    const d1Input = document.querySelector(
-      "#filters-form input[name='d1']",
-    ) as HTMLInputElement;
-    const d2Input = document.querySelector(
-      "#filters-form input[name='d2']",
-    ) as HTMLInputElement;
-    const monthInput = document.querySelector(
-      "#filters-form select[name='month']",
-    ) as HTMLInputElement;
-    const yearInput = document.querySelector(
-      "#filters-form select[name='year']",
-    ) as HTMLInputElement;
-
-    inputs.forEach((input) => {
-      input.addEventListener("change", (event) => {
-        let target = event.target as HTMLInputElement;
-
-        // disable/enable date inputs
-        if (target.id === "any_date") {
-          onInput.disabled = true;
-          d1Input.disabled = true;
-          d2Input.disabled = true;
-          monthInput.disabled = true;
-          yearInput.disabled = true;
-        } else if (target.id === "exact_date") {
-          onInput.disabled = false;
-          d1Input.disabled = true;
-          d2Input.disabled = true;
-          monthInput.disabled = true;
-          yearInput.disabled = true;
-        } else if (target.id === "range_date") {
-          onInput.disabled = true;
-          d1Input.disabled = false;
-          d2Input.disabled = false;
-          monthInput.disabled = true;
-          yearInput.disabled = true;
-        } else if (target.id === "months_date") {
-          onInput.disabled = true;
-          d1Input.disabled = true;
-          d2Input.disabled = true;
-          monthInput.disabled = false;
-          yearInput.disabled = true;
-        } else if (target.id === "years_date") {
-          onInput.disabled = true;
-          d1Input.disabled = true;
-          d2Input.disabled = true;
-          monthInput.disabled = true;
-          yearInput.disabled = false;
-        }
-      });
-    });
 
     if (form) {
       form.addEventListener("submit", async (event) => {
@@ -164,8 +88,6 @@ class IdentificationsFilters extends HTMLElement {
       form.addEventListener("input", async (event) => {
         let target = event.target as HTMLInputElement;
         if (target === null) return;
-        // ignore changes to search autocomplete
-        if (target.name === "unobserved_by_user_id") return;
 
         event.preventDefault();
 
