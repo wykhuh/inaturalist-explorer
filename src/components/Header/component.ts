@@ -1,6 +1,11 @@
 import { setupComponent } from "../../lib/component_utils";
+import {
+  updateCountForAll,
+  updateSelectedResourcesId,
+} from "../../lib/count_utils";
 import { viewAndTemplateObject } from "../../lib/data_utils";
 import { loggerRender } from "../../lib/logger";
+import { renderSelectedResources } from "../../lib/search_utils";
 import { updateAppUrl } from "../../lib/utils";
 import type { RecordTypes } from "../../types/app";
 import { template } from "./template";
@@ -78,6 +83,13 @@ class Header extends HTMLElement {
         itemEl.classList.add("currentView");
       }
     }
+
+    // update ids in observationsApiParams or identificationsApiParams
+    updateSelectedResourcesId(window.app.store);
+    // updates counts for selected itens that do not have counts
+    updateCountForAll("all", window.app.store, true).then(() => {
+      renderSelectedResources(window.app.store);
+    });
 
     // emit event
     if (recordType === "identifications" || recordType === "observations") {
