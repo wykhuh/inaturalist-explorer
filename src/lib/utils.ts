@@ -18,7 +18,6 @@ import {
 import { defaultColorScheme } from "./map_colors_utils";
 import { convertParamsBBoxToLngLat } from "./map_utils";
 import { validObservationsSubviews, validViews } from "../data/app_data";
-import { isIdentificationsCheck, isObservationsCheck } from "./data_utils";
 
 export function displayJson(json: any, el: HTMLElement | null) {
   // fix cyclic object errors
@@ -71,9 +70,12 @@ export function pluralize(
   }
 }
 
-export function formatAppUrl(appStore: MapStore) {
-  let isIdentifications = isIdentificationsCheck(appStore);
-  let isObservations = isObservationsCheck(appStore);
+export function formatAppUrl(
+  appStore: MapStore,
+  recordType = appStore.record_type,
+) {
+  let isIdentifications = recordType === "identifications";
+  let isObservations = recordType === "observations";
 
   let taxaIds = appStore.selectedTaxa
     .filter((r) => r.id !== 0)

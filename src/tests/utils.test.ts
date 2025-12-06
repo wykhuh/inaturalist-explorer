@@ -22,6 +22,7 @@ import {
   user1,
   user2,
   defaultQuery,
+  defaultParams,
 } from "./test_helpers.ts";
 import type { MapStore, NameOrder, ObservationViews } from "../types/app";
 import {
@@ -432,6 +433,28 @@ describe("formatAppUrl", () => {
     let result = formatAppUrl(appStore);
 
     expect(result).toBe("verifiable=true&spam=false&locale=" + lang);
+  });
+
+  test("formats  url when record type is set", () => {
+    let store = structuredClone(mapStore);
+    store.selectedTaxa = [life()];
+    store.observationsApiParams = {
+      ...defaultParams,
+    };
+    store.identificationsApiParams = {
+      taxon_id: life().id.toString(),
+    };
+
+    let result = formatAppUrl(store);
+    expect(result).toBe(
+      `taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}`,
+    );
+
+    let result2 = formatAppUrl(store, "identifications");
+
+    expect(result2).toBe(
+      `observation_taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}`,
+    );
   });
 });
 

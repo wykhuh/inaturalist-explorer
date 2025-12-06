@@ -1,8 +1,15 @@
-import type { MapStore, ObservationsApiParams } from "../types/app";
+import type {
+  MapStore,
+  ObservationsApiParams,
+  RecordTypes,
+} from "../types/app";
 import { formatAppUrl } from "./utils";
 
-function cleanupParamsStore(appStore: MapStore) {
-  let string = formatAppUrl(appStore);
+function cleanupParamsStore(
+  appStore: MapStore,
+  recordType: RecordTypes = appStore.record_type,
+) {
+  let string = formatAppUrl(appStore, recordType);
   let params = new URLSearchParams(string);
   cleanupParams(params);
   return params;
@@ -40,20 +47,29 @@ export function cleanupIdentificationsParamsForRecord(
   return params.toString();
 }
 
-export function cleanupObervationsParams(appStore: MapStore) {
-  let params = cleanupParamsStore(appStore);
+export function cleanupObervationsParams(
+  appStore: MapStore,
+  recordType = appStore.record_type,
+) {
+  let params = cleanupParamsStore(appStore, recordType);
 
   return params.toString();
 }
 
-export function cleanupIdentificationParams(appStore: MapStore) {
-  let params = cleanupParamsStore(appStore);
+export function cleanupIdentificationParams(
+  appStore: MapStore,
+  recordType = appStore.record_type,
+) {
+  let params = cleanupParamsStore(appStore, recordType);
 
   return params.toString();
 }
 
-export function cleanupObervationsObserversParams(appStore: MapStore) {
-  let params = cleanupParamsStore(appStore);
+export function cleanupObervationsObserversParams(
+  appStore: MapStore,
+  recordType = appStore.record_type,
+) {
+  let params = cleanupParamsStore(appStore, recordType);
 
   params.delete("order");
   params.delete("order_by");
@@ -61,8 +77,11 @@ export function cleanupObervationsObserversParams(appStore: MapStore) {
   return params.toString();
 }
 
-export function cleanupIdentificationsObserversParams(appStore: MapStore) {
-  let params = cleanupParamsStore(appStore);
+export function cleanupIdentificationsObserversParams(
+  appStore: MapStore,
+  recordType = appStore.record_type,
+) {
+  let params = cleanupParamsStore(appStore, recordType);
 
   params.delete("order");
   params.delete("order_by");

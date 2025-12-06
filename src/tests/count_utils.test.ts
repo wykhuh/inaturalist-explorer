@@ -317,6 +317,28 @@ describe("updateSelectedResourcesId", () => {
     );
   });
 
+  test("passed-in record type overrides store record type ", () => {
+    let store = populateStore();
+    store.record_type = "identifications";
+
+    updateSelectedResourcesId(store, "observations");
+
+    expect(store.observationsApiParams.place_id).toBe(
+      `${losangeles.id},${sandiego.id}`,
+    );
+    expect(store.observationsApiParams.project_id).toBe(
+      `${project_cnc1.id},${project_cnc2.id}`,
+    );
+    expect(store.observationsApiParams.taxon_id).toBe(
+      `${lifeBasic.id},${redOakBasic.id}`,
+    );
+    expect(store.observationsApiParams.unobserved_by_user_id).toBe(user1.id);
+    expect(store.observationsApiParams.user_id).toBe(`${user1.id},${user2.id}`);
+    expect(store.observationsApiParams.ident_user_id).toBe(
+      `${user2.id},${user1.id}`,
+    );
+  });
+
   test("does not update ids for empty selected resources", () => {
     let store = structuredClone(mapStore);
     store.record_type = "observations";

@@ -267,7 +267,10 @@ function getIdFieldForResource(
 // when switching pages, we need to update
 // observationsApiParams/identificationsApiParams for the next page since those
 // values are not updated when adding selected resources on current page
-export function updateSelectedResourcesId(appStore: MapStore) {
+export function updateSelectedResourcesId(
+  appStore: MapStore,
+  recordType = appStore.record_type,
+) {
   let place_id = appStore.selectedPlaces.map((r) => r.id);
   let project_id = appStore.selectedProjects.map((r) => r.id);
   let taxon_observed_id = appStore.selectedTaxa.map((r) => r.id);
@@ -275,7 +278,7 @@ export function updateSelectedResourcesId(appStore: MapStore) {
   let unobserved_id = appStore.selectedUnobservedByUser.id;
   let user_observer_id = appStore.selectedUsers.map((r) => r.id);
   let user_identifier_id = appStore.selectedUsersIdentifiers.map((r) => r.id);
-  if (isObservationsCheck(appStore)) {
+  if (recordType === "observations") {
     if (place_id.length > 0) {
       appStore.observationsApiParams.place_id = place_id.join(",");
     }

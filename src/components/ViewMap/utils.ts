@@ -17,6 +17,7 @@ import type { ObservationsResult } from "../../types/inat_api";
 import type { DataComponent, MapStore } from "../../types/app";
 import { observationsDemoLA } from "../../data/inat_api_cache";
 import { setSelectedOption } from "../../lib/form_utils";
+import { updateSelectedResourcesId } from "../../lib/count_utils";
 
 export let perPage = 48;
 
@@ -79,7 +80,9 @@ async function getAPIData(perPage: number, appStore: MapStore) {
     return observationsDemoLA;
   }
 
-  let params = cleanupObervationsParams(appStore);
+  // NOTE: set record type to observations since parmas are for getObservations
+  updateSelectedResourcesId(appStore, "observations");
+  let params = cleanupObervationsParams(appStore, "observations");
 
   try {
     let data = await getObservations(params, perPage);
