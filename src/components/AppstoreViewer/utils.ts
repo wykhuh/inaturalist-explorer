@@ -18,13 +18,16 @@ function formatSelectedPlaces(appStore: MapStore) {
     Object.entries(place).forEach(([key, val]) => {
       if (["bounding_box", "geometry"].includes(key)) {
         let value = val as PolygonJson;
-        temp[key] = {
-          type: value.type,
-          coordinates:
-            value.type === "Polygon"
-              ? value.coordinates[0].length
-              : value.coordinates[0][0].length,
-        };
+
+        if (value !== null) {
+          temp[key] = {
+            type: value.type,
+            coordinates:
+              value.type === "Polygon"
+                ? value.coordinates[0].length
+                : value.coordinates[0][0].length,
+          };
+        }
       } else {
         temp[key] = val;
       }
