@@ -17,6 +17,9 @@ class IdentificationsHeader extends HTMLElement {
     window.addEventListener("navResourceChange", this);
     window.addEventListener("storePopulated", this);
     window.addEventListener("identificationsChange", this);
+    this.querySelectorAll("nav li").forEach((el) => {
+      el.addEventListener("click", this);
+    });
   }
 
   disconnectedCallback() {
@@ -25,15 +28,22 @@ class IdentificationsHeader extends HTMLElement {
     window.removeEventListener("navResourceChange", this);
     window.removeEventListener("storePopulated", this);
     window.removeEventListener("identificationsChange", this);
+    this.querySelectorAll("nav li").forEach((el) => {
+      el.addEventListener("click", this);
+    });
   }
 
   handleEvent(event: Event) {
-    let countEvents = [
+    let target = event.target as HTMLElement;
+    if (!target) return;
+
+    // update header counts
+    let updateCountsEvents = [
       "identificationsChange",
       "storePopulated",
       "navResourceChange",
     ];
-    if (countEvents.includes(event.type)) {
+    if (updateCountsEvents.includes(event.type)) {
       // app uses two <identifications-header>;
       // only execute for instance that has updatecounts="true"
       if (this.dataset.updatecounts === "true") {
@@ -49,44 +59,17 @@ class IdentificationsHeader extends HTMLElement {
         itemEl?.classList.add("currentView");
       }
     }
+
+    // change view
+    if (event.type === "click") {
+      viewChangeHandler(target, window.app.store, this);
+    }
   }
 
   async render() {
     loggerRender("++ IdentificationHeader render");
 
     setupComponent(template, this);
-
-    let store = window.app.store;
-    viewChangeHandler(
-      "#identifications-header #observations",
-      "observations",
-      store,
-      this,
-    );
-    viewChangeHandler(
-      "#identifications-header #species",
-      "species",
-      store,
-      this,
-    );
-    viewChangeHandler(
-      "#identifications-header #identifiers",
-      "identifiers",
-      store,
-      this,
-    );
-    viewChangeHandler(
-      "#identifications-header #observers",
-      "observers",
-      store,
-      this,
-    );
-    viewChangeHandler(
-      "#identifications-header #identifications",
-      "identifications",
-      store,
-      this,
-    );
   }
 }
 

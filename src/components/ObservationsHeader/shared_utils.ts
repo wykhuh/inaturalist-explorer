@@ -1,23 +1,22 @@
-import { viewAndTemplateObject } from "../../lib/data_utils";
 import { updateAppUrl } from "../../lib/utils";
 import type { MapStore, ObservationViews } from "../../types/app";
 
 export function viewChangeHandler(
-  selector: string,
-  view: ObservationViews,
+  eventTarget: HTMLElement,
   appStore: MapStore,
   componentContext: HTMLElement,
 ) {
   let viewContainerEl = document.querySelector("#view-container");
-  let viewEl = document.querySelector(selector);
+  if (!viewContainerEl) return;
+  let liEl = eventTarget.closest("li");
+  if (!liEl) return;
+  let countLabel = liEl.dataset.countLabel;
+  if (!countLabel) return;
 
-  if (viewEl && viewContainerEl) {
-    viewEl.addEventListener("click", () => {
-      // only change view if new view is different than current view
-      if (appStore.currentView !== view) {
-        updateView(view, viewContainerEl, appStore, componentContext);
-      }
-    });
+  let view = countLabel.split("-")[1] as ObservationViews;
+
+  if (appStore.currentView !== view) {
+    updateView(view, viewContainerEl, window.app.store, componentContext);
   }
 }
 
@@ -90,4 +89,21 @@ export async function updateResourceCounts(
   Array.from(countEls).forEach((countEl) => {
     countEl.textContent = count.toLocaleString();
   });
+}
+
+export function viewAndTemplateObject(targetView: string) {
+  switch (targetView) {
+    case "species":
+      return "view-species";
+    case "identifiers":
+      return "view-identifiers";
+    case "observers":
+      return "view-observers";
+    case "observations":
+      return "view-observations";
+    case "identifications":
+      return "view-identifications";
+    default:
+      throw Error("Need to add view /template");
+  }
 }
