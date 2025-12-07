@@ -33,7 +33,6 @@ export interface MapStore {
   selectedUnobservedByUser: NormalizediNatUser;
   selectedProjects: NormalizediNatProject[];
   observationsApiParams: ObservationsApiParams;
-  observationsApiParamsTemp?: ObservationsApiParams;
   identificationsApiParams: IdentificationsApiParams;
   color: string;
   map: {
@@ -51,7 +50,6 @@ export interface MapStore {
     string: string;
   };
   iNatStats: {
-    years?: number[];
   };
   currentView?: ObservationViews;
   observationsSubviewData: ObservationsResult[];

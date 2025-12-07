@@ -51,14 +51,6 @@ function formatRefreshMap(appStore: MapStore) {
     },
   };
 }
-function formatYears(appStore: MapStore) {
-  let yearString = "";
-  if (appStore.iNatStats.years) {
-    let allYears = appStore.iNatStats.years;
-    yearString = `${allYears[0]}-${allYears[allYears.length - 1]}`;
-  }
-  return yearString;
-}
 
 export function displayAppstoreData(appStore: MapStore, _source: string) {
   const debug = import.meta.env.VITE_DEBUG;
@@ -80,8 +72,6 @@ export function displayAppstoreData(appStore: MapStore, _source: string) {
         layerControl: !!appStore.map.layerControl,
       };
       data.mapLayerDescriptions = leafletVisibleLayers(appStore);
-    } else if (key === "iNatStats") {
-      data.iNatStats = { years_summary: formatYears(appStore) };
     } else if (key === "selectedPlaces") {
       data.selectedPlaces = formatSelectedPlaces(appStore);
     } else if (key === "refreshMap") {
