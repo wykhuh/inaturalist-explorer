@@ -4,7 +4,7 @@ import { updateAppUrl } from "../../lib/utils";
 import type { NameOrder } from "../../types/app";
 import { renderTaxaList } from "../../lib/search_taxa";
 import { updateComonNamesByLanguage } from "./utils";
-import { loggerRender } from "../../lib/logger";
+import { loggerEvent, loggerRender } from "../../lib/logger";
 import { template } from "./template";
 
 class SettingsMenu extends HTMLElement {
@@ -56,6 +56,7 @@ class SettingsMenu extends HTMLElement {
         renderTaxaList(window.app.store);
 
         window.dispatchEvent(new Event("localeChanged"));
+        loggerEvent("dispatch localeChanged");
       }
     });
   }
@@ -83,6 +84,7 @@ class SettingsMenu extends HTMLElement {
         renderTaxaList(window.app.store);
 
         window.dispatchEvent(new Event("nameOrderChanged"));
+        loggerEvent("dispatch nameOrderChanged");
       }
     });
   }

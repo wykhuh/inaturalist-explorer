@@ -4,7 +4,7 @@ import type {
   MapStoreKeys,
   NormalizediNatUser,
 } from "../types/app.d.ts";
-import { loggerStore } from "./logger.ts";
+import { loggerEvent, loggerStore } from "./logger.ts";
 
 export const mapStore: MapStore = {
   selectedTaxa: [],
@@ -52,16 +52,22 @@ const proxiedStore = new Proxy(structuredClone(mapStore), {
     displayAppstoreData(proxiedStore, `proxiedStore ${property}`);
     if (property === "selectedPlaces") {
       window.dispatchEvent(new Event("selectedPlacesChange"));
+      loggerEvent(`dispatch ${property}Change`);
     } else if (property === "selectedProjects") {
       window.dispatchEvent(new Event("selectedProjectsChange"));
+      loggerEvent(`dispatch ${property}Change`);
     } else if (property === "selectedTaxa") {
       window.dispatchEvent(new Event("selectedTaxaChange"));
+      loggerEvent(`dispatch ${property}Change`);
     } else if (property === "selectedTaxaIdentified") {
       window.dispatchEvent(new Event("selectedTaxaIdentifiedChange"));
+      loggerEvent(`dispatch ${property}Change`);
     } else if (property === "selectedUsers") {
       window.dispatchEvent(new Event("selectedUsersChange"));
+      loggerEvent(`dispatch ${property}Change`);
     } else if (property === "selectedUsersIdentifiers") {
       window.dispatchEvent(new Event("selectedUsersIdentifiersChange"));
+      loggerEvent(`dispatch ${property}Change`);
     }
 
     return true;

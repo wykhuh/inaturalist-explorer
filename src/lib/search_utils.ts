@@ -44,6 +44,7 @@ import {
   setupTaxaIdentifiedSearch,
   taxonIdentifiedSelectedHandler,
 } from "./search_taxa_identified.ts";
+import { loggerEvent } from "./logger.ts";
 
 export async function updateTilesForAllTaxa(appStore: MapStore) {
   for await (const taxon of appStore.selectedTaxa) {
@@ -83,8 +84,10 @@ export function renderSelectedResources(
     updateAppUrl(window.location, appStore);
     if (isIdentificationsCheck(appStore)) {
       window.dispatchEvent(new Event("identificationsChange"));
+      loggerEvent("dispatch identificationsChange");
     } else if (isObservationsCheck(appStore)) {
       window.dispatchEvent(new Event("observationsChange"));
+      loggerEvent("dispatch identificationsChange");
     }
   }
 }

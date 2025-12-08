@@ -4,7 +4,7 @@ import {
   updateSelectedResourcesId,
 } from "../../lib/count_utils";
 import { viewAndTemplateObject } from "../../lib/data_utils";
-import { loggerRender } from "../../lib/logger";
+import { loggerEvent, loggerRender } from "../../lib/logger";
 import { renderSelectedResources } from "../../lib/search_utils";
 import { updateAppUrl } from "../../lib/utils";
 import type { RecordTypes } from "../../types/app";
@@ -98,6 +98,7 @@ class Header extends HTMLElement {
           detail: { recordType, currentView: this.appStore.currentView },
         }),
       );
+      loggerEvent("dispatch navResourceChange");
     }
   }
 }
