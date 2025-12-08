@@ -17,7 +17,7 @@ import {
 } from "./data_utils.ts";
 import { updateCountForAll, updateCountForOne } from "./count_utils.ts";
 import {
-  updateTilesForAllTaxa,
+  updateTilesForSelectedTaxa,
   renderSelectedResources,
 } from "./search_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
@@ -152,7 +152,7 @@ export async function projectSelectedHandler(
     project_id: project.id.toString(),
   };
   await updateCountForOne(project, "selectedProjects", appStore, paramsTemp);
-  await updateTilesForAllTaxa(appStore);
+  await updateTilesForSelectedTaxa(appStore);
   await updateCountForAll("selectedProjects", appStore);
 
   // zoom to map to fit all selected places
@@ -184,7 +184,7 @@ export async function removeProject(projectId: number, appStore: MapStore) {
   removeOneProjectFromStoreAndMap(appStore, projectId);
 
   // remove existing taxa tiles, and refetch taxa tiles
-  await updateTilesForAllTaxa(appStore);
+  await updateTilesForSelectedTaxa(appStore);
   await updateCountForAll("selectedProjects", appStore);
 
   if (appStore.map.map) {

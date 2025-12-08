@@ -29,7 +29,7 @@ import {
   basemapLabel_osm,
   gridLabel_allTaxaRecord,
   gridLabel_allTaxaRecord_la,
-  expectAllTaxaRecord,
+  expectDefaultTaxaRecord,
   colorsEncoded,
   redOak,
   sandiego,
@@ -123,7 +123,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     ]);
     expectNoPlaces(store);
     expectNoRefresh(store);
-    expectAllTaxaRecord(store);
+    expectDefaultTaxaRecord(store);
 
     let expectedParams: ObservationsApiParams = {
       ...defaultParams,
@@ -153,7 +153,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       ]);
       expectNoPlaces(store);
       expectNoRefresh(store);
-      expectAllTaxaRecord(store);
+      expectDefaultTaxaRecord(store);
 
       let expectedParams: ObservationsApiParams = {
         ...defaultParams,
@@ -183,7 +183,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     ]);
     expectNoPlaces(store);
     expectNoRefresh(store);
-    expectAllTaxaRecord(store);
+    expectDefaultTaxaRecord(store);
 
     let expectedParams: ObservationsApiParams = {
       ...defaultParams,
@@ -359,7 +359,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
     expectNoPlaces(store);
     expectNoRefresh(store);
-    expectAllTaxaRecord(store);
+    expectDefaultTaxaRecord(store);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       colors: iNatOrange,
@@ -383,7 +383,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
     expectNoPlaces(store);
     expectNoRefresh(store);
-    expectAllTaxaRecord(store);
+    expectDefaultTaxaRecord(store);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       colors: iNatOrange,
@@ -407,7 +407,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
     expectNoPlaces(store);
     expectNoRefresh(store);
-    expectAllTaxaRecord(store);
+    expectDefaultTaxaRecord(store);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       colors: iNatOrange,
@@ -431,7 +431,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
     expectNoPlaces(store);
     expectNoRefresh(store);
-    expectAllTaxaRecord(store);
+    expectDefaultTaxaRecord(store);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       colors: iNatOrange,
@@ -472,7 +472,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
     expectNoPlaces(store);
     expectNoRefresh(store);
-    expectAllTaxaRecord(store);
+    expectDefaultTaxaRecord(store);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       colors: iNatOrange,
@@ -495,7 +495,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
     expectNoPlaces(store);
     expectNoRefresh(store);
-    expectAllTaxaRecord(store);
+    expectDefaultTaxaRecord(store);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       colors: iNatOrange,
@@ -555,7 +555,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       gridLabel_allTaxaRecord_la,
     ]);
     expectNoRefresh(store);
-    expectAllTaxaRecord(store, allTaxaLACount);
+    expectDefaultTaxaRecord(store, allTaxaLACount);
     expectLosAngelesPlace(store, allTaxaLACount);
     let expectedParams: ObservationsApiParams = {
       ...defaultParams,
@@ -589,7 +589,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       gridLabel_allTaxaRecord,
     ]);
     expectRefreshPlace(store, allTaxaCount);
-    expectAllTaxaRecord(store);
+    expectDefaultTaxaRecord(store);
     let expectedParams: ObservationsApiParams = {
       ...defaultParams,
       nelat: 0,
@@ -623,7 +623,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     ]);
     expectNoRefresh(store);
     expectNoPlaces(store);
-    expectAllTaxaRecord(store, allTaxaProjectCount);
+    expectDefaultTaxaRecord(store, allTaxaProjectCount);
     expectProject1(store, allTaxaProjectCount);
     let expectedParams: ObservationsApiParams = {
       ...defaultParams,
@@ -657,7 +657,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     ]);
     expectNoRefresh(store);
     expectNoPlaces(store);
-    expectAllTaxaRecord(store, allTaxaCount * 0.45);
+    expectDefaultTaxaRecord(store, allTaxaCount * 0.45);
     expectUser1(store, allTaxaCount * 0.45);
     let expectedParams: ObservationsApiParams = {
       ...defaultParams,
@@ -688,7 +688,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     ]);
     expectNoRefresh(store);
     expectNoPlaces(store);
-    expectAllTaxaRecord(store, allTaxaCount * 0.75);
+    expectDefaultTaxaRecord(store, allTaxaCount * 0.75);
     expectUser1Identifier(store, allTaxaCount * 0.75);
     let expectedParams: ObservationsApiParams = {
       ...defaultParams,
@@ -719,7 +719,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     ]);
     expectNoRefresh(store);
     expectNoPlaces(store);
-    expectAllTaxaRecord(store, allTaxaCount * 0.65);
+    expectDefaultTaxaRecord(store, allTaxaCount * 0.65);
     expectUser1UnobservedByUser(store);
     let expectedParams: ObservationsApiParams = {
       ...defaultParams,

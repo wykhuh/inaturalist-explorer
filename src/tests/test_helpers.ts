@@ -524,7 +524,7 @@ export function expectNoTaxaIdentification(store: MapStore) {
   expect(store.taxaMapLayers).toStrictEqual({});
 }
 
-export function expectAllTaxaRecord(store: MapStore, count = 0) {
+export function expectDefaultTaxaRecord(store: MapStore, count = 0) {
   let taxa = structuredClone(allTaxa);
   if (count > 0) {
     taxa.observations_count = Math.round(count);

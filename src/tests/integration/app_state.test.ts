@@ -44,7 +44,7 @@ import {
   refreshBBoxLabel,
   basemapLabel_osm,
   gridLabel_allTaxaRecord,
-  expectAllTaxaRecord,
+  expectDefaultTaxaRecord,
   gridLabel_allTaxaRecord_la,
   gridLabel_allTaxaRecord_la_sd,
   gridLabel_allTaxaRecord_sd,
@@ -243,7 +243,7 @@ describe("taxonIdentifiedSelectedHandler", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectNoProjects(store);
-    expectAllTaxaRecord(store);
+    expectDefaultTaxaRecord(store);
     expectNoUsers(store);
     let expectedParams = {
       ...defaultParams,
@@ -276,7 +276,7 @@ describe("placeSelectedHandler", () => {
     ]);
     expectNoRefresh(store);
     expectNoProjects(store);
-    expectAllTaxaRecord(store, allTaxaLACount);
+    expectDefaultTaxaRecord(store, allTaxaLACount);
     expectLosAngelesPlace(store, allTaxaLACount);
     expectNoUsers(store);
     let expectedParams = {
@@ -311,7 +311,7 @@ describe("placeSelectedHandler", () => {
     ]);
     expectNoRefresh(store);
     expectNoProjects(store);
-    expectAllTaxaRecord(store, allTaxaCount * 0.6);
+    expectDefaultTaxaRecord(store, allTaxaCount * 0.6);
     expectLosAngelesPlace(store, allTaxaCount * 0.6);
     expectNoUsers(store);
     let expectedParams1 = {
@@ -339,7 +339,7 @@ describe("placeSelectedHandler", () => {
     ]);
     expectNoRefresh(store);
     expectNoProjects(store);
-    expectAllTaxaRecord(store);
+    expectDefaultTaxaRecord(store);
     expect_LA_SD_Place(store, [allTaxaCount * 0.6, allTaxaCount * 0.4]);
     expectNoUsers(store);
     let expectedParams2 = {
@@ -375,7 +375,7 @@ describe("refreshBoundingBox", () => {
       gridLabel_allTaxaRecord,
     ]);
     expectNoProjects(store);
-    expectAllTaxaRecord(store);
+    expectDefaultTaxaRecord(store);
     expectRefreshPlace(store, allTaxaCount);
     expectNoUsers(store);
     let expectedParams = {
@@ -412,7 +412,7 @@ describe("refreshBoundingBox", () => {
       gridLabel_allTaxaRecord,
     ]);
     expectNoProjects(store);
-    expectAllTaxaRecord(store);
+    expectDefaultTaxaRecord(store);
     expectRefreshPlace(store, allTaxaCount);
     expectNoUsers(store);
     let expectedParams = {
@@ -440,7 +440,7 @@ describe("refreshBoundingBox", () => {
       gridLabel_allTaxaRecord,
     ]);
     expectNoProjects(store);
-    expectAllTaxaRecord(store);
+    expectDefaultTaxaRecord(store);
     expectRefreshPlace(store, allTaxaCount);
     expectNoUsers(store);
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
@@ -471,7 +471,7 @@ describe("projectSelectedHandler", () => {
     ]);
     expectNoPlaces(store);
     expectNoRefresh(store);
-    expectAllTaxaRecord(store, allTaxaCount * 0.7);
+    expectDefaultTaxaRecord(store, allTaxaCount * 0.7);
     expectProject1(store);
     expectNoUsers(store);
     let expectedParams = {
@@ -506,7 +506,7 @@ describe("projectSelectedHandler", () => {
     ]);
     expectNoPlaces(store);
     expectNoRefresh(store);
-    expectAllTaxaRecord(store, allTaxaCount * 0.7);
+    expectDefaultTaxaRecord(store, allTaxaCount * 0.7);
     expectProject1(store);
     let expectedParams = {
       ...defaultParams,
@@ -528,7 +528,7 @@ describe("projectSelectedHandler", () => {
     ]);
     expectNoPlaces(store);
     expectNoRefresh(store);
-    expectAllTaxaRecord(store);
+    expectDefaultTaxaRecord(store);
     expectProjects(store);
     expectNoUsers(store);
     let expectedParams2 = {
@@ -569,7 +569,7 @@ describe("userSelectedHandler", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectNoProjects(store);
-    expectAllTaxaRecord(store, allTaxaCount * 0.45);
+    expectDefaultTaxaRecord(store, allTaxaCount * 0.45);
     expectUser1(store);
     let expectedParams = {
       ...defaultParams,
@@ -600,7 +600,7 @@ describe("userSelectedHandler", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectNoProjects(store);
-    expectAllTaxaRecord(store, allTaxaCount * 0.45);
+    expectDefaultTaxaRecord(store, allTaxaCount * 0.45);
     expectUser1(store);
     let expectedParams = {
       ...defaultParams,
@@ -620,7 +620,7 @@ describe("userSelectedHandler", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectNoProjects(store);
-    expectAllTaxaRecord(store);
+    expectDefaultTaxaRecord(store);
     expectUsers(store);
     let expectedParams2 = {
       ...defaultParams,
@@ -660,7 +660,7 @@ describe("userIdentifierSelectedHandler", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectNoProjects(store);
-    expectAllTaxaRecord(store, allTaxaCount * 0.75);
+    expectDefaultTaxaRecord(store, allTaxaCount * 0.75);
     expectUser1Identifier(store);
     let expectedParams = {
       ...defaultParams,
@@ -695,7 +695,7 @@ describe("userIdentifierSelectedHandler", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectNoProjects(store);
-    expectAllTaxaRecord(store, allTaxaCount * 0.75);
+    expectDefaultTaxaRecord(store, allTaxaCount * 0.75);
     expect(store.selectedUsers).toStrictEqual([]);
     expect(store.selectedUsersIdentifiers).toStrictEqual([user1]);
     let expectedParams = {
@@ -718,7 +718,7 @@ describe("userIdentifierSelectedHandler", () => {
     expectNoPlaces(store);
     expectNoRefresh(store);
     expectNoProjects(store);
-    expectAllTaxaRecord(store);
+    expectDefaultTaxaRecord(store);
     expect(store.selectedUsers).toStrictEqual([]);
     expect(store.selectedUsersIdentifiers).toStrictEqual([user2]);
     let expectedParams2 = {
@@ -809,7 +809,7 @@ describe("combos", () => {
       placeLabel_la,
       gridLabel_allTaxaRecord_la,
     ]);
-    expectAllTaxaRecord(store, allTaxaLACount);
+    expectDefaultTaxaRecord(store, allTaxaLACount);
     expectLosAngelesPlace(store, allTaxaLACount);
     let params = {
       ...defaultParams,
@@ -831,7 +831,7 @@ describe("combos", () => {
       refreshBBoxLabel,
       gridLabel_allTaxaRecord,
     ]);
-    expectAllTaxaRecord(store);
+    expectDefaultTaxaRecord(store);
     expectRefreshPlace(store, allTaxaCount, "LA");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
@@ -863,7 +863,7 @@ describe("combos", () => {
       basemapLabel_osm,
       gridLabel_allTaxaRecord_project1,
     ]);
-    expectAllTaxaRecord(store, allTaxaProjectCount);
+    expectDefaultTaxaRecord(store, allTaxaProjectCount);
     expectProject1(store);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
@@ -886,7 +886,7 @@ describe("combos", () => {
       refreshBBoxLabel,
       gridLabel_allTaxaRecord_project1,
     ]);
-    expectAllTaxaRecord(store, allTaxaProjectCount);
+    expectDefaultTaxaRecord(store, allTaxaProjectCount);
     expectProject1(store);
     expectRefreshPlace(store, allTaxaProjectCount);
     expect(store.observationsApiParams).toStrictEqual({
@@ -923,7 +923,7 @@ describe("combos", () => {
       basemapLabel_osm,
       gridLabel_allTaxaRecord_user1,
     ]);
-    expectAllTaxaRecord(store, allTaxaCount * 0.45);
+    expectDefaultTaxaRecord(store, allTaxaCount * 0.45);
     expectUser1(store);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
@@ -941,7 +941,7 @@ describe("combos", () => {
       refreshBBoxLabel,
       gridLabel_allTaxaRecord_user1,
     ]);
-    expectAllTaxaRecord(store, allTaxaCount * 0.45);
+    expectDefaultTaxaRecord(store, allTaxaCount * 0.45);
     expectUser1(store);
     expectRefreshPlace(store, allTaxaCount * 0.45);
     expect(store.observationsApiParams).toStrictEqual({
@@ -983,7 +983,7 @@ describe("combos", () => {
       placeLabel_la,
       gridLabel_allTaxaRecord_la,
     ]);
-    expectAllTaxaRecord(store, allTaxaLACount);
+    expectDefaultTaxaRecord(store, allTaxaLACount);
     expectLosAngelesPlace(store, allTaxaLACount);
     let params = {
       ...defaultParams,
@@ -1005,7 +1005,7 @@ describe("combos", () => {
       refreshBBoxLabel,
       gridLabel_allTaxaRecord,
     ]);
-    expectAllTaxaRecord(store);
+    expectDefaultTaxaRecord(store);
     expectRefreshPlace(store, allTaxaCount, "LA");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
@@ -1030,7 +1030,7 @@ describe("combos", () => {
       placeLabel_sd,
       gridLabel_allTaxaRecord_sd,
     ]);
-    expectAllTaxaRecord(store, allTaxaSDCount);
+    expectDefaultTaxaRecord(store, allTaxaSDCount);
     expectSanDiegoPlace(store, allTaxaSDCount);
     let params2 = {
       ...defaultParams,

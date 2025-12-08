@@ -46,7 +46,7 @@ import {
 } from "./search_taxa_identified.ts";
 import { loggerEvent } from "./logger.ts";
 
-export async function updateTilesForAllTaxa(appStore: MapStore) {
+export async function updateTilesForSelectedTaxa(appStore: MapStore) {
   for await (const taxon of appStore.selectedTaxa) {
     // remove existing taxon layers from map
     removeOneTaxonFromMap(appStore, taxon.id);

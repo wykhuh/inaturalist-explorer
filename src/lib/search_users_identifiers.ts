@@ -9,7 +9,7 @@ import {
 import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
 import {
   renderSelectedResources,
-  updateTilesForAllTaxa,
+  updateTilesForSelectedTaxa,
 } from "./search_utils.ts";
 import { setupUserSearch } from "./search_users.ts";
 import { renderSelectedFiltersList } from "../components/ObservationsFilters/utils.ts";
@@ -75,7 +75,7 @@ export async function userIdentifierSelectedHandler(
     appStore,
     paramsTemp,
   );
-  await updateTilesForAllTaxa(appStore);
+  await updateTilesForSelectedTaxa(appStore);
   await updateCountForAll("selectedUsersIdentifiers", appStore);
 
   // add ident_user_id to filters list shown in filters modal
@@ -125,7 +125,7 @@ export async function removeUserIdentifier(userId: number, appStore: MapStore) {
   removeOneUserIdentifierFromStore(appStore, userId);
 
   // remove existing taxa tiles, and refetch taxa tiles
-  await updateTilesForAllTaxa(appStore);
+  await updateTilesForSelectedTaxa(appStore);
   await updateCountForAll("selectedUsersIdentifiers", appStore);
 
   renderSelectedResources(appStore, true);

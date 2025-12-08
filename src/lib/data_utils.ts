@@ -34,7 +34,7 @@ import { logger, loggerFilters } from "./logger.ts";
 import { mapStore } from "./store.ts";
 import type { SpeciesCountTaxon, Taxon } from "../types/inat_api";
 import {
-  updateTilesForAllTaxa,
+  updateTilesForSelectedTaxa,
   renderSelectedResources,
 } from "./search_utils.ts";
 import { isNormalizediNatTaxon } from "../types/utils.ts";
@@ -73,7 +73,7 @@ export async function refreshBoundingBox(appStore: MapStore) {
     ...inatBbox,
   };
 
-  await updateTilesForAllTaxa(appStore);
+  await updateTilesForSelectedTaxa(appStore);
   await updateCountForAll("selectedPlaces", appStore);
 
   let paramsTemp = {
@@ -131,7 +131,7 @@ export async function fetchiNatMapDataForTaxon(
 // taxon
 // ================
 
-export async function addAllTaxaRecordToStore(appStore: MapStore) {
+export async function addDefaultTaxaRecordToStore(appStore: MapStore) {
   appStore.observationsApiParams = {
     ...appStore.observationsApiParams,
     colors: iNatOrange,
@@ -147,7 +147,7 @@ export async function addAllTaxaRecordToStore(appStore: MapStore) {
   );
 }
 
-export async function addAllTaxaRecordToMap(appStore: MapStore) {
+export async function addDefaultTaxaRecordToMap(appStore: MapStore) {
   await fetchiNatMapDataForTaxon(
     allTaxaRecord,
     appStore,

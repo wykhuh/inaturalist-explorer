@@ -41,8 +41,8 @@ import {
   renderSelectedPlacesBoundaries,
   renderSelectedProjectsBoundaries,
   viewAndTemplateObject,
-  addAllTaxaRecordToMap,
-  addAllTaxaRecordToStore,
+  addDefaultTaxaRecordToMap,
+  addDefaultTaxaRecordToStore,
   isObservationsCheck,
   isIdentificationsCheck,
   getResourceApiParams,
@@ -50,7 +50,7 @@ import {
 import { loggerEvent, loggerRender, loggerStore } from "./logger.ts";
 import {
   renderSelectedResources,
-  updateTilesForAllTaxa,
+  updateTilesForSelectedTaxa,
 } from "./search_utils.ts";
 import { decodeAppUrl } from "./utils.ts";
 import { updateCountForAll } from "./count_utils.ts";
@@ -185,7 +185,7 @@ export async function initPopulateStore(
       processTaxonData(taxonData, appStore, urlStore);
     }
   } else if (urlStore.record_type === "observations") {
-    await addAllTaxaRecordToStore(appStore);
+    await addDefaultTaxaRecordToStore(appStore);
   }
 
   // taxa data
@@ -282,11 +282,11 @@ export async function initRenderMap(appStore: MapStore) {
     appStore.selectedTaxa.length === 0
   ) {
     if (isObservationsCheck(appStore)) {
-      await addAllTaxaRecordToMap(appStore);
+      await addDefaultTaxaRecordToMap(appStore);
     }
   } else {
     // add taxa tiles for taxon id in url
-    await updateTilesForAllTaxa(appStore);
+    await updateTilesForSelectedTaxa(appStore);
   }
 
   // return map to previous position when switching views

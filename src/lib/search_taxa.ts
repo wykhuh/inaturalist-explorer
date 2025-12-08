@@ -9,8 +9,8 @@ import { autocomplete_taxa_api } from "../lib/inat_api.ts";
 import type { iNatAutocompleteTaxaAPI } from "../types/inat_api";
 import { loggerUrl } from "../lib/logger.ts";
 import {
-  addAllTaxaRecordToMap,
-  addAllTaxaRecordToStore,
+  addDefaultTaxaRecordToMap,
+  addDefaultTaxaRecordToStore,
   addValueToCommaSeparatedString,
   fetchiNatMapDataForTaxon,
   formatTaxonName,
@@ -210,8 +210,8 @@ export async function removeTaxon(taxonId: number, appStore: MapStore) {
 
   // if no selected taxa, load allTaxaRecord
   if (appStore.selectedTaxa.length === 0 && isObservationsCheck(appStore)) {
-    await addAllTaxaRecordToStore(appStore);
-    await addAllTaxaRecordToMap(appStore);
+    await addDefaultTaxaRecordToStore(appStore);
+    await addDefaultTaxaRecordToMap(appStore);
   }
   await updateCountForAll("all", appStore);
   renderSelectedResources(appStore, true);
