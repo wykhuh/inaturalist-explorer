@@ -160,7 +160,7 @@ export async function projectSelectedHandler(
     fitBoundsPlaces(appStore);
   }
 
-  renderSelectedResources(appStore);
+  renderSelectedResources(appStore, true);
 }
 
 export function renderProjectsList(appStore: MapStore) {
@@ -191,5 +191,5 @@ export async function removeProject(projectId: number, appStore: MapStore) {
     fitBoundsPlaces(appStore);
   }
 
-  renderSelectedResources(appStore);
+  renderSelectedResources(appStore, true);
 }

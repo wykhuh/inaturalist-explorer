@@ -71,7 +71,7 @@ export async function updateTilesForAllTaxa(appStore: MapStore) {
 
 export function renderSelectedResources(
   appStore: MapStore,
-  doSideEffects = true,
+  doSideEffects: boolean,
 ) {
   renderTaxaList(appStore);
   renderTaxaIdentifiedList(appStore);

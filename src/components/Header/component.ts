@@ -88,7 +88,7 @@ class Header extends HTMLElement {
     updateSelectedResourcesId(window.app.store);
     // updates counts for selected itens that do not have counts
     updateCountForAll("all", window.app.store, true).then(() => {
-      renderSelectedResources(window.app.store);
+      renderSelectedResources(window.app.store, false);
     });
 
     // emit event

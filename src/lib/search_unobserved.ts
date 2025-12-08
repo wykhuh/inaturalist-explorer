@@ -93,7 +93,7 @@ export async function unobservedByUserSelectedHandler(
     renderSelectedFiltersList(formData);
   }
 
-  renderSelectedResources(appStore);
+  renderSelectedResources(appStore, true);
 }
 
 export async function removeUnobservedByUser(appStore: MapStore) {
@@ -106,5 +106,5 @@ export async function removeUnobservedByUser(appStore: MapStore) {
   await updateTilesForAllTaxa(appStore);
   await updateCountForAll("all", appStore);
 
-  renderSelectedResources(appStore);
+  renderSelectedResources(appStore, true);
 }

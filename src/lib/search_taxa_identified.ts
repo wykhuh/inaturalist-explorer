@@ -57,7 +57,7 @@ export async function taxonIdentifiedSelectedHandler(
   );
 
   await updateCountForAll("selectedTaxaIdentified", appStore);
-  renderSelectedResources(appStore);
+  renderSelectedResources(appStore, true);
 }
 
 export function renderTaxaIdentifiedList(appStore: MapStore) {
@@ -80,5 +80,5 @@ export async function removeTaxonIdentified(
   removeOneTaxonIdentifiedFromStore(appStore, taxonId);
 
   await updateCountForAll("all", appStore);
-  renderSelectedResources(appStore);
+  renderSelectedResources(appStore, true);
 }

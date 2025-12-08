@@ -189,7 +189,7 @@ export async function taxonSelectedHandler(
 
   await updateCountForOne(taxon, "selectedTaxa", appStore, recordParams);
   await updateCountForAll("selectedTaxa", appStore);
-  renderSelectedResources(appStore);
+  renderSelectedResources(appStore, true);
 }
 
 export function renderTaxaList(appStore: MapStore) {
@@ -214,5 +214,5 @@ export async function removeTaxon(taxonId: number, appStore: MapStore) {
     await addAllTaxaRecordToMap(appStore);
   }
   await updateCountForAll("all", appStore);
-  renderSelectedResources(appStore);
+  renderSelectedResources(appStore, true);
 }

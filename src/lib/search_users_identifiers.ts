@@ -85,7 +85,7 @@ export async function userIdentifierSelectedHandler(
     renderSelectedFiltersList(formData);
   }
 
-  renderSelectedResources(appStore);
+  renderSelectedResources(appStore, true);
 }
 
 export function renderUsersIdentifiersList(appStore: MapStore) {
@@ -128,5 +128,5 @@ export async function removeUserIdentifier(userId: number, appStore: MapStore) {
   await updateTilesForAllTaxa(appStore);
   await updateCountForAll("selectedUsersIdentifiers", appStore);
 
-  renderSelectedResources(appStore);
+  renderSelectedResources(appStore, true);
 }

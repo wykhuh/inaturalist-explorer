@@ -82,7 +82,7 @@ export async function refreshBoundingBox(appStore: MapStore) {
 
   await updateCountForOne(place, "selectedPlaces", appStore, paramsTemp);
 
-  renderSelectedResources(appStore);
+  renderSelectedResources(appStore, true);
 }
 
 // called when user select taxa or place

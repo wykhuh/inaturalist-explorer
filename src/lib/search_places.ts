@@ -177,7 +177,7 @@ export async function placeSelectedHandler(
   if (map) {
     fitBoundsPlaces(appStore);
   }
-  renderSelectedResources(appStore);
+  renderSelectedResources(appStore, true);
 }
 
 export function renderPlacesList(appStore: MapStore) {
@@ -209,5 +209,5 @@ export async function removePlace(placeId: number, appStore: MapStore) {
   await updateTilesForAllTaxa(appStore);
   await updateCountForAll("selectedPlaces", appStore);
 
-  renderSelectedResources(appStore);
+  renderSelectedResources(appStore, true);
 }

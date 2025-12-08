@@ -119,7 +119,7 @@ export async function userSelectedHandler(
   await updateTilesForAllTaxa(appStore);
   await updateCountForAll("selectedUsers", appStore);
 
-  renderSelectedResources(appStore);
+  renderSelectedResources(appStore, true);
 }
 
 export function renderUsersList(appStore: MapStore) {
@@ -145,5 +145,5 @@ export async function removeUser(userId: number, appStore: MapStore) {
   await updateTilesForAllTaxa(appStore);
   await updateCountForAll("selectedUsers", appStore);
 
-  renderSelectedResources(appStore);
+  renderSelectedResources(appStore, true);
 }

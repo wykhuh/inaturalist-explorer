@@ -119,7 +119,7 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
 
   // update UI
   renderSelectedFiltersList(data);
-  renderSelectedResources(appStore);
+  renderSelectedResources(appStore, true);
 }
 
 // use store to populate the filter form fields on page load
