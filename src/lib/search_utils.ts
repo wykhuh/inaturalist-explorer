@@ -51,17 +51,26 @@ export async function updateTilesForSelectedTaxa(appStore: MapStore) {
     // remove existing taxon layers from map
     removeOneTaxonFromMap(appStore, taxon.id);
 
-    let paramsTemp = {
-      ...appStore.observationsApiParams,
-      taxon_id: taxon.id.toString(),
-      colors: taxon.color,
-    };
+    let paramsTemp = {} as any;
+    if (isObservationsCheck(appStore)) {
+      paramsTemp = {
+        ...appStore.observationsApiParams,
+        taxon_id: taxon.id.toString(),
+        colors: taxon.color,
+      };
 
-    // NOTE: iNat observations API only allows one ident_user_id value
-    let identifierId = appStore.observationsApiParams.ident_user_id;
-    if (identifierId && isObservationsCheck(appStore)) {
-      identifierId = identifierId.split(",")[0];
-      paramsTemp.ident_user_id = identifierId;
+      // NOTE: iNat observations API only allows one ident_user_id value
+      let identifierId = appStore.observationsApiParams.ident_user_id;
+      if (identifierId) {
+        identifierId = identifierId.split(",")[0];
+        paramsTemp.ident_user_id = identifierId;
+      }
+    } else {
+      paramsTemp = {
+        ...appStore.identificationsApiParams,
+        taxon_id: taxon.id.toString(),
+        colors: taxon.color,
+      };
     }
 
     // get new iNat map tiles

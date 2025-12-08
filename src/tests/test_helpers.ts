@@ -288,6 +288,11 @@ export let gridLabel_life_places_projects_users =
 export let gridLabel_oaks_places_projects_users =
   "overlay: iNat grid, taxon_id 861036, place_id 962,829, project_id 237729,229902, user_id 222137,677256";
 
+export let gridLabel_life_places_users =
+  "overlay: iNat grid, taxon_id 48460, place_id 962,829, user_id 222137,677256";
+export let gridLabel_oaks_places_users =
+  "overlay: iNat grid, taxon_id 861036, place_id 962,829, user_id 222137,677256";
+
 export let gridLabel_life_project1 =
   "overlay: iNat grid, taxon_id 48460, project_id 237729";
 export let gridLabel_life_project1_user1 =
@@ -822,6 +827,22 @@ export function expectUserIdentifiers(store: MapStore, counts = [0, 0]) {
   }
   if (counts[1] > 0) {
     userB.observations_count = counts[1];
+  }
+  expect(store.selectedUsersIdentifiers).toEqual([userA, userB]);
+}
+
+export function expectUserIdentifiersIdentifications(
+  store: MapStore,
+  counts = [0, 0],
+) {
+  let userA = structuredClone(user1);
+  let userB = structuredClone(user2);
+
+  if (counts[0] > 0) {
+    userA.identifications_count = counts[0];
+  }
+  if (counts[1] > 0) {
+    userB.identifications_count = counts[1];
   }
   expect(store.selectedUsersIdentifiers).toEqual([userA, userB]);
 }

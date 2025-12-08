@@ -65,6 +65,12 @@ import {
   expectNoTaxaIdentification,
   allTaxaIdentification,
   lifeIdentification,
+  gridLabel_life_places_users,
+  gridLabel_oaks_places_users,
+  expectLifeOakTaxaIdentifications,
+  expect_LA_SD_Place_Identifications,
+  redOakIdentification,
+  expectUserIdentifiersIdentifications,
 } from "../test_helpers.ts";
 import type {
   IdentificationsApiParams,
@@ -945,6 +951,91 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expect(store.color).toBe("");
   });
 
+  test("loads and renders places data based on url params", async () => {
+    let store = structuredClone(mapStore);
+
+    let placeA = structuredClone(losangeles);
+    placeA.identifications_count =
+      allTaxaIdentification.identification_count * 0.6;
+
+    expectEmpytMap(store);
+
+    let searchparams = `?locale=en&place_id=${placeA.id}&${defaultQuery}`;
+    let urlData = decodeAppUrl(searchparams, "/identifications/");
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expect(store.selectedPlaces).toStrictEqual([placeA]);
+    expectNoRefresh(store);
+    expectNoProjects(store);
+    expect(store.selectedTaxa).toStrictEqual([]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([]);
+    expectNoUsers(store);
+    expect(store.taxaMapLayers).toEqual({});
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      placeLabel_la,
+    ]);
+    let expectedParams: ObservationsApiParams = {
+      ...defaultParams,
+    };
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
+
+    let expectedParams2: IdentificationsApiParams = {
+      place_id: placeA.id.toString(),
+    };
+    expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
+  });
+
+  test("does not load bounding box data based on url params", async () => {
+    let store = structuredClone(mapStore);
+
+    expectEmpytMap(store);
+
+    let searchparams =
+      "?spam=false&verifiable=true&nelat=0&nelng=0&swlat=0&swlng=0";
+    let urlData = decodeAppUrl(searchparams, "/identifications/");
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expectNoProjects(store);
+    expect(store.selectedTaxa).toStrictEqual([]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([]);
+    expect(store.taxaMapLayers).toEqual({});
+    expectNoUsers(store);
+
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    expect(store.identificationsApiParams).toStrictEqual({});
+  });
+
+  test("does not load project data based on url params", async () => {
+    let store = structuredClone(mapStore);
+
+    expectEmpytMap(store);
+
+    let searchparams = `?locale=en&project_id=${project_cnc1.id}&${defaultQuery}`;
+    let urlData = decodeAppUrl(searchparams, "/identifications/");
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expectNoProjects(store);
+    expect(store.selectedTaxa).toStrictEqual([]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([]);
+    expect(store.taxaMapLayers).toEqual({});
+    expectNoUsers(store);
+
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    expect(store.identificationsApiParams).toStrictEqual({});
+  });
+
   test("loads and renders user data based on url params", async () => {
     let store = structuredClone(mapStore);
 
@@ -980,46 +1071,12 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
   });
 
-  test("loads and renders places data based on url params", async () => {
-    let store = structuredClone(mapStore);
-
-    let placeA = structuredClone(losangeles);
-    placeA.identifications_count =
-      allTaxaIdentification.identification_count * 0.6;
-
-    expectEmpytMap(store);
-
-    let searchparams = `?locale=en&place_id=${placeA.id}&${defaultQuery}`;
-    let urlData = decodeAppUrl(searchparams, "/identifications/");
-
-    await initPopulateStore(store, urlData);
-    await initRenderMap(store);
-
-    expect(store.selectedPlaces).toStrictEqual([placeA]);
-    expectNoRefresh(store);
-    expectNoProjects(store);
-    expect(store.selectedTaxa).toStrictEqual([]);
-    expect(store.selectedTaxaIdentified).toStrictEqual([]);
-    expectNoUsers(store);
-    expect(store.taxaMapLayers).toEqual({});
-
-    let expectedParams: ObservationsApiParams = {
-      ...defaultParams,
-    };
-    expect(store.observationsApiParams).toStrictEqual(expectedParams);
-
-    let expectedParams2: IdentificationsApiParams = {
-      place_id: placeA.id.toString(),
-    };
-    expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
-  });
-
-  test("does not load project data based on url params", async () => {
+  test("does not load user identifier data based on url params", async () => {
     let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
-    let searchparams = `?locale=en&project_id=${project_cnc1.id}&${defaultQuery}`;
+    let searchparams = `?locale=en&ident_user_id=${user1.id}&${defaultQuery}`;
     let urlData = decodeAppUrl(searchparams, "/identifications/");
 
     await initPopulateStore(store, urlData);
@@ -1035,5 +1092,74 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
 
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({});
+  });
+
+  test("does not load unobserved by user data based on url params", async () => {
+    let store = structuredClone(mapStore);
+
+    expectEmpytMap(store);
+
+    let searchparams = `?locale=en&unobserved_by_user_id=${user1.id}&${defaultQuery}`;
+    let urlData = decodeAppUrl(searchparams, "/identifications/");
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expectNoProjects(store);
+    expect(store.selectedTaxa).toStrictEqual([]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([]);
+    expect(store.taxaMapLayers).toEqual({});
+    expectNoUsers(store);
+
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    expect(store.identificationsApiParams).toStrictEqual({});
+  });
+
+  test("loads and renders resources and places based on url params", async () => {
+    let store = structuredClone(mapStore);
+
+    let lifeCount = lifeIdentification().identifications_count as number;
+    let oakCount = redOakIdentification().identifications_count as number;
+    let count = oakCount + lifeCount;
+
+    expectEmpytMap(store);
+
+    let searchparams = `?locale=en&observation_taxon_id=${life().id},${redOak().id}`;
+    searchparams += `&place_id=${losangeles.id},${sandiego.id}`;
+    searchparams += `&user_id=${user1.id},${user2.id}`;
+    searchparams += `&colors=${colorsEncoded[0]},${colorsEncoded[1]}`;
+    searchparams += `&spam=false&verifiable=true`;
+    let urlData = decodeAppUrl(searchparams, "/identifications/");
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      placeLabel_la,
+      placeLabel_la,
+      placeLabel_sd,
+      placeLabel_sd,
+      gridLabel_life_places_users,
+      gridLabel_oaks_places_users,
+    ]);
+    expectNoRefresh(store);
+    expectLifeOakTaxaIdentifications(store, [lifeCount, oakCount]);
+    expect_LA_SD_Place_Identifications(store, [count * 0.6, count * 0.4]);
+    expectUserIdentifiersIdentifications(store, [
+      Math.round(count * 0.45),
+      Math.round(count * 0.55),
+    ]);
+
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    let expectedParams: ObservationsApiParams = {
+      observation_taxon_id: `${life().id},${redOak().id}`,
+      place_id: `${losangeles.id},${sandiego.id}`,
+      user_id: `${user1.id},${user2.id}`,
+    };
+    expect(store.identificationsApiParams).toStrictEqual(expectedParams);
+    expect(store.color).toBe(colors[1]);
   });
 });
