@@ -21,7 +21,7 @@ import type {
   ResourceSpeciesCountResult,
 } from "../../types/inat_api";
 
-export let perPage = 48;
+export let perPage = 24;
 
 export async function fetchAndRenderData(
   perPage: number,

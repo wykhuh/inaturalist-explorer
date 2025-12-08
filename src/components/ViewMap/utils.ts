@@ -19,7 +19,7 @@ import { observationsDemoLA } from "../../data/inat_api_cache";
 import { setSelectedOption } from "../../lib/form_utils";
 import { updateSelectedResourcesId } from "../../lib/count_utils";
 
-export let perPage = 48;
+export let perPage = 24;
 
 // fetch new data from api when changing pages, order, filters and view
 export async function fetchAndRenderData(

@@ -20,7 +20,7 @@ import { formatDate, updateAppUrl } from "../../lib/utils";
 import type { MapStore } from "../../types/app";
 import { identifications } from "../../data/inat_api_cache";
 
-export let perPage = 48;
+export let perPage = 24;
 
 export async function fetchAndRenderData(
   perPage: number,

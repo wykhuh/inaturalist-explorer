@@ -20,7 +20,7 @@ import {
   isObservationsCheck,
 } from "../../lib/data_utils";
 
-export let perPage = 100;
+export let perPage = 25;
 
 export async function fetchAndRenderData(
   perPage: number,
