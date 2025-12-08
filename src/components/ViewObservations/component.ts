@@ -16,13 +16,13 @@ import { initRenderMap } from "../../lib/init_app";
 import { setupComponent } from "../../lib/component_utils";
 import type { MapStore } from "../../types/app";
 
-class ViewMap extends HTMLElement {
+class ViewObservations extends HTMLElement {
   constructor() {
     super();
   }
 
   connectedCallback() {
-    loggerRender("++ ViewMap connectedCallback");
+    loggerRender("++ ViewObservations connectedCallback");
 
     this.render();
 
@@ -33,7 +33,7 @@ class ViewMap extends HTMLElement {
   }
 
   disconnectedCallback() {
-    loggerRender("++ ViewMap disconnectedCallback");
+    loggerRender("++ ViewObservations disconnectedCallback");
 
     if (window.app.store.map.map) {
       // save map bounds before switching views so app can return to this map location
@@ -64,13 +64,13 @@ class ViewMap extends HTMLElement {
     ];
 
     if (resourceChanges.includes(event.type)) {
-      loggerEvent(`++ ViewMap ${event.type}`);
+      loggerEvent(`++ ViewObservations ${event.type}`);
       fetchAndRenderData(perPage, paginationcCallback, window.app.store);
     }
   }
 
   async render() {
-    loggerRender("++ ViewMap render");
+    loggerRender("++ ViewObservations render");
     setupComponent(template, this);
 
     // create new map
@@ -125,4 +125,4 @@ class ViewMap extends HTMLElement {
   }
 }
 
-customElements.define("view-map", ViewMap);
+customElements.define("view-observations", ViewObservations);

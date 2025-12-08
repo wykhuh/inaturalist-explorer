@@ -7,7 +7,7 @@ import "./components/ObservationsFilters/component.ts";
 import "./components/ObservationsHeader/component.ts";
 import "./components/IdentificationsFilters/component.ts";
 import "./components/IdentificationsHeader/component.ts";
-import "./components/ViewMap/component.ts";
+import "./components/ViewObservations/component.ts";
 import "./components/ViewSpecies/component.ts";
 import "./components/ViewIdentifiers/component.ts";
 import "./components/ViewIdentifications/component.ts";
