@@ -39,28 +39,32 @@ export async function fetchAndRenderData(
   loggerTime(`api ${t10 - t1} milliseconds`);
   spinner.stop();
 
-  if (data) {
-    containerEl.innerHTML = "";
-
-    let pagination1 = createPagination(
-      data.per_page,
-      data.page,
-      data.total_results,
-      paginationcCallback,
-    );
-    containerEl.appendChild(pagination1);
-
-    let tableEl = createTable(data.results, appStore);
-    containerEl.appendChild(tableEl);
-
-    let pagination2El = createPagination(
-      data.per_page,
-      data.page,
-      data.total_results,
-      paginationcCallback,
-    );
-    containerEl.appendChild(pagination2El);
+  if (!data) return;
+  if (data.results.length == 0) {
+    containerEl.innerHTML = "No records found";
+    return;
   }
+
+  containerEl.innerHTML = "";
+
+  let pagination1 = createPagination(
+    data.per_page,
+    data.page,
+    data.total_results,
+    paginationcCallback,
+  );
+  containerEl.appendChild(pagination1);
+
+  let tableEl = createTable(data.results, appStore);
+  containerEl.appendChild(tableEl);
+
+  let pagination2El = createPagination(
+    data.per_page,
+    data.page,
+    data.total_results,
+    paginationcCallback,
+  );
+  containerEl.appendChild(pagination2El);
 }
 
 async function getAPIData(perPage: number, appStore: MapStore) {

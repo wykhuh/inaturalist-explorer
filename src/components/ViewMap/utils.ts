@@ -41,38 +41,42 @@ export async function fetchAndRenderData(
 
   spinner.stop();
 
-  if (data) {
-    // store results in store for switching subview
-    appStore.observationsSubviewData = data.results;
-
-    containerEl.innerHTML = "";
-
-    let pagination1 = createPagination(
-      data.per_page,
-      data.page,
-      data.total_results,
-      paginationcCallback,
-    );
-    containerEl.appendChild(pagination1);
-
-    // switch between table and grid subview
-    let subviewEl = document.createElement("div");
-    subviewEl.className = "observations-subview";
-    if (appStore.viewMetadata.observations.subview === "table") {
-      subviewEl.appendChild(createTable(data.results, appStore));
-    } else {
-      subviewEl.appendChild(createGrid(data.results));
-    }
-    containerEl.append(subviewEl);
-
-    let pagination2El = createPagination(
-      data.per_page,
-      data.page,
-      data.total_results,
-      paginationcCallback,
-    );
-    containerEl.appendChild(pagination2El);
+  if (!data) return;
+  if (data.results.length == 0) {
+    containerEl.innerHTML = "No records found";
+    return;
   }
+
+  // store results in store for switching subview
+  appStore.observationsSubviewData = data.results;
+
+  containerEl.innerHTML = "";
+
+  let pagination1 = createPagination(
+    data.per_page,
+    data.page,
+    data.total_results,
+    paginationcCallback,
+  );
+  containerEl.appendChild(pagination1);
+
+  // switch between table and grid subview
+  let subviewEl = document.createElement("div");
+  subviewEl.className = "observations-subview";
+  if (appStore.viewMetadata.observations.subview === "table") {
+    subviewEl.appendChild(createTable(data.results, appStore));
+  } else {
+    subviewEl.appendChild(createGrid(data.results));
+  }
+  containerEl.append(subviewEl);
+
+  let pagination2El = createPagination(
+    data.per_page,
+    data.page,
+    data.total_results,
+    paginationcCallback,
+  );
+  containerEl.appendChild(pagination2El);
 }
 
 async function getAPIData(perPage: number, appStore: MapStore) {
