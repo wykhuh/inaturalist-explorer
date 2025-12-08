@@ -521,3 +521,22 @@ export function formatDate(date: string | null, timezone?: string) {
   // TODO: localize date
   return new Date(date).toLocaleString("en-US", options);
 }
+
+// https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest
+export async function createHashString(message: string) {
+  const msgUint8 = new TextEncoder().encode(message); // encode as (utf-8) Uint8Array
+  const hashBuffer = await window.crypto.subtle.digest("SHA-256", msgUint8); // hash the message
+  // NOTE: JavaScript's toHex()  is not supported in Typescript or Node yet,
+  // therefore I used  buf2hex instead of toHex(), so that tests will pass.
+  // const hashHex = new Uint8Array(hashBuffer).toHex();
+  const hashHex = buf2hex(new Uint8Array(hashBuffer)); // Convert ArrayBuffer to hex string.
+  return hashHex;
+}
+
+// https://stackoverflow.com/questions/40031688/how-can-i-convert-an-arraybuffer-to-a-hexadecimal-string-hex
+function buf2hex(buffer: ArrayBuffer) {
+  // buffer is an ArrayBuffer
+  return [...new Uint8Array(buffer)]
+    .map((x) => x.toString(16).padStart(2, "0"))
+    .join("");
+}

@@ -9,30 +9,34 @@ import {
   getObservationsSpecies,
 } from "../../lib/inat_api";
 import type { MapStore } from "../../types/app";
-import { updateResourceCounts } from "./shared_utils";
+import { updateHeaderCount } from "./shared_utils";
 
 export function updateCountsHeader(appStore: MapStore) {
   let params = cleanupObervationsParams(appStore);
-  updateResourceCounts(
+  updateHeaderCount(
+    "observations-observations",
     getObservations,
-    "#observations-header .observations-count",
     params,
+    appStore,
   );
-  updateResourceCounts(
+  updateHeaderCount(
+    "observations-species",
     getObservationsSpecies,
-    "#observations-header .species-count",
     params,
+    appStore,
   );
-  updateResourceCounts(
+  updateHeaderCount(
+    "observations-identifiers",
     getObservationsIdentifiers,
-    "#observations-header .identifiers-count",
     params,
+    appStore,
   );
 
   let observersParams = cleanupObervationsObserversParams(appStore);
-  updateResourceCounts(
+  updateHeaderCount(
+    "observations-observers",
     getObservationsObservers,
-    "#observations-header .observers-count",
     observersParams,
+    appStore,
   );
 }

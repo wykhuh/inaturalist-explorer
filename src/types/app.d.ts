@@ -50,6 +50,8 @@ export interface MapStore {
     string: string;
   };
   iNatStats: {
+    headerCounts: any;
+    headerCountsIndex: string[];
   };
   currentView?: ObservationViews;
   observationsSubviewData: ObservationsResult[];

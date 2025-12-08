@@ -9,6 +9,7 @@ import {
   updateAppUrl,
   decodeAppUrl,
   removeDefaultParams,
+  createHashString,
 } from "../lib/utils.ts";
 import { mapStore } from "../lib/store.ts";
 import {
@@ -1123,5 +1124,39 @@ describe("removeDefaultParams", () => {
     let result = removeDefaultParams(params);
 
     expect(result).toBe("verifiable=false&spam=true&locale=es");
+  });
+});
+
+describe("createHashString", () => {
+  test("creates a string hash for a given value", async () => {
+    let value1 = "abc";
+
+    let results1 = await createHashString(value1);
+
+    expect(results1).toEqual(
+      "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+    );
+  });
+
+  test("returns same hash everytime for a given value", async () => {
+    let value1 = "abc";
+
+    let results1 = await createHashString(value1);
+    let results2 = await createHashString(value1);
+    let results3 = await createHashString(value1);
+
+    expect(results1).toEqual(results2);
+    expect(results2).toEqual(results3);
+    expect(results1).toEqual(results3);
+  });
+
+  test("returns different hash for different given values", async () => {
+    let value1 = "abc";
+    let value2 = "bcd";
+
+    let results1 = await createHashString(value1);
+    let results2 = await createHashString(value2);
+
+    expect(results1).not.toEqual(results2);
   });
 });

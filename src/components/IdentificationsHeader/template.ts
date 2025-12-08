@@ -6,24 +6,22 @@ export const template = html`
       <h1>Identifications</h1>
       <ul>
         <li id="observations" data-count-label="identifications-observations">
-          <span class="observations-count">&nbsp;</span
-          ><span>Observations</span>
+          <span class="header-count">&nbsp;</span><span>Observations</span>
         </li>
         <li
           id="identifications"
           data-count-label="identifications-identifications"
         >
-          <span class="identifications-count">&nbsp;</span
-          ><span>Identifications</span>
+          <span class="header-count">&nbsp;</span><span>Identifications</span>
         </li>
         <li id="species" data-count-label="identifications-species">
-          <span class="species-count">&nbsp;</span><span>Species</span>
+          <span class="header-count">&nbsp;</span><span>Species</span>
         </li>
         <li id="identifiers" data-count-label="identifications-identifiers">
-          <span class="identifiers-count">&nbsp;</span><span>Identifiers</span>
+          <span class="header-count">&nbsp;</span><span>Identifiers</span>
         </li>
         <li id="observers" data-count-label="identifications-observers">
-          <span class="observers-count">&nbsp;</span><span>Observers</span>
+          <span class="header-count">&nbsp;</span><span>Observers</span>
         </li>
       </ul>
     </nav>

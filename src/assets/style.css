@@ -524,11 +524,7 @@
       background-color: var(--clr-iNat-green);
     }
 
-    .observations-count,
-    .species-count,
-    .identifiers-count,
-    .observers-count,
-    .identifications-count {
+    .header-count {
       font-weight: var(--fw-bold);
     }
 

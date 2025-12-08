@@ -79,6 +79,11 @@ export function displayAppstoreData(appStore: MapStore, _source: string) {
     } else if (key === "observationsSubviewData") {
       data.observationsSubviewData =
         appStore.observationsSubviewData?.length || 0;
+    } else if (key === "iNatStats") {
+      // convert Map to object https://gist.github.com/lukehorvat/133e2293ba6ae96a35ba
+      let obj = Object.fromEntries(appStore.iNatStats.headerCounts.entries());
+
+      data.iNatStats = { ...appStore.iNatStats, headerCounts: obj };
     } else {
       data[key] = appStore[key];
     }

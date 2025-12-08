@@ -26,7 +26,10 @@ export const mapStore: MapStore = {
     layer: null,
   },
   formFilters: { params: {}, string: "" },
-  iNatStats: {},
+  iNatStats: {
+    headerCounts: new Map() as unknown as Record<string, number>,
+    headerCountsIndex: [],
+  },
   observationsSubviewData: [],
   currentView: "observations",
   viewMetadata: {

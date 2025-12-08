@@ -1,4 +1,4 @@
-import { updateAppUrl } from "../../lib/utils";
+import { createHashString, updateAppUrl } from "../../lib/utils";
 import type { MapStore, ObservationViews } from "../../types/app";
 
 export function viewChangeHandler(
@@ -16,7 +16,7 @@ export function viewChangeHandler(
   let view = countLabel.split("-")[1] as ObservationViews;
 
   if (appStore.currentView !== view) {
-    updateView(view, viewContainerEl, window.app.store, componentContext);
+    updateView(view, viewContainerEl, appStore, componentContext);
   }
 }
 
@@ -66,29 +66,85 @@ export function updateView(
   updateAppUrl(window.location, appStore);
 }
 
-export async function updateResourceCounts(
+export async function updateHeaderCount(
+  countLabel: string,
   dataFn: any,
-  selector: string,
   searchParams: string,
+  appStore: MapStore,
   perPage = 0,
+  maxCacheSize = 1000,
 ) {
-  let countEls = document.querySelectorAll(selector);
-  if (countEls.length === 0) return;
+  let count = 0;
 
+  // get count from cache or API
+  let hash = await createHeaderCountHash(countLabel, searchParams);
+  let cacheCount = appStore.iNatStats.headerCounts.get(hash);
+  if (cacheCount) {
+    count = cacheCount;
+  } else {
+    count = await fetchHeaderCounts(dataFn, searchParams, perPage);
+  }
+
+  renderHeaderCounts(countLabel, count);
+
+  if (!cacheCount) {
+    await saveHeaderCount(count, hash, appStore, maxCacheSize);
+  }
+}
+
+async function fetchHeaderCounts(
+  dataFn: any,
+  searchParams: string,
+  perPage: number,
+) {
   if (import.meta.env.VITE_CACHE === "true") {
-    Array.from(countEls).forEach((countEl) => {
-      countEl.textContent = "-999";
-    });
-    return;
+    return -999;
   }
 
   let data = await dataFn(searchParams, perPage);
   let count = data?.total_results;
-  if (count == undefined) return;
+  return count;
+}
+
+function renderHeaderCounts(countLabel: string, count: number) {
+  let countEls = document.querySelectorAll(
+    `[data-count-label="${countLabel}"] .header-count`,
+  );
+  if (countEls.length === 0) return;
 
   Array.from(countEls).forEach((countEl) => {
     countEl.textContent = count.toLocaleString();
   });
+}
+
+export async function saveHeaderCount(
+  value: number,
+  hash: string,
+  appStore: MapStore,
+  maxCacheSize = 1000,
+) {
+  // remove first item in headerCounts if cache is max size
+  if (appStore.iNatStats.headerCounts.size === maxCacheSize) {
+    let firstKey = appStore.iNatStats.headerCountsIndex[0];
+    appStore.iNatStats.headerCounts.delete(firstKey);
+    appStore.iNatStats.headerCountsIndex.shift();
+  }
+
+  appStore.iNatStats.headerCountsIndex.push(hash);
+  appStore.iNatStats.headerCounts.set(hash, value);
+  appStore.iNatStats = appStore.iNatStats;
+}
+
+export async function createHeaderCountHash(
+  countLabel: string,
+  searchParams: string,
+) {
+  let params = searchParams
+    .replace(/&view=[a-z]+/, "")
+    .replace(/&colors=[%0-9a-z]+/, "")
+    .replace(/&subview=[a-z]+/, "");
+  let key = params + ":" + countLabel;
+  return await createHashString(key);
 }
 
 export function viewAndTemplateObject(targetView: string) {

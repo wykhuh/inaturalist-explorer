@@ -10,7 +10,7 @@ import {
   getIdentificationsSpecies,
 } from "../../lib/inat_api";
 import type { MapStore } from "../../types/app";
-import { updateResourceCounts } from "../ObservationsHeader/shared_utils";
+import { updateHeaderCount } from "../ObservationsHeader/shared_utils";
 
 function nullObservations(_searchParams = "", _perPage = 0) {
   return { total_results: "--" };
@@ -24,42 +24,48 @@ export function updateCountsHeader(appStore: MapStore) {
   let params = cleanupObervationsParams(tempStore);
 
   if (appStore.selectedTaxa.length === 0) {
-    updateResourceCounts(
+    updateHeaderCount(
+      "identifications-observations",
       nullObservations,
-      "#identifications-header .observations-count",
       params,
+      appStore,
     );
   } else {
-    updateResourceCounts(
+    updateHeaderCount(
+      "identifications-observations",
       getObservations,
-      "#identifications-header .observations-count",
       params,
+      appStore,
     );
   }
 
   let identificationParams = cleanupIdentificationParams(appStore);
-  updateResourceCounts(
+  updateHeaderCount(
+    "identifications-identifications",
     getIdentifications,
-    "#identifications-header .identifications-count",
     identificationParams,
+    appStore,
   );
 
-  updateResourceCounts(
+  updateHeaderCount(
+    "identifications-identifiers",
     getIdentificationsIdentifiers,
-    "#identifications-header .identifiers-count",
     identificationParams,
+    appStore,
   );
 
-  updateResourceCounts(
+  updateHeaderCount(
+    "identifications-species",
     getIdentificationsSpecies,
-    "#identifications-header .species-count",
     identificationParams,
+    appStore,
   );
 
-  updateResourceCounts(
+  updateHeaderCount(
+    "identifications-observers",
     getIdentificationsObservers,
-    "#identifications-header .observers-count",
     identificationParams,
-    1, // 0 per pages causes an server error for /idenifications/observers
+    appStore,
+    1, // BUG: 0 per pages causes an error for /idenifications/observers API
   );
 }
