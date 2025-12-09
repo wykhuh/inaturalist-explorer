@@ -189,7 +189,10 @@ async function updateIdentificationsCountForAll(
     "selectedUsersIdentifiers",
   ] as MapStoreSelectedResourcesKeys[];
 
-  let targetResources = resources.filter((r) => r != ignoreResource);
+  let targetResources = resources
+    .filter((r) => r != ignoreResource)
+    .filter((r) => appStore[r].length > 0);
+
   for await (const resource of targetResources) {
     await updateIdentificationsCountForResource(
       resource,
@@ -219,6 +222,7 @@ export async function updateIdentificationsCountForResource(
       ...appStore.identificationsApiParams,
       [idField]: record.id.toString(),
     };
+    cleanupIdentificationsParamsForRecord(paramsTemp);
     await updateIdentificationsCountForOne(
       record,
       resource,

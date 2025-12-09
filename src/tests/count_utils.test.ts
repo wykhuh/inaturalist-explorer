@@ -3,13 +3,16 @@
 import { expect, test, describe, beforeAll, afterEach, afterAll } from "vitest";
 
 import {
+  updateCountForAll,
   updateIdentificationsCountForResource,
   updateObservationsCountForResource,
   updateSelectedResourcesId,
 } from "../lib/count_utils";
 import { mapStore } from "../lib/store";
 import {
+  allTaxa,
   createMockServer,
+  life,
   lifeBasic,
   lifeIdentification,
   losangeles,
@@ -358,5 +361,120 @@ describe("updateSelectedResourcesId", () => {
     expect(store.observationsApiParams.unobserved_by_user_id).toBeUndefined();
     expect(store.observationsApiParams.user_id).toBeUndefined();
     expect(store.observationsApiParams.ident_user_id).toBeUndefined();
+  });
+});
+
+describe("updateCountForAll", () => {
+  test("update observations_count for all selected resources", async () => {
+    let life1 = life();
+    let lifeCount = life1.observations_count as number;
+
+    let store = structuredClone(mapStore);
+    store.record_type = "observations";
+    store.selectedTaxa = [{ ...life1, observations_count: 1 }];
+    store.selectedPlaces = [{ ...losangeles, observations_count: 1 }];
+    store.observationsApiParams = {
+      taxon_id: life1.id.toString(),
+      place_id: losangeles.id.toString(),
+    };
+
+    await updateCountForAll("all", store);
+
+    expect(store.selectedTaxa).toStrictEqual([
+      { ...life1, observations_count: lifeCount * 0.6 },
+    ]);
+    expect(store.selectedPlaces).toStrictEqual([
+      { ...losangeles, observations_count: lifeCount * 0.6 },
+    ]);
+  });
+
+  test("update observations_count for all resources except given resource", async () => {
+    let life1 = life();
+    let lifeCount = life1.observations_count as number;
+
+    let store = structuredClone(mapStore);
+    store.record_type = "observations";
+    store.selectedTaxa = [{ ...life1, observations_count: 1 }];
+    store.selectedPlaces = [{ ...losangeles, observations_count: 1 }];
+    store.observationsApiParams = {
+      taxon_id: life1.id.toString(),
+      place_id: losangeles.id.toString(),
+    };
+
+    await updateCountForAll("selectedTaxa", store);
+
+    expect(store.selectedTaxa).toStrictEqual([
+      { ...life1, observations_count: 1 },
+    ]);
+    expect(store.selectedPlaces).toStrictEqual([
+      { ...losangeles, observations_count: lifeCount * 0.6 },
+    ]);
+  });
+
+  test("update identifications_count for all selected resources if identifications", async () => {
+    let life1 = lifeIdentification();
+    let lifeCount = (life().observations_count as number) * 2;
+
+    let store = structuredClone(mapStore);
+    store.record_type = "identifications";
+    store.selectedTaxa = [{ ...life1, identifications_count: 1 }];
+    store.selectedPlaces = [{ ...losangeles, identifications_count: 1 }];
+    store.identificationsApiParams = {
+      observation_taxon_id: life1.id.toString(),
+      place_id: losangeles.id.toString(),
+    };
+
+    await updateCountForAll("all", store);
+
+    expect(store.selectedTaxa).toStrictEqual([
+      { ...life1, identifications_count: lifeCount * 0.6 },
+    ]);
+    expect(store.selectedPlaces).toStrictEqual([
+      { ...losangeles, identifications_count: lifeCount * 0.6 },
+    ]);
+  });
+
+  test("update identifications_count for all resources except given resource if identifications", async () => {
+    let life1 = lifeIdentification();
+    let lifeCount = (life().observations_count as number) * 2;
+
+    let store = structuredClone(mapStore);
+    store.record_type = "identifications";
+    store.selectedTaxa = [{ ...life1, identifications_count: 1 }];
+    store.selectedPlaces = [{ ...losangeles, identifications_count: 1 }];
+    store.identificationsApiParams = {
+      observation_taxon_id: life1.id.toString(),
+      place_id: losangeles.id.toString(),
+    };
+
+    await updateCountForAll("selectedTaxa", store);
+
+    expect(store.selectedTaxa).toStrictEqual([
+      { ...life1, identifications_count: 1 },
+    ]);
+    expect(store.selectedPlaces).toStrictEqual([
+      { ...losangeles, identifications_count: lifeCount * 0.6 },
+    ]);
+  });
+
+  test("update observations_count for default taxon", async () => {
+    let store = structuredClone(mapStore);
+    let allCount = allTaxa.observations_count;
+    store.record_type = "observations";
+    store.selectedTaxa = [{ ...allTaxa, observations_count: 1 }];
+    store.selectedPlaces = [{ ...losangeles, observations_count: 1 }];
+    store.observationsApiParams = {
+      taxon_id: allTaxa.id.toString(),
+      place_id: losangeles.id.toString(),
+    };
+
+    await updateCountForAll("all", store);
+
+    expect(store.selectedTaxa).toStrictEqual([
+      { ...allTaxa, observations_count: allCount * 0.6 },
+    ]);
+    expect(store.selectedPlaces).toStrictEqual([
+      { ...losangeles, observations_count: allCount * 0.6 },
+    ]);
   });
 });

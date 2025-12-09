@@ -40,7 +40,6 @@ import {
   addValueToCommaSeparatedString,
   renderSelectedPlacesBoundaries,
   renderSelectedProjectsBoundaries,
-  viewAndTemplateObject,
   addDefaultTaxaRecordToMap,
   addDefaultTaxaRecordToStore,
   isObservationsCheck,
@@ -54,6 +53,7 @@ import {
 } from "./search_utils.ts";
 import { decodeAppUrl } from "./utils.ts";
 import { updateCountForAll } from "./count_utils.ts";
+import { viewAndTemplateObject } from "../components/ObservationsHeader/shared_utils.ts";
 
 // populate store with basic view data from app url.
 // used to set view in observation header and subview in obdervation view
@@ -245,6 +245,7 @@ function populateIdentificationsApiParams(
   }
 }
 
+// create map
 export async function initRenderMap(appStore: MapStore) {
   let map = L.map("map", {
     center: [0, 0],
@@ -276,16 +277,18 @@ export async function initRenderMap(appStore: MapStore) {
     addBBoxDataToMap(appStore);
   }
 
-  // load allTaxon map tiles if no taxon id in the url
-  if (
-    appStore.selectedTaxa === undefined ||
-    appStore.selectedTaxa.length === 0
-  ) {
+  // load Default Taxa map tiles if no selected Taxa
+  if (appStore.selectedTaxa.length === 0) {
     if (isObservationsCheck(appStore)) {
       await addDefaultTaxaRecordToMap(appStore);
     }
+    // update default Taxa map tiles;
+  } else if (appStore.selectedTaxa[0].id === 0) {
+    if (isObservationsCheck(appStore)) {
+      await updateTilesForSelectedTaxa(appStore);
+    }
+    // update taxa tiles for selected taxa
   } else {
-    // add taxa tiles for taxon id in url
     await updateTilesForSelectedTaxa(appStore);
   }
 

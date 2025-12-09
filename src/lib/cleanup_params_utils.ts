@@ -24,6 +24,9 @@ function cleanupParams(params: URLSearchParams) {
   if (params.get("taxon_id") === "0") {
     params.delete("taxon_id");
   }
+  if (params.get("observation_taxon_id") === "0") {
+    params.delete("observation_taxon_id");
+  }
   if (params.get("place_id") === "0") {
     params.delete("place_id");
   }

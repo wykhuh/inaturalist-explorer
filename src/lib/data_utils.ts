@@ -843,24 +843,6 @@ export function normalizeAppParams(appParams: string) {
   return rawParams;
 }
 
-export function viewAndTemplateObject(targetView: string) {
-  let view;
-  if (targetView === "species") {
-    view = "view-species";
-  } else if (targetView === "identifiers") {
-    view = "view-identifiers";
-  } else if (targetView === "observers") {
-    view = "view-observers";
-  } else if (targetView === "observations") {
-    view = "view-map";
-  } else if (targetView === "identifications") {
-    view = "view-identifications";
-  } else {
-    throw Error("Need to add view /template");
-  }
-  return view;
-}
-
 export function isIdentificationsCheck(appStore: MapStore) {
   return appStore.record_type === "identifications";
 }
