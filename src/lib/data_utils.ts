@@ -16,6 +16,7 @@ import type {
   MapStoreParamsKeys,
   IdentificationsApiParams,
   IdentificationsApiParamsKeys,
+  MapTilesAPIParams,
 } from "../types/app";
 import {
   addOverlayToMap,
@@ -39,6 +40,10 @@ import {
 } from "./search_utils.ts";
 import { isNormalizediNatTaxon } from "../types/utils.ts";
 import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
+import {
+  cleanupIdentificationsMapParams,
+  cleanupObservationsMapParams,
+} from "./cleanup_params_utils.ts";
 
 // called when user clicks refresh map button
 export async function refreshBoundingBox(appStore: MapStore) {
@@ -89,16 +94,34 @@ export async function refreshBoundingBox(appStore: MapStore) {
 export async function fetchiNatMapDataForTaxon(
   taxonObj: NormalizediNatTaxon,
   appStore: MapStore,
-  paramsTemp: ObservationsApiParams,
 ) {
   let map = appStore.map.map;
   let layerControl = appStore.map.layerControl;
   if (map === null) return;
   if (layerControl === null) return;
 
+  let mapParams = {} as MapTilesAPIParams;
+  if (isObservationsCheck(appStore)) {
+    let params = cleanupObservationsMapParams(appStore.observationsApiParams);
+    mapParams = {
+      ...params,
+      taxon_id: `${taxonObj.id}`,
+      color: taxonObj.color,
+    };
+  } else {
+    let params = cleanupIdentificationsMapParams(
+      appStore.identificationsApiParams,
+    );
+    mapParams = {
+      ...params,
+      taxon_id: `${taxonObj.id}`,
+      color: taxonObj.color,
+    };
+  }
+
   // get iNaturalist map layers
   let { iNatGrid, iNatHeatmap, iNatTaxonRange, iNatPoint } = getiNatMapTiles(
-    paramsTemp,
+    mapParams,
     taxonObj,
   );
 
@@ -148,11 +171,7 @@ export async function addDefaultTaxaRecordToStore(appStore: MapStore) {
 }
 
 export async function addDefaultTaxaRecordToMap(appStore: MapStore) {
-  await fetchiNatMapDataForTaxon(
-    allTaxaRecord,
-    appStore,
-    appStore.observationsApiParams,
-  );
+  await fetchiNatMapDataForTaxon(allTaxaRecord, appStore);
 }
 
 export function removeOneTaxonFromStoreAndMap(

@@ -165,14 +165,7 @@ export async function taxonSelectedHandler(
   }
   appStore.color = color;
 
-  // create params for the iNat map tiles API
-  let mapParams = {
-    ...appStore[resourceApiParams],
-    taxon_id: taxon.id.toString(),
-    colors: color,
-  };
-  delete mapParams.observation_taxon_id;
-  await fetchiNatMapDataForTaxon(taxon, appStore, mapParams);
+  await fetchiNatMapDataForTaxon(taxon, appStore);
 
   let recordParams = {};
   if (isObservations) {

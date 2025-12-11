@@ -1,6 +1,8 @@
 import type {
   iNatObservationTilesSettings,
+  MapTilesAPIParams,
   NormalizediNatTaxon,
+  ObservationsApiParams,
 } from "../types/app";
 import type {
   iNatObservationsSpeciesCountAPI,
@@ -20,7 +22,6 @@ import type {
 } from "../types/inat_api.d.ts";
 import { normalizeAppParams } from "./data_utils.ts";
 import { loggerUrl } from "./logger.ts";
-import { iNatOrange } from "./map_colors_utils.ts";
 
 export const api_base = "https://api.inaturalist.org/v1/";
 const search_api = "https://api.inaturalist.org/v1/search";
@@ -39,11 +40,10 @@ const histogram_year_api = `https://api.inaturalist.org/v1/observations/histogra
 const projects_api = "https://api.inaturalist.org/v1/projects/";
 const users_api = "https://api.inaturalist.org/v1/users/";
 
-type Params = {
-  [index: string]: any;
-};
-
-function formatDescription(observationsApiParams: Params, type: string) {
+function formatDescription(
+  observationsApiParams: ObservationsApiParams,
+  type: string,
+) {
   let text = `overlay: iNat ${type}, taxon_id ${observationsApiParams.taxon_id || 0}`;
   if (observationsApiParams.place_id) {
     text += `, place_id ${observationsApiParams.place_id}`;
@@ -64,26 +64,16 @@ function formatDescription(observationsApiParams: Params, type: string) {
 }
 
 export const getiNatMapTiles = (
-  observationsApiParams: Params,
+  mapTilesApiParams: MapTilesAPIParams,
   taxonObj: NormalizediNatTaxon,
 ): iNatObservationTilesSettings => {
-  let dupParams = structuredClone(observationsApiParams);
-  // rename colors to color to work with iNat api
-  dupParams.color = dupParams.colors;
-  delete dupParams.colors;
-
-  // remove taxon id if it is zero
+  let dupParams = structuredClone(mapTilesApiParams) as any;
   if (dupParams.taxon_id === "0") {
     delete dupParams.taxon_id;
   }
-  if (dupParams.place_id === "0") {
-    delete dupParams.place_id;
-  }
-  if (dupParams.color === undefined) {
-    dupParams.color = iNatOrange;
-  }
 
   let paramsString = new URLSearchParams(dupParams).toString();
+
   let taxonRangeParamsString = new URLSearchParams({
     color: dupParams.color,
   }).toString();
@@ -101,7 +91,7 @@ export const getiNatMapTiles = (
           'Observation data by <a href="https://www.inaturalist.org/">iNaturalist</a>.',
         minZoom: 0,
         maxZoom: 21,
-        layer_description: formatDescription(observationsApiParams, "grid"),
+        layer_description: formatDescription(mapTilesApiParams, "grid"),
         control_name: `${taxonObj.title} Grid`,
       },
     },
@@ -114,7 +104,7 @@ export const getiNatMapTiles = (
           'Observation data by <a href="https://www.inaturalist.org/">iNaturalist</a>.',
         minZoom: 0,
         maxZoom: 21,
-        layer_description: formatDescription(observationsApiParams, "points"),
+        layer_description: formatDescription(mapTilesApiParams, "points"),
         control_name: `${taxonObj.title} Points`,
       },
     },
@@ -127,10 +117,7 @@ export const getiNatMapTiles = (
           'Taxon range by <a href="https://www.inaturalist.org/">iNaturalist</a>.',
         minZoom: 0,
         maxZoom: 21,
-        layer_description: formatDescription(
-          observationsApiParams,
-          "taxon range",
-        ),
+        layer_description: formatDescription(mapTilesApiParams, "taxon range"),
         control_name: `${taxonObj.title} Taxon Range`,
       },
     },
@@ -143,7 +130,7 @@ export const getiNatMapTiles = (
           'Observation data by <a href="https://www.inaturalist.org/">iNaturalist</a>.',
         minZoom: 0,
         maxZoom: 21,
-        layer_description: formatDescription(observationsApiParams, "heatmap"),
+        layer_description: formatDescription(mapTilesApiParams, "heatmap"),
         control_name: `${taxonObj.title} Heatmap`,
       },
     },

@@ -274,6 +274,7 @@ interface IdentificationsApiParams extends IdentificationsApiFilterableParams {
   user_id?: string; // comma-seperated string
   page?: number;
   per_page?: number;
+  colors?: string; // comma-seperated string
 }
 
 interface IdentificationsApiFilterableParams {
@@ -383,6 +384,18 @@ export interface CustomGeoJSON extends GeoJSON {
 export interface CustomGeoJSONOptions extends GeoJSONOptions {
   layer_description: string;
 }
+
+interface ObservationsMapTilesAPIParams extends ObservationsApiParams {
+  color?: string;
+}
+
+interface IdentificationsMapTilesAPIParams extends IdentificationsApiParams {
+  color?: string;
+}
+
+type MapTilesAPIParams =
+  | IdentificationsMapTilesAPIParams
+  | ObservationsMapTilesAPIParams;
 
 export type PlaceTypes = {
   [key: string]: string;
