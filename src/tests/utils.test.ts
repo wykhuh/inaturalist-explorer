@@ -435,26 +435,35 @@ describe("formatAppUrl", () => {
 
     expect(result).toBe("verifiable=true&spam=false&locale=" + lang);
   });
+});
 
-  test("formats  url when record type is set", () => {
+describe("formatAppUrl with identifications", () => {
+  test("formats url when record type is set", () => {
     let store = structuredClone(mapStore);
     store.selectedTaxa = [life()];
     store.observationsApiParams = {
       ...defaultParams,
+      colors: "blue",
+      page: 2,
+      per_page: 20,
     };
     store.identificationsApiParams = {
       taxon_id: life().id.toString(),
+      colors: "red",
+      page: 3,
+      per_page: 30,
     };
 
     let result = formatAppUrl(store);
+
     expect(result).toBe(
-      `taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}`,
+      `taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}&page=2&per_page=20`,
     );
 
     let result2 = formatAppUrl(store, "identifications");
 
     expect(result2).toBe(
-      `observation_taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}`,
+      `observation_taxon_id=${life().id}&colors=${colorsEncoded[0]}&page=3&per_page=30`,
     );
   });
 });

@@ -1,5 +1,6 @@
 import {
   CCLicenses,
+  iconicTaxaIdName,
   iNatObservationsYears,
   taxonRanks,
 } from "../../data/inat_data";
@@ -12,10 +13,8 @@ import { updateStoreUsingFilters } from "../../lib/data_utils";
 import { loggerFilters } from "../../lib/logger";
 import {
   setInputChecked,
-  setInputDisabled,
   setInputValue,
   setSelectedOption,
-  setSelectedOptionTrueFalse,
 } from "../../lib/form_utils";
 import {
   renderSelectedResources,
@@ -91,176 +90,60 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
 
 // use store to populate the filter form fields on page load
 export function initFilters(appStore: MapStore) {
-  let { observationsApiParams } = appStore;
+  let { identificationsApiParams } = appStore;
 
-  if (observationsApiParams.captive !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "captive",
-      observationsApiParams.captive,
-    );
-  }
-
-  if (observationsApiParams.d1 !== undefined) {
-    setInputChecked("#filters-form input#range_date", true);
-    setInputDisabled("#filters-form input#d1", false);
-    setInputValue("#filters-form input#d1", observationsApiParams.d1);
-  }
-  if (observationsApiParams.d2 !== undefined) {
-    setInputChecked("#filters-form input#range_date", true);
-    setInputDisabled("#filters-form input#d2", false);
-    setInputValue("#filters-form input#d2", observationsApiParams.d2);
-  }
-
-  if (observationsApiParams.endemic !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "endemic",
-      observationsApiParams.endemic,
-    );
-  }
-
-  if (observationsApiParams.hrank !== undefined) {
-    setSelectedOption(
-      `#filters-form select#hrank option[value='${observationsApiParams.hrank}']`,
-    );
-  }
-
-  if (observationsApiParams.iconic_taxa !== undefined) {
-    observationsApiParams.iconic_taxa.split(",").forEach((value) => {
-      setInputChecked(`#filters-form input#${value}`, true);
-    });
-  }
-
-  if (observationsApiParams.identified !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "identified",
-      observationsApiParams.identified,
-    );
-  }
-
-  if (observationsApiParams.introduced !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "introduced",
-      observationsApiParams.introduced,
-    );
-  }
-
-  if (observationsApiParams.license !== undefined) {
-    observationsApiParams.license.split(",").forEach((value) => {
-      setSelectedOption(
-        `#filters-form select#license option[value='${value}']`,
+  let fields = [
+    "d1",
+    "d2",
+    "observed_d1",
+    "observed_d2",
+  ] as IdentificationsApiParamsKeys[];
+  fields.forEach((field) => {
+    if (identificationsApiParams[field] !== undefined) {
+      setInputValue(
+        `#filters-form input#${field}`,
+        identificationsApiParams[field],
       );
-    });
-  }
-
-  if (observationsApiParams.lrank !== undefined) {
-    setSelectedOption(
-      `#filters-form select#lrank option[value='${observationsApiParams.lrank}']`,
-    );
-  }
-
-  if (observationsApiParams.month !== undefined) {
-    setInputChecked("#filters-form input#months_date", true);
-    setInputDisabled("#filters-form select#month", false);
-    observationsApiParams.month.split(",").forEach((value) => {
-      setSelectedOption(`#filters-form select#month option[value='${value}']`);
-    });
-  }
-
-  if (observationsApiParams.native !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "native",
-      observationsApiParams.native,
-    );
-  }
-
-  if (observationsApiParams.on !== undefined) {
-    setInputChecked("#filters-form input#exact_date", true);
-    setInputDisabled("#filters-form input#on", false);
-    setInputValue("#filters-form input#on", observationsApiParams.on);
-  }
-
-  if (observationsApiParams.photo_license !== undefined) {
-    observationsApiParams.photo_license.split(",").forEach((value) => {
-      setSelectedOption(
-        `#filters-form select#photo_license option[value='${value}']`,
-      );
-    });
-  }
-
-  if (observationsApiParams.photos !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "photos",
-      observationsApiParams.photos,
-    );
-  }
-
-  if (observationsApiParams.popular !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "popular",
-      observationsApiParams.popular,
-    );
-  }
-
-  if (observationsApiParams.quality_grade !== undefined) {
-    setSelectedOption(
-      `#filters-form select#quality_grade option[value='${observationsApiParams.quality_grade}']`,
-    );
-  }
-
-  if (observationsApiParams.sound_license !== undefined) {
-    observationsApiParams.sound_license.split(",").forEach((value) => {
-      setSelectedOption(
-        `#filters-form select#sound_license option[value='${value}']`,
-      );
-    });
-  }
-
-  if (observationsApiParams.sounds !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "sounds",
-      observationsApiParams.sounds,
-    );
-  }
-
-  if (observationsApiParams.threatened !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "threatened",
-      observationsApiParams.threatened,
-    );
-  }
-
-  if (observationsApiParams.verifiable !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "verifiable",
-      observationsApiParams.verifiable as boolean,
-    );
-  }
-
-  if (observationsApiParams.year !== undefined) {
-    setInputChecked("#filters-form input#years_date", true);
-    setInputDisabled("#filters-form select#year", false);
-    observationsApiParams.year.split(",").forEach((value) => {
-      setSelectedOption(`#filters-form select#year option[value='${value}']`);
-    });
-  }
-
-  if (observationsApiParams.unobserved_by_user_id !== undefined) {
-    let inputEl = document.querySelector(
-      "#unobserved-by-user-search",
-    ) as HTMLInputElement;
-    if (inputEl) {
-      inputEl.value = appStore.selectedUnobservedByUser.login;
     }
+  });
+
+  let fields2 = [
+    "hrank",
+    "lrank",
+    "observation_hrank",
+    "observation_lrank",
+    "quality_grade",
+  ] as IdentificationsApiParamsKeys[];
+  fields2.forEach((field) => {
+    if (identificationsApiParams[field] !== undefined) {
+      setSelectedOption(
+        `#filters-form select#${field} option[value='${identificationsApiParams[field]}']`,
+      );
+    }
+  });
+
+  if (identificationsApiParams["iconic_taxon_id"] !== undefined) {
+    identificationsApiParams["iconic_taxon_id"]
+      .toString()
+      .split(",")
+      .forEach((value: string) => {
+        setInputChecked(
+          `#filters-form input#${(iconicTaxaIdName as any)[value]}`,
+          true,
+        );
+      });
+  }
+
+  if (identificationsApiParams["observation_iconic_taxon_id"] !== undefined) {
+    identificationsApiParams["observation_iconic_taxon_id"]
+      .toString()
+      .split(",")
+      .forEach((value: string) => {
+        setInputChecked(
+          `#filters-form input#${(iconicTaxaIdName as any)[value]}2`,
+          true,
+        );
+      });
   }
 }
 

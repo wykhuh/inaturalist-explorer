@@ -1,3 +1,8 @@
+import {
+  iconicTaxaIdName,
+  IdentificationsApiNames,
+  ObservationsApiNames,
+} from "../data/inat_data";
 import type {
   IdentificationsApiParams,
   IdentificationsMapTilesAPIParams,
@@ -77,6 +82,16 @@ export function cleanupObervationsObserversParams(
   return params.toString();
 }
 
+export function cleanupIdentificationsObservationsParams(appStore: MapStore) {
+  let cleanParams = convertIdentificationParamsToObservationParams(
+    appStore.identificationsApiParams,
+  );
+  let params = new URLSearchParams(cleanParams as any);
+  cleanupParams(params);
+
+  return params.toString();
+}
+
 // =============
 // identifications API
 // =============
@@ -115,34 +130,9 @@ export function cleanupIdentificationsObserversParams(
 // tiles API
 // =============
 
-function cleanupMapParams(rawParams: MapTilesAPIParams) {
-  for (const [key, value] of Object.entries(rawParams)) {
-    if (key === "taxon_id" && value == "0") {
-      delete rawParams.taxon_id;
-    } else if (key === "observation_taxon_id" && value == "0") {
-      delete rawParams.observation_taxon_id;
-    } else if (key === "place_id" && value == "0") {
-      delete rawParams.place_id;
-    } else if (key === "colors") {
-      delete rawParams.colors;
-      (rawParams as any)["color"] = value.split(",")[0];
-    } else if (key === "page") {
-      delete rawParams.page;
-    } else if (key === "per_page") {
-      delete rawParams.per_page;
-    } else if (key === "view") {
-      delete rawParams.view;
-    } else if (key === "subview") {
-      delete rawParams.subview;
-    }
-  }
-}
-
-export function cleanupIdentificationsMapParams(
-  rawParams: IdentificationsMapTilesAPIParams,
+function convertIdentificationParamsToObservationParams(
+  params: IdentificationsMapTilesAPIParams,
 ) {
-  let params = structuredClone(rawParams);
-  cleanupMapParams(params);
   let allowedParams = [
     "place_id",
     "observation_taxon_id",
@@ -162,7 +152,13 @@ export function cleanupIdentificationsMapParams(
     if (!allowedParams.includes(key)) {
       continue;
     }
-    if (key.startsWith("observed_")) {
+    if (key === "observation_iconic_taxon_id") {
+      cleanedParms.iconic_taxa = value
+        .toString()
+        .split(",")
+        .map((id: string) => (iconicTaxaIdName as any)[id])
+        .join(",");
+    } else if (key.startsWith("observed_")) {
       let k = key.replace("observed_", "");
       cleanedParms[k] = value;
     } else if (key.startsWith("observation_")) {
@@ -171,6 +167,52 @@ export function cleanupIdentificationsMapParams(
       cleanedParms[key] = value;
     }
   }
+
+  return cleanedParms;
+}
+
+function cleanupMapParams(rawParams: MapTilesAPIParams) {
+  let validParams = ObservationsApiNames.concat(IdentificationsApiNames);
+  Object.keys(rawParams).forEach((key) => {
+    if (!validParams.includes(key)) {
+      delete (rawParams as any).key;
+    }
+  });
+
+  if (rawParams.taxon_id == "0") {
+    delete rawParams.taxon_id;
+  }
+  if (rawParams.observation_taxon_id == "0") {
+    delete rawParams.observation_taxon_id;
+  }
+  if (rawParams.place_id == "0") {
+    delete rawParams.place_id;
+  }
+  if (rawParams.colors) {
+    (rawParams as any)["color"] = rawParams.colors?.split(",")[0];
+    delete rawParams.colors;
+  }
+  if (rawParams.page) {
+    delete rawParams.page;
+  }
+  if (rawParams.per_page) {
+    delete rawParams.per_page;
+  }
+  if (rawParams.view) {
+    delete rawParams.view;
+  }
+  if (rawParams.subview) {
+    delete rawParams.subview;
+  }
+}
+
+// convert fields for /identifications to work with map tiles
+export function cleanupIdentificationsMapParams(
+  rawParams: IdentificationsMapTilesAPIParams,
+) {
+  let params = structuredClone(rawParams);
+  cleanupMapParams(params);
+  let cleanedParms = convertIdentificationParamsToObservationParams(params);
 
   if (!cleanedParms.color) {
     cleanedParms.color = iNatOrange;

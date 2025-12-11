@@ -510,6 +510,42 @@ describe("initPopulateStore and initRenderMap options", () => {
     expect(store.color).toBe(iNatOrange);
     expect(store.viewMetadata.name_order).toBe("sc");
   });
+
+  test("works with observation_iconic_taxon_id when it is one value ", async () => {
+    let store = structuredClone(mapStore);
+
+    expectEmpytMap(store);
+
+    let searchparams = "?observation_iconic_taxon_id=1&iconic_taxon_id=3";
+    let urlData = decodeAppUrl(searchparams, "/identifications/");
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expect(store.observationsApiParams).toStrictEqual(defaultParams);
+    expect(store.identificationsApiParams).toStrictEqual({
+      observation_iconic_taxon_id: 1,
+      iconic_taxon_id: 3,
+    });
+  });
+
+  test("works with iconic_taxon_id when it is multiple values ", async () => {
+    let store = structuredClone(mapStore);
+
+    expectEmpytMap(store);
+
+    let searchparams = "?observation_iconic_taxon_id=1,2&iconic_taxon_id=3,4";
+    let urlData = decodeAppUrl(searchparams, "/identifications/");
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expect(store.observationsApiParams).toStrictEqual(defaultParams);
+    expect(store.identificationsApiParams).toStrictEqual({
+      observation_iconic_taxon_id: "1,2",
+      iconic_taxon_id: "3,4",
+    });
+  });
 });
 
 describe("initPopulateStore and initRenderMap resources", () => {

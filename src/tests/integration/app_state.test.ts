@@ -1424,7 +1424,7 @@ describe("taxonSelectedHandler with identifications", () => {
     });
 
     expect(window.location.search).toBe(
-      `?observation_taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}`,
+      `?observation_taxon_id=${life().id}&colors=${colorsEncoded[0]}`,
     );
     expect(store.selectedTaxa[0].identifications_count).toBe(lifeCount);
   });
@@ -1458,7 +1458,7 @@ describe("taxonSelectedHandler with identifications", () => {
     expect(store.identificationsApiParams).toStrictEqual(expectedParams1);
 
     expect(window.location.search).toBe(
-      `?observation_taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}`,
+      `?observation_taxon_id=${life().id}&colors=${colorsEncoded[0]}`,
     );
     expect(store.selectedTaxa[0].identifications_count).toBe(lifeCount);
 
@@ -1482,7 +1482,7 @@ describe("taxonSelectedHandler with identifications", () => {
 
     expect(window.location.search).toBe(
       `?observation_taxon_id=${life().id},${redOak().id}` +
-        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&${defaultQuery}`,
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}`,
     );
     expect(store.selectedTaxa[0].identifications_count).toBe(lifeCount);
     expect(store.selectedTaxa[1].identifications_count).toBe(oakCount);
@@ -1513,7 +1513,7 @@ describe("taxonIdentifiedSelectedHandler with identifications", () => {
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.identificationsApiParams).toStrictEqual({ taxon_id: "48460" });
-    expect(window.location.search).toBe(`?taxon_id=48460&${defaultQuery}`);
+    expect(window.location.search).toBe(`?taxon_id=48460`);
   });
 });
 
@@ -1546,9 +1546,7 @@ describe("placeSelectedHandler with identifications", () => {
       place_id: losangeles.id.toString(),
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams);
-    expect(window.location.search).toBe(
-      `?place_id=${losangeles.id}&${defaultQuery}`,
-    );
+    expect(window.location.search).toBe(`?place_id=${losangeles.id}`);
   });
 
   test(`add los angeles; add san diego`, async () => {
@@ -1579,9 +1577,7 @@ describe("placeSelectedHandler with identifications", () => {
       place_id: losangeles.id.toString(),
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams1);
-    expect(window.location.search).toBe(
-      `?place_id=${losangeles.id}&${defaultQuery}`,
-    );
+    expect(window.location.search).toBe(`?place_id=${losangeles.id}`);
 
     await placeSelectedHandler(sandiego, "san", store);
 
@@ -1603,7 +1599,7 @@ describe("placeSelectedHandler with identifications", () => {
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?place_id=${losangeles.id},${sandiego.id}&${defaultQuery}`,
+      `?place_id=${losangeles.id},${sandiego.id}`,
     );
   });
 });
@@ -1679,7 +1675,7 @@ describe("userIdentifierSelectedHandler with identifications", () => {
       user_id: user1.id.toString(),
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams);
-    expect(window.location.search).toBe(`?user_id=${user1.id}&${defaultQuery}`);
+    expect(window.location.search).toBe(`?user_id=${user1.id}`);
     expect(store.selectedUsersIdentifiers[0].identifications_count).toBe(
       count * 0.45,
     );
@@ -1712,7 +1708,7 @@ describe("userIdentifierSelectedHandler with identifications", () => {
       user_id: user1.id.toString(),
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams);
-    expect(window.location.search).toBe(`?user_id=${user1.id}&${defaultQuery}`);
+    expect(window.location.search).toBe(`?user_id=${user1.id}`);
     expect(store.selectedUsersIdentifiers[0].identifications_count).toBe(
       count * 0.45,
     );
@@ -1736,9 +1732,7 @@ describe("userIdentifierSelectedHandler with identifications", () => {
       user_id: `${user1.id},${user2.id}`,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
-    expect(window.location.search).toBe(
-      `?user_id=${user1.id},${user2.id}&${defaultQuery}`,
-    );
+    expect(window.location.search).toBe(`?user_id=${user1.id},${user2.id}`);
     expect(store.selectedUsersIdentifiers[0].identifications_count).toBe(
       count * 0.45,
     );
@@ -2178,7 +2172,7 @@ describe("removePlace with identifications", () => {
       place_id: `${LosAngeles.id},${SanDiego.id}`,
     });
     expect(window.location.search).toBe(
-      `?place_id=${LosAngeles.id},${SanDiego.id}&${defaultQuery}`,
+      `?place_id=${LosAngeles.id},${SanDiego.id}`,
     );
     expect(store.selectedPlaces).toStrictEqual([LosAngeles, SanDiego]);
 
@@ -2188,9 +2182,7 @@ describe("removePlace with identifications", () => {
     expect(store.identificationsApiParams).toStrictEqual({
       place_id: `${SanDiego.id}`,
     });
-    expect(window.location.search).toBe(
-      `?place_id=${SanDiego.id}&${defaultQuery}`,
-    );
+    expect(window.location.search).toBe(`?place_id=${SanDiego.id}`);
     expect(store.selectedPlaces).toStrictEqual([SanDiego]);
 
     await removePlace(SanDiego.id, store);
@@ -2224,8 +2216,7 @@ describe("removeTaxon with identifications", () => {
     });
     expect(window.location.search).toBe(
       `?observation_taxon_id=${Life.id},${RedOak.id}` +
-        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}` +
-        `&${defaultQuery}`,
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}`,
     );
     expect(store.selectedTaxa).toStrictEqual([Life, RedOak]);
 
@@ -2236,9 +2227,7 @@ describe("removeTaxon with identifications", () => {
       observation_taxon_id: `${RedOak.id}`,
     });
     expect(window.location.search).toBe(
-      `?observation_taxon_id=${RedOak.id}` +
-        `&colors=${colorsEncoded[1]}` +
-        `&${defaultQuery}`,
+      `?observation_taxon_id=${RedOak.id}` + `&colors=${colorsEncoded[1]}`,
     );
     expect(store.selectedTaxa).toStrictEqual([RedOak]);
 
@@ -2268,9 +2257,7 @@ describe("removeUserIdentifier with identifications", () => {
       user_id: `${user1.id},${user2.id}`,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
-    expect(window.location.search).toBe(
-      `?user_id=${user1.id},${user2.id}&${defaultQuery}`,
-    );
+    expect(window.location.search).toBe(`?user_id=${user1.id},${user2.id}`);
     expect(store.selectedUsersIdentifiers).toStrictEqual([user1, user2]);
 
     await removeUserIdentifier(user1.id, store);
@@ -2282,7 +2269,7 @@ describe("removeUserIdentifier with identifications", () => {
       user_id: `${user2.id}`,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams3);
-    expect(window.location.search).toBe(`?user_id=${user2.id}&${defaultQuery}`);
+    expect(window.location.search).toBe(`?user_id=${user2.id}`);
     expect(store.selectedUsersIdentifiers).toStrictEqual([user2]);
 
     await removeUserIdentifier(user2.id, store);

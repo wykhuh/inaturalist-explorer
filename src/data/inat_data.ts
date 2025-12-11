@@ -362,3 +362,17 @@ export const observationsOrderByValues = [
   "observed_on",
   "votes",
 ];
+
+export const iconicTaxaIdName = {
+  3: "Aves",
+  20978: "Amphibia",
+  26036: "Reptilia",
+  40151: "Mammalia",
+  47178: "Actinopterygii",
+  47115: "Mollusca",
+  47119: "Arachnida",
+  47158: "Insecta",
+  47126: "Plantae",
+  47170: "Fungi",
+  47686: "Protozoa",
+};

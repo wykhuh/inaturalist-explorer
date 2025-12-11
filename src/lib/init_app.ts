@@ -247,6 +247,8 @@ function populateIdentificationsApiParams(
 
 // create map
 export async function initRenderMap(appStore: MapStore) {
+  loggerRender("++ initRenderMap start");
+
   let map = L.map("map", {
     center: [0, 0],
     zoom: 2,

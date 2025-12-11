@@ -1,6 +1,6 @@
 import {
   cleanupIdentificationParams,
-  cleanupObervationsParams,
+  cleanupIdentificationsObservationsParams,
 } from "../../lib/cleanup_params_utils";
 import {
   getIdentifications,
@@ -17,13 +17,12 @@ function nullObservations(_searchParams = "", _perPage = 0) {
 }
 
 export function updateCountsHeader(appStore: MapStore) {
-  // NOTE: use tempStore with record_type = "observations" since observations
-  // has different search params than identifications
-  let tempStore = { ...appStore };
-  tempStore.record_type = "observations";
-  let params = cleanupObervationsParams(tempStore);
-
-  if (appStore.selectedTaxa.length === 0) {
+  // NOTE:observations has different search params than identifications
+  let params = cleanupIdentificationsObservationsParams(appStore);
+  if (
+    appStore.selectedTaxa.length === 0 &&
+    appStore.identificationsApiParams.observation_iconic_taxon_id === undefined
+  ) {
     updateHeaderCount(
       "identifications-observations",
       nullObservations,

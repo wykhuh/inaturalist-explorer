@@ -1,5 +1,8 @@
 import { iNatObservationUrl, iNatUserUrl } from "../../data/inat_data";
-import { cleanupObervationsParams } from "../../lib/cleanup_params_utils";
+import {
+  cleanupIdentificationsObservationsParams,
+  cleanupObervationsParams,
+} from "../../lib/cleanup_params_utils";
 import {
   formatAvatar,
   renderMedia,
@@ -18,6 +21,7 @@ import type { DataComponent, MapStore } from "../../types/app";
 import { observationsDemoLA } from "../../data/inat_api_cache";
 import { setSelectedOption } from "../../lib/form_utils";
 import { updateSelectedResourcesId } from "../../lib/count_utils";
+import { isObservationsCheck } from "../../lib/data_utils";
 
 export let perPage = 24;
 
@@ -86,7 +90,12 @@ async function getAPIData(perPage: number, appStore: MapStore) {
 
   // NOTE: set record type to observations since parmas are for getObservations
   updateSelectedResourcesId(appStore, "observations");
-  let params = cleanupObervationsParams(appStore, "observations");
+  let params = "";
+  if (isObservationsCheck(appStore)) {
+    params = cleanupObervationsParams(appStore, "observations");
+  } else {
+    params = cleanupIdentificationsObservationsParams(appStore);
+  }
 
   try {
     let data = await getObservations(params, perPage);

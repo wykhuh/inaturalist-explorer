@@ -280,13 +280,13 @@ interface IdentificationsApiParams extends IdentificationsApiFilterableParams {
 interface IdentificationsApiFilterableParams {
   d1?: string; // date
   d2?: string; // date
-  iconic_taxon_id?: string; // comma-seperated string
+  iconic_taxon_id?: string | number; // comma-seperated string
   hrank?: TaxonRanks; // one value
   lrank?: TaxonRanks; // one value
 
   observed_d1?: string; // date
   observed_d2?: string; // date
-  observation_iconic_taxon_id?: string; // comma-seperated string
+  observation_iconic_taxon_id?: string | number; // comma-seperated string
   observation_hrank?: TaxonRanks; // one value
   observation_lrank?: TaxonRanks; // one value
   quality_grade?: "casual" | "needs_id" | "research";

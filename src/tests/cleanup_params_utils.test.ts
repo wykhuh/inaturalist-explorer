@@ -143,13 +143,28 @@ describe("cleanupIdentificationsMapParams", () => {
     });
   });
 
+  test("converts iconic taxon ids to taxa names", () => {
+    let store = structuredClone(mapStore);
+    store.identificationsApiParams = {
+      observation_iconic_taxon_id: "3,20978",
+    };
+
+    let results = cleanupIdentificationsMapParams(
+      store.identificationsApiParams,
+    );
+
+    expect(results).toStrictEqual({
+      iconic_taxa: "Aves,Amphibia",
+      color: iNatOrange,
+    });
+  });
+
   test("renames params for observation fields ", () => {
     let store = structuredClone(mapStore);
     store.identificationsApiParams = {
       observation_taxon_id: "10,11",
       observed_d1: "2000-01-01",
       observed_d2: "2000-02-02",
-      observation_iconic_taxon_id: "1,2",
       observation_hrank: "kingdom",
       observation_lrank: "phylum",
     };
@@ -162,7 +177,6 @@ describe("cleanupIdentificationsMapParams", () => {
       taxon_id: "10,11",
       d1: "2000-01-01",
       d2: "2000-02-02",
-      iconic_taxon_id: "1,2",
       hrank: "kingdom",
       lrank: "phylum",
       color: iNatOrange,
@@ -234,7 +248,7 @@ describe("cleanupIdentificationsMapParams", () => {
       lrank: "phylum",
       observed_d1: "2000-03-03",
       observed_d2: "2000-04-04",
-      observation_iconic_taxon_id: "10,20",
+      observation_iconic_taxon_id: "3,20978",
       observation_hrank: "genus",
       observation_lrank: "species",
       quality_grade: "research",
@@ -252,7 +266,7 @@ describe("cleanupIdentificationsMapParams", () => {
       d1: "2000-03-03",
       d2: "2000-04-04",
       hrank: "genus",
-      iconic_taxon_id: "10,20",
+      iconic_taxa: "Aves,Amphibia",
       lrank: "species",
       place_id: "1,2",
       quality_grade: "research",

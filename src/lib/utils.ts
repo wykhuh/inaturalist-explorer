@@ -6,10 +6,12 @@ import type {
   ObservationViews,
   NameOrder,
   IdentificationsApiParamsKeys,
+  IdentificationsApiParams,
 } from "../types/app";
 import {
   bboxPlaceRecord,
   IdentificationsApiFilterableNames,
+  IdentificationsApiNames,
   ObservationsApiFilterableNames,
   ObservationsApiNames,
   observationsOrderByValues,
@@ -99,7 +101,7 @@ export function formatAppUrl(
     .map((r) => r.color)
     .join(",");
 
-  let params: ObservationsApiParams = {};
+  let params: ObservationsApiParams & IdentificationsApiParams = {};
 
   if (taxaIds.length > 0) {
     if (isIdentifications) {
@@ -117,7 +119,9 @@ export function formatAppUrl(
     params.place_id = placesIds;
   }
   if (projectsIds) {
-    params.project_id = projectsIds;
+    if (isObservations) {
+      params.project_id = projectsIds;
+    }
   }
   if (usersIds.length > 0) {
     if (isObservations) {
@@ -144,14 +148,28 @@ export function formatAppUrl(
     "ident_user_id",
     "colors",
   ];
-  Object.entries(appStore.observationsApiParams).forEach(([key, value]) => {
-    if (processedKeys.includes(key)) {
-    } else {
-      if (params && ObservationsApiNames.includes(key)) {
-        params[key as ObservationsApiParamsKeys] = value as any;
+
+  if (isObservations) {
+    Object.entries(appStore.observationsApiParams).forEach(([key, value]) => {
+      if (processedKeys.includes(key)) {
+      } else {
+        if (params && ObservationsApiNames.includes(key)) {
+          (params as any)[key] = value as any;
+        }
       }
-    }
-  });
+    });
+  } else {
+    Object.entries(appStore.identificationsApiParams).forEach(
+      ([key, value]) => {
+        if (processedKeys.includes(key)) {
+        } else {
+          if (params && IdentificationsApiNames.includes(key)) {
+            (params as any)[key] = value as any;
+          }
+        }
+      },
+    );
+  }
 
   if (appStore.currentView === "observations") {
     if (appStore.viewMetadata.observations?.subview === "table") {
@@ -486,11 +504,9 @@ function setUrlStoreValuesIdentifications(
   if (IdentificationsApiFilterableNames.includes(key)) {
     if (value === "true") {
       cleanedValue = true;
-    }
-    if (value === "false") {
+    } else if (value === "false") {
       cleanedValue = false;
-    }
-    if (/^\d+$/.test(value)) {
+    } else if (/^\d+$/.test(value)) {
       cleanedValue = Number(value);
     }
     appStore.identificationsApiParams[key as IdentificationsApiParamsKeys] =
