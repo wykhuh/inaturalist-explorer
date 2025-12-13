@@ -10,7 +10,12 @@ import {
 import { loggerEvent } from "../../lib/logger";
 import { renderSelectedResources } from "../../lib/search_utils";
 import { updateAppUrl } from "../../lib/utils";
-import type { MapStore, RecordTypes, RouterType } from "../../types/app";
+import type {
+  MapStore,
+  ObservationViews,
+  RecordTypes,
+  RouterType,
+} from "../../types/app";
 import { viewAndTemplateObject } from "../ObservationsHeader/shared_utils";
 
 export async function resetDefaultTaxa(appStore: MapStore) {
@@ -44,7 +49,6 @@ export async function pageChangeHandler(
   // process and render data
   let recordType = target.dataset.recordType as RecordTypes;
   appStore.record_type = recordType;
-
   // update selected items ids in observationsApiParams or identificationsApiParams
   updateSelectedResourcesId(appStore);
 
@@ -62,15 +66,15 @@ export async function pageChangeHandler(
   // update app url
   updateAppUrl(window.location, appStore);
 
-  // if user goes from /identifications?view=identifications to  /,
-  // we need to change view to observations to since home page does not
-  // have identifications view
-  if (path === "/" && appStore.currentView === "identifications") {
-    appStore.currentView = "observations";
-
-    let itemEl = document.querySelector(`#observations-nav #observations`);
-    if (itemEl) {
-      itemEl.classList.add("currentView");
+  // update currentView
+  if (appStore.currentView) {
+    let view = appStore.currentView.split("_")[1];
+    if (view) {
+      if (recordType === "observations" && view === "identifications") {
+        appStore.currentView = "observations_observations";
+      } else {
+        appStore.currentView = (recordType + "_" + view) as ObservationViews;
+      }
     }
   }
 

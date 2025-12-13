@@ -56,11 +56,15 @@ export interface MapStore {
   currentView?: ObservationViews;
   observationsSubviewData: ObservationsResult[];
   viewMetadata: {
-    observations: ViewOptions;
-    species: ViewOptions;
-    identifiers: ViewOptions;
-    observers: ViewOptions;
-    identifications: ViewOptions;
+    observations_observations: ViewOptions;
+    observations_species: ViewOptions;
+    observations_identifiers: ViewOptions;
+    observations_observers: ViewOptions;
+    identifications_observations: ViewOptions;
+    identifications_species: ViewOptions;
+    identifications_identifiers: ViewOptions;
+    identifications_observers: ViewOptions;
+    identifications_identifications: ViewOptions;
     name_order: NameOrder;
   };
   record_type: RecordTypes;
@@ -78,11 +82,15 @@ type ViewOptions = {
 export type MapStoreKeys = keyof MapStore;
 
 export type ObservationViews =
-  | "observations"
-  | "species"
-  | "identifiers"
-  | "observers"
-  | "identifications";
+  | "observations_observations"
+  | "observations_species"
+  | "observations_identifiers"
+  | "observations_observers"
+  | "identifications_observations"
+  | "identifications_species"
+  | "identifications_identifiers"
+  | "identifications_observers"
+  | "identifications_identifications";
 
 export type ObservationSubviews = "table" | "grid";
 export type NameOrder = "cs" | "sc" | "s";

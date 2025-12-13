@@ -206,14 +206,26 @@ function createIdentificationsTable(
 }
 
 export async function paginationcCallback(num: number) {
-  window.app.store.observationsApiParams = {
-    ...window.app.store.observationsApiParams,
-    page: num,
-  };
-  window.app.store.viewMetadata.observers = {
-    ...window.app.store.viewMetadata.observers,
-    page: num,
-  };
+  if (isObservationsCheck(window.app.store)) {
+    window.app.store.observationsApiParams = {
+      ...window.app.store.observationsApiParams,
+      page: num,
+    };
+    window.app.store.viewMetadata.observations_observers = {
+      ...window.app.store.viewMetadata.observations_observers,
+      page: num,
+    };
+  } else {
+    window.app.store.identificationsApiParams = {
+      ...window.app.store.identificationsApiParams,
+      page: num,
+    };
+    window.app.store.viewMetadata.identifications_observers = {
+      ...window.app.store.viewMetadata.identifications_observers,
+      page: num,
+    };
+  }
+
   // HACK: update store
   window.app.store.viewMetadata = window.app.store.viewMetadata;
 

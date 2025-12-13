@@ -31,13 +31,17 @@ export const mapStore: MapStore = {
     headerCountsIndex: [],
   },
   observationsSubviewData: [],
-  currentView: "observations",
+  currentView: "observations_observations",
   viewMetadata: {
-    observations: { subview: "grid" },
-    species: {},
-    identifiers: {},
-    identifications: {},
-    observers: {},
+    observations_observations: { subview: "grid" },
+    observations_species: {},
+    observations_identifiers: {},
+    observations_observers: {},
+    identifications_observations: { subview: "grid" },
+    identifications_species: {},
+    identifications_identifiers: {},
+    identifications_identifications: {},
+    identifications_observers: {},
     name_order: "cs",
   },
   record_type: "observations",
@@ -45,7 +49,7 @@ export const mapStore: MapStore = {
 
 const proxiedStore = new Proxy(structuredClone(mapStore), {
   set(target, property: MapStoreKeys, value) {
-    target[property] = value;
+    (target as any)[property] = value;
 
     loggerStore(`proxy store.${property} changed`);
 

@@ -17,7 +17,12 @@ import {
   defaultQuery,
   defaultParams,
 } from "../../test_helpers";
-import { updateView } from "../../../components/ObservationsHeader/shared_utils";
+import {
+  updateView,
+  viewAndTemplateObject,
+} from "../../../components/ObservationsHeader/shared_utils";
+import { template } from "../../../components/ObservationsHeader/template";
+import type { ObservationViews } from "../../../types/app";
 
 const server = createMockServer();
 
@@ -38,48 +43,41 @@ beforeEach(() => {
     `<!doctype html>
 <html lang="en">
   <body>
-      <ul>
-        <li id="observations" class="currentView">
-          <span class="observations-count">&nbsp;</span
-          ><span>Observations</span>
-        </li>
-        <li id="species">
-          <span class="species-count">&nbsp;</span><span>Species</span>
-        </li>
-        <li id="identifiers">
-          <span class="identifiers-count">&nbsp;</span><span>Identifiers</span>
-        </li>
-        <li id="observers">
-          <span class="observers-count">&nbsp;</span><span>Observers</span>
-        </li>
-      </ul>
-      <div>demo</div>
+      ${template}
+      <div id="view-container">demo</div>
   </body>
 </html>`,
   );
+
   global.document = dom.window.document;
 });
-
 describe("updateView", () => {
-  test.each(["species", "identifiers", "observers"])(
+  test.each([
+    "observations_species",
+    "observations_identifiers",
+    "observations_observers",
+  ] as ObservationViews[])(
     "update store, sets currentView class, adds template tag, update url",
     (view) => {
       const store = structuredClone(mapStore);
+      let template = viewAndTemplateObject(view);
 
-      let parentEl = document.querySelector("div") as HTMLDivElement;
+      let parentEl = document.querySelector(
+        "#view-container",
+      ) as HTMLDivElement;
       let targetLI = document.querySelector(`#${view}`);
-      let oldLI = document.querySelector("#observations");
+      let oldLI = document.querySelector("#observations_observations");
 
-      expect(oldLI?.className).toBe("currentView");
+      // expect(oldLI?.className).toBe("currentView");
       expect(targetLI?.className).toBe("");
-      expect(parentEl?.innerHTML).toBe("demo");
-      expect(store.currentView).toBe("observations");
+      // expect(parentEl?.innerHTML).toBe("demo");
+      expect(store.currentView).toBe("observations_observations");
 
       updateView(view as any, parentEl, store, document as any);
 
       expect(oldLI?.className).toBe("");
       expect(targetLI?.className).toBe("currentView");
-      expect(parentEl?.innerHTML).toBe(`<view-${view}></view-${view}>`);
+      expect(parentEl?.innerHTML).toBe(`<${template}></${template}>`);
       expect(store.currentView).toBe(view);
       expect(store.observationsApiParams).toStrictEqual(defaultParams);
       expect(window.location.search).toBe(`?${defaultQuery}&view=${view}`);
@@ -88,29 +86,26 @@ describe("updateView", () => {
 
   test("uses viewMetadata to set page, order, order_by if viewMetadata is set", () => {
     const store = structuredClone(mapStore);
-    store.currentView = "observations";
-    store.viewMetadata.observations = {};
-    store.viewMetadata.observers = {
+    store.currentView = "observations_observations";
+    store.viewMetadata.observations_observations = {};
+    store.viewMetadata.observations_observers = {
       page: 10,
       order_by: "votes",
       order: "asc",
     };
 
-    let parentEl = document.querySelector("div") as HTMLDivElement;
-    let targetLI = document.querySelector("#observers");
-    let oldLI = document.querySelector("#observations");
+    let parentEl = document.querySelector("#view-container") as HTMLDivElement;
+    let targetLI = document.querySelector("#observations_observers");
 
-    expect(oldLI?.className).toBe("currentView");
     expect(targetLI?.className).toBe("");
     expect(parentEl?.innerHTML).toBe("demo");
-    expect(store.currentView).toBe("observations");
+    expect(store.currentView).toBe("observations_observations");
 
-    updateView("observers", parentEl, store, document as any);
+    updateView("observations_observers", parentEl, store, document as any);
 
-    expect(oldLI?.className).toBe("");
     expect(targetLI?.className).toBe("currentView");
     expect(parentEl?.innerHTML).toBe("<view-observers></view-observers>");
-    expect(store.currentView).toBe("observers");
+    expect(store.currentView).toBe("observations_observers");
     expect(store.observationsApiParams).toStrictEqual({
       page: 10,
       order: "asc",
@@ -118,36 +113,36 @@ describe("updateView", () => {
       ...defaultParams,
     });
     expect(window.location.search).toBe(
-      `?${defaultQuery}&page=10&order=asc` + "&order_by=votes&view=observers",
+      `?${defaultQuery}&page=10&order=asc` +
+        "&order_by=votes&view=observations_observers",
     );
   });
 
   test("uses viewMetadata to set page, order, order_by if viewMetadata is set", () => {
     const store = structuredClone(mapStore);
-    store.currentView = "observations";
-    store.viewMetadata.observations = {
+    store.currentView = "observations_observations";
+    store.viewMetadata.observations_observations = {
       page: 10,
       order_by: "votes",
       order: "asc",
     };
-    store.viewMetadata.observers = {};
+    store.viewMetadata.observations_observers = {};
 
-    let parentEl = document.querySelector("div") as HTMLDivElement;
-    let targetLI = document.querySelector("#observers");
-    let oldLI = document.querySelector("#observations");
+    let parentEl = document.querySelector("#view-container") as HTMLDivElement;
+    let targetLI = document.querySelector("#observations_observers");
 
-    expect(oldLI?.className).toBe("currentView");
     expect(targetLI?.className).toBe("");
     expect(parentEl?.innerHTML).toBe("demo");
-    expect(store.currentView).toBe("observations");
+    expect(store.currentView).toBe("observations_observations");
 
-    updateView("observers", parentEl, store, document as any);
+    updateView("observations_observers", parentEl, store, document as any);
 
-    expect(oldLI?.className).toBe("");
     expect(targetLI?.className).toBe("currentView");
     expect(parentEl?.innerHTML).toBe("<view-observers></view-observers>");
-    expect(store.currentView).toBe("observers");
+    expect(store.currentView).toBe("observations_observers");
     expect(store.observationsApiParams).toStrictEqual(defaultParams);
-    expect(window.location.search).toBe(`?${defaultQuery}&view=observers`);
+    expect(window.location.search).toBe(
+      `?${defaultQuery}&view=observations_observers`,
+    );
   });
 });

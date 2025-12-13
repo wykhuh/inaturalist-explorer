@@ -171,10 +171,18 @@ export function formatAppUrl(
     );
   }
 
-  if (appStore.currentView === "observations") {
-    if (appStore.viewMetadata.observations?.subview === "table") {
+  if (appStore.currentView === "observations_observations") {
+    if (appStore.viewMetadata.observations_observations?.subview === "table") {
       params.view = appStore.currentView;
-      params.subview = appStore.viewMetadata.observations.subview;
+      params.subview = appStore.viewMetadata.observations_observations.subview;
+    }
+  } else if (appStore.currentView === "identifications_observations") {
+    if (
+      appStore.viewMetadata.identifications_observations?.subview === "table"
+    ) {
+      params.view = appStore.currentView;
+      params.subview =
+        appStore.viewMetadata.identifications_observations.subview;
     }
   } else if (appStore.currentView) {
     if (validViews.includes(appStore.currentView)) {
@@ -201,7 +209,8 @@ export function removeDefaultParams(searchParams: string) {
   let defaultiNatAPiParamas =
     parts.includes("verifiable=true") && parts.includes("spam=false");
   let defaultView =
-    parts.includes("view=observations") && parts.includes("subview=grid");
+    parts.includes("view=observations_observations") &&
+    parts.includes("subview=grid");
   let defaultNameOrder = parts.includes("name_order=cs");
   let defaultLocale = parts.includes("locale=en");
 
@@ -209,12 +218,12 @@ export function removeDefaultParams(searchParams: string) {
     parts = removeValueFromArray("verifiable=true", parts);
     parts = removeValueFromArray("spam=false", parts);
     parts = removeValueFromArray("locale=en", parts);
-    parts = removeValueFromArray("view=observations", parts);
+    parts = removeValueFromArray("view=observations_observations", parts);
     parts = removeValueFromArray("subview=grid", parts);
   }
 
   if (defaultView) {
-    parts = removeValueFromArray("view=observations", parts);
+    parts = removeValueFromArray("view=observations_observations", parts);
     parts = removeValueFromArray("subview=grid", parts);
   }
 
@@ -258,10 +267,15 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     observationsApiParams: {},
     identificationsApiParams: {},
     viewMetadata: {
-      observations: {},
-      identifiers: {},
-      observers: {},
-      species: {},
+      observations_observations: {},
+      observations_identifiers: {},
+      observations_observers: {},
+      observations_species: {},
+      identifications_observations: {},
+      identifications_identifiers: {},
+      identifications_observers: {},
+      identifications_species: {},
+      identifications_identifications: {},
     },
   } as MapStore;
   let isObservations = true;
@@ -400,29 +414,36 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     }
   }
 
-  if (urlParams.view && validViews.includes(urlParams.view)) {
-    store.currentView = urlParams.view as ObservationViews;
+  let urlView = urlParams.view as ObservationViews;
+  if (urlView && validViews.includes(urlView)) {
+    store.currentView = urlView;
+  } else if (isObservations) {
+    store.currentView = "observations_observations";
   } else {
-    store.currentView = "observations";
+    store.currentView = "identifications_observations";
   }
 
-  if (urlParams.view === "observations") {
+  if (urlView === "observations_observations") {
     if (validObservationsSubviews.includes(urlParams.subview)) {
-      store.viewMetadata.observations.subview = urlParams.subview;
+      store.viewMetadata.observations_observations.subview = urlParams.subview;
     }
-  } else if (urlParams.view === "identifications") {
-    store.viewMetadata.identifications = {};
+  } else if (urlView === "identifications_observations") {
+    if (validObservationsSubviews.includes(urlParams.subview)) {
+      store.viewMetadata.identifications_observations.subview =
+        urlParams.subview;
+    }
+  } else if (urlView === "identifications_identifications") {
+    store.viewMetadata.identifications_identifications = {};
   }
 
   if (urlParams.order) {
     if (isObservations && orderValues.includes(urlParams.order)) {
       store.observationsApiParams.order = urlParams.order;
     }
-    if (urlParams.view && validViews.includes(urlParams.view)) {
-      store.viewMetadata[urlParams.view as ObservationViews].order =
-        urlParams.order;
+    if (urlView && validViews.includes(urlView)) {
+      store.viewMetadata[urlView].order = urlParams.order;
     } else {
-      store.viewMetadata.observations.order = urlParams.order;
+      store.viewMetadata.observations_observations.order = urlParams.order;
     }
   }
 
@@ -433,11 +454,11 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     ) {
       store.observationsApiParams.order_by = urlParams.order_by;
     }
-    if (urlParams.view && validViews.includes(urlParams.view)) {
-      store.viewMetadata[urlParams.view as ObservationViews].order_by =
-        urlParams.order_by;
+    if (urlView && validViews.includes(urlView)) {
+      store.viewMetadata[urlView].order_by = urlParams.order_by;
     } else {
-      store.viewMetadata.observations.order_by = urlParams.order_by;
+      store.viewMetadata.observations_observations.order_by =
+        urlParams.order_by;
     }
   }
 
@@ -445,12 +466,12 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     if (isObservations) {
       store.observationsApiParams.page = Number(urlParams.page);
     }
-    if (urlParams.view && validViews.includes(urlParams.view)) {
-      store.viewMetadata[urlParams.view as ObservationViews].page = Number(
+    if (urlView && validViews.includes(urlView)) {
+      store.viewMetadata[urlView].page = Number(urlParams.page);
+    } else {
+      store.viewMetadata.observations_observations.page = Number(
         urlParams.page,
       );
-    } else {
-      store.viewMetadata.observations.page = Number(urlParams.page);
     }
   }
 

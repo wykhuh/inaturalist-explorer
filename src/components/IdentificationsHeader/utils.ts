@@ -24,14 +24,14 @@ export function updateCountsHeader(appStore: MapStore) {
     appStore.identificationsApiParams.observation_iconic_taxon_id === undefined
   ) {
     updateHeaderCount(
-      "identifications-observations",
+      "identifications_observations",
       nullObservations,
       params,
       appStore,
     );
   } else {
     updateHeaderCount(
-      "identifications-observations",
+      "identifications_observations",
       getObservations,
       params,
       appStore,
@@ -40,28 +40,28 @@ export function updateCountsHeader(appStore: MapStore) {
 
   let identificationParams = cleanupIdentificationParams(appStore);
   updateHeaderCount(
-    "identifications-identifications",
+    "identifications_identifications",
     getIdentifications,
     identificationParams,
     appStore,
   );
 
   updateHeaderCount(
-    "identifications-identifiers",
+    "identifications_identifiers",
     getIdentificationsIdentifiers,
     identificationParams,
     appStore,
   );
 
   updateHeaderCount(
-    "identifications-species",
+    "identifications_species",
     getIdentificationsSpecies,
     identificationParams,
     appStore,
   );
 
   updateHeaderCount(
-    "identifications-observers",
+    "identifications_observers",
     getIdentificationsObservers,
     identificationParams,
     appStore,

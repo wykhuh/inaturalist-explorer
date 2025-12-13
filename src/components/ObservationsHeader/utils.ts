@@ -14,19 +14,19 @@ import { updateHeaderCount } from "./shared_utils";
 export function updateCountsHeader(appStore: MapStore) {
   let params = cleanupObervationsParams(appStore);
   updateHeaderCount(
-    "observations-observations",
+    "observations_observations",
     getObservations,
     params,
     appStore,
   );
   updateHeaderCount(
-    "observations-species",
+    "observations_species",
     getObservationsSpecies,
     params,
     appStore,
   );
   updateHeaderCount(
-    "observations-identifiers",
+    "observations_identifiers",
     getObservationsIdentifiers,
     params,
     appStore,
@@ -34,7 +34,7 @@ export function updateCountsHeader(appStore: MapStore) {
 
   let observersParams = cleanupObervationsObserversParams(appStore);
   updateHeaderCount(
-    "observations-observers",
+    "observations_observers",
     getObservationsObservers,
     observersParams,
     appStore,

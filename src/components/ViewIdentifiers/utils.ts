@@ -141,14 +141,26 @@ function createTable(
 }
 
 export async function paginationcCallback(num: number) {
-  window.app.store.observationsApiParams = {
-    ...window.app.store.observationsApiParams,
-    page: num,
-  };
-  window.app.store.viewMetadata.identifiers = {
-    ...window.app.store.viewMetadata.identifiers,
-    page: num,
-  };
+  if (isObservationsCheck(window.app.store)) {
+    window.app.store.observationsApiParams = {
+      ...window.app.store.observationsApiParams,
+      page: num,
+    };
+    window.app.store.viewMetadata.observations_identifiers = {
+      ...window.app.store.viewMetadata.observations_identifiers,
+      page: num,
+    };
+  } else {
+    window.app.store.identificationsApiParams = {
+      ...window.app.store.identificationsApiParams,
+      page: num,
+    };
+    window.app.store.viewMetadata.identifications_identifiers = {
+      ...window.app.store.viewMetadata.identifications_identifiers,
+      page: num,
+    };
+  }
+
   // HACK: update store
   window.app.store.viewMetadata = window.app.store.viewMetadata;
 

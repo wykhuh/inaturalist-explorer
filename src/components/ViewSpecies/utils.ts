@@ -111,14 +111,26 @@ function createGrid(
 }
 
 export async function paginationcCallback(num: number) {
-  window.app.store.observationsApiParams = {
-    ...window.app.store.observationsApiParams,
-    page: num,
-  };
-  window.app.store.viewMetadata.species = {
-    ...window.app.store.viewMetadata.species,
-    page: num,
-  };
+  if (isObservationsCheck(window.app.store)) {
+    window.app.store.observationsApiParams = {
+      ...window.app.store.observationsApiParams,
+      page: num,
+    };
+    window.app.store.viewMetadata.observations_species = {
+      ...window.app.store.viewMetadata.observations_species,
+      page: num,
+    };
+  } else {
+    window.app.store.identificationsApiParams = {
+      ...window.app.store.identificationsApiParams,
+      page: num,
+    };
+    window.app.store.viewMetadata.identifications_species = {
+      ...window.app.store.viewMetadata.identifications_species,
+      page: num,
+    };
+  }
+
   // HACK: update store
   window.app.store.viewMetadata = window.app.store.viewMetadata;
 

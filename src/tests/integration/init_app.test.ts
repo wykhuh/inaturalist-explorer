@@ -357,7 +357,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = `?locale=en&view=observations&subview=table`;
+    let searchparams = `?locale=en&view=observations_observations&subview=table`;
     let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
@@ -372,8 +372,10 @@ describe("initPopulateStore and initRenderMap options", () => {
       taxon_id: allTaxa.id.toString(),
     });
     expect(store.color).toBe(iNatOrange);
-    expect(store.currentView).toBe("observations");
-    expect(store.viewMetadata.observations).toStrictEqual({ subview: "table" });
+    expect(store.currentView).toBe("observations_observations");
+    expect(store.viewMetadata.observations_observations).toStrictEqual({
+      subview: "table",
+    });
   });
 
   test("adds observations view to store", async () => {
@@ -381,7 +383,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = `?locale=en&view=observations`;
+    let searchparams = `?locale=en&view=observations_observations`;
     let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
@@ -396,8 +398,10 @@ describe("initPopulateStore and initRenderMap options", () => {
       taxon_id: allTaxa.id.toString(),
     });
     expect(store.color).toBe(iNatOrange);
-    expect(store.currentView).toBe("observations");
-    expect(store.viewMetadata.observations).toStrictEqual({ subview: "grid" });
+    expect(store.currentView).toBe("observations_observations");
+    expect(store.viewMetadata.observations_observations).toStrictEqual({
+      subview: "grid",
+    });
   });
 
   test("adds view to store", async () => {
@@ -405,7 +409,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = `?locale=en&view=identifiers`;
+    let searchparams = `?locale=en&view=observations_identifiers`;
     let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
@@ -420,8 +424,8 @@ describe("initPopulateStore and initRenderMap options", () => {
       taxon_id: allTaxa.id.toString(),
     });
     expect(store.color).toBe(iNatOrange);
-    expect(store.currentView).toBe("identifiers");
-    expect(store.viewMetadata.identifiers).toStrictEqual({});
+    expect(store.currentView).toBe("observations_identifiers");
+    expect(store.viewMetadata.observations_identifiers).toStrictEqual({});
   });
 
   test("adds page, order, order_by, and view to store", async () => {
@@ -429,7 +433,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
     expectEmpytMap(store);
 
-    let searchparams = `?locale=en&view=identifiers&page=3&order=desc&order_by=id`;
+    let searchparams = `?locale=en&view=observations_identifiers&page=3&order=desc&order_by=id`;
     let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
@@ -448,17 +452,16 @@ describe("initPopulateStore and initRenderMap options", () => {
     });
     expect(store.color).toBe(iNatOrange);
     expect(store.viewMetadata).toStrictEqual({
-      identifications: {},
-      identifiers: { page: 3, order: "desc", order_by: "id" },
-      observers: {},
-      species: {},
-      observations: {
-        subview: "grid",
+      ...structuredClone(mapStore.viewMetadata),
+      observations_identifiers: {
+        page: 3,
+        order: "desc",
+        order_by: "id",
       },
       name_order: "cs",
     });
-    expect(store.currentView).toBe("identifiers");
-    expect(store.viewMetadata.identifiers).toStrictEqual({
+    expect(store.currentView).toBe("observations_identifiers");
+    expect(store.viewMetadata.observations_identifiers).toStrictEqual({
       page: 3,
       order: "desc",
       order_by: "id",

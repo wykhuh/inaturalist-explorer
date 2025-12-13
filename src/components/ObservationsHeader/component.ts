@@ -56,6 +56,7 @@ class ObservationHeader extends HTMLElement {
     let viewEvents = ["storePopulated", "navResourceChange"];
     if (viewEvents.includes(event.type)) {
       let itemEl = this.querySelector(`#${window.app.store.currentView}`);
+
       if (itemEl) {
         itemEl?.classList.add("currentView");
       }

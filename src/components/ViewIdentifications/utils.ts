@@ -19,6 +19,7 @@ import type { IdentificationsResult } from "../../types/inat_api";
 import { formatDate, updateAppUrl } from "../../lib/utils";
 import type { MapStore } from "../../types/app";
 import { identifications } from "../../data/inat_api_cache";
+import { isObservationsCheck } from "../../lib/data_utils";
 
 export let perPage = 24;
 
@@ -221,14 +222,17 @@ function formatIdentification(row: IdentificationsResult, appStore: MapStore) {
 }
 
 export async function paginationcCallback(num: number) {
-  window.app.store.observationsApiParams = {
-    ...window.app.store.observationsApiParams,
-    page: num,
-  };
-  window.app.store.viewMetadata.identifications = {
-    ...window.app.store.viewMetadata.identifications,
-    page: num,
-  };
+  if (isObservationsCheck(window.app.store)) {
+  } else {
+    window.app.store.identificationsApiParams = {
+      ...window.app.store.identificationsApiParams,
+      page: num,
+    };
+    window.app.store.viewMetadata.identifications_identifications = {
+      ...window.app.store.viewMetadata.identifications_identifications,
+      page: num,
+    };
+  }
   // HACK: update store
   window.app.store.viewMetadata = window.app.store.viewMetadata;
 

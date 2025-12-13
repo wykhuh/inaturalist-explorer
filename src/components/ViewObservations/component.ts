@@ -15,6 +15,7 @@ import { loggerEvent, loggerRender } from "../../lib/logger";
 import { initRenderMap } from "../../lib/init_app";
 import { setupComponent } from "../../lib/component_utils";
 import type { MapStore } from "../../types/app";
+import { isObservationsCheck } from "../../lib/data_utils";
 
 class ViewObservations extends HTMLElement {
   constructor() {
@@ -93,7 +94,10 @@ class ViewObservations extends HTMLElement {
     if (!gridLinkEl) return;
 
     // set initial current-subview class in html
-    let subview = appStore.viewMetadata.observations?.subview;
+    let isObservations = isObservationsCheck(appStore);
+    let subview = isObservations
+      ? appStore.viewMetadata.observations_observations?.subview
+      : appStore.viewMetadata.identifications_observations?.subview;
     if (subview === "table") {
       tableLinkEl.classList.add("current-subview");
     } else {

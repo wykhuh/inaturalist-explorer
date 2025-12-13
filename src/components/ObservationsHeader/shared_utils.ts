@@ -13,9 +13,8 @@ export function viewChangeHandler(
   let countLabel = liEl.dataset.countLabel;
   if (!countLabel) return;
 
-  let view = countLabel.split("-")[1] as ObservationViews;
-
-  if (appStore.currentView !== view) {
+  let view = countLabel as ObservationViews;
+  if (appStore.currentView !== countLabel) {
     updateView(view, viewContainerEl, appStore, componentContext);
   }
 }
@@ -34,7 +33,6 @@ export function updateView(
   let templateName = viewAndTemplateObject(targetView);
   let view = document.createElement(templateName);
   parentEl.appendChild(view);
-
   // update currentView class in nav
   let oldItemEl = componentContext.querySelector(`#${appStore.currentView}`);
   oldItemEl?.classList.remove("currentView");
@@ -147,19 +145,27 @@ export async function createHeaderCountHash(
   return await createHashString(key);
 }
 
-export function viewAndTemplateObject(targetView: string) {
+export function viewAndTemplateObject(targetView: ObservationViews) {
   switch (targetView) {
-    case "species":
+    case "observations_species":
       return "view-species";
-    case "identifiers":
+    case "observations_identifiers":
       return "view-identifiers";
-    case "observers":
+    case "observations_observers":
       return "view-observers";
-    case "observations":
+    case "observations_observations":
       return "view-observations";
-    case "identifications":
+    case "identifications_species":
+      return "view-species";
+    case "identifications_identifiers":
+      return "view-identifiers";
+    case "identifications_observers":
+      return "view-observers";
+    case "identifications_observations":
+      return "view-observations";
+    case "identifications_identifications":
       return "view-identifications";
     default:
-      throw Error("Need to add view /template");
+      throw Error(`Need to add view /template: ${targetView}`);
   }
 }

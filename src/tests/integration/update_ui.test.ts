@@ -45,7 +45,7 @@ beforeEach(() => {
     <main></main>
     <li
       id="identifications"
-      data-count-label="identifications-identifications"
+      data-count-label="identifications_identifications"
     >
       <span class="header-count">&nbsp;</span><span>Identifications</span>
     </li>
@@ -102,7 +102,7 @@ describe("click on header to change page", () => {
     ]);
     expectLifeOakTaxaIdentifications(store, [20000, 2000]);
     expect(store.record_type).toStrictEqual("identifications");
-    expect(store.currentView).toStrictEqual("observations");
+    expect(store.currentView).toStrictEqual("identifications_observations");
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       observation_taxon_id: `${life1.id},${oak1.id}`,
@@ -118,7 +118,7 @@ describe("click on header to change page", () => {
     ]);
     expect(store.selectedTaxa).toStrictEqual([life2, oak2]);
     expect(store.record_type).toStrictEqual("observations");
-    expect(store.currentView).toStrictEqual("observations");
+    expect(store.currentView).toStrictEqual("observations_observations");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       taxon_id: `${life2.id},${oak2.id}`,
@@ -174,7 +174,7 @@ describe("click on header to change page", () => {
     ]);
     expectLifeOakTaxa(store, [10000, 1000]);
     expect(store.record_type).toStrictEqual("observations");
-    expect(store.currentView).toStrictEqual("observations");
+    expect(store.currentView).toStrictEqual("observations_observations");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       taxon_id: `${life2.id},${oak2.id}`,
@@ -192,7 +192,7 @@ describe("click on header to change page", () => {
     ]);
     expect(store.selectedTaxa).toStrictEqual([life2, oak2]);
     expect(store.record_type).toStrictEqual("identifications");
-    expect(store.currentView).toStrictEqual("observations");
+    expect(store.currentView).toStrictEqual("identifications_observations");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       taxon_id: `${life2.id},${oak2.id}`,
@@ -243,7 +243,7 @@ describe("click on headers to change view and page", () => {
     await taxonSelectedHandler(redOakBasic, "", store);
 
     expect(store.record_type).toStrictEqual("identifications");
-    expect(store.currentView).toStrictEqual("observations");
+    expect(store.currentView).toStrictEqual("identifications_observations");
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_life,
@@ -255,7 +255,7 @@ describe("click on headers to change view and page", () => {
     viewChangeHandler(spanEl, store, thisMock);
 
     expect(store.record_type).toStrictEqual("identifications");
-    expect(store.currentView).toStrictEqual("identifications");
+    expect(store.currentView).toStrictEqual("identifications_identifications");
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_life,
@@ -272,7 +272,7 @@ describe("click on headers to change view and page", () => {
     await pageChangeHandler(observationsPageClick, store, Router);
 
     expect(store.record_type).toStrictEqual("observations");
-    expect(store.currentView).toStrictEqual("observations");
+    expect(store.currentView).toStrictEqual("observations_observations");
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_life,

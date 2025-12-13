@@ -5,16 +5,25 @@ export const template = html`
     <nav id="observations-nav">
       <h1>Observations</h1>
       <ul>
-        <li id="observations" data-count-label="observations-observations">
+        <li
+          id="observations_observations"
+          data-count-label="observations_observations"
+        >
           <span class="header-count">&nbsp;</span><span>Observations</span>
         </li>
-        <li id="species" data-count-label="observations-species">
+        <li id="observations_species" data-count-label="observations_species">
           <span class="header-count">&nbsp;</span><span>Species</span>
         </li>
-        <li id="identifiers" data-count-label="observations-identifiers">
+        <li
+          id="observations_identifiers"
+          data-count-label="observations_identifiers"
+        >
           <span class="header-count">&nbsp;</span><span>Identifiers</span>
         </li>
-        <li id="observers" data-count-label="observations-observers">
+        <li
+          id="observations_observers"
+          data-count-label="observations_observers"
+        >
           <span class="header-count">&nbsp;</span><span>Observers</span>
         </li>
       </ul>

@@ -67,7 +67,10 @@ export async function fetchAndRenderData(
   // switch between table and grid subview
   let subviewEl = document.createElement("div");
   subviewEl.className = "observations-subview";
-  if (appStore.viewMetadata.observations.subview === "table") {
+  let view = isObservationsCheck(appStore)
+    ? appStore.viewMetadata.observations_observations
+    : appStore.viewMetadata.identifications_observations;
+  if (view.subview === "table") {
     subviewEl.appendChild(createTable(data.results, appStore));
   } else {
     subviewEl.appendChild(createGrid(data.results));
@@ -228,14 +231,26 @@ export function createGrid(results: ObservationsResult[]) {
 }
 
 export async function paginationcCallback(num: number) {
-  window.app.store.observationsApiParams = {
-    ...window.app.store.observationsApiParams,
-    page: num,
-  };
-  window.app.store.viewMetadata.observations = {
-    ...window.app.store.viewMetadata.observations,
-    page: num,
-  };
+  if (isObservationsCheck(window.app.store)) {
+    window.app.store.observationsApiParams = {
+      ...window.app.store.observationsApiParams,
+      page: num,
+    };
+    window.app.store.viewMetadata.observations_observations = {
+      ...window.app.store.viewMetadata.observations_observations,
+      page: num,
+    };
+  } else {
+    window.app.store.identificationsApiParams = {
+      ...window.app.store.identificationsApiParams,
+      page: num,
+    };
+    window.app.store.viewMetadata.identifications_observations = {
+      ...window.app.store.viewMetadata.identifications_observations,
+      page: num,
+    };
+  }
+
   // HACK: update store
   window.app.store.viewMetadata = window.app.store.viewMetadata;
 
@@ -261,10 +276,13 @@ export function updateSubviewState(
   let subview = event.target.dataset.subview;
   if (!subview) return;
   // early return if this is current subview
-  if (subview === appStore.viewMetadata.observations?.subview) return;
+  let view = isObservationsCheck(appStore)
+    ? appStore.viewMetadata.observations_observations
+    : appStore.viewMetadata.identifications_observations;
+  if (subview === view.subview) return;
 
   // update store
-  appStore.viewMetadata.observations.subview = subview;
+  view.subview = subview;
 
   // HACK: force triggering store proxy
   appStore.viewMetadata = appStore.viewMetadata;
