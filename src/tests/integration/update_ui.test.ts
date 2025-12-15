@@ -42,7 +42,7 @@ beforeEach(() => {
     `<!doctype html>
 <html lang="en">
   <body>
-    <main></main>
+  <div id="app"></div>
     <li
       id="identifications"
       data-count-label="identifications_identifications"
@@ -127,7 +127,7 @@ describe("click on header to change page", () => {
       observation_taxon_id: `${life2.id},${oak2.id}`,
     });
 
-    let mainEl = document.querySelector("main") as HTMLDivElement;
+    let mainEl = document.querySelector("#app") as HTMLDivElement;
     expect(mainEl?.innerHTML).toBe(`<page-observations></page-observations>`);
 
     let viewContainerEl = document.querySelector(
@@ -202,7 +202,7 @@ describe("click on header to change page", () => {
       observation_taxon_id: `${life2.id},${oak2.id}`,
     });
 
-    let mainEl = document.querySelector("main") as HTMLDivElement;
+    let mainEl = document.querySelector("#app") as HTMLDivElement;
     expect(mainEl?.innerHTML).toBe(
       `<page-identifications></page-identifications>`,
     );
@@ -279,7 +279,7 @@ describe("click on headers to change view and page", () => {
       gridLabel_oaks,
     ]);
 
-    let mainEl = document.querySelector("main") as HTMLDivElement;
+    let mainEl = document.querySelector("#app") as HTMLDivElement;
     expect(mainEl?.innerHTML).toBe(`<page-observations></page-observations>`);
 
     expect(viewContainerEl?.innerHTML).toBe(

@@ -2,7 +2,7 @@ import { html } from "../../lib/component_utils";
 
 export const template = html`
   <site-header></site-header>
-  <div id="wrapper" class="flow">
+  <main id="wrapper" class="flow">
     <h1>About</h1>
     <p>
       iNaturalist Explorer is a opensource website that lets people explore
@@ -65,5 +65,5 @@ export const template = html`
         <a href="https://github.com/wykhuh/inaturalist-explorer">Github Repo</a>
       </li>
     </ul>
-  </div>
+  </main>
 `;

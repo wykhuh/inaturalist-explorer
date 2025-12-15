@@ -35,7 +35,7 @@ const Router: RouterType = {
     loggerRender("pageElement:", pageElement);
 
     // document.querySelector("main").children[0].remove();
-    const mainEl = document.querySelector("main") as HTMLElement;
+    const mainEl = document.querySelector("#app") as HTMLElement;
     mainEl.innerHTML = "";
     mainEl.appendChild(pageElement);
     window.scrollX = 0;

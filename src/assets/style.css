@@ -350,8 +350,8 @@
     background: var(--clr-white);
   }
 
-  x-page-about #wrapper,
-  x-page-404 #wrapper {
+  page-about #wrapper,
+  page-404 #wrapper {
     max-width: 1000px;
     margin: 0 auto 2rem auto;
 

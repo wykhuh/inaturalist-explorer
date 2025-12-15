@@ -3,7 +3,7 @@ import { html } from "../../lib/component_utils";
 export const template = html`
   <site-header></site-header>
   <identifications-header data-updatecounts="true"></identifications-header>
-  <div id="wrapper">
+  <main id="wrapper">
     <div id="site-controls" class="sidebar-open">
       <button id="sidebar-toggle" title="Toggle sidebar">&#9776;</button>
       <button id="identifications-menu-toggle" title="Identifications">
@@ -28,5 +28,5 @@ export const template = html`
       </div>
       <div id="view-container"></div>
     </section>
-  </div>
+  </main>
 `;
