@@ -95,7 +95,7 @@ async function fetchHeaderCounts(
   searchParams: string,
   perPage: number,
 ) {
-  if (import.meta.env.VITE_CACHE === "true") {
+  if (import.meta.env?.VITE_CACHE === "true") {
     return -999;
   }
 

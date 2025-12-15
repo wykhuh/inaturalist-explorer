@@ -183,7 +183,7 @@ export async function getProjectById(id: number) {
 }
 
 export async function getUserById(id: number) {
-  if (import.meta.env.VITE_CACHE === "true") {
+  if (import.meta.env?.VITE_CACHE === "true") {
     return { login: `user${id}`, name: `user ${id}`, id: id } as UserResult;
   }
 

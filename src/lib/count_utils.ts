@@ -60,7 +60,7 @@ async function getObservationsCountForRecord(
   paramsTemp: ObservationsApiParams,
   appStore: MapStore,
 ) {
-  if (import.meta.env.VITE_CACHE === "true") {
+  if (import.meta.env?.VITE_CACHE === "true") {
     record.observations_count = -888;
     return record;
   }
@@ -95,7 +95,7 @@ async function getIdentificationsCountForRecord(
     | NormalizediNatUser,
   paramsTemp: ObservationsApiParams,
 ) {
-  if (import.meta.env.VITE_CACHE === "true") {
+  if (import.meta.env?.VITE_CACHE === "true") {
     record.identifications_count = -555;
     return record;
   }

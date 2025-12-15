@@ -66,7 +66,7 @@ https://forum.inaturalist.org/t/ideas-for-a-revamped-explore-observations-search
 ==
 
 ```js
-if (import.meta.env.MODE !== "development") {
+if (import.meta.env?.MODE !== "development") {
   return;
 }
 if (process.env.npm_lifecycle_event === "e2e") return;

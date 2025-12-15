@@ -53,7 +53,7 @@ function formatRefreshMap(appStore: MapStore) {
 }
 
 export function displayAppstoreData(appStore: MapStore, _source: string) {
-  const debug = import.meta.env.VITE_DEBUG;
+  const debug = import.meta.env?.VITE_DEBUG;
   if (!debug || debug === "false") return;
 
   let displayJsonWrapperEl = document.getElementById("display-json-wrapper");

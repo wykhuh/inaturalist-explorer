@@ -253,7 +253,7 @@ function removeValueFromArray(value: any, array: any[]) {
 
 export function updateAppUrl(url_location: Location, appStore: MapStore) {
   let paramsString = formatAppUrl(appStore);
-  let url = `${url_location.origin}${import.meta.env.VITE_BASE}${url_location.pathname}`;
+  let url = `${url_location.origin}${import.meta.env?.VITE_BASE}${url_location.pathname}`;
   if (paramsString) {
     url += `?${paramsString}`;
   }

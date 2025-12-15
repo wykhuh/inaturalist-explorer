@@ -69,7 +69,7 @@ export async function fetchAndRenderData(
 }
 
 async function getAPIData(perPage: number, appStore: MapStore) {
-  if (import.meta.env.VITE_CACHE === "true") {
+  if (import.meta.env?.VITE_CACHE === "true") {
     return identifications;
   }
 

@@ -8,7 +8,7 @@
     <title>iNaturalist Explorer</title>
     <script type="module" src="/src/main.ts"></script>
     <script type="module">
-      if (import.meta.env.VITE_BASE === "/inaturalist-explorer") {
+      if (import.meta.env?.VITE_BASE === "/inaturalist-explorer") {
         let head = document.querySelector("head");
         if (head) {
           let base = document.createElement("base");

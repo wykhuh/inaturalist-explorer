@@ -1,54 +1,54 @@
 export function logger(...args: any) {
-  const log = import.meta.env.VITE_LOGGER;
+  const log = import.meta.env?.VITE_LOGGER;
   if (!log || log === "false") return;
 
   console.log(...args);
 }
 
 export function loggerUrl(...args: any) {
-  const log = import.meta.env.VITE_LOGGER_URL;
+  const log = import.meta.env?.VITE_LOGGER_URL;
   if (!log || log === "false") return;
 
   console.log(...args);
 }
 
 export function loggerFilters(...args: any) {
-  const log = import.meta.env.VITE_LOGGER_FILTERS;
+  const log = import.meta.env?.VITE_LOGGER_FILTERS;
   if (!log || log === "false") return;
 
   console.log(...args);
 }
 
 export function loggerTime(...args: any) {
-  const log = import.meta.env.VITE_LOGGER_TIME;
+  const log = import.meta.env?.VITE_LOGGER_TIME;
   if (!log || log === "false") return;
 
   console.log(...args);
 }
 
 export function loggerMapLayers(...args: any) {
-  const log = import.meta.env.VITE_LOGGER_MAP;
+  const log = import.meta.env?.VITE_LOGGER_MAP;
   if (!log || log === "false") return;
 
   console.log(...args);
 }
 
 export function loggerStore(...args: any) {
-  const log = import.meta.env.VITE_LOGGER_STORE;
+  const log = import.meta.env?.VITE_LOGGER_STORE;
   if (!log || log === "false") return;
 
   console.log(...args);
 }
 
 export function loggerRender(...args: any) {
-  const log = import.meta.env.VITE_LOGGER_RENDER;
+  const log = import.meta.env?.VITE_LOGGER_RENDER;
   if (!log || log === "false") return;
 
   console.log(...args);
 }
 
 export function loggerEvent(...args: any) {
-  const log = import.meta.env.VITE_LOGGER_EVENT;
+  const log = import.meta.env?.VITE_LOGGER_EVENT;
   if (!log || log === "false") return;
 
   console.log(...args);
