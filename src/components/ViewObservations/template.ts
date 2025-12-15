@@ -2,7 +2,7 @@ import { html } from "../../lib/component_utils";
 
 export const template = html`
   <div id="map"></div>
-  <div id="observations-list-controls">
+  <div id="observations-list-controls" data-testid="observations-controls">
     <div>
       <div id="observations-subview">
         <button class="subview-grid" data-subview="grid">Grid</button>

@@ -7,7 +7,7 @@ import type {
 } from "../types/inat_api";
 
 export const identifiers: iNatObservationsIdentifiersAPI = {
-  total_results: 453433,
+  total_results: 400000,
   page: 1,
   per_page: 50,
   results: [
@@ -513,7 +513,7 @@ export const identifiers: iNatObservationsIdentifiersAPI = {
 };
 
 export const observers: iNatObservationsObserversAPI = {
-  total_results: 3873663,
+  total_results: 3000000,
   page: 1,
   per_page: 50,
   results: [
@@ -1804,7 +1804,7 @@ export const species: iNatObservationsSpeciesCountAPI = {
 
 //https://www.inaturalist.org/observations?order_by=votes&photos&place_id=962&threatened&view=species
 export const threatenedSpecies: iNatObservationsSpeciesCountAPI = {
-  total_results: 538,
+  total_results: 500,
   page: 1,
   per_page: 30,
   results: [
@@ -2686,7 +2686,7 @@ export const threatenedSpecies: iNatObservationsSpeciesCountAPI = {
 };
 
 export const observationsDemoLA: iNatObservationsAPI = {
-  total_results: 9124,
+  total_results: 100,
   page: 1,
   per_page: 25,
   results: [
@@ -4743,7 +4743,7 @@ export const observationsDemoLA: iNatObservationsAPI = {
 };
 
 export const identifications: IdentificationsAPI = {
-  total_results: 650398786,
+  total_results: 100000000,
   page: 1,
   per_page: 24,
   results: [

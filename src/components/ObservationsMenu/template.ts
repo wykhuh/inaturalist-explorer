@@ -38,7 +38,6 @@ export const template = html`
     <ul id="selected-users-list"></ul>
 
     <h2 class="users-identifiers-heading" hidden>Identifier*</h2>
-    <p>* Only one identifier allowed for observations</p>
     <ul id="selected-users-identifiers-list"></ul>
   </div>
 `;
