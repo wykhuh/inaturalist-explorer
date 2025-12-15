@@ -163,19 +163,17 @@ function formatObservation(row: IdentificationsResult, appStore: MapStore) {
 
   let content = "";
 
-  content += `<div class="header">`;
-  content += `<div class="user">Observer: <a href="${iNatUserUrl}/${row.user.login}">${observation.user.login}</a></div>`;
-  if (observation.time_observed_at) {
-    content += `<div class="date">${formatDate(observation.time_observed_at, observation.observed_time_zone)}</div>`;
-  }
-  content += `</div>`;
-
   if (observation.taxon) {
     content += renderTaxonNames(
       observation.taxon,
       appStore,
       `${iNatObservationUrl}/${observation.id}`,
     );
+  }
+
+  content += `<div class="user">Observer: <a href="${iNatUserUrl}/${row.user.login}">${observation.user.login}</a></div>`;
+  if (observation.time_observed_at) {
+    content += `<div class="date">${formatDate(observation.time_observed_at, observation.observed_time_zone)}</div>`;
   }
 
   content += `<div class="footer">`;
@@ -194,19 +192,17 @@ function formatIdentification(row: IdentificationsResult, appStore: MapStore) {
   if (!idenfication) return "";
 
   let content = "";
-  content += `<div class="header">`;
-  content += `<div class="user">Identifier: <a href="${iNatUserUrl}/${row.user.login}">${row.user.login}</a></div>`;
-  if (idenfication.created_at) {
-    content += `<div class="date">${formatDate(idenfication.created_at)}</div>`;
-  }
-  content += `</div>`;
-
   if (idenfication.taxon) {
     content += renderTaxonNames(
       idenfication.taxon,
       appStore,
       `${iNatTaxaUrl}/${row.observation.taxon.id}`,
     );
+  }
+
+  content += `<div class="user">Identifier: <a href="${iNatUserUrl}/${row.user.login}">${row.user.login}</a></div>`;
+  if (idenfication.created_at) {
+    content += `<div class="date">${formatDate(idenfication.created_at)}</div>`;
   }
 
   content += `<div class="footer">`;
