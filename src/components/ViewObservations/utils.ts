@@ -181,7 +181,7 @@ export function createTable(results: ObservationsResult[], appStore: MapStore) {
     tdEl = document.createElement("td");
     tdEl.className = "user";
     let userContent = `<span class="avatar-name">
-      <a href="${iNatUserUrl}/${row.user.login}">${formatAvatar(row.user.icon_url)}</a>
+      <a href="${iNatUserUrl}/${row.user.login}">${formatAvatar(row.user)}</a>
       <a href="${iNatUserUrl}/${row.user.login}">${row.user.login}</a>
     </span>`;
     tdEl.innerHTML = userContent;

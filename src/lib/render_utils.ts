@@ -6,6 +6,7 @@ import type {
   ObservationSound,
   ObservationsResult,
   ObservationTaxon,
+  ObservationUser,
   SpeciesCountTaxon,
   Taxon,
 } from "../types/inat_api";
@@ -22,9 +23,10 @@ import {
 import { capitalizeFirstLetter, formatTaxonName } from "./data_utils.ts";
 import { logger } from "./logger.ts";
 
-export function formatAvatar(imgUrl?: string | null) {
+export function formatAvatar(user: ObservationUser) {
+  let imgUrl = user.icon_url;
   if (imgUrl) {
-    return `<img class="avatar" src="${imgUrl}">`;
+    return `<img class="avatar" src="${imgUrl}" alt="iNaturalist user ${user.login}">`;
   } else {
     return person2;
   }

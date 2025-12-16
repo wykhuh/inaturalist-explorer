@@ -44,7 +44,7 @@ class CardObservation extends HTMLElement {
       if (data.user) {
         detailsContent += `<span class="avatar-name">
           <a href="${iNatUserUrl}/${data.user.login}" title="${data.user.login}">
-          ${formatAvatar(data.user.icon_url)}
+          ${formatAvatar(data.user)}
           </a>
         </span>`;
       }

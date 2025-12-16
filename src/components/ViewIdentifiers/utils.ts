@@ -125,7 +125,7 @@ function createTable(
 
     tdEl = document.createElement("td");
     tdEl.innerHTML = `<span class="avatar-name">
-      <a href="${iNatUserUrl}/${row.user.login}">${formatAvatar(row.user.icon_url)}</a>
+      <a href="${iNatUserUrl}/${row.user.login}">${formatAvatar(row.user)}</a>
       <a href="${iNatUserUrl}/${row.user.login}">${row.user.login}</a>
     </span>`;
     rowEl.appendChild(tdEl);
