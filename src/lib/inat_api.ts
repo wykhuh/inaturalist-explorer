@@ -208,34 +208,36 @@ export async function getObservationsYears() {
 }
 
 export async function getObservations(appParams: string, perPage: number) {
+  let fields =
+    "(comments_count:!t," +
+    "created_at:!t," +
+    "created_at_details:all," +
+    "created_time_zone:!t," +
+    "faves_count:!t," +
+    "geoprivacy:!t," +
+    "id:!t," +
+    "identifications:(current:!t)," +
+    // "identifications_count:!t," +
+    // "location:!t," +
+    // "mappable:!t," +
+    "obscured:!t," +
+    "observed_on:!t," +
+    "observed_on_details:all," +
+    "observed_time_zone:!t," +
+    "photos:(id:!t,url:!t)," +
+    "place_guess:!t," +
+    "private_geojson:!t," +
+    "quality_grade:!t," +
+    "sounds:(id:!t,file_url:!t)," +
+    "taxon:(iconic_taxon_id:!t,name:!t,preferred_common_name:!t,preferred_common_names:(name:!t),rank:!t,rank_level:!t)," +
+    "time_observed_at:!t," +
+    "user:(icon_url:!t,id:!t,login:!t,name:!t))";
+
   let searchParams = normalizeAppParams(appParams);
   let url =
     `${observations_api}?${searchParams}&ttl=3600` +
     `&per_page=${perPage}` +
-    `&fields=(comments_count%3A!t` +
-    `%2Ccreated_at%3A!t` +
-    `%2Ccreated_at_details%3Aall` +
-    `%2Ccreated_time_zone%3A!t` +
-    `%2Cfaves_count%3A!t` +
-    `%2Cgeoprivacy%3A!t` +
-    `%2Cid%3A!t` +
-    `%2Cidentifications%3A(current%3A!t)` +
-    // `%2Cidentifications_count%3A!t` +
-    // `%2Clocation%3A!t` +
-    // `%2Cmappable%3A!t` +
-    `%2Cobscured%3A!t` +
-    `%2Cobserved_on%3A!t` +
-    `%2Cobserved_on_details%3Aall` +
-    `%2Cobserved_time_zone%3A!t` +
-    `%2Cphotos%3A(id%3A!t%2Curl%3A!t)` +
-    `%2Cplace_guess%3A!t` +
-    `%2Cprivate_geojson%3A!t` +
-    `%2Cquality_grade%3A!t` +
-    `%2Csounds%3A(id%3A!t)` +
-    `%2Ctaxon%3A(iconic_taxon_id%3A!t%2Cname%3A!t%2Cpreferred_common_name%3A!t` +
-    `%2Cpreferred_common_names%3A(name%3A!t)%2Crank%3A!t%2Crank_level%3A!t)` +
-    `%2Ctime_observed_at%3A!t` +
-    `%2Cuser%3A(icon_url%3A!t%2Cid%3A!t%2Clogin%3A!t%2Cname%3A!t))`;
+    `&fields=${fields}`;
 
   try {
     let resp = await fetch(url);
@@ -252,18 +254,24 @@ export async function getObservationsSpecies(
   perPage: number,
 ) {
   let searchParams = normalizeAppParams(appParams);
+  let fields =
+    "(taxon:" +
+    "(" +
+    // "ancestors:" +
+    // "(iconic_taxon_name:!t,id:!t,name:!t,preferred_common_name:!t,preferred_common_names:(name:!t),rank:!t,rank_level:!t,uuid:!t)," +
+    "ancestry:!t," +
+    "conservation_status:(status:!t)," +
+    "default_photo:(attribution:!t,license_code:!t,medium_url:!t,square_url:!t,url:!t)," +
+    "iconic_taxon_name:!t," +
+    "id:!t," +
+    "name:!t," +
+    "preferred_common_name:!t," +
+    "preferred_common_names:(name:!t)," +
+    "rank:!t))";
   let url =
     `${observations_api}/species_counts?${searchParams}&ttl=3600` +
     `&per_page=${perPage}` +
-    `&fields=(taxon%3A(ancestors%3A(iconic_taxon_name%3A!t` +
-    `%2Cid%3A!t%2Cname%3A!t` +
-    `%2Cpreferred_common_name%3A!t%2Cpreferred_common_names%3A(name%3A!t)` +
-    `%2Crank%3A!t%2Crank_level%3A!t%2Cuuid%3A!t)%2Cancestry%3A!t` +
-    `%2Cconservation_status%3A(status%3A!t)` +
-    `%2Cdefault_photo%3A(attribution%3A!t%2Clicense_code%3A!t%2Cmedium_url%3A!t%2Csquare_url%3A!t%2Curl%3A!t)` +
-    `%2Ciconic_taxon_name%3A!t%2Cid%3A!t%2Cname%3A!t` +
-    `%2Cpreferred_common_name%3A!t%2Cpreferred_common_names%3A(name%3A!t)` +
-    `%2Crank%3A!t))`;
+    `&fields=${fields}`;
 
   try {
     let resp = await fetch(url);
@@ -285,7 +293,7 @@ export async function getObservationsObservers(
   let url =
     `${observations_api}/observers?${searchParams}&ttl=3600` +
     `&per_page=${perPage}` +
-    `&fields=(user%3A(icon_url%3A!t%2Cid%3A!t%2Clogin%3A!t%2Cname%3A!t))`;
+    `&fields=(user:(icon_url:!t,id:!t,login:!t,name:!t))`;
   try {
     let resp = await fetch(url);
     let data = (await resp.json()) as iNatObservationsObserversAPI;
@@ -304,7 +312,7 @@ export async function getObservationsIdentifiers(
   let url =
     `${observations_api}/identifiers?${searchParams}&ttl=3600` +
     `&per_page=${perPage}` +
-    `&fields=(user%3A(icon_url%3A!t%2Cid%3A!t%2Clogin%3A!t%2Cname%3A!t))`;
+    `&fields=(user:(icon_url:!t,id:!t,login:!t,name:!t))`;
   try {
     let resp = await fetch(url);
     let data = (await resp.json()) as iNatObservationsIdentifiersAPI;
