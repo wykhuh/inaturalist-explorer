@@ -193,7 +193,7 @@ interface ObservationsApiFilterableParams {
   photos?: boolean;
   popular?: boolean;
   project_id?: string; // comma-seperated string
-  quality_grade?: "casual" | "needs_id" | "research";
+  quality_grade?: string;
   spam?: boolean;
   sound_license?: string; // comma-seperated string, type CCLicense
   sounds?: boolean;
@@ -297,7 +297,7 @@ interface IdentificationsApiFilterableParams {
   observation_iconic_taxon_id?: string | number; // comma-seperated string
   observation_hrank?: TaxonRanks; // one value
   observation_lrank?: TaxonRanks; // one value
-  quality_grade?: "casual" | "needs_id" | "research";
+  quality_grade?: string;
 
   view?: string;
   subview?: string;

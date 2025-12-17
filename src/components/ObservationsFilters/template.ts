@@ -1,14 +1,18 @@
+import { circleX } from "../../assets/icons";
 import { html } from "../../lib/component_utils";
+import { observationsHeaderLinks } from "../ObservationsHeader/template";
 
 export const template = html`
   <button id="filters-btn" class="btn-primary">Filters</button>
   <span class="filters-count"></span>
+
   <dialog class="filters-modal">
-    <div>
-      <div class="modal-header">
-        <observations-header></observations-header>
-        <div><button class="close-btn btn-primary">Close</button></div>
-      </div>
+    <div class="modal-header">
+      ${observationsHeaderLinks}
+      <div><button class="close-btn btn-primary">${circleX}</button></div>
+    </div>
+
+    <div class="modal-body">
       <ol class="filters-list"></ol>
 
       <form id="filters-form">
@@ -34,10 +38,10 @@ export const template = html`
                 </select>
               </div>
 
-              <div class="form-group">
+              <div class="form-group multiselect">
                 <label for="quality_grade">Quality Grade</label>
-                <select id="quality_grade" name="quality_grade">
-                  <option></option>
+                <select id="quality_grade" name="quality_grade" multiple>
+                  <option value="">All</option>
                   <option value="research">Research Grade</option>
                   <option value="needs_id">Needs Id</option>
                   <option value="casual">Casual</option>
@@ -108,206 +112,6 @@ export const template = html`
           </div>
           <!-- column 2 -->
           <div>
-            <fieldset class="date-observed">
-              <legend>Date Observed</legend>
-              <div class="form-group">
-                <input type="radio" name="date_observed" id="any_date" />
-                <label for="any_date">Any</label>
-              </div>
-              <div class="form-group">
-                <input type="radio" name="date_observed" id="exact_date" />
-                <label for="exact_date">Exact Date</label>
-                <input type="date" name="on" id="on" disabled />
-              </div>
-              <div class="form-group">
-                <input type="radio" name="date_observed" id="range_date" />
-                <label for="range_date">Range</label>
-
-                <div class="form-group">
-                  <label for="d1">Start Date</label>
-                  <input type="date" name="d1" id="d1" disabled />
-                </div>
-                <div class="form-group">
-                  <label for="d2">End Date</label>
-                  <input type="date" name="d2" id="d2" disabled />
-                </div>
-              </div>
-              <div class="form-group multiselect">
-                <input type="radio" name="date_observed" id="months_date" />
-                <label for="months_date">Months</label>
-                <select name="month" id="month" multiple disabled>
-                  <option value="">Select months</option>
-                  <option value="1">Janurary</option>
-                  <option value="2">February</option>
-                  <option value="3">March</option>
-                  <option value="4">April</option>
-                  <option value="5">May</option>
-                  <option value="6">June</option>
-                  <option value="7">July</option>
-                  <option value="8">August</option>
-                  <option value="9">September</option>
-                  <option value="10">October</option>
-                  <option value="11">November</option>
-                  <option value="12">December</option>
-                </select>
-              </div>
-
-              <div class="form-group multiselect">
-                <input type="radio" name="date_observed" id="years_date" />
-                <label for="years_date">Years</label>
-                <select name="year" id="year" multiple disabled></select>
-              </div>
-            </fieldset>
-
-            <fieldset class="users">
-              <legend>Users</legend>
-              <div class="form-group">
-                <label for="identifier-search">Identified by user </label>
-                <input
-                  name="ident_user_id"
-                  id="identifier-search"
-                  type="text"
-                  autocomplete="off"
-                />
-              </div>
-
-              <div class="form-group">
-                <label for="unobserved-by-user-search"
-                  >Unobserved by user</label
-                >
-                <input
-                  name="unobserved_by_user_id"
-                  id="unobserved-by-user-search"
-                  type="text"
-                  autocomplete="off"
-                />
-              </div>
-            </fieldset>
-          </div>
-          <!-- column 3 -->
-          <div>
-            <fieldset class="iconic_taxa">
-              <legend>Categories</legend>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Aves"
-                  value="Aves"
-                  name="iconic_taxa"
-                />
-                <label for="Aves">Aves</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Amphibia"
-                  value="Amphibia"
-                  name="iconic_taxa"
-                />
-                <label for="Amphibia">Amphibia</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Reptilia"
-                  value="Reptilia"
-                  name="iconic_taxa"
-                />
-                <label for="Reptilia">Reptilia</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Mammalia"
-                  value="Mammalia"
-                  name="iconic_taxa"
-                />
-                <label for="Mammalia">Mammalia</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Actinopterygii"
-                  value="Actinopterygii"
-                  name="iconic_taxa"
-                />
-                <label for="Actinopterygii">Actinopterygii</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Mollusca"
-                  value="Mollusca"
-                  name="iconic_taxa"
-                />
-                <label for="Mollusca">Mollusca</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Arachnida"
-                  value="Arachnida"
-                  name="iconic_taxa"
-                />
-                <label for="Arachnida">Arachnida</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Insecta"
-                  value="Insecta"
-                  name="iconic_taxa"
-                />
-                <label for="Insecta">Insecta</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Plantae"
-                  value="Plantae"
-                  name="iconic_taxa"
-                />
-                <label for="Plantae">Plantae</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Fungi"
-                  value="Fungi"
-                  name="iconic_taxa"
-                />
-                <label for="Fungi">Fungi</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Protozoa"
-                  value="Protozoa"
-                  name="iconic_taxa"
-                />
-                <label for="Protozoa">Protozoa</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="unknown"
-                  value="unknown"
-                  name="iconic_taxa"
-                />
-                <label for="unknown">unknown</label>
-              </div>
-            </fieldset>
-            <fieldset class="rank">
-              <legend>Rank</legend>
-              <div class="form-group">
-                <label for="hrank">High Rank</label>
-                <select id="hrank" name="hrank"></select>
-              </div>
-              <div class="form-group">
-                <label for="lrank">Low Rank</label>
-                <select id="lrank" name="lrank"></select>
-              </div>
-            </fieldset>
             <fieldset class="species-status">
               <legend>Species Status</legend>
               <div class="form-group">
@@ -341,6 +145,232 @@ export const template = html`
                   <option value="true">True</option>
                   <option value="false">False</option>
                 </select>
+              </div>
+            </fieldset>
+            <fieldset class="iconic_taxa">
+              <legend>Categories</legend>
+              <div class="iconic_taxa_list">
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Aves"
+                    value="Aves"
+                    name="iconic_taxa"
+                  />
+                  <label for="Aves">Aves</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Amphibia"
+                    value="Amphibia"
+                    name="iconic_taxa"
+                  />
+                  <label for="Amphibia">Amphibia</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Reptilia"
+                    value="Reptilia"
+                    name="iconic_taxa"
+                  />
+                  <label for="Reptilia">Reptilia</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Mammalia"
+                    value="Mammalia"
+                    name="iconic_taxa"
+                  />
+                  <label for="Mammalia">Mammalia</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Actinopterygii"
+                    value="Actinopterygii"
+                    name="iconic_taxa"
+                  />
+                  <label for="Actinopterygii">Actinopterygii</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Mollusca"
+                    value="Mollusca"
+                    name="iconic_taxa"
+                  />
+                  <label for="Mollusca">Mollusca</label>
+                </div>
+
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Arachnida"
+                    value="Arachnida"
+                    name="iconic_taxa"
+                  />
+                  <label for="Arachnida">Arachnida</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Insecta"
+                    value="Insecta"
+                    name="iconic_taxa"
+                  />
+                  <label for="Insecta">Insecta</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Plantae"
+                    value="Plantae"
+                    name="iconic_taxa"
+                  />
+                  <label for="Plantae">Plantae</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Fungi"
+                    value="Fungi"
+                    name="iconic_taxa"
+                  />
+                  <label for="Fungi">Fungi</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Protozoa"
+                    value="Protozoa"
+                    name="iconic_taxa"
+                  />
+                  <label for="Protozoa">Protozoa</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="unknown"
+                    value="unknown"
+                    name="iconic_taxa"
+                  />
+                  <label for="unknown">unknown</label>
+                </div>
+              </div>
+            </fieldset>
+            <fieldset class="rank">
+              <legend>Rank</legend>
+              <div class="form-group">
+                <label for="hrank">High Rank</label>
+                <select id="hrank" name="hrank"></select>
+              </div>
+              <div class="form-group">
+                <label for="lrank">Low Rank</label>
+                <select id="lrank" name="lrank"></select>
+              </div>
+            </fieldset>
+          </div>
+          <!-- column 3 -->
+          <div>
+            <fieldset class="date-observed">
+              <legend>Date Observed</legend>
+              <div class="form-group">
+                <label for="on">Exact Date</label>
+                <input type="date" name="on" id="on" />
+              </div>
+
+              <div class="form-group range-start">
+                <label for="d1">Start Date</label>
+                <input type="date" name="d1" id="d1" />
+              </div>
+
+              <div class="form-group range-end">
+                <label for="d2">End Date</label>
+                <input type="date" name="d2" id="d2" />
+              </div>
+
+              <div class="form-group multiselect">
+                <label for="month">Months</label>
+                <select name="month" id="month" multiple>
+                  <option value="">All</option>
+                  <option value="1">Janurary</option>
+                  <option value="2">February</option>
+                  <option value="3">March</option>
+                  <option value="4">April</option>
+                  <option value="5">May</option>
+                  <option value="6">June</option>
+                  <option value="7">July</option>
+                  <option value="8">August</option>
+                  <option value="9">September</option>
+                  <option value="10">October</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
+                </select>
+              </div>
+
+              <div class="form-group multiselect">
+                <label for="year">Years</label>
+                <select name="year" id="year" multiple></select>
+              </div>
+            </fieldset>
+
+            <fieldset class="date-added">
+              <legend>Date Added</legend>
+              <div class="form-group">
+                <label for="created_on">Exact Date</label>
+                <input type="date" name="created_on" id="created_on" />
+              </div>
+              <div class="form-group">
+                <div class="form-group range-created-start">
+                  <label for="created_d1">Start Date</label>
+                  <input type="date" name="created_d1" id="created_d1" />
+                </div>
+                <div class="form-group range-created-end">
+                  <label for="created_d2">End Date</label>
+                  <input type="date" name="created_d2" id="created_d2" />
+                </div>
+              </div>
+              <div class="form-group multiselect">
+                <label for="created_month">Months</label>
+                <select name="created_month" id="created_month" multiple>
+                  <option value="">All</option>
+                  <option value="1">Janurary</option>
+                  <option value="2">February</option>
+                  <option value="3">March</option>
+                  <option value="4">April</option>
+                  <option value="5">May</option>
+                  <option value="6">June</option>
+                  <option value="7">July</option>
+                  <option value="8">August</option>
+                  <option value="9">September</option>
+                  <option value="10">October</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
+                </select>
+              </div>
+
+              <div class="form-group multiselect">
+                <label for="created_year">Years</label>
+                <select name="created_year" id="created_year" multiple></select>
+              </div>
+            </fieldset>
+
+            <fieldset class="users">
+              <legend>Users</legend>
+
+              <div class="form-group">
+                <label for="unobserved-by-user-search"
+                  >Unobserved by user</label
+                >
+                <input
+                  name="unobserved_by_user_id"
+                  id="unobserved-by-user-search"
+                  type="text"
+                  autocomplete="off"
+                />
               </div>
             </fieldset>
           </div>

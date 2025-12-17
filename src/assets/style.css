@@ -1193,45 +1193,40 @@
 
 @layer filtersModal {
   .filters-modal {
-    /* z-index: 2500; */
-    /* position: absolute; */
-    /* top: 0; */
-    /* width: calc(100% - 270px);
-    margin-right: 1rem; */
-    width: 95%;
+    width:  90%;
     padding: 0;
 
-    & > div {
+    .modal-body{
+      margin-top: 3rem;
       padding: 1rem;
+    }
+
+    .close-btn {
+      background-color: transparent;
+      border: none;
+      font-size: var(--fs-800);
+    }
+
+    ul.observations-stats, ul.identifications-stats {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      list-style: none;
+      padding: 1rem;
+
+      .header-count {
+        margin-right: 0.3rem;
+      }
     }
 
     .modal-header {
       display: flex;
       justify-content: space-between;
-      gap: 1rem;
       border-bottom: var(--border-dark-grey);
+      position: fixed;
+      background-color: var(--clr-gray-300);
+      width: 88%;
 
-      #observations-header,
-      #identifications-header {
-        background-color: var(--clr-white);
-        color: var(--text-main);
-
-        ul {
-          flex-wrap: wrap;
-        }
-
-        .currentView {
-          background-color: var(--clr-white);
-        }
-        li {
-          padding: 0.5rem 0.5rem;
-          flex-direction: row;
-          gap: 5px;
-        }
-
-        h1 {
-          display: none;
-        }
       }
     }
 
@@ -1274,6 +1269,15 @@
 
     label {
       margin-right: 0.5rem;
+    }
+
+    .iconic_taxa_list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+
+      .form-group {
+        margin: 0.2rem 0;
+      }
     }
   }
 }

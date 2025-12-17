@@ -1,19 +1,23 @@
+import { circleX } from "../../assets/icons";
 import { html } from "../../lib/component_utils";
+import { identificationsHeaderLinks } from "../IdentificationsHeader/template";
 
 export const template = html`
   <button id="filters-btn" class="btn-primary">Filters</button>
   <span class="filters-count"></span>
+
   <dialog class="filters-modal">
-    <div>
-      <div class="modal-header">
-        <identifications-header></identifications-header>
-        <div><button class="close-btn btn-primary">Close</button></div>
-      </div>
+    <div class="modal-header">
+      ${identificationsHeaderLinks}
+      <div><button class="close-btn btn-primary">${circleX}</button></div>
+    </div>
+
+    <div class="modal-body">
       <ol class="filters-list"></ol>
 
       <form id="filters-form">
         <div class="fields">
-          <!-- column 2 -->
+          <!-- column 1 -->
           <div>
             <fieldset class="date-observed">
               <legend>Date Observed</legend>
@@ -29,104 +33,106 @@ export const template = html`
             </fieldset>
             <fieldset class="iconic_taxa">
               <legend>Observation Categories</legend>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Aves2"
-                  value="3"
-                  name="observation_iconic_taxon_id"
-                />
-                <label for="Aves2">Aves</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Amphibia2"
-                  value="20978"
-                  name="observation_iconic_taxon_id"
-                />
-                <label for="Amphibia2">Amphibia</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Reptilia2"
-                  value="26036"
-                  name="observation_iconic_taxon_id"
-                />
-                <label for="Reptilia2">Reptilia</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Mammalia2"
-                  value="40151"
-                  name="observation_iconic_taxon_id"
-                />
-                <label for="Mammalia2">Mammalia</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Actinopterygii2"
-                  value="47178"
-                  name="observation_iconic_taxon_id"
-                />
-                <label for="Actinopterygii2">Actinopterygii</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Mollusca2"
-                  value="47115"
-                  name="observation_iconic_taxon_id"
-                />
-                <label for="Mollusca2">Mollusca</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Arachnida2"
-                  value="47119"
-                  name="observation_iconic_taxon_id"
-                />
-                <label for="Arachnida2">Arachnida</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Insecta2"
-                  value="47158"
-                  name="observation_iconic_taxon_id"
-                />
-                <label for="Insecta2">Insecta</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Plantae2"
-                  value="47126"
-                  name="observation_iconic_taxon_id"
-                />
-                <label for="Plantae2">Plantae</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Fungi2"
-                  value="47170"
-                  name="observation_iconic_taxon_id"
-                />
-                <label for="Fungi2">Fungi</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Protozoa2"
-                  value="47686"
-                  name="observation_iconic_taxon_id"
-                />
-                <label for="Protozoa2">Protozoa</label>
+              <div class="iconic_taxa_list">
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Aves2"
+                    value="3"
+                    name="observation_iconic_taxon_id"
+                  />
+                  <label for="Aves2">Aves</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Amphibia2"
+                    value="20978"
+                    name="observation_iconic_taxon_id"
+                  />
+                  <label for="Amphibia2">Amphibia</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Reptilia2"
+                    value="26036"
+                    name="observation_iconic_taxon_id"
+                  />
+                  <label for="Reptilia2">Reptilia</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Mammalia2"
+                    value="40151"
+                    name="observation_iconic_taxon_id"
+                  />
+                  <label for="Mammalia2">Mammalia</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Actinopterygii2"
+                    value="47178"
+                    name="observation_iconic_taxon_id"
+                  />
+                  <label for="Actinopterygii2">Actinopterygii</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Mollusca2"
+                    value="47115"
+                    name="observation_iconic_taxon_id"
+                  />
+                  <label for="Mollusca2">Mollusca</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Arachnida2"
+                    value="47119"
+                    name="observation_iconic_taxon_id"
+                  />
+                  <label for="Arachnida2">Arachnida</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Insecta2"
+                    value="47158"
+                    name="observation_iconic_taxon_id"
+                  />
+                  <label for="Insecta2">Insecta</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Plantae2"
+                    value="47126"
+                    name="observation_iconic_taxon_id"
+                  />
+                  <label for="Plantae2">Plantae</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Fungi2"
+                    value="47170"
+                    name="observation_iconic_taxon_id"
+                  />
+                  <label for="Fungi2">Fungi</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Protozoa2"
+                    value="47686"
+                    name="observation_iconic_taxon_id"
+                  />
+                  <label for="Protozoa2">Protozoa</label>
+                </div>
               </div>
             </fieldset>
             <fieldset class="rank">
@@ -175,104 +181,106 @@ export const template = html`
             </fieldset>
             <fieldset class="iconic_taxa">
               <legend>Identification Categories</legend>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Aves"
-                  value="3"
-                  name="iconic_taxon_id"
-                />
-                <label for="Aves">Aves</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Amphibia"
-                  value="20978"
-                  name="iconic_taxon_id"
-                />
-                <label for="Amphibia">Amphibia</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Reptilia"
-                  value="26036"
-                  name="iconic_taxon_id"
-                />
-                <label for="Reptilia">Reptilia</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Mammalia"
-                  value="40151"
-                  name="iconic_taxon_id"
-                />
-                <label for="Mammalia">Mammalia</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Actinopterygii"
-                  value="47178"
-                  name="iconic_taxon_id"
-                />
-                <label for="Actinopterygii">Actinopterygii</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Mollusca"
-                  value="47115"
-                  name="iconic_taxon_id"
-                />
-                <label for="Mollusca">Mollusca</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Arachnida"
-                  value="47119"
-                  name="iconic_taxon_id"
-                />
-                <label for="Arachnida">Arachnida</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Insecta"
-                  value="47158"
-                  name="iconic_taxon_id"
-                />
-                <label for="Insecta">Insecta</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Plantae"
-                  value="47126"
-                  name="iconic_taxon_id"
-                />
-                <label for="Plantae">Plantae</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Fungi"
-                  value="47170"
-                  name="iconic_taxon_id"
-                />
-                <label for="Fungi">Fungi</label>
-              </div>
-              <div class="form-group">
-                <input
-                  type="checkbox"
-                  id="Protozoa"
-                  value="47686"
-                  name="iconic_taxon_id"
-                />
-                <label for="Protozoa">Protozoa</label>
+              <div class="iconic_taxa_list">
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Aves"
+                    value="3"
+                    name="iconic_taxon_id"
+                  />
+                  <label for="Aves">Aves</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Amphibia"
+                    value="20978"
+                    name="iconic_taxon_id"
+                  />
+                  <label for="Amphibia">Amphibia</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Reptilia"
+                    value="26036"
+                    name="iconic_taxon_id"
+                  />
+                  <label for="Reptilia">Reptilia</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Mammalia"
+                    value="40151"
+                    name="iconic_taxon_id"
+                  />
+                  <label for="Mammalia">Mammalia</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Actinopterygii"
+                    value="47178"
+                    name="iconic_taxon_id"
+                  />
+                  <label for="Actinopterygii">Actinopterygii</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Mollusca"
+                    value="47115"
+                    name="iconic_taxon_id"
+                  />
+                  <label for="Mollusca">Mollusca</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Arachnida"
+                    value="47119"
+                    name="iconic_taxon_id"
+                  />
+                  <label for="Arachnida">Arachnida</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Insecta"
+                    value="47158"
+                    name="iconic_taxon_id"
+                  />
+                  <label for="Insecta">Insecta</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Plantae"
+                    value="47126"
+                    name="iconic_taxon_id"
+                  />
+                  <label for="Plantae">Plantae</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Fungi"
+                    value="47170"
+                    name="iconic_taxon_id"
+                  />
+                  <label for="Fungi">Fungi</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="checkbox"
+                    id="Protozoa"
+                    value="47686"
+                    name="iconic_taxon_id"
+                  />
+                  <label for="Protozoa">Protozoa</label>
+                </div>
               </div>
             </fieldset>
             <fieldset class="rank">

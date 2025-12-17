@@ -39,15 +39,15 @@ export function processFiltersForm(data: FormData): {
     // ignore fields
     if (
       [
-        "on",
-        "d1",
-        "d2",
         "month",
         "year",
         "iconic_taxa",
         "license",
         "photo_license",
         "sound_license",
+        "quality_grade",
+        "created_month",
+        "created_year",
       ].includes(key)
     ) {
       // ignore value "on"
@@ -66,38 +66,15 @@ export function processFiltersForm(data: FormData): {
   }
 
   // handle comma-separated params
-  if (data.getAll("iconic_taxa").length > 0) {
-    values.iconic_taxa = data.getAll("iconic_taxa").join(",");
-  }
-  let licenses = data.getAll("license");
-  if (licenses.length > 0 && licenses[0] != "") {
-    values.license = licenses.join(",");
-  }
-  let photo_licenses = data.getAll("photo_license");
-  if (photo_licenses.length > 0 && photo_licenses[0] != "") {
-    values.photo_license = photo_licenses.join(",");
-  }
-  let sound_licenses = data.getAll("sound_license");
-  if (sound_licenses.length > 0 && sound_licenses[0] != "") {
-    values.sound_license = sound_licenses.join(",");
-  }
-
-  // handle observed date
-  if (data.get("on")) {
-    values.on = data.get("on") as string;
-  }
-  if (data.get("d1")) {
-    values.d1 = data.get("d1") as string;
-  }
-  if (data.get("d2") && data.get("d2")) {
-    values.d2 = data.get("d2") as string;
-  }
-  if (data.getAll("month").filter((m) => m !== "").length > 0) {
-    values.month = data.getAll("month").join(",");
-  }
-  if (data.getAll("year").filter((y) => y !== "").length > 0) {
-    values.year = data.getAll("year").join(",");
-  }
+  handleMultivalues(data, "month", values);
+  handleMultivalues(data, "year", values);
+  handleMultivalues(data, "iconic_taxa", values);
+  handleMultivalues(data, "license", values);
+  handleMultivalues(data, "photo_license", values);
+  handleMultivalues(data, "sound_license", values);
+  handleMultivalues(data, "quality_grade", values);
+  handleMultivalues(data, "created_month", values);
+  handleMultivalues(data, "created_year", values);
 
   return {
     params: values,
@@ -105,6 +82,17 @@ export function processFiltersForm(data: FormData): {
       .toString()
       .replaceAll("%2C", ","),
   };
+}
+
+function handleMultivalues(
+  data: FormData,
+  field: ObservationsApiParamsKeys,
+  values: ObservationsApiParams,
+) {
+  let items = data.getAll(field).filter((i) => i !== "");
+  if (items.length > 0) {
+    values[field] = items.join(",");
+  }
 }
 
 export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
@@ -353,11 +341,12 @@ export function renderLicenseSelect(
   });
 }
 
-export function renderYearsSelect() {
-  let selectEl = document.querySelector("#year");
+export function renderYearsSelect(selector: string) {
+  let selectEl = document.querySelector(selector);
   if (selectEl) {
     let optionEl = document.createElement("option");
-    optionEl.innerText = "Select years";
+    optionEl.innerText = "All";
+    optionEl.value = "";
     selectEl.appendChild(optionEl);
 
     iNatObservationsYears.forEach((year) => {
