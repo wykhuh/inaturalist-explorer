@@ -33,7 +33,13 @@ class CardObservation extends HTMLElement {
     let data = (this as unknown as DataComponent).data as ObservationsResult;
 
     let url = `${iNatObservationUrl}/${data.id}`;
-    cardEl.innerHTML = renderMedia(url, data.photos, data.sounds);
+    cardEl.innerHTML = renderMedia(
+      url,
+      data.taxon,
+      data.photos,
+      data.sounds,
+      appStore,
+    );
 
     let detailsEl = document.createElement("div");
     detailsEl.className = "details";

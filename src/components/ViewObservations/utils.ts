@@ -149,7 +149,13 @@ export function createTable(results: ObservationsResult[], appStore: MapStore) {
     let tdEl = document.createElement("td");
     tdEl.className = "media-cell";
     let url = `${iNatObservationUrl}/${row.id}`;
-    tdEl.innerHTML = renderMedia(url, row.photos, row.sounds);
+    tdEl.innerHTML = renderMedia(
+      url,
+      row.taxon,
+      row.photos,
+      row.sounds,
+      appStore,
+    );
     rowEl.appendChild(tdEl);
 
     // taxon name, observation metadata

@@ -114,8 +114,10 @@ function renderTaxonName(
 
 export function renderMedia(
   inatUrl: string,
+  taxon: Taxon | ObservationTaxon,
   photos: ObservationPhoto[],
   sounds: ObservationSound[],
+  appStore: MapStore,
 ) {
   let classes = ["media"];
   if (photos.length === 0 && sounds.length > 0) {
@@ -130,8 +132,17 @@ export function renderMedia(
       url = photos[0].photo?.url;
     }
     if (url) {
+      let { title, subtitle, titleAriaLabel, subtitleAriaLabel } =
+        formatTaxonName(taxon, appStore);
+      let altText = "observation of ";
+      if (title) {
+        altText += `${titleAriaLabel} ${title}`;
+      }
+      if (subtitle) {
+        altText += `, ${subtitleAriaLabel} ${subtitle}`;
+      }
       mediaContent += `<a href="${inatUrl}">`;
-      mediaContent += `<img src="${url}">`;
+      mediaContent += `<img src="${url}" alt="${altText}">`;
       mediaContent += "</a>";
     } else {
       logger(photos);

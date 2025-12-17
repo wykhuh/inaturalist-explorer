@@ -110,8 +110,10 @@ function createTable(results: IdentificationsResult[], appStore: MapStore) {
     let url = `${iNatObservationUrl}/${row.observation.id}`;
     let obsMediaDiv = renderMedia(
       url,
+      row.observation.taxon,
       row.observation.observation_photos,
       row.observation.sounds,
+      appStore,
     );
     obsDiv.innerHTML = obsMediaDiv;
 
@@ -136,8 +138,10 @@ function createTable(results: IdentificationsResult[], appStore: MapStore) {
         let url = `${iNatTaxaUrl}/${row.observation.taxon.id}`;
         let identMediaDiv = renderMedia(
           url,
+          idenfication.taxon,
           [idenfication.taxon?.default_photo],
           [],
+          appStore,
         );
         identDiv.innerHTML = identMediaDiv;
       }
