@@ -659,7 +659,8 @@
   .observers-table,
   .identifiers-table,
   .observations-table,
-  .observations-grid {
+  .observations-grid,
+  .observations-media-grid {
     .details {
       a {
         color: var(--text-main);
@@ -942,11 +943,13 @@
     }
   }
 
-  .observations-grid.grid-auto-fill {
+  .observations-grid.grid-auto-fill,
+  .observations-media-grid.grid-auto-fill {
     --autofill-min-col: 250px;
   }
 
-  .observations-grid {
+  .observations-grid,
+  .observations-media-grid {
     .card {
       display: flex;
       flex-direction: column;
@@ -958,6 +961,7 @@
       position: relative;
       border-bottom: var(--border-grey);
       background-color: var(--clr-gray-500);
+      height: 250px;
 
       img {
         object-fit: cover;
@@ -1004,7 +1008,7 @@
       display: flex;
       flex-direction: column;
       padding: 0.5rem 0.75rem;
-      height: 100%;
+      /*height: 100%;*/
       position: relative;
     }
 
@@ -1026,6 +1030,14 @@
   .identifications-table .details {
     display: flex;
     flex-direction: column;
+  }
+
+  .observations-media-grid {
+    .media.sound {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 }
 

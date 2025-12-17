@@ -22,6 +22,7 @@ import {
 } from "../assets/icons.ts";
 import { capitalizeFirstLetter, formatTaxonName } from "./data_utils.ts";
 import { logger } from "./logger.ts";
+import { pluralize } from "./utils.ts";
 
 export function formatAvatar(user: ObservationUser) {
   let imgUrl = user.icon_url;
@@ -118,6 +119,7 @@ export function renderMedia(
   photos: ObservationPhoto[],
   sounds: ObservationSound[],
   appStore: MapStore,
+  displayCount = false,
 ) {
   let classes = ["media"];
   if (photos.length === 0 && sounds.length > 0) {
@@ -161,11 +163,28 @@ export function renderMedia(
     mediaContent += noPhoto;
   }
 
-  if (photos.length > 1) {
+  if (displayCount && photos.length > 1) {
     mediaContent += `<span class="photos-count">${photos.length}</span>`;
   }
   mediaContent += "</div>";
   return mediaContent;
+}
+
+export function renderMediaCounts(
+  photos: ObservationPhoto[],
+  sounds: ObservationSound[],
+) {
+  if (photos.length === 0 && sounds.length === 0) return;
+
+  let text = [];
+  if (photos.length > 0) {
+    text.push(pluralize(photos.length, "photo"));
+  }
+  if (sounds.length > 0) {
+    text.push(pluralize(sounds.length, "sound"));
+  }
+
+  return `<div class="media-counts">${text.join(", ")}</div>`;
 }
 
 export function renderObservationMetadataCounts(

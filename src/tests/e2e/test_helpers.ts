@@ -3,7 +3,7 @@ import type { Page } from "@playwright/test";
 import { redTaxaAutocompleteResults } from "../fixtures/inatApi";
 import {
   identifications,
-  observationsDemoLA,
+  observations,
   threatenedSpecies,
   observers,
   identifiers,
@@ -14,7 +14,7 @@ export async function countsObservationsApi(page: Page) {
   await page.route(
     "https://api.inaturalist.org/v2/observations**",
     async (route) => {
-      const json = observationsDemoLA;
+      const json = observations;
       await route.fulfill({ json });
     },
   );
@@ -47,7 +47,7 @@ export async function countsIdentificationsApi(page: Page) {
   await page.route(
     "https://api.inaturalist.org/v2/observations**",
     async (route) => {
-      const json = observationsDemoLA;
+      const json = observations;
       await route.fulfill({ json });
     },
   );

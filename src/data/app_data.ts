@@ -1,4 +1,4 @@
-import type { ObservationViews } from "../types/app";
+import type { ObservationSubviews, ObservationViews } from "../types/app";
 
 export const validViews: ObservationViews[] = [
   "observations_observations",
@@ -12,4 +12,8 @@ export const validViews: ObservationViews[] = [
   "identifications_identifications",
 ];
 
-export const validObservationsSubviews = ["grid", "table"];
+export const validObservationsSubviews: ObservationSubviews[] = [
+  "grid",
+  "table",
+  "media",
+];

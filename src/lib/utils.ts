@@ -7,6 +7,7 @@ import type {
   NameOrder,
   IdentificationsApiParamsKeys,
   IdentificationsApiParams,
+  ObservationSubviews,
 } from "../types/app";
 import {
   bboxPlaceRecord,
@@ -172,17 +173,22 @@ export function formatAppUrl(
   }
 
   if (appStore.currentView === "observations_observations") {
-    if (appStore.viewMetadata.observations_observations?.subview === "table") {
+    let subview = appStore.viewMetadata.observations_observations?.subview;
+    if (subview === "table") {
       params.view = appStore.currentView;
-      params.subview = appStore.viewMetadata.observations_observations.subview;
+      params.subview = subview;
+    } else if (subview === "media") {
+      params.view = appStore.currentView;
+      params.subview = subview;
     }
   } else if (appStore.currentView === "identifications_observations") {
-    if (
-      appStore.viewMetadata.identifications_observations?.subview === "table"
-    ) {
+    let subview = appStore.viewMetadata.identifications_observations?.subview;
+    if (subview === "table") {
       params.view = appStore.currentView;
-      params.subview =
-        appStore.viewMetadata.identifications_observations.subview;
+      params.subview = subview;
+    } else if (subview === "media") {
+      params.view = appStore.currentView;
+      params.subview = subview;
     }
   } else if (appStore.currentView) {
     if (validViews.includes(appStore.currentView)) {
@@ -415,6 +421,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   }
 
   let urlView = urlParams.view as ObservationViews;
+  let urlSubview = urlParams.subview as ObservationSubviews;
   if (urlView && validViews.includes(urlView)) {
     store.currentView = urlView;
   } else if (isObservations) {
@@ -424,13 +431,12 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   }
 
   if (urlView === "observations_observations") {
-    if (validObservationsSubviews.includes(urlParams.subview)) {
-      store.viewMetadata.observations_observations.subview = urlParams.subview;
+    if (validObservationsSubviews.includes(urlSubview)) {
+      store.viewMetadata.observations_observations.subview = urlSubview;
     }
   } else if (urlView === "identifications_observations") {
-    if (validObservationsSubviews.includes(urlParams.subview)) {
-      store.viewMetadata.identifications_observations.subview =
-        urlParams.subview;
+    if (validObservationsSubviews.includes(urlSubview)) {
+      store.viewMetadata.identifications_observations.subview = urlSubview;
     }
   } else if (urlView === "identifications_identifications") {
     store.viewMetadata.identifications_identifications = {};

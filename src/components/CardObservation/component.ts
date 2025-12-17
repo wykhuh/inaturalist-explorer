@@ -3,6 +3,7 @@ import type { DataComponent, MapStore } from "../../types/app";
 import {
   formatAvatar,
   renderMedia,
+  renderMediaCounts,
   renderObservationMetadataCounts,
   renderQualityGrade,
   renderTaxonNames,
@@ -61,15 +62,15 @@ class CardObservation extends HTMLElement {
         `${iNatObservationUrl}/${data.id}`,
       );
 
-      // some obsevations only have sound and no taxa info
+      // some obsevations do not have taxa info
     } else {
       detailsContent += `<span class="title">`;
       detailsContent += `<a href="${iNatObservationUrl}/${data.id}">Unknown</a>`;
       detailsContent += "</span>";
     }
 
+    detailsContent += renderMediaCounts(data.photos, data.sounds);
     detailsContent += renderQualityGrade(data.quality_grade);
-
     detailsContent += renderObservationMetadataCounts(data, true);
 
     detailsEl.innerHTML = detailsContent;

@@ -317,25 +317,70 @@ describe("formatAppUrl", () => {
     expect(result).toBe(``);
   });
 
-  test("return view & subview if view is observations and table ", () => {
-    let appStore: MapStore = {
-      ...mapStore,
-      currentView: "observations_observations",
-      viewMetadata: {
-        ...mapStore.viewMetadata,
-        observations_observations: { subview: "table" },
-        name_order: "cs",
-      },
-    };
+  test.each([
+    "observations_observations",
+    "identifications_observations",
+  ] as ObservationViews[])(
+    "return empty string if subview is grid ",
+    (view) => {
+      let appStore: MapStore = {
+        ...mapStore,
+        currentView: view as ObservationViews,
+        viewMetadata: {
+          ...mapStore.viewMetadata,
+          [view]: { subview: "grid" },
+        },
+      };
 
-    let result = formatAppUrl(appStore);
+      let result = formatAppUrl(appStore);
 
-    expect(result).toBe(
-      `${defaultQuery}&view=observations_observations&subview=table`,
-    );
-  });
+      expect(result).toBe(``);
+    },
+  );
 
-  test.each(["sc", "s"])(
+  test.each([
+    "observations_observations",
+    "identifications_observations",
+  ] as ObservationViews[])(
+    "return view & subview if subview is table ",
+    (view) => {
+      let appStore: MapStore = {
+        ...mapStore,
+        currentView: view as ObservationViews,
+        viewMetadata: {
+          ...mapStore.viewMetadata,
+          [view]: { subview: "table" },
+        },
+      };
+
+      let result = formatAppUrl(appStore);
+
+      expect(result).toBe(`${defaultQuery}&view=${view}&subview=table`);
+    },
+  );
+
+  test.each([
+    "observations_observations",
+    "identifications_observations",
+  ] as ObservationViews[])(
+    "return view & subview if subview is photos ",
+    (view) => {
+      let appStore: MapStore = {
+        ...mapStore,
+        currentView: view as ObservationViews,
+        viewMetadata: {
+          ...mapStore.viewMetadata,
+          [view]: { subview: "media" },
+        },
+      };
+
+      let result = formatAppUrl(appStore);
+
+      expect(result).toBe(`${defaultQuery}&view=${view}&subview=media`);
+    },
+  );
+
+  test.each(["sc", "s"] as NameOrder[])(
     "return name_order if name_order is sc or s",
     (name_order) => {
       let appStore: MapStore = {

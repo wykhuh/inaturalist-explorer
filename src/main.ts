@@ -14,6 +14,7 @@ import "./components/ViewIdentifications/component.ts";
 import "./components/ViewObservers/component.ts";
 import "./components/CardSpecies/component.ts";
 import "./components/CardObservation/component.ts";
+import "./components/CardMedia/component.ts";
 import "./components/ObservationsMenu/component.ts";
 import "./components/IdentificationsMenu/component.ts";
 import "./components/SettingsMenu/component.ts";

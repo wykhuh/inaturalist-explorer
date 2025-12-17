@@ -76,7 +76,7 @@ type ViewOptions = {
   page?: number;
   order?: string;
   order_by?: string;
-  subview?: string;
+  subview?: ObservationSubviews;
 };
 
 export type MapStoreKeys = keyof MapStore;
@@ -92,7 +92,7 @@ export type ObservationViews =
   | "identifications_observers"
   | "identifications_identifications";
 
-export type ObservationSubviews = "table" | "grid";
+export type ObservationSubviews = "table" | "grid" | "media";
 export type NameOrder = "cs" | "sc" | "s";
 
 export type NormalizediNatTaxon = {

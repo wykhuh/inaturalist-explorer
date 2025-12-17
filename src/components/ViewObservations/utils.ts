@@ -17,8 +17,12 @@ import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";
 import { formatDate, updateAppUrl } from "../../lib/utils";
 import type { ObservationsResult } from "../../types/inat_api";
-import type { DataComponent, MapStore } from "../../types/app";
-import { observationsDemoLA } from "../../data/inat_api_cache";
+import type {
+  DataComponent,
+  MapStore,
+  ObservationSubviews,
+} from "../../types/app";
+import { observations } from "../../data/inat_api_cache";
 import { setSelectedOption } from "../../lib/form_utils";
 import { updateSelectedResourcesId } from "../../lib/count_utils";
 import { isObservationsCheck } from "../../lib/data_utils";
@@ -70,8 +74,11 @@ export async function fetchAndRenderData(
   let view = isObservationsCheck(appStore)
     ? appStore.viewMetadata.observations_observations
     : appStore.viewMetadata.identifications_observations;
+
   if (view.subview === "table") {
     subviewEl.appendChild(createTable(data.results, appStore));
+  } else if (view.subview === "media") {
+    subviewEl.appendChild(createMediaGrid(data.results));
   } else {
     subviewEl.appendChild(createGrid(data.results));
   }
@@ -88,7 +95,7 @@ export async function fetchAndRenderData(
 
 async function getAPIData(perPage: number, appStore: MapStore) {
   if (import.meta.env?.VITE_CACHE === "true") {
-    return observationsDemoLA;
+    return observations;
   }
 
   // NOTE: set record type to observations since parmas are for getObservations
@@ -155,6 +162,7 @@ export function createTable(results: ObservationsResult[], appStore: MapStore) {
       row.photos,
       row.sounds,
       appStore,
+      true,
     );
     rowEl.appendChild(tdEl);
 
@@ -236,6 +244,28 @@ export function createGrid(results: ObservationsResult[]) {
   return containerEl;
 }
 
+function createMediaGrid(results: ObservationsResult[]) {
+  let containerEl = document.createElement("div");
+  containerEl.className = "observations-media-grid grid-auto-fill";
+  results.forEach((record) => {
+    let media = record.photos.concat(record.sounds);
+    media.forEach((medium, j) => {
+      let cardEl = document.createElement(
+        "card-media",
+      ) as unknown as DataComponent;
+      cardEl.data = {
+        observation: record,
+        media: medium,
+        mediaIndex: j,
+        type: medium.url ? "photo" : "sound",
+      };
+      containerEl.appendChild(cardEl);
+    });
+  });
+
+  return containerEl;
+}
+
 export async function paginationcCallback(num: number) {
   if (isObservationsCheck(window.app.store)) {
     window.app.store.observationsApiParams = {
@@ -265,22 +295,17 @@ export async function paginationcCallback(num: number) {
 }
 
 export function updateSubviewState(
-  event: Event,
-  tableLinkEl: HTMLElement,
-  gridLinkEl: HTMLElement,
+  subview: ObservationSubviews,
+  componentContext: any,
   appStore: MapStore,
 ) {
-  event.preventDefault();
-  if (!(event.target instanceof HTMLElement)) {
-    return;
-  }
   let containerEl = document.querySelector(".observations-subview");
   if (!containerEl) {
     return;
   }
 
-  let subview = event.target.dataset.subview;
   if (!subview) return;
+
   // early return if this is current subview
   let view = isObservationsCheck(appStore)
     ? appStore.viewMetadata.observations_observations
@@ -297,17 +322,25 @@ export function updateSubviewState(
 
   // load store.observationsSubviewData to populate table and grid to avoid API call
   if (subview === "table") {
-    tableLinkEl.classList.add("current-subview");
-    gridLinkEl.classList.remove("current-subview");
+    componentContext.tableLinkEl.classList.add("current-subview");
+    componentContext.gridLinkEl.classList.remove("current-subview");
+    componentContext.mediaLinkEl.classList.remove("current-subview");
 
     containerEl.appendChild(
       createTable(appStore.observationsSubviewData, appStore),
     );
-  } else {
-    tableLinkEl.classList.remove("current-subview");
-    gridLinkEl.classList.add("current-subview");
+  } else if (subview === "grid") {
+    componentContext.tableLinkEl.classList.remove("current-subview");
+    componentContext.gridLinkEl.classList.add("current-subview");
+    componentContext.mediaLinkEl.classList.remove("current-subview");
 
     containerEl.appendChild(createGrid(appStore.observationsSubviewData));
+  } else {
+    componentContext.tableLinkEl.classList.remove("current-subview");
+    componentContext.gridLinkEl.classList.remove("current-subview");
+    componentContext.mediaLinkEl.classList.add("current-subview");
+
+    containerEl.appendChild(createMediaGrid(appStore.observationsSubviewData));
   }
 
   // add subview to url

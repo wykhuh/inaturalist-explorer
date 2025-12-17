@@ -339,10 +339,10 @@ export interface ObservationsResult {
   faves_count: number;
   geoprivacy: any;
   id: number;
-  identifications_count: number;
+  identifications_count?: number;
   identifications: Identification[];
-  location: string;
-  mappable: boolean;
+  location?: string;
+  mappable?: boolean;
   obscured: boolean;
   observed_on_details: ObservedOnDetails;
   observed_on: string;
@@ -425,6 +425,7 @@ export interface ObservationUser {
 
 export interface ObservationSound {
   id: number;
+  file_url?: string;
 }
 
 export interface iNatObservationsObserversAPI {

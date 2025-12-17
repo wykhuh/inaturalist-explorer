@@ -14,7 +14,7 @@ import {
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import { initRenderMap } from "../../lib/init_app";
 import { setupComponent } from "../../lib/component_utils";
-import type { MapStore } from "../../types/app";
+import type { MapStore, ObservationSubviews } from "../../types/app";
 import { isObservationsCheck } from "../../lib/data_utils";
 
 class ViewObservations extends HTMLElement {
@@ -22,15 +22,31 @@ class ViewObservations extends HTMLElement {
     super();
   }
 
+  tableLinkEl: null | HTMLElement = null;
+  gridLinkEl: null | HTMLElement = null;
+  mediaLinkEl: null | HTMLElement = null;
+
   connectedCallback() {
     loggerRender("++ ViewObservations connectedCallback");
+    setupComponent(template, this);
 
-    this.render();
+    this.tableLinkEl = document.querySelector<HTMLElement>(".subview-table");
+    this.gridLinkEl = document.querySelector<HTMLElement>(".subview-grid");
+    this.mediaLinkEl = document.querySelector<HTMLElement>(".subview-media");
+    if (!this.tableLinkEl) return;
+    if (!this.gridLinkEl) return;
+    if (!this.mediaLinkEl) return;
+
+    this.render(window.app.store);
 
     window.addEventListener("observationsChange", this);
     window.addEventListener("localeChanged", this);
     window.addEventListener("nameOrderChanged", this);
     window.addEventListener("identificationsChange", this);
+
+    this.tableLinkEl.addEventListener("click", this);
+    this.gridLinkEl.addEventListener("click", this);
+    this.mediaLinkEl.addEventListener("click", this);
   }
 
   disconnectedCallback() {
@@ -54,25 +70,49 @@ class ViewObservations extends HTMLElement {
     window.removeEventListener("localeChanged", this);
     window.removeEventListener("nameOrderChanged", this);
     window.removeEventListener("identificationsChange", this);
+    this.tableLinkEl?.removeEventListener("click", this);
+    this.gridLinkEl?.removeEventListener("click", this);
+    this.mediaLinkEl?.removeEventListener("click", this);
   }
 
   handleEvent(event: Event) {
+    let target = event.target as HTMLElement;
+    if (!target) return;
+
     let resourceChanges = [
       "observationsChange",
       "identificationsChange",
       "localeChanged",
       "nameOrderChanged",
     ];
-
     if (resourceChanges.includes(event.type)) {
       loggerEvent(`++ ViewObservations ${event.type}`);
       fetchAndRenderData(perPage, paginationcCallback, window.app.store);
     }
+
+    let subview = target.dataset?.subview as ObservationSubviews;
+    if (event.type === "click") {
+      if (subview && this.tableLinkEl && this.gridLinkEl && this.mediaLinkEl) {
+        updateSubviewState(subview, this, window.app.store);
+      }
+    }
   }
 
-  async render() {
+  async render(appStore: MapStore) {
     loggerRender("++ ViewObservations render");
-    setupComponent(template, this);
+
+    // set initial current-subview class
+    let isObservations = isObservationsCheck(appStore);
+    let subview = isObservations
+      ? appStore.viewMetadata.observations_observations?.subview
+      : appStore.viewMetadata.identifications_observations?.subview;
+    if (subview === "table") {
+      this.tableLinkEl?.classList.add("current-subview");
+    } else if (subview === "media") {
+      this.mediaLinkEl?.classList.add("current-subview");
+    } else {
+      this.gridLinkEl?.classList.add("current-subview");
+    }
 
     // create new map
     await initRenderMap(window.app.store);
@@ -83,36 +123,7 @@ class ViewObservations extends HTMLElement {
     // load observation data for grid/table
     await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
 
-    this.subviewHandler(window.app.store);
     this.orderFormHandler();
-  }
-
-  subviewHandler(appStore: MapStore) {
-    let tableLinkEl = document.querySelector(".subview-table") as HTMLElement;
-    let gridLinkEl = document.querySelector(".subview-grid") as HTMLElement;
-    if (!tableLinkEl) return;
-    if (!gridLinkEl) return;
-
-    // set initial current-subview class in html
-    let isObservations = isObservationsCheck(appStore);
-    let subview = isObservations
-      ? appStore.viewMetadata.observations_observations?.subview
-      : appStore.viewMetadata.identifications_observations?.subview;
-    if (subview === "table") {
-      tableLinkEl.classList.add("current-subview");
-    } else {
-      gridLinkEl.classList.add("current-subview");
-    }
-
-    // change subview when clicked
-    if (tableLinkEl && gridLinkEl) {
-      tableLinkEl.addEventListener("click", (event) => {
-        updateSubviewState(event, tableLinkEl, gridLinkEl, appStore);
-      });
-      gridLinkEl.addEventListener("click", (event) => {
-        updateSubviewState(event, tableLinkEl, gridLinkEl, appStore);
-      });
-    }
   }
 
   orderFormHandler() {
