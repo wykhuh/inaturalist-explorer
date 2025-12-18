@@ -14,6 +14,7 @@ import {
   renderSelectedFiltersList,
 } from "./utils";
 import { template } from "./template";
+import { tabClickHandler } from "./shared_utils";
 
 class ObservationFilters extends HTMLElement {
   constructor() {
@@ -26,6 +27,10 @@ class ObservationFilters extends HTMLElement {
 
     window.addEventListener("navResourceChange", this);
     window.addEventListener("storePopulated", this);
+
+    this.querySelectorAll(".nav-link").forEach((el) => {
+      el.addEventListener("click", this);
+    });
   }
 
   disconnectedCallback() {
@@ -33,14 +38,28 @@ class ObservationFilters extends HTMLElement {
 
     window.removeEventListener("navResourceChange", this);
     window.removeEventListener("storePopulated", this);
+
+    this.querySelectorAll(".nav-link").forEach((el) => {
+      el.addEventListener("click", this);
+    });
   }
 
   handleEvent(event: Event) {
+    let target = event.target as HTMLHtmlElement;
+    if (!target) return;
+
     let events = ["navResourceChange", "storePopulated"];
     if (events.includes(event.type)) {
       loggerEvent(`++ ObservationFilters ${event.type}`);
 
       this.render();
+    }
+
+    if (
+      event.type === "click" &&
+      target.className.split(" ").includes("nav-link")
+    ) {
+      tabClickHandler(target, this);
     }
   }
 
