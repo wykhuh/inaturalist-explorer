@@ -272,6 +272,87 @@ export const template = html`
                 <select id="lrank" name="lrank"></select>
               </div>
             </fieldset>
+
+            <fieldset>
+              <legend>Annotations</legend>
+
+              <div class="form-group">
+                <label for="life_stage">Life Stage</label>
+                <select id="life_stage" name="term_value_id-1" multiple>
+                  <option value="">Any</option>
+                  <option value="2">Adult</option>
+                  <option value="3">Teneral</option>
+                  <option value="4">Pupa</option>
+                  <option value="5">Nymph</option>
+                  <option value="6">Larva</option>
+                  <option value="7">Egg</option>
+                  <option value="8">Juvenile</option>
+                  <option value="16">Subimago</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="sex">Sex</label>
+                <select id="sex" name="term_value_id-9" multiple>
+                  <option value="">Any</option>
+                  <option value="10">Female</option>
+                  <option value="11">Male</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="flowers">Flowers and Fruits</label>
+                <select id="flowers" name="term_value_id-12" multiple>
+                  <option value="">Any</option>
+                  <option value="13">Flowers</option>
+                  <option value="14">Fruits or Seeds</option>
+                  <option value="15">Flower Buds</option>
+                  <option value="21">No Flowers or Fruits</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="alive_dead">Alive or Dead</label>
+                <select id="alive_dead" name="term_value_id-17" multiple>
+                  <option value="">Any</option>
+                  <option value="18">Alive</option>
+                  <option value="19">Dead</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="presence">Evidence of Presence</label>
+                <select id="presence" name="term_value_id-22" multiple>
+                  <option value="">Any</option>
+                  <option value="23">Feather</option>
+                  <option value="24">Organism</option>
+                  <option value="25">Scat</option>
+                  <option value="26">Track</option>
+                  <option value="27">Bone</option>
+                  <option value="28">Molt</option>
+                  <option value="29">Gall</option>
+                  <option value="30">Egg</option>
+                  <option value="31">Hair</option>
+                  <option value="32">Leafmine</option>
+                  <option value="35">Construction</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="established">Established</label>
+                <select id="established" name="term_value_id-33" multiple>
+                  <option value="">Any</option>
+                  <option value="34">Not Established</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="leaves">Leaves</label>
+                <select id="leaves" name="term_value_id-36" multiple>
+                  <option value="">Any</option>
+                  <option value="37">Breaking Leaf Buds</option>
+                  <option value="38">Green Leaves</option>
+                  <option value="39">Colored Leaves</option>
+                  <option value="40">No Live Leaves</option>
+                </select>
+              </div>
+            </fieldset>
           </div>
           <!-- column 3 -->
           <div>

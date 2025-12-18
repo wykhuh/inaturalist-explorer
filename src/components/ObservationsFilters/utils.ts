@@ -31,8 +31,7 @@ export function processFiltersForm(data: FormData): {
   let values: ObservationsApiParams = {};
   loggerFilters("----------- processFiltersForm");
 
-  for (const [k, value] of data) {
-    // HACK: get rid of typescript errors for values[key]
+  for (let [k, value] of data) {
     let key = k as ObservationsApiParamsKeys;
     loggerFilters(key, value);
 
@@ -48,6 +47,13 @@ export function processFiltersForm(data: FormData): {
         "quality_grade",
         "created_month",
         "created_year",
+        "term_value_id-1",
+        "term_value_id-9",
+        "term_value_id-12",
+        "term_value_id-17",
+        "term_value_id-22",
+        "term_value_id-33",
+        "term_value_id-36",
       ].includes(key)
     ) {
       // ignore value "on"
@@ -66,15 +72,16 @@ export function processFiltersForm(data: FormData): {
   }
 
   // handle comma-separated params
+  handleMultivalues(data, "iconic_taxa", values);
   handleMultivalues(data, "month", values);
   handleMultivalues(data, "year", values);
-  handleMultivalues(data, "iconic_taxa", values);
   handleMultivalues(data, "license", values);
   handleMultivalues(data, "photo_license", values);
   handleMultivalues(data, "sound_license", values);
   handleMultivalues(data, "quality_grade", values);
   handleMultivalues(data, "created_month", values);
   handleMultivalues(data, "created_year", values);
+  handleMultiterms(data, values);
 
   return {
     params: values,
@@ -89,9 +96,45 @@ function handleMultivalues(
   field: ObservationsApiParamsKeys,
   values: ObservationsApiParams,
 ) {
-  let items = data.getAll(field).filter((i) => i !== "");
+  let items = data
+    .getAll(field)
+    .filter((i) => i !== "")
+    .map((i) => i.toString().trim());
   if (items.length > 0) {
     values[field] = items.join(",");
+  }
+}
+
+//
+function handleMultiterms(data: FormData, values: ObservationsApiParams) {
+  // -number represents the corresponding term_id for the term_value_id
+  let fields = [
+    "term_value_id-1",
+    "term_value_id-9",
+    "term_value_id-12",
+    "term_value_id-17",
+    "term_value_id-22",
+    "term_value_id-33",
+    "term_value_id-36",
+  ];
+  let valueIds: FormDataEntryValue[] = [];
+  let termIds: string[] = [];
+  fields.forEach((field) => {
+    let items = data
+      .getAll(field)
+      .filter((i) => i !== "")
+      .map((i) => i.toString().trim());
+    if (items.length > 0) {
+      valueIds = valueIds.concat(items);
+      let parts = field.split("-");
+      termIds.push(parts[1]);
+    }
+  });
+  if (termIds.length > 0) {
+    values.term_id = termIds.join(",");
+  }
+  if (valueIds.length > 0) {
+    values.term_value_id = valueIds.join(",");
   }
 }
 

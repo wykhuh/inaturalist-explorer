@@ -13,6 +13,9 @@ https://forum.inaturalist.org/t/understanding-and-exporting-annotations/67998/3
 list of annotaions
 term_id & term_value_id
 
+Searching for Annotations - Basic to Advanced
+https://forum.inaturalist.org/t/searching-for-annotations-basic-to-advanced/65375
+
 ==
 Changes to City Nature Challenge 2026: from the Global Organizing Team
 https://forum.inaturalist.org/t/changes-to-city-nature-challenge-2026-from-the-global-organizing-team/72291/38

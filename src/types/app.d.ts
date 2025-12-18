@@ -173,6 +173,13 @@ interface ObservationsApiParams extends ObservationsApiFilterableParams {
   order_by?: string;
   locale?: string;
   name_order?: NameOrder;
+  life_stage?: number;
+  sex?: number;
+  flowers_fruits?: number;
+  alive_dead?: number;
+  presence?: number;
+  established?: number;
+  leaves?: number;
 }
 
 interface ObservationsApiFilterableParams {

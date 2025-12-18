@@ -85,71 +85,84 @@ describe("processFiltersForm", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test("returns iconic_taxa  if there is one iconic_taxa", () => {
+  test("convert string boolean to boolean", () => {
     let data = createFormData();
-    data.append("iconic_taxa", "Aves");
+    data.append("verifiable", "true");
+    data.append("sound", "false");
+
+    let result = processFiltersForm(data);
+
+    let expected = {
+      params: { verifiable: true, sound: false },
+      string: "verifiable=true&sound=false",
+    };
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("ignore fields with empty string values", () => {
+    let data = createFormData();
+    data.append("sound", "");
+    data.append("iconic_taxa", "");
+    data.append("term_value_id-9", "");
+
+    let result = processFiltersForm(data);
+
+    let expected = {
+      params: {},
+      string: "",
+    };
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("remove trailing and leading space; replace inner spaces with +", () => {
+    let data = createFormData();
+    data.append("sound", " a b ");
+    data.append("iconic_taxa", " c d ");
+    data.append("term_value_id-9", " e f ");
 
     let result = processFiltersForm(data);
 
     let expected = {
       params: {
-        iconic_taxa: "Aves",
+        sound: "a b",
+        iconic_taxa: "c d",
+        term_id: "9",
+        term_value_id: "e f",
       },
-      string: "iconic_taxa=Aves",
+      string: "sound=a+b&iconic_taxa=c+d&term_id=9&term_value_id=e+f",
     };
     expect(result).toStrictEqual(expected);
   });
 
-  test("returns iconic_taxa as comma-separated string if multiple iconic_taxa", () => {
-    let data = createFormData();
-    data.append("iconic_taxa", "Aves");
-    processFiltersForm(data);
-    data.append("iconic_taxa", "Amphibia");
+  test.each([
+    "iconic_taxa",
+    "month",
+    "year",
+    "license",
+    "photo_license",
+    "sound_license",
+    "quality_grade",
+    "created_month",
+    "created_year",
+  ])(
+    "returns comma-separated string for fields that accept multiple values",
+    (field) => {
+      let data = createFormData();
+      data.append(field, "a");
+      processFiltersForm(data);
+      data.append(field, "b");
 
-    let result = processFiltersForm(data);
+      let result = processFiltersForm(data);
 
-    let expected = {
-      params: { iconic_taxa: "Aves,Amphibia" },
-      string: "iconic_taxa=Aves,Amphibia",
-    };
-    expect(result).toStrictEqual(expected);
-  });
+      let expected = {
+        params: { [field]: "a,b" },
+        string: `${field}=a,b`,
+      };
+      expect(result).toStrictEqual(expected);
+    },
+  );
 
-  test("returns month if month is current field and only one month is set", () => {
-    let data = createFormData();
-    data.append("on", "2021-01-01");
-    processFiltersForm(data);
-    data.append("month", "1");
-    data.delete("on");
-
-    let result = processFiltersForm(data);
-
-    let expected = {
-      params: { month: "1" },
-      string: "month=1",
-    };
-    expect(result).toStrictEqual(expected);
-  });
-
-  test("returns month as comma-separated string if month is current field and multiple months", () => {
-    let data = createFormData();
-    data.append("month", "1");
-    processFiltersForm(data);
-    data.append("on", "2021-01-01");
-    processFiltersForm(data);
-    data.append("month", "3");
-    data.delete("on");
-
-    let result = processFiltersForm(data);
-
-    let expected = {
-      params: { month: "1,3" },
-      string: "month=1,3",
-    };
-    expect(result).toStrictEqual(expected);
-  });
-
-  test("returns on if on is current field", () => {
+  test("allow deleting a field", () => {
     let data = createFormData();
     data.append("month", "1");
     processFiltersForm(data);
@@ -165,96 +178,22 @@ describe("processFiltersForm", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test("returns d1 if d1 is current field", () => {
+  test("returns d1 and d2 if both are set", () => {
     let data = createFormData();
-    data.append("month", "1");
-    processFiltersForm(data);
-    data.append("d1", "2022-02-02");
-    data.delete("month");
-
-    let result = processFiltersForm(data);
-
-    let expected = {
-      params: { d1: "2022-02-02" },
-      string: "d1=2022-02-02",
-    };
-    expect(result).toStrictEqual(expected);
-  });
-
-  test("returns d2 if d2 is current field", () => {
-    let data = createFormData();
-    data.append("month", "1");
-    processFiltersForm(data);
-    data.append("d2", "2023-03-03");
-    data.delete("month");
-
-    let result = processFiltersForm(data);
-
-    let expected = {
-      params: { d2: "2023-03-03" },
-      string: "d2=2023-03-03",
-    };
-    expect(result).toStrictEqual(expected);
-  });
-
-  test("returns d1 and d2 if d1 is current field and both are set", () => {
-    let data = createFormData();
-    data.append("month", "1");
-    processFiltersForm(data);
     data.append("d2", "2023-03-03");
     processFiltersForm(data);
     data.append("d1", "2022-02-02");
-    data.delete("month");
 
     let result = processFiltersForm(data);
 
     let expected = {
       params: { d1: "2022-02-02", d2: "2023-03-03" },
-      string: "d1=2022-02-02&d2=2023-03-03",
+      string: "d2=2023-03-03&d1=2022-02-02",
     };
     expect(result).toStrictEqual(expected);
   });
 
-  test("returns d1 and d2 if d2 is current field and both are set", () => {
-    let data = createFormData();
-    data.append("month", "1");
-    processFiltersForm(data);
-    data.append("d1", "2022-02-02");
-    processFiltersForm(data);
-    data.append("d2", "2023-03-03");
-    data.delete("month");
-
-    let result = processFiltersForm(data);
-
-    let expected = {
-      params: { d1: "2022-02-02", d2: "2023-03-03" },
-      string: "d1=2022-02-02&d2=2023-03-03",
-    };
-    expect(result).toStrictEqual(expected);
-  });
-
-  test("returns the last date format", () => {
-    let data = createFormData();
-    data.append("month", "1");
-    processFiltersForm(data);
-    data.append("on", "2020-01-01");
-    processFiltersForm(data);
-    data.append("iconic_taxa", "Aves");
-    data.delete("month");
-
-    let result = processFiltersForm(data);
-
-    let expected = {
-      params: {
-        iconic_taxa: "Aves",
-        on: "2020-01-01",
-      },
-      string: "iconic_taxa=Aves&on=2020-01-01",
-    };
-    expect(result).toStrictEqual(expected);
-  });
-
-  test("returns the last date format for multiple months", () => {
+  test("returns single value fields and  multiple values fields", () => {
     let data = createFormData();
     data.append("month", "1");
     processFiltersForm(data);
@@ -263,7 +202,6 @@ describe("processFiltersForm", () => {
     data.append("month", "2");
     processFiltersForm(data);
     data.append("iconic_taxa", "Aves");
-    data.delete("on");
 
     let result = processFiltersForm(data);
 
@@ -271,8 +209,25 @@ describe("processFiltersForm", () => {
       params: {
         iconic_taxa: "Aves",
         month: "1,2",
+        on: "2020-01-01",
       },
-      string: "iconic_taxa=Aves&month=1,2",
+      string: "on=2020-01-01&iconic_taxa=Aves&month=1,2",
+    };
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("convert term_value_id-number into comma seperated term_id and term_value_id", () => {
+    let data = createFormData();
+    data.append("term_value_id-1", "4");
+    data.append("term_value_id-1", "5");
+    data.append("term_value_id-9", "10");
+    data.append("term_value_id-9", "11");
+
+    let result = processFiltersForm(data);
+
+    let expected = {
+      params: { term_id: "1,9", term_value_id: "4,5,10,11" },
+      string: "term_id=1,9&term_value_id=4,5,10,11",
     };
     expect(result).toStrictEqual(expected);
   });
