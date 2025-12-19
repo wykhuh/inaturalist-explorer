@@ -70,7 +70,10 @@ export async function fetchAndRenderData(
 
 async function getAPIData(perPage: number, appStore: MapStore) {
   if (import.meta.env?.VITE_CACHE === "true") {
-    return identifications;
+    let page = isObservationsCheck(appStore)
+      ? appStore.observationsApiParams.page
+      : appStore.identificationsApiParams.page;
+    return { ...identifications, page: page || 1 };
   }
 
   let params = cleanupIdentificationParams(appStore);

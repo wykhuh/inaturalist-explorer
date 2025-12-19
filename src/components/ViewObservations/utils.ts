@@ -95,7 +95,10 @@ export async function fetchAndRenderData(
 
 async function getAPIData(perPage: number, appStore: MapStore) {
   if (import.meta.env?.VITE_CACHE === "true") {
-    return observations;
+    let page = isObservationsCheck(appStore)
+      ? appStore.observationsApiParams.page
+      : appStore.identificationsApiParams.page;
+    return { ...observations, page: page || 1 };
   }
 
   // NOTE: set record type to observations since parmas are for getObservations

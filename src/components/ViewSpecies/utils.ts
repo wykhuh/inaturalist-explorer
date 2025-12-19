@@ -72,7 +72,10 @@ export async function fetchAndRenderData(
 
 async function getAPIData(perPage: number, appStore: MapStore) {
   if (import.meta.env?.VITE_CACHE === "true") {
-    return threatenedSpecies;
+    let page = isObservationsCheck(appStore)
+      ? appStore.observationsApiParams.page
+      : appStore.identificationsApiParams.page;
+    return { ...threatenedSpecies, page: page || 1 };
   }
 
   try {
