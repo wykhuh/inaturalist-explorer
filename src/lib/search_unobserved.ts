@@ -17,8 +17,9 @@ import {
   isObservationsCheck,
   removeOneUnobservedByUserFromStore,
 } from "./data_utils.ts";
-import { renderSelectedFiltersList } from "../components/ObservationsFilters/utils.ts";
 import { updateCountForAll } from "./count_utils.ts";
+import { renderSelectedFiltersList } from "../components/ObservationsFilters/shared_utils.ts";
+import { processFiltersForm } from "../components/ObservationsFilters/utils.ts";
 
 export function setupUnobservedByUserSearch(
   selector: string,
@@ -89,8 +90,11 @@ export async function unobservedByUserSelectedHandler(
   // add unobserved_by_user_id to filters list shown in filters modal
   const form = document.querySelector("#filters-form") as HTMLFormElement;
   if (form) {
-    const formData = new FormData(form);
-    renderSelectedFiltersList(formData);
+    const data = new FormData(form);
+    if (isObservationsCheck(appStore)) {
+      let results = processFiltersForm(data);
+      renderSelectedFiltersList(results.params);
+    }
   }
 
   renderSelectedResources(appStore, true);

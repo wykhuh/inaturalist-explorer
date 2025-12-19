@@ -297,7 +297,6 @@ export const template = html`
           </div>
         </div>
         <div class="controls">
-          <button class="btn-primary" type="submit">Update Search</button>
           <button class="btn-danger" type="reset">Reset</button>
         </div>
       </form>

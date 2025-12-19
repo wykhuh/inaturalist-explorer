@@ -1,3 +1,8 @@
+import type {
+  IdentificationsApiParams,
+  ObservationsApiParams,
+} from "../../types/app";
+
 export function tabClickHandler(
   target: HTMLElement,
   componentCtx: HTMLElement,
@@ -26,4 +31,30 @@ export function tabClickHandler(
       el.classList.remove("active");
     }
   });
+}
+
+export function renderSelectedFiltersList(
+  params: ObservationsApiParams | IdentificationsApiParams,
+) {
+  let listEl = document.querySelector(".filters-list");
+  if (!listEl) return;
+
+  listEl.innerHTML = "";
+  for (let [key, value] of Object.entries(params)) {
+    let itemEl = document.createElement("li");
+    itemEl.textContent = `${key}=${value}`;
+    listEl.appendChild(itemEl);
+  }
+
+  let countEl = document.querySelector(".filters-count") as HTMLElement;
+  if (countEl) {
+    let count = Object.keys(params).length;
+    if (count > 0) {
+      countEl.innerHTML = count.toString();
+      countEl.style = "display:inline-block";
+    } else {
+      countEl.innerHTML = "";
+      countEl.style = "display:none";
+    }
+  }
 }

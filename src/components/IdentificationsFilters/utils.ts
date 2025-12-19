@@ -21,6 +21,7 @@ import {
   updateTilesForSelectedTaxa,
 } from "../../lib/search_utils";
 import { updateCountForAll } from "../../lib/count_utils";
+import { renderSelectedFiltersList } from "../ObservationsFilters/shared_utils";
 
 export function processFiltersForm(data: FormData): {
   params: IdentificationsApiParams;
@@ -84,7 +85,7 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
   await updateCountForAll("all", appStore);
 
   // update UI
-  renderSelectedFiltersList(data);
+  renderSelectedFiltersList(results.params);
   renderSelectedResources(appStore, true);
 }
 
@@ -205,30 +206,5 @@ export function renderYearsSelect() {
       optionEl.value = year.toString();
       selectEl.appendChild(optionEl);
     });
-  }
-}
-
-export function renderSelectedFiltersList(data: FormData) {
-  let listEl = document.querySelector(".filters-list");
-  if (!listEl) return;
-
-  listEl.innerHTML = "";
-  let results = processFiltersForm(data);
-
-  for (let [key, value] of Object.entries(results.params)) {
-    let itemEl = document.createElement("li");
-    itemEl.textContent = `${key}=${value}`;
-    listEl.appendChild(itemEl);
-  }
-  let countEl = document.querySelector(".filters-count") as HTMLElement;
-  if (countEl) {
-    let count = Object.keys(results.params).length;
-    if (count > 0) {
-      countEl.innerHTML = count.toString();
-      countEl.style = "display:inline-block";
-    } else {
-      countEl.innerHTML = "";
-      countEl.style = "display:none";
-    }
   }
 }

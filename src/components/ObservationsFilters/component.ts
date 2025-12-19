@@ -11,23 +11,27 @@ import {
   renderLicenseSelect,
   renderRankSelect,
   renderYearsSelect,
-  renderSelectedFiltersList,
+  processFiltersForm,
 } from "./utils";
 import { template } from "./template";
-import { tabClickHandler } from "./shared_utils";
+import { renderSelectedFiltersList, tabClickHandler } from "./shared_utils";
 
 class ObservationFilters extends HTMLElement {
   constructor() {
     super();
   }
 
+  formEl: null | HTMLFormElement = null;
+
   connectedCallback() {
     loggerRender("++ ObservationFilters connectedCallback");
     setupComponent(template, this);
+    this.formEl = this.querySelector("#filters-form") as HTMLFormElement;
 
+    this.formEl?.addEventListener("input", this);
+    this.formEl?.addEventListener("reset", this);
     window.addEventListener("navResourceChange", this);
     window.addEventListener("storePopulated", this);
-
     this.querySelectorAll(".nav-link").forEach((el) => {
       el.addEventListener("click", this);
     });
@@ -36,11 +40,12 @@ class ObservationFilters extends HTMLElement {
   disconnectedCallback() {
     loggerRender("++ ObservationFilters disconnectedCallback");
 
+    this.formEl?.removeEventListener("input", this);
+    this.formEl?.removeEventListener("reset", this);
     window.removeEventListener("navResourceChange", this);
     window.removeEventListener("storePopulated", this);
-
     this.querySelectorAll(".nav-link").forEach((el) => {
-      el.addEventListener("click", this);
+      el.removeEventListener("click", this);
     });
   }
 
@@ -61,6 +66,16 @@ class ObservationFilters extends HTMLElement {
     ) {
       tabClickHandler(target, this);
     }
+
+    if (this.formEl) {
+      if (event.type === "input") {
+        this.formChangeHandler(event, this.formEl);
+      }
+
+      if (event.type === "reset") {
+        this.resetFormHandler(this.formEl);
+      }
+    }
   }
 
   async render() {
@@ -68,7 +83,6 @@ class ObservationFilters extends HTMLElement {
 
     this.renderModal();
     this.renderForm();
-    this.formEventHandler();
 
     setupUnobservedByUserSearch("#unobserved-by-user-search", window.app.store);
     searchSetup("#unobserved-by-user-search", unobservedByUserSelectedHandler);
@@ -80,7 +94,8 @@ class ObservationFilters extends HTMLElement {
     let formEl = this.querySelector("#filters-form") as HTMLFormElement;
     if (formEl) {
       const data = new FormData(formEl);
-      renderSelectedFiltersList(data);
+      let results = processFiltersForm(data);
+      renderSelectedFiltersList(results.params);
     }
 
     // close dialog if click ouside of dialog
@@ -105,38 +120,19 @@ class ObservationFilters extends HTMLElement {
     renderLicenseSelect("#sound_license", "All");
   }
 
-  formEventHandler() {
-    const form = document.querySelector("#filters-form") as HTMLFormElement;
+  async formChangeHandler(event: Event, form: HTMLFormElement) {
+    event.preventDefault();
 
-    if (form) {
-      form.addEventListener("submit", async (event) => {
-        event.preventDefault();
+    const data = new FormData(form);
+    await updateAppWithFilters(data, window.app.store);
+  }
 
-        const data = new FormData(form);
-        await updateAppWithFilters(data, window.app.store);
-      });
-
-      form.addEventListener("input", async (event) => {
-        let target = event.target as HTMLInputElement;
-        if (target === null) return;
-        // ignore changes to search autocomplete
-        if (target.name === "ident_user_id") return;
-        if (target.name === "unobserved_by_user_id") return;
-
-        event.preventDefault();
-
-        const data = new FormData(form);
-        await updateAppWithFilters(data, window.app.store);
-      });
-
-      form.addEventListener("reset", () => {
-        // HACK: use setTimeout to add new event that has access to resetted form
-        setTimeout(async () => {
-          let data = new FormData(form);
-          await updateAppWithFilters(data, window.app.store);
-        }, 0);
-      });
-    }
+  resetFormHandler(form: HTMLFormElement) {
+    // HACK: use setTimeout to add new event that has access to resetted form
+    setTimeout(async () => {
+      let data = new FormData(form);
+      await updateAppWithFilters(data, window.app.store);
+    }, 0);
   }
 
   renderModal() {

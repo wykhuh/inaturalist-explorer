@@ -4,18 +4,25 @@ import {
   initFilters,
   updateAppWithFilters,
   renderRankSelect,
-  renderSelectedFiltersList,
+  processFiltersForm,
 } from "./utils";
 import { template } from "./template";
+import { renderSelectedFiltersList } from "../ObservationsFilters/shared_utils";
 
 class IdentificationsFilters extends HTMLElement {
   constructor() {
     super();
   }
 
+  formEl: null | HTMLFormElement = null;
+
   connectedCallback() {
     loggerRender("++ IdentificationsFilters connectedCallback");
+    setupComponent(template, this);
+    this.formEl = this.querySelector("#filters-form") as HTMLFormElement;
 
+    this.formEl?.addEventListener("input", this);
+    this.formEl?.addEventListener("reset", this);
     window.addEventListener("storePopulated", this);
     window.addEventListener("navResourceChange", this);
   }
@@ -23,27 +30,53 @@ class IdentificationsFilters extends HTMLElement {
   disconnectedCallback() {
     loggerRender("++ IdentificationsFilters disconnectedCallback");
 
+    this.formEl?.removeEventListener("input", this);
+    this.formEl?.removeEventListener("reset", this);
     window.removeEventListener("storePopulated", this);
     window.removeEventListener("navResourceChange", this);
   }
 
   handleEvent(event: Event) {
+    let target = event.target as HTMLInputElement;
+    if (target === null) return;
+
     let events = ["navResourceChange", "storePopulated"];
     if (events.includes(event.type)) {
       loggerEvent(`++ IdentificationsFilters ${event.type}`);
 
       this.render();
     }
+    if (this.formEl) {
+      if (event.type === "input") {
+        this.formChangeHandler(event, this.formEl);
+      }
+
+      if (event.type === "reset") {
+        this.resetFormHandler(this.formEl);
+      }
+    }
+  }
+
+  async formChangeHandler(event: Event, form: HTMLFormElement) {
+    event.preventDefault();
+
+    const data = new FormData(form);
+    await updateAppWithFilters(data, window.app.store);
+  }
+
+  resetFormHandler(form: HTMLFormElement) {
+    // HACK: use setTimeout to add new event that has access to resetted form
+    setTimeout(async () => {
+      let data = new FormData(form);
+      await updateAppWithFilters(data, window.app.store);
+    }, 0);
   }
 
   async render() {
     loggerRender("++ IdentificationsFilters render");
 
-    setupComponent(template, this);
-
     this.renderModal();
     this.renderForm();
-    this.formEventHandler();
 
     // use store to set values the form on page load
     initFilters(window.app.store);
@@ -52,7 +85,8 @@ class IdentificationsFilters extends HTMLElement {
     let formEl = this.querySelector("#filters-form") as HTMLFormElement;
     if (formEl) {
       const data = new FormData(formEl);
-      renderSelectedFiltersList(data);
+      let results = processFiltersForm(data);
+      renderSelectedFiltersList(results.params);
     }
 
     // close dialog if click ouside of dialog
@@ -78,13 +112,6 @@ class IdentificationsFilters extends HTMLElement {
     const form = document.querySelector("#filters-form") as HTMLFormElement;
 
     if (form) {
-      form.addEventListener("submit", async (event) => {
-        event.preventDefault();
-
-        const data = new FormData(form);
-        await updateAppWithFilters(data, window.app.store);
-      });
-
       form.addEventListener("input", async (event) => {
         let target = event.target as HTMLInputElement;
         if (target === null) return;

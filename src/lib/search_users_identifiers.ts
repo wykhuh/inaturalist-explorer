@@ -12,7 +12,6 @@ import {
   updateTilesForSelectedTaxa,
 } from "./search_utils.ts";
 import { setupUserSearch } from "./search_users.ts";
-import { renderSelectedFiltersList } from "../components/ObservationsFilters/utils.ts";
 
 export function setupUserIdentifierSearch(
   selector: string,
@@ -77,13 +76,6 @@ export async function userIdentifierSelectedHandler(
   );
   await updateTilesForSelectedTaxa(appStore);
   await updateCountForAll("selectedUsersIdentifiers", appStore);
-
-  // add ident_user_id to filters list shown in filters modal
-  const form = document.querySelector("#filters-form") as HTMLFormElement;
-  if (form) {
-    const formData = new FormData(form);
-    renderSelectedFiltersList(formData);
-  }
 
   renderSelectedResources(appStore, true);
 }
