@@ -9,6 +9,7 @@ import {
   addValueToCommaSeparatedString,
   isObservationsCheck,
   removeOneUserFromStore,
+  resetPageNumber,
 } from "./data_utils.ts";
 import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
 import {
@@ -102,7 +103,7 @@ export async function userSelectedHandler(
 
   // add user to store
   appStore.selectedUsers = [...appStore.selectedUsers, selection];
-
+  resetPageNumber(appStore);
   appStore.observationsApiParams = {
     ...appStore.observationsApiParams,
     user_id: addValueToCommaSeparatedString(

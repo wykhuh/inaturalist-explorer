@@ -1,6 +1,6 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
-import { fetchAndRenderData, paginationcCallback, perPage } from "./utils";
+import { fetchAndRenderData, paginationCallback, perPage } from "./utils";
 import { template } from "./template";
 
 class ViewSpecies extends HTMLElement {
@@ -37,7 +37,7 @@ class ViewSpecies extends HTMLElement {
     ];
     if (resourceChanges.includes(event.type)) {
       loggerEvent(`++ ViewSpecies ${event.type}`);
-      fetchAndRenderData(perPage, paginationcCallback, window.app.store);
+      fetchAndRenderData(perPage, paginationCallback, window.app.store);
     }
   }
 
@@ -45,7 +45,7 @@ class ViewSpecies extends HTMLElement {
     loggerRender("++ ViewSpecies render");
     setupComponent(template, this);
 
-    await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
+    await fetchAndRenderData(perPage, paginationCallback, window.app.store);
   }
 }
 

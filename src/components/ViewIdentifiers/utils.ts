@@ -24,7 +24,10 @@ export let perPage = 25;
 
 export async function fetchAndRenderData(
   perPage: number,
-  paginationcCallback: (currentPage: number) => Promise<void>,
+  paginationCallback: (
+    currentPage: number,
+    appStore: MapStore,
+  ) => Promise<void>,
   appStore: MapStore,
 ) {
   let containerEl = document.querySelector(".identifiers-table-container");
@@ -53,7 +56,8 @@ export async function fetchAndRenderData(
     data.page,
     // iNat API only returns first 500 records
     Math.min(data.total_results, 500),
-    paginationcCallback,
+    appStore,
+    paginationCallback,
   );
   containerEl.appendChild(pagination1);
 
@@ -66,7 +70,8 @@ export async function fetchAndRenderData(
     data.page,
     // iNat API only returns first 500 records
     Math.min(data.total_results, 500),
-    paginationcCallback,
+    appStore,
+    paginationCallback,
   );
   containerEl.appendChild(pagination2El);
 }
@@ -143,30 +148,30 @@ function createTable(
   return tableEl;
 }
 
-export async function paginationcCallback(num: number) {
-  if (isObservationsCheck(window.app.store)) {
-    window.app.store.observationsApiParams = {
-      ...window.app.store.observationsApiParams,
+export async function paginationCallback(num: number, appStore: MapStore) {
+  if (isObservationsCheck(appStore)) {
+    appStore.observationsApiParams = {
+      ...appStore.observationsApiParams,
       page: num,
     };
-    window.app.store.viewMetadata.observations_identifiers = {
-      ...window.app.store.viewMetadata.observations_identifiers,
+    appStore.viewMetadata.observations_identifiers = {
+      ...appStore.viewMetadata.observations_identifiers,
       page: num,
     };
   } else {
-    window.app.store.identificationsApiParams = {
-      ...window.app.store.identificationsApiParams,
+    appStore.identificationsApiParams = {
+      ...appStore.identificationsApiParams,
       page: num,
     };
-    window.app.store.viewMetadata.identifications_identifiers = {
-      ...window.app.store.viewMetadata.identifications_identifiers,
+    appStore.viewMetadata.identifications_identifiers = {
+      ...appStore.viewMetadata.identifications_identifiers,
       page: num,
     };
   }
 
   // HACK: update store
-  window.app.store.viewMetadata = window.app.store.viewMetadata;
+  appStore.viewMetadata = appStore.viewMetadata;
 
-  await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
-  updateAppUrl(window.location, window.app.store);
+  await fetchAndRenderData(perPage, paginationCallback, appStore);
+  updateAppUrl(window.location, appStore);
 }

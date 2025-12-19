@@ -14,6 +14,7 @@ import {
   isObservationsCheck,
   removeOneProjectFromStoreAndMap,
   renderResourceGeometryLayer,
+  resetPageNumber,
 } from "./data_utils.ts";
 import { updateCountForAll, updateCountForOne } from "./count_utils.ts";
 import {
@@ -139,6 +140,7 @@ export async function projectSelectedHandler(
 
   // add project to store
   appStore.selectedProjects = [...appStore.selectedProjects, project];
+  resetPageNumber(appStore);
   appStore.observationsApiParams = {
     ...appStore.observationsApiParams,
     project_id: addValueToCommaSeparatedString(

@@ -18,6 +18,7 @@ import {
   isObservationsCheck,
   removeOneTaxonFromStoreAndMap,
   removeTaxaFromStoreAndMap,
+  resetPageNumber,
 } from "./data_utils.ts";
 import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
 import { renderTaxonNames } from "./render_utils";
@@ -143,6 +144,7 @@ export async function taxonSelectedHandler(
   appStore.selectedTaxa = [...appStore.selectedTaxa, taxon];
 
   if (isObservations) {
+    resetPageNumber(appStore);
     appStore.observationsApiParams = {
       ...appStore.observationsApiParams,
       taxon_id: addValueToCommaSeparatedString(
@@ -155,6 +157,7 @@ export async function taxonSelectedHandler(
       ),
     };
   } else {
+    resetPageNumber(appStore);
     appStore.identificationsApiParams = {
       ...appStore.identificationsApiParams,
       observation_taxon_id: addValueToCommaSeparatedString(

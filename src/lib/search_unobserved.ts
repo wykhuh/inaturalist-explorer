@@ -16,6 +16,7 @@ import {
 import {
   isObservationsCheck,
   removeOneUnobservedByUserFromStore,
+  resetPageNumber,
 } from "./data_utils.ts";
 import { updateCountForAll } from "./count_utils.ts";
 import { renderSelectedFiltersList } from "../components/ObservationsFilters/shared_utils.ts";
@@ -79,6 +80,7 @@ export async function unobservedByUserSelectedHandler(
 
   // add project to store
   appStore.selectedUnobservedByUser = selection;
+  resetPageNumber(appStore);
   appStore.observationsApiParams = {
     ...appStore.observationsApiParams,
     unobserved_by_user_id: selection.id,

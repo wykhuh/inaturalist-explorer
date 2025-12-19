@@ -183,7 +183,7 @@ export function removeOneTaxonFromStoreAndMap(
   appStore.selectedTaxa = appStore.selectedTaxa.filter(
     (taxon) => taxon.id !== taxonId,
   );
-
+  resetPageNumber(appStore);
   removeIdfromInatApiParams(appStore, "selectedTaxa", taxonId);
 }
 
@@ -242,7 +242,7 @@ export function removeOneTaxonIdentifiedFromStore(
   appStore.selectedTaxaIdentified = appStore.selectedTaxaIdentified.filter(
     (taxon) => taxon.id !== taxonId,
   );
-
+  resetPageNumber(appStore);
   removeIdfromInatApiParams(appStore, "selectedTaxaIdentified", taxonId);
 }
 
@@ -259,6 +259,7 @@ export async function removeOnePlaceFromStoreAndMap(
   appStore.selectedPlaces = appStore.selectedPlaces.filter(
     (place) => place.id !== placeId,
   );
+  resetPageNumber(appStore);
 
   // update observationsApiParams for bounding box
   if (placeId === 0) {
@@ -344,6 +345,7 @@ export function removeOneProjectFromStoreAndMap(
   appStore.selectedProjects = appStore.selectedProjects.filter(
     (item) => item.id !== projectId,
   );
+  resetPageNumber(appStore);
   removeIdfromInatApiParams(appStore, "selectedProjects", projectId);
 }
 
@@ -432,6 +434,7 @@ export function removeOneUserFromStore(appStore: MapStore, userId: number) {
   appStore.selectedUsers = appStore.selectedUsers.filter(
     (item) => item.id !== userId,
   );
+  resetPageNumber(appStore);
   removeIdfromInatApiParams(appStore, "selectedUsers", userId);
 }
 
@@ -442,12 +445,15 @@ export function removeOneUserIdentifierFromStore(
   appStore.selectedUsersIdentifiers = appStore.selectedUsersIdentifiers.filter(
     (item) => item.id !== userId,
   );
+  resetPageNumber(appStore);
   removeIdfromInatApiParams(appStore, "selectedUsersIdentifiers", userId);
 }
 
 export function removeOneUnobservedByUserFromStore(appStore: MapStore) {
   appStore.selectedUnobservedByUser = {} as NormalizediNatUser;
   delete appStore.observationsApiParams.unobserved_by_user_id;
+
+  resetPageNumber(appStore);
 }
 
 // ================
@@ -874,4 +880,22 @@ export function getResourceApiParams(isObservations: boolean) {
   return (
     isObservations ? "observationsApiParams" : "identificationsApiParams"
   ) as MapStoreParamsKeys;
+}
+
+export function resetPageNumber(appStore: MapStore) {
+  if (isObservationsCheck(appStore)) {
+    delete appStore.observationsApiParams.page;
+  } else {
+    delete appStore.identificationsApiParams.page;
+  }
+
+  delete appStore.viewMetadata.identifications_identifications.page;
+  delete appStore.viewMetadata.identifications_identifiers.page;
+  delete appStore.viewMetadata.identifications_observations.page;
+  delete appStore.viewMetadata.identifications_observers.page;
+  delete appStore.viewMetadata.identifications_species.page;
+  delete appStore.viewMetadata.observations_identifiers.page;
+  delete appStore.viewMetadata.observations_observations.page;
+  delete appStore.viewMetadata.observations_observers.page;
+  delete appStore.viewMetadata.observations_species.page;
 }

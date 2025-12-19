@@ -1,10 +1,12 @@
 import { generateFromObj } from "@bramus/pagination-sequence";
+import type { MapStore } from "../types/app";
 
 export function createPagination(
   perPage: number,
   currentPage: number,
   totalRecords: number,
-  paginationcCallback: (pageNumber: number) => Promise<void>,
+  appStore: MapStore,
+  paginationCallback: (pageNumber: number, appStore: MapStore) => Promise<void>,
 ) {
   let numPages = Math.ceil(totalRecords / perPage);
   const sequence = createSequence(numPages, currentPage);
@@ -19,7 +21,7 @@ export function createPagination(
   }
   if (currentPage > 1) {
     prevEl.addEventListener("click", async () => {
-      await paginationcCallback(currentPage - 1);
+      await paginationCallback(currentPage - 1, appStore);
     });
   }
   listEl.appendChild(prevEl);
@@ -33,7 +35,7 @@ export function createPagination(
     if (typeof pageNum === "number") {
       liEl.addEventListener("click", async () => {
         if (pageNum !== currentPage) {
-          await paginationcCallback(pageNum);
+          await paginationCallback(pageNum, appStore);
         }
       });
     }
@@ -47,7 +49,7 @@ export function createPagination(
   }
   if (currentPage <= numPages - 1) {
     nextEl.addEventListener("click", async () => {
-      await paginationcCallback(currentPage + 1);
+      await paginationCallback(currentPage + 1, appStore);
     });
   }
 

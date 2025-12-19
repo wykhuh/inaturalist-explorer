@@ -4,6 +4,7 @@ import {
   formatTaxonName,
   isObservationsCheck,
   removeOneTaxonIdentifiedFromStore,
+  resetPageNumber,
 } from "./data_utils.ts";
 import { renderSelectedResources } from "./search_utils.ts";
 import { setupTaxaSearch } from "./search_taxa.ts";
@@ -37,6 +38,7 @@ export async function taxonIdentifiedSelectedHandler(
   };
 
   appStore.selectedTaxaIdentified = [...appStore.selectedTaxaIdentified, taxon];
+  resetPageNumber(appStore);
   appStore.identificationsApiParams = {
     ...appStore.identificationsApiParams,
     taxon_id: addValueToCommaSeparatedString(

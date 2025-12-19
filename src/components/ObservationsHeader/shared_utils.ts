@@ -14,6 +14,7 @@ export function viewChangeHandler(
   if (!countLabel) return;
 
   let view = countLabel as ObservationViews;
+
   if (appStore.currentView !== countLabel) {
     updateView(view, viewContainerEl, appStore, componentContext);
   }

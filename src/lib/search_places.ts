@@ -17,6 +17,7 @@ import {
   isObservationsCheck,
   removeOnePlaceFromStoreAndMap,
   renderResourceGeometryLayer,
+  resetPageNumber,
 } from "./data_utils.ts";
 import { updateCountForAll, updateCountForOne } from "./count_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
@@ -150,6 +151,7 @@ export async function placeSelectedHandler(
 
   let resourceApiParams = getResourceApiParams(isObservations);
   appStore.selectedPlaces = [...appStore.selectedPlaces, place];
+  resetPageNumber(appStore);
   appStore[resourceApiParams] = {
     ...appStore[resourceApiParams],
     place_id: addValueToCommaSeparatedString(

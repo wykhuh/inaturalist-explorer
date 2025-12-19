@@ -26,7 +26,7 @@
     }
 
 
-    test.only("works with observation_iconic_taxon_id when it is a number ", async () => {
+    test("works with observation_iconic_taxon_id when it is a number ", async () => {
       let store = structuredClone(mapStore);
 
       expectEmpytMap(store);

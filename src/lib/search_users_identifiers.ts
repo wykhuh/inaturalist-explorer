@@ -5,6 +5,7 @@ import {
   isIdentificationsCheck,
   isObservationsCheck,
   removeOneUserIdentifierFromStore,
+  resetPageNumber,
 } from "./data_utils.ts";
 import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
 import {
@@ -34,7 +35,7 @@ export async function userIdentifierSelectedHandler(
 
   if (isObservations) {
     appStore.selectedUsersIdentifiers = [selection];
-
+    resetPageNumber(appStore);
     appStore.observationsApiParams = {
       ...appStore.observationsApiParams,
       ident_user_id: selection.id.toString(),
@@ -44,7 +45,7 @@ export async function userIdentifierSelectedHandler(
       ...appStore.selectedUsersIdentifiers,
       selection,
     ];
-
+    resetPageNumber(appStore);
     appStore.identificationsApiParams = {
       ...appStore.identificationsApiParams,
       user_id: addValueToCommaSeparatedString(

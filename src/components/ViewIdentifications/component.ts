@@ -1,6 +1,6 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
-import { fetchAndRenderData, paginationcCallback, perPage } from "./utils";
+import { fetchAndRenderData, paginationCallback, perPage } from "./utils";
 import { template } from "./template";
 
 class ViewIdentifications extends HTMLElement {
@@ -34,7 +34,7 @@ class ViewIdentifications extends HTMLElement {
     ];
     if (resourceChanges.includes(event.type)) {
       loggerEvent(`++ ViewIdentifications ${event.type}`);
-      fetchAndRenderData(perPage, paginationcCallback, window.app.store);
+      fetchAndRenderData(perPage, paginationCallback, window.app.store);
     }
   }
 
@@ -42,7 +42,7 @@ class ViewIdentifications extends HTMLElement {
     loggerRender("++ ViewIdentifications render");
     setupComponent(template, this);
 
-    await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
+    await fetchAndRenderData(perPage, paginationCallback, window.app.store);
   }
 }
 

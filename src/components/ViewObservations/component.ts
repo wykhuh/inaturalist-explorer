@@ -6,7 +6,7 @@ import { template } from "./template";
 import {
   fetchAndRenderData,
   initFilters,
-  paginationcCallback,
+  paginationCallback,
   perPage,
   updateSubviewState,
   updateOrderState,
@@ -87,7 +87,7 @@ class ViewObservations extends HTMLElement {
     ];
     if (resourceChanges.includes(event.type)) {
       loggerEvent(`++ ViewObservations ${event.type}`);
-      fetchAndRenderData(perPage, paginationcCallback, window.app.store);
+      fetchAndRenderData(perPage, paginationCallback, window.app.store);
     }
 
     let subview = target.dataset?.subview as ObservationSubviews;
@@ -121,7 +121,7 @@ class ViewObservations extends HTMLElement {
     initFilters(window.app.store);
 
     // load observation data for grid/table
-    await fetchAndRenderData(perPage, paginationcCallback, window.app.store);
+    await fetchAndRenderData(perPage, paginationCallback, window.app.store);
 
     this.orderFormHandler();
   }
