@@ -27,20 +27,14 @@ export function updateView(
 ) {
   if (!parentEl) return;
 
-  // load view component
-  parentEl.innerHTML = "";
-
-  let templateName = viewAndTemplateObject(targetView);
-  let view = document.createElement(templateName);
-  parentEl.appendChild(view);
   // update currentView class in nav
   let oldItemEl = componentContext.querySelector(`#${appStore.currentView}`);
   oldItemEl?.classList.remove("currentView");
   let itemEl = componentContext.querySelector(`#${targetView}`);
   itemEl?.classList.add("currentView");
 
+  // update store
   appStore.currentView = targetView;
-
   let page = appStore.viewMetadata[targetView]?.page;
   if (page) {
     appStore.observationsApiParams.page = page;
@@ -61,6 +55,13 @@ export function updateView(
   } else {
     delete appStore.observationsApiParams.order_by;
   }
+
+  // load view component and fetch data
+  parentEl.innerHTML = "";
+  let templateName = viewAndTemplateObject(targetView);
+  let view = document.createElement(templateName);
+  parentEl.appendChild(view);
+
   updateAppUrl(window.location, appStore);
 }
 
