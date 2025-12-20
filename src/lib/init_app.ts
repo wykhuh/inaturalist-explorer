@@ -248,6 +248,7 @@ function populateIdentificationsApiParams(
 // create map
 export async function initRenderMap(appStore: MapStore) {
   loggerRender("++ initRenderMap start");
+  let isObservations = isObservationsCheck(appStore);
 
   let map = L.map("map", {
     center: [0, 0],
@@ -260,8 +261,10 @@ export async function initRenderMap(appStore: MapStore) {
   appStore.map.layerControl = layerControl;
 
   appStore.refreshMap.showRefreshMapButton = false;
-  let button = createRefreshMapButton(appStore);
-  appStore.refreshMap.refreshMapButtonEl = button;
+  if (isObservations) {
+    let button = createRefreshMapButton(appStore);
+    appStore.refreshMap.refreshMapButtonEl = button;
+  }
 
   // add basemaps
   let { OpenStreetMap, OpenTopo } = getMapTiles();
@@ -275,7 +278,7 @@ export async function initRenderMap(appStore: MapStore) {
   renderSelectedProjectsBoundaries(appStore);
 
   // add bounding box layer
-  if (appStore.observationsApiParams.nelat !== undefined) {
+  if (appStore.observationsApiParams.nelat !== undefined && isObservations) {
     addBBoxDataToMap(appStore);
   }
 

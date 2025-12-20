@@ -14,6 +14,7 @@ import { loggerUrl } from "../lib/logger.ts";
 import {
   addValueToCommaSeparatedString,
   getResourceApiParams,
+  isIdentificationsCheck,
   isObservationsCheck,
   removeOnePlaceFromStoreAndMap,
   renderResourceGeometryLayer,
@@ -185,9 +186,14 @@ export async function placeSelectedHandler(
 export function renderPlacesList(appStore: MapStore) {
   let listEl = document.querySelector("#selected-places-list");
   if (!listEl) return;
+  let isIdentifications = isIdentificationsCheck(appStore);
 
   listEl.innerHTML = "";
   appStore.selectedPlaces.forEach((place) => {
+    if (isIdentifications && place.id === 0) {
+      return;
+    }
+
     let templateEl = document.createElement("places-list-item");
     templateEl.dataset.place = JSON.stringify({
       id: place.id,
