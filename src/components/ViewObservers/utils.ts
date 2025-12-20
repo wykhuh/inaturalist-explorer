@@ -24,7 +24,11 @@ import {
   isObservationsCheck,
 } from "../../lib/data_utils";
 
-export let perPage = 25;
+// BUG: iNat /v1/identifications/observers API
+// - returns 0 results for any page greater than 1.
+// - returns only 100 observers
+// https://api.inaturalist.org/v1/identifications/observers?page=2&per_page=25
+export let perPage = 200;
 
 export async function fetchAndRenderData(
   perPage: number,
@@ -55,17 +59,27 @@ export async function fetchAndRenderData(
 
   containerEl.innerHTML = "";
 
+  // HACK: iNat API only returns first 500 record for observations and 100 for identifications
+  let totalCount = isObservationsCheck(appStore)
+    ? Math.min(data.total_results, 500)
+    : Math.min(data.total_results, 100);
+
   let pagination1 = createPagination(
     data.per_page,
     data.page,
-    // iNat API only returns first 500 records
-    Math.min(data.total_results, 500),
+    totalCount,
     appStore,
     paginationCallback,
   );
   containerEl.appendChild(pagination1);
 
-  let page = appStore.observationsApiParams.page || 1;
+  let page = 1;
+  if (isObservationsCheck(appStore)) {
+    page = appStore.observationsApiParams.page || 1;
+  } else {
+    page = appStore.identificationsApiParams.page || 1;
+  }
+
   let tableEl;
   if (isIdentificationsObserversResult(data.results)) {
     tableEl = createIdentificationsTable(data.results, page, perPage);
@@ -77,8 +91,7 @@ export async function fetchAndRenderData(
   let pagination2El = createPagination(
     data.per_page,
     data.page,
-    // iNat API only returns first 500 records
-    Math.min(data.total_results, 500),
+    totalCount,
     appStore,
     paginationCallback,
   );

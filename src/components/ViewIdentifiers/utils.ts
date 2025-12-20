@@ -20,7 +20,7 @@ import {
   isObservationsCheck,
 } from "../../lib/data_utils";
 
-export let perPage = 25;
+export let perPage = 200;
 
 export async function fetchAndRenderData(
   perPage: number,
@@ -51,25 +51,32 @@ export async function fetchAndRenderData(
 
   containerEl.innerHTML = "";
 
+  // HACK: iNat API only returns first 500 record
+  let totalCount = Math.min(data.total_results, 500);
+
   let pagination1 = createPagination(
     data.per_page,
     data.page,
-    // iNat API only returns first 500 records
-    Math.min(data.total_results, 500),
+    totalCount,
     appStore,
     paginationCallback,
   );
   containerEl.appendChild(pagination1);
 
-  let page = appStore.observationsApiParams.page || 1;
+  let page = 1;
+  if (isObservationsCheck(appStore)) {
+    page = appStore.observationsApiParams.page || 1;
+  } else {
+    page = appStore.identificationsApiParams.page || 1;
+  }
+
   let tableEl = createTable(data.results, page, perPage);
   containerEl.appendChild(tableEl);
 
   let pagination2El = createPagination(
     data.per_page,
     data.page,
-    // iNat API only returns first 500 records
-    Math.min(data.total_results, 500),
+    totalCount,
     appStore,
     paginationCallback,
   );

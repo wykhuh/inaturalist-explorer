@@ -145,6 +145,8 @@ function convertIdentificationParamsToObservationParams(
     "observation_lrank",
     "color",
     "colors",
+    "page",
+    "per_page",
   ];
   let cleanedParms = {} as any;
 
