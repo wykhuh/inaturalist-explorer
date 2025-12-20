@@ -301,7 +301,11 @@
 
 @layer layout {
   .flow > * + * {
-    margin-top: var(--flow-space, 1em);
+    margin-top: var(--flow-space, 1rem);
+  }
+
+  p {
+    margin: 0.5rem 0;
   }
 
   .two-columns {
@@ -346,8 +350,8 @@
     background: var(--clr-white);
   }
 
-  page-about #wrapper,
-  page-404 #wrapper {
+  .page-about,
+  .page-404 {
     max-width: 1000px;
     margin: 0 auto 2rem auto;
 
@@ -1295,5 +1299,12 @@
         margin: 0.2rem 0;
       }
     }
+  }
+}
+
+.page-about {
+  img {
+    border: var(--border-grey);
+    margin: 1rem 0;
   }
 }
