@@ -9,7 +9,7 @@ import type {
   ObservationsApiParams,
   ObservationTilesSetting,
 } from "../types/app.d.ts";
-import { refreshBoundingBox } from "./data_utils.ts";
+import { refreshBoundingBox } from "./search_bounding_box.ts";
 import { loggerUrl } from "./logger.ts";
 
 export function getMonthName(month: number) {

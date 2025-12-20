@@ -18,77 +18,23 @@ import type {
   IdentificationsApiParamsKeys,
   MapTilesAPIParams,
 } from "../types/app";
-import {
-  addOverlayToMap,
-  formatiNatAPIBoundingBoxParams,
-  getAndDrawMapBoundingBox,
-} from "./map_utils.ts";
+import { addOverlayToMap } from "./map_utils.ts";
 import { getiNatMapTiles } from "./inat_api.ts";
 import {
   IdentificationsApiNonFilterableNames,
   ObservationsApiNonFilterableNames,
   allTaxaRecord,
-  bboxPlaceRecord,
 } from "../data/inat_data.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
 import { logger, loggerFilters } from "./logger.ts";
 import { mapStore } from "./store.ts";
 import type { SpeciesCountTaxon, Taxon } from "../types/inat_api";
-import {
-  updateTilesForSelectedTaxa,
-  renderSelectedResources,
-} from "./search_utils.ts";
 import { isNormalizediNatTaxon } from "../types/utils.ts";
-import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
+import { updateCountForOne } from "./count_utils.ts";
 import {
   cleanupIdentificationsMapParams,
   cleanupObservationsMapParams,
 } from "./cleanup_params_utils.ts";
-
-// called when user clicks refresh map button
-export async function refreshBoundingBox(appStore: MapStore) {
-  let map = appStore.map.map;
-  let layerControl = appStore.map.layerControl;
-
-  if (map === null) return;
-  if (layerControl === null) return;
-
-  // remove old refresh box
-  removeRefreshBBox(appStore, map);
-
-  // remove old places
-  removePlacesFromStoreAndMap(appStore);
-
-  // create bounding box using the boundaries of the map
-  let { layer, lngLatCoors } = getAndDrawMapBoundingBox(map);
-  appStore.refreshMap = {
-    ...appStore.refreshMap,
-    layer: layer as any,
-  };
-
-  // save place to store
-  let place = bboxPlaceRecord(lngLatCoors);
-  appStore.selectedPlaces = [place];
-  appStore.placesMapLayers = { "0": [layer as unknown as CustomGeoJSON] };
-
-  let bbox = map.getBounds();
-  let inatBbox = formatiNatAPIBoundingBoxParams(bbox);
-  appStore.observationsApiParams = {
-    ...appStore.observationsApiParams,
-    ...inatBbox,
-  };
-
-  await updateTilesForSelectedTaxa(appStore);
-  await updateCountForAll("selectedPlaces", appStore);
-
-  let paramsTemp = {
-    ...appStore.observationsApiParams,
-  };
-
-  await updateCountForOne(place, "selectedPlaces", appStore, paramsTemp);
-
-  renderSelectedResources(appStore, true);
-}
 
 // called when user select taxa or place
 export async function fetchiNatMapDataForTaxon(
@@ -286,27 +232,6 @@ export function removeOnePlaceFromMap(appStore: MapStore, placeId: number) {
   delete appStore.placesMapLayers[placeId];
 }
 
-function removePlacesFromStoreAndMap(appStore: MapStore) {
-  // remove from map
-  Object.values(appStore.placesMapLayers).forEach((layers) => {
-    layers.forEach((layer) => {
-      // remove layer from map
-      layer.remove();
-    });
-  });
-
-  appStore.refreshMap.layer = null;
-
-  // remove from store
-  appStore.placesMapLayers = {};
-  delete appStore.observationsApiParams.place_id;
-  delete appStore.observationsApiParams.nelat;
-  delete appStore.observationsApiParams.nelng;
-  delete appStore.observationsApiParams.swlat;
-  delete appStore.observationsApiParams.swlng;
-  appStore.selectedPlaces = [];
-}
-
 export function renderSelectedPlacesBoundaries(appStore: MapStore) {
   let map = appStore.map.map;
   if (!map) return;
@@ -414,16 +339,6 @@ export function renderResourceGeometryLayer(
   let layer = L.geoJSON(resource.geometry as any, options);
   layer.addTo(map);
   return layer;
-}
-
-// ================
-// bounding box
-// ================
-
-function removeRefreshBBox(appStore: MapStore, map: Map) {
-  if (appStore.refreshMap.layer) {
-    appStore.refreshMap.layer.removeFrom(map);
-  }
 }
 
 // ================
@@ -644,7 +559,6 @@ export function formatTaxonName(
   let scientificName;
   let rank;
 
-  // has common name
   if (item.preferred_common_name) {
     commonName = item.preferred_common_name
       .split(" ")

@@ -10,10 +10,7 @@ import {
 } from "vitest";
 import jsdom from "jsdom";
 
-import {
-  leafletVisibleLayers,
-  refreshBoundingBox,
-} from "../../lib/data_utils.ts";
+import { leafletVisibleLayers } from "../../lib/data_utils.ts";
 import { placeSelectedHandler, removePlace } from "../../lib/search_places.ts";
 import {
   projectSelectedHandler,
@@ -109,6 +106,7 @@ import {
 import { unobservedByUserSelectedHandler } from "../../lib/search_unobserved.ts";
 import { taxonIdentifiedSelectedHandler } from "../../lib/search_taxa_identified.ts";
 import { allTaxaRecord } from "../../data/inat_data.ts";
+import { refreshBoundingBox } from "../../lib/search_bounding_box.ts";
 
 beforeEach(() => {
   const { JSDOM } = jsdom;
