@@ -145,8 +145,7 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
 
   // update store observationsApiParams with form values
   updateStoreUsingFilters(appStore, results);
-  console.log("observationsApiParams", appStore.observationsApiParams);
-  console.log("identificationsApiParams", appStore.identificationsApiParams);
+
   await updateTilesForSelectedTaxa(appStore);
   await updateCountForAll("all", appStore);
 

@@ -74,12 +74,9 @@ export function processFiltersForm(data: FormData): {
 export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
   // get values from form data
   let results = processFiltersForm(data);
-  console.log(results.params);
 
   // update store observationsApiParams with form values
   updateStoreUsingFilters(appStore, results);
-  console.log("observationsApiParams", appStore.observationsApiParams);
-  console.log("identificationsApiParams", appStore.identificationsApiParams);
 
   await updateTilesForSelectedTaxa(appStore);
   await updateCountForAll("all", appStore);
