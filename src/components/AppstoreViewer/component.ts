@@ -10,6 +10,10 @@ export class AppstoreViewer extends HTMLElement {
   connectedCallback() {
     loggerRender("++ AppstoreViewer connectedCallback");
 
+    if (import.meta.env?.VITE_DEBUG === "false") {
+      return;
+    }
+
     setupComponent(template, this);
 
     this.render();
