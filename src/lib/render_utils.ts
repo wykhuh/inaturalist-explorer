@@ -134,14 +134,18 @@ export function renderMedia(
       url = photos[0].photo?.url;
     }
     if (url) {
-      let { title, subtitle, titleAriaLabel, subtitleAriaLabel } =
-        formatTaxonName(taxon, appStore);
       let altText = "observation of ";
-      if (title) {
-        altText += `${titleAriaLabel} ${title}`;
-      }
-      if (subtitle) {
-        altText += `, ${subtitleAriaLabel} ${subtitle}`;
+      if (taxon) {
+        let { title, subtitle, titleAriaLabel, subtitleAriaLabel } =
+          formatTaxonName(taxon, appStore);
+        if (title) {
+          altText += `${titleAriaLabel} ${title}`;
+        }
+        if (subtitle) {
+          altText += `, ${subtitleAriaLabel} ${subtitle}`;
+        }
+      } else {
+        altText += "unknown";
       }
       mediaContent += `<a href="${inatUrl}">`;
       mediaContent += `<img src="${url}" alt="${altText}">`;
