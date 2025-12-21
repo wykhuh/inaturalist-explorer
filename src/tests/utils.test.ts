@@ -512,6 +512,42 @@ describe("formatAppUrl with identifications", () => {
   });
 });
 
+describe("formatAppUrl with about record_type", () => {
+  test("returns '' for default store", () => {
+    let appStore: MapStore = {
+      ...mapStore,
+      record_type: "about",
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe(``);
+  });
+
+  test("returns '' for selected resources", () => {
+    let appStore: MapStore = {
+      ...mapStore,
+      observationsApiParams: {
+        ...mapStore.observationsApiParams,
+        taxon_id: life().id.toString(),
+        place_id: losangeles.id.toString(),
+        project_id: project_cnc1.id.toString(),
+        user_id: user1.id.toString(),
+        colors: life().color,
+      },
+      selectedTaxa: [life()],
+      selectedPlaces: [losangeles],
+      selectedProjects: [project_cnc1],
+      selectedUsers: [user1],
+      record_type: "about",
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe("");
+  });
+});
+
 describe("updateAppUrl", () => {
   test("uses push state to change location url with default store", () => {
     const pushSpy = vi.spyOn(history, "pushState");

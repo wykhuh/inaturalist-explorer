@@ -80,6 +80,10 @@ export function formatAppUrl(
   let isIdentifications = recordType === "identifications";
   let isObservations = recordType === "observations";
 
+  if (!isIdentifications && !isObservations) {
+    return "";
+  }
+
   let taxaIds = appStore.selectedTaxa
     .filter((r) => r.id !== 0)
     .map((r) => r.id)
@@ -159,7 +163,7 @@ export function formatAppUrl(
         }
       }
     });
-  } else {
+  } else if (isIdentifications) {
     Object.entries(appStore.identificationsApiParams).forEach(
       ([key, value]) => {
         if (processedKeys.includes(key)) {
