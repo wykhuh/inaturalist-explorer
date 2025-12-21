@@ -70,7 +70,7 @@ export interface MapStore {
   record_type: RecordTypes;
 }
 
-type RecordTypes = "observations" | "identifications" | "other";
+type RecordTypes = "observations" | "identifications" | "about";
 
 type ViewOptions = {
   page?: number;

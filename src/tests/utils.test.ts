@@ -797,6 +797,17 @@ describe("decodeAppUrl resources", () => {
       expect(result).toStrictEqual(expected);
     },
   );
+
+  test("returns object with record_type about for about path", () => {
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      record_type: "about",
+    };
+
+    let result = decodeAppUrl("", "/about/");
+
+    expect(result).toStrictEqual(expected);
+  });
 });
 
 describe("decodeAppUrl options", () => {

@@ -54,6 +54,7 @@ import {
 import { decodeAppUrl } from "./utils.ts";
 import { updateCountForAll } from "./count_utils.ts";
 import { viewAndTemplateObject } from "../components/ObservationsHeader/shared_utils.ts";
+import { addCurrentPageClass } from "../components/Header/utils.ts";
 
 // populate store with basic view data from app url.
 // used to set view in observation header and subview in obdervation view
@@ -66,17 +67,16 @@ export async function initPopulateStore(
     appStore.record_type = urlStore.record_type;
   }
   let isObservations = isObservationsCheck(appStore);
+  let isIdentifications = isIdentificationsCheck(appStore);
 
   if (isObservations) {
     populateObservationsApiParams(appStore, urlStore);
-  } else {
+  } else if (isIdentifications) {
     populateIdentificationsApiParams(appStore, urlStore);
   }
 
   // use url store to populate store view and and subview
-  if (urlStore.currentView) {
-    appStore.currentView = urlStore.currentView;
-  }
+  appStore.currentView = urlStore.currentView;
 
   // populate viewMetadata
   for (let [k, value] of Object.entries(urlStore.viewMetadata)) {
@@ -537,14 +537,16 @@ function processUnobservedByUserData(userData: UserResult, appStore: MapStore) {
 export async function initApp() {
   loggerRender("initApp");
 
-  let viewContainerEl = document.querySelector("#view-container");
-  if (!viewContainerEl) return;
-
   let appStore = window.app.store;
   if (!appStore.currentView) return;
 
   let urlData = decodeAppUrl(window.location.search, window.location.pathname);
   await initPopulateStore(appStore, urlData);
+
+  addCurrentPageClass(appStore.record_type);
+
+  let viewContainerEl = document.querySelector("#view-container");
+  if (!viewContainerEl) return;
 
   let templateName = viewAndTemplateObject(appStore.currentView);
   let view = document.createElement(templateName);

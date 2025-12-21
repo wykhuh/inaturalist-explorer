@@ -446,6 +446,10 @@
     a:focus {
       text-decoration: underline;
     }
+
+    .current-page {
+      text-decoration: underline;
+    }
   }
 
   .tab-pane {

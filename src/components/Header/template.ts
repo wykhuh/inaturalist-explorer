@@ -20,7 +20,7 @@ export const template = html`
             >
           </li>
           <li>
-            <a href="/about/" class="navlink" data-record-type="other">About</a>
+            <a href="/about/" class="navlink" data-record-type="about">About</a>
           </li>
         </ul>
       </nav>

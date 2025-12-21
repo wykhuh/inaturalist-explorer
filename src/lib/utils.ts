@@ -289,12 +289,19 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     },
   } as MapStore;
   let isObservations = true;
+  let isIdentifications = false;
 
   if (path === "/identifications/") {
     store.record_type = "identifications";
     isObservations = false;
-  } else {
+    isIdentifications = true;
+  } else if (path === "/") {
     store.record_type = "observations";
+  } else if (path === "/about/") {
+    store.record_type = "about";
+    isObservations = false;
+  } else {
+    throw Error("invalid record_type");
   }
 
   // convert observation_taxon_id into selectedTaxa
@@ -430,7 +437,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     store.currentView = urlView;
   } else if (isObservations) {
     store.currentView = "observations_observations";
-  } else {
+  } else if (isIdentifications) {
     store.currentView = "identifications_observations";
   }
 

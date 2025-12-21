@@ -49,6 +49,7 @@ export async function pageChangeHandler(
   // process and render data
   let recordType = target.dataset.recordType as RecordTypes;
   appStore.record_type = recordType;
+
   // update selected items ids in observationsApiParams or identificationsApiParams
   updateSelectedResourcesId(appStore);
 
@@ -62,6 +63,8 @@ export async function pageChangeHandler(
     // HACK: trigger proxy store
     appStore.observationsApiParams = appStore.observationsApiParams;
   }
+
+  addCurrentPageClass(appStore.record_type);
 
   // update app url
   updateAppUrl(window.location, appStore);
@@ -106,4 +109,9 @@ export async function pageChangeHandler(
     );
     loggerEvent("dispatch navResourceChange");
   }
+}
+
+export function addCurrentPageClass(recordType: RecordTypes) {
+  let link = document.querySelector(`[data-record-type='${recordType}']`);
+  link?.classList.add("current-page");
 }

@@ -1211,3 +1211,29 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expect(store.color).toBe(colors[1]);
   });
 });
+
+describe("initPopulateStore and initRenderMap resources with about page", () => {
+  test("sets record_type to about", async () => {
+    let store = structuredClone(mapStore);
+
+    expectEmpytMap(store);
+
+    let searchparams = ``;
+    let urlData = decodeAppUrl(searchparams, "/about/");
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expect(store.observationsApiParams).toStrictEqual({
+      ...defaultParams,
+    });
+    expect(store.selectedTaxa).toStrictEqual([]);
+    expectNoPlaces(store);
+    expectNoProjects(store);
+    expectNoRefresh(store);
+    expectNoTaxaIdentification(store);
+    expectNoUsers(store);
+    expect(store.record_type).toStrictEqual("about");
+    expect(store.currentView).toBeUndefined();
+  });
+});
