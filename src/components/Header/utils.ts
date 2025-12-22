@@ -2,11 +2,6 @@ import {
   updateCountForAll,
   updateSelectedResourcesId,
 } from "../../lib/count_utils";
-import {
-  addDefaultTaxaRecordToStore,
-  isIdentificationsCheck,
-  isObservationsCheck,
-} from "../../lib/data_utils";
 import { loggerEvent } from "../../lib/logger";
 import { renderSelectedResources } from "../../lib/search_utils";
 import { updateAppUrl } from "../../lib/utils";
@@ -16,22 +11,26 @@ import type {
   RecordTypes,
   RouterType,
 } from "../../types/app";
-import { viewAndTemplateObject } from "../ObservationsHeader/shared_utils";
+import { viewAndTemplateObject } from "../../data/app_data";
+import {
+  addDefaultTaxaRecordToStore,
+  isIdentificationsCheck,
+  isObservationsCheck,
+  removeOneTaxonFromMap,
+} from "../../lib/data_utils";
 
 export async function resetDefaultTaxa(appStore: MapStore) {
-  // remove all selected taxa when switching to identifications
-  if (isIdentificationsCheck(appStore)) {
-    if (
-      appStore.selectedTaxa.length === 1 &&
-      appStore.selectedTaxa[0].id === 0
-    ) {
-      appStore.selectedTaxa = [];
-    }
-    // add default taxa when switching to obdervations
-  } else if (isObservationsCheck(appStore)) {
+  if (isObservationsCheck(appStore)) {
     if (appStore.selectedTaxa.length === 0) {
       await addDefaultTaxaRecordToStore(appStore);
-      renderSelectedResources(appStore, false);
+    }
+  } else if (isIdentificationsCheck(appStore)) {
+    if (
+      appStore.observationsApiParams.taxon_id === "0" &&
+      appStore.selectedTaxaIdentified.length > 0
+    ) {
+      appStore.selectedTaxa = [];
+      removeOneTaxonFromMap(appStore, 0);
     }
   }
   appStore.selectedTaxa = appStore.selectedTaxa;
@@ -64,22 +63,23 @@ export async function pageChangeHandler(
     appStore.observationsApiParams = appStore.observationsApiParams;
   }
 
-  addCurrentPageClass(appStore.record_type);
+  // update currentView
+  if (appStore.currentView) {
+    let oldView = appStore.currentView.split("_")[1];
+    if (oldView) {
+      if (recordType === "observations" && oldView === "identifications") {
+        appStore.currentView = "observations_observations";
+      } else {
+        appStore.currentView = (recordType + "_" + oldView) as ObservationViews;
+      }
+    }
+  }
 
   // update app url
   updateAppUrl(window.location, appStore);
 
-  // update currentView
-  if (appStore.currentView) {
-    let view = appStore.currentView.split("_")[1];
-    if (view) {
-      if (recordType === "observations" && view === "identifications") {
-        appStore.currentView = "observations_observations";
-      } else {
-        appStore.currentView = (recordType + "_" + view) as ObservationViews;
-      }
-    }
-  }
+  // highlight current page
+  addCurrentPageClass(recordType);
 
   // load view
   let viewContainerEl = document.querySelector("#view-container");
@@ -88,8 +88,8 @@ export async function pageChangeHandler(
   if (appStore.currentView) {
     viewContainerEl.innerHTML = "";
     let templateName = viewAndTemplateObject(appStore.currentView);
-    let view = document.createElement(templateName);
-    viewContainerEl.appendChild(view);
+    let newView = document.createElement(templateName);
+    viewContainerEl.appendChild(newView);
   }
 
   // updates counts for selected items that do not have counts

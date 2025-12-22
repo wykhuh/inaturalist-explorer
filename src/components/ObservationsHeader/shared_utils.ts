@@ -1,3 +1,4 @@
+import { viewAndTemplateObject } from "../../data/app_data";
 import { createHashString, updateAppUrl } from "../../lib/utils";
 import type { MapStore, ObservationViews } from "../../types/app";
 
@@ -145,29 +146,4 @@ export async function createHeaderCountHash(
     .replace(/&subview=[a-z]+/, "");
   let key = params + ":" + countLabel;
   return await createHashString(key);
-}
-
-export function viewAndTemplateObject(targetView: ObservationViews) {
-  switch (targetView) {
-    case "observations_species":
-      return "view-species";
-    case "observations_identifiers":
-      return "view-identifiers";
-    case "observations_observers":
-      return "view-observers";
-    case "observations_observations":
-      return "view-observations";
-    case "identifications_species":
-      return "view-species";
-    case "identifications_identifiers":
-      return "view-identifiers";
-    case "identifications_observers":
-      return "view-observers";
-    case "identifications_observations":
-      return "view-observations";
-    case "identifications_identifications":
-      return "view-identifications";
-    default:
-      throw Error(`Need to add view /template: ${targetView}`);
-  }
 }

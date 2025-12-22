@@ -63,7 +63,7 @@ function adjustCount(url: string, count: number) {
 function adjustCountIdentification(url: string, count: number) {
   let lifeCount = lifeIdentification().identifications_count as number;
   let oakCount = redOakIdentification().identifications_count as number;
-  let allCount = allTaxaIdentification.identification_count;
+  let allCount = allTaxaIdentification.identifications_count;
 
   if (new RegExp(`[?&](observation_)?taxon_id=${allTaxa.id}`).test(url)) {
     count = allCount;
@@ -402,11 +402,13 @@ export function monarch(color = colors[2]) {
 export const allTaxa = {
   ...allTaxaRecord,
   observations_count: 100000,
+  title: "All species",
 };
 
 export const allTaxaIdentification = {
   ...allTaxaRecord,
-  identification_count: 200000,
+  identifications_count: 200000,
+  title: "All species",
 };
 
 export let losangeles: NormalizediNatPlace = {
@@ -519,14 +521,11 @@ export function expectEmpytMap(store: MapStore) {
 
 export function expectNoTaxa(store: MapStore) {
   expect(store.selectedTaxa).toStrictEqual([]);
-  expect(store.selectedTaxa).toStrictEqual([]);
   expect(store.taxaMapLayers).toStrictEqual({});
 }
 
-export function expectNoTaxaIdentification(store: MapStore) {
-  expect(store.selectedTaxa).toStrictEqual([]);
+export function expectNoTaxaIdentified(store: MapStore) {
   expect(store.selectedTaxaIdentified).toStrictEqual([]);
-  expect(store.taxaMapLayers).toStrictEqual({});
 }
 
 export function expectDefaultTaxaRecord(store: MapStore, count = 0) {
@@ -535,6 +534,22 @@ export function expectDefaultTaxaRecord(store: MapStore, count = 0) {
     taxa.observations_count = Math.round(count);
   }
   expect(store.selectedTaxa).toStrictEqual([taxa]);
+  expect(Object.keys(store.taxaMapLayers)).toStrictEqual([taxa.id.toString()]);
+  expect(store.taxaMapLayers[0].length).toBe(3);
+}
+
+export function expectDefaultTaxaRecordIdentification(
+  store: MapStore,
+  count = 0,
+) {
+  let taxa = structuredClone(allTaxaIdentification);
+  delete taxa.observations_count;
+  if (count > 0) {
+    taxa.identifications_count = Math.round(count);
+  }
+
+  expect(store.selectedTaxa).toStrictEqual([taxa]);
+  expect(Object.keys(store.taxaMapLayers)).toEqual([taxa.id.toString()]);
   expect(store.taxaMapLayers[0].length).toBe(3);
 }
 
@@ -558,8 +573,8 @@ export function expectLifeTaxaIdentification(store: MapStore, count = 0) {
   }
 
   expect(store.selectedTaxa).toStrictEqual([taxa]);
-  expect(Object.keys(store.taxaMapLayers)).toEqual([life().id.toString()]);
-  expect(store.taxaMapLayers[life().id].length).toBe(4);
+  expect(Object.keys(store.taxaMapLayers)).toEqual([taxa.id.toString()]);
+  expect(store.taxaMapLayers[taxa.id].length).toBe(4);
 }
 
 export function expectLifeTaxaIdentifiedIdentification(
@@ -574,7 +589,6 @@ export function expectLifeTaxaIdentifiedIdentification(
   }
 
   expect(store.selectedTaxaIdentified).toStrictEqual([taxa]);
-  expect(store.taxaMapLayers).toStrictEqual({});
 }
 
 export function expectOakTaxa(store: MapStore, color = colors[1]) {
@@ -610,9 +624,9 @@ export function expectLifeOakTaxaIdentifications(
   store: MapStore,
   count = [0, 0],
 ) {
-  let taxa1 = life();
+  let taxa1 = lifeIdentification();
   delete taxa1.observations_count;
-  let taxa2 = redOak();
+  let taxa2 = redOakIdentification();
   delete taxa2.observations_count;
 
   if (count[0] > 0) {
@@ -721,6 +735,9 @@ export function expect_LA_SD_Place_Identifications(
 
 export function expectNoUsers(store: MapStore) {
   expect(store.selectedUsers).toStrictEqual([]);
+}
+
+export function expectNoUsersIdentifiers(store: MapStore) {
   expect(store.selectedUsersIdentifiers).toStrictEqual([]);
 }
 

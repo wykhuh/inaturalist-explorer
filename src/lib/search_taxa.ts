@@ -15,6 +15,7 @@ import {
   fetchiNatMapDataForTaxon,
   formatTaxonName,
   getResourceApiParams,
+  isIdentificationsCheck,
   isObservationsCheck,
   removeOneTaxonFromStoreAndMap,
   removeTaxaFromStoreAndMap,
@@ -123,11 +124,19 @@ export async function taxonSelectedHandler(
   appStore: MapStore,
 ) {
   let isObservations = isObservationsCheck(appStore);
+  let isIdentifications = isIdentificationsCheck(appStore);
+
   let resourceApiParams = getResourceApiParams(isObservations);
 
   // remove all taxa if allTaxaRecord is the current taxon
-  if (appStore[resourceApiParams].taxon_id === "0") {
-    removeTaxaFromStoreAndMap(appStore);
+  if (isObservations) {
+    if (appStore.observationsApiParams.taxon_id === "0") {
+      removeTaxaFromStoreAndMap(appStore);
+    }
+  } else if (isIdentifications) {
+    if (appStore.identificationsApiParams.observation_taxon_id === "0") {
+      removeTaxaFromStoreAndMap(appStore);
+    }
   }
 
   let { title, subtitle } = formatTaxonName(selection, appStore);
@@ -156,7 +165,7 @@ export async function taxonSelectedHandler(
         appStore.observationsApiParams.colors,
       ),
     };
-  } else {
+  } else if (isIdentifications) {
     resetPageNumber(appStore);
     appStore.identificationsApiParams = {
       ...appStore.identificationsApiParams,
@@ -176,7 +185,7 @@ export async function taxonSelectedHandler(
       ...appStore[resourceApiParams],
       taxon_id: taxon.id.toString(),
     };
-  } else {
+  } else if (isIdentifications) {
     recordParams = {
       ...appStore[resourceApiParams],
       observation_taxon_id: taxon.id.toString(),
@@ -205,10 +214,21 @@ export async function removeTaxon(taxonId: number, appStore: MapStore) {
   removeOneTaxonFromStoreAndMap(appStore, taxonId);
 
   // if no selected taxa, load allTaxaRecord
-  if (appStore.selectedTaxa.length === 0 && isObservationsCheck(appStore)) {
-    await addDefaultTaxaRecordToStore(appStore);
-    await addDefaultTaxaRecordToMap(appStore);
+  if (isObservationsCheck(appStore)) {
+    if (appStore.selectedTaxa.length === 0) {
+      await addDefaultTaxaRecordToStore(appStore);
+      await addDefaultTaxaRecordToMap(appStore);
+    }
+  } else if (isIdentificationsCheck(appStore)) {
+    if (
+      appStore.selectedTaxa.length === 0 &&
+      appStore.selectedTaxaIdentified.length === 0
+    ) {
+      await addDefaultTaxaRecordToStore(appStore);
+      await addDefaultTaxaRecordToMap(appStore);
+    }
   }
+
   await updateCountForAll("all", appStore);
   renderSelectedResources(appStore, true);
 }

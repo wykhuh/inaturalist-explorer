@@ -1,16 +1,23 @@
 import type { ObservationSubviews, ObservationViews } from "../types/app";
 
-export const validViews: ObservationViews[] = [
+export const validObservationsViews: ObservationViews[] = [
   "observations_observations",
   "observations_species",
   "observations_identifiers",
   "observations_observers",
+];
+
+export const validIdentificationsViews: ObservationViews[] = [
   "identifications_observations",
   "identifications_species",
   "identifications_identifiers",
   "identifications_observers",
   "identifications_identifications",
 ];
+
+export const validViews: ObservationViews[] = validObservationsViews.concat(
+  validIdentificationsViews,
+);
 
 export const validObservationsSubviews: ObservationSubviews[] = [
   "grid",

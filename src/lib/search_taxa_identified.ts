@@ -1,9 +1,12 @@
 import type { NormalizediNatTaxon, MapStore } from "../types/app.d.ts";
 import {
+  addDefaultTaxaRecordToMap,
+  addDefaultTaxaRecordToStore,
   addValueToCommaSeparatedString,
   formatTaxonName,
   isObservationsCheck,
   removeOneTaxonIdentifiedFromStore,
+  removeTaxaFromStoreAndMap,
   resetPageNumber,
 } from "./data_utils.ts";
 import { renderSelectedResources } from "./search_utils.ts";
@@ -36,6 +39,11 @@ export async function taxonIdentifiedSelectedHandler(
     title,
     subtitle,
   };
+
+  // remove default taxa
+  if (appStore.identificationsApiParams.observation_taxon_id === "0") {
+    removeTaxaFromStoreAndMap(appStore);
+  }
 
   appStore.selectedTaxaIdentified = [...appStore.selectedTaxaIdentified, taxon];
   resetPageNumber(appStore);
@@ -80,6 +88,12 @@ export async function removeTaxonIdentified(
   appStore: MapStore,
 ) {
   removeOneTaxonIdentifiedFromStore(appStore, taxonId);
+
+  // if no selected taxa, load allTaxaRecord
+  if (appStore.selectedTaxa.length === 0) {
+    await addDefaultTaxaRecordToStore(appStore);
+    await addDefaultTaxaRecordToMap(appStore);
+  }
 
   await updateCountForAll("all", appStore);
   renderSelectedResources(appStore, true);

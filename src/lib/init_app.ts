@@ -45,6 +45,7 @@ import {
   isObservationsCheck,
   isIdentificationsCheck,
   getResourceApiParams,
+  isOtherCheck,
 } from "./data_utils";
 import { loggerEvent, loggerRender, loggerStore } from "./logger.ts";
 import {
@@ -53,11 +54,11 @@ import {
 } from "./search_utils.ts";
 import { decodeAppUrl } from "./utils.ts";
 import { updateCountForAll } from "./count_utils.ts";
-import { viewAndTemplateObject } from "../components/ObservationsHeader/shared_utils.ts";
+import { viewAndTemplateObject } from "../data/app_data.ts";
 import { addCurrentPageClass } from "../components/Header/utils.ts";
 
 // populate store with basic view data from app url.
-// used to set view in observation header and subview in obdervation view
+// used on initial page load.
 export async function initPopulateStore(
   appStore: MapStore,
   urlStore: MapStore,
@@ -175,7 +176,7 @@ export async function initPopulateStore(
     appStore.selectedUnobservedByUser,
   );
 
-  // taxa data
+  // load selected taxa
   if (urlStore.selectedTaxa && urlStore.selectedTaxa.length > 0) {
     for await (const urlStoreTaxon of urlStore.selectedTaxa) {
       let taxonData = await getTaxonById(urlStoreTaxon.id);
@@ -184,11 +185,9 @@ export async function initPopulateStore(
       }
       processTaxonData(taxonData, appStore, urlStore);
     }
-  } else if (urlStore.record_type === "observations") {
-    await addDefaultTaxaRecordToStore(appStore);
   }
 
-  // taxa data
+  // load taxa identified data
   if (
     urlStore.selectedTaxaIdentified &&
     urlStore.selectedTaxaIdentified.length > 0
@@ -199,6 +198,16 @@ export async function initPopulateStore(
         continue;
       }
       processTaxonIdentifiedData(taxonData, appStore, urlStore);
+    }
+  }
+
+  // add default taxa
+  if (
+    urlStore.selectedTaxa === undefined &&
+    urlStore.selectedTaxaIdentified === undefined
+  ) {
+    if (isIdentifications || isObservations) {
+      await addDefaultTaxaRecordToStore(appStore);
     }
   }
 
@@ -245,10 +254,12 @@ function populateIdentificationsApiParams(
   }
 }
 
-// create map
+// create map.
+// used on inital app load, changing views, changing pages.
 export async function initRenderMap(appStore: MapStore) {
   loggerRender("++ initRenderMap start");
   let isObservations = isObservationsCheck(appStore);
+  let isOther = isOtherCheck(appStore);
 
   let map = L.map("map", {
     center: [0, 0],
@@ -282,18 +293,17 @@ export async function initRenderMap(appStore: MapStore) {
     addBBoxDataToMap(appStore);
   }
 
-  // load Default Taxa map tiles if no selected Taxa
-  if (appStore.selectedTaxa.length === 0) {
-    if (isObservationsCheck(appStore)) {
-      await addDefaultTaxaRecordToMap(appStore);
-    }
-    // update default Taxa map tiles;
-  } else if (appStore.selectedTaxa[0].id === 0) {
-    if (isObservationsCheck(appStore)) {
-      await updateTilesForSelectedTaxa(appStore);
-    }
-    // update taxa tiles for selected taxa
+  // load default or selected taxa map layer
+  if (isOther) {
+    // do not load map tiles
+  } else if (
+    appStore.selectedTaxa.length === 1 &&
+    appStore.selectedTaxa[0].id === 0
+  ) {
+    // load default Taxa map tiles
+    await addDefaultTaxaRecordToMap(appStore);
   } else {
+    // update taxa tiles for selected taxa
     await updateTilesForSelectedTaxa(appStore);
   }
 

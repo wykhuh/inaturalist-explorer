@@ -12,31 +12,15 @@ import {
 import type { MapStore } from "../../types/app";
 import { updateHeaderCount } from "../ObservationsHeader/shared_utils";
 
-function nullObservations(_searchParams = "", _perPage = 0) {
-  return { total_results: "--" };
-}
-
 export function updateCountsHeader(appStore: MapStore) {
   // NOTE:observations has different search params than identifications
   let params = cleanupIdentificationsObservationsParams(appStore);
-  if (
-    appStore.selectedTaxa.length === 0 &&
-    appStore.identificationsApiParams.observation_iconic_taxon_id === undefined
-  ) {
-    updateHeaderCount(
-      "identifications_observations",
-      nullObservations,
-      params,
-      appStore,
-    );
-  } else {
-    updateHeaderCount(
-      "identifications_observations",
-      getObservations,
-      params,
-      appStore,
-    );
-  }
+  updateHeaderCount(
+    "identifications_observations",
+    getObservations,
+    params,
+    appStore,
+  );
 
   let identificationParams = cleanupIdentificationParams(appStore);
   updateHeaderCount(

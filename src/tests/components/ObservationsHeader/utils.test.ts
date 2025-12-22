@@ -17,12 +17,10 @@ import {
   defaultQuery,
   defaultParams,
 } from "../../test_helpers";
-import {
-  updateView,
-  viewAndTemplateObject,
-} from "../../../components/ObservationsHeader/shared_utils";
+import { updateView } from "../../../components/ObservationsHeader/shared_utils";
 import { template } from "../../../components/ObservationsHeader/template";
 import type { ObservationViews } from "../../../types/app";
+import { viewAndTemplateObject } from "../../../data/app_data";
 
 const server = createMockServer();
 

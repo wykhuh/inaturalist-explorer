@@ -101,15 +101,23 @@ export async function fetchiNatMapDataForTaxon(
 // ================
 
 export async function addDefaultTaxaRecordToStore(appStore: MapStore) {
-  appStore.observationsApiParams = {
-    ...appStore.observationsApiParams,
-    colors: iNatOrange,
-    taxon_id: "0",
-  };
+  if (isObservationsCheck(appStore)) {
+    appStore.observationsApiParams = {
+      ...appStore.observationsApiParams,
+      colors: iNatOrange,
+      taxon_id: "0",
+    };
+  } else if (isIdentificationsCheck(appStore)) {
+    appStore.identificationsApiParams = {
+      ...appStore.identificationsApiParams,
+      observation_taxon_id: "0",
+    };
+  }
+
   appStore.color = iNatOrange;
 
   await updateCountForOne(
-    allTaxaRecord,
+    structuredClone(allTaxaRecord),
     "selectedTaxa",
     appStore,
     appStore.observationsApiParams,
@@ -117,7 +125,7 @@ export async function addDefaultTaxaRecordToStore(appStore: MapStore) {
 }
 
 export async function addDefaultTaxaRecordToMap(appStore: MapStore) {
-  await fetchiNatMapDataForTaxon(allTaxaRecord, appStore);
+  await fetchiNatMapDataForTaxon(structuredClone(allTaxaRecord), appStore);
 }
 
 export function removeOneTaxonFromStoreAndMap(
@@ -788,6 +796,10 @@ export function isIdentificationsCheck(appStore: MapStore) {
 
 export function isObservationsCheck(appStore: MapStore) {
   return appStore.record_type === "observations";
+}
+
+export function isOtherCheck(appStore: MapStore) {
+  return appStore.record_type === "about";
 }
 
 export function getResourceApiParams(isObservations: boolean) {
