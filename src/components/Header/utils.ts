@@ -31,6 +31,11 @@ export async function resetDefaultTaxa(appStore: MapStore) {
     ) {
       appStore.selectedTaxa = [];
       removeOneTaxonFromMap(appStore, 0);
+    } else if (
+      appStore.selectedTaxa.length === 0 &&
+      appStore.selectedTaxaIdentified.length === 0
+    ) {
+      await addDefaultTaxaRecordToStore(appStore);
     }
   }
   appStore.selectedTaxa = appStore.selectedTaxa;
@@ -64,6 +69,7 @@ export async function pageChangeHandler(
   }
 
   // update currentView
+  // identifications page and observations page have currentView
   if (appStore.currentView) {
     let oldView = appStore.currentView.split("_")[1];
     if (oldView) {
@@ -73,6 +79,11 @@ export async function pageChangeHandler(
         appStore.currentView = (recordType + "_" + oldView) as ObservationViews;
       }
     }
+    // about page does not have currentView
+  } else {
+    appStore.currentView = (recordType +
+      "_" +
+      "observations") as ObservationViews;
   }
 
   // update app url

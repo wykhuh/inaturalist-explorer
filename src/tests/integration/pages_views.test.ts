@@ -41,6 +41,7 @@ import { taxonSelectedHandler } from "../../lib/search_taxa.ts";
 import { viewChangeHandler } from "../../components/ObservationsHeader/shared_utils.ts";
 import { taxonIdentifiedSelectedHandler } from "../../lib/search_taxa_identified.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
+import "../../components/ViewObservations/component.ts";
 
 beforeEach(() => {
   const { JSDOM } = jsdom;
@@ -405,6 +406,42 @@ describe("click on site header to change page", () => {
     expect(mainEl?.innerHTML).toBe(
       `<page-identifications></page-identifications>`,
     );
+
+    let viewContainerEl = document.querySelector(
+      "#view-container",
+    ) as HTMLDivElement;
+    expect(viewContainerEl?.innerHTML).toBe(
+      `<view-observations></view-observations>`,
+    );
+  });
+
+  test("switch from about page to observations page", async () => {
+    let store = structuredClone(mapStore);
+
+    let searchparams = "";
+    let urlData = decodeAppUrl(searchparams, "/about/");
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
+    expect(store.record_type).toStrictEqual("about");
+    expect(store.currentView).toBeUndefined();
+
+    await pageChangeHandler(observationsPageClick(), store, Router);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
+    expect(store.selectedTaxa).toStrictEqual([allTaxa]);
+    expect(store.record_type).toStrictEqual("observations");
+    expect(store.currentView).toStrictEqual("observations_observations");
+    expect(store.observationsApiParams).toStrictEqual({
+      ...defaultParams,
+      taxon_id: `${allTaxa.id}`,
+      colors: `${allTaxa.color}`,
+    });
+    expect(store.identificationsApiParams).toStrictEqual({});
+
+    let mainEl = document.querySelector("#app") as HTMLDivElement;
+    expect(mainEl?.innerHTML).toBe(`<page-observations></page-observations>`);
 
     let viewContainerEl = document.querySelector(
       "#view-container",
