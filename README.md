@@ -4,7 +4,7 @@
 
 iNaturalist Explorer is a website that lets people explore iNaturalist data. This site adds some features that is missing from [iNaturalist Explore Observations](https://www.inaturalist.org/observations) page. This site gets data from the iNaturalist API.
 
-[Live Demo](https://wykhuh.github.io/inaturalist-explorer/)
+[Live Demo](https://inat-explorer.dataexplorers.info)
 
 ## Features
 

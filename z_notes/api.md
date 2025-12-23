@@ -247,3 +247,8 @@ https://forum.inaturalist.org/t/ideas-for-a-revamped-explore-observations-search
 ==
 
 http://localhost:5173/?taxon_id=1,47126&place_id=962,829&user_id=2902070,81261&colors=%2366ccee,%23228833&locale=en&verifiable=true&spam=false&ident_user_id=150454&page=4
+
+
+==
+
+https://api.inaturalist.org/v2/docs/
