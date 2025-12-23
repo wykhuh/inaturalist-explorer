@@ -72,6 +72,9 @@ import {
   expectDefaultTaxaRecordIdentification,
   expectNoUsersIdentifiers,
   expectNoTaxa,
+  expectUser1Reviewer,
+  gridLabel_allTaxaRecord_user1Reviewer,
+  expectNoUnobservedUsers,
 } from "../test_helpers.ts";
 import type {
   IdentificationsApiParams,
@@ -727,6 +730,41 @@ describe("initPopulateStore and initRenderMap resources", () => {
     let expectedParams: ObservationsApiParams = {
       ...defaultParams,
       unobserved_by_user_id: user1.id,
+      taxon_id: allTaxa.id.toString(),
+      colors: iNatOrange,
+    };
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
+    expect(store.identificationsApiParams).toStrictEqual({});
+    expect(store.color).toBe(iNatOrange);
+  });
+
+  test("loads and renders reviewer data based on url params", async () => {
+    let store = structuredClone(mapStore);
+
+    expectEmpytMap(store);
+
+    let searchparams = `?locale=en&viewer_id=${user1.id}&${defaultQuery}`;
+    let urlData = decodeAppUrl(searchparams, "/");
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expectNoPlaces(store);
+    expectNoRefresh(store);
+    expectNoProjects(store);
+    expectDefaultTaxaRecord(store);
+    expectNoTaxaIdentified(store);
+    expectNoUsers(store);
+    expectNoUsersIdentifiers(store);
+    expectNoUnobservedUsers(store);
+    expectUser1Reviewer(store);
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord_user1Reviewer,
+    ]);
+    let expectedParams: ObservationsApiParams = {
+      ...defaultParams,
+      viewer_id: user1.id,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
     };

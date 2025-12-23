@@ -425,9 +425,17 @@ export function decodeAppUrl(searchParams: string, path = "/") {
 
   if ("unobserved_by_user_id" in urlParams) {
     if (isObservations) {
-      let id = Number(urlParams.unobserved_by_user_id);
+      store.selectedUnobservedByUser = {
+        id: Number(urlParams.unobserved_by_user_id),
+      } as any;
+    }
+  }
 
-      store.selectedUnobservedByUser = { id: Number(id) } as any;
+  if ("viewer_id" in urlParams) {
+    if (isObservations) {
+      store.selectedReviewer = {
+        id: Number(urlParams.viewer_id),
+      } as any;
     }
   }
 

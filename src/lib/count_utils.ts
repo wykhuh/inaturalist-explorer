@@ -280,6 +280,7 @@ export function updateSelectedResourcesId(
   let taxon_observed_id = appStore.selectedTaxa.map((r) => r.id);
   let taxon_identified_id = appStore.selectedTaxaIdentified.map((r) => r.id);
   let unobserved_id = appStore.selectedUnobservedByUser.id;
+  let viewer_id = appStore.selectedReviewer.id;
   let user_observer_id = appStore.selectedUsers.map((r) => r.id);
   let user_identifier_id = appStore.selectedUsersIdentifiers.map((r) => r.id);
   if (recordType === "observations") {
@@ -294,6 +295,9 @@ export function updateSelectedResourcesId(
     }
     if (unobserved_id) {
       appStore.observationsApiParams.unobserved_by_user_id = unobserved_id;
+    }
+    if (viewer_id) {
+      appStore.observationsApiParams.viewer_id = viewer_id;
     }
     if (user_observer_id.length > 0) {
       appStore.observationsApiParams.user_id = user_observer_id.join(",");

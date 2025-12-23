@@ -60,6 +60,9 @@ function formatDescription(
   if (observationsApiParams.unobserved_by_user_id) {
     text += `, unobserved_by_user_id ${observationsApiParams.unobserved_by_user_id}`;
   }
+  if (observationsApiParams.viewer_id) {
+    text += `, viewer_id ${observationsApiParams.viewer_id}`;
+  }
   return text;
 }
 

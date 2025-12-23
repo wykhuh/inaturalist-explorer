@@ -16,6 +16,7 @@ export const mapStore: MapStore = {
   selectedUsers: [],
   selectedUsersIdentifiers: [],
   selectedUnobservedByUser: {} as NormalizediNatUser,
+  selectedReviewer: {} as NormalizediNatUser,
   observationsApiParams: { verifiable: true, spam: false, locale: "en" },
   identificationsApiParams: {},
   color: "",

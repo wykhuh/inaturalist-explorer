@@ -109,6 +109,28 @@ export const template = html`
                     </select>
                   </div>
                 </fieldset>
+
+                <fieldset>
+                  <legend>Review Status</legend>
+                  <div class="form-group">
+                    <label for="reviewed">Reviewed</label>
+                    <select id="reviewed" name="reviewed">
+                      <option></option>
+                      <option value="true">True</option>
+                      <option value="false">False</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="reviewer-search">Reviewer</label>
+                    <input
+                      name="viewer_id"
+                      id="reviewer-search"
+                      type="text"
+                      autocomplete="off"
+                    />
+                  </div>
+                </fieldset>
+
                 <fieldset class="users">
                   <legend>Users</legend>
 

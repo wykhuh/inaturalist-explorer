@@ -13,6 +13,7 @@ refreshBoundingBox -> updateTilesForSelectedTaxa
 
 ==
 
+
 lib/init_app.ts
 
 function initRenderMap(appStore: MapStore)

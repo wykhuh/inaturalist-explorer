@@ -249,6 +249,9 @@ export let gridLabel_allTaxaRecord_user2Identifier =
 export let gridLabel_allTaxaRecord_user1Unobserved =
   "overlay: iNat grid, taxon_id 0, unobserved_by_user_id 222137";
 
+export let gridLabel_allTaxaRecord_user1Reviewer =
+  "overlay: iNat grid, taxon_id 0, viewer_id 222137";
+
 export let gridLabel_life_la_user1 =
   "overlay: iNat grid, taxon_id 48460, place_id 962, user_id 222137";
 
@@ -315,12 +318,19 @@ export let gridLabel_oaks_places_identifier =
   "overlay: iNat grid, taxon_id 861036, place_id 962,829, project_id 237729,229902, user_id 222137,677256, " +
   "ident_user_id 222137";
 
-export let gridLabel_life_places_resources =
+export let gridLabel_life_places_unobserved =
   "overlay: iNat grid, taxon_id 48460, place_id 962,829, project_id 237729,229902, user_id 222137,677256, " +
   "ident_user_id 222137, unobserved_by_user_id 222137";
-export let gridLabel_oaks_places_resources =
+export let gridLabel_oaks_places_unobserved =
   "overlay: iNat grid, taxon_id 861036, place_id 962,829, project_id 237729,229902, user_id 222137,677256, " +
   "ident_user_id 222137, unobserved_by_user_id 222137";
+
+export let gridLabel_life_places_viewer =
+  "overlay: iNat grid, taxon_id 48460, place_id 962,829, project_id 237729,229902, user_id 222137,677256, " +
+  "ident_user_id 222137, unobserved_by_user_id 222137, viewer_id 222137";
+export let gridLabel_oaks_places_viewer =
+  "overlay: iNat grid, taxon_id 861036, place_id 962,829, project_id 237729,229902, user_id 222137,677256, " +
+  "ident_user_id 222137, unobserved_by_user_id 222137, viewer_id 222137";
 
 export let gridLabel_life_resource =
   "overlay: iNat grid, taxon_id 48460, place_id 962, project_id 237729, user_id 222137";
@@ -741,6 +751,10 @@ export function expectNoUsersIdentifiers(store: MapStore) {
   expect(store.selectedUsersIdentifiers).toStrictEqual([]);
 }
 
+export function expectNoUnobservedUsers(store: MapStore) {
+  expect(store.selectedUnobservedByUser).toStrictEqual({});
+}
+
 export function expectRefreshPlace(store: MapStore, count = 0, type = "zero") {
   let place = structuredClone(refreshPlace);
   if (type !== "zero") {
@@ -870,6 +884,14 @@ export function expectUser1UnobservedByUser(store: MapStore, count = 0) {
     userA.observations_count = Math.round(count);
   }
   expect(store.selectedUnobservedByUser).toEqual(userA);
+}
+
+export function expectUser1Reviewer(store: MapStore, count = 0) {
+  let userA = structuredClone(user1);
+  if (count > 0) {
+    userA.observations_count = Math.round(count);
+  }
+  expect(store.selectedReviewer).toEqual(userA);
 }
 
 export function expectUser2Identifier(store: MapStore, count = 0) {

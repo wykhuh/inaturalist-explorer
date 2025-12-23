@@ -379,6 +379,14 @@ export function removeOneUnobservedByUserFromStore(appStore: MapStore) {
   resetPageNumber(appStore);
 }
 
+export function removeOneReviewerFromStore(appStore: MapStore) {
+  appStore.selectedReviewer = {} as NormalizediNatUser;
+  delete appStore.observationsApiParams.reviewed;
+  delete appStore.observationsApiParams.viewer_id;
+
+  resetPageNumber(appStore);
+}
+
 // ================
 // misc
 // ================

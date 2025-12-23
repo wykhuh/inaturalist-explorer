@@ -14,17 +14,14 @@ import { updateCountForAll } from "./count_utils.ts";
 import { renderSelectedFiltersList } from "../components/ObservationsFilters/shared_utils.ts";
 import { processFiltersForm } from "../components/ObservationsFilters/utils.ts";
 
-export function setupUnobservedByUserSearch(
-  selector: string,
-  appStore: MapStore,
-) {
+export function setupReviewerSearch(selector: string, appStore: MapStore) {
   const autoCompleteUsersJS = setupUserSearch(selector, appStore);
 
   return autoCompleteUsersJS;
 }
 
 // called by autocomplete search when an user option is selected
-export async function unobservedByUserSelectedHandler(
+export async function reviewerSelectedHandler(
   selection: NormalizediNatUser,
   _query: string,
   appStore: MapStore,
@@ -33,17 +30,17 @@ export async function unobservedByUserSelectedHandler(
   if (!isObservations) return;
 
   // add to store
-  appStore.selectedUnobservedByUser = selection;
+  appStore.selectedReviewer = selection;
   resetPageNumber(appStore);
   appStore.observationsApiParams = {
     ...appStore.observationsApiParams,
-    unobserved_by_user_id: selection.id,
+    viewer_id: selection.id,
   };
 
   await updateTilesForSelectedTaxa(appStore);
   await updateCountForAll("all", appStore);
 
-  // add unobserved_by_user_id to filters list shown in filters modal
+  // add reviewer_id to filters list shown in filters modal
   const form = document.querySelector("#filters-form") as HTMLFormElement;
   if (form) {
     const data = new FormData(form);
@@ -56,8 +53,8 @@ export async function unobservedByUserSelectedHandler(
   renderSelectedResources(appStore, true);
 }
 
-export async function removeUnobservedByUser(appStore: MapStore) {
-  if (!appStore.selectedUsers) return;
+export async function removeReviewer(appStore: MapStore) {
+  if (!appStore.selectedReviewer) return;
 
   // remove user
   removeOneUnobservedByUserFromStore(appStore);

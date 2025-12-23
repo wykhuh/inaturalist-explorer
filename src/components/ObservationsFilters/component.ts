@@ -15,6 +15,10 @@ import {
 } from "./utils";
 import { template } from "./template";
 import { renderSelectedFiltersList, tabClickHandler } from "./shared_utils";
+import {
+  reviewerSelectedHandler,
+  setupReviewerSearch,
+} from "../../lib/search_reviewer";
 
 class ObservationFilters extends HTMLElement {
   constructor() {
@@ -50,7 +54,7 @@ class ObservationFilters extends HTMLElement {
   }
 
   handleEvent(event: Event) {
-    let target = event.target as HTMLHtmlElement;
+    let target = event.target as HTMLInputElement;
     if (!target) return;
 
     let events = ["navResourceChange", "storePopulated"];
@@ -69,7 +73,20 @@ class ObservationFilters extends HTMLElement {
 
     if (this.formEl) {
       if (event.type === "input") {
-        this.formChangeHandler(event, this.formEl);
+        // use formChangeHandler to clear user; use autocomplete to add user
+        if (target.id === "unobserved-by-user-search") {
+          if (target.value === "") {
+            this.formChangeHandler(event, this.formEl);
+          }
+          // use formChangeHandler to clear user; use autocomplete to add user
+        } else if (target.id === "reviewer-search") {
+          if (target.value === "") {
+            this.formChangeHandler(event, this.formEl);
+          }
+          // use formChangeHandler to add and clear other fields
+        } else {
+          this.formChangeHandler(event, this.formEl);
+        }
       }
 
       if (event.type === "reset") {
@@ -86,6 +103,9 @@ class ObservationFilters extends HTMLElement {
 
     setupUnobservedByUserSearch("#unobserved-by-user-search", window.app.store);
     searchSetup("#unobserved-by-user-search", unobservedByUserSelectedHandler);
+
+    setupReviewerSearch("#reviewer-search", window.app.store);
+    searchSetup("#reviewer-search", reviewerSelectedHandler);
 
     // use store to set values the form on page load
     initFilters(window.app.store);

@@ -171,6 +171,13 @@ export async function initPopulateStore(
     }
   }
 
+  if (urlStore.selectedReviewer?.id) {
+    let data = await getUserById(urlStore.selectedReviewer.id);
+    if (data) {
+      processReviewerData(data, appStore);
+    }
+  }
+
   loggerStore(
     "++ initPopulateStore selectedUnobservedByUser",
     appStore.selectedUnobservedByUser,
@@ -542,6 +549,18 @@ function processUnobservedByUserData(userData: UserResult, appStore: MapStore) {
   };
 
   appStore.observationsApiParams.unobserved_by_user_id = userData.id;
+}
+
+function processReviewerData(userData: UserResult, appStore: MapStore) {
+  if (isIdentificationsCheck(appStore)) return;
+
+  appStore.selectedReviewer = {
+    id: userData.id,
+    name: userData.name,
+    login: userData.login,
+  };
+
+  appStore.observationsApiParams.viewer_id = userData.id;
 }
 
 export async function initApp() {

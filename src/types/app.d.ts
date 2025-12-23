@@ -31,6 +31,7 @@ export interface MapStore {
   selectedUsers: NormalizediNatUser[];
   selectedUsersIdentifiers: NormalizediNatUser[];
   selectedUnobservedByUser: NormalizediNatUser;
+  selectedReviewer: NormalizediNatUser;
   selectedProjects: NormalizediNatProject[];
   observationsApiParams: ObservationsApiParams;
   identificationsApiParams: IdentificationsApiParams;
@@ -168,6 +169,8 @@ interface ObservationsApiParams extends ObservationsApiFilterableParams {
   user_id?: string; // comma-seperated string
   ident_user_id?: string; // comma-seperated string
   unobserved_by_user_id?: number;
+  reviewed?: boolean;
+  viewer_id?: number;
   page?: number;
   order?: string;
   order_by?: string;

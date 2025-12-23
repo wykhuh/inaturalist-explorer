@@ -19,3 +19,20 @@ https://forum.inaturalist.org/t/searching-for-annotations-basic-to-advanced/6537
 ==
 Changes to City Nature Challenge 2026: from the Global Organizing Team
 https://forum.inaturalist.org/t/changes-to-city-nature-challenge-2026-from-the-global-organizing-team/72291/38
+
+==
+
+https://github.com/jumear/stirfry/tree/master
+
+https://jumear.github.io/stirfry/iNat_UTFGrid_data_interpreter
+
+https://github.com/jumear/stirfry/blob/master/iNat_UTFgrid_based_density_comparison_map.html
+
+==
+
+https://forum.inaturalist.org/t/world-map-representation-is-mercator-the-most-adequate-for-inat/7806/10
+
+
+https://forum.inaturalist.org/t/access-to-the-api-denied/57916/4
+
+https://forum.inaturalist.org/t/is-there-a-way-to-exclude-my-observations-from-a-search/71428

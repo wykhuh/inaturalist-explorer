@@ -336,6 +336,23 @@ export function initFilters(appStore: MapStore) {
       inputEl.value = appStore.selectedUsersIdentifiers[0].login;
     }
   }
+
+  if (observationsApiParams.viewer_id !== undefined) {
+    let inputEl = document.querySelector(
+      "#reviewer-search",
+    ) as HTMLInputElement;
+    if (inputEl) {
+      inputEl.value = appStore.selectedReviewer.login;
+    }
+  }
+
+  if (observationsApiParams.reviewed !== undefined) {
+    setSelectedOptionTrueFalse(
+      "#filters-form",
+      "reviewed",
+      observationsApiParams.reviewed,
+    );
+  }
 }
 
 export function renderRankSelect(selectSelector: string, defaultValue: string) {

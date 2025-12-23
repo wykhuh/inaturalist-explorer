@@ -71,6 +71,11 @@ export const ObservationsApiNonFilterableNames = [
 
 export const ObservationsApiFilterableNames = [
   "captive",
+  "created_d1",
+  "created_d2",
+  "created_month",
+  "created_on",
+  "created_year",
   "d1",
   "d2",
   "endemic",
@@ -89,11 +94,13 @@ export const ObservationsApiFilterableNames = [
   "photos",
   "popular",
   "quality_grade",
+  "reviewed",
   "sound_license",
   "sounds",
   "threatened",
   "unobserved_by_user_id",
   "verifiable",
+  "viewer_id",
   "year",
 
   // TODO: needs to be implemented
@@ -131,8 +138,6 @@ export const ObservationsApiFilterableNames = [
   "hour",
   "day",
   "created_day",
-  "created_month",
-  "created_year",
   "term_id",
   "term_value_id",
   "without_term_id",
@@ -141,9 +146,6 @@ export const ObservationsApiFilterableNames = [
   "acc_above",
   "acc_below",
   "acc_below_or_unknown",
-  "created_d1",
-  "created_d2",
-  "created_on",
   "apply_project_rules_for",
   "cs",
   "csa",
@@ -158,8 +160,6 @@ export const ObservationsApiFilterableNames = [
   "q",
   "search_on",
   "updated_since",
-  "viewer_id",
-  "reviewed",
   "spam",
 ];
 
@@ -189,6 +189,7 @@ export const IdentificationsApiFilterableNames = [
   "observation_lrank",
   "observation_hrank",
   "quality_grade",
+  "reviewed",
 
   // TODO: needs to be implemented
   "rank",
