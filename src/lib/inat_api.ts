@@ -238,7 +238,7 @@ export async function getObservations(appParams: string, perPage: number) {
 
   let searchParams = normalizeAppParams(appParams);
   let url =
-    `${observations_api}?${searchParams}&ttl=3600` +
+    `${observations_api}?${searchParams}&ttl=180` +
     `&per_page=${perPage}` +
     `&fields=${fields}`;
 
