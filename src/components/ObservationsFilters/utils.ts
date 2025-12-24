@@ -314,9 +314,12 @@ export function initFilters(appStore: MapStore) {
   if (observationsApiParams.year !== undefined) {
     setInputChecked("#filters-form input#years_date", true);
     setInputDisabled("#filters-form select#year", false);
-    observationsApiParams.year.split(",").forEach((value) => {
-      setSelectedOption(`#filters-form select#year option[value='${value}']`);
-    });
+    observationsApiParams.year
+      .toString()
+      .split(",")
+      .forEach((value) => {
+        setSelectedOption(`#filters-form select#year option[value='${value}']`);
+      });
   }
 
   if (observationsApiParams.unobserved_by_user_id !== undefined) {
