@@ -1,14 +1,14 @@
 import type { ObservationsResult } from "../../types/inat_api";
 import type { DataComponent, MapStore } from "../../types/app";
 import {
-  formatAvatar,
   renderMedia,
   renderMediaCounts,
   renderObservationMetadataCounts,
   renderQualityGrade,
   renderTaxonNames,
+  renderUser,
 } from "../../lib/render_utils";
-import { iNatObservationUrl, iNatUserUrl } from "../../data/inat_data";
+import { iNatObservationUrl } from "../../data/inat_data";
 import { setupComponent } from "../../lib/component_utils";
 import { template } from "./template";
 
@@ -49,11 +49,7 @@ class CardObservation extends HTMLElement {
 
     if (data.taxon) {
       if (data.user) {
-        detailsContent += `<span class="avatar-name">
-          <a href="${iNatUserUrl}/${data.user.login}" title="${data.user.login}">
-          ${formatAvatar(data.user)}
-          </a>
-        </span>`;
+        detailsContent += renderUser(data.user, true);
       }
 
       detailsContent += renderTaxonNames(

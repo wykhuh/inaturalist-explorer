@@ -1,6 +1,7 @@
 import type { NormalizediNatTaxon, MapStore } from "../types/app";
-import { speciesRanks } from "../data/inat_data.ts";
+import { iNatTaxaUrl, iNatUserUrl, speciesRanks } from "../data/inat_data.ts";
 import type {
+  DefaultPhoto,
   Observation,
   ObservationPhoto,
   ObservationSound,
@@ -23,6 +24,7 @@ import {
 import { capitalizeFirstLetter, formatTaxonName } from "./data_utils.ts";
 import { logger } from "./logger.ts";
 import { pluralize } from "./utils.ts";
+import { html } from "./component_utils.ts";
 
 export function formatAvatar(user: ObservationUser) {
   let imgUrl = user.icon_url;
@@ -134,19 +136,7 @@ export function renderMedia(
       url = photos[0].photo?.url;
     }
     if (url) {
-      let altText = "observation of ";
-      if (taxon) {
-        let { title, subtitle, titleAriaLabel, subtitleAriaLabel } =
-          formatTaxonName(taxon, appStore);
-        if (title) {
-          altText += `${titleAriaLabel} ${title}`;
-        }
-        if (subtitle) {
-          altText += `, ${subtitleAriaLabel} ${subtitle}`;
-        }
-      } else {
-        altText += "unknown";
-      }
+      let altText = formatTaxonPhotoAltText(taxon, appStore);
       mediaContent += `<a href="${inatUrl}">`;
       mediaContent += `<img src="${url}" alt="${altText}">`;
       mediaContent += "</a>";
@@ -221,16 +211,39 @@ export function renderObservationMetadataCounts(
   }
 
   if (includeDate && data.observed_on) {
-    let date = new Date(data.observed_on).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "2-digit",
-    });
+    let date = formatDate(data.observed_on);
     detailsContent += `<span class="observed">${date}</span>`;
   }
   detailsContent += `</div>`;
 
   return detailsContent;
+}
+
+export function formatDate(date: string) {
+  return new Date(date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+  });
+}
+
+export function formatDateLong(date: string | null, timezone?: string) {
+  if (!date) return;
+
+  let options = {
+    timeZoneName: "short",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  } as any;
+  if (timezone) {
+    options.timeZone = timezone;
+  }
+
+  // TODO: localize date
+  return new Date(date).toLocaleString("en-US", options);
 }
 
 export function renderPlace(place: string, obscured: boolean) {
@@ -263,4 +276,78 @@ export function renderQualityGrade(quality_grade: string) {
   }
 
   return content;
+}
+
+export function renderUser(user: ObservationUser, imageOnly = false) {
+  if (imageOnly) {
+    return html`<span class="avatar-name">
+      <a href="${iNatUserUrl}/${user.login}" title="${user.login}"
+        >${formatAvatar(user)}</a
+      >
+    </span>`;
+  } else {
+    return html`<span class="avatar-name">
+      <a href="${iNatUserUrl}/${user.login}">${formatAvatar(user)}</a>
+      <a href="${iNatUserUrl}/${user.login}">${user.login}</a>
+    </span>`;
+  }
+}
+
+export function renderUserName(user: ObservationUser) {
+  return html`<span class="avatar-name">
+    <a href="${iNatUserUrl}/${user.login}">${user.login}</a>
+  </span>`;
+}
+
+export function renderTaxonDefaultPhoto(
+  taxon: SpeciesCountTaxon | Taxon,
+  appStore: MapStore,
+  size = "default",
+) {
+  if (!taxon.default_photo) return;
+
+  let url = "";
+  if (size === "square") {
+    url = taxon.default_photo.square_url;
+  } else if (size === "medium") {
+    url = taxon.default_photo.medium_url;
+  } else {
+    url = taxon.default_photo.url;
+  }
+
+  let alt = formatTaxonPhotoAltText(taxon, appStore);
+  alt += formatTaxonPhotoAttribution(taxon.default_photo);
+
+  return html`<a href="${iNatTaxaUrl}/${taxon.id}"
+    ><img src=${url} alt="${alt}"
+  /></a>`;
+}
+
+export function formatTaxonPhotoAltText(
+  taxon: Taxon | ObservationTaxon | SpeciesCountTaxon,
+  appStore: MapStore,
+) {
+  let altText = "observation of ";
+  if (taxon) {
+    let { title, subtitle, titleAriaLabel, subtitleAriaLabel } =
+      formatTaxonName(taxon, appStore);
+    if (title) {
+      altText += `${titleAriaLabel} ${title}`;
+    }
+    if (subtitle) {
+      altText += `, ${subtitleAriaLabel} ${subtitle}`;
+    }
+  } else {
+    altText += "unknown";
+  }
+
+  return altText;
+}
+
+export function formatTaxonPhotoAttribution(photo: DefaultPhoto) {
+  let text = "";
+  if (photo.attribution) {
+    text += ` taken by ${photo.attribution}`;
+  }
+  return text;
 }

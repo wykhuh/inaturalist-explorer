@@ -39,13 +39,13 @@ export interface AutocompleteTaxaResult {
 }
 
 export interface DefaultPhoto {
-  attribution_name: string;
+  attribution_name?: string;
   attribution: string;
-  flags: any[];
+  flags?: any[];
   id: number;
   license_code?: string | null;
   medium_url: string;
-  original_dimensions: OriginalDimensions;
+  original_dimensions?: OriginalDimensions;
   square_url: string;
   url: string;
 }
@@ -471,7 +471,7 @@ export interface SpeciesCountTaxon {
     id: number;
     status: string;
   };
-  default_photo?: SpeciesCountDefaultPhoto;
+  default_photo?: DefaultPhoto;
   establishment_means?: { establishment_means: string };
   iconic_taxon_name?: string;
   id: number;
@@ -480,15 +480,6 @@ export interface SpeciesCountTaxon {
   preferred_common_name?: string;
   rank_level?: number;
   rank?: string;
-}
-
-export interface SpeciesCountDefaultPhoto {
-  attribution: string;
-  id: number;
-  license_code: string | null;
-  medium_url: string;
-  square_url: string;
-  url: string;
 }
 
 // ==================

@@ -565,25 +565,6 @@ export function getRandomInt(max: number) {
   return Math.floor(Math.random() * max);
 }
 
-export function formatDate(date: string | null, timezone?: string) {
-  if (!date) return;
-
-  let options = {
-    timeZoneName: "short",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-  } as any;
-  if (timezone) {
-    options.timeZone = timezone;
-  }
-
-  // TODO: localize date
-  return new Date(date).toLocaleString("en-US", options);
-}
-
 // https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest
 export async function createHashString(message: string) {
   const msgUint8 = new TextEncoder().encode(message); // encode as (utf-8) Uint8Array

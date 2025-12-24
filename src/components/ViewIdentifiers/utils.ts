@@ -2,12 +2,11 @@ import {
   cleanupIdentificationParams,
   cleanupObervationsParams,
 } from "../../lib/cleanup_params_utils";
-import { formatAvatar } from "../../lib/render_utils";
+import { renderUser } from "../../lib/render_utils";
 import {
   getIdentificationsIdentifiers,
   getObservationsIdentifiers,
 } from "../../lib/inat_api";
-import { iNatUserUrl } from "../../data/inat_data";
 import { loggerTime } from "../../lib/logger";
 import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";
@@ -139,10 +138,7 @@ function createTable(
     rowEl.appendChild(tdEl);
 
     tdEl = document.createElement("td");
-    tdEl.innerHTML = `<span class="avatar-name">
-      <a href="${iNatUserUrl}/${row.user.login}">${formatAvatar(row.user)}</a>
-      <a href="${iNatUserUrl}/${row.user.login}">${row.user.login}</a>
-    </span>`;
+    tdEl.innerHTML = renderUser(row.user);
     rowEl.appendChild(tdEl);
 
     tdEl = document.createElement("td");

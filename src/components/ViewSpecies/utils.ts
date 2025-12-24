@@ -18,6 +18,7 @@ import { updateAppUrl } from "../../lib/utils";
 import type { DataComponent, MapStore } from "../../types/app";
 import type {
   IdentificationsResult,
+  ObservationsResult,
   ResourceSpeciesCountResult,
 } from "../../types/inat_api";
 
@@ -100,7 +101,10 @@ async function getAPIData(perPage: number, appStore: MapStore) {
 }
 
 function createGrid(
-  results: ResourceSpeciesCountResult[] | IdentificationsResult[],
+  results:
+    | ObservationsResult[]
+    | IdentificationsResult[]
+    | ResourceSpeciesCountResult[],
   appStore: MapStore,
 ) {
   let containerEl = document.createElement("div");

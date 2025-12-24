@@ -1,10 +1,12 @@
 import type { ResourceSpeciesCountResult } from "../../types/inat_api";
 import type { DataComponent, MapStore } from "../../types/app";
 import { pluralize } from "../../lib/utils";
-import { formatTaxonName } from "../../lib/data_utils";
 import { iNatTaxaUrl } from "../../data/inat_data";
 import { setupComponent } from "../../lib/component_utils";
-import { renderTaxonNames } from "../../lib/render_utils";
+import {
+  renderTaxonDefaultPhoto,
+  renderTaxonNames,
+} from "../../lib/render_utils";
 import { template } from "./template";
 
 class CardSpecies extends HTMLElement {
@@ -27,7 +29,13 @@ class CardSpecies extends HTMLElement {
       .data as ResourceSpeciesCountResult;
     let record_type = (this as unknown as DataComponent).record_type;
 
-    let { title, subtitle } = formatTaxonName(data.taxon, appStore);
+    let photoEl = this.querySelector(".photo") as HTMLLinkElement;
+    if (photoEl) {
+      let img = renderTaxonDefaultPhoto(data.taxon, appStore, "medium");
+      if (img) {
+        photoEl.innerHTML = img;
+      }
+    }
 
     let mediaEl = this.querySelector(".media") as HTMLLinkElement;
     if (mediaEl) {
@@ -46,28 +54,6 @@ class CardSpecies extends HTMLElement {
         }
         mediaEl.appendChild(spanEl);
       }
-    }
-
-    let linkEl = this.querySelector(".media a") as HTMLLinkElement;
-    if (linkEl) {
-      linkEl.href = `${iNatTaxaUrl}/${data.taxon.id}`;
-    }
-
-    let imgEl = this.querySelector("img");
-    if (imgEl && data.taxon.default_photo?.medium_url) {
-      imgEl.src = data.taxon.default_photo?.medium_url;
-      let altText = `photo of `;
-      if (title) {
-        altText += `${title} `;
-      }
-      if (subtitle) {
-        altText += `${subtitle} taken by `;
-      }
-      if (data.taxon.default_photo.attribution) {
-        altText += `${data.taxon.default_photo.attribution} ,`;
-      }
-
-      imgEl.alt = altText;
     }
 
     let licenseEl = this.querySelector(".licensing");

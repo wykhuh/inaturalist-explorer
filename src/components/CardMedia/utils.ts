@@ -5,13 +5,13 @@ import type {
 } from "../../types/inat_api";
 import type { DataComponent, MapStore } from "../../types/app";
 import {
-  formatAvatar,
   renderMedia,
   renderObservationMetadataCounts,
   renderQualityGrade,
   renderTaxonNames,
+  renderUser,
 } from "../../lib/render_utils";
-import { iNatObservationUrl, iNatUserUrl } from "../../data/inat_data";
+import { iNatObservationUrl } from "../../data/inat_data";
 
 type DataProps = {
   observation: ObservationsResult;
@@ -48,11 +48,7 @@ export function renderCard(appStore: MapStore, componentCtx: any) {
   let detailsContent = ``;
 
   if (observation.user && mediaIndex === 0) {
-    detailsContent += `<span class="avatar-name">
-      <a href="${iNatUserUrl}/${observation.user.login}" title="${observation.user.login}">
-      ${formatAvatar(observation.user)}
-      </a>
-    </span>`;
+    detailsContent += renderUser(observation.user, true);
   }
 
   if (observation.taxon) {

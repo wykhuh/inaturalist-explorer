@@ -3,7 +3,7 @@ import { html } from "../../lib/component_utils";
 export const template = html`
   <div class="card">
     <div class="media">
-      <a><img /></a>
+      <div class="photo"></div>
       <div class="media-meta popover__wrapper">
         <div class="licensing"></div>
         <div class="attribution popover__content"></div>

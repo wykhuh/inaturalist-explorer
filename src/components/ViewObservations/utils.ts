@@ -1,21 +1,22 @@
-import { iNatObservationUrl, iNatUserUrl } from "../../data/inat_data";
+import { iNatObservationUrl } from "../../data/inat_data";
 import {
   cleanupIdentificationsObservationsParams,
   cleanupObervationsParams,
 } from "../../lib/cleanup_params_utils";
 import {
-  formatAvatar,
+  formatDateLong,
   renderMedia,
   renderObservationMetadataCounts,
   renderPlace,
   renderQualityGrade,
   renderTaxonNames,
+  renderUser,
 } from "../../lib/render_utils";
 import { getObservations } from "../../lib/inat_api";
 import { loggerTime } from "../../lib/logger";
 import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";
-import { formatDate, updateAppUrl } from "../../lib/utils";
+import { updateAppUrl } from "../../lib/utils";
 import type { ObservationsResult } from "../../types/inat_api";
 import type {
   DataComponent,
@@ -202,11 +203,7 @@ export function createTable(results: ObservationsResult[], appStore: MapStore) {
     // user
     tdEl = document.createElement("td");
     tdEl.className = "user";
-    let userContent = `<span class="avatar-name">
-      <a href="${iNatUserUrl}/${row.user.login}">${formatAvatar(row.user)}</a>
-      <a href="${iNatUserUrl}/${row.user.login}">${row.user.login}</a>
-    </span>`;
-    tdEl.innerHTML = userContent;
+    tdEl.innerHTML = renderUser(row.user);
     rowEl.appendChild(tdEl);
 
     // place
@@ -220,14 +217,14 @@ export function createTable(results: ObservationsResult[], appStore: MapStore) {
     tdEl = document.createElement("td");
     tdEl.className = "observed";
     if (row.time_observed_at) {
-      tdEl.innerText = ` ${formatDate(row.time_observed_at, row.observed_time_zone)}`;
+      tdEl.innerText = ` ${formatDateLong(row.time_observed_at, row.observed_time_zone)}`;
     }
     rowEl.appendChild(tdEl);
 
     // created
     tdEl = document.createElement("td");
     tdEl.className = "created";
-    tdEl.innerText = ` ${formatDate(row.created_at, row.created_time_zone)}`;
+    tdEl.innerText = ` ${formatDateLong(row.created_at, row.created_time_zone)}`;
 
     rowEl.appendChild(tdEl);
 
