@@ -224,6 +224,7 @@ export function renderObservationMetadataCounts(
     let date = new Date(data.observed_on).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
+      day: "2-digit",
     });
     detailsContent += `<span class="observed">${date}</span>`;
   }
