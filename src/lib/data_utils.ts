@@ -28,13 +28,32 @@ import {
 import { iNatOrange } from "./map_colors_utils.ts";
 import { logger, loggerFilters } from "./logger.ts";
 import { mapStore } from "./store.ts";
-import type { SpeciesCountTaxon, Taxon } from "../types/inat_api";
-import { isNormalizediNatTaxon } from "../types/utils.ts";
+import type {
+  IdentificationsResult,
+  ObservationsObserversResult,
+  ObservationsResult,
+  ResourceIdentifiersResult,
+  ResourceSpeciesCountResult,
+  SpeciesCountTaxon,
+  Taxon,
+} from "../types/inat_api";
+import {
+  isIdentificationsResult,
+  isNormalizediNatTaxon,
+  isObservationsResult,
+  isResourceIdentifierResult,
+  isResourceSpeciesResult,
+} from "../types/utils.ts";
 import { updateCountForOne } from "./count_utils.ts";
 import {
   cleanupIdentificationsMapParams,
   cleanupObservationsMapParams,
 } from "./cleanup_params_utils.ts";
+
+import squareImg from "../assets/images/square.jpeg";
+import mediumImg from "../assets/images/medium.jpeg";
+import userMedium from "../assets/images/user_medium.jpg";
+import userThumb from "../assets/images/user_thumb.jpg";
 
 // called when user select taxa or place
 export async function fetchiNatMapDataForTaxon(
@@ -832,4 +851,87 @@ export function resetPageNumber(appStore: MapStore) {
   delete appStore.viewMetadata.observations_observations.page;
   delete appStore.viewMetadata.observations_observers.page;
   delete appStore.viewMetadata.observations_species.page;
+}
+
+export function replaceWithCacheImages(
+  results:
+    | IdentificationsResult[]
+    | ObservationsResult[]
+    | ResourceIdentifiersResult[]
+    | ObservationsObserversResult[]
+    | ResourceSpeciesCountResult[],
+) {
+  if (isIdentificationsResult(results)) {
+    replaceWithCacheImagesIdentifications(results);
+  } else if (isObservationsResult(results)) {
+    replaceWithCacheImagesObservations(results);
+  } else if (isResourceIdentifierResult(results)) {
+    replaceWithCacheImagesBasicUser(results);
+  } else if (isResourceSpeciesResult(results)) {
+    replaceWithCacheImagesBasicTaxon(results);
+  }
+
+  return results;
+}
+
+function replaceWithCacheImagesBasicTaxon(
+  results: ResourceSpeciesCountResult[],
+) {
+  results.forEach((result) => {
+    if (result.taxon.default_photo) {
+      result.taxon.default_photo.medium_url = mediumImg;
+      result.taxon.default_photo.square_url = squareImg;
+      result.taxon.default_photo.url = squareImg;
+    }
+  });
+}
+
+function replaceWithCacheImagesBasicUser(results: ResourceIdentifiersResult[]) {
+  results.forEach((result) => {
+    result.user.icon = userThumb;
+    result.user.icon_url = userMedium;
+  });
+}
+
+function replaceWithCacheImagesObservations(results: ObservationsResult[]) {
+  results.forEach((result) => {
+    result.photos.forEach((photo) => {
+      photo.url = mediumImg;
+    });
+  });
+}
+
+function replaceWithCacheImagesIdentifications(
+  results: IdentificationsResult[],
+) {
+  results.forEach((result) => {
+    if (result.observation.taxon.default_photo) {
+      result.observation.taxon.default_photo.medium_url = mediumImg;
+      result.observation.taxon.default_photo.square_url = squareImg;
+      result.observation.taxon.default_photo.url = squareImg;
+    }
+
+    if (result.observation.observation_photos) {
+      result.observation.observation_photos.forEach((photo) => {
+        photo.url = mediumImg;
+      });
+    }
+
+    result.observation.user.icon = userThumb;
+    result.observation.user.icon_url = userMedium;
+
+    result.observation.identifications.forEach((ident) => {
+      if (ident.user) {
+        ident.user.icon = userThumb;
+        ident.user.icon_url = userMedium;
+      }
+      if (ident.taxon?.default_photo) {
+        ident.taxon.default_photo.medium_url = mediumImg;
+        ident.taxon.default_photo.square_url = squareImg;
+        ident.taxon.default_photo.url = squareImg;
+      }
+    });
+  });
+
+  return results;
 }

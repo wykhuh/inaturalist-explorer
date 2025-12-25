@@ -21,6 +21,7 @@ import { isIdentificationsObserversResult } from "../../types/utils";
 import {
   isIdentificationsCheck,
   isObservationsCheck,
+  replaceWithCacheImages,
 } from "../../lib/data_utils";
 
 // BUG: iNat /v1/identifications/observers API
@@ -102,6 +103,8 @@ async function getAPIData(perPage: number, appStore: MapStore) {
     let page = isObservationsCheck(appStore)
       ? appStore.observationsApiParams.page
       : appStore.identificationsApiParams.page;
+    replaceWithCacheImages(observers.results);
+
     return { ...observers, page: page || 1 };
   }
 

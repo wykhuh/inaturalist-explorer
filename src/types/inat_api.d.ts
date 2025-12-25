@@ -418,6 +418,7 @@ export interface ObservationTaxon {
 
 export interface ObservationUser {
   icon_url?: string | null;
+  icon?: string | null;
   id: number;
   login: string;
   name?: string | null;

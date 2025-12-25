@@ -6,6 +6,7 @@ import {
 import {
   isIdentificationsCheck,
   isObservationsCheck,
+  replaceWithCacheImages,
 } from "../../lib/data_utils";
 import {
   getIdentificationsSpecies,
@@ -81,6 +82,7 @@ async function getAPIData(perPage: number, appStore: MapStore) {
     let page = isObservationsCheck(appStore)
       ? appStore.observationsApiParams.page
       : appStore.identificationsApiParams.page;
+    replaceWithCacheImages(threatenedSpecies.results);
     return { ...threatenedSpecies, page: page || 1 };
   }
 

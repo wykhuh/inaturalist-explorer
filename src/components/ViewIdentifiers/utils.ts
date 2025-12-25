@@ -17,6 +17,7 @@ import { identifiers } from "../../data/inat_api_cache";
 import {
   isIdentificationsCheck,
   isObservationsCheck,
+  replaceWithCacheImages,
 } from "../../lib/data_utils";
 
 export let perPage = 200;
@@ -87,6 +88,8 @@ async function getAPIData(perPage: number, appStore: MapStore) {
     let page = isObservationsCheck(appStore)
       ? appStore.observationsApiParams.page
       : appStore.identificationsApiParams.page;
+
+    replaceWithCacheImages(identifiers.results);
     return { ...identifiers, page: page || 1 };
   }
 

@@ -26,7 +26,10 @@ import type {
 import { observations } from "../../data/inat_api_cache";
 import { setSelectedOption } from "../../lib/form_utils";
 import { updateSelectedResourcesId } from "../../lib/count_utils";
-import { isObservationsCheck } from "../../lib/data_utils";
+import {
+  isObservationsCheck,
+  replaceWithCacheImages,
+} from "../../lib/data_utils";
 
 export let perPage = 24;
 
@@ -104,6 +107,7 @@ async function getAPIData(perPage: number, appStore: MapStore) {
     let page = isObservationsCheck(appStore)
       ? appStore.observationsApiParams.page
       : appStore.identificationsApiParams.page;
+    replaceWithCacheImages(observations.results);
     return { ...observations, page: page || 1 };
   }
 
