@@ -293,6 +293,8 @@ interface IdentificationsApiParams extends IdentificationsApiFilterableParams {
   page?: number;
   per_page?: number;
   colors?: string; // comma-seperated string
+  order?: string;
+  order_by?: string;
 }
 
 interface IdentificationsApiFilterableParams {

@@ -147,6 +147,8 @@ function convertIdentificationParamsToObservationParams(
     "colors",
     "page",
     "per_page",
+    "order",
+    "order_by",
   ];
   let cleanedParms = {} as any;
 

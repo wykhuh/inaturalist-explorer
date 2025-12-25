@@ -8,6 +8,7 @@ import type {
   IdentificationsApiParamsKeys,
   IdentificationsApiParams,
   ObservationSubviews,
+  MapStoreParamsKeys,
 } from "../types/app";
 import {
   bboxPlaceRecord,
@@ -304,6 +305,11 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     throw Error("invalid record_type");
   }
 
+  let resourceApiParams: MapStoreParamsKeys = "observationsApiParams";
+  if (isIdentifications) {
+    resourceApiParams = "identificationsApiParams";
+  }
+
   // convert observation_taxon_id into selectedTaxa
   if ("observation_taxon_id" in urlParams) {
     if (!isObservations) {
@@ -462,41 +468,53 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   }
 
   if (urlParams.order) {
-    if (isObservations && orderValues.includes(urlParams.order)) {
-      store.observationsApiParams.order = urlParams.order;
+    if (orderValues.includes(urlParams.order)) {
+      store[resourceApiParams].order = urlParams.order;
     }
+
     if (urlView && validViews.includes(urlView)) {
       store.viewMetadata[urlView].order = urlParams.order;
     } else {
-      store.viewMetadata.observations_observations.order = urlParams.order;
+      if (isObservations) {
+        store.viewMetadata.observations_observations.order = urlParams.order;
+      } else if (isIdentifications) {
+        store.viewMetadata.identifications_observations.order = urlParams.order;
+      }
     }
   }
 
   if (urlParams.order_by) {
-    if (
-      isObservations &&
-      observationsOrderByValues.includes(urlParams.order_by)
-    ) {
-      store.observationsApiParams.order_by = urlParams.order_by;
+    if (observationsOrderByValues.includes(urlParams.order_by)) {
+      store[resourceApiParams].order_by = urlParams.order_by;
     }
     if (urlView && validViews.includes(urlView)) {
       store.viewMetadata[urlView].order_by = urlParams.order_by;
     } else {
-      store.viewMetadata.observations_observations.order_by =
-        urlParams.order_by;
+      if (isObservations) {
+        store.viewMetadata.observations_observations.order_by =
+          urlParams.order_by;
+      } else if (isIdentifications) {
+        store.viewMetadata.identifications_observations.order_by =
+          urlParams.order_by;
+      }
     }
   }
 
   if (urlParams.page) {
-    if (isObservations) {
-      store.observationsApiParams.page = Number(urlParams.page);
-    }
+    store[resourceApiParams].page = Number(urlParams.page);
+
     if (urlView && validViews.includes(urlView)) {
       store.viewMetadata[urlView].page = Number(urlParams.page);
     } else {
-      store.viewMetadata.observations_observations.page = Number(
-        urlParams.page,
-      );
+      if (isObservations) {
+        store.viewMetadata.observations_observations.page = Number(
+          urlParams.page,
+        );
+      } else if (isIdentifications) {
+        store.viewMetadata.identifications_observations.page = Number(
+          urlParams.page,
+        );
+      }
     }
   }
 

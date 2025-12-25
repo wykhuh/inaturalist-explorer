@@ -1114,7 +1114,7 @@ describe("decodeAppUrl options", () => {
   });
 });
 
-describe("if identifications path", () => {
+describe("decodeAppUrl if identifications path", () => {
   test("returns object with record_type = 'identifications'", () => {
     let path = "/identifications/";
     let searchParams = "";
@@ -1196,6 +1196,49 @@ describe("if identifications path", () => {
 
     expect(result).toStrictEqual(expected);
   });
+
+  test("returns object with page, order, order_by", () => {
+    let searchParams = "?page=2&order=desc&order_by=id";
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      identificationsApiParams: { page: 2, order: "desc", order_by: "id" },
+      currentView: "identifications_observations",
+      record_type: "identifications",
+      viewMetadata: {
+        ...structuredClone(defaultUrlStore.viewMetadata),
+        identifications_observations: {
+          page: 2,
+          order: "desc",
+          order_by: "id",
+        },
+      },
+    };
+
+    let result = decodeAppUrl(searchParams, "/identifications/");
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test.each(validViews)(
+    "returns object with view, page, order, order_by",
+    (name) => {
+      let searchParams = `?view=${name}&page=2&order=desc&order_by=id`;
+      let expected = {
+        ...structuredClone(defaultUrlStore),
+        identificationsApiParams: { page: 2, order: "desc", order_by: "id" },
+        currentView: name,
+        record_type: "identifications",
+        viewMetadata: {
+          ...structuredClone(defaultUrlStore.viewMetadata),
+          [name]: { page: 2, order: "desc", order_by: "id" },
+        },
+      };
+
+      let result = decodeAppUrl(searchParams, "/identifications/");
+
+      expect(result).toStrictEqual(expected);
+    },
+  );
 });
 
 describe("removeDefaultParams", () => {
