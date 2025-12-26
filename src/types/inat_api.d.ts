@@ -227,6 +227,7 @@ export interface Taxon {
   parent_id?: number | null;
   photos_locked?: boolean;
   preferred_common_name?: string;
+  provisional?: boolean;
   rank_level: number;
   rank: string;
   taxon_changes_count?: number;
@@ -266,6 +267,7 @@ export interface Ancestor {
   observations_count: number;
   parent_id: number | null;
   preferred_common_name?: string;
+  provisional?: boolean;
   rank_level: number;
   rank: string;
   taxon_changes_count: number;

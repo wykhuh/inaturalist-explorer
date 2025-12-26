@@ -5,11 +5,11 @@ import type {
 } from "../../types/inat_api";
 import type { DataComponent, MapStore } from "../../types/app";
 import {
+  formatAvatar,
   renderMedia,
   renderObservationMetadataCounts,
   renderQualityGrade,
   renderTaxonNames,
-  renderUser,
 } from "../../lib/render_utils";
 import { iNatObservationUrl } from "../../data/inat_data";
 
@@ -48,7 +48,7 @@ export function renderCard(appStore: MapStore, componentCtx: any) {
   let detailsContent = ``;
 
   if (observation.user && mediaIndex === 0) {
-    detailsContent += renderUser(observation.user, true);
+    detailsContent += formatAvatar(observation.user);
   }
 
   if (observation.taxon) {

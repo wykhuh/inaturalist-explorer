@@ -601,3 +601,15 @@ function buf2hex(buffer: ArrayBuffer) {
     .map((x) => x.toString(16).padStart(2, "0"))
     .join("");
 }
+
+export function sortArrayOfObjectsByDate(
+  records: { [k: string]: any }[],
+  field: string,
+) {
+  return records.sort((a, b) => {
+    let dateA = a[field];
+    let dateB = b[field];
+    console.log(dateA, (new Date(dateA) as any) - (new Date(dateB) as any));
+    return (new Date(dateA) as any) - (new Date(dateB) as any);
+  });
+}

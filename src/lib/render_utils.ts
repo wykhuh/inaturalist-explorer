@@ -26,13 +26,37 @@ import { logger } from "./logger.ts";
 import { pluralize } from "./utils.ts";
 import { html } from "./component_utils.ts";
 
+export function renderUser(user: ObservationUser) {
+  return html`<span class="avatar-name">
+    ${formatAvatar(user)} ${formatUserName(user)}
+  </span>`;
+}
+
+export function formatUserName(user: ObservationUser) {
+  return html`<a class="user-name" href="${iNatUserUrl}/${user.login}"
+    >${user.login}</a
+  >`;
+}
+
 export function formatAvatar(user: ObservationUser) {
-  let imgUrl = user.icon_url;
+  let imgUrl = user.icon;
+  let image = "";
   if (imgUrl) {
-    return `<img class="avatar" src="${imgUrl}" alt="iNaturalist user ${user.login}">`;
+    image = html`<img
+      class="avatar-image"
+      src="${imgUrl}"
+      alt="iNaturalist user ${user.login}"
+    />`;
   } else {
-    return person2;
+    image = person2;
   }
+
+  return html`<a
+    class="avatar"
+    href="${iNatUserUrl}/${user.login}"
+    title="${user.login}"
+    >${image}</a
+  >`;
 }
 
 export function renderTaxonNames(
@@ -122,6 +146,7 @@ export function renderMedia(
   sounds: ObservationSound[],
   appStore: MapStore,
   displayCount = false,
+  size = "medium",
 ) {
   let classes = ["media"];
   if (photos.length === 0 && sounds.length > 0) {
@@ -131,9 +156,15 @@ export function renderMedia(
   let mediaContent = `<div class="${classes.join(" ")}">`;
 
   if (photos.length > 0) {
-    let url = photos[0].url?.replace("/square.", "/medium.");
+    if (size === "medium") {
+      size = "medium.";
+    } else {
+      size = "square.";
+    }
+
+    let url = photos[0].url?.replace("/square.", `/${size}`);
     if (!url) {
-      url = photos[0].photo?.url;
+      url = photos[0].photo?.url?.replace("/square.", `/${size}`);
     }
     if (url) {
       let altText = formatTaxonPhotoAltText(taxon, appStore);
@@ -181,33 +212,45 @@ export function renderMediaCounts(
   return `<div class="media-counts">${text.join(", ")}</div>`;
 }
 
+export function renderIdCount(count: number) {
+  let message = `${count} identifications`;
+  return `
+  <span class="identifications" aria-label="${message}" title="${message}">
+    ${check}<span class="identifications-count">${count}</span>
+  </span>`;
+}
+
+function renderCommentCount(count: number) {
+  let message = `${count} comments`;
+  return `
+  <span class="speech" aria-label="${message}" title="${message}">
+    ${speech}<span class="comments-count">${count}</span>
+  </span>`;
+}
+
+function renderFavoritesCount(count: number) {
+  let message = `${count} favorites`;
+  return `
+  <span class="favorites" aria-label="${message}" title="${message}">
+    ${star}<span class="favorites-count">${count}</span>
+  </span>`;
+}
+
 export function renderObservationMetadataCounts(
   data: ObservationsResult | Observation,
   includeDate = false,
 ) {
   let detailsContent = `<div class="metadata-counts">`;
   if (data.identifications.length > 0) {
-    let message = `${data.identifications.length} identifications`;
-    detailsContent += `
-        <span class="identifications" aria-label="${message}" title="${message}">
-          ${check}<span class="identifications-count">${data.identifications.length}</span>
-        </span>`;
+    detailsContent += renderIdCount(data.identifications.length);
   }
 
   if (data.comments_count > 0) {
-    let message = `${data.comments_count} comments`;
-    detailsContent += `
-        <span class="speech" aria-label="${message}" title="${message}">
-          ${speech}<span class="comments-count">${data.comments_count}</span>
-        </span>`;
+    detailsContent += renderCommentCount(data.comments_count);
   }
 
   if (data.faves_count > 0) {
-    let message = `${data.faves_count} favorites`;
-    detailsContent += `
-        <span class="favorites" aria-label="${message}" title="${message}">
-          ${star}<span class="favorites-count">${data.faves_count}</span>
-        </span>`;
+    detailsContent += renderFavoritesCount(data.faves_count);
   }
 
   if (includeDate && data.observed_on) {
@@ -217,33 +260,6 @@ export function renderObservationMetadataCounts(
   detailsContent += `</div>`;
 
   return detailsContent;
-}
-
-export function formatDate(date: string) {
-  return new Date(date).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-  });
-}
-
-export function formatDateLong(date: string | null, timezone?: string) {
-  if (!date) return;
-
-  let options = {
-    timeZoneName: "short",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-  } as any;
-  if (timezone) {
-    options.timeZone = timezone;
-  }
-
-  // TODO: localize date
-  return new Date(date).toLocaleString("en-US", options);
 }
 
 export function renderPlace(place: string, obscured: boolean) {
@@ -276,27 +292,6 @@ export function renderQualityGrade(quality_grade: string) {
   }
 
   return content;
-}
-
-export function renderUser(user: ObservationUser, imageOnly = false) {
-  if (imageOnly) {
-    return html`<span class="avatar-name">
-      <a href="${iNatUserUrl}/${user.login}" title="${user.login}"
-        >${formatAvatar(user)}</a
-      >
-    </span>`;
-  } else {
-    return html`<span class="avatar-name">
-      <a href="${iNatUserUrl}/${user.login}">${formatAvatar(user)}</a>
-      <a href="${iNatUserUrl}/${user.login}">${user.login}</a>
-    </span>`;
-  }
-}
-
-export function renderUserName(user: ObservationUser) {
-  return html`<span class="avatar-name">
-    <a href="${iNatUserUrl}/${user.login}">${user.login}</a>
-  </span>`;
 }
 
 export function renderTaxonDefaultPhoto(
@@ -350,4 +345,74 @@ export function formatTaxonPhotoAttribution(photo: DefaultPhoto) {
     text += ` taken by ${photo.attribution}`;
   }
   return text;
+}
+
+export function formatDate(date: string) {
+  return new Date(date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+  });
+}
+
+export function formatDateLong(date: string | null, timezone?: string) {
+  if (!date) return;
+
+  let options = {
+    timeZoneName: "short",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  } as any;
+  if (timezone) {
+    options.timeZone = timezone;
+  }
+
+  // TODO: localize date
+  return new Date(date).toLocaleString("en-US", options);
+}
+
+// https://stackoverflow.com/a/69122877
+export function timeAgo(input: Date | string) {
+  const date = input instanceof Date ? input : new Date(input);
+  const formatter = new Intl.RelativeTimeFormat("en");
+  const ranges = {
+    years: 3600 * 24 * 365,
+    months: 3600 * 24 * 31,
+    weeks: 3600 * 24 * 7,
+    days: 3600 * 24,
+    hours: 3600,
+    minutes: 60,
+    seconds: 1,
+  };
+  const secondsElapsed = (date.getTime() - Date.now()) / 1000;
+  for (let k in ranges) {
+    // https://stackoverflow.com/a/66838662
+    let key = k as keyof typeof ranges;
+    if (ranges[key] < Math.abs(secondsElapsed)) {
+      const delta = secondsElapsed / ranges[key];
+      return formatter.format(Math.round(delta), key);
+    }
+  }
+}
+
+export function formatiNatDate(input: string) {
+  const date = new Date(input);
+  const secondsElapsed = Math.abs((date.getTime() - Date.now()) / 1000);
+  if (secondsElapsed < 60 * 60 * 24) {
+    return date
+      .toLocaleDateString("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+      })
+      .split(",")[1];
+  } else {
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+    });
+  }
 }

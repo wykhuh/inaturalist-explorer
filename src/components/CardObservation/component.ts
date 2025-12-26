@@ -1,12 +1,12 @@
 import type { ObservationsResult } from "../../types/inat_api";
 import type { DataComponent, MapStore } from "../../types/app";
 import {
+  formatAvatar,
   renderMedia,
   renderMediaCounts,
   renderObservationMetadataCounts,
   renderQualityGrade,
   renderTaxonNames,
-  renderUser,
 } from "../../lib/render_utils";
 import { iNatObservationUrl } from "../../data/inat_data";
 import { setupComponent } from "../../lib/component_utils";
@@ -49,7 +49,7 @@ class CardObservation extends HTMLElement {
 
     if (data.taxon) {
       if (data.user) {
-        detailsContent += renderUser(data.user, true);
+        detailsContent += formatAvatar(data.user);
       }
 
       detailsContent += renderTaxonNames(

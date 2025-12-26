@@ -176,6 +176,7 @@ export function createTable(results: ObservationsResult[], appStore: MapStore) {
       row.sounds,
       appStore,
       true,
+      "square",
     );
     rowEl.appendChild(tdEl);
 
