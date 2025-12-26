@@ -1059,6 +1059,114 @@
       justify-content: center;
     }
   }
+
+  .identification-grid {
+    .card-record {
+      border: var(--border-grey);
+      margin-bottom: 1rem;
+    }
+
+    .card-observation,
+    .card-identification {
+      display: grid;
+      gap: 0.5rem;
+      grid-template-areas: "top top" "media details";
+      padding: 0.75rem;
+    }
+
+    .media {
+      grid-area: media;
+    }
+    .details {
+      grid-area: details;
+    }
+    .user-action {
+      grid-area: top;
+    }
+
+    .user-action {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .title {
+      display: block;
+    }
+
+    .card-observation {
+      background-color: var(--clr-gray-300);
+      grid-template-columns: 200px 1fr;
+
+      .media {
+        object-fit: cover;
+        height: 100%;
+        width: 200px;
+        position: relative;
+      }
+
+      .media:not(.sound-only) {
+        .audio-icon {
+          --icon-width: 30px;
+          --icon-height: 30px;
+          --icon-padding: 6px;
+        }
+      }
+      .media.sound-only {
+        .audio-icon {
+          --audio-background: var(--clr-overlay-dark-200);
+          --icon-height: 100%;
+          --icon-width: 200px;
+          --icon-padding: 10px;
+        }
+      }
+
+      .quality-grade {
+        margin-top: 0;
+      }
+
+      .status {
+        display: flex;
+        gap: 1rem;
+        margin-top: 0.5rem;
+
+        button {
+          padding: 0;
+        }
+      }
+    }
+
+    .card-identification {
+      grid-template-columns: 75px 1fr;
+
+      .media {
+        width: 75px;
+      }
+
+      &.withdrawn {
+        .user-action,
+        .title,
+        .subtitle,
+        .disagreement {
+          color: var(--clr-gray-700);
+          text-decoration: line-through;
+        }
+      }
+
+      .disagreement {
+        padding-top: 0.5rem;
+      }
+
+      .category.maverick {
+        color: #d9534f;
+      }
+
+      .category.improving,
+      .category.leading {
+        color: var(--clr-iNat-green);
+      }
+    }
+  }
 }
 
 @layer search-menu {
@@ -1300,120 +1408,6 @@
   img {
     border: var(--border-grey);
     margin: 1rem 0;
-  }
-}
-
-.identification-grid {
-  .card-record {
-    border: var(--border-grey);
-    margin-bottom: 1rem;
-  }
-
-  .card-observation,
-  .card-identification {
-    display: grid;
-    gap: 0.5rem;
-    grid-template-areas: "top top" "media details";
-    padding: 0.75rem;
-  }
-
-  .media {
-    grid-area: media;
-  }
-  .details {
-    grid-area: details;
-  }
-  .user-action {
-    grid-area: top;
-  }
-
-  .user-action {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .card-observation {
-    background-color: var(--clr-gray-300);
-    grid-template-columns: 150px 1fr;
-
-    .media {
-      object-fit: cover;
-      height: 100%;
-      width: 150px;
-      position: relative;
-    }
-
-    .media:not(.sound-only) {
-      .audio-icon {
-        --icon-width: 30px;
-        --icon-height: 30px;
-        --icon-padding: 6px;
-      }
-    }
-    .media.sound-only {
-      .audio-icon {
-        --audio-background: var(--clr-overlay-dark-200);
-        --icon-height: 100%;
-        --icon-width: 150px;
-        --icon-padding: 10px;
-      }
-    }
-
-    .quality-grade {
-      margin-top: 0;
-    }
-
-    .subtitle,
-    .title {
-      font-size: var(--font-size-md);
-    }
-
-    .title {
-      display: block;
-    }
-
-    .status {
-      display: flex;
-      gap: 1rem;
-      margin-top: 0.5rem;
-
-      button {
-        padding: 0;
-      }
-    }
-  }
-
-  .card-identification {
-    border-top: var(--border-grey);
-    grid-template-columns: 75px 1fr;
-
-    .media {
-      width: 75px;
-    }
-
-    &.withdrawn {
-      .user-action,
-      .title,
-      .subtitle,
-      .disagreement {
-        color: var(--clr-gray-700);
-        text-decoration: line-through;
-      }
-    }
-
-    .disagreement {
-      padding-top: 0.5rem;
-    }
-
-    .category.maverick {
-      color: #d9534f;
-    }
-
-    .category.improving,
-    .category.leading {
-      color: var(--clr-iNat-green);
-    }
   }
 }
 

@@ -91,14 +91,7 @@ function createGrid(results: IdentificationsResult[]) {
   let containerEl = document.createElement("div");
   containerEl.className = "identification-grid";
 
-  let ids = new Set();
   results.forEach((row) => {
-    // skip duplicate observations
-    if (ids.has(row.observation.id)) {
-      return;
-    }
-    ids.add(row.observation.id);
-
     let recordEl = document.createElement(
       "card-identification",
     ) as unknown as DataComponent;

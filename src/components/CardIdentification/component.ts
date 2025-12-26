@@ -1,5 +1,4 @@
 import { setupComponent } from "../../lib/component_utils";
-import { sortArrayOfObjectsByDate } from "../../lib/utils";
 import type { DataComponent } from "../../types/app";
 import type { IdentificationsResult } from "../../types/inat_api";
 import { template } from "./template";
@@ -35,17 +34,15 @@ class CardIdentification extends HTMLElement {
     observationEl.data = data.observation;
     cardEl.append(observationEl);
 
-    let sorted = sortArrayOfObjectsByDate(
-      data.observation.identifications,
-      "created_at",
+    let identification = data.observation.identifications.find(
+      (ident) => ident.id === data.id,
     );
-    sorted.forEach((identification) => {
-      let identificationEl = document.createElement(
-        "card-identification-identification",
-      ) as unknown as DataComponent;
-      identificationEl.data = identification;
-      cardEl.append(identificationEl);
-    });
+
+    let identificationEl = document.createElement(
+      "card-identification-identification",
+    ) as unknown as DataComponent;
+    identificationEl.data = identification;
+    cardEl.append(identificationEl);
   }
 }
 
