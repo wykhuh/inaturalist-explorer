@@ -1,7 +1,6 @@
 import { cleanupIdentificationParams } from "../../lib/cleanup_params_utils";
 import { getIdentifications } from "../../lib/inat_api";
 import { loggerTime } from "../../lib/logger";
-import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";
 import type { IdentificationsResult } from "../../types/inat_api";
 import { updateAppUrl } from "../../lib/utils";
@@ -42,26 +41,31 @@ export async function fetchAndRenderData(
 
   containerEl.innerHTML = "";
 
-  let pagination1 = createPagination(
-    data.per_page,
-    data.page,
-    data.total_results,
-    appStore,
+  let pagination1 = document.createElement(
+    "app-pagination",
+  ) as unknown as DataComponent;
+  pagination1.data = {
+    perPage: data.per_page,
+    currentPage: data.page,
+    totalRecords: data.total_results,
     paginationCallback,
-  );
+  };
   containerEl.appendChild(pagination1);
 
   let gridEl = createGrid(data.results);
   containerEl.appendChild(gridEl);
 
-  let pagination2El = createPagination(
-    data.per_page,
-    data.page,
-    data.total_results,
-    appStore,
+  let pagination2 = document.createElement(
+    "app-pagination",
+  ) as unknown as DataComponent;
+  pagination2.data = {
+    perPage: data.per_page,
+    currentPage: data.page,
+    totalRecords: data.total_results,
     paginationCallback,
-  );
-  containerEl.appendChild(pagination2El);
+    scrollToSelector: ".identifications-grid",
+  };
+  containerEl.appendChild(pagination2);
 }
 
 async function getAPIData(perPage: number, appStore: MapStore) {

@@ -14,7 +14,6 @@ import {
 } from "../../lib/render_utils";
 import { getObservations } from "../../lib/inat_api";
 import { loggerTime } from "../../lib/logger";
-import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";
 import { updateAppUrl } from "../../lib/utils";
 import type { ObservationsResult } from "../../types/inat_api";
@@ -67,13 +66,15 @@ export async function fetchAndRenderData(
 
   containerEl.innerHTML = "";
 
-  let pagination1 = createPagination(
-    data.per_page,
-    data.page,
-    data.total_results,
-    appStore,
+  let pagination1 = document.createElement(
+    "app-pagination",
+  ) as unknown as DataComponent;
+  pagination1.data = {
+    perPage: data.per_page,
+    currentPage: data.page,
+    totalRecords: data.total_results,
     paginationCallback,
-  );
+  };
   containerEl.appendChild(pagination1);
 
   // switch between table and grid subview
@@ -92,14 +93,17 @@ export async function fetchAndRenderData(
   }
   containerEl.append(subviewEl);
 
-  let pagination2El = createPagination(
-    data.per_page,
-    data.page,
-    data.total_results,
-    appStore,
+  let pagination2 = document.createElement(
+    "app-pagination",
+  ) as unknown as DataComponent;
+  pagination2.data = {
+    perPage: data.per_page,
+    currentPage: data.page,
+    totalRecords: data.total_results,
     paginationCallback,
-  );
-  containerEl.appendChild(pagination2El);
+    scrollToSelector: "#observations-list-controls",
+  };
+  containerEl.appendChild(pagination2);
 }
 
 async function getAPIData(perPage: number, appStore: MapStore) {

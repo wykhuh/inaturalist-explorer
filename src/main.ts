@@ -27,6 +27,7 @@ import "./components/PageObservations/component.ts";
 import "./components/AppstoreViewer/component.ts";
 import "./components/Header/component.ts";
 import "./components/Page404/component.ts";
+import "./components/Pagination/component.ts";
 
 import mapStore from "./lib/store.ts";
 import Router from "./lib/router.ts";

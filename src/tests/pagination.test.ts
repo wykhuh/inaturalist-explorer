@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { expect, test, describe } from "vitest";
-import { createSequence } from "../lib/pagination";
+import { createSequence } from "../components/Pagination/utils";
 
 describe("createSequence", () => {
   test("returns array", () => {

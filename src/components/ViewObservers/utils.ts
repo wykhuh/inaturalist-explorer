@@ -8,14 +8,13 @@ import {
   getObservationsObservers,
 } from "../../lib/inat_api";
 import { loggerTime } from "../../lib/logger";
-import { createPagination } from "../../lib/pagination";
 import { createSpinner } from "../../lib/spinner";
 import type {
   IdentificationsObserversResult,
   ObservationsObserversResult,
 } from "../../types/inat_api";
 import { updateAppUrl } from "../../lib/utils";
-import type { MapStore } from "../../types/app";
+import type { DataComponent, MapStore } from "../../types/app";
 import { observers } from "../../data/inat_api_cache";
 import { isIdentificationsObserversResult } from "../../types/utils";
 import {
@@ -64,13 +63,15 @@ export async function fetchAndRenderData(
     ? Math.min(data.total_results, 500)
     : Math.min(data.total_results, 100);
 
-  let pagination1 = createPagination(
-    data.per_page,
-    data.page,
-    totalCount,
-    appStore,
+  let pagination1 = document.createElement(
+    "app-pagination",
+  ) as unknown as DataComponent;
+  pagination1.data = {
+    perPage: data.per_page,
+    currentPage: data.page,
+    totalRecords: totalCount,
     paginationCallback,
-  );
+  };
   containerEl.appendChild(pagination1);
 
   let page = 1;
@@ -88,14 +89,17 @@ export async function fetchAndRenderData(
   }
   containerEl.appendChild(tableEl);
 
-  let pagination2El = createPagination(
-    data.per_page,
-    data.page,
-    totalCount,
-    appStore,
+  let pagination2 = document.createElement(
+    "app-pagination",
+  ) as unknown as DataComponent;
+  pagination2.data = {
+    perPage: data.per_page,
+    currentPage: data.page,
+    totalRecords: totalCount,
     paginationCallback,
-  );
-  containerEl.appendChild(pagination2El);
+    scrollToSelector: ".observers-table-container",
+  };
+  containerEl.appendChild(pagination2);
 }
 
 async function getAPIData(perPage: number, appStore: MapStore) {
