@@ -36,3 +36,24 @@ https://forum.inaturalist.org/t/world-map-representation-is-mercator-the-most-ad
 https://forum.inaturalist.org/t/access-to-the-api-denied/57916/4
 
 https://forum.inaturalist.org/t/is-there-a-way-to-exclude-my-observations-from-a-search/71428
+
+==
+descriptions/tag 
+q=
+
+
+without annotation
+without_term_id=17
+
+account creation
+user_after=1w - in the past week
+user_before=1w - more than a week ago
+
+
+
+Geospatial
+Hide observations with private locations
+geoprivacy=open,obscured&taxon_geoprivacy=open,obscured
+
+Not expected nearby
+expected_nearby=false

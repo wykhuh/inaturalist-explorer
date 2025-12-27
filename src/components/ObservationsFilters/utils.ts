@@ -1,6 +1,7 @@
 import {
   CCLicenses,
   iNatObservationsYears,
+  ObservationsFilterableImplementedArrays,
   taxonRanks,
 } from "../../data/inat_data";
 import type {
@@ -8,21 +9,27 @@ import type {
   ObservationsApiParamsKeys,
   MapStore,
 } from "../../types/app";
-import { updateStoreUsingFilters } from "../../lib/data_utils";
-import { loggerFilters } from "../../lib/logger";
 import {
-  setInputChecked,
-  setInputDisabled,
-  setInputValue,
-  setSelectedOption,
-  setSelectedOptionTrueFalse,
-} from "../../lib/form_utils";
+  isObservationsCheck,
+  updateStoreUsingFilters,
+} from "../../lib/data_utils";
+import { loggerFilters } from "../../lib/logger";
 import {
   renderSelectedResources,
   updateTilesForSelectedTaxa,
 } from "../../lib/search_utils";
 import { updateCountForAll } from "../../lib/count_utils";
-import { renderSelectedFiltersList } from "./shared_utils";
+import {
+  concatParamsWithMultivalues,
+  renderSelectedFiltersList,
+} from "./shared_utils";
+import {
+  processInputCheckedFields,
+  processInputFields,
+  processMultipleSelectFields,
+  processSelectFields,
+  processTrueFalseFields,
+} from "../../lib/form_utils";
 
 export function processFiltersForm(data: FormData): {
   params: ObservationsApiParams;
@@ -37,20 +44,7 @@ export function processFiltersForm(data: FormData): {
     loggerFilters(key, value);
 
     // ignore fields
-    if (
-      [
-        "month",
-        "year",
-        "iconic_taxa",
-        "license",
-        "photo_license",
-        "sound_license",
-        "quality_grade",
-        "created_month",
-        "created_year",
-        "term_value_id",
-      ].includes(key)
-    ) {
+    if (ObservationsFilterableImplementedArrays.includes(key)) {
       // ignore value "on"
     } else if (value === "on") {
       // convert boolean strings to boolean
@@ -67,17 +61,9 @@ export function processFiltersForm(data: FormData): {
   }
 
   // handle comma-separated params
-  handleMultivalues(data, "iconic_taxa", values);
-  handleMultivalues(data, "month", values);
-  handleMultivalues(data, "year", values);
-  handleMultivalues(data, "license", values);
-  handleMultivalues(data, "photo_license", values);
-  handleMultivalues(data, "sound_license", values);
-  handleMultivalues(data, "quality_grade", values);
-  handleMultivalues(data, "created_month", values);
-  handleMultivalues(data, "created_year", values);
-  handleMultivalues(data, "term_id", values);
-  handleMultivalues(data, "term_value_id", values);
+  ObservationsFilterableImplementedArrays.forEach((field) => {
+    concatParamsWithMultivalues(data, field, values);
+  });
 
   return {
     params: values,
@@ -85,20 +71,6 @@ export function processFiltersForm(data: FormData): {
       .toString()
       .replaceAll("%2C", ","),
   };
-}
-
-function handleMultivalues(
-  data: FormData,
-  field: ObservationsApiParamsKeys,
-  values: ObservationsApiParams,
-) {
-  let items = data
-    .getAll(field)
-    .filter((i) => i !== "")
-    .map((i) => i.toString().trim());
-  if (items.length > 0) {
-    values[field] = items.join(",");
-  }
 }
 
 export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
@@ -116,173 +88,57 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
   renderSelectedResources(appStore, true);
 }
 
+export function isObservationsApiFields(
+  _records: any[],
+  appStore: MapStore,
+): _records is ObservationsApiParamsKeys[] {
+  return isObservationsCheck(appStore);
+}
+
+export function isObservationsApiParams(
+  _params: any,
+  appStore: MapStore,
+): _params is ObservationsApiParams {
+  return isObservationsCheck(appStore);
+}
+
 // use store to populate the filter form fields on page load
 export function initFilters(appStore: MapStore) {
   let { observationsApiParams } = appStore;
 
-  if (observationsApiParams.captive !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "captive",
-      observationsApiParams.captive,
-    );
-  }
+  let trueFalseFields: ObservationsApiParamsKeys[] = [
+    "captive",
+    "endemic",
+    "identified",
+    "introduced",
+    "native",
+    "photos",
+    "popular",
+    "sounds",
+    "threatened",
+    "verifiable",
+    "reviewed",
+  ];
+  processTrueFalseFields(trueFalseFields, appStore);
 
-  if (observationsApiParams.d1 !== undefined) {
-    setInputChecked("#filters-form input#range_date", true);
-    setInputDisabled("#filters-form input#d1", false);
-    setInputValue("#filters-form input#d1", observationsApiParams.d1);
-  }
-  if (observationsApiParams.d2 !== undefined) {
-    setInputChecked("#filters-form input#range_date", true);
-    setInputDisabled("#filters-form input#d2", false);
-    setInputValue("#filters-form input#d2", observationsApiParams.d2);
-  }
+  let selectFields: ObservationsApiParamsKeys[] = ["hrank", "lrank"];
+  processSelectFields(selectFields, appStore);
 
-  if (observationsApiParams.endemic !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "endemic",
-      observationsApiParams.endemic,
-    );
-  }
+  let multipleSelectFields: ObservationsApiParamsKeys[] = [
+    "license",
+    "photo_license",
+    "quality_grade",
+    "sound_license",
+    "month",
+    "year",
+  ];
+  processMultipleSelectFields(multipleSelectFields, appStore);
 
-  if (observationsApiParams.hrank !== undefined) {
-    setSelectedOption(
-      `#filters-form select#hrank option[value='${observationsApiParams.hrank}']`,
-    );
-  }
+  let inputCheckedFields: ObservationsApiParamsKeys[] = ["iconic_taxa"];
+  processInputCheckedFields(inputCheckedFields, appStore);
 
-  if (observationsApiParams.iconic_taxa !== undefined) {
-    observationsApiParams.iconic_taxa.split(",").forEach((value) => {
-      setInputChecked(`#filters-form input#${value}`, true);
-    });
-  }
-
-  if (observationsApiParams.identified !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "identified",
-      observationsApiParams.identified,
-    );
-  }
-
-  if (observationsApiParams.introduced !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "introduced",
-      observationsApiParams.introduced,
-    );
-  }
-
-  if (observationsApiParams.license !== undefined) {
-    observationsApiParams.license.split(",").forEach((value) => {
-      setSelectedOption(
-        `#filters-form select#license option[value='${value}']`,
-      );
-    });
-  }
-
-  if (observationsApiParams.lrank !== undefined) {
-    setSelectedOption(
-      `#filters-form select#lrank option[value='${observationsApiParams.lrank}']`,
-    );
-  }
-
-  if (observationsApiParams.month !== undefined) {
-    setInputChecked("#filters-form input#months_date", true);
-    setInputDisabled("#filters-form select#month", false);
-    observationsApiParams.month.split(",").forEach((value) => {
-      setSelectedOption(`#filters-form select#month option[value='${value}']`);
-    });
-  }
-
-  if (observationsApiParams.native !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "native",
-      observationsApiParams.native,
-    );
-  }
-
-  if (observationsApiParams.on !== undefined) {
-    setInputChecked("#filters-form input#exact_date", true);
-    setInputDisabled("#filters-form input#on", false);
-    setInputValue("#filters-form input#on", observationsApiParams.on);
-  }
-
-  if (observationsApiParams.photo_license !== undefined) {
-    observationsApiParams.photo_license.split(",").forEach((value) => {
-      setSelectedOption(
-        `#filters-form select#photo_license option[value='${value}']`,
-      );
-    });
-  }
-
-  if (observationsApiParams.photos !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "photos",
-      observationsApiParams.photos,
-    );
-  }
-
-  if (observationsApiParams.popular !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "popular",
-      observationsApiParams.popular,
-    );
-  }
-
-  if (observationsApiParams.quality_grade !== undefined) {
-    setSelectedOption(
-      `#filters-form select#quality_grade option[value='${observationsApiParams.quality_grade}']`,
-    );
-  }
-
-  if (observationsApiParams.sound_license !== undefined) {
-    observationsApiParams.sound_license.split(",").forEach((value) => {
-      setSelectedOption(
-        `#filters-form select#sound_license option[value='${value}']`,
-      );
-    });
-  }
-
-  if (observationsApiParams.sounds !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "sounds",
-      observationsApiParams.sounds,
-    );
-  }
-
-  if (observationsApiParams.threatened !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "threatened",
-      observationsApiParams.threatened,
-    );
-  }
-
-  if (observationsApiParams.verifiable !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "verifiable",
-      observationsApiParams.verifiable as boolean,
-    );
-  }
-
-  if (observationsApiParams.year !== undefined) {
-    setInputChecked("#filters-form input#years_date", true);
-    setInputDisabled("#filters-form select#year", false);
-    observationsApiParams.year
-      .toString()
-      .split(",")
-      .forEach((value) => {
-        setSelectedOption(`#filters-form select#year option[value='${value}']`);
-      });
-  }
+  let inputFields: ObservationsApiParamsKeys[] = ["d1", "d2", "on"];
+  processInputFields(inputFields, appStore);
 
   if (observationsApiParams.unobserved_by_user_id !== undefined) {
     let inputEl = document.querySelector(
@@ -309,14 +165,6 @@ export function initFilters(appStore: MapStore) {
     if (inputEl) {
       inputEl.value = appStore.selectedReviewer.login;
     }
-  }
-
-  if (observationsApiParams.reviewed !== undefined) {
-    setSelectedOptionTrueFalse(
-      "#filters-form",
-      "reviewed",
-      observationsApiParams.reviewed,
-    );
   }
 }
 

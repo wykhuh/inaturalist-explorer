@@ -1,6 +1,8 @@
 import type {
   IdentificationsApiParams,
+  IdentificationsApiParamsKeys,
   ObservationsApiParams,
+  ObservationsApiParamsKeys,
 } from "../../types/app";
 
 export function tabClickHandler(
@@ -56,5 +58,20 @@ export function renderSelectedFiltersList(
       countEl.innerHTML = "";
       countEl.style = "display:none";
     }
+  }
+}
+
+export function concatParamsWithMultivalues(
+  data: FormData,
+  field: ObservationsApiParamsKeys | IdentificationsApiParamsKeys,
+  values: ObservationsApiParams | IdentificationsApiParams,
+) {
+  let items = data
+    .getAll(field)
+    .filter((i) => i !== "")
+    .map((i) => i.toString().trim());
+  if (items.length > 0) {
+    // @ts-ignore
+    values[field] = items.join(",");
   }
 }

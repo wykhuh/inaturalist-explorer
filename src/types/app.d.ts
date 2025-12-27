@@ -313,6 +313,28 @@ interface IdentificationsApiFilterableParams {
 
   view?: string;
   subview?: string;
+
+  reviewed?: boolean;
+  rank?: string;
+  observation_rank?: string;
+  observation_created_d1?: string;
+  observation_created_d2?: string;
+  current_taxon?: string;
+  own_observation?: string;
+  is_change?: string;
+  taxon_active?: string;
+  observation_taxon_active?: string;
+  id?: string;
+  user_login?: string; // array string
+  current?: string;
+  category?: string; // array string
+  taxon_change_id?: string; // array string
+  without_taxon_id?: string; // array string
+  without_observation_taxon_id?: string; // array string
+  id_above?: string;
+  id_below?: string;
+  only_id?: string;
+  taxon_of?: string;
 }
 
 export type IdentificationsApiParamsKeys = keyof IdentificationsApiParams;

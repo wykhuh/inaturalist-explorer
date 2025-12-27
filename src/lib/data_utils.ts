@@ -735,9 +735,8 @@ export function updateStoreUsingFilters(
   filtersResults: FiltersResults,
 ) {
   let isObservations = isObservationsCheck(appStore);
-  let resourceApiParams = (
-    isObservations ? "observationsApiParams" : "identificationsApiParams"
-  ) as MapStoreParamsKeys;
+  let resourceApiParams = getResourceApiParams(isObservations);
+
   // update store formFilters
   appStore.formFilters = filtersResults;
   loggerFilters("------------ updateStoreUsingFilters");

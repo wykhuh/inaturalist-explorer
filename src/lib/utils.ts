@@ -8,7 +8,6 @@ import type {
   IdentificationsApiParamsKeys,
   IdentificationsApiParams,
   ObservationSubviews,
-  MapStoreParamsKeys,
 } from "../types/app";
 import {
   bboxPlaceRecord,
@@ -22,6 +21,7 @@ import {
 import { defaultColorScheme } from "./map_colors_utils";
 import { convertParamsBBoxToLngLat } from "./map_utils";
 import { validObservationsSubviews, validViews } from "../data/app_data";
+import { getResourceApiParams } from "./data_utils";
 
 export function displayJson(json: any, el: HTMLElement | null) {
   // fix cyclic object errors
@@ -304,11 +304,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   } else {
     throw Error("invalid record_type");
   }
-
-  let resourceApiParams: MapStoreParamsKeys = "observationsApiParams";
-  if (isIdentifications) {
-    resourceApiParams = "identificationsApiParams";
-  }
+  let resourceApiParams = getResourceApiParams(isObservations);
 
   // convert observation_taxon_id into selectedTaxa
   if ("observation_taxon_id" in urlParams) {
@@ -543,7 +539,9 @@ function setUrlStoreValuesObservations(
 ) {
   let cleanedValue = value as string | number | boolean;
 
-  if (ObservationsApiFilterableNames.includes(key)) {
+  if (
+    ObservationsApiFilterableNames.includes(key as ObservationsApiParamsKeys)
+  ) {
     if (value === "true") {
       cleanedValue = true;
     }
@@ -565,7 +563,11 @@ function setUrlStoreValuesIdentifications(
 ) {
   let cleanedValue = value as string | number | boolean;
 
-  if (IdentificationsApiFilterableNames.includes(key)) {
+  if (
+    IdentificationsApiFilterableNames.includes(
+      key as IdentificationsApiParamsKeys,
+    )
+  ) {
     if (value === "true") {
       cleanedValue = true;
     } else if (value === "false") {

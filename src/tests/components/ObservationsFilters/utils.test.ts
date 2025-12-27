@@ -1,14 +1,6 @@
 // @vitest-environment jsdom
 
-import {
-  expect,
-  test,
-  describe,
-  beforeAll,
-  afterAll,
-  afterEach,
-  beforeEach,
-} from "vitest";
+import { expect, test, describe, beforeAll, afterAll, afterEach } from "vitest";
 import jsdom from "jsdom";
 
 import {

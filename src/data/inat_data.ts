@@ -1,7 +1,9 @@
 import type {
+  IdentificationsApiParamsKeys,
   LngLat,
   NormalizediNatPlace,
   NormalizediNatTaxon,
+  ObservationsApiParamsKeys,
   PlaceTypes,
 } from "../types/app";
 import { defaultColorScheme, iNatOrange } from "../lib/map_colors_utils";
@@ -51,7 +53,7 @@ export const speciesRanks = [
   "form",
 ];
 
-export const ObservationsApiNonFilterableNames = [
+export const ObservationsApiNonFilterableNames: ObservationsApiParamsKeys[] = [
   "nelat",
   "nelng",
   "swlat",
@@ -69,129 +71,147 @@ export const ObservationsApiNonFilterableNames = [
   "locale",
 ];
 
-export const ObservationsApiFilterableNames = [
+export const ObservationsFilterableImplemented: ObservationsApiParamsKeys[] = [
   "captive",
   "created_d1",
   "created_d2",
-  "created_month",
   "created_on",
-  "created_year",
   "d1",
   "d2",
   "endemic",
   "hrank",
-  "iconic_taxa",
   "identified",
   "introduced",
-  "license",
   "lrank",
-  "month",
   "native",
   "on",
   "order",
   "order_by",
-  "photo_license",
   "photos",
   "popular",
-  "quality_grade",
   "reviewed",
-  "sound_license",
   "sounds",
+  "term_id",
   "threatened",
   "unobserved_by_user_id",
   "verifiable",
   "viewer_id",
-  "year",
+];
 
-  // TODO: needs to be implemented
-  "acc",
-  "licensed",
-  "out_of_range",
-  "photo_licensed",
-  "rank",
-  "without_taxon_id",
-  "taxon_name",
-  "annotation_user_id",
-  "acc_above",
-  "acc_below",
-  "observed_on",
-  "csi",
+export const ObservationsFilterableImplementedArrays: ObservationsApiParamsKeys[] =
+  [
+    "created_month",
+    "created_year",
+    "iconic_taxa",
+    "license",
+    "month",
+    "photo_license",
+    "quality_grade",
+    "sound_license",
+    "term_value_id",
+    "year",
+  ];
+
+const ObservationsFilterableTodo: ObservationsApiParamsKeys[] = [
+  // maybe
+  "q",
+  "search_on",
+  "without_term_id",
+  "without_term_value_id",
   "geoprivacy",
   "taxon_geoprivacy",
   "obscuration",
-  "identifications",
+  // maybe
+  "without_taxon_id",
   "not_in_project",
-
-  // not implemented
-  "geo",
-  "id_please",
-  "mappable",
-  "pcid",
-  "taxon_is_active",
-  "expected_nearby",
-  "id",
-  "not_id",
-  "ofv_datatype",
-  "rank",
-  "site_id",
-  "user_login",
-  "hour",
+  "out_of_range",
   "day",
+  "hour",
   "created_day",
-  "term_id",
-  "term_value_id",
-  "without_term_id",
-  "without_term_value_id",
-  "term_id_or_unknown",
+  "annotation_user_id",
   "acc_above",
   "acc_below",
   "acc_below_or_unknown",
+  "identifications",
+  "list_id",
+
+  // no
+  "csi",
+  "observed_on",
+  "acc",
+  "licensed",
+  "photo_licensed",
+  "rank",
+  "taxon_name",
+  "acc_above",
+  "acc_below",
   "apply_project_rules_for",
   "cs",
   "csa",
+  "expected_nearby",
+  "geo",
+  "id",
   "id_above",
   "id_below",
+  "id_please",
   "lat",
   "lng",
-  "radius",
-  "list_id",
+  "mappable",
+  "not_id",
   "not_matching_project_rules_for",
   "observation_accuracy_experiment_id",
-  "q",
-  "search_on",
-  "updated_since",
+  "ofv_datatype",
+  "pcid",
+  "radius",
+  "rank",
+  "site_id",
   "spam",
+  "taxon_is_active",
+  "term_id_or_unknown",
+  "updated_since",
+  "user_login",
 ];
 
-export const ObservationsApiNames = ObservationsApiNonFilterableNames.concat(
-  ObservationsApiFilterableNames,
-);
+export const ObservationsApiFilterableNames =
+  ObservationsFilterableImplemented.concat(
+    ObservationsFilterableImplementedArrays,
+  ).concat(ObservationsFilterableTodo);
 
-export const IdentificationsApiNonFilterableNames = [
-  "place_id", // array string
-  "taxon_id", // array string
-  "observation_taxon_id", // array string
-  "user_id", // array integer
-  "page",
-  "per_page",
-];
+export const ObservationsApiNames: string[] =
+  ObservationsApiNonFilterableNames.concat(ObservationsApiFilterableNames);
 
-export const IdentificationsApiFilterableNames = [
-  "d1",
-  "d2",
-  "iconic_taxon_id", // array string
-  "lrank",
-  "hrank",
+export const IdentificationsApiNonFilterableNames: IdentificationsApiParamsKeys[] =
+  [
+    "place_id", // array string
+    "taxon_id", // array string
+    "observation_taxon_id", // array string
+    "user_id", // array integer
+    "page",
+    "per_page",
+  ];
 
-  "observed_d1",
-  "observed_d2",
-  "observation_iconic_taxon_id", // array string
-  "observation_lrank",
-  "observation_hrank",
-  "quality_grade",
-  "reviewed",
+export const IdentificationsFilterableImplemented: IdentificationsApiParamsKeys[] =
+  [
+    "d1",
+    "d2",
+    "lrank",
+    "hrank",
 
-  // TODO: needs to be implemented
+    "observed_d1",
+    "observed_d2",
+    "observation_lrank",
+    "observation_hrank",
+    "quality_grade",
+    "reviewed",
+  ];
+export const IdentificationsFilterableImplementedArrays: IdentificationsApiParamsKeys[] =
+  ["iconic_taxon_id", "observation_iconic_taxon_id"];
+
+export const IdentificationsFilterableTodo: IdentificationsApiParamsKeys[] = [
+  // maybe
+  "order",
+  "order_by", // created_at,
+  // no
   "rank",
   "observation_rank",
   "observation_created_d1",
@@ -210,13 +230,16 @@ export const IdentificationsApiFilterableNames = [
   "without_observation_taxon_id", // array string
   "id_above",
   "id_below",
-  "order",
-  "order_by", // created_at,
   "only_id",
   "taxon_of",
 ];
 
-export const IdentificationsApiNames =
+export const IdentificationsApiFilterableNames =
+  IdentificationsFilterableImplemented.concat(
+    IdentificationsFilterableImplementedArrays,
+  ).concat(IdentificationsFilterableTodo);
+
+export const IdentificationsApiNames: string[] =
   IdentificationsApiNonFilterableNames.concat(
     IdentificationsApiFilterableNames,
   );

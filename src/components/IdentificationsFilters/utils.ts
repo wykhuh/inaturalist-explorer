@@ -1,6 +1,6 @@
 import {
   CCLicenses,
-  iconicTaxaIdName,
+  IdentificationsFilterableImplementedArrays,
   iNatObservationsYears,
   taxonRanks,
 } from "../../data/inat_data";
@@ -12,16 +12,19 @@ import type {
 import { updateStoreUsingFilters } from "../../lib/data_utils";
 import { loggerFilters } from "../../lib/logger";
 import {
-  setInputChecked,
-  setInputValue,
-  setSelectedOption,
+  processInputCheckedFields,
+  processInputFields,
+  processSelectFields,
 } from "../../lib/form_utils";
 import {
   renderSelectedResources,
   updateTilesForSelectedTaxa,
 } from "../../lib/search_utils";
 import { updateCountForAll } from "../../lib/count_utils";
-import { renderSelectedFiltersList } from "../ObservationsFilters/shared_utils";
+import {
+  concatParamsWithMultivalues,
+  renderSelectedFiltersList,
+} from "../ObservationsFilters/shared_utils";
 
 export function processFiltersForm(data: FormData): {
   params: IdentificationsApiParams;
@@ -37,7 +40,7 @@ export function processFiltersForm(data: FormData): {
     loggerFilters(key, value);
 
     // ignore fields
-    if (["iconic_taxon_id", "observation_iconic_taxon_id"].includes(key)) {
+    if (IdentificationsFilterableImplementedArrays.includes(key)) {
       // ignore value "on"
     } else if (value === "on") {
       // convert boolean strings to boolean
@@ -52,6 +55,10 @@ export function processFiltersForm(data: FormData): {
       delete values[key];
     }
   }
+
+  IdentificationsFilterableImplementedArrays.forEach((field) => {
+    concatParamsWithMultivalues(data, field, values);
+  });
 
   // handle comma-separated params
   if (data.getAll("iconic_taxon_id").length > 0) {
@@ -88,61 +95,28 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
 
 // use store to populate the filter form fields on page load
 export function initFilters(appStore: MapStore) {
-  let { identificationsApiParams } = appStore;
-
-  let fields = [
+  let inputFields: IdentificationsApiParamsKeys[] = [
     "d1",
     "d2",
     "observed_d1",
     "observed_d2",
-  ] as IdentificationsApiParamsKeys[];
-  fields.forEach((field) => {
-    if (identificationsApiParams[field] !== undefined) {
-      setInputValue(
-        `#filters-form input#${field}`,
-        identificationsApiParams[field],
-      );
-    }
-  });
+  ];
+  processInputFields(inputFields, appStore);
 
-  let fields2 = [
+  let selectFields: IdentificationsApiParamsKeys[] = [
     "hrank",
     "lrank",
     "observation_hrank",
     "observation_lrank",
     "quality_grade",
-  ] as IdentificationsApiParamsKeys[];
-  fields2.forEach((field) => {
-    if (identificationsApiParams[field] !== undefined) {
-      setSelectedOption(
-        `#filters-form select#${field} option[value='${identificationsApiParams[field]}']`,
-      );
-    }
-  });
+  ];
+  processSelectFields(selectFields, appStore);
 
-  if (identificationsApiParams["iconic_taxon_id"] !== undefined) {
-    identificationsApiParams["iconic_taxon_id"]
-      .toString()
-      .split(",")
-      .forEach((value: string) => {
-        setInputChecked(
-          `#filters-form input#${(iconicTaxaIdName as any)[value]}`,
-          true,
-        );
-      });
-  }
-
-  if (identificationsApiParams["observation_iconic_taxon_id"] !== undefined) {
-    identificationsApiParams["observation_iconic_taxon_id"]
-      .toString()
-      .split(",")
-      .forEach((value: string) => {
-        setInputChecked(
-          `#filters-form input#${(iconicTaxaIdName as any)[value]}2`,
-          true,
-        );
-      });
-  }
+  let inputCheckedFields: IdentificationsApiParamsKeys[] = [
+    "iconic_taxon_id",
+    "observation_iconic_taxon_id",
+  ];
+  processInputCheckedFields(inputCheckedFields, appStore);
 }
 
 export function renderRankSelect(selectSelector: string, defaultValue: string) {
