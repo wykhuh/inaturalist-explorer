@@ -48,13 +48,7 @@ export function processFiltersForm(data: FormData): {
         "quality_grade",
         "created_month",
         "created_year",
-        "term_value_id-1",
-        "term_value_id-9",
-        "term_value_id-12",
-        "term_value_id-17",
-        "term_value_id-22",
-        "term_value_id-33",
-        "term_value_id-36",
+        "term_value_id",
       ].includes(key)
     ) {
       // ignore value "on"
@@ -82,7 +76,8 @@ export function processFiltersForm(data: FormData): {
   handleMultivalues(data, "quality_grade", values);
   handleMultivalues(data, "created_month", values);
   handleMultivalues(data, "created_year", values);
-  handleMultiterms(data, values);
+  handleMultivalues(data, "term_id", values);
+  handleMultivalues(data, "term_value_id", values);
 
   return {
     params: values,
@@ -103,39 +98,6 @@ function handleMultivalues(
     .map((i) => i.toString().trim());
   if (items.length > 0) {
     values[field] = items.join(",");
-  }
-}
-
-//
-function handleMultiterms(data: FormData, values: ObservationsApiParams) {
-  // -number represents the corresponding term_id for the term_value_id
-  let fields = [
-    "term_value_id-1",
-    "term_value_id-9",
-    "term_value_id-12",
-    "term_value_id-17",
-    "term_value_id-22",
-    "term_value_id-33",
-    "term_value_id-36",
-  ];
-  let valueIds: FormDataEntryValue[] = [];
-  let termIds: string[] = [];
-  fields.forEach((field) => {
-    let items = data
-      .getAll(field)
-      .filter((i) => i !== "")
-      .map((i) => i.toString().trim());
-    if (items.length > 0) {
-      valueIds = valueIds.concat(items);
-      let parts = field.split("-");
-      termIds.push(parts[1]);
-    }
-  });
-  if (termIds.length > 0) {
-    values.term_id = termIds.join(",");
-  }
-  if (valueIds.length > 0) {
-    values.term_value_id = valueIds.join(",");
   }
 }
 
@@ -417,4 +379,33 @@ export function renderYearsSelect(selector: string) {
       selectEl.appendChild(optionEl);
     });
   }
+}
+
+export function setTermId(target: HTMLInputElement, ctx: any) {
+  let termIdEl = ctx.querySelector("#term_id") as HTMLInputElement;
+  if (!termIdEl) return;
+  if (!target.dataset.termid) return;
+  if (target.name !== "term_value_id") return;
+
+  let termId = target.dataset.termid;
+
+  let existingvalues = termIdEl.value.split(",");
+  let newValue: string[] = [];
+
+  // remove term_id when user de-selects annotation term
+  if (target.value === "") {
+    newValue = existingvalues.filter((v) => v !== termId);
+    // add term_id
+  } else {
+    let values: string[] = existingvalues;
+
+    if (existingvalues[0] == "") {
+      newValue = [target.dataset.termid];
+    } else if (!values.includes(target.dataset.termid)) {
+      existingvalues.push(target.dataset.termid);
+      newValue = existingvalues;
+    }
+  }
+
+  termIdEl.value = newValue.join(",");
 }

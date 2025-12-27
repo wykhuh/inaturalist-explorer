@@ -1,10 +1,20 @@
 // @vitest-environment jsdom
 
-import { expect, test, describe, beforeAll, afterAll, afterEach } from "vitest";
+import {
+  expect,
+  test,
+  describe,
+  beforeAll,
+  afterAll,
+  afterEach,
+  beforeEach,
+} from "vitest";
+import jsdom from "jsdom";
 
 import {
   processFiltersForm,
   updateAppWithFilters,
+  setTermId,
 } from "../../../components/ObservationsFilters/utils";
 import { mapStore } from "../../../lib/store";
 import { createMockServer, defaultParams } from "../../test_helpers";
@@ -118,7 +128,6 @@ describe("processFiltersForm", () => {
     let data = createFormData();
     data.append("sound", " a b ");
     data.append("iconic_taxa", " c d ");
-    data.append("term_value_id-9", " e f ");
 
     let result = processFiltersForm(data);
 
@@ -126,10 +135,8 @@ describe("processFiltersForm", () => {
       params: {
         sound: "a b",
         iconic_taxa: "c d",
-        term_id: "9",
-        term_value_id: "e f",
       },
-      string: "sound=a+b&iconic_taxa=c+d&term_id=9&term_value_id=e+f",
+      string: "sound=a+b&iconic_taxa=c+d",
     };
     expect(result).toStrictEqual(expected);
   });
@@ -212,22 +219,6 @@ describe("processFiltersForm", () => {
         on: "2020-01-01",
       },
       string: "on=2020-01-01&iconic_taxa=Aves&month=1,2",
-    };
-    expect(result).toStrictEqual(expected);
-  });
-
-  test("convert term_value_id-number into comma seperated term_id and term_value_id", () => {
-    let data = createFormData();
-    data.append("term_value_id-1", "4");
-    data.append("term_value_id-1", "5");
-    data.append("term_value_id-9", "10");
-    data.append("term_value_id-9", "11");
-
-    let result = processFiltersForm(data);
-
-    let expected = {
-      params: { term_id: "1,9", term_value_id: "4,5,10,11" },
-      string: "term_id=1,9&term_value_id=4,5,10,11",
     };
     expect(result).toStrictEqual(expected);
   });
@@ -408,5 +399,75 @@ describe("updateHeaderCount", () => {
     expect(store.iNatStats.headerCountsIndex).toStrictEqual([hash2, hash3]);
     expect(store.iNatStats.headerCounts.get(hash2)).toStrictEqual(20);
     expect(store.iNatStats.headerCounts.get(hash3)).toStrictEqual(30);
+  });
+});
+
+describe("setTermId", () => {
+  const { JSDOM } = jsdom;
+
+  test("set term_id input using data-termid from term_value_id input", () => {
+    let dom = new JSDOM(
+      `<!doctype html>
+  <html lang="en">
+    <body>
+    <input id="term_id" name="term_id" />
+    <input name="term_value_id" id="term_value_id" data-termid="123" value="1" />
+    </body>
+  </html>`,
+    );
+    global.document = dom.window.document;
+
+    let ctx = document.querySelector("body");
+    let target = document.querySelector("#term_value_id") as HTMLInputElement;
+    if (!target) return;
+
+    setTermId(target, ctx);
+
+    let termIdEl = document.querySelector("#term_id") as HTMLInputElement;
+    expect(termIdEl.value).toBe("123");
+  });
+
+  test("append term_id when term_id input has an existing value", () => {
+    let dom = new JSDOM(
+      `<!doctype html>
+  <html lang="en">
+    <body>
+    <input id="term_id" name="term_id" value="123" />
+    <input name="term_value_id" id="term_value_id" data-termid="234" value="1" />
+    </body>
+  </html>`,
+    );
+    global.document = dom.window.document;
+
+    let ctx = document.querySelector("body");
+    let target = document.querySelector("#term_value_id") as HTMLInputElement;
+    if (!target) return;
+
+    setTermId(target, ctx);
+
+    let termIdEl = document.querySelector("#term_id") as HTMLInputElement;
+    expect(termIdEl.value).toBe("123,234");
+  });
+
+  test("set term_id  to '' if term_value_id is ''", () => {
+    let dom = new JSDOM(
+      `<!doctype html>
+  <html lang="en">
+    <body>
+    <input id="term_id" name="term_id" value="123" />
+    <input name="term_value_id" id="term_value_id" data-termid="123" value="" />
+    </body>
+  </html>`,
+    );
+    global.document = dom.window.document;
+
+    let ctx = document.querySelector("body");
+    let target = document.querySelector("#term_value_id") as HTMLInputElement;
+    if (!target) return;
+
+    setTermId(target, ctx);
+
+    let termIdEl = document.querySelector("#term_id") as HTMLInputElement;
+    expect(termIdEl.value).toBe("");
   });
 });

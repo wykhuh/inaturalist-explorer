@@ -12,6 +12,7 @@ import {
   renderRankSelect,
   renderYearsSelect,
   processFiltersForm,
+  setTermId,
 } from "./utils";
 import { template } from "./template";
 import { renderSelectedFiltersList, tabClickHandler } from "./shared_utils";
@@ -142,6 +143,9 @@ class ObservationFilters extends HTMLElement {
 
   async formChangeHandler(event: Event, form: HTMLFormElement) {
     event.preventDefault();
+
+    let target = event.target as HTMLInputElement;
+    setTermId(target, this);
 
     const data = new FormData(form);
     await updateAppWithFilters(data, window.app.store);
