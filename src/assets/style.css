@@ -737,7 +737,7 @@
     .avatar-image {
       width: 36px;
       height: 36px;
-      border-radius: 18px;
+      border-radius: 100%;
     }
 
     .map-marker-icon,
@@ -1044,7 +1044,7 @@
     }
 
     .person-icon,
-    .avatar {
+    .avatar-image {
       width: 45px;
       height: 45px;
       border-radius: 100%;

@@ -39,7 +39,7 @@ export function formatUserName(user: ObservationUser) {
 }
 
 export function formatAvatar(user: ObservationUser) {
-  let imgUrl = user.icon;
+  let imgUrl = user.icon || user.icon_url;
   let image = "";
   if (imgUrl) {
     image = html`<img

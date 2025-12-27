@@ -234,7 +234,7 @@ export async function getObservations(appParams: string, perPage: number) {
     "sounds:(id:!t,file_url:!t)," +
     "taxon:(iconic_taxon_id:!t,name:!t,preferred_common_name:!t,preferred_common_names:(name:!t),rank:!t,rank_level:!t)," +
     "time_observed_at:!t," +
-    "user:(icon_url:!t,id:!t,login:!t,name:!t))";
+    "user:(icon_url:!t,icon:!t,id:!t,login:!t,name:!t))";
 
   let searchParams = normalizeAppParams(appParams);
   let url =
