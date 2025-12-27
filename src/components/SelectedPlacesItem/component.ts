@@ -2,7 +2,7 @@ import { setupComponent } from "../../lib/component_utils.ts";
 import { loggerRender } from "../../lib/logger.ts";
 import { removePlace } from "../../lib/search_places.ts";
 import { renderSelectedCounts } from "../../lib/selected_items_utils.ts";
-import type { MapStore, NormalizediNatPlace } from "../../types/app";
+import type { AppStoreType, NormalizediNatPlaceType } from "../../types/app";
 import { template } from "./template";
 
 class SelectedPlacesItem extends HTMLElement {
@@ -14,13 +14,13 @@ class SelectedPlacesItem extends HTMLElement {
     this.render(window.app.store);
   }
 
-  async render(appStore: MapStore) {
+  async render(appStore: AppStoreType) {
     if (!this.dataset.place) return;
     loggerRender("++ SelectedPlacesItem render");
 
     setupComponent(template, this);
 
-    let place = JSON.parse(this.dataset.place) as NormalizediNatPlace;
+    let place = JSON.parse(this.dataset.place) as NormalizediNatPlaceType;
 
     let titleEl = this.querySelector(".title");
     if (titleEl && place.name) {

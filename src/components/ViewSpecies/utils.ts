@@ -15,7 +15,7 @@ import {
 import { loggerTime } from "../../lib/logger";
 import { createSpinner } from "../../lib/spinner";
 import { updateAppUrl } from "../../lib/utils";
-import type { DataComponent, MapStore } from "../../types/app";
+import type { DataComponentType, AppStoreType } from "../../types/app";
 import type {
   IdentificationsResult,
   ObservationsResult,
@@ -28,9 +28,9 @@ export async function fetchAndRenderData(
   perPage: number,
   paginationCallback: (
     currentPage: number,
-    appStore: MapStore,
+    appStore: AppStoreType,
   ) => Promise<void>,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   let containerEl = document.querySelector(".species-list-container");
   if (!containerEl) return;
@@ -56,7 +56,7 @@ export async function fetchAndRenderData(
 
   let pagination1 = document.createElement(
     "app-pagination",
-  ) as unknown as DataComponent;
+  ) as unknown as DataComponentType;
   pagination1.data = {
     perPage: data.per_page,
     currentPage: data.page,
@@ -70,7 +70,7 @@ export async function fetchAndRenderData(
 
   let pagination2 = document.createElement(
     "app-pagination",
-  ) as unknown as DataComponent;
+  ) as unknown as DataComponentType;
   pagination2.data = {
     perPage: data.per_page,
     currentPage: data.page,
@@ -81,7 +81,7 @@ export async function fetchAndRenderData(
   containerEl.appendChild(pagination2);
 }
 
-async function getAPIData(perPage: number, appStore: MapStore) {
+async function getAPIData(perPage: number, appStore: AppStoreType) {
   if (import.meta.env?.VITE_CACHE === "true") {
     let page = isObservationsCheck(appStore)
       ? appStore.observationsApiParams.page
@@ -111,7 +111,7 @@ function createGrid(
     | ObservationsResult[]
     | IdentificationsResult[]
     | ResourceSpeciesCountResult[],
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   let containerEl = document.createElement("div");
   containerEl.className = "species-grid grid-auto-fill";
@@ -119,7 +119,7 @@ function createGrid(
   results.forEach((row) => {
     let cardEl = document.createElement(
       "card-species",
-    ) as unknown as DataComponent;
+    ) as unknown as DataComponentType;
     cardEl.data = row;
     cardEl.record_type = appStore.record_type;
     containerEl.appendChild(cardEl);
@@ -128,7 +128,7 @@ function createGrid(
   return containerEl;
 }
 
-export async function paginationCallback(num: number, appStore: MapStore) {
+export async function paginationCallback(num: number, appStore: AppStoreType) {
   if (isObservationsCheck(appStore)) {
     appStore.observationsApiParams = {
       ...appStore.observationsApiParams,

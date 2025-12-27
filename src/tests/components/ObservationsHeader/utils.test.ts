@@ -19,7 +19,7 @@ import {
 } from "../../test_helpers";
 import { updateView } from "../../../components/ObservationsHeader/shared_utils";
 import { template } from "../../../components/ObservationsHeader/template";
-import type { ObservationViews } from "../../../types/app";
+import type { ObservationViewsType } from "../../../types/app";
 import { viewAndTemplateObject } from "../../../data/app_data";
 
 const server = createMockServer();
@@ -54,7 +54,7 @@ describe("updateView", () => {
     "observations_species",
     "observations_identifiers",
     "observations_observers",
-  ] as ObservationViews[])(
+  ] as ObservationViewsType[])(
     "update store, sets currentView class, adds template tag, update url",
     (view) => {
       const store = structuredClone(mapStore);

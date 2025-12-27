@@ -18,9 +18,9 @@ import { createSpinner } from "../../lib/spinner";
 import { updateAppUrl } from "../../lib/utils";
 import type { ObservationsResult } from "../../types/inat_api";
 import type {
-  DataComponent,
-  MapStore,
-  ObservationSubviews,
+  DataComponentType,
+  AppStoreType,
+  ObservationSubviewsType,
 } from "../../types/app";
 import { observations } from "../../data/inat_api_cache";
 import { setSelectedOption } from "../../lib/form_utils";
@@ -37,9 +37,9 @@ export async function fetchAndRenderData(
   perPage: number,
   paginationCallback: (
     currentPage: number,
-    appStore: MapStore,
+    appStore: AppStoreType,
   ) => Promise<void>,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   let containerEl = document.querySelector(".observations-list-container");
   if (!containerEl) return;
@@ -68,7 +68,7 @@ export async function fetchAndRenderData(
 
   let pagination1 = document.createElement(
     "app-pagination",
-  ) as unknown as DataComponent;
+  ) as unknown as DataComponentType;
   pagination1.data = {
     perPage: data.per_page,
     currentPage: data.page,
@@ -95,7 +95,7 @@ export async function fetchAndRenderData(
 
   let pagination2 = document.createElement(
     "app-pagination",
-  ) as unknown as DataComponent;
+  ) as unknown as DataComponentType;
   pagination2.data = {
     perPage: data.per_page,
     currentPage: data.page,
@@ -106,7 +106,7 @@ export async function fetchAndRenderData(
   containerEl.appendChild(pagination2);
 }
 
-async function getAPIData(perPage: number, appStore: MapStore) {
+async function getAPIData(perPage: number, appStore: AppStoreType) {
   if (import.meta.env?.VITE_CACHE === "true") {
     let page = isObservationsCheck(appStore)
       ? appStore.observationsApiParams.page
@@ -134,7 +134,10 @@ async function getAPIData(perPage: number, appStore: MapStore) {
   }
 }
 
-export function createTable(results: ObservationsResult[], appStore: MapStore) {
+export function createTable(
+  results: ObservationsResult[],
+  appStore: AppStoreType,
+) {
   let tableEl = document.createElement("table") as HTMLElement;
   tableEl.className = "observations-table table";
 
@@ -250,7 +253,7 @@ export function createGrid(results: ObservationsResult[]) {
   results.forEach((row) => {
     let cardEl = document.createElement(
       "card-observation",
-    ) as unknown as DataComponent;
+    ) as unknown as DataComponentType;
     cardEl.data = row;
     containerEl.appendChild(cardEl);
   });
@@ -266,7 +269,7 @@ function createMediaGrid(results: ObservationsResult[]) {
     media.forEach((medium, j) => {
       let cardEl = document.createElement(
         "card-media",
-      ) as unknown as DataComponent;
+      ) as unknown as DataComponentType;
       cardEl.data = {
         observation: record,
         media: medium,
@@ -280,7 +283,7 @@ function createMediaGrid(results: ObservationsResult[]) {
   return containerEl;
 }
 
-export async function paginationCallback(num: number, appStore: MapStore) {
+export async function paginationCallback(num: number, appStore: AppStoreType) {
   if (isObservationsCheck(appStore)) {
     appStore.observationsApiParams = {
       ...appStore.observationsApiParams,
@@ -309,9 +312,9 @@ export async function paginationCallback(num: number, appStore: MapStore) {
 }
 
 export function updateSubviewState(
-  subview: ObservationSubviews,
+  subview: ObservationSubviewsType,
   componentContext: any,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   let containerEl = document.querySelector(".observations-subview");
   if (!containerEl) {
@@ -362,7 +365,7 @@ export function updateSubviewState(
 }
 
 // use store to populate the filter form fields on page load
-export function initFilters(appStore: MapStore) {
+export function initFilters(appStore: AppStoreType) {
   let { observationsApiParams } = appStore;
 
   if (observationsApiParams.order !== undefined) {
@@ -377,7 +380,7 @@ export function initFilters(appStore: MapStore) {
   }
 }
 
-export async function updateOrderState(data: FormData, appStore: MapStore) {
+export async function updateOrderState(data: FormData, appStore: AppStoreType) {
   // get values from form data
   let orderBy;
   let order;

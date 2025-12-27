@@ -1,10 +1,13 @@
 import autoComplete from "@tarekraafat/autocomplete.js";
 
-import type { AutoCompleteEvent, NormalizediNatUser } from "../types/app.d.ts";
+import type {
+  AutoCompleteEventType,
+  NormalizediNatUserType,
+} from "../types/app.d.ts";
 import { autocomplete_users_api } from "../lib/inat_api.ts";
 import type { iNatUsersAPI } from "../types/inat_api";
 import { loggerUrl } from "../lib/logger.ts";
-import type { MapStore } from "../types/app";
+import type { AppStoreType } from "../types/app";
 import {
   addValueToCommaSeparatedString,
   isObservationsCheck,
@@ -17,13 +20,13 @@ import {
   renderSelectedResources,
 } from "./search_utils.ts";
 
-export function setupUserSearch(selector: string, appStore: MapStore) {
+export function setupUserSearch(selector: string, appStore: AppStoreType) {
   const autoCompleteUsersJS = new autoComplete({
     autocomplete: "off",
     selector: selector,
     placeHolder: "Enter username",
     threshold: 2,
-    searchEngine: (_query: string, record: NormalizediNatUser) => {
+    searchEngine: (_query: string, record: NormalizediNatUserType) => {
       return renderAutocompleteUser(record);
     },
     data: {
@@ -50,8 +53,9 @@ export function setupUserSearch(selector: string, appStore: MapStore) {
     },
     events: {
       input: {
-        selection: (event: AutoCompleteEvent) => {
-          const selection = event.detail.selection.value as NormalizediNatUser;
+        selection: (event: AutoCompleteEventType) => {
+          const selection = event.detail.selection
+            .value as NormalizediNatUserType;
           autoCompleteUsersJS.input.value = selection.login;
         },
       },
@@ -63,7 +67,7 @@ export function setupUserSearch(selector: string, appStore: MapStore) {
 
 export function processAutocompleteUser(
   data: iNatUsersAPI,
-): NormalizediNatUser[] {
+): NormalizediNatUserType[] {
   return data.results.map((item) => {
     return {
       id: item.id,
@@ -73,7 +77,7 @@ export function processAutocompleteUser(
   });
 }
 
-export function renderAutocompleteUser(item: NormalizediNatUser): string {
+export function renderAutocompleteUser(item: NormalizediNatUserType): string {
   let html = `
   <div class="users-ac-option" data-testid="users-ac-option">
     <div class="user-name">
@@ -92,9 +96,9 @@ export function renderAutocompleteUser(item: NormalizediNatUser): string {
 
 // called by autocomplete search when an user option is selected
 export async function userSelectedHandler(
-  selection: NormalizediNatUser,
+  selection: NormalizediNatUserType,
   _query: string,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   let isObservations = isObservationsCheck(appStore);
   if (!isObservations) return;
@@ -123,7 +127,7 @@ export async function userSelectedHandler(
   renderSelectedResources(appStore, true);
 }
 
-export function renderUsersList(appStore: MapStore) {
+export function renderUsersList(appStore: AppStoreType) {
   let listEl = document.querySelector("#selected-users-list");
   if (!listEl) return;
 
@@ -136,7 +140,7 @@ export function renderUsersList(appStore: MapStore) {
   });
 }
 
-export async function removeUser(userId: number, appStore: MapStore) {
+export async function removeUser(userId: number, appStore: AppStoreType) {
   if (!appStore.selectedUsers) return;
 
   // remove user

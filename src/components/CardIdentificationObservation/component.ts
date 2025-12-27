@@ -9,7 +9,7 @@ import {
   renderTaxonNames,
 } from "../../lib/render_utils";
 import { pluralize } from "../../lib/utils";
-import type { DataComponent, MapStore } from "../../types/app";
+import type { DataComponentType, AppStoreType } from "../../types/app";
 import type { Observation } from "../../types/inat_api";
 import { template } from "./template";
 
@@ -23,10 +23,11 @@ class CardIdentificationObservation extends HTMLElement {
     this.render(window.app.store);
   }
 
-  render(appStore: MapStore) {
+  render(appStore: AppStoreType) {
     let cardEl = this.querySelector(".card");
     if (!cardEl) return;
-    let observation = (this as unknown as DataComponent).data as Observation;
+    let observation = (this as unknown as DataComponentType)
+      .data as Observation;
 
     let content = "";
     content += `<div class="user-action">`;

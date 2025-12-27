@@ -12,7 +12,7 @@ import type { PolygonJson, MultiPolygonJson } from "./inat_api";
 
 declare global {
   interface Window {
-    app: { store: MapStore; router: RouterType };
+    app: { store: AppStoreType; router: RouterType };
   }
 }
 
@@ -21,20 +21,20 @@ type RouterType = {
   go: (path: string, params?: string, addToHistory?: boolean) => void;
 };
 
-export interface MapStore {
-  selectedTaxa: NormalizediNatTaxon[];
-  selectedTaxaIdentified: NormalizediNatTaxon[];
+export interface AppStoreType {
+  selectedTaxa: NormalizediNatTaxonType[];
+  selectedTaxaIdentified: NormalizediNatTaxonType[];
   taxaMapLayers: { [index: string]: TileLayer[] };
-  selectedPlaces: NormalizediNatPlace[];
-  placesMapLayers: { [index: string]: CustomGeoJSON[] };
-  projectsMapLayers?: { [index: string]: CustomGeoJSON[] };
-  selectedUsers: NormalizediNatUser[];
-  selectedUsersIdentifiers: NormalizediNatUser[];
-  selectedUnobservedByUser: NormalizediNatUser;
-  selectedReviewer: NormalizediNatUser;
-  selectedProjects: NormalizediNatProject[];
-  observationsApiParams: ObservationsApiParams;
-  identificationsApiParams: IdentificationsApiParams;
+  selectedPlaces: NormalizediNatPlaceType[];
+  placesMapLayers: { [index: string]: CustomGeoJSONType[] };
+  projectsMapLayers?: { [index: string]: CustomGeoJSONType[] };
+  selectedUsers: NormalizediNatUserType[];
+  selectedUsersIdentifiers: NormalizediNatUserType[];
+  selectedUnobservedByUser: NormalizediNatUserType;
+  selectedReviewer: NormalizediNatUserType;
+  selectedProjects: NormalizediNatProjectType[];
+  observationsApiParams: ObservationsApiParamsType;
+  identificationsApiParams: IdentificationsApiParamsType;
   color: string;
   map: {
     map: Map | null;
@@ -47,14 +47,14 @@ export interface MapStore {
     layer: CustomPolygon | null;
   };
   formFilters: {
-    params: ObservationsApiParams;
+    params: ObservationsApiParamsType;
     string: string;
   };
   iNatStats: {
     headerCounts: any;
     headerCountsIndex: string[];
   };
-  currentView?: ObservationViews;
+  currentView?: ObservationViewsType;
   observationsSubviewData: ObservationsResult[];
   viewMetadata: {
     observations_observations: ViewOptions;
@@ -66,7 +66,7 @@ export interface MapStore {
     identifications_identifiers: ViewOptions;
     identifications_observers: ViewOptions;
     identifications_identifications: ViewOptions;
-    name_order: NameOrder;
+    name_order: NameOrderType;
   };
   record_type: RecordTypes;
 }
@@ -77,12 +77,12 @@ type ViewOptions = {
   page?: number;
   order?: string;
   order_by?: string;
-  subview?: ObservationSubviews;
+  subview?: ObservationSubviewsType;
 };
 
-export type MapStoreKeys = keyof MapStore;
+export type AppStoreKeysType = keyof AppStoreType;
 
-export type ObservationViews =
+export type ObservationViewsType =
   | "observations_observations"
   | "observations_species"
   | "observations_identifiers"
@@ -93,10 +93,10 @@ export type ObservationViews =
   | "identifications_observers"
   | "identifications_identifications";
 
-export type ObservationSubviews = "table" | "grid" | "media";
-export type NameOrder = "cs" | "sc" | "s";
+export type ObservationSubviewsType = "table" | "grid" | "media";
+export type NameOrderType = "cs" | "sc" | "s";
 
-export type NormalizediNatTaxon = {
+export type NormalizediNatTaxonType = {
   name?: string;
   default_photo?: string;
   preferred_common_name?: string;
@@ -110,7 +110,7 @@ export type NormalizediNatTaxon = {
   subtitle?: string;
 };
 
-export type NormalizediNatPlace = {
+export type NormalizediNatPlaceType = {
   display_name?: string;
   name?: string;
   geometry?: PolygonJson | MultiPolygonJson;
@@ -122,7 +122,7 @@ export type NormalizediNatPlace = {
   identifications_count?: number;
 };
 
-export type NormalizediNatProject = {
+export type NormalizediNatProjectType = {
   id: number;
   name: string;
   slug: string;
@@ -133,7 +133,7 @@ export type NormalizediNatProject = {
   bounding_box?: PolygonJson;
 };
 
-export type NormalizediNatUser = {
+export type NormalizediNatUserType = {
   id: number;
   login: string;
   name: string | null;
@@ -141,9 +141,9 @@ export type NormalizediNatUser = {
   identifications_count?: number;
 };
 
-export type MapStoreKeys = keyof MapStore;
+export type AppStoreKeysType = keyof AppStoreType;
 
-export type MapStoreSelectedResourcesKeys =
+export type AppStoreSelectedResourcesKeysType =
   | "selectedTaxa"
   | "selectedTaxaIdentified"
   | "selectedPlaces"
@@ -151,11 +151,11 @@ export type MapStoreSelectedResourcesKeys =
   | "selectedProjects"
   | "selectedUsersIdentifiers";
 
-export type MapStoreParamsKeys =
+export type AppStoreTypeParamsKeys =
   | "observationsApiParams"
   | "identificationsApiParams";
 
-interface ObservationsApiParams extends ObservationsApiFilterableParams {
+interface ObservationsApiParamsType extends ObservationsApiFilterableParams {
   nelat?: number;
   nelng?: number;
   swlat?: number;
@@ -175,7 +175,7 @@ interface ObservationsApiParams extends ObservationsApiFilterableParams {
   order?: string;
   order_by?: string;
   locale?: string;
-  name_order?: NameOrder;
+  name_order?: NameOrderType;
   life_stage?: number;
   sex?: number;
   flowers_fruits?: number;
@@ -281,11 +281,12 @@ interface ObservationsApiFilterableParams {
   reviewed?: boolean;
 }
 
-export type ObservationsApiParamsKeys = keyof ObservationsApiParams;
+export type ObservationsApiParamsKeysType = keyof ObservationsApiParamsType;
 export type ObservationsApiFilterableParamsKeys =
   keyof ObservationsApiFilterableParams;
 
-interface IdentificationsApiParams extends IdentificationsApiFilterableParams {
+interface IdentificationsApiParamsType
+  extends IdentificationsApiFilterableParams {
   place_id?: string; // comma-seperated string
   taxon_id?: string; // comma-seperated string
   observation_taxon_id?: string; // comma-seperated string
@@ -337,33 +338,34 @@ interface IdentificationsApiFilterableParams {
   taxon_of?: string;
 }
 
-export type IdentificationsApiParamsKeys = keyof IdentificationsApiParams;
+export type IdentificationsApiParamsKeysType =
+  keyof IdentificationsApiParamsType;
 export type IdentificationsApiFilterableParamsKeys =
   keyof IdentificationsApiFilterableParams;
 
-export interface AutoCompleteEvent {
+export interface AutoCompleteEventType {
   detail: {
     query: string;
     selection: {
       index: number;
       match: string;
       value:
-        | NormalizediNatTaxon
-        | NormalizediNatPlace
-        | NormalizediNatProject
-        | NormalizediNatUser;
+        | NormalizediNatTaxonType
+        | NormalizediNatPlaceType
+        | NormalizediNatProjectType
+        | NormalizediNatUserType;
     };
   };
 }
 
-export type iNatObservationTilesSettings = {
-  iNatGrid: ObservationTilesSetting;
-  iNatPoint: ObservationTilesSetting;
-  iNatTaxonRange?: ObservationTilesSetting;
-  iNatHeatmap: ObservationTilesSetting;
+export type iNatObservationTilesSettingsType = {
+  iNatGrid: ObservationTilesSettingType;
+  iNatPoint: ObservationTilesSettingType;
+  iNatTaxonRange?: ObservationTilesSettingType;
+  iNatHeatmap: ObservationTilesSettingType;
 };
 
-export interface ObservationTilesSetting {
+export interface ObservationTilesSettingType {
   name: string;
   type: "overlay" | "basemap";
   url: string;
@@ -381,34 +383,34 @@ type ButtonEvent = Event & {
   target: HTMLButtonElement;
 };
 
-type LeafletBounds = {
+type LeafletBoundsType = {
   _northEast: { lat: number; lng: number };
   _southWest: { lat: number; lng: number };
 };
 
 type Lng = number;
 type Lat = number;
-export type LngLat = [Lng, Lat];
-export type LatLng = [Lat, Lng];
-export type Coordinates = LngLat | LatLng;
+export type LngLatType = [Lng, Lat];
+export type LatLngType = [Lat, Lng];
+export type CoordinatesType = LngLatType | LatLngType;
 
-export interface CustomLayer extends LayerOptions {
-  options: CustomLayerOptions;
-  _bounds: LeafletBounds;
+export interface CustomLayerType extends LayerOptions {
+  options: CustomLayerOptionsType;
+  _bounds: LeafletBoundsType;
   _path: string;
   _container: string;
 }
 
-export interface CustomLayerOptions extends LayerOptions {
+export interface CustomLayerOptionsType extends LayerOptions {
   layer_description?: string;
 }
 
 export interface CustomPolygon extends Polygon {
-  _bounds: LeafletBounds;
+  _bounds: LeafletBoundsType;
   options: CustomPolygonOptions;
 }
 
-type LeafletBounds = {
+type LeafletBoundsType = {
   nelat?: number;
   nelng?: number;
   swlat?: number;
@@ -419,25 +421,26 @@ export interface CustomPolygonOptions extends PolylineOptions {
   layer_description: string;
 }
 
-export interface CustomGeoJSON extends GeoJSON {
-  options: CustomGeoJSONOptions;
+export interface CustomGeoJSONType extends GeoJSON {
+  options: CustomGeoJSONTypeOptions;
 }
 
-export interface CustomGeoJSONOptions extends GeoJSONOptions {
+export interface CustomGeoJSONTypeOptions extends GeoJSONOptions {
   layer_description: string;
 }
 
-interface ObservationsMapTilesAPIParams extends ObservationsApiParams {
+interface ObservationsMapTilesAPIParamsType extends ObservationsApiParamsType {
   color?: string;
 }
 
-interface IdentificationsMapTilesAPIParams extends IdentificationsApiParams {
+interface IdentificationsMapTilesAPIParamsType
+  extends IdentificationsApiParamsType {
   color?: string;
 }
 
-type MapTilesAPIParams =
+type MapTilesAPIParamsType =
   | IdentificationsMapTilesAPIParams
-  | ObservationsMapTilesAPIParams;
+  | ObservationsMapTilesAPIParamsType;
 
 export type PlaceTypes = {
   [key: string]: string;
@@ -461,7 +464,7 @@ type Spinner = {
   stop: () => void;
 };
 
-export interface DataComponent extends HTMLElement {
+export interface DataComponentType extends HTMLElement {
   data?: any;
   record_type: RecordTypes;
 }

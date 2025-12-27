@@ -1,5 +1,5 @@
 import type { ResourceSpeciesCountResult } from "../../types/inat_api";
-import type { DataComponent, MapStore } from "../../types/app";
+import type { DataComponentType, AppStoreType } from "../../types/app";
 import { pluralize } from "../../lib/utils";
 import { iNatTaxaUrl } from "../../data/inat_data";
 import { setupComponent } from "../../lib/component_utils";
@@ -24,10 +24,10 @@ class CardSpecies extends HTMLElement {
     this.renderCard(window.app.store);
   }
 
-  renderCard(appStore: MapStore) {
-    let data = (this as unknown as DataComponent)
+  renderCard(appStore: AppStoreType) {
+    let data = (this as unknown as DataComponentType)
       .data as ResourceSpeciesCountResult;
-    let record_type = (this as unknown as DataComponent).record_type;
+    let record_type = (this as unknown as DataComponentType).record_type;
 
     let photoEl = this.querySelector(".photo") as HTMLLinkElement;
     if (photoEl) {

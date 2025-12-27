@@ -25,7 +25,11 @@ import {
   defaultQuery,
   defaultParams,
 } from "./test_helpers.ts";
-import type { MapStore, NameOrder, ObservationViews } from "../types/app";
+import type {
+  AppStoreType,
+  NameOrderType,
+  ObservationViewsType,
+} from "../types/app";
 import {
   IdentificationsApiFilterableNames,
   ObservationsApiFilterableNames,
@@ -81,7 +85,7 @@ describe("pluralize", () => {
 
 describe("formatAppUrl", () => {
   test("format parameters for default store", () => {
-    let appStore: MapStore = {
+    let appStore: AppStoreType = {
       ...mapStore,
     };
 
@@ -90,7 +94,7 @@ describe("formatAppUrl", () => {
     expect(result).toBe(``);
   });
   test("format parameters for one taxon", () => {
-    let appStore: MapStore = {
+    let appStore: AppStoreType = {
       ...mapStore,
       observationsApiParams: {
         ...mapStore.observationsApiParams,
@@ -108,7 +112,7 @@ describe("formatAppUrl", () => {
   });
 
   test("format parameters for multiple taxa", () => {
-    let appStore: MapStore = {
+    let appStore: AppStoreType = {
       ...mapStore,
       observationsApiParams: {
         ...mapStore.observationsApiParams,
@@ -128,7 +132,7 @@ describe("formatAppUrl", () => {
   });
 
   test("format parameters for one place", () => {
-    let appStore: MapStore = {
+    let appStore: AppStoreType = {
       ...mapStore,
       observationsApiParams: {
         ...mapStore.observationsApiParams,
@@ -144,7 +148,7 @@ describe("formatAppUrl", () => {
   });
 
   test("format parameters for multiple places", () => {
-    let appStore: MapStore = {
+    let appStore: AppStoreType = {
       ...mapStore,
       observationsApiParams: {
         ...mapStore.observationsApiParams,
@@ -162,7 +166,7 @@ describe("formatAppUrl", () => {
   });
 
   test("format parameters for one project", () => {
-    let appStore: MapStore = {
+    let appStore: AppStoreType = {
       ...mapStore,
       observationsApiParams: {
         ...mapStore.observationsApiParams,
@@ -178,7 +182,7 @@ describe("formatAppUrl", () => {
   });
 
   test("format parameters for multiple project", () => {
-    let appStore: MapStore = {
+    let appStore: AppStoreType = {
       ...mapStore,
       observationsApiParams: {
         ...mapStore.observationsApiParams,
@@ -196,7 +200,7 @@ describe("formatAppUrl", () => {
   });
 
   test("format parameters for one user", () => {
-    let appStore: MapStore = {
+    let appStore: AppStoreType = {
       ...mapStore,
       observationsApiParams: {
         ...mapStore.observationsApiParams,
@@ -212,7 +216,7 @@ describe("formatAppUrl", () => {
   });
 
   test("format parameters for multiple users", () => {
-    let appStore: MapStore = {
+    let appStore: AppStoreType = {
       ...mapStore,
       observationsApiParams: {
         ...mapStore.observationsApiParams,
@@ -228,7 +232,7 @@ describe("formatAppUrl", () => {
   });
 
   test("return params if no selected resources, and observationsApiParams has additional params", () => {
-    let appStore: MapStore = {
+    let appStore: AppStoreType = {
       ...mapStore,
       observationsApiParams: {
         ...mapStore.observationsApiParams,
@@ -277,7 +281,7 @@ describe("formatAppUrl", () => {
   });
 
   test("return params if no selected resources, and spam and verifiable are not default", () => {
-    let appStore: MapStore = {
+    let appStore: AppStoreType = {
       ...mapStore,
       observationsApiParams: {
         verifiable: false,
@@ -295,9 +299,9 @@ describe("formatAppUrl", () => {
   test.each(validViews.filter((v) => !v.endsWith("_observations")))(
     "return parameters if view is not observations_observations",
     (view) => {
-      let appStore: MapStore = {
+      let appStore: AppStoreType = {
         ...mapStore,
-        currentView: view as ObservationViews,
+        currentView: view as ObservationViewsType,
       };
 
       let result = formatAppUrl(appStore);
@@ -307,7 +311,7 @@ describe("formatAppUrl", () => {
   );
 
   test("return empty string if view is observations", () => {
-    let appStore: MapStore = {
+    let appStore: AppStoreType = {
       ...mapStore,
       currentView: "observations_observations",
     };
@@ -320,12 +324,12 @@ describe("formatAppUrl", () => {
   test.each([
     "observations_observations",
     "identifications_observations",
-  ] as ObservationViews[])(
+  ] as ObservationViewsType[])(
     "return empty string if subview is grid ",
     (view) => {
-      let appStore: MapStore = {
+      let appStore: AppStoreType = {
         ...mapStore,
-        currentView: view as ObservationViews,
+        currentView: view as ObservationViewsType,
         viewMetadata: {
           ...mapStore.viewMetadata,
           [view]: { subview: "grid" },
@@ -341,12 +345,12 @@ describe("formatAppUrl", () => {
   test.each([
     "observations_observations",
     "identifications_observations",
-  ] as ObservationViews[])(
+  ] as ObservationViewsType[])(
     "return view & subview if subview is table ",
     (view) => {
-      let appStore: MapStore = {
+      let appStore: AppStoreType = {
         ...mapStore,
-        currentView: view as ObservationViews,
+        currentView: view as ObservationViewsType,
         viewMetadata: {
           ...mapStore.viewMetadata,
           [view]: { subview: "table" },
@@ -362,12 +366,12 @@ describe("formatAppUrl", () => {
   test.each([
     "observations_observations",
     "identifications_observations",
-  ] as ObservationViews[])(
+  ] as ObservationViewsType[])(
     "return view & subview if subview is photos ",
     (view) => {
-      let appStore: MapStore = {
+      let appStore: AppStoreType = {
         ...mapStore,
-        currentView: view as ObservationViews,
+        currentView: view as ObservationViewsType,
         viewMetadata: {
           ...mapStore.viewMetadata,
           [view]: { subview: "media" },
@@ -380,15 +384,15 @@ describe("formatAppUrl", () => {
     },
   );
 
-  test.each(["sc", "s"] as NameOrder[])(
+  test.each(["sc", "s"] as NameOrderType[])(
     "return name_order if name_order is sc or s",
     (name_order) => {
-      let appStore: MapStore = {
+      let appStore: AppStoreType = {
         ...mapStore,
         currentView: "observations_observations",
         viewMetadata: {
           ...mapStore.viewMetadata,
-          name_order: name_order as NameOrder,
+          name_order: name_order as NameOrderType,
         },
       };
 
@@ -399,7 +403,7 @@ describe("formatAppUrl", () => {
   );
 
   test("return params for page, order, order_by if observation", () => {
-    let appStore: MapStore = {
+    let appStore: AppStoreType = {
       ...mapStore,
       observationsApiParams: {
         verifiable: true,
@@ -431,7 +435,7 @@ describe("formatAppUrl", () => {
   test.each(validViews.filter((v) => !v.endsWith("_observations")))(
     "return params for page, order, order_by if not observation",
     (name) => {
-      let appStore: MapStore = {
+      let appStore: AppStoreType = {
         ...mapStore,
         observationsApiParams: {
           verifiable: true,
@@ -466,7 +470,7 @@ describe("formatAppUrl", () => {
   );
 
   test.each(["es", "fr"])("return params for locale that is not en", (lang) => {
-    let appStore: MapStore = {
+    let appStore: AppStoreType = {
       ...mapStore,
       observationsApiParams: {
         verifiable: true,
@@ -514,7 +518,7 @@ describe("formatAppUrl with identifications", () => {
 
 describe("formatAppUrl with about record_type", () => {
   test("returns '' for default store", () => {
-    let appStore: MapStore = {
+    let appStore: AppStoreType = {
       ...mapStore,
       record_type: "about",
     };
@@ -525,7 +529,7 @@ describe("formatAppUrl with about record_type", () => {
   });
 
   test("returns '' for selected resources", () => {
-    let appStore: MapStore = {
+    let appStore: AppStoreType = {
       ...mapStore,
       observationsApiParams: {
         ...mapStore.observationsApiParams,
@@ -598,7 +602,7 @@ let defaultUrlStore = {
     identifications_species: {},
     identifications_identifications: {},
   },
-} as MapStore;
+} as AppStoreType;
 
 describe("decodeAppUrl resources", () => {
   test("returns object with taxa data if taxon_id is present", () => {

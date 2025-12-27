@@ -1,5 +1,4 @@
-import type { NormalizediNatUser } from "../types/app.d.ts";
-import type { MapStore } from "../types/app";
+import type { NormalizediNatUserType, AppStoreType } from "../types/app.d.ts";
 import {
   updateTilesForSelectedTaxa,
   renderSelectedResources,
@@ -16,7 +15,7 @@ import { processFiltersForm } from "../components/ObservationsFilters/utils.ts";
 
 export function setupUnobservedByUserSearch(
   selector: string,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   const autoCompleteUsersJS = setupUserSearch(selector, appStore);
 
@@ -25,9 +24,9 @@ export function setupUnobservedByUserSearch(
 
 // called by autocomplete search when an user option is selected
 export async function unobservedByUserSelectedHandler(
-  selection: NormalizediNatUser,
+  selection: NormalizediNatUserType,
   _query: string,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   let isObservations = isObservationsCheck(appStore);
   if (!isObservations) return;
@@ -56,7 +55,7 @@ export async function unobservedByUserSelectedHandler(
   renderSelectedResources(appStore, true);
 }
 
-export async function removeUnobservedByUser(appStore: MapStore) {
+export async function removeUnobservedByUser(appStore: AppStoreType) {
   if (!appStore.selectedUsers) return;
 
   // remove user

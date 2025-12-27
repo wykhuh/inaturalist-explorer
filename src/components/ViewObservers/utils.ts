@@ -14,7 +14,7 @@ import type {
   ObservationsObserversResult,
 } from "../../types/inat_api";
 import { updateAppUrl } from "../../lib/utils";
-import type { DataComponent, MapStore } from "../../types/app";
+import type { DataComponentType, AppStoreType } from "../../types/app";
 import { observers } from "../../data/inat_api_cache";
 import { isIdentificationsObserversResult } from "../../types/utils";
 import {
@@ -33,9 +33,9 @@ export async function fetchAndRenderData(
   perPage: number,
   paginationCallback: (
     currentPage: number,
-    appStore: MapStore,
+    appStore: AppStoreType,
   ) => Promise<void>,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   let containerEl = document.querySelector(".observers-table-container");
   if (!containerEl) return;
@@ -65,7 +65,7 @@ export async function fetchAndRenderData(
 
   let pagination1 = document.createElement(
     "app-pagination",
-  ) as unknown as DataComponent;
+  ) as unknown as DataComponentType;
   pagination1.data = {
     perPage: data.per_page,
     currentPage: data.page,
@@ -91,7 +91,7 @@ export async function fetchAndRenderData(
 
   let pagination2 = document.createElement(
     "app-pagination",
-  ) as unknown as DataComponent;
+  ) as unknown as DataComponentType;
   pagination2.data = {
     perPage: data.per_page,
     currentPage: data.page,
@@ -102,7 +102,7 @@ export async function fetchAndRenderData(
   containerEl.appendChild(pagination2);
 }
 
-async function getAPIData(perPage: number, appStore: MapStore) {
+async function getAPIData(perPage: number, appStore: AppStoreType) {
   if (import.meta.env?.VITE_CACHE === "true") {
     let page = isObservationsCheck(appStore)
       ? appStore.observationsApiParams.page
@@ -226,7 +226,7 @@ function createIdentificationsTable(
   return tableEl;
 }
 
-export async function paginationCallback(num: number, appStore: MapStore) {
+export async function paginationCallback(num: number, appStore: AppStoreType) {
   if (isObservationsCheck(appStore)) {
     appStore.observationsApiParams = {
       ...appStore.observationsApiParams,

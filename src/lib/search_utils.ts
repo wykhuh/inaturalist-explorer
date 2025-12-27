@@ -1,6 +1,6 @@
 import type {
-  MapStore,
-  MapStoreSelectedResourcesKeys,
+  AppStoreType,
+  AppStoreSelectedResourcesKeysType,
   SearchOptions,
   SearchOptionsKeys,
 } from "../types/app";
@@ -46,7 +46,7 @@ import {
 } from "./search_taxa_identified.ts";
 import { loggerEvent } from "./logger.ts";
 
-export async function updateTilesForSelectedTaxa(appStore: MapStore) {
+export async function updateTilesForSelectedTaxa(appStore: AppStoreType) {
   for await (const taxon of appStore.selectedTaxa) {
     // remove existing taxon layers from map
     removeOneTaxonFromMap(appStore, taxon.id);
@@ -57,7 +57,7 @@ export async function updateTilesForSelectedTaxa(appStore: MapStore) {
 }
 
 export function renderSelectedResources(
-  appStore: MapStore,
+  appStore: AppStoreType,
   doSideEffects: boolean,
 ) {
   renderTaxaList(appStore);
@@ -79,7 +79,7 @@ export function renderSelectedResources(
   }
 }
 
-export function multisearchSetup(appStore: MapStore) {
+export function multisearchSetup(appStore: AppStoreType) {
   let searchSelector = "#inatAutocomplete";
   let searchInputEl = document.querySelector(
     searchSelector,
@@ -163,7 +163,7 @@ export function searchSetup(searchSelector: string, selectedHandler: any) {
 
 export function showHideHeader(
   selector: string,
-  storeResource: MapStoreSelectedResourcesKeys,
+  storeResource: AppStoreSelectedResourcesKeysType,
 ) {
   let heading = document.querySelector(selector) as HTMLElement;
 

@@ -10,7 +10,7 @@ import {
   normalizeAppParams,
 } from "../lib/data_utils.ts";
 import { renderTaxonNames } from "../lib/render_utils";
-import type { NormalizediNatTaxon } from "../types/app.d.ts";
+import type { NormalizediNatTaxonType } from "../types/app.d.ts";
 import { mapStore } from "../lib/store.ts";
 import { life, losangeles, redOak, sandiego } from "./test_helpers.ts";
 import {
@@ -381,7 +381,7 @@ describe("formatTaxonName", () => {
     test.each(results)(
       "returns title and subtitle",
       (processed, common, science, hasCommonName) => {
-        let data = processed as NormalizediNatTaxon;
+        let data = processed as NormalizediNatTaxonType;
 
         let res = formatTaxonName(data, store, "red");
 
@@ -422,7 +422,7 @@ describe("formatTaxonName", () => {
     test.each(results)(
       "returns title and subtitle",
       (processed, common, science, hasCommonName) => {
-        let data = processed as NormalizediNatTaxon;
+        let data = processed as NormalizediNatTaxonType;
 
         let res = formatTaxonName(data, store, "canis");
 
@@ -478,7 +478,7 @@ describe("formatTaxonName", () => {
     test.each(results)(
       "returns title and subtitle",
       (processed, common, science, hasCommonName) => {
-        let data = processed as NormalizediNatTaxon;
+        let data = processed as NormalizediNatTaxonType;
 
         let res = formatTaxonName(data, store, "coast oak");
 
@@ -694,7 +694,7 @@ describe("renderTaxonNames", () => {
 });
 
 describe("updateSelectedResource", () => {
-  let taxon1: NormalizediNatTaxon = {
+  let taxon1: NormalizediNatTaxonType = {
     name: "name 1",
     matched_term: "matched_term 1",
     rank: "rank 1",
@@ -702,7 +702,7 @@ describe("updateSelectedResource", () => {
     id: 111,
   };
 
-  let taxon2: NormalizediNatTaxon = {
+  let taxon2: NormalizediNatTaxonType = {
     name: "name 2",
     matched_term: "matched_term 2",
     rank: "rank 2",

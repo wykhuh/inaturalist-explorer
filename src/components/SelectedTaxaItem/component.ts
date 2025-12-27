@@ -6,7 +6,7 @@ import { renderTaxonNames } from "../../lib/render_utils";
 import { isObservationsCheck } from "../../lib/data_utils.ts";
 import { removeTaxon } from "../../lib/search_taxa.ts";
 import { pluralize } from "../../lib/utils.ts";
-import type { MapStore, NormalizediNatTaxon } from "../../types/app";
+import type { AppStoreType, NormalizediNatTaxonType } from "../../types/app";
 import { template } from "./template";
 
 class SelectedTaxaItem extends HTMLElement {
@@ -18,13 +18,13 @@ class SelectedTaxaItem extends HTMLElement {
     this.render(window.app.store);
   }
 
-  async render(appStore: MapStore) {
+  async render(appStore: AppStoreType) {
     if (!this.dataset.taxon) return;
 
     loggerRender("++ SelectedTaxaItem render");
     setupComponent(template, this);
 
-    let taxon = JSON.parse(this.dataset.taxon) as NormalizediNatTaxon;
+    let taxon = JSON.parse(this.dataset.taxon) as NormalizediNatTaxonType;
 
     let swatchEl = this.querySelector(".swatch") as HTMLElement;
     if (swatchEl) {

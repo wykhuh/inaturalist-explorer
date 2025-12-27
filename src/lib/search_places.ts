@@ -1,10 +1,10 @@
 import autoComplete from "@tarekraafat/autocomplete.js";
 
 import type {
-  AutoCompleteEvent,
-  NormalizediNatPlace,
-  MapStore,
-  CustomGeoJSON,
+  AutoCompleteEventType,
+  NormalizediNatPlaceType,
+  AppStoreType,
+  CustomGeoJSONType,
   PlaceTypesKey,
 } from "../types/app.d.ts";
 import { autocomplete_places_api } from "../lib/inat_api.ts";
@@ -34,7 +34,7 @@ export function setupPlacesSearch(selector: string) {
     selector: selector,
     placeHolder: "Enter place name",
     threshold: 2,
-    searchEngine: (_query: string, record: NormalizediNatPlace) => {
+    searchEngine: (_query: string, record: NormalizediNatPlaceType) => {
       return renderAutocompletePlace(record);
     },
     data: {
@@ -55,8 +55,9 @@ export function setupPlacesSearch(selector: string) {
     },
     events: {
       input: {
-        selection: (event: AutoCompleteEvent) => {
-          const selection = event.detail.selection.value as NormalizediNatPlace;
+        selection: (event: AutoCompleteEventType) => {
+          const selection = event.detail.selection
+            .value as NormalizediNatPlaceType;
           autoCompletePlacesJS.input.value = selection.display_name;
         },
       },
@@ -68,7 +69,7 @@ export function setupPlacesSearch(selector: string) {
 
 export function processAutocompletePlaces(
   data: iNatSearchAPI,
-): NormalizediNatPlace[] {
+): NormalizediNatPlaceType[] {
   return data.results.map((item) => {
     let typeName;
     if (item.record.place_type) {
@@ -85,7 +86,7 @@ export function processAutocompletePlaces(
   });
 }
 
-export function renderAutocompletePlace(item: NormalizediNatPlace): string {
+export function renderAutocompletePlace(item: NormalizediNatPlaceType): string {
   let html = `
   <div class="places-ac-option" data-testid="places-ac-option">
     <div class="place-name">
@@ -102,9 +103,9 @@ export function renderAutocompletePlace(item: NormalizediNatPlace): string {
 
 // called by autocomplete search when an place option is selected
 export async function placeSelectedHandler(
-  selection: NormalizediNatPlace,
+  selection: NormalizediNatPlaceType,
   _query: string,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   let isObservations = isObservationsCheck(appStore);
 
@@ -164,7 +165,7 @@ export async function placeSelectedHandler(
   if (map && layer) {
     appStore.placesMapLayers = {
       ...appStore.placesMapLayers,
-      [selection.id]: [layer as CustomGeoJSON],
+      [selection.id]: [layer as CustomGeoJSONType],
     };
   }
 
@@ -183,7 +184,7 @@ export async function placeSelectedHandler(
   renderSelectedResources(appStore, true);
 }
 
-export function renderPlacesList(appStore: MapStore) {
+export function renderPlacesList(appStore: AppStoreType) {
   let listEl = document.querySelector("#selected-places-list");
   if (!listEl) return;
   let isIdentifications = isIdentificationsCheck(appStore);
@@ -207,7 +208,7 @@ export function renderPlacesList(appStore: MapStore) {
 }
 
 // called when user deletes a place
-export async function removePlace(placeId: number, appStore: MapStore) {
+export async function removePlace(placeId: number, appStore: AppStoreType) {
   if (!appStore.selectedPlaces) return;
 
   // remove place

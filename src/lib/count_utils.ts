@@ -1,11 +1,11 @@
 import type {
-  NormalizediNatTaxon,
-  MapStore,
-  ObservationsApiParams,
-  NormalizediNatPlace,
-  NormalizediNatProject,
-  NormalizediNatUser,
-  MapStoreSelectedResourcesKeys,
+  NormalizediNatTaxonType,
+  AppStoreType,
+  ObservationsApiParamsType,
+  NormalizediNatPlaceType,
+  NormalizediNatProjectType,
+  NormalizediNatUserType,
+  AppStoreSelectedResourcesKeysType,
 } from "../types/app";
 import { getIdentifications, getObservations } from "./inat_api.ts";
 import {
@@ -16,13 +16,13 @@ import { isObservationsCheck, updateSelectedResource } from "./data_utils.ts";
 
 export async function updateCountForOne(
   record:
-    | NormalizediNatUser
-    | NormalizediNatProject
-    | NormalizediNatPlace
-    | NormalizediNatTaxon,
-  resource: MapStoreSelectedResourcesKeys,
-  appStore: MapStore,
-  paramsTemp: ObservationsApiParams,
+    | NormalizediNatUserType
+    | NormalizediNatProjectType
+    | NormalizediNatPlaceType
+    | NormalizediNatTaxonType,
+  resource: AppStoreSelectedResourcesKeysType,
+  appStore: AppStoreType,
+  paramsTemp: ObservationsApiParamsType,
 ) {
   if (isObservationsCheck(appStore)) {
     await updateObservationsCountForOne(record, resource, appStore, paramsTemp);
@@ -38,13 +38,13 @@ export async function updateCountForOne(
 
 async function updateObservationsCountForOne(
   record:
-    | NormalizediNatUser
-    | NormalizediNatProject
-    | NormalizediNatPlace
-    | NormalizediNatTaxon,
-  resource: MapStoreSelectedResourcesKeys,
-  appStore: MapStore,
-  paramsTemp: ObservationsApiParams,
+    | NormalizediNatUserType
+    | NormalizediNatProjectType
+    | NormalizediNatPlaceType
+    | NormalizediNatTaxonType,
+  resource: AppStoreSelectedResourcesKeysType,
+  appStore: AppStoreType,
+  paramsTemp: ObservationsApiParamsType,
 ) {
   await getObservationsCountForRecord(record, paramsTemp, appStore);
 
@@ -53,12 +53,12 @@ async function updateObservationsCountForOne(
 
 async function getObservationsCountForRecord(
   record:
-    | NormalizediNatPlace
-    | NormalizediNatTaxon
-    | NormalizediNatProject
-    | NormalizediNatUser,
-  paramsTemp: ObservationsApiParams,
-  appStore: MapStore,
+    | NormalizediNatPlaceType
+    | NormalizediNatTaxonType
+    | NormalizediNatProjectType
+    | NormalizediNatUserType,
+  paramsTemp: ObservationsApiParamsType,
+  appStore: AppStoreType,
 ) {
   if (import.meta.env?.VITE_CACHE === "true") {
     record.observations_count = -888;
@@ -77,10 +77,13 @@ async function getObservationsCountForRecord(
 }
 
 export async function updateIdentificationsCountForOne(
-  record: NormalizediNatPlace | NormalizediNatTaxon | NormalizediNatUser,
-  resource: MapStoreSelectedResourcesKeys,
-  appStore: MapStore,
-  paramsTemp: ObservationsApiParams,
+  record:
+    | NormalizediNatPlaceType
+    | NormalizediNatTaxonType
+    | NormalizediNatUserType,
+  resource: AppStoreSelectedResourcesKeysType,
+  appStore: AppStoreType,
+  paramsTemp: ObservationsApiParamsType,
 ) {
   await getIdentificationsCountForRecord(record, paramsTemp);
 
@@ -89,11 +92,11 @@ export async function updateIdentificationsCountForOne(
 
 async function getIdentificationsCountForRecord(
   record:
-    | NormalizediNatPlace
-    | NormalizediNatTaxon
-    | NormalizediNatProject
-    | NormalizediNatUser,
-  paramsTemp: ObservationsApiParams,
+    | NormalizediNatPlaceType
+    | NormalizediNatTaxonType
+    | NormalizediNatProjectType
+    | NormalizediNatUserType,
+  paramsTemp: ObservationsApiParamsType,
 ) {
   if (import.meta.env?.VITE_CACHE === "true") {
     record.identifications_count = -555;
@@ -109,8 +112,8 @@ async function getIdentificationsCountForRecord(
 }
 
 export async function updateCountForAll(
-  ignoreResource: MapStoreSelectedResourcesKeys | "all",
-  appStore: MapStore,
+  ignoreResource: AppStoreSelectedResourcesKeysType | "all",
+  appStore: AppStoreType,
   onlyFetchMissingCounts = false,
 ) {
   if (isObservationsCheck(appStore)) {
@@ -129,8 +132,8 @@ export async function updateCountForAll(
 }
 
 async function updateObservationsCountForAll(
-  ignoreResource: MapStoreSelectedResourcesKeys | "all",
-  appStore: MapStore,
+  ignoreResource: AppStoreSelectedResourcesKeysType | "all",
+  appStore: AppStoreType,
   onlyFetchMissingCounts = false,
 ) {
   let resources = [
@@ -140,7 +143,7 @@ async function updateObservationsCountForAll(
     "selectedProjects",
     "selectedUsers",
     "selectedUsersIdentifiers",
-  ] as MapStoreSelectedResourcesKeys[];
+  ] as AppStoreSelectedResourcesKeysType[];
 
   let targetResources = resources.filter((r) => r != ignoreResource);
   for await (const resource of targetResources) {
@@ -153,8 +156,8 @@ async function updateObservationsCountForAll(
 }
 
 export async function updateObservationsCountForResource(
-  resource: MapStoreSelectedResourcesKeys,
-  appStore: MapStore,
+  resource: AppStoreSelectedResourcesKeysType,
+  appStore: AppStoreType,
   onlyFetchMissingCounts = false,
 ) {
   let idField = getIdFieldForResource(resource, appStore);
@@ -177,8 +180,8 @@ export async function updateObservationsCountForResource(
 }
 
 async function updateIdentificationsCountForAll(
-  ignoreResource: MapStoreSelectedResourcesKeys | "all",
-  appStore: MapStore,
+  ignoreResource: AppStoreSelectedResourcesKeysType | "all",
+  appStore: AppStoreType,
   onlyFetchMissingCounts = false,
 ) {
   let resources = [
@@ -187,7 +190,7 @@ async function updateIdentificationsCountForAll(
     "selectedPlaces",
     "selectedUsers",
     "selectedUsersIdentifiers",
-  ] as MapStoreSelectedResourcesKeys[];
+  ] as AppStoreSelectedResourcesKeysType[];
 
   let targetResources = resources
     .filter((r) => r != ignoreResource)
@@ -203,8 +206,8 @@ async function updateIdentificationsCountForAll(
 }
 
 export async function updateIdentificationsCountForResource(
-  resource: MapStoreSelectedResourcesKeys,
-  appStore: MapStore,
+  resource: AppStoreSelectedResourcesKeysType,
+  appStore: AppStoreType,
   onlyFetchMissingCounts = false,
 ) {
   let idField = getIdFieldForResource(resource, appStore);
@@ -233,8 +236,8 @@ export async function updateIdentificationsCountForResource(
 }
 
 function getIdFieldForResource(
-  resource: MapStoreSelectedResourcesKeys,
-  appStore: MapStore,
+  resource: AppStoreSelectedResourcesKeysType,
+  appStore: AppStoreType,
 ) {
   let isObservation = isObservationsCheck(appStore);
   let idField = "";
@@ -272,7 +275,7 @@ function getIdFieldForResource(
 // observationsApiParams/identificationsApiParams for the next page since those
 // values are not updated when adding selected resources on current page
 export function updateSelectedResourcesId(
-  appStore: MapStore,
+  appStore: AppStoreType,
   recordType = appStore.record_type,
 ) {
   let place_id = appStore.selectedPlaces.map((r) => r.id);

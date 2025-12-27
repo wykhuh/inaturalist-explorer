@@ -1,4 +1,4 @@
-import type { NormalizediNatTaxon, NormalizediNatUser } from "./app";
+import type { NormalizediNatTaxonType, NormalizediNatUserType } from "./app";
 import type {
   IdentificationsObserversResult,
   IdentificationsResult,
@@ -10,13 +10,13 @@ import type {
   Taxon,
 } from "./inat_api";
 
-export function isNormalizediNatTaxon(
-  record: NormalizediNatTaxon | SpeciesCountTaxon | Taxon,
-): record is NormalizediNatTaxon {
+export function isNormalizediNatTaxonType(
+  record: NormalizediNatTaxonType | SpeciesCountTaxon | Taxon,
+): record is NormalizediNatTaxonType {
   return "matched_term" in record;
 }
 
-export function isResourceObject(input: any): input is NormalizediNatUser {
+export function isResourceObject(input: any): input is NormalizediNatUserType {
   return !Array.isArray(input);
 }
 

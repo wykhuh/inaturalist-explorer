@@ -1,7 +1,7 @@
 import { setupComponent } from "../../lib/component_utils";
 import { languageCodes } from "../../data/locale";
 import { updateAppUrl } from "../../lib/utils";
-import type { NameOrder } from "../../types/app";
+import type { NameOrderType } from "../../types/app";
 import { renderTaxaList } from "../../lib/search_taxa";
 import { updateComonNamesByLanguage } from "./utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
@@ -77,7 +77,7 @@ class SettingsMenu extends HTMLElement {
         let target = event.target as HTMLInputElement;
         window.app.store.viewMetadata = {
           ...window.app.store.viewMetadata,
-          name_order: target.value as NameOrder,
+          name_order: target.value as NameOrderType,
         };
 
         updateAppUrl(window.location, window.app.store);

@@ -2,21 +2,21 @@ import type { Map, TileLayer } from "leaflet";
 import L from "leaflet";
 
 import type {
-  NormalizediNatTaxon,
-  MapStore,
-  ObservationsApiParams,
-  CustomLayerOptions,
-  CustomLayer,
-  CustomGeoJSON,
-  ObservationsApiParamsKeys,
-  NormalizediNatPlace,
-  NormalizediNatProject,
-  NormalizediNatUser,
-  MapStoreSelectedResourcesKeys,
-  MapStoreParamsKeys,
-  IdentificationsApiParams,
-  IdentificationsApiParamsKeys,
-  MapTilesAPIParams,
+  NormalizediNatTaxonType,
+  AppStoreType,
+  ObservationsApiParamsType,
+  CustomLayerOptionsType,
+  CustomLayerType,
+  CustomGeoJSONType,
+  ObservationsApiParamsKeysType,
+  NormalizediNatPlaceType,
+  NormalizediNatProjectType,
+  NormalizediNatUserType,
+  AppStoreSelectedResourcesKeysType,
+  AppStoreTypeParamsKeys,
+  IdentificationsApiParamsType,
+  IdentificationsApiParamsKeysType,
+  MapTilesAPIParamsType,
 } from "../types/app";
 import { addOverlayToMap } from "./map_utils.ts";
 import { getiNatMapTiles } from "./inat_api.ts";
@@ -39,7 +39,7 @@ import type {
 } from "../types/inat_api";
 import {
   isIdentificationsResult,
-  isNormalizediNatTaxon,
+  isNormalizediNatTaxonType,
   isObservationsResult,
   isResourceIdentifierResult,
   isResourceSpeciesResult,
@@ -57,15 +57,15 @@ import userThumb from "../assets/images/user_thumb.jpg";
 
 // called when user select taxa or place
 export async function fetchiNatMapDataForTaxon(
-  taxonObj: NormalizediNatTaxon,
-  appStore: MapStore,
+  taxonObj: NormalizediNatTaxonType,
+  appStore: AppStoreType,
 ) {
   let map = appStore.map.map;
   let layerControl = appStore.map.layerControl;
   if (map === null) return;
   if (layerControl === null) return;
 
-  let mapParams = {} as MapTilesAPIParams;
+  let mapParams = {} as MapTilesAPIParamsType;
   if (isObservationsCheck(appStore)) {
     let params = cleanupObservationsMapParams(appStore.observationsApiParams);
     mapParams = {
@@ -119,7 +119,7 @@ export async function fetchiNatMapDataForTaxon(
 // taxon
 // ================
 
-export async function addDefaultTaxaRecordToStore(appStore: MapStore) {
+export async function addDefaultTaxaRecordToStore(appStore: AppStoreType) {
   if (isObservationsCheck(appStore)) {
     appStore.observationsApiParams = {
       ...appStore.observationsApiParams,
@@ -143,12 +143,12 @@ export async function addDefaultTaxaRecordToStore(appStore: MapStore) {
   );
 }
 
-export async function addDefaultTaxaRecordToMap(appStore: MapStore) {
+export async function addDefaultTaxaRecordToMap(appStore: AppStoreType) {
   await fetchiNatMapDataForTaxon(structuredClone(allTaxaRecord), appStore);
 }
 
 export function removeOneTaxonFromStoreAndMap(
-  appStore: MapStore,
+  appStore: AppStoreType,
   taxonId: number,
 ) {
   removeOneTaxonFromMap(appStore, taxonId);
@@ -160,7 +160,7 @@ export function removeOneTaxonFromStoreAndMap(
   removeIdfromInatApiParams(appStore, "selectedTaxa", taxonId);
 }
 
-export function removeOneTaxonFromMap(appStore: MapStore, taxonId: number) {
+export function removeOneTaxonFromMap(appStore: AppStoreType, taxonId: number) {
   if (!appStore.taxaMapLayers) return;
   let mapLayers = appStore.taxaMapLayers[taxonId];
   let layerControl = appStore.map.layerControl;
@@ -179,7 +179,7 @@ export function removeOneTaxonFromMap(appStore: MapStore, taxonId: number) {
   appStore.taxaMapLayers = appStore.taxaMapLayers;
 }
 
-export function removeTaxaFromStoreAndMap(appStore: MapStore) {
+export function removeTaxaFromStoreAndMap(appStore: AppStoreType) {
   let layerControl = appStore.map.layerControl;
   let isObservations = isObservationsCheck(appStore);
 
@@ -209,7 +209,7 @@ export function removeTaxaFromStoreAndMap(appStore: MapStore) {
 }
 
 export function removeOneTaxonIdentifiedFromStore(
-  appStore: MapStore,
+  appStore: AppStoreType,
   taxonId: number,
 ) {
   appStore.selectedTaxaIdentified = appStore.selectedTaxaIdentified.filter(
@@ -224,7 +224,7 @@ export function removeOneTaxonIdentifiedFromStore(
 // ================
 
 export async function removeOnePlaceFromStoreAndMap(
-  appStore: MapStore,
+  appStore: AppStoreType,
   placeId: number,
 ) {
   removeOnePlaceFromMap(appStore, placeId);
@@ -246,7 +246,7 @@ export async function removeOnePlaceFromStoreAndMap(
   }
 }
 
-export function removeOnePlaceFromMap(appStore: MapStore, placeId: number) {
+export function removeOnePlaceFromMap(appStore: AppStoreType, placeId: number) {
   if (!appStore.placesMapLayers) return;
 
   let mapLayers = appStore.placesMapLayers[placeId];
@@ -259,7 +259,7 @@ export function removeOnePlaceFromMap(appStore: MapStore, placeId: number) {
   delete appStore.placesMapLayers[placeId];
 }
 
-export function renderSelectedPlacesBoundaries(appStore: MapStore) {
+export function renderSelectedPlacesBoundaries(appStore: AppStoreType) {
   let map = appStore.map.map;
   if (!map) return;
 
@@ -269,7 +269,7 @@ export function renderSelectedPlacesBoundaries(appStore: MapStore) {
 
     appStore.placesMapLayers = {
       ...appStore.placesMapLayers,
-      [place.id]: [layer as CustomGeoJSON],
+      [place.id]: [layer as CustomGeoJSONType],
     };
   });
 }
@@ -279,7 +279,7 @@ export function renderSelectedPlacesBoundaries(appStore: MapStore) {
 // ================
 
 export function removeOneProjectFromStoreAndMap(
-  appStore: MapStore,
+  appStore: AppStoreType,
   projectId: number,
 ) {
   if (appStore.projectsMapLayers) {
@@ -301,7 +301,7 @@ export function removeOneProjectFromStoreAndMap(
   removeIdfromInatApiParams(appStore, "selectedProjects", projectId);
 }
 
-export function renderSelectedProjectsBoundaries(appStore: MapStore) {
+export function renderSelectedProjectsBoundaries(appStore: AppStoreType) {
   let map = appStore.map.map;
   if (!map) return;
 
@@ -313,7 +313,7 @@ export function renderSelectedProjectsBoundaries(appStore: MapStore) {
 
     appStore.projectsMapLayers = {
       ...appStore.projectsMapLayers,
-      [project.id]: [layer as CustomGeoJSON],
+      [project.id]: [layer as CustomGeoJSONType],
     };
   });
 }
@@ -324,12 +324,12 @@ export function renderSelectedProjectsBoundaries(appStore: MapStore) {
 
 export function updateSelectedResource(
   record:
-    | NormalizediNatPlace
-    | NormalizediNatTaxon
-    | NormalizediNatProject
-    | NormalizediNatUser,
-  resourceName: MapStoreSelectedResourcesKeys,
-  appStore: MapStore,
+    | NormalizediNatPlaceType
+    | NormalizediNatTaxonType
+    | NormalizediNatProjectType
+    | NormalizediNatUserType,
+  resourceName: AppStoreSelectedResourcesKeysType,
+  appStore: AppStoreType,
 ) {
   let records = [];
   let ids: number[] = [];
@@ -354,7 +354,7 @@ export function updateSelectedResource(
 }
 
 export function renderResourceGeometryLayer(
-  resource: NormalizediNatProject | NormalizediNatPlace,
+  resource: NormalizediNatProjectType | NormalizediNatPlaceType,
   map: Map,
   layerDescription: string,
 ): L.GeoJSON {
@@ -372,7 +372,7 @@ export function renderResourceGeometryLayer(
 // user
 // ================
 
-export function removeOneUserFromStore(appStore: MapStore, userId: number) {
+export function removeOneUserFromStore(appStore: AppStoreType, userId: number) {
   appStore.selectedUsers = appStore.selectedUsers.filter(
     (item) => item.id !== userId,
   );
@@ -381,7 +381,7 @@ export function removeOneUserFromStore(appStore: MapStore, userId: number) {
 }
 
 export function removeOneUserIdentifierFromStore(
-  appStore: MapStore,
+  appStore: AppStoreType,
   userId: number,
 ) {
   appStore.selectedUsersIdentifiers = appStore.selectedUsersIdentifiers.filter(
@@ -391,15 +391,15 @@ export function removeOneUserIdentifierFromStore(
   removeIdfromInatApiParams(appStore, "selectedUsersIdentifiers", userId);
 }
 
-export function removeOneUnobservedByUserFromStore(appStore: MapStore) {
-  appStore.selectedUnobservedByUser = {} as NormalizediNatUser;
+export function removeOneUnobservedByUserFromStore(appStore: AppStoreType) {
+  appStore.selectedUnobservedByUser = {} as NormalizediNatUserType;
   delete appStore.observationsApiParams.unobserved_by_user_id;
 
   resetPageNumber(appStore);
 }
 
-export function removeOneReviewerFromStore(appStore: MapStore) {
-  appStore.selectedReviewer = {} as NormalizediNatUser;
+export function removeOneReviewerFromStore(appStore: AppStoreType) {
+  appStore.selectedReviewer = {} as NormalizediNatUserType;
   delete appStore.observationsApiParams.reviewed;
   delete appStore.observationsApiParams.viewer_id;
 
@@ -411,8 +411,8 @@ export function removeOneReviewerFromStore(appStore: MapStore) {
 // ================
 
 function removeTaxonId(
-  appStore: MapStore,
-  resource: MapStoreSelectedResourcesKeys,
+  appStore: AppStoreType,
+  resource: AppStoreSelectedResourcesKeysType,
   value: any,
 ) {
   removeResourceId(appStore, resource, "taxon_id", value);
@@ -431,49 +431,49 @@ function removeTaxonId(
 }
 
 function removeObservationTaxonId(
-  appStore: MapStore,
-  resource: MapStoreSelectedResourcesKeys,
+  appStore: AppStoreType,
+  resource: AppStoreSelectedResourcesKeysType,
   value: any,
 ) {
   removeResourceId(appStore, resource, "observation_taxon_id", value);
 }
 
 function removePlaceId(
-  appStore: MapStore,
-  resource: MapStoreSelectedResourcesKeys,
+  appStore: AppStoreType,
+  resource: AppStoreSelectedResourcesKeysType,
   value: any,
 ) {
   removeResourceId(appStore, resource, "place_id", value);
 }
 
 function removeProjectId(
-  appStore: MapStore,
-  resource: MapStoreSelectedResourcesKeys,
+  appStore: AppStoreType,
+  resource: AppStoreSelectedResourcesKeysType,
   value: any,
 ) {
   removeResourceId(appStore, resource, "project_id", value);
 }
 
 function removeUserId(
-  appStore: MapStore,
-  resource: MapStoreSelectedResourcesKeys,
+  appStore: AppStoreType,
+  resource: AppStoreSelectedResourcesKeysType,
   value: any,
 ) {
   removeResourceId(appStore, resource, "user_id", value);
 }
 
 function removeUserIdentifierId(
-  appStore: MapStore,
-  resource: MapStoreSelectedResourcesKeys,
+  appStore: AppStoreType,
+  resource: AppStoreSelectedResourcesKeysType,
   value: any,
 ) {
   removeResourceId(appStore, resource, "ident_user_id", value);
 }
 
 function removeResourceId(
-  appStore: MapStore,
-  resource: MapStoreSelectedResourcesKeys,
-  property: ObservationsApiParamsKeys | IdentificationsApiParamsKeys,
+  appStore: AppStoreType,
+  resource: AppStoreSelectedResourcesKeysType,
+  property: ObservationsApiParamsKeysType | IdentificationsApiParamsKeysType,
   value: any,
 ) {
   let isObservations = isObservationsCheck(appStore);
@@ -481,11 +481,11 @@ function removeResourceId(
   if (appStore[resource].length === 0) {
     if (isObservations) {
       delete appStore.observationsApiParams[
-        property as ObservationsApiParamsKeys
+        property as ObservationsApiParamsKeysType
       ];
     } else {
       delete appStore.identificationsApiParams[
-        property as IdentificationsApiParamsKeys
+        property as IdentificationsApiParamsKeysType
       ];
     }
   } else {
@@ -494,13 +494,13 @@ function removeResourceId(
       if (isObservations) {
         setObservationsApiParams(
           appStore,
-          property as ObservationsApiParamsKeys,
+          property as ObservationsApiParamsKeysType,
           value,
         );
       } else {
         setIdentificationsApiParams(
           appStore,
-          property as IdentificationsApiParamsKeys,
+          property as IdentificationsApiParamsKeysType,
           value,
         );
       }
@@ -509,8 +509,8 @@ function removeResourceId(
 }
 
 export function removeIdfromInatApiParams(
-  appStore: MapStore,
-  resource: MapStoreSelectedResourcesKeys,
+  appStore: AppStoreType,
+  resource: AppStoreSelectedResourcesKeysType,
   value: any,
 ) {
   let isObservations = isObservationsCheck(appStore);
@@ -548,8 +548,8 @@ export function removeIdfromInatApiParams(
 }
 
 function setObservationsApiParams(
-  appStore: MapStore,
-  property: ObservationsApiParamsKeys,
+  appStore: AppStoreType,
+  property: ObservationsApiParamsKeysType,
   value: any,
 ) {
   let ids = removeValueFromCommaSeparatedString(
@@ -562,8 +562,8 @@ function setObservationsApiParams(
 }
 
 function setIdentificationsApiParams(
-  appStore: MapStore,
-  property: IdentificationsApiParamsKeys,
+  appStore: AppStoreType,
+  property: IdentificationsApiParamsKeysType,
   value: any,
 ) {
   let ids = removeValueFromCommaSeparatedString(
@@ -580,8 +580,8 @@ export function capitalizeFirstLetter(text: string) {
 }
 
 export function formatTaxonName(
-  item: NormalizediNatTaxon | SpeciesCountTaxon | Taxon,
-  appStore: MapStore,
+  item: NormalizediNatTaxonType | SpeciesCountTaxon | Taxon,
+  appStore: AppStoreType,
   searchTerm = "",
 ) {
   let includeMatchedTerm = searchTerm.length > 0;
@@ -619,7 +619,11 @@ export function formatTaxonName(
   }
 
   // add optional (matched_term)
-  if (includeMatchedTerm && isNormalizediNatTaxon(item) && item.matched_term) {
+  if (
+    includeMatchedTerm &&
+    isNormalizediNatTaxonType(item) &&
+    item.matched_term
+  ) {
     if (item.matched_term.toLowerCase() === commonName?.toLowerCase()) {
     } else if (
       item.matched_term.toLowerCase() === scientificName?.toLowerCase()
@@ -658,12 +662,12 @@ export function formatTaxonName(
   };
 }
 
-export function leafletVisibleLayers(appStore: MapStore, strict = false) {
+export function leafletVisibleLayers(appStore: AppStoreType, strict = false) {
   let layer_descriptions: any[] = [];
   if (appStore.map.map) {
     appStore.map.map.eachLayer((lay) => {
-      let layer = lay as unknown as CustomLayer;
-      let options = layer.options as CustomLayerOptions;
+      let layer = lay as unknown as CustomLayerType;
+      let options = layer.options as CustomLayerOptionsType;
 
       if (options.layer_description) {
         if (layer._path || layer._container || !strict) {
@@ -726,12 +730,12 @@ export function removeValueFromCommaSeparatedString(
 }
 
 type FiltersResults = {
-  params: ObservationsApiParams | IdentificationsApiParams;
+  params: ObservationsApiParamsType | IdentificationsApiParamsType;
   string: string;
 };
 
 export function updateStoreUsingFilters(
-  appStore: MapStore,
+  appStore: AppStoreType,
   filtersResults: FiltersResults,
 ) {
   let isObservations = isObservationsCheck(appStore);
@@ -758,10 +762,10 @@ export function updateStoreUsingFilters(
 
 function handleObservationsFilters(
   filtersResults: FiltersResults,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   for (let [k, _value] of Object.entries(appStore.observationsApiParams)) {
-    let key = k as ObservationsApiParamsKeys;
+    let key = k as ObservationsApiParamsKeysType;
     loggerFilters(key, _value);
 
     // ignore params that can't be changed in the filter modal
@@ -769,7 +773,7 @@ function handleObservationsFilters(
       continue;
     }
 
-    let params = filtersResults.params as ObservationsApiParams;
+    let params = filtersResults.params as ObservationsApiParamsType;
     if (key === "verifiable") {
       if (params.verifiable === undefined) {
         delete appStore.observationsApiParams[key];
@@ -785,10 +789,10 @@ function handleObservationsFilters(
 
 function handleIdentificationsFilters(
   filtersResults: FiltersResults,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   for (let [k, _value] of Object.entries(appStore.identificationsApiParams)) {
-    let key = k as IdentificationsApiParamsKeys;
+    let key = k as IdentificationsApiParamsKeysType;
     loggerFilters(key, _value);
 
     // ignore params that can't be changed in the filter modal
@@ -796,7 +800,7 @@ function handleIdentificationsFilters(
       continue;
     }
 
-    let params = filtersResults.params as IdentificationsApiParams;
+    let params = filtersResults.params as IdentificationsApiParamsType;
     if (appStore.identificationsApiParams[key] !== params[key]) {
       if (params[key] === undefined) {
         delete appStore.identificationsApiParams[key];
@@ -816,25 +820,25 @@ export function normalizeAppParams(appParams: string) {
   return rawParams;
 }
 
-export function isIdentificationsCheck(appStore: MapStore) {
+export function isIdentificationsCheck(appStore: AppStoreType) {
   return appStore.record_type === "identifications";
 }
 
-export function isObservationsCheck(appStore: MapStore) {
+export function isObservationsCheck(appStore: AppStoreType) {
   return appStore.record_type === "observations";
 }
 
-export function isOtherCheck(appStore: MapStore) {
+export function isOtherCheck(appStore: AppStoreType) {
   return appStore.record_type === "about";
 }
 
 export function getResourceApiParams(isObservations: boolean) {
   return (
     isObservations ? "observationsApiParams" : "identificationsApiParams"
-  ) as MapStoreParamsKeys;
+  ) as AppStoreTypeParamsKeys;
 }
 
-export function resetPageNumber(appStore: MapStore) {
+export function resetPageNumber(appStore: AppStoreType) {
   if (isObservationsCheck(appStore)) {
     delete appStore.observationsApiParams.page;
   } else {

@@ -1,7 +1,7 @@
 import type {
-  IdentificationsApiParamsKeys,
-  MapStore,
-  ObservationsApiParamsKeys,
+  IdentificationsApiParamsKeysType,
+  AppStoreType,
+  ObservationsApiParamsKeysType,
 } from "../types/app";
 import { getResourceApiParams, isObservationsCheck } from "./data_utils";
 
@@ -14,7 +14,7 @@ export function setSelectedOption(selector: string) {
 
 export function setSelectedOptionTrueFalse(
   form: string,
-  property: ObservationsApiParamsKeys | IdentificationsApiParamsKeys,
+  property: ObservationsApiParamsKeysType | IdentificationsApiParamsKeysType,
   value: boolean,
 ) {
   setSelectedOption(`${form} select#${property} option[value='${value}']`);
@@ -42,8 +42,8 @@ export function setInputDisabled(selector: string, value: any) {
 }
 
 export function processTrueFalseFields(
-  fields: ObservationsApiParamsKeys[] | IdentificationsApiParamsKeys[],
-  appStore: MapStore,
+  fields: ObservationsApiParamsKeysType[] | IdentificationsApiParamsKeysType[],
+  appStore: AppStoreType,
 ) {
   let resourceApiParams = getResourceApiParams(isObservationsCheck(appStore));
 
@@ -61,8 +61,8 @@ export function processTrueFalseFields(
 }
 
 export function processSelectFields(
-  fields: ObservationsApiParamsKeys[] | IdentificationsApiParamsKeys[],
-  appStore: MapStore,
+  fields: ObservationsApiParamsKeysType[] | IdentificationsApiParamsKeysType[],
+  appStore: AppStoreType,
 ) {
   let resourceApiParams = getResourceApiParams(isObservationsCheck(appStore));
 
@@ -78,8 +78,8 @@ export function processSelectFields(
 }
 
 export function processMultipleSelectFields(
-  fields: ObservationsApiParamsKeys[] | IdentificationsApiParamsKeys[],
-  appStore: MapStore,
+  fields: ObservationsApiParamsKeysType[] | IdentificationsApiParamsKeysType[],
+  appStore: AppStoreType,
 ) {
   let resourceApiParams = getResourceApiParams(isObservationsCheck(appStore));
 
@@ -100,8 +100,8 @@ export function processMultipleSelectFields(
 }
 
 export function processInputCheckedFields(
-  fields: ObservationsApiParamsKeys[] | IdentificationsApiParamsKeys[],
-  appStore: MapStore,
+  fields: ObservationsApiParamsKeysType[] | IdentificationsApiParamsKeysType[],
+  appStore: AppStoreType,
 ) {
   let resourceApiParams = getResourceApiParams(isObservationsCheck(appStore));
 
@@ -120,8 +120,8 @@ export function processInputCheckedFields(
 }
 
 export function processInputFields(
-  fields: ObservationsApiParamsKeys[] | IdentificationsApiParamsKeys[],
-  appStore: MapStore,
+  fields: ObservationsApiParamsKeysType[] | IdentificationsApiParamsKeysType[],
+  appStore: AppStoreType,
 ) {
   let resourceApiParams = getResourceApiParams(isObservationsCheck(appStore));
 

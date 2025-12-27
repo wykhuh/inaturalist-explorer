@@ -1,4 +1,4 @@
-import type { NormalizediNatTaxon, MapStore } from "../types/app.d.ts";
+import type { NormalizediNatTaxonType, AppStoreType } from "../types/app.d.ts";
 import {
   addDefaultTaxaRecordToMap,
   addDefaultTaxaRecordToStore,
@@ -15,7 +15,7 @@ import { updateCountForAll, updateCountForOne } from "./count_utils.ts";
 
 export function setupTaxaIdentifiedSearch(
   selector: string,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   const autoCompleteTaxaJS = setupTaxaSearch(selector, appStore);
 
@@ -24,9 +24,9 @@ export function setupTaxaIdentifiedSearch(
 
 // called by autocomplete search when an taxa option is selected
 export async function taxonIdentifiedSelectedHandler(
-  selection: NormalizediNatTaxon,
+  selection: NormalizediNatTaxonType,
   _searchTerm: string,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   let isObservations = isObservationsCheck(appStore);
   if (isObservations) return;
@@ -70,7 +70,7 @@ export async function taxonIdentifiedSelectedHandler(
   renderSelectedResources(appStore, true);
 }
 
-export function renderTaxaIdentifiedList(appStore: MapStore) {
+export function renderTaxaIdentifiedList(appStore: AppStoreType) {
   let listEl = document.querySelector("#selected-species-identified-list");
   if (!listEl) return;
 
@@ -85,7 +85,7 @@ export function renderTaxaIdentifiedList(appStore: MapStore) {
 // called when user deletes a taxon
 export async function removeTaxonIdentified(
   taxonId: number,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   removeOneTaxonIdentifiedFromStore(appStore, taxonId);
 

@@ -14,7 +14,7 @@ import {
   losAngelesSearchApi,
   redTaxaAutocomplete,
 } from "./fixtures/inatApi.js";
-import type { NormalizediNatPlace } from "../types/app.js";
+import type { NormalizediNatPlaceType } from "../types/app.js";
 import type { iNatAutocompleteTaxaAPI } from "../types/inat_api";
 import { mapStore } from "../lib/store.ts";
 
@@ -428,7 +428,7 @@ describe("processAutocompletePlaces", () => {
 
 describe("renderAutocompletePlace", () => {
   test("returns html string that has place info", () => {
-    let record: NormalizediNatPlace = {
+    let record: NormalizediNatPlaceType = {
       name: "Los Angeles",
       display_name: "Los Angeles County, US, CA",
       id: losAngelesSearchApi.results[0].record.id,

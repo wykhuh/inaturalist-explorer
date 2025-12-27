@@ -1,6 +1,6 @@
 import type { Map } from "leaflet";
 
-import type { MapStore, CustomGeoJSON } from "../types/app";
+import type { AppStoreType, CustomGeoJSONType } from "../types/app";
 import {
   formatiNatAPIBoundingBoxParams,
   getAndDrawMapBoundingBox,
@@ -13,7 +13,7 @@ import {
 import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
 
 // called when user clicks refresh map button
-export async function refreshBoundingBox(appStore: MapStore) {
+export async function refreshBoundingBox(appStore: AppStoreType) {
   let map = appStore.map.map;
   let layerControl = appStore.map.layerControl;
 
@@ -36,7 +36,7 @@ export async function refreshBoundingBox(appStore: MapStore) {
   // save place to store
   let place = bboxPlaceRecord(lngLatCoors);
   appStore.selectedPlaces = [place];
-  appStore.placesMapLayers = { "0": [layer as unknown as CustomGeoJSON] };
+  appStore.placesMapLayers = { "0": [layer as unknown as CustomGeoJSONType] };
 
   let bbox = map.getBounds();
   let inatBbox = formatiNatAPIBoundingBoxParams(bbox);
@@ -57,13 +57,13 @@ export async function refreshBoundingBox(appStore: MapStore) {
   renderSelectedResources(appStore, true);
 }
 
-export function removeRefreshBBox(appStore: MapStore, map: Map) {
+export function removeRefreshBBox(appStore: AppStoreType, map: Map) {
   if (appStore.refreshMap.layer) {
     appStore.refreshMap.layer.removeFrom(map);
   }
 }
 
-function removePlacesFromStoreAndMap(appStore: MapStore) {
+function removePlacesFromStoreAndMap(appStore: AppStoreType) {
   // remove from map
   Object.values(appStore.placesMapLayers).forEach((layers) => {
     layers.forEach((layer) => {

@@ -47,7 +47,7 @@ import { paginationCallback as paginationCallbackObservers } from "../../compone
 import { paginationCallback as paginationCallbackSpecies } from "../../components/ViewSpecies/utils.ts";
 import { viewChangeHandler } from "../../components/ObservationsHeader/shared_utils.ts";
 import { template as observationHeaderHTML } from "../../components/ObservationsHeader/template.ts";
-import type { MapStore } from "../../types/app";
+import type { AppStoreType } from "../../types/app";
 
 beforeEach(() => {
   const { JSDOM } = jsdom;
@@ -310,7 +310,7 @@ test("add page when user changes view and page for each view", async () => {
 });
 
 describe("pagination for all views and selected resources", () => {
-  async function setupPages(store: MapStore, path: string) {
+  async function setupPages(store: AppStoreType, path: string) {
     let speciesLink = document.querySelector(
       "#observations_species",
     ) as HTMLElement;

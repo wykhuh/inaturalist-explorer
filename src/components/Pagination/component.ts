@@ -1,13 +1,16 @@
 import { loggerRender } from "../../lib/logger";
-import type { DataComponent, MapStore } from "../../types/app";
+import type { DataComponentType, AppStoreType } from "../../types/app";
 import { createSequence } from "./utils";
 
 type PaginationProps = {
   perPage: number;
   currentPage: number;
   totalRecords: number;
-  appStore: MapStore;
-  paginationCallback: (pageNumber: number, appStore: MapStore) => Promise<void>;
+  appStore: AppStoreType;
+  paginationCallback: (
+    pageNumber: number,
+    appStore: AppStoreType,
+  ) => Promise<void>;
   scrollToSelector?: string;
 };
 
@@ -25,7 +28,7 @@ export class Pagination extends HTMLElement {
   connectedCallback() {
     loggerRender("++ Pagination connectedCallback");
 
-    let data = (this as unknown as DataComponent).data as PaginationProps;
+    let data = (this as unknown as DataComponentType).data as PaginationProps;
     this.perPage = data.perPage;
     this.currentPage = data.currentPage;
     this.totalRecords = data.totalRecords;

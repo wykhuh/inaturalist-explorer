@@ -9,7 +9,7 @@ import {
   renderTaxonDefaultPhoto,
   renderTaxonNames,
 } from "../../lib/render_utils";
-import type { DataComponent, MapStore } from "../../types/app";
+import type { DataComponentType, AppStoreType } from "../../types/app";
 import type { Identification } from "../../types/inat_api";
 import { template } from "./template";
 
@@ -33,10 +33,10 @@ class CardIdentificationIdentification extends HTMLElement {
     }
   }
 
-  render(appStore: MapStore) {
+  render(appStore: AppStoreType) {
     let cardEl = this.querySelector(".card") as HTMLDivElement;
     if (!cardEl) return;
-    let data = (this as unknown as DataComponent).data as Identification;
+    let data = (this as unknown as DataComponentType).data as Identification;
 
     if (!data.current) {
       cardEl.classList.add("withdrawn");

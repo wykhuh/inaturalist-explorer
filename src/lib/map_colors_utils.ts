@@ -1,4 +1,4 @@
-import type { MapStore } from "../types/app.d.ts";
+import type { AppStoreType } from "../types/app.d.ts";
 import { getRandomInt } from "./utils.ts";
 
 // https://personal.sron.nl/~pault/#sec:qualitative
@@ -180,7 +180,7 @@ export let iNatGreen = "#86a91c";
 
 export let defaultColorScheme = colorsSixTolBright;
 
-export function getColor(appStore: MapStore, colorArray: string[]) {
+export function getColor(appStore: AppStoreType, colorArray: string[]) {
   let color = appStore.color;
   if (color === undefined || color === "") {
     color = colorArray[0];

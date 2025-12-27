@@ -1,4 +1,4 @@
-import type { NormalizediNatTaxon, MapStore } from "../types/app";
+import type { NormalizediNatTaxonType, AppStoreType } from "../types/app";
 import { iNatTaxaUrl, iNatUserUrl, speciesRanks } from "../data/inat_data.ts";
 import type {
   DefaultPhoto,
@@ -60,8 +60,8 @@ export function formatAvatar(user: ObservationUser) {
 }
 
 export function renderTaxonNames(
-  taxon: ObservationTaxon | SpeciesCountTaxon | NormalizediNatTaxon | Taxon,
-  appStore: MapStore,
+  taxon: ObservationTaxon | SpeciesCountTaxon | NormalizediNatTaxonType | Taxon,
+  appStore: AppStoreType,
   url?: string,
   searchTerm = "",
   includeParathesis = true,
@@ -144,7 +144,7 @@ export function renderMedia(
   taxon: Taxon | ObservationTaxon,
   photos: ObservationPhoto[],
   sounds: ObservationSound[],
-  appStore: MapStore,
+  appStore: AppStoreType,
   displayCount = false,
   size = "medium",
 ) {
@@ -296,7 +296,7 @@ export function renderQualityGrade(quality_grade: string) {
 
 export function renderTaxonDefaultPhoto(
   taxon: SpeciesCountTaxon | Taxon,
-  appStore: MapStore,
+  appStore: AppStoreType,
   size = "default",
 ) {
   if (!taxon.default_photo) return;
@@ -320,7 +320,7 @@ export function renderTaxonDefaultPhoto(
 
 export function formatTaxonPhotoAltText(
   taxon: Taxon | ObservationTaxon | SpeciesCountTaxon,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   let altText = "observation of ";
   if (taxon) {

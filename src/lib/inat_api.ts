@@ -1,8 +1,8 @@
 import type {
-  iNatObservationTilesSettings,
-  MapTilesAPIParams,
-  NormalizediNatTaxon,
-  ObservationsApiParams,
+  iNatObservationTilesSettingsType,
+  MapTilesAPIParamsType,
+  NormalizediNatTaxonType,
+  ObservationsApiParamsType,
 } from "../types/app";
 import type {
   iNatObservationsSpeciesCountAPI,
@@ -41,7 +41,7 @@ const projects_api = "https://api.inaturalist.org/v1/projects/";
 const users_api = "https://api.inaturalist.org/v1/users/";
 
 function formatDescription(
-  observationsApiParams: ObservationsApiParams,
+  observationsApiParams: ObservationsApiParamsType,
   type: string,
 ) {
   let text = `overlay: iNat ${type}, taxon_id ${observationsApiParams.taxon_id || 0}`;
@@ -67,9 +67,9 @@ function formatDescription(
 }
 
 export const getiNatMapTiles = (
-  mapTilesApiParams: MapTilesAPIParams,
-  taxonObj: NormalizediNatTaxon,
-): iNatObservationTilesSettings => {
+  mapTilesApiParams: MapTilesAPIParamsType,
+  taxonObj: NormalizediNatTaxonType,
+): iNatObservationTilesSettingsType => {
   let dupParams = structuredClone(mapTilesApiParams) as any;
   if (dupParams.taxon_id === "0") {
     delete dupParams.taxon_id;
@@ -84,7 +84,7 @@ export const getiNatMapTiles = (
   delete dupParams.color;
   let noColorParamsString = new URLSearchParams(dupParams).toString();
 
-  let tiles: iNatObservationTilesSettings = {
+  let tiles: iNatObservationTilesSettingsType = {
     iNatGrid: {
       name: "Grid",
       type: "overlay",

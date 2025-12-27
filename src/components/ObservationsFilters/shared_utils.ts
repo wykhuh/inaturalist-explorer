@@ -1,8 +1,8 @@
 import type {
-  IdentificationsApiParams,
-  IdentificationsApiParamsKeys,
-  ObservationsApiParams,
-  ObservationsApiParamsKeys,
+  IdentificationsApiParamsType,
+  IdentificationsApiParamsKeysType,
+  ObservationsApiParamsType,
+  ObservationsApiParamsKeysType,
 } from "../../types/app";
 
 export function tabClickHandler(
@@ -36,7 +36,7 @@ export function tabClickHandler(
 }
 
 export function renderSelectedFiltersList(
-  params: ObservationsApiParams | IdentificationsApiParams,
+  params: ObservationsApiParamsType | IdentificationsApiParamsType,
 ) {
   let listEl = document.querySelector(".filters-list");
   if (!listEl) return;
@@ -63,8 +63,8 @@ export function renderSelectedFiltersList(
 
 export function concatParamsWithMultivalues(
   data: FormData,
-  field: ObservationsApiParamsKeys | IdentificationsApiParamsKeys,
-  values: ObservationsApiParams | IdentificationsApiParams,
+  field: ObservationsApiParamsKeysType | IdentificationsApiParamsKeysType,
+  values: ObservationsApiParamsType | IdentificationsApiParamsType,
 ) {
   let items = data
     .getAll(field)

@@ -1,6 +1,6 @@
 import { setupComponent } from "../../lib/component_utils.ts";
 import { removeProject } from "../../lib/search_projects.ts";
-import type { MapStore, NormalizediNatProject } from "../../types/app";
+import type { AppStoreType, NormalizediNatProjectType } from "../../types/app";
 import { loggerRender } from "../../lib/logger.ts";
 import { template } from "./template";
 import { renderSelectedCounts } from "../../lib/selected_items_utils.ts";
@@ -14,13 +14,13 @@ class MyComponent extends HTMLElement {
     this.render(window.app.store);
   }
 
-  async render(appStore: MapStore) {
+  async render(appStore: AppStoreType) {
     if (!this.dataset.project) return;
     loggerRender("++ SelectedProjectsItem render");
 
     setupComponent(template, this);
 
-    let project = JSON.parse(this.dataset.project) as NormalizediNatProject;
+    let project = JSON.parse(this.dataset.project) as NormalizediNatProjectType;
 
     let nameEl = this.querySelector(".name");
     if (nameEl && project.name) {

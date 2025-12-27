@@ -1,10 +1,10 @@
 import { viewAndTemplateObject } from "../../data/app_data";
 import { createHashString, updateAppUrl } from "../../lib/utils";
-import type { MapStore, ObservationViews } from "../../types/app";
+import type { AppStoreType, ObservationViewsType } from "../../types/app";
 
 export function viewChangeHandler(
   eventTarget: HTMLElement,
-  appStore: MapStore,
+  appStore: AppStoreType,
   componentContext: HTMLElement,
 ) {
   let viewContainerEl = document.querySelector("#view-container");
@@ -14,7 +14,7 @@ export function viewChangeHandler(
   let countLabel = liEl.dataset.countLabel;
   if (!countLabel) return;
 
-  let view = countLabel as ObservationViews;
+  let view = countLabel as ObservationViewsType;
 
   if (appStore.currentView !== countLabel) {
     updateView(view, viewContainerEl, appStore, componentContext);
@@ -22,9 +22,9 @@ export function viewChangeHandler(
 }
 
 export function updateView(
-  targetView: ObservationViews,
+  targetView: ObservationViewsType,
   parentEl: Element,
-  appStore: MapStore,
+  appStore: AppStoreType,
   componentContext: HTMLElement,
 ) {
   if (!parentEl) return;
@@ -71,7 +71,7 @@ export async function updateHeaderCount(
   countLabel: string,
   dataFn: any,
   searchParams: string,
-  appStore: MapStore,
+  appStore: AppStoreType,
   perPage = 0,
   maxCacheSize = 1000,
 ) {
@@ -121,7 +121,7 @@ function renderHeaderCounts(countLabel: string, count: number) {
 export async function saveHeaderCount(
   value: number,
   hash: string,
-  appStore: MapStore,
+  appStore: AppStoreType,
   maxCacheSize = 1000,
 ) {
   // remove first item in headerCounts if cache is max size

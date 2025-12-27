@@ -14,7 +14,7 @@ import {
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import { initRenderMap } from "../../lib/init_app";
 import { setupComponent } from "../../lib/component_utils";
-import type { MapStore, ObservationSubviews } from "../../types/app";
+import type { AppStoreType, ObservationSubviewsType } from "../../types/app";
 import { isObservationsCheck } from "../../lib/data_utils";
 
 class ViewObservations extends HTMLElement {
@@ -90,7 +90,7 @@ class ViewObservations extends HTMLElement {
       fetchAndRenderData(perPage, paginationCallback, window.app.store);
     }
 
-    let subview = target.dataset?.subview as ObservationSubviews;
+    let subview = target.dataset?.subview as ObservationSubviewsType;
     if (event.type === "click") {
       if (subview && this.tableLinkEl && this.gridLinkEl && this.mediaLinkEl) {
         updateSubviewState(subview, this, window.app.store);
@@ -98,7 +98,7 @@ class ViewObservations extends HTMLElement {
     }
   }
 
-  async render(appStore: MapStore) {
+  async render(appStore: AppStoreType) {
     loggerRender("++ ViewObservations render");
 
     // set initial current-subview class

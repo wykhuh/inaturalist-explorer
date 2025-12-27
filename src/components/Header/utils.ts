@@ -6,8 +6,8 @@ import { loggerEvent } from "../../lib/logger";
 import { renderSelectedResources } from "../../lib/search_utils";
 import { updateAppUrl } from "../../lib/utils";
 import type {
-  MapStore,
-  ObservationViews,
+  AppStoreType,
+  ObservationViewsType,
   RecordTypes,
   RouterType,
 } from "../../types/app";
@@ -19,7 +19,7 @@ import {
   removeOneTaxonFromMap,
 } from "../../lib/data_utils";
 
-export async function resetDefaultTaxa(appStore: MapStore) {
+export async function resetDefaultTaxa(appStore: AppStoreType) {
   if (isObservationsCheck(appStore)) {
     if (appStore.selectedTaxa.length === 0) {
       await addDefaultTaxaRecordToStore(appStore);
@@ -43,7 +43,7 @@ export async function resetDefaultTaxa(appStore: MapStore) {
 
 export async function pageChangeHandler(
   event: CustomEvent,
-  appStore: MapStore,
+  appStore: AppStoreType,
   router: RouterType,
 ) {
   let target = event.target as HTMLInputElement;
@@ -76,14 +76,16 @@ export async function pageChangeHandler(
       if (recordType === "observations" && oldView === "identifications") {
         appStore.currentView = "observations_observations";
       } else {
-        appStore.currentView = (recordType + "_" + oldView) as ObservationViews;
+        appStore.currentView = (recordType +
+          "_" +
+          oldView) as ObservationViewsType;
       }
     }
     // about page does not have currentView
   } else {
     appStore.currentView = (recordType +
       "_" +
-      "observations") as ObservationViews;
+      "observations") as ObservationViewsType;
   }
 
   // update app url

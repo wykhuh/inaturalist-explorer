@@ -1,5 +1,4 @@
-import type { NormalizediNatUser } from "../types/app.d.ts";
-import type { MapStore } from "../types/app";
+import type { NormalizediNatUserType, AppStoreType } from "../types/app.d.ts";
 import {
   updateTilesForSelectedTaxa,
   renderSelectedResources,
@@ -14,7 +13,7 @@ import { updateCountForAll } from "./count_utils.ts";
 import { renderSelectedFiltersList } from "../components/ObservationsFilters/shared_utils.ts";
 import { processFiltersForm } from "../components/ObservationsFilters/utils.ts";
 
-export function setupReviewerSearch(selector: string, appStore: MapStore) {
+export function setupReviewerSearch(selector: string, appStore: AppStoreType) {
   const autoCompleteUsersJS = setupUserSearch(selector, appStore);
 
   return autoCompleteUsersJS;
@@ -22,9 +21,9 @@ export function setupReviewerSearch(selector: string, appStore: MapStore) {
 
 // called by autocomplete search when an user option is selected
 export async function reviewerSelectedHandler(
-  selection: NormalizediNatUser,
+  selection: NormalizediNatUserType,
   _query: string,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   let isObservations = isObservationsCheck(appStore);
   if (!isObservations) return;
@@ -53,7 +52,7 @@ export async function reviewerSelectedHandler(
   renderSelectedResources(appStore, true);
 }
 
-export async function removeReviewer(appStore: MapStore) {
+export async function removeReviewer(appStore: AppStoreType) {
   if (!appStore.selectedReviewer) return;
 
   // remove user

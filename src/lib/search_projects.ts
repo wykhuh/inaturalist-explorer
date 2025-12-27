@@ -1,10 +1,10 @@
 import autoComplete from "@tarekraafat/autocomplete.js";
 
 import type {
-  AutoCompleteEvent,
-  NormalizediNatProject,
-  MapStore,
-  CustomGeoJSON,
+  AutoCompleteEventType,
+  NormalizediNatProjectType,
+  AppStoreType,
+  CustomGeoJSONType,
 } from "../types/app.d.ts";
 import { autocomplete_projects_api, getPlaceById } from "../lib/inat_api.ts";
 import type { iNatProjectsAPI } from "../types/inat_api";
@@ -23,13 +23,13 @@ import {
 } from "./search_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
 
-export function setupProjectSearch(selector: string, appStore: MapStore) {
+export function setupProjectSearch(selector: string, appStore: AppStoreType) {
   const autoCompleteProjectJS = new autoComplete({
     autocomplete: "off",
     selector: selector,
     placeHolder: "Enter projects name",
     threshold: 2,
-    searchEngine: (_query: string, record: NormalizediNatProject) => {
+    searchEngine: (_query: string, record: NormalizediNatProjectType) => {
       return renderAutocompleteProject(record);
     },
     data: {
@@ -59,7 +59,7 @@ export function setupProjectSearch(selector: string, appStore: MapStore) {
     },
     events: {
       input: {
-        selection: (event: AutoCompleteEvent) => {
+        selection: (event: AutoCompleteEventType) => {
           const selection = event.detail.selection.value;
           autoCompleteProjectJS.input.value = selection.name;
         },
@@ -72,7 +72,7 @@ export function setupProjectSearch(selector: string, appStore: MapStore) {
 
 export function processAutocompleteProject(
   data: iNatProjectsAPI,
-): NormalizediNatProject[] {
+): NormalizediNatProjectType[] {
   return data.results.map((item) => {
     return {
       name: item.title,
@@ -83,7 +83,9 @@ export function processAutocompleteProject(
   });
 }
 
-export function renderAutocompleteProject(item: NormalizediNatProject): string {
+export function renderAutocompleteProject(
+  item: NormalizediNatProjectType,
+): string {
   let html = `
   <div class="projects-ac-option" data-testid="projects-ac-option">
     <div class="project-name">
@@ -96,9 +98,9 @@ export function renderAutocompleteProject(item: NormalizediNatProject): string {
 
 // called by autocomplete search when an project option is selected
 export async function projectSelectedHandler(
-  selection: NormalizediNatProject,
+  selection: NormalizediNatProjectType,
   _query: string,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   let isObservations = isObservationsCheck(appStore);
   if (!isObservations) return;
@@ -134,7 +136,7 @@ export async function projectSelectedHandler(
     // add project map layer
     appStore.projectsMapLayers = {
       ...appStore.projectsMapLayers,
-      [project.id]: [layer as CustomGeoJSON],
+      [project.id]: [layer as CustomGeoJSONType],
     };
   }
 
@@ -165,7 +167,7 @@ export async function projectSelectedHandler(
   renderSelectedResources(appStore, true);
 }
 
-export function renderProjectsList(appStore: MapStore) {
+export function renderProjectsList(appStore: AppStoreType) {
   let listEl = document.querySelector("#selected-projects-list");
   if (!listEl) return;
 
@@ -179,7 +181,7 @@ export function renderProjectsList(appStore: MapStore) {
 }
 
 // called when user deletes a project
-export async function removeProject(projectId: number, appStore: MapStore) {
+export async function removeProject(projectId: number, appStore: AppStoreType) {
   if (!appStore.selectedProjects) return;
 
   // remove project

@@ -1,5 +1,4 @@
-import type { NormalizediNatUser } from "../types/app.d.ts";
-import type { MapStore } from "../types/app";
+import type { NormalizediNatUserType, AppStoreType } from "../types/app.d.ts";
 import {
   addValueToCommaSeparatedString,
   isIdentificationsCheck,
@@ -16,7 +15,7 @@ import { setupUserSearch } from "./search_users.ts";
 
 export function setupUserIdentifierSearch(
   selector: string,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   const autoCompleteUsersJS = setupUserSearch(selector, appStore);
 
@@ -25,9 +24,9 @@ export function setupUserIdentifierSearch(
 
 // called by autocomplete search when an user option is selected
 export async function userIdentifierSelectedHandler(
-  selection: NormalizediNatUser,
+  selection: NormalizediNatUserType,
   _query: string,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   let isObservations = isObservationsCheck(appStore);
 
@@ -81,7 +80,7 @@ export async function userIdentifierSelectedHandler(
   renderSelectedResources(appStore, true);
 }
 
-export function renderUsersIdentifiersList(appStore: MapStore) {
+export function renderUsersIdentifiersList(appStore: AppStoreType) {
   let listEl = document.querySelector("#selected-users-identifiers-list");
   if (!listEl) return;
 
@@ -111,7 +110,10 @@ export function renderUsersIdentifiersList(appStore: MapStore) {
   }
 }
 
-export async function removeUserIdentifier(userId: number, appStore: MapStore) {
+export async function removeUserIdentifier(
+  userId: number,
+  appStore: AppStoreType,
+) {
   if (!appStore.selectedUsersIdentifiers) return;
 
   // remove user

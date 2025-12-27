@@ -5,9 +5,9 @@ import {
   taxonRanks,
 } from "../../data/inat_data";
 import type {
-  ObservationsApiParams,
-  ObservationsApiParamsKeys,
-  MapStore,
+  ObservationsApiParamsType,
+  ObservationsApiParamsKeysType,
+  AppStoreType,
 } from "../../types/app";
 import {
   isObservationsCheck,
@@ -32,15 +32,15 @@ import {
 } from "../../lib/form_utils";
 
 export function processFiltersForm(data: FormData): {
-  params: ObservationsApiParams;
+  params: ObservationsApiParamsType;
   string: string;
 } {
   // convert form data into object that can be use with URLSearchParams
-  let values: ObservationsApiParams = {};
+  let values: ObservationsApiParamsType = {};
   loggerFilters("----------- processFiltersForm");
 
   for (let [k, value] of data) {
-    let key = k as ObservationsApiParamsKeys;
+    let key = k as ObservationsApiParamsKeysType;
     loggerFilters(key, value);
 
     // ignore fields
@@ -73,7 +73,10 @@ export function processFiltersForm(data: FormData): {
   };
 }
 
-export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
+export async function updateAppWithFilters(
+  data: FormData,
+  appStore: AppStoreType,
+) {
   // get values from form data
   let results = processFiltersForm(data);
 
@@ -90,23 +93,23 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
 
 export function isObservationsApiFields(
   _records: any[],
-  appStore: MapStore,
-): _records is ObservationsApiParamsKeys[] {
+  appStore: AppStoreType,
+): _records is ObservationsApiParamsKeysType[] {
   return isObservationsCheck(appStore);
 }
 
 export function isObservationsApiParams(
   _params: any,
-  appStore: MapStore,
-): _params is ObservationsApiParams {
+  appStore: AppStoreType,
+): _params is ObservationsApiParamsType {
   return isObservationsCheck(appStore);
 }
 
 // use store to populate the filter form fields on page load
-export function initFilters(appStore: MapStore) {
+export function initFilters(appStore: AppStoreType) {
   let { observationsApiParams } = appStore;
 
-  let trueFalseFields: ObservationsApiParamsKeys[] = [
+  let trueFalseFields: ObservationsApiParamsKeysType[] = [
     "captive",
     "endemic",
     "identified",
@@ -121,10 +124,10 @@ export function initFilters(appStore: MapStore) {
   ];
   processTrueFalseFields(trueFalseFields, appStore);
 
-  let selectFields: ObservationsApiParamsKeys[] = ["hrank", "lrank"];
+  let selectFields: ObservationsApiParamsKeysType[] = ["hrank", "lrank"];
   processSelectFields(selectFields, appStore);
 
-  let multipleSelectFields: ObservationsApiParamsKeys[] = [
+  let multipleSelectFields: ObservationsApiParamsKeysType[] = [
     "license",
     "photo_license",
     "quality_grade",
@@ -134,10 +137,10 @@ export function initFilters(appStore: MapStore) {
   ];
   processMultipleSelectFields(multipleSelectFields, appStore);
 
-  let inputCheckedFields: ObservationsApiParamsKeys[] = ["iconic_taxa"];
+  let inputCheckedFields: ObservationsApiParamsKeysType[] = ["iconic_taxa"];
   processInputCheckedFields(inputCheckedFields, appStore);
 
-  let inputFields: ObservationsApiParamsKeys[] = ["d1", "d2", "on"];
+  let inputFields: ObservationsApiParamsKeysType[] = ["d1", "d2", "on"];
   processInputFields(inputFields, appStore);
 
   if (observationsApiParams.unobserved_by_user_id !== undefined) {

@@ -5,11 +5,11 @@ import { expect } from "vitest";
 
 import { addLayerToMap, getMapTiles } from "../lib/map_utils";
 import type {
-  MapStore,
-  NormalizediNatPlace,
-  NormalizediNatProject,
-  NormalizediNatTaxon,
-  NormalizediNatUser,
+  AppStoreType,
+  NormalizediNatPlaceType,
+  NormalizediNatProjectType,
+  NormalizediNatTaxonType,
+  NormalizediNatUserType,
 } from "../types/app";
 import { mapStore } from "../lib/store.ts";
 import { allTaxaRecord } from "../data/inat_data.ts";
@@ -340,7 +340,7 @@ export let gridLabel_life_bbox_resources =
 export let gridLabel_oaks_bbox_resources =
   "overlay: iNat grid, taxon_id 861036, project_id 237729,229902, user_id 222137,677256";
 
-export let lifeBasic: NormalizediNatTaxon = {
+export let lifeBasic: NormalizediNatTaxonType = {
   name: "Life",
   default_photo: "https://inat.com/photos/347064198/square.jpeg",
   preferred_common_name: "life",
@@ -355,7 +355,7 @@ export function life(color = colors[0]) {
     subtitle: "Life",
     color: color,
     observations_count: 10000,
-  } as NormalizediNatTaxon;
+  } as NormalizediNatTaxonType;
 }
 
 export function lifeIdentification() {
@@ -365,7 +365,7 @@ export function lifeIdentification() {
   return taxon;
 }
 
-export let redOakBasic: NormalizediNatTaxon = {
+export let redOakBasic: NormalizediNatTaxonType = {
   name: "Lobatae",
   default_photo: "https://inat.com/photos/149586607/square.jpg",
   preferred_common_name: "red oaks",
@@ -380,7 +380,7 @@ export function redOak(color = colors[1]) {
     subtitle: "Lobatae",
     color: color,
     observations_count: 1000,
-  } as NormalizediNatTaxon;
+  } as NormalizediNatTaxonType;
 }
 
 export function redOakIdentification() {
@@ -390,7 +390,7 @@ export function redOakIdentification() {
   return taxon;
 }
 
-export let monarchBasic: NormalizediNatTaxon = {
+export let monarchBasic: NormalizediNatTaxonType = {
   name: "Danaus plexippus",
   default_photo: "https://inat.com/photos/61756746/square.jpg",
   preferred_common_name: "Monarch",
@@ -421,7 +421,7 @@ export const allTaxaIdentification = {
   title: "All species",
 };
 
-export let losangeles: NormalizediNatPlace = {
+export let losangeles: NormalizediNatPlaceType = {
   display_name: "Los Angeles County, US, CA",
   id: 962,
   name: "Los Angeles",
@@ -429,7 +429,7 @@ export let losangeles: NormalizediNatPlace = {
   bounding_box: losAngelesSearchApi.results[0].record.bounding_box_geojson,
 };
 
-export let sandiego: NormalizediNatPlace = {
+export let sandiego: NormalizediNatPlaceType = {
   id: 829,
   name: "San Diego",
   display_name: "San Diego County, CA, US",
@@ -437,7 +437,7 @@ export let sandiego: NormalizediNatPlace = {
   geometry: sandiegoSearchApi.results[0].record.geometry_geojson,
 };
 
-export let refreshPlace: NormalizediNatPlace = {
+export let refreshPlace: NormalizediNatPlaceType = {
   id: 0,
   name: "Custom Boundary",
   display_name: "Custom Boundary",
@@ -454,7 +454,7 @@ export let refreshPlace: NormalizediNatPlace = {
   },
 };
 
-export let refreshPlaceLA: NormalizediNatPlace = {
+export let refreshPlaceLA: NormalizediNatPlaceType = {
   id: 0,
   name: "Custom Boundary",
   display_name: "Custom Boundary",
@@ -471,13 +471,13 @@ export let refreshPlaceLA: NormalizediNatPlace = {
   },
 };
 
-export let project_cnc1: NormalizediNatProject = {
+export let project_cnc1: NormalizediNatProjectType = {
   id: 237729,
   name: "City Nature Challenge 2025: Aotearoa New Zealand",
   slug: "city-nature-challenge-2025-aotearoa-new-zealand",
 };
 
-export let project_cnc2: NormalizediNatProject = {
+export let project_cnc2: NormalizediNatProjectType = {
   id: 229902,
   name: "City Nature Challenge 2025: Ōtautahi/Christchurch",
   slug: "city-nature-challenge-2025-otautahi-christchurch",
@@ -485,13 +485,13 @@ export let project_cnc2: NormalizediNatProject = {
   bounding_box: cnc2PlaceApi.results[0].bounding_box_geojson as PolygonJson,
 };
 
-export let user1: NormalizediNatUser = {
+export let user1: NormalizediNatUserType = {
   id: 222137,
   login: "reiner",
   name: "Reiner Richter",
 };
 
-export let user2: NormalizediNatUser = {
+export let user2: NormalizediNatUserType = {
   id: 677256,
   login: "alanhorstmann",
   name: "Alan Horstmann",
@@ -508,7 +508,7 @@ export function setupMapAndStore() {
   addLayerToMap(OpenStreetMap, map, layerControl, true);
 
   let dup = structuredClone(mapStore);
-  let store: MapStore = {
+  let store: AppStoreType = {
     ...dup,
     map: { map: map, layerControl: layerControl },
   };
@@ -516,7 +516,7 @@ export function setupMapAndStore() {
   return { map, layerControl, store };
 }
 
-export function expectEmpytMap(store: MapStore) {
+export function expectEmpytMap(store: AppStoreType) {
   expect(store.observationsApiParams).toStrictEqual(
     mapStore.observationsApiParams,
   );
@@ -529,16 +529,16 @@ export function expectEmpytMap(store: MapStore) {
   expect(store.refreshMap.layer).toBeNull();
 }
 
-export function expectNoTaxa(store: MapStore) {
+export function expectNoTaxa(store: AppStoreType) {
   expect(store.selectedTaxa).toStrictEqual([]);
   expect(store.taxaMapLayers).toStrictEqual({});
 }
 
-export function expectNoTaxaIdentified(store: MapStore) {
+export function expectNoTaxaIdentified(store: AppStoreType) {
   expect(store.selectedTaxaIdentified).toStrictEqual([]);
 }
 
-export function expectDefaultTaxaRecord(store: MapStore, count = 0) {
+export function expectDefaultTaxaRecord(store: AppStoreType, count = 0) {
   let taxa = structuredClone(allTaxa);
   if (count > 0) {
     taxa.observations_count = Math.round(count);
@@ -549,7 +549,7 @@ export function expectDefaultTaxaRecord(store: MapStore, count = 0) {
 }
 
 export function expectDefaultTaxaRecordIdentification(
-  store: MapStore,
+  store: AppStoreType,
   count = 0,
 ) {
   let taxa = structuredClone(allTaxaIdentification);
@@ -563,7 +563,11 @@ export function expectDefaultTaxaRecordIdentification(
   expect(store.taxaMapLayers[0].length).toBe(3);
 }
 
-export function expectLifeTaxa(store: MapStore, count = 0, color = colors[0]) {
+export function expectLifeTaxa(
+  store: AppStoreType,
+  count = 0,
+  color = colors[0],
+) {
   let taxa = structuredClone(life());
   if (count > 0) {
     taxa.observations_count = Math.round(count);
@@ -575,7 +579,7 @@ export function expectLifeTaxa(store: MapStore, count = 0, color = colors[0]) {
   expect(store.taxaMapLayers[taxa.id].length).toBe(4);
 }
 
-export function expectLifeTaxaIdentification(store: MapStore, count = 0) {
+export function expectLifeTaxaIdentification(store: AppStoreType, count = 0) {
   let taxa = structuredClone(life());
   delete taxa.observations_count;
   if (count > 0) {
@@ -588,7 +592,7 @@ export function expectLifeTaxaIdentification(store: MapStore, count = 0) {
 }
 
 export function expectLifeTaxaIdentifiedIdentification(
-  store: MapStore,
+  store: AppStoreType,
   count = 0,
 ) {
   let taxa = structuredClone(life());
@@ -601,7 +605,7 @@ export function expectLifeTaxaIdentifiedIdentification(
   expect(store.selectedTaxaIdentified).toStrictEqual([taxa]);
 }
 
-export function expectOakTaxa(store: MapStore, color = colors[1]) {
+export function expectOakTaxa(store: AppStoreType, color = colors[1]) {
   let oak = redOak(color);
   expect(store.selectedTaxa).toStrictEqual([oak]);
   expect(Object.keys(store.taxaMapLayers)).toEqual([oak.id.toString()]);
@@ -609,7 +613,7 @@ export function expectOakTaxa(store: MapStore, color = colors[1]) {
 }
 
 export function expectLifeOakTaxa(
-  store: MapStore,
+  store: AppStoreType,
   count = [0, 0],
   customColors = [colors[0], colors[1]],
 ) {
@@ -631,7 +635,7 @@ export function expectLifeOakTaxa(
 }
 
 export function expectLifeOakTaxaIdentifications(
-  store: MapStore,
+  store: AppStoreType,
   count = [0, 0],
 ) {
   let taxa1 = lifeIdentification();
@@ -654,16 +658,16 @@ export function expectLifeOakTaxaIdentifications(
   expect(store.taxaMapLayers[taxa2.id].length).toBe(4);
 }
 
-export function expectNoPlaces(store: MapStore) {
+export function expectNoPlaces(store: AppStoreType) {
   expect(store.selectedPlaces).toStrictEqual([]);
   expect(store.placesMapLayers).toStrictEqual({});
 }
 
-export function expectNoRefresh(store: MapStore) {
+export function expectNoRefresh(store: AppStoreType) {
   expect(store.refreshMap.layer).toBeNull();
 }
 
-export function expectLosAngelesPlace(store: MapStore, count = 0) {
+export function expectLosAngelesPlace(store: AppStoreType, count = 0) {
   let place = structuredClone(losangeles);
   if (count > 0) {
     place.observations_count = Math.round(count);
@@ -676,7 +680,7 @@ export function expectLosAngelesPlace(store: MapStore, count = 0) {
 }
 
 export function expectLosAngelesPlaceIdentifications(
-  store: MapStore,
+  store: AppStoreType,
   count = 0,
 ) {
   let place = structuredClone(losangeles);
@@ -690,7 +694,7 @@ export function expectLosAngelesPlaceIdentifications(
   expect(store.placesMapLayers[place.id].length).toBe(1);
 }
 
-export function expectSanDiegoPlace(store: MapStore, count = 0) {
+export function expectSanDiegoPlace(store: AppStoreType, count = 0) {
   let place = structuredClone(sandiego);
   if (count > 0) {
     place.observations_count = Math.round(count);
@@ -702,7 +706,7 @@ export function expectSanDiegoPlace(store: MapStore, count = 0) {
   expect(store.placesMapLayers[place.id].length).toBe(1);
 }
 
-export function expect_LA_SD_Place(store: MapStore, counts = [0, 0]) {
+export function expect_LA_SD_Place(store: AppStoreType, counts = [0, 0]) {
   let place1 = structuredClone(losangeles);
   if (counts[0] > 0) {
     place1.observations_count = counts[0];
@@ -722,7 +726,7 @@ export function expect_LA_SD_Place(store: MapStore, counts = [0, 0]) {
 }
 
 export function expect_LA_SD_Place_Identifications(
-  store: MapStore,
+  store: AppStoreType,
   counts = [0, 0],
 ) {
   let place1 = structuredClone(losangeles);
@@ -743,19 +747,23 @@ export function expect_LA_SD_Place_Identifications(
   expect(store.placesMapLayers[sandiego.id].length).toBe(1);
 }
 
-export function expectNoUsers(store: MapStore) {
+export function expectNoUsers(store: AppStoreType) {
   expect(store.selectedUsers).toStrictEqual([]);
 }
 
-export function expectNoUsersIdentifiers(store: MapStore) {
+export function expectNoUsersIdentifiers(store: AppStoreType) {
   expect(store.selectedUsersIdentifiers).toStrictEqual([]);
 }
 
-export function expectNoUnobservedUsers(store: MapStore) {
+export function expectNoUnobservedUsers(store: AppStoreType) {
   expect(store.selectedUnobservedByUser).toStrictEqual({});
 }
 
-export function expectRefreshPlace(store: MapStore, count = 0, type = "zero") {
+export function expectRefreshPlace(
+  store: AppStoreType,
+  count = 0,
+  type = "zero",
+) {
   let place = structuredClone(refreshPlace);
   if (type !== "zero") {
     place = structuredClone(refreshPlaceLA);
@@ -769,11 +777,11 @@ export function expectRefreshPlace(store: MapStore, count = 0, type = "zero") {
   expect(store.placesMapLayers["0"].length).toBe(1);
 }
 
-export function expectNoProjects(store: MapStore) {
+export function expectNoProjects(store: AppStoreType) {
   expect(store.selectedProjects).toEqual([]);
 }
 
-export function expectProject1(store: MapStore, count = 0) {
+export function expectProject1(store: AppStoreType, count = 0) {
   let project = structuredClone(project_cnc1);
   if (count) {
     project.observations_count = Math.round(count);
@@ -783,7 +791,7 @@ export function expectProject1(store: MapStore, count = 0) {
   expect(store.projectsMapLayers).toBe(undefined);
 }
 
-export function expectProject2(store: MapStore, count = 0) {
+export function expectProject2(store: AppStoreType, count = 0) {
   let project = structuredClone(project_cnc2);
   if (count) {
     project.observations_count = Math.round(count);
@@ -795,7 +803,7 @@ export function expectProject2(store: MapStore, count = 0) {
   expect(store.projectsMapLayers[project.id].length).toBe(10);
 }
 
-export function expectProjects(store: MapStore, counts = [0, 0]) {
+export function expectProjects(store: AppStoreType, counts = [0, 0]) {
   let project1 = structuredClone(project_cnc1);
   let project2 = structuredClone(project_cnc2);
   if (counts[0] > 0) {
@@ -813,7 +821,7 @@ export function expectProjects(store: MapStore, counts = [0, 0]) {
   expect(store.projectsMapLayers[project2.id].length).toBe(1);
 }
 
-export function expectUser1(store: MapStore, count = 0) {
+export function expectUser1(store: AppStoreType, count = 0) {
   let userA = structuredClone(user1);
   if (count > 0) {
     userA.observations_count = Math.round(count);
@@ -821,7 +829,7 @@ export function expectUser1(store: MapStore, count = 0) {
   expect(store.selectedUsers).toEqual([userA]);
 }
 
-export function expectUser2(store: MapStore, count = 0) {
+export function expectUser2(store: AppStoreType, count = 0) {
   let userB = structuredClone(user2);
   if (count > 0) {
     userB.observations_count = Math.round(count);
@@ -829,7 +837,7 @@ export function expectUser2(store: MapStore, count = 0) {
   expect(store.selectedUsers).toEqual([userB]);
 }
 
-export function expectUsers(store: MapStore, counts = [0, 0]) {
+export function expectUsers(store: AppStoreType, counts = [0, 0]) {
   let userA = structuredClone(user1);
   if (counts[0] > 0) {
     userA.observations_count = Math.round(counts[0]);
@@ -841,7 +849,7 @@ export function expectUsers(store: MapStore, counts = [0, 0]) {
   expect(store.selectedUsers).toEqual([userA, userB]);
 }
 
-export function expectUser1Identifier(store: MapStore, count = 0) {
+export function expectUser1Identifier(store: AppStoreType, count = 0) {
   let userA = structuredClone(user1);
   if (count > 0) {
     userA.observations_count = Math.round(count);
@@ -849,7 +857,7 @@ export function expectUser1Identifier(store: MapStore, count = 0) {
   expect(store.selectedUsersIdentifiers).toEqual([userA]);
 }
 
-export function expectUserIdentifiers(store: MapStore, counts = [0, 0]) {
+export function expectUserIdentifiers(store: AppStoreType, counts = [0, 0]) {
   let userA = structuredClone(user1);
   let userB = structuredClone(user2);
 
@@ -863,7 +871,7 @@ export function expectUserIdentifiers(store: MapStore, counts = [0, 0]) {
 }
 
 export function expectUserIdentifiersIdentifications(
-  store: MapStore,
+  store: AppStoreType,
   counts = [0, 0],
 ) {
   let userA = structuredClone(user1);
@@ -878,7 +886,7 @@ export function expectUserIdentifiersIdentifications(
   expect(store.selectedUsersIdentifiers).toEqual([userA, userB]);
 }
 
-export function expectUser1UnobservedByUser(store: MapStore, count = 0) {
+export function expectUser1UnobservedByUser(store: AppStoreType, count = 0) {
   let userA = structuredClone(user1);
   if (count > 0) {
     userA.observations_count = Math.round(count);
@@ -886,7 +894,7 @@ export function expectUser1UnobservedByUser(store: MapStore, count = 0) {
   expect(store.selectedUnobservedByUser).toEqual(userA);
 }
 
-export function expectUser1Reviewer(store: MapStore, count = 0) {
+export function expectUser1Reviewer(store: AppStoreType, count = 0) {
   let userA = structuredClone(user1);
   if (count > 0) {
     userA.observations_count = Math.round(count);
@@ -894,7 +902,7 @@ export function expectUser1Reviewer(store: MapStore, count = 0) {
   expect(store.selectedReviewer).toEqual(userA);
 }
 
-export function expectUser2Identifier(store: MapStore, count = 0) {
+export function expectUser2Identifier(store: AppStoreType, count = 0) {
   let userB = structuredClone(user2);
   if (count > 0) {
     userB.observations_count = Math.round(count);

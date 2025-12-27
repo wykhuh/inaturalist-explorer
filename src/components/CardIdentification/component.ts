@@ -1,5 +1,5 @@
 import { setupComponent } from "../../lib/component_utils";
-import type { DataComponent } from "../../types/app";
+import type { DataComponentType } from "../../types/app";
 import type { IdentificationsResult } from "../../types/inat_api";
 import { template } from "./template";
 
@@ -26,11 +26,12 @@ class CardIdentification extends HTMLElement {
   render() {
     let cardEl = this.querySelector(".card");
     if (!cardEl) return;
-    let data = (this as unknown as DataComponent).data as IdentificationsResult;
+    let data = (this as unknown as DataComponentType)
+      .data as IdentificationsResult;
 
     let observationEl = document.createElement(
       "card-identification-observation",
-    ) as unknown as DataComponent;
+    ) as unknown as DataComponentType;
     observationEl.data = data.observation;
     cardEl.append(observationEl);
 
@@ -40,7 +41,7 @@ class CardIdentification extends HTMLElement {
 
     let identificationEl = document.createElement(
       "card-identification-identification",
-    ) as unknown as DataComponent;
+    ) as unknown as DataComponentType;
     identificationEl.data = identification;
     cardEl.append(identificationEl);
   }

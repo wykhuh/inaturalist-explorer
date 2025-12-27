@@ -3,7 +3,7 @@ import type {
   ObservationSound,
   ObservationsResult,
 } from "../../types/inat_api";
-import type { DataComponent, MapStore } from "../../types/app";
+import type { DataComponentType, AppStoreType } from "../../types/app";
 import {
   formatAvatar,
   renderMedia,
@@ -20,12 +20,12 @@ type DataProps = {
   media: ObservationPhoto | ObservationSound;
 };
 
-export function renderCard(appStore: MapStore, componentCtx: any) {
+export function renderCard(appStore: AppStoreType, componentCtx: any) {
   let cardEl = componentCtx.querySelector(".card");
   if (!cardEl) return;
 
   let { observation, media, type, mediaIndex } = (
-    componentCtx as unknown as DataComponent
+    componentCtx as unknown as DataComponentType
   ).data as DataProps;
 
   let obsUrl = `${iNatObservationUrl}/${observation.id}`;

@@ -9,10 +9,10 @@ import {
   getIdentificationsObservers,
   getIdentificationsSpecies,
 } from "../../lib/inat_api";
-import type { MapStore } from "../../types/app";
+import type { AppStoreType } from "../../types/app";
 import { updateHeaderCount } from "../ObservationsHeader/shared_utils";
 
-export function updateCountsHeader(appStore: MapStore) {
+export function updateCountsHeader(appStore: AppStoreType) {
   // NOTE:observations has different search params than identifications
   let params = cleanupIdentificationsObservationsParams(appStore);
   updateHeaderCount(

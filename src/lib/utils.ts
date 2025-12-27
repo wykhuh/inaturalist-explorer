@@ -1,13 +1,13 @@
 import type {
-  MapStore,
-  ObservationsApiParams,
-  ObservationsApiParamsKeys,
-  NormalizediNatTaxon,
-  ObservationViews,
-  NameOrder,
-  IdentificationsApiParamsKeys,
-  IdentificationsApiParams,
-  ObservationSubviews,
+  AppStoreType,
+  ObservationsApiParamsType,
+  ObservationsApiParamsKeysType,
+  NormalizediNatTaxonType,
+  ObservationViewsType,
+  NameOrderType,
+  IdentificationsApiParamsKeysType,
+  IdentificationsApiParamsType,
+  ObservationSubviewsType,
 } from "../types/app";
 import {
   bboxPlaceRecord,
@@ -75,7 +75,7 @@ export function pluralize(
 }
 
 export function formatAppUrl(
-  appStore: MapStore,
+  appStore: AppStoreType,
   recordType = appStore.record_type,
 ) {
   let isIdentifications = recordType === "identifications";
@@ -107,7 +107,7 @@ export function formatAppUrl(
     .map((r) => r.color)
     .join(",");
 
-  let params: ObservationsApiParams & IdentificationsApiParams = {};
+  let params: ObservationsApiParamsType & IdentificationsApiParamsType = {};
 
   if (taxaIds.length > 0) {
     if (isIdentifications) {
@@ -262,7 +262,7 @@ function removeValueFromArray(value: any, array: any[]) {
   return array;
 }
 
-export function updateAppUrl(url_location: Location, appStore: MapStore) {
+export function updateAppUrl(url_location: Location, appStore: AppStoreType) {
   let paramsString = formatAppUrl(appStore);
   let url = `${url_location.origin}${import.meta.env?.VITE_BASE}${url_location.pathname}`;
   if (paramsString) {
@@ -288,7 +288,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
       identifications_species: {},
       identifications_identifications: {},
     },
-  } as MapStore;
+  } as AppStoreType;
   let isObservations = true;
   let isIdentifications = false;
 
@@ -309,7 +309,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   // convert observation_taxon_id into selectedTaxa
   if ("observation_taxon_id" in urlParams) {
     if (!isObservations) {
-      let taxa: NormalizediNatTaxon[] = [];
+      let taxa: NormalizediNatTaxonType[] = [];
       let ids = urlParams.observation_taxon_id.split(",");
       let colors = urlParams.colors
         ? urlParams.colors.split(",")
@@ -328,7 +328,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
 
   // convert taxon_id into basic selectedTaxa or selectedTaxaIdentified id
   if ("taxon_id" in urlParams) {
-    let taxa: NormalizediNatTaxon[] = [];
+    let taxa: NormalizediNatTaxonType[] = [];
     let ids = urlParams.taxon_id.split(",");
 
     if (isObservations) {
@@ -441,8 +441,8 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     }
   }
 
-  let urlView = urlParams.view as ObservationViews;
-  let urlSubview = urlParams.subview as ObservationSubviews;
+  let urlView = urlParams.view as ObservationViewsType;
+  let urlSubview = urlParams.subview as ObservationSubviewsType;
   if (urlView && validViews.includes(urlView)) {
     store.currentView = urlView;
   } else if (isObservations) {
@@ -518,7 +518,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     store.observationsApiParams.locale = urlParams.locale;
   }
   if (urlParams.name_order) {
-    store.viewMetadata.name_order = urlParams.name_order as NameOrder;
+    store.viewMetadata.name_order = urlParams.name_order as NameOrderType;
   }
 
   for (let [key, value] of new URLSearchParams(searchParams)) {
@@ -535,12 +535,14 @@ export function decodeAppUrl(searchParams: string, path = "/") {
 function setUrlStoreValuesObservations(
   key: string,
   value: string,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   let cleanedValue = value as string | number | boolean;
 
   if (
-    ObservationsApiFilterableNames.includes(key as ObservationsApiParamsKeys)
+    ObservationsApiFilterableNames.includes(
+      key as ObservationsApiParamsKeysType,
+    )
   ) {
     if (value === "true") {
       cleanedValue = true;
@@ -551,7 +553,7 @@ function setUrlStoreValuesObservations(
     if (/^\d+$/.test(value)) {
       cleanedValue = Number(value);
     }
-    appStore.observationsApiParams[key as ObservationsApiParamsKeys] =
+    appStore.observationsApiParams[key as ObservationsApiParamsKeysType] =
       cleanedValue;
   }
 }
@@ -559,13 +561,13 @@ function setUrlStoreValuesObservations(
 function setUrlStoreValuesIdentifications(
   key: string,
   value: string,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   let cleanedValue = value as string | number | boolean;
 
   if (
     IdentificationsApiFilterableNames.includes(
-      key as IdentificationsApiParamsKeys,
+      key as IdentificationsApiParamsKeysType,
     )
   ) {
     if (value === "true") {
@@ -575,7 +577,7 @@ function setUrlStoreValuesIdentifications(
     } else if (/^\d+$/.test(value)) {
       cleanedValue = Number(value);
     }
-    appStore.identificationsApiParams[key as IdentificationsApiParamsKeys] =
+    appStore.identificationsApiParams[key as IdentificationsApiParamsKeysType] =
       cleanedValue;
   }
 }

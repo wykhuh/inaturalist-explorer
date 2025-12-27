@@ -2,12 +2,12 @@ import L from "leaflet";
 import type { Map, LatLngExpression } from "leaflet";
 
 import type {
-  MapStore,
-  LeafletBounds,
-  LngLat,
-  Coordinates,
-  ObservationsApiParams,
-  ObservationTilesSetting,
+  AppStoreType,
+  LeafletBoundsType,
+  LngLatType,
+  CoordinatesType,
+  ObservationsApiParamsType,
+  ObservationTilesSettingType,
 } from "../types/app.d.ts";
 import { refreshBoundingBox } from "./search_bounding_box.ts";
 import { loggerUrl } from "./logger.ts";
@@ -34,7 +34,7 @@ export function fitBoundsPoints(coordinates: any, map: Map) {
   }
 }
 
-export function fitBoundsPlaces(appStore: MapStore) {
+export function fitBoundsPlaces(appStore: AppStoreType) {
   let map = appStore.map.map;
   if (!map) return;
   if (
@@ -66,7 +66,7 @@ export function fitBoundsPlaces(appStore: MapStore) {
 type: "Polygon"
 */
 
-export function fitBoundsBBox(map: Map, lngLatCoors: LngLat[]) {
+export function fitBoundsBBox(map: Map, lngLatCoors: LngLatType[]) {
   let latLngCoors = lngLatCoors.map(flipLatLng);
   let bounds = L.latLngBounds(latLngCoors);
 
@@ -89,7 +89,9 @@ export function areAllPointsInMap(coordinates: LatLngExpression[], map: Map) {
   }
 }
 
-export const getMapTiles = (): { [name: string]: ObservationTilesSetting } => {
+export const getMapTiles = (): {
+  [name: string]: ObservationTilesSettingType;
+} => {
   return {
     OpenStreetMap: {
       name: "Open Street Map",
@@ -276,7 +278,7 @@ export const getMapTiles = (): { [name: string]: ObservationTilesSetting } => {
 };
 
 export function addLayerToMap(
-  tileObj: ObservationTilesSetting,
+  tileObj: ObservationTilesSettingType,
   map: any,
   layerControl: any,
   checked = false,
@@ -293,7 +295,7 @@ export function addLayerToMap(
 }
 
 export function addOverlayToMap(
-  tileObj: ObservationTilesSetting,
+  tileObj: ObservationTilesSettingType,
   map: any,
   layerControl: any,
   checked = false,
@@ -326,7 +328,7 @@ export function formatiNatAPIBoundingBoxParams(bounds: any) {
 }
 
 export function createRefreshMapButton(
-  appStore: MapStore,
+  appStore: AppStoreType,
 ): HTMLButtonElement | null {
   let buttonEl: HTMLButtonElement = null as unknown as HTMLButtonElement;
   let map = appStore.map.map;
@@ -366,11 +368,11 @@ export function createRefreshMapButton(
   return buttonEl;
 }
 
-export function flipLatLng(coordinates: Coordinates): Coordinates {
+export function flipLatLng(coordinates: CoordinatesType): CoordinatesType {
   return [coordinates[1], coordinates[0]];
 }
 
-export function getBoundingBox(coordinates: LngLat[]) {
+export function getBoundingBox(coordinates: LngLatType[]) {
   let latLngCoors = coordinates.map(flipLatLng);
   return L.latLngBounds(latLngCoors);
 }
@@ -383,7 +385,7 @@ export function getAndDrawMapBoundingBox(
     layer_description: "refresh bounding box",
   },
 ) {
-  let bounds = map.getBounds() as unknown as LeafletBounds;
+  let bounds = map.getBounds() as unknown as LeafletBoundsType;
   let lngLatCoors = convertBoundsObjectToLngLat(bounds);
   let layer = drawMapBoundingBox(map, lngLatCoors, options);
   return { layer, lngLatCoors };
@@ -391,7 +393,7 @@ export function getAndDrawMapBoundingBox(
 
 export function drawMapBoundingBox(
   map: Map,
-  lngLatCoors: LngLat[],
+  lngLatCoors: LngLatType[],
   options = {
     fillColor: "none",
     weight: 1,
@@ -404,7 +406,9 @@ export function drawMapBoundingBox(
   return layer;
 }
 
-export function convertBoundsObjectToLngLat(bounds: LeafletBounds): LngLat[] {
+export function convertBoundsObjectToLngLat(
+  bounds: LeafletBoundsType,
+): LngLatType[] {
   return formatBoundingBox(
     bounds._northEast.lng,
     bounds._northEast.lat,
@@ -414,8 +418,8 @@ export function convertBoundsObjectToLngLat(bounds: LeafletBounds): LngLat[] {
 }
 
 export function convertParamsBBoxToLngLat(
-  params: ObservationsApiParams,
-): LngLat[] | undefined {
+  params: ObservationsApiParamsType,
+): LngLatType[] | undefined {
   const { nelng, nelat, swlng, swlat } = params;
   if (nelng === undefined) return;
   if (nelat === undefined) return;
@@ -435,7 +439,7 @@ function formatBoundingBox(
   nelat: number,
   swlng: number,
   swlat: number,
-): LngLat[] {
+): LngLatType[] {
   return [
     [nelng, nelat],
     [nelng, swlat],

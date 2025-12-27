@@ -1,9 +1,9 @@
-import type { MapStore, MapStoreKeys } from "../../types/app";
+import type { AppStoreType, AppStoreKeysType } from "../../types/app";
 import type { PolygonJson } from "../../types/inat_api";
 import { leafletVisibleLayers } from "../../lib/data_utils";
 import { displayJson } from "../../lib/utils";
 
-function formatTaxaMapLayers(appStore: MapStore) {
+function formatTaxaMapLayers(appStore: AppStoreType) {
   let temp: any = {};
   Object.entries(appStore.taxaMapLayers).forEach(([key, val]) => {
     temp[key] = val
@@ -12,7 +12,7 @@ function formatTaxaMapLayers(appStore: MapStore) {
   });
   return temp;
 }
-function formatSelectedPlaces(appStore: MapStore) {
+function formatSelectedPlaces(appStore: AppStoreType) {
   return appStore.selectedPlaces.map((place) => {
     let temp = {} as any;
     Object.entries(place).forEach(([key, val]) => {
@@ -35,14 +35,14 @@ function formatSelectedPlaces(appStore: MapStore) {
     return temp;
   });
 }
-function formatPlacesMapLayers(appStore: MapStore) {
+function formatPlacesMapLayers(appStore: AppStoreType) {
   let temp: any = {};
   Object.entries(appStore.placesMapLayers).forEach(([key, val]) => {
     temp[key] = val.map((v: any) => v.options.layer_description);
   });
   return temp;
 }
-function formatRefreshMap(appStore: MapStore) {
+function formatRefreshMap(appStore: AppStoreType) {
   return {
     showRefreshMapButton: appStore.refreshMap.showRefreshMapButton,
     layer: {
@@ -52,7 +52,7 @@ function formatRefreshMap(appStore: MapStore) {
   };
 }
 
-export function displayAppstoreData(appStore: MapStore, _source: string) {
+export function displayAppstoreData(appStore: AppStoreType, _source: string) {
   const debug = import.meta.env?.VITE_DEBUG;
   if (!debug || debug === "false") return;
 
@@ -61,7 +61,7 @@ export function displayAppstoreData(appStore: MapStore, _source: string) {
 
   let data = {} as any;
   Object.keys(appStore).forEach((k) => {
-    let key = k as MapStoreKeys;
+    let key = k as AppStoreKeysType;
     if (key === "taxaMapLayers") {
       data.taxaMapLayers = formatTaxaMapLayers(appStore);
     } else if (key === "placesMapLayers") {

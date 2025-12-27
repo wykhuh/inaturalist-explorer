@@ -1,13 +1,13 @@
 import L from "leaflet";
 
 import type {
-  NormalizediNatTaxon,
-  MapStore,
-  CustomGeoJSON,
-  ObservationsApiParamsKeys,
-  ObservationViews,
-  NormalizediNatProject,
-  IdentificationsApiParamsKeys,
+  NormalizediNatTaxonType,
+  AppStoreType,
+  CustomGeoJSONType,
+  ObservationsApiParamsKeysType,
+  ObservationViewsType,
+  NormalizediNatProjectType,
+  IdentificationsApiParamsKeysType,
 } from "../types/app";
 import {
   addLayerToMap,
@@ -60,8 +60,8 @@ import { addCurrentPageClass } from "../components/Header/utils.ts";
 // populate store with basic view data from app url.
 // used on initial page load.
 export async function initPopulateStore(
-  appStore: MapStore,
-  urlStore: MapStore,
+  appStore: AppStoreType,
+  urlStore: AppStoreType,
 ) {
   loggerStore("++ initPopulateStore start");
   if (urlStore.record_type) {
@@ -81,7 +81,7 @@ export async function initPopulateStore(
 
   // populate viewMetadata
   for (let [k, value] of Object.entries(urlStore.viewMetadata)) {
-    let key = k as ObservationViews;
+    let key = k as ObservationViewsType;
     if (typeof value === "string") {
       appStore.viewMetadata[key] = value as any;
     } else {
@@ -228,10 +228,13 @@ export async function initPopulateStore(
   loggerEvent("dispatch storePopulated");
 }
 
-function populateObservationsApiParams(appStore: MapStore, urlStore: MapStore) {
+function populateObservationsApiParams(
+  appStore: AppStoreType,
+  urlStore: AppStoreType,
+) {
   // use url store to populate appStore.observationsApiParams
   for (const [k, value] of Object.entries(urlStore.observationsApiParams)) {
-    let key = k as ObservationsApiParamsKeys;
+    let key = k as ObservationsApiParamsKeysType;
     // ignore params whose value is any
     if (fieldsWithAny.includes(key) && value === "any") {
       delete appStore.observationsApiParams[key];
@@ -244,12 +247,12 @@ function populateObservationsApiParams(appStore: MapStore, urlStore: MapStore) {
 }
 
 function populateIdentificationsApiParams(
-  appStore: MapStore,
-  urlStore: MapStore,
+  appStore: AppStoreType,
+  urlStore: AppStoreType,
 ) {
   // use url store to populate appStore.identificationsApiParams
   for (const [k, value] of Object.entries(urlStore.identificationsApiParams)) {
-    let key = k as IdentificationsApiParamsKeys;
+    let key = k as IdentificationsApiParamsKeysType;
     // ignore params whose value is any
     if (fieldsWithAny.includes(key) && value === "any") {
       delete appStore.identificationsApiParams[key];
@@ -263,7 +266,7 @@ function populateIdentificationsApiParams(
 
 // create map.
 // used on inital app load, changing views, changing pages.
-export async function initRenderMap(appStore: MapStore) {
+export async function initRenderMap(appStore: AppStoreType) {
   loggerRender("++ initRenderMap start");
   let isObservations = isObservationsCheck(appStore);
   let isOther = isOtherCheck(appStore);
@@ -339,8 +342,8 @@ export async function initRenderMap(appStore: MapStore) {
 
 export function processTaxonData(
   taxonData: TaxaResult,
-  appStore: MapStore,
-  urlStore: MapStore,
+  appStore: AppStoreType,
+  urlStore: AppStoreType,
 ) {
   let urlStoreTaxon = urlStore.selectedTaxa.find((t) => t.id === taxonData.id);
   if (!urlStoreTaxon) return;
@@ -348,7 +351,7 @@ export function processTaxonData(
   let isObservations = isObservationsCheck(appStore);
 
   // create taxon object
-  let taxon: NormalizediNatTaxon = {
+  let taxon: NormalizediNatTaxonType = {
     name: taxonData.name,
     default_photo: taxonData.default_photo?.square_url,
     preferred_common_name: taxonData.preferred_common_name,
@@ -387,8 +390,8 @@ export function processTaxonData(
 
 export function processTaxonIdentifiedData(
   taxonData: TaxaResult,
-  appStore: MapStore,
-  urlStore: MapStore,
+  appStore: AppStoreType,
+  urlStore: AppStoreType,
 ) {
   if (isObservationsCheck(appStore)) return;
 
@@ -398,7 +401,7 @@ export function processTaxonIdentifiedData(
   if (!urlStoreTaxon) return;
 
   // create taxon object
-  let taxon: NormalizediNatTaxon = {
+  let taxon: NormalizediNatTaxonType = {
     name: taxonData.name,
     default_photo: taxonData.default_photo?.square_url,
     preferred_common_name: taxonData.preferred_common_name,
@@ -418,7 +421,10 @@ export function processTaxonIdentifiedData(
   );
 }
 
-export function processPlaceData(placeData: PlacesResult, appStore: MapStore) {
+export function processPlaceData(
+  placeData: PlacesResult,
+  appStore: AppStoreType,
+) {
   let isObservations = isObservationsCheck(appStore);
 
   // save place to store
@@ -442,7 +448,10 @@ export function processPlaceData(placeData: PlacesResult, appStore: MapStore) {
   );
 }
 
-export function processBBoxData(appStore: MapStore, urlStore: MapStore) {
+export function processBBoxData(
+  appStore: AppStoreType,
+  urlStore: AppStoreType,
+) {
   if (!isObservationsCheck(appStore)) return;
   let lngLatCoors = convertParamsBBoxToLngLat(urlStore.observationsApiParams);
   if (!lngLatCoors) return;
@@ -455,7 +464,7 @@ export function processBBoxData(appStore: MapStore, urlStore: MapStore) {
   appStore.selectedPlaces = [bboxPlaceRecord(lngLatCoors)];
 }
 
-export function addBBoxDataToMap(appStore: MapStore) {
+export function addBBoxDataToMap(appStore: AppStoreType) {
   let map = appStore.map.map;
   if (!map) return;
   let lngLatCoors = convertParamsBBoxToLngLat(appStore.observationsApiParams);
@@ -467,17 +476,17 @@ export function addBBoxDataToMap(appStore: MapStore) {
     layer: layer,
   };
 
-  appStore.placesMapLayers["0"] = [layer as unknown as CustomGeoJSON];
+  appStore.placesMapLayers["0"] = [layer as unknown as CustomGeoJSONType];
 }
 
 export function processProjectData(
   projectData: ProjectsResult,
-  appStore: MapStore,
+  appStore: AppStoreType,
   placeData?: PlacesResult,
 ) {
   if (isIdentificationsCheck(appStore)) return;
 
-  let project: NormalizediNatProject = {
+  let project: NormalizediNatProjectType = {
     id: projectData.id,
     name: projectData.title,
     slug: projectData.slug,
@@ -496,7 +505,7 @@ export function processProjectData(
   );
 }
 
-function processUserData(userData: UserResult, appStore: MapStore) {
+function processUserData(userData: UserResult, appStore: AppStoreType) {
   if (isIdentificationsCheck(appStore)) return;
 
   appStore.selectedUsers = [
@@ -515,7 +524,10 @@ function processUserData(userData: UserResult, appStore: MapStore) {
   );
 }
 
-function processUserIdentifierData(userData: UserResult, appStore: MapStore) {
+function processUserIdentifierData(
+  userData: UserResult,
+  appStore: AppStoreType,
+) {
   appStore.selectedUsersIdentifiers = [
     ...appStore.selectedUsersIdentifiers,
     {
@@ -539,7 +551,10 @@ function processUserIdentifierData(userData: UserResult, appStore: MapStore) {
   }
 }
 
-function processUnobservedByUserData(userData: UserResult, appStore: MapStore) {
+function processUnobservedByUserData(
+  userData: UserResult,
+  appStore: AppStoreType,
+) {
   if (isIdentificationsCheck(appStore)) return;
 
   appStore.selectedUnobservedByUser = {
@@ -551,7 +566,7 @@ function processUnobservedByUserData(userData: UserResult, appStore: MapStore) {
   appStore.observationsApiParams.unobserved_by_user_id = userData.id;
 }
 
-function processReviewerData(userData: UserResult, appStore: MapStore) {
+function processReviewerData(userData: UserResult, appStore: AppStoreType) {
   if (isIdentificationsCheck(appStore)) return;
 
   appStore.selectedReviewer = {

@@ -1,9 +1,9 @@
 import autoComplete from "@tarekraafat/autocomplete.js";
 
 import type {
-  NormalizediNatTaxon,
-  AutoCompleteEvent,
-  MapStore,
+  NormalizediNatTaxonType,
+  AutoCompleteEventType,
+  AppStoreType,
 } from "../types/app.d.ts";
 import { autocomplete_taxa_api } from "../lib/inat_api.ts";
 import type { iNatAutocompleteTaxaAPI } from "../types/inat_api";
@@ -26,13 +26,13 @@ import { renderTaxonNames } from "./render_utils";
 import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
 import { renderSelectedResources } from "./search_utils.ts";
 
-export function setupTaxaSearch(selector: string, appStore: MapStore) {
+export function setupTaxaSearch(selector: string, appStore: AppStoreType) {
   const autoCompleteTaxaJS = new autoComplete({
     autocomplete: "off",
     selector: selector,
     placeHolder: "Enter species name",
     threshold: 2,
-    searchEngine: (query: string, record: NormalizediNatTaxon) => {
+    searchEngine: (query: string, record: NormalizediNatTaxonType) => {
       return renderAutocompleteTaxon(record, query, appStore);
     },
     data: {
@@ -56,8 +56,9 @@ export function setupTaxaSearch(selector: string, appStore: MapStore) {
     },
     events: {
       input: {
-        selection: (event: AutoCompleteEvent) => {
-          const selection = event.detail.selection.value as NormalizediNatTaxon;
+        selection: (event: AutoCompleteEventType) => {
+          const selection = event.detail.selection
+            .value as NormalizediNatTaxonType;
           autoCompleteTaxaJS.input.value = selection.title;
         },
       },
@@ -70,10 +71,10 @@ export function setupTaxaSearch(selector: string, appStore: MapStore) {
 export function processAutocompleteTaxa(
   response: iNatAutocompleteTaxaAPI,
   query: string,
-  appStore: MapStore,
-): NormalizediNatTaxon[] {
+  appStore: AppStoreType,
+): NormalizediNatTaxonType[] {
   let taxa = response.results.map((result) => {
-    let data: NormalizediNatTaxon = {
+    let data: NormalizediNatTaxonType = {
       name: result.name,
       default_photo: result.default_photo?.square_url,
       preferred_common_name: result.preferred_common_name,
@@ -92,9 +93,9 @@ export function processAutocompleteTaxa(
 }
 
 export function renderAutocompleteTaxon(
-  item: NormalizediNatTaxon,
+  item: NormalizediNatTaxonType,
   inputValue: string,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ): string {
   let html = `
   <div class="taxa-ac-option" data-testid="taxa-ac-option">
@@ -119,9 +120,9 @@ export function renderAutocompleteTaxon(
 
 // called by autocomplete search when an taxa option is selected
 export async function taxonSelectedHandler(
-  selection: NormalizediNatTaxon,
+  selection: NormalizediNatTaxonType,
   _searchTerm: string,
-  appStore: MapStore,
+  appStore: AppStoreType,
 ) {
   let isObservations = isObservationsCheck(appStore);
   let isIdentifications = isIdentificationsCheck(appStore);
@@ -197,7 +198,7 @@ export async function taxonSelectedHandler(
   renderSelectedResources(appStore, true);
 }
 
-export function renderTaxaList(appStore: MapStore) {
+export function renderTaxaList(appStore: AppStoreType) {
   let listEl = document.querySelector("#selected-species-list");
   if (!listEl) return;
 
@@ -210,7 +211,7 @@ export function renderTaxaList(appStore: MapStore) {
 }
 
 // called when user deletes a taxon
-export async function removeTaxon(taxonId: number, appStore: MapStore) {
+export async function removeTaxon(taxonId: number, appStore: AppStoreType) {
   removeOneTaxonFromStoreAndMap(appStore, taxonId);
 
   // if no selected taxa, load allTaxaRecord

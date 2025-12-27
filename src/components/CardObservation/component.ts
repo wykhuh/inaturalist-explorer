@@ -1,5 +1,5 @@
 import type { ObservationsResult } from "../../types/inat_api";
-import type { DataComponent, MapStore } from "../../types/app";
+import type { DataComponentType, AppStoreType } from "../../types/app";
 import {
   formatAvatar,
   renderMedia,
@@ -27,11 +27,12 @@ class CardObservation extends HTMLElement {
     this.renderCard(window.app.store);
   }
 
-  renderCard(appStore: MapStore) {
+  renderCard(appStore: AppStoreType) {
     let cardEl = this.querySelector(".card");
     if (!cardEl) return;
 
-    let data = (this as unknown as DataComponent).data as ObservationsResult;
+    let data = (this as unknown as DataComponentType)
+      .data as ObservationsResult;
 
     let url = `${iNatObservationUrl}/${data.id}`;
     cardEl.innerHTML = renderMedia(

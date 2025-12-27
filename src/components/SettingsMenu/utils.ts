@@ -1,8 +1,8 @@
 import { formatTaxonName } from "../../lib/data_utils";
 import { getTaxa } from "../../lib/inat_api";
-import type { MapStore } from "../../types/app";
+import type { AppStoreType } from "../../types/app";
 
-export async function updateComonNamesByLanguage(appStore: MapStore) {
+export async function updateComonNamesByLanguage(appStore: AppStoreType) {
   if (appStore.observationsApiParams.taxon_id === "0") return;
 
   let param = {

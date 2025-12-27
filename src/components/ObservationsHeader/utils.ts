@@ -8,10 +8,10 @@ import {
   getObservationsObservers,
   getObservationsSpecies,
 } from "../../lib/inat_api";
-import type { MapStore } from "../../types/app";
+import type { AppStoreType } from "../../types/app";
 import { updateHeaderCount } from "./shared_utils";
 
-export function updateCountsHeader(appStore: MapStore) {
+export function updateCountsHeader(appStore: AppStoreType) {
   let params = cleanupObervationsParams(appStore);
   updateHeaderCount(
     "observations_observations",

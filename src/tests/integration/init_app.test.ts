@@ -77,8 +77,8 @@ import {
   expectNoUnobservedUsers,
 } from "../test_helpers.ts";
 import type {
-  IdentificationsApiParams,
-  ObservationsApiParams,
+  IdentificationsApiParamsType,
+  ObservationsApiParamsType,
 } from "../../types/app";
 import {
   allTaxaRecord,
@@ -143,7 +143,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
-    let expectedParams: ObservationsApiParams = {
+    let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
@@ -176,7 +176,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       expectNoRefresh(store);
       expectDefaultTaxaRecord(store);
 
-      let expectedParams: ObservationsApiParams = {
+      let expectedParams: ObservationsApiParamsType = {
         ...defaultParams,
         colors: iNatOrange,
         taxon_id: allTaxaRecord.id.toString(),
@@ -206,7 +206,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoRefresh(store);
     expectDefaultTaxaRecord(store);
 
-    let expectedParams: ObservationsApiParams = {
+    let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
@@ -234,7 +234,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoRefresh(store);
     expectLifeTaxa(store);
 
-    let expectedParams: ObservationsApiParams = {
+    let expectedParams: ObservationsApiParamsType = {
       colors: colors[0],
       taxon_id: life().id.toString(),
       verifiable: false,
@@ -264,7 +264,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoRefresh(store);
     expectLifeTaxa(store);
 
-    let expectedParams: ObservationsApiParams = {
+    let expectedParams: ObservationsApiParamsType = {
       colors: colors[0],
       taxon_id: life().id.toString(),
       verifiable: true,
@@ -294,7 +294,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoRefresh(store);
     expectLifeTaxa(store);
 
-    let expectedParams: ObservationsApiParams = {
+    let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
       colors: colors[0],
       taxon_id: life().id.toString(),
@@ -324,7 +324,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       expectNoRefresh(store);
       expectLifeTaxa(store);
 
-      let expectedParams: ObservationsApiParams = {
+      let expectedParams: ObservationsApiParamsType = {
         colors: colors[0],
         taxon_id: life().id.toString(),
         spam: false,
@@ -358,7 +358,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expectNoRefresh(store);
     expectLifeTaxa(store);
 
-    let expectedParams: ObservationsApiParams = {
+    let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
       colors: colors[0],
       taxon_id: life().id.toString(),
@@ -515,7 +515,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       basemapLabel_osm,
       gridLabel_life,
     ]);
-    let expectedParams: ObservationsApiParams = {
+    let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
       colors: colors[0],
       taxon_id: life().id.toString(),
@@ -550,7 +550,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       placeLabel_la,
       gridLabel_allTaxaRecord_la,
     ]);
-    let expectedParams: ObservationsApiParams = {
+    let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
       place_id: losangeles.id.toString(),
       taxon_id: allTaxa.id.toString(),
@@ -586,7 +586,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       refreshBBoxLabel,
       gridLabel_allTaxaRecord,
     ]);
-    let expectedParams: ObservationsApiParams = {
+    let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
       nelat: 0,
       nelng: 0,
@@ -623,7 +623,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       basemapLabel_osm,
       gridLabel_allTaxaRecord_project1,
     ]);
-    let expectedParams: ObservationsApiParams = {
+    let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
       project_id: project_cnc1.id.toString(),
       taxon_id: allTaxa.id.toString(),
@@ -657,7 +657,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       basemapLabel_osm,
       gridLabel_allTaxaRecord_user1,
     ]);
-    let expectedParams: ObservationsApiParams = {
+    let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
       user_id: user1.id.toString(),
       taxon_id: allTaxa.id.toString(),
@@ -692,7 +692,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       gridLabel_allTaxaRecord_user1Identifier,
     ]);
 
-    let expectedParams: ObservationsApiParams = {
+    let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
       ident_user_id: `${user1.id}`,
       taxon_id: allTaxa.id.toString(),
@@ -727,7 +727,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       basemapLabel_osm,
       gridLabel_allTaxaRecord_user1Unobserved,
     ]);
-    let expectedParams: ObservationsApiParams = {
+    let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
       unobserved_by_user_id: user1.id,
       taxon_id: allTaxa.id.toString(),
@@ -762,7 +762,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       basemapLabel_osm,
       gridLabel_allTaxaRecord_user1Reviewer,
     ]);
-    let expectedParams: ObservationsApiParams = {
+    let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
       viewer_id: user1.id,
       taxon_id: allTaxa.id.toString(),
@@ -815,7 +815,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       gridLabel_life_places_identifier,
       gridLabel_oaks_places_identifier,
     ]);
-    let expectedParams: ObservationsApiParams = {
+    let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
       colors: `${colors[0]},${colors[1]}`,
       taxon_id: `${life().id},${redOak().id}`,
@@ -863,7 +863,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       gridLabel_life_bbox_resources,
       gridLabel_oaks_bbox_resources,
     ]);
-    let expectedParams: ObservationsApiParams = {
+    let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
       colors: `${colors[0]},${colors[1]}`,
       taxon_id: `${life().id},${redOak().id}`,
@@ -1036,7 +1036,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
       gridLabel_allTaxaRecord_la,
     ]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
-    let expectedParams2: IdentificationsApiParams = {
+    let expectedParams2: IdentificationsApiParamsType = {
       place_id: placeA.id.toString(),
       observation_taxon_id: allTaxa.id.toString(),
     };
@@ -1133,7 +1133,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
       gridLabel_allTaxaRecord_user1,
     ]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
-    let expectedParams2: IdentificationsApiParams = {
+    let expectedParams2: IdentificationsApiParamsType = {
       user_id: userA.id.toString(),
       observation_taxon_id: allTaxa.id.toString(),
     };
@@ -1242,7 +1242,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
       gridLabel_life_places_users,
     ]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
-    let expectedParams: ObservationsApiParams = {
+    let expectedParams: ObservationsApiParamsType = {
       observation_taxon_id: `${life.id}`,
       taxon_id: `${oak.id}`,
       place_id: `${losangeles.id},${sandiego.id}`,

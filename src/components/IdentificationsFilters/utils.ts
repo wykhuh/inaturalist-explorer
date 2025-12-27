@@ -5,9 +5,9 @@ import {
   taxonRanks,
 } from "../../data/inat_data";
 import type {
-  MapStore,
-  IdentificationsApiParams,
-  IdentificationsApiParamsKeys,
+  AppStoreType,
+  IdentificationsApiParamsType,
+  IdentificationsApiParamsKeysType,
 } from "../../types/app";
 import { updateStoreUsingFilters } from "../../lib/data_utils";
 import { loggerFilters } from "../../lib/logger";
@@ -27,16 +27,16 @@ import {
 } from "../ObservationsFilters/shared_utils";
 
 export function processFiltersForm(data: FormData): {
-  params: IdentificationsApiParams;
+  params: IdentificationsApiParamsType;
   string: string;
 } {
   // convert form data into object that can be use with URLSearchParams
-  let values: IdentificationsApiParams = {};
+  let values: IdentificationsApiParamsType = {};
   loggerFilters("----------- processFiltersForm");
 
   for (const [k, value] of data) {
     // HACK: get rid of typescript errors for values[key]
-    let key = k as IdentificationsApiParamsKeys;
+    let key = k as IdentificationsApiParamsKeysType;
     loggerFilters(key, value);
 
     // ignore fields
@@ -78,7 +78,10 @@ export function processFiltersForm(data: FormData): {
   };
 }
 
-export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
+export async function updateAppWithFilters(
+  data: FormData,
+  appStore: AppStoreType,
+) {
   // get values from form data
   let results = processFiltersForm(data);
 
@@ -94,8 +97,8 @@ export async function updateAppWithFilters(data: FormData, appStore: MapStore) {
 }
 
 // use store to populate the filter form fields on page load
-export function initFilters(appStore: MapStore) {
-  let inputFields: IdentificationsApiParamsKeys[] = [
+export function initFilters(appStore: AppStoreType) {
+  let inputFields: IdentificationsApiParamsKeysType[] = [
     "d1",
     "d2",
     "observed_d1",
@@ -103,7 +106,7 @@ export function initFilters(appStore: MapStore) {
   ];
   processInputFields(inputFields, appStore);
 
-  let selectFields: IdentificationsApiParamsKeys[] = [
+  let selectFields: IdentificationsApiParamsKeysType[] = [
     "hrank",
     "lrank",
     "observation_hrank",
@@ -112,7 +115,7 @@ export function initFilters(appStore: MapStore) {
   ];
   processSelectFields(selectFields, appStore);
 
-  let inputCheckedFields: IdentificationsApiParamsKeys[] = [
+  let inputCheckedFields: IdentificationsApiParamsKeysType[] = [
     "iconic_taxon_id",
     "observation_iconic_taxon_id",
   ];

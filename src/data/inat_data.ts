@@ -1,9 +1,9 @@
 import type {
-  IdentificationsApiParamsKeys,
-  LngLat,
-  NormalizediNatPlace,
-  NormalizediNatTaxon,
-  ObservationsApiParamsKeys,
+  IdentificationsApiParamsKeysType,
+  LngLatType,
+  NormalizediNatPlaceType,
+  NormalizediNatTaxonType,
+  ObservationsApiParamsKeysType,
   PlaceTypes,
 } from "../types/app";
 import { defaultColorScheme, iNatOrange } from "../lib/map_colors_utils";
@@ -53,52 +53,54 @@ export const speciesRanks = [
   "form",
 ];
 
-export const ObservationsApiNonFilterableNames: ObservationsApiParamsKeys[] = [
-  "nelat",
-  "nelng",
-  "swlat",
-  "swlng",
-  "colors",
-  "per_page",
-  "place_id",
-  "taxon_id",
-  "project_id",
-  "user_id",
-  "ident_user_id",
-  "view",
-  "subview",
-  "page",
-  "locale",
-];
+export const ObservationsApiNonFilterableNames: ObservationsApiParamsKeysType[] =
+  [
+    "nelat",
+    "nelng",
+    "swlat",
+    "swlng",
+    "colors",
+    "per_page",
+    "place_id",
+    "taxon_id",
+    "project_id",
+    "user_id",
+    "ident_user_id",
+    "view",
+    "subview",
+    "page",
+    "locale",
+  ];
 
-export const ObservationsFilterableImplemented: ObservationsApiParamsKeys[] = [
-  "captive",
-  "created_d1",
-  "created_d2",
-  "created_on",
-  "d1",
-  "d2",
-  "endemic",
-  "hrank",
-  "identified",
-  "introduced",
-  "lrank",
-  "native",
-  "on",
-  "order",
-  "order_by",
-  "photos",
-  "popular",
-  "reviewed",
-  "sounds",
-  "term_id",
-  "threatened",
-  "unobserved_by_user_id",
-  "verifiable",
-  "viewer_id",
-];
+export const ObservationsFilterableImplemented: ObservationsApiParamsKeysType[] =
+  [
+    "captive",
+    "created_d1",
+    "created_d2",
+    "created_on",
+    "d1",
+    "d2",
+    "endemic",
+    "hrank",
+    "identified",
+    "introduced",
+    "lrank",
+    "native",
+    "on",
+    "order",
+    "order_by",
+    "photos",
+    "popular",
+    "reviewed",
+    "sounds",
+    "term_id",
+    "threatened",
+    "unobserved_by_user_id",
+    "verifiable",
+    "viewer_id",
+  ];
 
-export const ObservationsFilterableImplementedArrays: ObservationsApiParamsKeys[] =
+export const ObservationsFilterableImplementedArrays: ObservationsApiParamsKeysType[] =
   [
     "created_month",
     "created_year",
@@ -112,7 +114,7 @@ export const ObservationsFilterableImplementedArrays: ObservationsApiParamsKeys[
     "year",
   ];
 
-const ObservationsFilterableTodo: ObservationsApiParamsKeys[] = [
+const ObservationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   // maybe
   "q",
   "search_on",
@@ -180,7 +182,7 @@ export const ObservationsApiFilterableNames =
 export const ObservationsApiNames: string[] =
   ObservationsApiNonFilterableNames.concat(ObservationsApiFilterableNames);
 
-export const IdentificationsApiNonFilterableNames: IdentificationsApiParamsKeys[] =
+export const IdentificationsApiNonFilterableNames: IdentificationsApiParamsKeysType[] =
   [
     "place_id", // array string
     "taxon_id", // array string
@@ -190,7 +192,7 @@ export const IdentificationsApiNonFilterableNames: IdentificationsApiParamsKeys[
     "per_page",
   ];
 
-export const IdentificationsFilterableImplemented: IdentificationsApiParamsKeys[] =
+export const IdentificationsFilterableImplemented: IdentificationsApiParamsKeysType[] =
   [
     "d1",
     "d2",
@@ -204,35 +206,36 @@ export const IdentificationsFilterableImplemented: IdentificationsApiParamsKeys[
     "quality_grade",
     "reviewed",
   ];
-export const IdentificationsFilterableImplementedArrays: IdentificationsApiParamsKeys[] =
+export const IdentificationsFilterableImplementedArrays: IdentificationsApiParamsKeysType[] =
   ["iconic_taxon_id", "observation_iconic_taxon_id"];
 
-export const IdentificationsFilterableTodo: IdentificationsApiParamsKeys[] = [
-  // maybe
-  "order",
-  "order_by", // created_at,
-  // no
-  "rank",
-  "observation_rank",
-  "observation_created_d1",
-  "observation_created_d2",
-  "current_taxon",
-  "own_observation",
-  "is_change",
-  "taxon_active",
-  "observation_taxon_active",
-  "id",
-  "user_login", // array string
-  "current",
-  "category", // array string
-  "taxon_change_id", // array string
-  "without_taxon_id", // array string
-  "without_observation_taxon_id", // array string
-  "id_above",
-  "id_below",
-  "only_id",
-  "taxon_of",
-];
+export const IdentificationsFilterableTodo: IdentificationsApiParamsKeysType[] =
+  [
+    // maybe
+    "order",
+    "order_by", // created_at,
+    // no
+    "rank",
+    "observation_rank",
+    "observation_created_d1",
+    "observation_created_d2",
+    "current_taxon",
+    "own_observation",
+    "is_change",
+    "taxon_active",
+    "observation_taxon_active",
+    "id",
+    "user_login", // array string
+    "current",
+    "category", // array string
+    "taxon_change_id", // array string
+    "without_taxon_id", // array string
+    "without_observation_taxon_id", // array string
+    "id_above",
+    "id_below",
+    "only_id",
+    "taxon_of",
+  ];
 
 export const IdentificationsApiFilterableNames =
   IdentificationsFilterableImplemented.concat(
@@ -312,7 +315,7 @@ export const placeTypes: PlaceTypes = {
 // BUG: tests are not importing defaultColorScheme correctly, so need to use
 // hexcolor
 let color = defaultColorScheme ? defaultColorScheme[0] : "#4477aa";
-export const lifeTaxon: NormalizediNatTaxon = {
+export const lifeTaxon: NormalizediNatTaxonType = {
   name: "Life",
   default_photo:
     "https://inaturalist-open-data.s3.amazonaws.com/photos/347064198/square.jpeg",
@@ -325,14 +328,14 @@ export const lifeTaxon: NormalizediNatTaxon = {
   subtitle: "Life",
 };
 
-export const allTaxaRecord: NormalizediNatTaxon = {
+export const allTaxaRecord: NormalizediNatTaxonType = {
   id: 0,
   color: iNatOrange,
   title: "All species",
   preferred_common_name: "All species",
 };
 
-export function bboxPlaceRecord(bbox: LngLat[]): NormalizediNatPlace {
+export function bboxPlaceRecord(bbox: LngLatType[]): NormalizediNatPlaceType {
   return {
     id: 0,
     name: "Custom Boundary",

@@ -1,12 +1,12 @@
 import { displayAppstoreData } from "../components/AppstoreViewer/utils.ts";
 import type {
-  MapStore,
-  MapStoreKeys,
-  NormalizediNatUser,
+  AppStoreType,
+  AppStoreKeysType,
+  NormalizediNatUserType,
 } from "../types/app.d.ts";
 import { loggerEvent, loggerStore } from "./logger.ts";
 
-export const mapStore: MapStore = {
+export const mapStore: AppStoreType = {
   selectedTaxa: [],
   selectedTaxaIdentified: [],
   taxaMapLayers: {},
@@ -15,8 +15,8 @@ export const mapStore: MapStore = {
   selectedProjects: [],
   selectedUsers: [],
   selectedUsersIdentifiers: [],
-  selectedUnobservedByUser: {} as NormalizediNatUser,
-  selectedReviewer: {} as NormalizediNatUser,
+  selectedUnobservedByUser: {} as NormalizediNatUserType,
+  selectedReviewer: {} as NormalizediNatUserType,
   observationsApiParams: { verifiable: true, spam: false, locale: "en" },
   identificationsApiParams: {},
   color: "",
@@ -49,7 +49,7 @@ export const mapStore: MapStore = {
 };
 
 const proxiedStore = new Proxy(structuredClone(mapStore), {
-  set(target, property: MapStoreKeys, value) {
+  set(target, property: AppStoreKeysType, value) {
     (target as any)[property] = value;
 
     loggerStore(`proxy store.${property} changed`);

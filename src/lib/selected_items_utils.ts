@@ -1,20 +1,20 @@
 import type {
-  MapStore,
-  NormalizediNatPlace,
-  NormalizediNatProject,
-  NormalizediNatTaxon,
-  NormalizediNatUser,
+  AppStoreType,
+  NormalizediNatPlaceType,
+  NormalizediNatProjectType,
+  NormalizediNatTaxonType,
+  NormalizediNatUserType,
 } from "../types/app";
 import { isObservationsCheck } from "./data_utils";
 import { pluralize } from "./utils";
 
 export function renderSelectedCounts(
   record:
-    | NormalizediNatPlace
-    | NormalizediNatProject
-    | NormalizediNatUser
-    | NormalizediNatTaxon,
-  appStore: MapStore,
+    | NormalizediNatPlaceType
+    | NormalizediNatProjectType
+    | NormalizediNatUserType
+    | NormalizediNatTaxonType,
+  appStore: AppStoreType,
   context: any,
 ) {
   let countEl = context.querySelector(".count");

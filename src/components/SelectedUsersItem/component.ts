@@ -3,7 +3,7 @@ import { loggerRender } from "../../lib/logger";
 import { removeUser } from "../../lib/search_users";
 import { removeUserIdentifier } from "../../lib/search_users_identifiers";
 import { renderSelectedCounts } from "../../lib/selected_items_utils";
-import type { MapStore, NormalizediNatUser } from "../../types/app";
+import type { AppStoreType, NormalizediNatUserType } from "../../types/app";
 import { template } from "./template";
 
 class SelectedUsersItem extends HTMLElement {
@@ -15,7 +15,7 @@ class SelectedUsersItem extends HTMLElement {
     this.render(window.app.store);
   }
 
-  async render(appStore: MapStore) {
+  async render(appStore: AppStoreType) {
     if (!this.dataset.user) return;
     let userType = this.dataset.user_type;
     if (!userType) return;
@@ -24,7 +24,7 @@ class SelectedUsersItem extends HTMLElement {
 
     setupComponent(template, this);
 
-    let user = JSON.parse(this.dataset.user) as NormalizediNatUser;
+    let user = JSON.parse(this.dataset.user) as NormalizediNatUserType;
     let nameEl = this.querySelector(".name");
     if (nameEl && user.login) {
       let text = user.login;

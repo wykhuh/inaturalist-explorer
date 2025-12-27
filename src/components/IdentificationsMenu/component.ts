@@ -10,7 +10,7 @@ import {
   showHideUsersHeader,
   showHideUsersIdentifiersHeader,
 } from "../../lib/search_utils";
-import type { MapStore } from "../../types/app";
+import type { AppStoreType } from "../../types/app";
 import { template } from "./template";
 
 class IdentificationsMenu extends HTMLElement {
@@ -57,7 +57,7 @@ class IdentificationsMenu extends HTMLElement {
     );
   }
 
-  render(appStore: MapStore) {
+  render(appStore: AppStoreType) {
     multisearchSetup(appStore);
     showHideTaxaIdentifiedHeader();
     showHidePlacesHeader();

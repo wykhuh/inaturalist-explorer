@@ -4,19 +4,19 @@ import {
   ObservationsApiNames,
 } from "../data/inat_data";
 import type {
-  IdentificationsApiParams,
-  IdentificationsMapTilesAPIParams,
-  MapStore,
-  MapTilesAPIParams,
-  ObservationsApiParams,
-  ObservationsMapTilesAPIParams,
+  IdentificationsApiParamsType,
+  IdentificationsMapTilesAPIParamsType,
+  AppStoreType,
+  MapTilesAPIParamsType,
+  ObservationsApiParamsType,
+  ObservationsMapTilesAPIParamsType,
   RecordTypes,
 } from "../types/app";
 import { iNatOrange } from "./map_colors_utils";
 import { formatAppUrl } from "./utils";
 
 function cleanupParamsStore(
-  appStore: MapStore,
+  appStore: AppStoreType,
   recordType: RecordTypes = appStore.record_type,
 ) {
   let string = formatAppUrl(appStore, recordType);
@@ -47,7 +47,7 @@ function cleanupParams(params: URLSearchParams) {
 // =============
 
 export function cleanupObervationsParamsForRecord(
-  inatParams: ObservationsApiParams,
+  inatParams: ObservationsApiParamsType,
 ) {
   let params = new URLSearchParams(inatParams as any);
   cleanupParams(params);
@@ -56,7 +56,7 @@ export function cleanupObervationsParamsForRecord(
 }
 
 export function cleanupObervationsParams(
-  appStore: MapStore,
+  appStore: AppStoreType,
   recordType = appStore.record_type,
 ) {
   let params = cleanupParamsStore(appStore, recordType);
@@ -71,7 +71,7 @@ export function cleanupObervationsParams(
 }
 
 export function cleanupObervationsObserversParams(
-  appStore: MapStore,
+  appStore: AppStoreType,
   recordType = appStore.record_type,
 ) {
   let params = cleanupParamsStore(appStore, recordType);
@@ -82,7 +82,9 @@ export function cleanupObervationsObserversParams(
   return params.toString();
 }
 
-export function cleanupIdentificationsObservationsParams(appStore: MapStore) {
+export function cleanupIdentificationsObservationsParams(
+  appStore: AppStoreType,
+) {
   let cleanParams = convertIdentificationParamsToObservationParams(
     appStore.identificationsApiParams,
   );
@@ -97,7 +99,7 @@ export function cleanupIdentificationsObservationsParams(appStore: MapStore) {
 // =============
 
 export function cleanupIdentificationsParamsForRecord(
-  inatParams: IdentificationsApiParams,
+  inatParams: IdentificationsApiParamsType,
 ) {
   let params = new URLSearchParams(inatParams as any);
   cleanupParams(params);
@@ -106,7 +108,7 @@ export function cleanupIdentificationsParamsForRecord(
 }
 
 export function cleanupIdentificationParams(
-  appStore: MapStore,
+  appStore: AppStoreType,
   recordType = appStore.record_type,
 ) {
   let params = cleanupParamsStore(appStore, recordType);
@@ -115,7 +117,7 @@ export function cleanupIdentificationParams(
 }
 
 export function cleanupIdentificationsObserversParams(
-  appStore: MapStore,
+  appStore: AppStoreType,
   recordType = appStore.record_type,
 ) {
   let params = cleanupParamsStore(appStore, recordType);
@@ -131,7 +133,7 @@ export function cleanupIdentificationsObserversParams(
 // =============
 
 function convertIdentificationParamsToObservationParams(
-  params: IdentificationsMapTilesAPIParams,
+  params: IdentificationsMapTilesAPIParamsType,
 ) {
   let allowedParams = [
     "place_id",
@@ -175,7 +177,7 @@ function convertIdentificationParamsToObservationParams(
   return cleanedParms;
 }
 
-function cleanupMapParams(rawParams: MapTilesAPIParams) {
+function cleanupMapParams(rawParams: MapTilesAPIParamsType) {
   let validParams = ObservationsApiNames.concat(IdentificationsApiNames);
   Object.keys(rawParams).forEach((key) => {
     if (!validParams.includes(key)) {
@@ -212,7 +214,7 @@ function cleanupMapParams(rawParams: MapTilesAPIParams) {
 
 // convert fields for /identifications to work with map tiles
 export function cleanupIdentificationsMapParams(
-  rawParams: IdentificationsMapTilesAPIParams,
+  rawParams: IdentificationsMapTilesAPIParamsType,
 ) {
   let params = structuredClone(rawParams);
   cleanupMapParams(params);
@@ -226,7 +228,7 @@ export function cleanupIdentificationsMapParams(
 }
 
 export function cleanupObservationsMapParams(
-  rawParams: ObservationsMapTilesAPIParams,
+  rawParams: ObservationsMapTilesAPIParamsType,
 ) {
   let params = structuredClone(rawParams);
   cleanupMapParams(params);

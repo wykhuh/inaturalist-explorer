@@ -1,13 +1,16 @@
-import type { ObservationSubviews, ObservationViews } from "../types/app";
+import type {
+  ObservationSubviewsType,
+  ObservationViewsType,
+} from "../types/app";
 
-export const validObservationsViews: ObservationViews[] = [
+export const validObservationsViews: ObservationViewsType[] = [
   "observations_observations",
   "observations_species",
   "observations_identifiers",
   "observations_observers",
 ];
 
-export const validIdentificationsViews: ObservationViews[] = [
+export const validIdentificationsViews: ObservationViewsType[] = [
   "identifications_observations",
   "identifications_species",
   "identifications_identifiers",
@@ -15,17 +18,17 @@ export const validIdentificationsViews: ObservationViews[] = [
   "identifications_identifications",
 ];
 
-export const validViews: ObservationViews[] = validObservationsViews.concat(
+export const validViews: ObservationViewsType[] = validObservationsViews.concat(
   validIdentificationsViews,
 );
 
-export const validObservationsSubviews: ObservationSubviews[] = [
+export const validObservationsSubviews: ObservationSubviewsType[] = [
   "grid",
   "table",
   "media",
 ];
 
-export function viewAndTemplateObject(targetView: ObservationViews) {
+export function viewAndTemplateObject(targetView: ObservationViewsType) {
   switch (targetView) {
     case "observations_species":
       return "view-species";
