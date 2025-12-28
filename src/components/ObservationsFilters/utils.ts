@@ -11,6 +11,7 @@ import type {
 } from "../../types/app";
 import {
   isObservationsCheck,
+  resetPageNumber,
   updateStoreUsingFilters,
 } from "../../lib/data_utils";
 import { loggerFilters } from "../../lib/logger";
@@ -88,6 +89,7 @@ export async function updateAppWithFilters(
 
   // update UI
   renderSelectedFiltersList(results.params);
+  resetPageNumber(appStore);
   renderSelectedResources(appStore, true);
 }
 

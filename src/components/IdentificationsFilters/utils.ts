@@ -9,7 +9,7 @@ import type {
   IdentificationsApiParamsType,
   IdentificationsApiParamsKeysType,
 } from "../../types/app";
-import { updateStoreUsingFilters } from "../../lib/data_utils";
+import { resetPageNumber, updateStoreUsingFilters } from "../../lib/data_utils";
 import { loggerFilters } from "../../lib/logger";
 import {
   processInputCheckedFields,
@@ -93,6 +93,7 @@ export async function updateAppWithFilters(
 
   // update UI
   renderSelectedFiltersList(results.params);
+  resetPageNumber(appStore);
   renderSelectedResources(appStore, true);
 }
 
