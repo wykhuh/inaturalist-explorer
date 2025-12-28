@@ -357,6 +357,7 @@ export interface ObservationsResult {
   time_observed_at: string | null;
   user: ObservationUser;
   uuid: string;
+  annotations?: Annotation[];
 }
 
 export interface CreatedAtDetails {
@@ -692,28 +693,28 @@ export interface iNatUsersAPI {
 }
 
 export interface UserResult {
-  activity_count: number;
+  activity_count?: number;
   annotated_observations_count?: number;
-  created_at: string;
+  created_at?: string;
   icon_url: string | null;
   icon: string | null;
   id: number;
-  identifications_count: number;
-  journal_posts_count: number;
-  login_autocomplete: string;
-  login_exact: string;
+  identifications_count?: number;
+  journal_posts_count?: number;
+  login_autocomplete?: string;
+  login_exact?: string;
   login: string;
-  name_autocomplete: string | null;
-  name: string | null;
-  observations_count: number;
+  name_autocomplete?: string | null;
+  name?: string | null;
+  observations_count?: number;
   orcid?: string | null;
   preferences?: Preferences;
-  roles: string[];
+  roles?: string[];
   site_id?: number | null;
-  spam: boolean;
-  species_count: number;
-  suspended: boolean;
-  universal_search_rank: number;
+  spam?: boolean;
+  species_count?: number;
+  suspended?: boolean;
+  universal_search_rank?: number;
 }
 
 // ==================
@@ -939,14 +940,14 @@ export interface Preferences {
 }
 
 export interface Annotation {
-  concatenated_attr_val: string;
+  concatenated_attr_val?: string;
   controlled_attribute_id: number;
   controlled_value_id: number;
-  user_id: number;
+  user_id?: number;
   user: UserResult;
   uuid: string;
-  vote_score: number;
-  votes: any[];
+  vote_score?: number;
+  votes?: any[];
 }
 
 export interface ObservationSound {

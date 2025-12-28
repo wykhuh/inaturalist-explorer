@@ -136,7 +136,7 @@ export type NormalizediNatProjectType = {
 export type NormalizediNatUserType = {
   id: number;
   login: string;
-  name: string | null;
+  name?: string | null;
   observations_count?: number;
   identifications_count?: number;
 };

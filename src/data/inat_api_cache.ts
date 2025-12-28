@@ -2702,6 +2702,44 @@ export const observations: iNatObservationsAPI = {
         week: 38,
         year: 2014,
       },
+      annotations: [
+        {
+          uuid: "a14e5e46-4e52-48e2-9ff5-81c3c932bd16",
+          controlled_attribute_id: 1,
+          controlled_value_id: 2,
+          user: {
+            id: 9486502,
+            icon_url:
+              "https://static.inaturalist.org/attachments/users/icons/9486502/940bcbcc82f0a7e1a53de2a594d6c4c8-medium.jpeg?1752682480",
+            icon: "https://static.inaturalist.org/attachments/users/icons/9486502/940bcbcc82f0a7e1a53de2a594d6c4c8-thumb.jpeg?1752682480",
+            login: "polypterus",
+          },
+        },
+        {
+          uuid: "4aafbbfb-865c-4e9f-81a7-6bc9b367baca",
+          controlled_attribute_id: 17,
+          controlled_value_id: 18,
+          user: {
+            id: 9486502,
+            icon_url:
+              "https://static.inaturalist.org/attachments/users/icons/9486502/940bcbcc82f0a7e1a53de2a594d6c4c8-medium.jpeg?1752682480",
+            icon: "https://static.inaturalist.org/attachments/users/icons/9486502/940bcbcc82f0a7e1a53de2a594d6c4c8-thumb.jpeg?1752682480",
+            login: "polypterus",
+          },
+        },
+        {
+          uuid: "cfbc435d-3164-45de-bc9b-b79bd218b084",
+          controlled_attribute_id: 22,
+          controlled_value_id: 24,
+          user: {
+            id: 9486502,
+            icon_url:
+              "https://static.inaturalist.org/attachments/users/icons/9486502/940bcbcc82f0a7e1a53de2a594d6c4c8-medium.jpeg?1752682480",
+            icon: "https://static.inaturalist.org/attachments/users/icons/9486502/940bcbcc82f0a7e1a53de2a594d6c4c8-thumb.jpeg?1752682480",
+            login: "polypterus",
+          },
+        },
+      ],
       created_time_zone: "America/Los_Angeles",
       faves_count: 0,
       geoprivacy: null,
@@ -2769,6 +2807,44 @@ export const observations: iNatObservationsAPI = {
         week: 50,
         year: 2016,
       },
+      annotations: [
+        {
+          uuid: "7595f5d9-ebd8-42a6-bd4f-e3e9e9975a03",
+          controlled_attribute_id: 1,
+          controlled_value_id: 2,
+          user: {
+            id: 416028,
+            icon_url:
+              "https://static.inaturalist.org/attachments/users/icons/416028/aba33bca649665790f50a2367a7abd07-medium.jpg?1761263403",
+            icon: "https://static.inaturalist.org/attachments/users/icons/416028/aba33bca649665790f50a2367a7abd07-thumb.jpg?1761263403",
+            login: "dmarina_cuevas",
+          },
+        },
+        {
+          uuid: "3d2da454-57be-4018-8b9a-b4aae7fdaf1a",
+          controlled_attribute_id: 17,
+          controlled_value_id: 18,
+          user: {
+            id: 416028,
+            icon_url:
+              "https://static.inaturalist.org/attachments/users/icons/416028/aba33bca649665790f50a2367a7abd07-medium.jpg?1761263403",
+            icon: "https://static.inaturalist.org/attachments/users/icons/416028/aba33bca649665790f50a2367a7abd07-thumb.jpg?1761263403",
+            login: "dmarina_cuevas",
+          },
+        },
+        {
+          uuid: "8da255a5-ea25-4ddf-acf5-b57e7680983a",
+          controlled_attribute_id: 22,
+          controlled_value_id: 24,
+          user: {
+            id: 416028,
+            icon_url:
+              "https://static.inaturalist.org/attachments/users/icons/416028/aba33bca649665790f50a2367a7abd07-medium.jpg?1761263403",
+            icon: "https://static.inaturalist.org/attachments/users/icons/416028/aba33bca649665790f50a2367a7abd07-thumb.jpg?1761263403",
+            login: "dmarina_cuevas",
+          },
+        },
+      ],
       created_time_zone: "America/Los_Angeles",
       faves_count: 0,
       geoprivacy: null,
@@ -2838,6 +2914,44 @@ export const observations: iNatObservationsAPI = {
         week: 53,
         year: 2021,
       },
+      annotations: [
+        {
+          uuid: "dfd84945-27e9-4386-97cf-9773f795234c",
+          controlled_attribute_id: 1,
+          controlled_value_id: 2,
+          user: {
+            id: 416028,
+            icon_url:
+              "https://static.inaturalist.org/attachments/users/icons/416028/aba33bca649665790f50a2367a7abd07-medium.jpg?1761263403",
+            icon: "https://static.inaturalist.org/attachments/users/icons/416028/aba33bca649665790f50a2367a7abd07-thumb.jpg?1761263403",
+            login: "dmarina_cuevas",
+          },
+        },
+        {
+          uuid: "6c208ce1-d21a-42d6-9539-45830885cbd3",
+          controlled_attribute_id: 17,
+          controlled_value_id: 18,
+          user: {
+            id: 416028,
+            icon_url:
+              "https://static.inaturalist.org/attachments/users/icons/416028/aba33bca649665790f50a2367a7abd07-medium.jpg?1761263403",
+            icon: "https://static.inaturalist.org/attachments/users/icons/416028/aba33bca649665790f50a2367a7abd07-thumb.jpg?1761263403",
+            login: "dmarina_cuevas",
+          },
+        },
+        {
+          uuid: "b95c84ab-e83b-4721-8eba-1bb801fa56b5",
+          controlled_attribute_id: 22,
+          controlled_value_id: 24,
+          user: {
+            id: 416028,
+            icon_url:
+              "https://static.inaturalist.org/attachments/users/icons/416028/aba33bca649665790f50a2367a7abd07-medium.jpg?1761263403",
+            icon: "https://static.inaturalist.org/attachments/users/icons/416028/aba33bca649665790f50a2367a7abd07-thumb.jpg?1761263403",
+            login: "dmarina_cuevas",
+          },
+        },
+      ],
       created_time_zone: "America/Los_Angeles",
       faves_count: 112,
       geoprivacy: "obscured",

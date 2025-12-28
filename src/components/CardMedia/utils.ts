@@ -6,6 +6,8 @@ import type {
 import type { DataComponentType, AppStoreType } from "../../types/app";
 import {
   formatAvatar,
+  renderAnnotations,
+  renderAnnotationsCounts,
   renderMedia,
   renderObservationMetadataCounts,
   renderQualityGrade,
@@ -65,6 +67,11 @@ export function renderCard(appStore: AppStoreType, componentCtx: any) {
   if (mediaIndex === 0) {
     detailsContent += renderQualityGrade(observation.quality_grade);
     detailsContent += renderObservationMetadataCounts(observation, true);
+
+    if (observation.annotations && observation.annotations.length > 0) {
+      detailsContent += renderAnnotationsCounts(observation.annotations);
+      detailsContent += renderAnnotations(observation.annotations);
+    }
   }
   detailsEl.innerHTML = detailsContent;
   cardEl.appendChild(detailsEl);

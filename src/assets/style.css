@@ -1167,6 +1167,30 @@
       }
     }
   }
+
+  .annotations-list {
+    margin-top: 1rem;
+    /* display: flex; */
+    div {
+      display: flex;
+      gap: 0.5rem;
+      /*
+      grid-template-columns: 1.25fr 1fr; */
+    }
+    div:nth-child(odd) {
+      background-color: var(--clr-gray-200);
+    }
+
+    dt {
+      /* width: 50%; */
+    }
+    dt {
+      /* font-weight: 550; */
+    }
+    dt::after {
+      content: ":";
+    }
+  }
 }
 
 @layer search-menu {

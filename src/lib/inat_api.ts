@@ -220,6 +220,7 @@ export async function getObservations(appParams: string, perPage: number) {
     "geoprivacy:!t," +
     "id:!t," +
     "identifications:(current:!t)," +
+    "annotations:(controlled_attribute_id:!t,controlled_value_id:!t,user:(icon_url:!t,icon:!t,id:!t,login:!t))," +
     // "identifications_count:!t," +
     // "location:!t," +
     // "mappable:!t," +

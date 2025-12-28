@@ -2,6 +2,8 @@ import type { ObservationsResult } from "../../types/inat_api";
 import type { DataComponentType, AppStoreType } from "../../types/app";
 import {
   formatAvatar,
+  renderAnnotations,
+  renderAnnotationsCounts,
   renderMedia,
   renderMediaCounts,
   renderObservationMetadataCounts,
@@ -66,9 +68,14 @@ class CardObservation extends HTMLElement {
       detailsContent += "</span>";
     }
 
-    detailsContent += renderMediaCounts(data.photos, data.sounds);
     detailsContent += renderQualityGrade(data.quality_grade);
     detailsContent += renderObservationMetadataCounts(data, true);
+
+    detailsContent += renderMediaCounts(data.photos, data.sounds);
+    if (data.annotations && data.annotations.length > 0) {
+      detailsContent += renderAnnotationsCounts(data.annotations);
+      detailsContent += renderAnnotations(data.annotations);
+    }
 
     detailsEl.innerHTML = detailsContent;
     cardEl.appendChild(detailsEl);

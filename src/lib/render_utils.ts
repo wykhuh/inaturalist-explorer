@@ -1,6 +1,13 @@
 import type { NormalizediNatTaxonType, AppStoreType } from "../types/app";
-import { iNatTaxaUrl, iNatUserUrl, speciesRanks } from "../data/inat_data.ts";
+import {
+  annotationsTerms,
+  annotationsValues,
+  iNatTaxaUrl,
+  iNatUserUrl,
+  speciesRanks,
+} from "../data/inat_data.ts";
 import type {
+  Annotation,
   DefaultPhoto,
   Observation,
   ObservationPhoto,
@@ -210,6 +217,22 @@ export function renderMediaCounts(
   }
 
   return `<div class="media-counts">${text.join(", ")}</div>`;
+}
+
+export function renderAnnotationsCounts(annotations: Annotation[]) {
+  return `<div class="annotations-counts">${pluralize(annotations.length, "annotation")}</div>`;
+}
+
+export function renderAnnotations(annotations: Annotation[]) {
+  let content = '<dl class="annotations-list">';
+  annotations.forEach((annotation) => {
+    content += `<div>`;
+    content += `<dt>${annotationsTerms[annotation.controlled_attribute_id as keyof typeof annotationsTerms]}</dt>`;
+    content += `<dd>${annotationsValues[annotation.controlled_value_id as keyof typeof annotationsValues]}</dd>`;
+    content += `</div>`;
+  });
+  content += `</dl>`;
+  return content;
 }
 
 export function renderIdCount(count: number) {
