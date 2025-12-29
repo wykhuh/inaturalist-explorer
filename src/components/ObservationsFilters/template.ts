@@ -186,6 +186,25 @@ let observationPane = html`<div
       <legend>Users</legend>
 
       <div class="form-group">
+        <label for="user_after">Recent accounts created</label>
+        <select id="user_after" name="user_after">
+          <option value=""></option>
+          <option value="1w">1 week ago</option>
+          <option value="4w">4 weeks/1 month ago</option>
+          <option value="52w">52 weeks/1 year ago</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="user_before">Accounts older than</label>
+        <select id="user_before" name="user_before">
+          <option value=""></option>
+          <option value="1w">1 week</option>
+          <option value="4w">4 weeks/1 month</option>
+          <option value="52w">52 weeks/1 year</option>
+        </select>
+      </div>
+
+      <div class="form-group">
         <label for="unobserved-by-user-search">Unobserved by user</label>
         <input
           name="unobserved_by_user_id"

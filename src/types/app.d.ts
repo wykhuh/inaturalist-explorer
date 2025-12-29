@@ -217,6 +217,8 @@ interface ObservationsApiFilterableParams {
   year?: string; // comma-seperated string
   view?: string;
   subview?: string;
+  user_before?: string;
+  user_after?: string;
 
   // TODO: needs to be implemented
   acc?: boolean;

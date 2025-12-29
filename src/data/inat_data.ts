@@ -98,6 +98,8 @@ export const ObservationsFilterableImplemented: ObservationsApiParamsKeysType[] 
     "term_id",
     "threatened",
     "unobserved_by_user_id",
+    "user_after",
+    "user_before",
     "verifiable",
     "viewer_id",
   ];
