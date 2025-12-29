@@ -4,7 +4,6 @@ import {
   addValueToCommaSeparatedString,
   isObservationsCheck,
   removeOneUserAnnotatorFromStore,
-  removeOneUserFromStore,
   resetPageNumber,
 } from "./data_utils.ts";
 import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
