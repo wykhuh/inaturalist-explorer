@@ -45,6 +45,11 @@ import {
   taxonIdentifiedSelectedHandler,
 } from "./search_taxa_identified.ts";
 import { loggerEvent } from "./logger.ts";
+import {
+  renderUsersAnnotatorsList,
+  setupUserAnnotatorsSearch,
+  userAnnotatorsSelectedHandler,
+} from "./search_users_annotators.ts";
 
 export async function updateTilesForSelectedTaxa(appStore: AppStoreType) {
   for await (const taxon of appStore.selectedTaxa) {
@@ -60,12 +65,14 @@ export function renderSelectedResources(
   appStore: AppStoreType,
   doSideEffects: boolean,
 ) {
+  // NOTE: update when adding selectedResource
   renderTaxaList(appStore);
   renderTaxaIdentifiedList(appStore);
   renderPlacesList(appStore);
   renderProjectsList(appStore);
   renderUsersList(appStore);
   renderUsersIdentifiersList(appStore);
+  renderUsersAnnotatorsList(appStore);
 
   if (doSideEffects) {
     updateAppUrl(window.location, appStore);
@@ -91,6 +98,7 @@ export function multisearchSetup(appStore: AppStoreType) {
   ) as HTMLSelectElement;
   if (!searchSelectEl) return;
 
+  // NOTE: update when adding selectedResource
   let searchOptions: SearchOptions = {
     places: {
       setup: setupPlacesSearch,
@@ -111,6 +119,10 @@ export function multisearchSetup(appStore: AppStoreType) {
     usersIdentifiers: {
       setup: setupUserIdentifierSearch,
       selectedHandler: userIdentifierSelectedHandler,
+    },
+    usersAnnotators: {
+      setup: setupUserAnnotatorsSearch,
+      selectedHandler: userAnnotatorsSelectedHandler,
     },
     taxaIdentified: {
       setup: setupTaxaIdentifiedSearch,
@@ -142,6 +154,9 @@ export function multisearchSetup(appStore: AppStoreType) {
     searchInputEl.value = "";
 
     let targetSearch = searchOptions[target.value as SearchOptionsKeys];
+    if (!targetSearch) {
+      throw Error("missing search config for " + target.value);
+    }
 
     setup = targetSearch.setup(searchSelector, appStore);
     selectedHandler = targetSearch.selectedHandler;
@@ -176,6 +191,7 @@ export function showHideHeader(
   }
 }
 
+// NOTE: update when adding selectedResource
 export function showHideUsersHeader() {
   showHideHeader("#sidebar-menu .users-heading", "selectedUsers");
 }
@@ -184,6 +200,13 @@ export function showHideUsersIdentifiersHeader() {
   showHideHeader(
     "#sidebar-menu .users-identifiers-heading",
     "selectedUsersIdentifiers",
+  );
+}
+
+export function showHideUsersAnnotatorsHeader() {
+  showHideHeader(
+    "#sidebar-menu .users-annotators-heading",
+    "selectedUsersAnnotators",
   );
 }
 

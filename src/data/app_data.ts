@@ -1,4 +1,5 @@
 import type {
+  AppStoreSelectedResourcesKeysType,
   ObservationSubviewsType,
   ObservationViewsType,
 } from "../types/app";
@@ -52,3 +53,15 @@ export function viewAndTemplateObject(targetView: ObservationViewsType) {
       throw Error(`Need to add view /template: ${targetView}`);
   }
 }
+
+// NOTE: update when adding selectedResource
+// selected resources are the resources shown in the sidemenu with counts
+export const selectedResources: AppStoreSelectedResourcesKeysType[] = [
+  "selectedPlaces",
+  "selectedProjects",
+  "selectedTaxa",
+  "selectedTaxaIdentified",
+  "selectedUsers",
+  "selectedUsersAnnotators",
+  "selectedUsersIdentifiers",
+];

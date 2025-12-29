@@ -6,11 +6,13 @@ export const template = html`
       <label>
         Search for
         <select id="search-type" name="search-type">
+          <!--  // NOTE: update when adding selectedResource -->
           <option selected value="taxa">Species</option>
           <option value="places">iNaturalist Places</option>
           <option value="projects">Projects</option>
           <option value="users">Observers</option>
           <option value="usersIdentifiers">Identifier</option>
+          <option value="usersAnnotators">Annotators</option>
         </select>
       </label>
     </div>
@@ -25,6 +27,7 @@ export const template = html`
       <observations-filters></observations-filters>
     </div>
 
+    <!--  // NOTE: update when adding selectedResource -->
     <h2 class="taxa-heading">Species</h2>
     <ul id="selected-species-list"></ul>
 
@@ -37,7 +40,10 @@ export const template = html`
     <h2 class="users-heading" hidden>Observers</h2>
     <ul id="selected-users-list"></ul>
 
-    <h2 class="users-identifiers-heading" hidden>Identifier*</h2>
+    <h2 class="users-identifiers-heading" hidden>Identifier</h2>
     <ul id="selected-users-identifiers-list"></ul>
+
+    <h2 class="users-annotators-heading" hidden>Annotators</h2>
+    <ul id="selected-users-annotators-list"></ul>
   </div>
 `;

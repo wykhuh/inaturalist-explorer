@@ -1239,6 +1239,7 @@
   ul#selected-projects-list,
   ul#selected-users-list,
   ul#selected-users-identifiers-list,
+  ul#selected-users-annotators-list,
   ul#selected-species-identified-list {
     padding: 0;
     list-style: none;

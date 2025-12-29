@@ -306,6 +306,8 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   }
   let resourceApiParams = getResourceApiParams(isObservations);
 
+  // NOTE: update when adding selectedResource
+
   // convert observation_taxon_id into selectedTaxa
   if ("observation_taxon_id" in urlParams) {
     if (!isObservations) {
@@ -430,6 +432,18 @@ export function decodeAppUrl(searchParams: string, path = "/") {
       store.selectedUnobservedByUser = {
         id: Number(urlParams.unobserved_by_user_id),
       } as any;
+    }
+  }
+
+  if ("annotation_user_id" in urlParams) {
+    if (isObservations) {
+      let ids = urlParams.annotation_user_id.split(",");
+      let users = ids
+        .map((id) => {
+          return { id: Number(id) };
+        })
+        .filter((p) => p);
+      store.selectedUsersAnnotators = users as any;
     }
   }
 

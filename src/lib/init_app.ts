@@ -95,6 +95,8 @@ export async function initPopulateStore(
   // HACK: trigger store proxy
   appStore.observationsApiParams = appStore.observationsApiParams;
 
+  // NOTE: update when adding selectedResource
+
   // places data
   if (
     urlStore.selectedPlaces?.length > 0 &&
@@ -143,11 +145,8 @@ export async function initPopulateStore(
       processUserData(data, appStore);
     }
   }
+  loggerStore("++ initPopulateStore selectedUsers", appStore.selectedUsers);
 
-  loggerStore(
-    "++ initPopulateStore selectedUsersIdentifiers",
-    appStore.selectedUsersIdentifiers,
-  );
   if (urlStore.selectedUsersIdentifiers?.length > 0) {
     for await (const urlStoreUser of urlStore.selectedUsersIdentifiers) {
       let data = await getUserById(urlStoreUser.id);
@@ -157,7 +156,6 @@ export async function initPopulateStore(
       processUserIdentifierData(data, appStore);
     }
   }
-
   loggerStore(
     "++ initPopulateStore selectedUsersIdentifiers",
     appStore.selectedUsersIdentifiers,
@@ -170,6 +168,10 @@ export async function initPopulateStore(
       processUnobservedByUserData(data, appStore);
     }
   }
+  loggerStore(
+    "++ initPopulateStore selectedUnobservedByUser",
+    appStore.selectedUnobservedByUser,
+  );
 
   if (urlStore.selectedReviewer?.id) {
     let data = await getUserById(urlStore.selectedReviewer.id);
@@ -177,10 +179,23 @@ export async function initPopulateStore(
       processReviewerData(data, appStore);
     }
   }
-
   loggerStore(
-    "++ initPopulateStore selectedUnobservedByUser",
-    appStore.selectedUnobservedByUser,
+    "++ initPopulateStore selectedReviewer",
+    appStore.selectedReviewer,
+  );
+
+  if (urlStore.selectedUsersAnnotators?.length > 0) {
+    for await (const urlStoreUser of urlStore.selectedUsersAnnotators) {
+      let data = await getUserById(urlStoreUser.id);
+      if (!data) {
+        continue;
+      }
+      processUserAnnotatorData(data, appStore);
+    }
+  }
+  loggerStore(
+    "++ initPopulateStore selectedUsersAnnotators",
+    appStore.selectedUsersAnnotators,
   );
 
   // load selected taxa
@@ -193,6 +208,7 @@ export async function initPopulateStore(
       processTaxonData(taxonData, appStore, urlStore);
     }
   }
+  loggerStore("++ initPopulateStore selectedTaxa", appStore.selectedTaxa);
 
   // load taxa identified data
   if (
@@ -207,6 +223,10 @@ export async function initPopulateStore(
       processTaxonIdentifiedData(taxonData, appStore, urlStore);
     }
   }
+  loggerStore(
+    "++ initPopulateStore selectedTaxaIdentified",
+    appStore.selectedTaxaIdentified,
+  );
 
   // add default taxa
   if (
@@ -479,6 +499,7 @@ export function addBBoxDataToMap(appStore: AppStoreType) {
   appStore.placesMapLayers["0"] = [layer as unknown as CustomGeoJSONType];
 }
 
+// NOTE: update when adding selectedResource
 export function processProjectData(
   projectData: ProjectsResult,
   appStore: AppStoreType,
@@ -576,6 +597,29 @@ function processReviewerData(userData: UserResult, appStore: AppStoreType) {
   };
 
   appStore.observationsApiParams.viewer_id = userData.id;
+}
+
+function processUserAnnotatorData(
+  userData: UserResult,
+  appStore: AppStoreType,
+) {
+  if (isIdentificationsCheck(appStore)) return;
+
+  appStore.selectedUsersAnnotators = [
+    ...appStore.selectedUsersAnnotators,
+    {
+      id: userData.id,
+      name: userData.name,
+      login: userData.login,
+    },
+  ];
+
+  // create comma seperated user_id
+  appStore.observationsApiParams.annotation_user_id =
+    addValueToCommaSeparatedString(
+      userData.id,
+      appStore.observationsApiParams.annotation_user_id,
+    );
 }
 
 export async function initApp() {

@@ -28,9 +28,11 @@ export interface AppStoreType {
   selectedPlaces: NormalizediNatPlaceType[];
   placesMapLayers: { [index: string]: CustomGeoJSONType[] };
   projectsMapLayers?: { [index: string]: CustomGeoJSONType[] };
+  // NOTE: update when adding selectedResource
   selectedUsers: NormalizediNatUserType[];
   selectedUsersIdentifiers: NormalizediNatUserType[];
   selectedUnobservedByUser: NormalizediNatUserType;
+  selectedUsersAnnotators: NormalizediNatUserType[];
   selectedReviewer: NormalizediNatUserType;
   selectedProjects: NormalizediNatProjectType[];
   observationsApiParams: ObservationsApiParamsType;
@@ -143,13 +145,15 @@ export type NormalizediNatUserType = {
 
 export type AppStoreKeysType = keyof AppStoreType;
 
+// NOTE: update when adding selectedResource
 export type AppStoreSelectedResourcesKeysType =
   | "selectedTaxa"
   | "selectedTaxaIdentified"
   | "selectedPlaces"
   | "selectedUsers"
   | "selectedProjects"
-  | "selectedUsersIdentifiers";
+  | "selectedUsersIdentifiers"
+  | "selectedUsersAnnotators";
 
 export type AppStoreTypeParamsKeys =
   | "observationsApiParams"
@@ -447,6 +451,7 @@ export type PlaceTypes = {
 };
 export type PlaceTypesKey = keyof PlaceTypes;
 
+// NOTE: update when adding selectedResource
 type SearchOptions = {
   places: SearchOption;
   projects: SearchOption;
@@ -454,6 +459,7 @@ type SearchOptions = {
   usersIdentifiers: SearchOption;
   taxa: SearchOption;
   taxaIdentified: SearchOption;
+  usersAnnotators: SearchOption;
 };
 
 type SearchOption = { setup: any; selectedHandler: any };

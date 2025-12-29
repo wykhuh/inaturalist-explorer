@@ -17,7 +17,6 @@ import {
   expectEmpytMap,
   expectLifeTaxa,
   expectLosAngelesPlace,
-  expectNoPlaces,
   expectNoRefresh,
   expectRefreshPlace,
   losangeles,
@@ -60,9 +59,6 @@ import {
   gridLabel_life_places_identifier,
   gridLabel_oaks_places_identifier,
   lifeBasic,
-  expectNoProjects,
-  expectNoUsers,
-  expectNoTaxaIdentified,
   allTaxaIdentification,
   lifeIdentification,
   gridLabel_life_places_users,
@@ -70,11 +66,12 @@ import {
   redOakIdentification,
   expectUserIdentifiersIdentifications,
   expectDefaultTaxaRecordIdentification,
-  expectNoUsersIdentifiers,
-  expectNoTaxa,
   expectUser1Reviewer,
   gridLabel_allTaxaRecord_user1Reviewer,
-  expectNoUnobservedUsers,
+  expectUserAnnotator,
+  gridLabel_allTaxaRecord_user1Annotator,
+  expectEmptyResources,
+  expectLifeTaxaIdentification,
 } from "../test_helpers.ts";
 import type {
   IdentificationsApiParamsType,
@@ -132,13 +129,8 @@ describe("initPopulateStore and initRenderMap options", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectNoPlaces(store);
-    expectNoRefresh(store);
-    expectNoProjects(store);
+    expectEmptyResources(store, ["selectedTaxa"]);
     expectDefaultTaxaRecord(store);
-    expectNoTaxaIdentified(store);
-    expectNoUsers(store);
-    expectNoUsersIdentifiers(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
@@ -172,8 +164,7 @@ describe("initPopulateStore and initRenderMap options", () => {
         basemapLabel_osm,
         gridLabel_allTaxaRecord,
       ]);
-      expectNoPlaces(store);
-      expectNoRefresh(store);
+      expectEmptyResources(store, ["selectedTaxa"]);
       expectDefaultTaxaRecord(store);
 
       let expectedParams: ObservationsApiParamsType = {
@@ -202,8 +193,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
-    expectNoPlaces(store);
-    expectNoRefresh(store);
+    expectEmptyResources(store, ["selectedTaxa"]);
     expectDefaultTaxaRecord(store);
 
     let expectedParams: ObservationsApiParamsType = {
@@ -230,8 +220,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       basemapLabel_osm,
       gridLabel_life,
     ]);
-    expectNoPlaces(store);
-    expectNoRefresh(store);
+    expectEmptyResources(store, ["selectedTaxa"]);
     expectLifeTaxa(store);
 
     let expectedParams: ObservationsApiParamsType = {
@@ -260,8 +249,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       basemapLabel_osm,
       gridLabel_life,
     ]);
-    expectNoPlaces(store);
-    expectNoRefresh(store);
+    expectEmptyResources(store, ["selectedTaxa"]);
     expectLifeTaxa(store);
 
     let expectedParams: ObservationsApiParamsType = {
@@ -290,8 +278,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       basemapLabel_osm,
       gridLabel_life,
     ]);
-    expectNoPlaces(store);
-    expectNoRefresh(store);
+    expectEmptyResources(store, ["selectedTaxa"]);
     expectLifeTaxa(store);
 
     let expectedParams: ObservationsApiParamsType = {
@@ -320,8 +307,7 @@ describe("initPopulateStore and initRenderMap options", () => {
         basemapLabel_osm,
         gridLabel_life,
       ]);
-      expectNoPlaces(store);
-      expectNoRefresh(store);
+      expectEmptyResources(store, ["selectedTaxa"]);
       expectLifeTaxa(store);
 
       let expectedParams: ObservationsApiParamsType = {
@@ -354,8 +340,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       basemapLabel_osm,
       gridLabel_life,
     ]);
-    expectNoPlaces(store);
-    expectNoRefresh(store);
+    expectEmptyResources(store, ["selectedTaxa"]);
     expectLifeTaxa(store);
 
     let expectedParams: ObservationsApiParamsType = {
@@ -378,8 +363,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectNoPlaces(store);
-    expectNoRefresh(store);
+    expectEmptyResources(store, ["selectedTaxa"]);
     expectDefaultTaxaRecord(store);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
@@ -418,8 +402,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectNoPlaces(store);
-    expectNoRefresh(store);
+    expectEmptyResources(store, ["selectedTaxa"]);
     expectDefaultTaxaRecord(store);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
@@ -441,8 +424,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectNoPlaces(store);
-    expectNoRefresh(store);
+    expectEmptyResources(store, ["selectedTaxa"]);
     expectDefaultTaxaRecord(store);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
@@ -492,6 +474,7 @@ describe("initPopulateStore and initRenderMap options", () => {
   });
 });
 
+// NOTE: update when adding selectedResource
 describe("initPopulateStore and initRenderMap resources", () => {
   test("loads and renders taxa data based on url params", async () => {
     let store = structuredClone(mapStore);
@@ -504,13 +487,8 @@ describe("initPopulateStore and initRenderMap resources", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectNoPlaces(store);
-    expectNoRefresh(store);
-    expectNoProjects(store);
+    expectEmptyResources(store, ["selectedTaxa"]);
     expectLifeTaxa(store);
-    expectNoTaxaIdentified(store);
-    expectNoUsers(store);
-    expectNoUsersIdentifiers(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_life,
@@ -537,13 +515,10 @@ describe("initPopulateStore and initRenderMap resources", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
+    expectEmptyResources(store, ["selectedPlaces", "selectedTaxa"]);
     expectLosAngelesPlace(store, allTaxaLACount);
     expectNoRefresh(store);
-    expectNoProjects(store);
     expectDefaultTaxaRecord(store, allTaxaLACount);
-    expectNoTaxaIdentified(store);
-    expectNoUsers(store);
-    expectNoUsersIdentifiers(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
@@ -574,12 +549,9 @@ describe("initPopulateStore and initRenderMap resources", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
+    expectEmptyResources(store, ["selectedPlaces", "selectedTaxa"]);
     expectRefreshPlace(store, allTaxaCount);
-    expectNoProjects(store);
     expectDefaultTaxaRecord(store);
-    expectNoTaxaIdentified(store);
-    expectNoUsers(store);
-    expectNoUsersIdentifiers(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeBBoxLabel,
@@ -612,13 +584,9 @@ describe("initPopulateStore and initRenderMap resources", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectNoPlaces(store);
-    expectNoRefresh(store);
+    expectEmptyResources(store, ["selectedProjects", "selectedTaxa"]);
     expectProject1(store, allTaxaProjectCount);
     expectDefaultTaxaRecord(store, allTaxaProjectCount);
-    expectNoTaxaIdentified(store);
-    expectNoUsers(store);
-    expectNoUsersIdentifiers(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_project1,
@@ -646,13 +614,9 @@ describe("initPopulateStore and initRenderMap resources", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectNoPlaces(store);
-    expectNoRefresh(store);
-    expectNoProjects(store);
+    expectEmptyResources(store, ["selectedUsers", "selectedTaxa"]);
     expectDefaultTaxaRecord(store, allTaxaCount * 0.45);
-    expectNoTaxaIdentified(store);
     expectUser1(store, allTaxaCount * 0.45);
-    expectNoUsersIdentifiers(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_user1,
@@ -680,12 +644,8 @@ describe("initPopulateStore and initRenderMap resources", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectNoPlaces(store);
-    expectNoRefresh(store);
-    expectNoProjects(store);
+    expectEmptyResources(store, ["selectedUsersIdentifiers", "selectedTaxa"]);
     expectDefaultTaxaRecord(store, allTaxaCount * 0.75);
-    expectNoTaxaIdentified(store);
-    expectNoUsers(store);
     expectUser1Identifier(store, allTaxaCount * 0.75);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -715,13 +675,8 @@ describe("initPopulateStore and initRenderMap resources", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectNoPlaces(store);
-    expectNoRefresh(store);
-    expectNoProjects(store);
+    expectEmptyResources(store, ["selectedTaxa"]);
     expectDefaultTaxaRecord(store, allTaxaCount * 0.65);
-    expectNoTaxaIdentified(store);
-    expectNoUsers(store);
-    expectNoUsersIdentifiers(store);
     expectUser1UnobservedByUser(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -749,14 +704,8 @@ describe("initPopulateStore and initRenderMap resources", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectNoPlaces(store);
-    expectNoRefresh(store);
-    expectNoProjects(store);
+    expectEmptyResources(store, ["selectedTaxa"]);
     expectDefaultTaxaRecord(store);
-    expectNoTaxaIdentified(store);
-    expectNoUsers(store);
-    expectNoUsersIdentifiers(store);
-    expectNoUnobservedUsers(store);
     expectUser1Reviewer(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -765,6 +714,36 @@ describe("initPopulateStore and initRenderMap resources", () => {
     let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
       viewer_id: user1.id,
+      taxon_id: allTaxa.id.toString(),
+      colors: iNatOrange,
+    };
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
+    expect(store.identificationsApiParams).toStrictEqual({});
+    expect(store.color).toBe(iNatOrange);
+  });
+
+  test("loads and renders user annotator data based on url params", async () => {
+    let store = structuredClone(mapStore);
+
+    expectEmpytMap(store);
+
+    let searchparams = `?locale=en&annotation_user_id=${user1.id}&${defaultQuery}`;
+    let urlData = decodeAppUrl(searchparams, "/");
+    let allTaxaCount = allTaxa.observations_count;
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expectEmptyResources(store, ["selectedUsersAnnotators", "selectedTaxa"]);
+    expectDefaultTaxaRecord(store);
+    expectUserAnnotator(store, allTaxaCount);
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord_user1Annotator,
+    ]);
+    let expectedParams: ObservationsApiParamsType = {
+      ...defaultParams,
+      annotation_user_id: user1.id.toString(),
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
     };
@@ -798,7 +777,6 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expect_LA_SD_Place(store, [count * 0.6 * 0.75, count * 0.4 * 0.75]);
     expectProjects(store, [count * 0.7 * 0.75, count * 0.3 * 0.75]);
     expectLifeOakTaxa(store, [lifeCount * 0.75, oakCount * 0.75]);
-    expectNoTaxaIdentified(store);
     expectUsers(store, [
       Math.round(count * 0.45 * 0.75),
       Math.round(count * 0.55 * 0.75),
@@ -851,9 +829,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
 
     expectProjects(store, [count * 0.7, count * 0.3]);
     expectLifeOakTaxa(store, [lifeCount, oakCount]);
-    expectNoTaxaIdentified(store);
     expectUsers(store, [count * 0.45, count * 0.55]);
-    expectNoUsersIdentifiers(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeBBoxLabel,
@@ -892,13 +868,8 @@ describe("initPopulateStore and initRenderMap options with identifications", () 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectNoPlaces(store);
-    expectNoRefresh(store);
-    expectNoProjects(store);
+    expectEmptyResources(store, ["selectedTaxa"]);
     expectDefaultTaxaRecordIdentification(store);
-    expectNoTaxaIdentified(store);
-    expectNoUsers(store);
-    expectNoUsersIdentifiers(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
@@ -922,13 +893,8 @@ describe("initPopulateStore and initRenderMap options with identifications", () 
       await initPopulateStore(store, urlData);
       await initRenderMap(store);
 
-      expectNoPlaces(store);
-      expectNoRefresh(store);
-      expectNoProjects(store);
+      expectEmptyResources(store, ["selectedTaxa"]);
       expectDefaultTaxaRecordIdentification(store);
-      expectNoTaxaIdentified(store);
-      expectNoUsers(store);
-      expectNoUsersIdentifiers(store);
       expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
       expect(store.identificationsApiParams).toStrictEqual({
         [param]: true,
@@ -954,15 +920,8 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectNoPlaces(store);
-    expectNoRefresh(store);
-    expectNoProjects(store);
-    expect(store.selectedTaxa).toStrictEqual([life]);
-    expect(Object.keys(store.taxaMapLayers)).toEqual([life.id.toString()]);
-    expect(store.taxaMapLayers[life.id].length).toBe(4);
-    expectNoTaxaIdentified(store);
-    expectNoUsers(store);
-    expectNoUsersIdentifiers(store);
+    expectEmptyResources(store, ["selectedTaxa"]);
+    expectLifeTaxaIdentification(store, life.identifications_count);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_life,
@@ -989,13 +948,8 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectNoPlaces(store);
-    expectNoRefresh(store);
-    expectNoProjects(store);
-    expectNoTaxa(store);
+    expectEmptyResources(store, ["selectedTaxaIdentified"]);
     expect(store.selectedTaxaIdentified).toStrictEqual([life]);
-    expectNoUsers(store);
-    expectNoUsersIdentifiers(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
@@ -1019,16 +973,12 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
+    expectEmptyResources(store, ["selectedPlaces", "selectedTaxa"]);
     expect(store.selectedPlaces).toStrictEqual([placeA]);
-    expectNoRefresh(store);
-    expectNoProjects(store);
     expectDefaultTaxaRecordIdentification(
       store,
       allTaxaIdentification.identifications_count * 0.6,
     );
-    expectNoTaxaIdentified(store);
-    expectNoUsers(store);
-    expectNoUsersIdentifiers(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
@@ -1056,13 +1006,8 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectNoPlaces(store);
-    expectNoRefresh(store);
-    expectNoProjects(store);
+    expectEmptyResources(store, ["selectedTaxa"]);
     expectDefaultTaxaRecordIdentification(store);
-    expectNoTaxaIdentified(store);
-    expectNoUsers(store);
-    expectNoUsersIdentifiers(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
@@ -1085,13 +1030,8 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectNoPlaces(store);
-    expectNoRefresh(store);
-    expectNoProjects(store);
+    expectEmptyResources(store, ["selectedTaxa"]);
     expectDefaultTaxaRecordIdentification(store);
-    expectNoTaxaIdentified(store);
-    expectNoUsers(store);
-    expectNoUsersIdentifiers(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
@@ -1118,15 +1058,12 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectNoPlaces(store);
-    expectNoRefresh(store);
-    expectNoProjects(store);
+    expectEmptyResources(store, ["selectedTaxa", "selectedUsersIdentifiers"]);
     expectDefaultTaxaRecordIdentification(
       store,
       allTaxaIdentification.identifications_count * 0.45,
     );
-    expectNoTaxaIdentified(store);
-    expectNoUsers(store);
+
     expect(store.selectedUsersIdentifiers).toStrictEqual([userA]);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -1152,13 +1089,8 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectNoPlaces(store);
-    expectNoRefresh(store);
-    expectNoProjects(store);
+    expectEmptyResources(store, ["selectedTaxa"]);
     expectDefaultTaxaRecordIdentification(store);
-    expectNoTaxaIdentified(store);
-    expectNoUsers(store);
-    expectNoUsersIdentifiers(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
@@ -1181,13 +1113,8 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectNoPlaces(store);
-    expectNoRefresh(store);
-    expectNoProjects(store);
+    expectEmptyResources(store, ["selectedTaxa"]);
     expectDefaultTaxaRecordIdentification(store);
-    expectNoTaxaIdentified(store);
-    expectNoUsers(store);
-    expectNoUsersIdentifiers(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
@@ -1222,7 +1149,6 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
 
     expect_LA_SD_Place_Identifications(store, [count * 0.6, count * 0.4]);
     expectNoRefresh(store);
-    expectNoProjects(store);
     expect(store.selectedTaxa).toStrictEqual([life]);
     expect(Object.keys(store.taxaMapLayers)).toEqual([life.id.toString()]);
     expect(store.taxaMapLayers[life.id].length).toBe(4);
@@ -1265,13 +1191,7 @@ describe("initPopulateStore and initRenderMap resources with about page", () => 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectNoPlaces(store);
-    expectNoRefresh(store);
-    expectNoProjects(store);
-    expectNoTaxa(store);
-    expectNoTaxaIdentified(store);
-    expectNoUsers(store);
-    expectNoUsersIdentifiers(store);
+    expectEmptyResources(store);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
     });
@@ -1298,13 +1218,8 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       await initPopulateStore(store, urlData);
       await initRenderMap(store);
 
-      expectNoPlaces(store);
-      expectNoRefresh(store);
-      expectNoProjects(store);
+      expectEmptyResources(store, ["selectedTaxa"]);
       expectDefaultTaxaRecord(store);
-      expectNoTaxaIdentified(store);
-      expectNoUsers(store);
-      expectNoUsersIdentifiers(store);
       expect(store.observationsApiParams).toStrictEqual({
         ...defaultParams,
         colors: iNatOrange,
@@ -1333,13 +1248,8 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       await initPopulateStore(store, urlData);
       await initRenderMap(store);
 
-      expectNoPlaces(store);
-      expectNoRefresh(store);
-      expectNoProjects(store);
+      expectEmptyResources(store, ["selectedTaxa"]);
       expectDefaultTaxaRecordIdentification(store);
-      expectNoTaxaIdentified(store);
-      expectNoUsers(store);
-      expectNoUsersIdentifiers(store);
       expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
       expect(store.identificationsApiParams).toStrictEqual({
         observation_taxon_id: allTaxa.id.toString(),
@@ -1364,13 +1274,8 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       await initPopulateStore(store, urlData);
       await initRenderMap(store);
 
-      expectNoPlaces(store);
-      expectNoRefresh(store);
-      expectNoProjects(store);
+      expectEmptyResources(store, ["selectedTaxa"]);
       expectDefaultTaxaRecord(store);
-      expectNoTaxaIdentified(store);
-      expectNoUsers(store);
-      expectNoUsersIdentifiers(store);
       expect(store.observationsApiParams).toStrictEqual({
         ...defaultParams,
         colors: iNatOrange,
@@ -1398,13 +1303,8 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       await initPopulateStore(store, urlData);
       await initRenderMap(store);
 
-      expectNoPlaces(store);
-      expectNoRefresh(store);
-      expectNoProjects(store);
+      expectEmptyResources(store, ["selectedTaxa"]);
       expectDefaultTaxaRecordIdentification(store);
-      expectNoTaxaIdentified(store);
-      expectNoUsers(store);
-      expectNoUsersIdentifiers(store);
       expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
       expect(store.identificationsApiParams).toStrictEqual({
         observation_taxon_id: allTaxa.id.toString(),

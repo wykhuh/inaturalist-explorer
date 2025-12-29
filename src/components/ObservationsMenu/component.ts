@@ -5,6 +5,7 @@ import {
   renderSelectedResources,
   showHidePlacesHeader,
   showHideProjectsHeader,
+  showHideUsersAnnotatorsHeader,
   showHideUsersHeader,
   showHideUsersIdentifiersHeader,
 } from "../../lib/search_utils";
@@ -23,6 +24,7 @@ class ObservationsMenu extends HTMLElement {
 
     this.render(window.app.store);
 
+    // NOTE: update when adding selectedResource
     window.addEventListener("selectedPlacesChange", showHidePlacesHeader);
     window.addEventListener("selectedProjectsChange", showHideProjectsHeader);
     window.addEventListener("selectedUsersChange", showHideUsersHeader);
@@ -30,9 +32,14 @@ class ObservationsMenu extends HTMLElement {
       "selectedUsersIdentifiersChange",
       showHideUsersIdentifiersHeader,
     );
+    window.addEventListener(
+      "selectedUsersAnnotatorsChange",
+      showHideUsersAnnotatorsHeader,
+    );
   }
 
   disconnectedCallback() {
+    // NOTE: update when adding selectedResource
     window.removeEventListener("selectedPlacesChange", showHidePlacesHeader);
     window.removeEventListener(
       "selectedProjectsChange",
@@ -43,14 +50,21 @@ class ObservationsMenu extends HTMLElement {
       "selectedUsersIdentifiersChange",
       showHideUsersIdentifiersHeader,
     );
+    window.removeEventListener(
+      "selectedUsersAnnotatorsChange",
+      showHideUsersAnnotatorsHeader,
+    );
   }
 
   render(appStore: AppStoreType) {
+    // NOTE: update when adding selectedResource
     multisearchSetup(appStore);
     showHidePlacesHeader();
     showHideProjectsHeader();
     showHideUsersHeader();
     showHideUsersIdentifiersHeader();
+    showHideUsersAnnotatorsHeader();
+
     renderSelectedResources(appStore, false);
   }
 }

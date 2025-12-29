@@ -44,6 +44,7 @@ function formatDescription(
   observationsApiParams: ObservationsApiParamsType,
   type: string,
 ) {
+  // NOTE: update when adding selectedResource
   let text = `overlay: iNat ${type}, taxon_id ${observationsApiParams.taxon_id || 0}`;
   if (observationsApiParams.place_id) {
     text += `, place_id ${observationsApiParams.place_id}`;
@@ -62,6 +63,9 @@ function formatDescription(
   }
   if (observationsApiParams.viewer_id) {
     text += `, viewer_id ${observationsApiParams.viewer_id}`;
+  }
+  if (observationsApiParams.annotation_user_id) {
+    text += `, annotation_user_id ${observationsApiParams.annotation_user_id}`;
   }
   return text;
 }

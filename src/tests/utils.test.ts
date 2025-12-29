@@ -604,6 +604,7 @@ let defaultUrlStore = {
   },
 } as AppStoreType;
 
+// NOTE: update when adding selectedResource
 describe("decodeAppUrl resources", () => {
   test("returns object with taxa data if taxon_id is present", () => {
     let searchParams =
@@ -739,6 +740,22 @@ describe("decodeAppUrl resources", () => {
       observationsApiParams: {
         viewer_id: 1,
       },
+      currentView: "observations_observations",
+      record_type: "observations",
+    };
+
+    let result = decodeAppUrl(searchParams, "/");
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("returns object with user data if annotation_user_id is present", () => {
+    let searchParams = "?annotation_user_id=1";
+
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      selectedUsersAnnotators: [{ id: 1 }],
+      observationsApiParams: {},
       currentView: "observations_observations",
       record_type: "observations",
     };
@@ -1011,9 +1028,7 @@ describe("decodeAppUrl options", () => {
     "adds valid params to observationsApiParams",
     (name) => {
       let value;
-      if (
-        ["unobserved_by_user_id", "ident_user_id", "viewer_id"].includes(name)
-      ) {
+      if (["unobserved_by_user_id", "viewer_id"].includes(name)) {
         value = 1;
       } else {
         value = true;
@@ -1031,10 +1046,6 @@ describe("decodeAppUrl options", () => {
       if (name == "unobserved_by_user_id") {
         expected.selectedUnobservedByUser = { id: 1 };
         expected.observationsApiParams.unobserved_by_user_id = 1;
-      }
-      if (name == "ident_user_id") {
-        expected.selectedUsersIdentifiers = [{ id: 1 }];
-        expected.observationsApiParams.ident_user_id = 1;
       }
       if (name == "viewer_id") {
         expected.selectedReviewer = { id: 1 };

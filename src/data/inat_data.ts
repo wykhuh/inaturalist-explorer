@@ -53,23 +53,25 @@ export const speciesRanks = [
   "form",
 ];
 
+// NOTE: update when adding selectedResource
 export const ObservationsApiNonFilterableNames: ObservationsApiParamsKeysType[] =
   [
+    "annotation_user_id",
+    "colors",
+    "ident_user_id",
+    "locale",
     "nelat",
     "nelng",
-    "swlat",
-    "swlng",
-    "colors",
+    "page",
     "per_page",
     "place_id",
-    "taxon_id",
     "project_id",
-    "user_id",
-    "ident_user_id",
-    "view",
     "subview",
-    "page",
-    "locale",
+    "swlat",
+    "swlng",
+    "taxon_id",
+    "user_id",
+    "view",
   ];
 
 export const ObservationsFilterableImplemented: ObservationsApiParamsKeysType[] =
@@ -130,7 +132,6 @@ const ObservationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   "day",
   "hour",
   "created_day",
-  "annotation_user_id",
   "acc_above",
   "acc_below",
   "acc_below_or_unknown",

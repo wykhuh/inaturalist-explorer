@@ -13,6 +13,7 @@ import {
   cleanupObervationsParamsForRecord,
 } from "./cleanup_params_utils.ts";
 import { isObservationsCheck, updateSelectedResource } from "./data_utils.ts";
+import { selectedResources } from "../data/app_data.ts";
 
 export async function updateCountForOne(
   record:
@@ -136,16 +137,7 @@ async function updateObservationsCountForAll(
   appStore: AppStoreType,
   onlyFetchMissingCounts = false,
 ) {
-  let resources = [
-    "selectedTaxa",
-    "selectedTaxaIdentified",
-    "selectedPlaces",
-    "selectedProjects",
-    "selectedUsers",
-    "selectedUsersIdentifiers",
-  ] as AppStoreSelectedResourcesKeysType[];
-
-  let targetResources = resources.filter((r) => r != ignoreResource);
+  let targetResources = selectedResources.filter((r) => r != ignoreResource);
   for await (const resource of targetResources) {
     await updateObservationsCountForResource(
       resource,
@@ -241,6 +233,7 @@ function getIdFieldForResource(
 ) {
   let isObservation = isObservationsCheck(appStore);
   let idField = "";
+  // NOTE: update when adding selectedResource
   if (resource === "selectedPlaces") {
     idField = "place_id";
   } else if (resource === "selectedProjects") {
@@ -265,8 +258,12 @@ function getIdFieldForResource(
     } else {
       idField = "user_id";
     }
+  } else if (resource === "selectedUsersAnnotators") {
+    if (isObservation) {
+      idField = "annotation_user_id";
+    }
   } else {
-    throw Error("invalid selected resource: " + resource);
+    throw Error("missing id field for selected resource: " + resource);
   }
   return idField;
 }

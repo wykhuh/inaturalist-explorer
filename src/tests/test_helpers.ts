@@ -5,6 +5,7 @@ import { expect } from "vitest";
 
 import { addLayerToMap, getMapTiles } from "../lib/map_utils";
 import type {
+  AppStoreSelectedResourcesKeysType,
   AppStoreType,
   NormalizediNatPlaceType,
   NormalizediNatProjectType,
@@ -28,6 +29,7 @@ import {
   user2UserApi,
 } from "./fixtures/inatApi.ts";
 import type { PolygonJson } from "../types/inat_api";
+import { selectedResources } from "../data/app_data.ts";
 
 function adjustCount(url: string, count: number) {
   let lifeCount = life().observations_count as number;
@@ -251,6 +253,9 @@ export let gridLabel_allTaxaRecord_user1Unobserved =
 
 export let gridLabel_allTaxaRecord_user1Reviewer =
   "overlay: iNat grid, taxon_id 0, viewer_id 222137";
+
+export let gridLabel_allTaxaRecord_user1Annotator =
+  "overlay: iNat grid, taxon_id 0, annotation_user_id 222137";
 
 export let gridLabel_life_la_user1 =
   "overlay: iNat grid, taxon_id 48460, place_id 962, user_id 222137";
@@ -563,6 +568,19 @@ export function expectDefaultTaxaRecordIdentification(
   expect(store.taxaMapLayers[0].length).toBe(3);
 }
 
+export function expectEmptyResources(
+  store: AppStoreType,
+  changedResources: AppStoreSelectedResourcesKeysType[] = [],
+) {
+  let defaultStore = structuredClone(mapStore);
+
+  selectedResources.forEach((resource) => {
+    if (changedResources.includes(resource)) return;
+
+    expect(store[resource]).toStrictEqual(defaultStore[resource]);
+  });
+}
+
 export function expectLifeTaxa(
   store: AppStoreType,
   count = 0,
@@ -759,6 +777,10 @@ export function expectNoUnobservedUsers(store: AppStoreType) {
   expect(store.selectedUnobservedByUser).toStrictEqual({});
 }
 
+export function expectNoUsersAnnotators(store: AppStoreType) {
+  expect(store.selectedUsersAnnotators).toStrictEqual({});
+}
+
 export function expectRefreshPlace(
   store: AppStoreType,
   count = 0,
@@ -868,6 +890,27 @@ export function expectUserIdentifiers(store: AppStoreType, counts = [0, 0]) {
     userB.observations_count = counts[1];
   }
   expect(store.selectedUsersIdentifiers).toEqual([userA, userB]);
+}
+
+export function expectUserAnnotator(store: AppStoreType, count = 0) {
+  let userA = structuredClone(user1);
+  if (count > 0) {
+    userA.observations_count = Math.round(count);
+  }
+  expect(store.selectedUsersAnnotators).toEqual([userA]);
+}
+
+export function expectUserAnnotators(store: AppStoreType, counts = [0, 0]) {
+  let userA = structuredClone(user1);
+  let userB = structuredClone(user2);
+
+  if (counts[0] > 0) {
+    userA.observations_count = counts[0];
+  }
+  if (counts[1] > 0) {
+    userB.observations_count = counts[1];
+  }
+  expect(store.selectedUsersAnnotators).toEqual([userA, userB]);
 }
 
 export function expectUserIdentifiersIdentifications(

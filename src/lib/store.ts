@@ -1,4 +1,5 @@
 import { displayAppstoreData } from "../components/AppstoreViewer/utils.ts";
+import { selectedResources } from "../data/app_data.ts";
 import type {
   AppStoreType,
   AppStoreKeysType,
@@ -7,16 +8,17 @@ import type {
 import { loggerEvent, loggerStore } from "./logger.ts";
 
 export const mapStore: AppStoreType = {
+  placesMapLayers: {},
+  selectedPlaces: [],
+  selectedProjects: [],
+  selectedReviewer: {} as NormalizediNatUserType,
   selectedTaxa: [],
   selectedTaxaIdentified: [],
-  taxaMapLayers: {},
-  selectedPlaces: [],
-  placesMapLayers: {},
-  selectedProjects: [],
-  selectedUsers: [],
-  selectedUsersIdentifiers: [],
   selectedUnobservedByUser: {} as NormalizediNatUserType,
-  selectedReviewer: {} as NormalizediNatUserType,
+  selectedUsers: [],
+  selectedUsersAnnotators: [],
+  selectedUsersIdentifiers: [],
+  taxaMapLayers: {},
   observationsApiParams: { verifiable: true, spam: false, locale: "en" },
   identificationsApiParams: {},
   color: "",
@@ -55,25 +57,13 @@ const proxiedStore = new Proxy(structuredClone(mapStore), {
     loggerStore(`proxy store.${property} changed`);
 
     displayAppstoreData(proxiedStore, `proxiedStore ${property}`);
-    if (property === "selectedPlaces") {
-      window.dispatchEvent(new Event("selectedPlacesChange"));
-      loggerEvent(`dispatch ${property}Change`);
-    } else if (property === "selectedProjects") {
-      window.dispatchEvent(new Event("selectedProjectsChange"));
-      loggerEvent(`dispatch ${property}Change`);
-    } else if (property === "selectedTaxa") {
-      window.dispatchEvent(new Event("selectedTaxaChange"));
-      loggerEvent(`dispatch ${property}Change`);
-    } else if (property === "selectedTaxaIdentified") {
-      window.dispatchEvent(new Event("selectedTaxaIdentifiedChange"));
-      loggerEvent(`dispatch ${property}Change`);
-    } else if (property === "selectedUsers") {
-      window.dispatchEvent(new Event("selectedUsersChange"));
-      loggerEvent(`dispatch ${property}Change`);
-    } else if (property === "selectedUsersIdentifiers") {
-      window.dispatchEvent(new Event("selectedUsersIdentifiersChange"));
-      loggerEvent(`dispatch ${property}Change`);
-    }
+
+    selectedResources.forEach((resource) => {
+      if (property === resource) {
+        window.dispatchEvent(new Event(`${resource}Change`));
+        loggerEvent(`dispatch ${property}Change`);
+      }
+    });
 
     return true;
   },
