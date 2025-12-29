@@ -11,13 +11,15 @@ import type {
 } from "../types/app";
 import {
   bboxPlaceRecord,
+  observationsOrderByValues,
+  orderValues,
+} from "../data/inat_data";
+import {
   IdentificationsApiFilterableNames,
   IdentificationsApiNames,
   ObservationsApiFilterableNames,
   ObservationsApiNames,
-  observationsOrderByValues,
-  orderValues,
-} from "../data/inat_data";
+} from "../data/app_data";
 import { defaultColorScheme } from "./map_colors_utils";
 import { convertParamsBBoxToLngLat } from "./map_utils";
 import { validObservationsSubviews, validViews } from "../data/app_data";

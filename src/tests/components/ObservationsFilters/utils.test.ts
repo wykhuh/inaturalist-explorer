@@ -30,7 +30,7 @@ import {
   ObservationsFilterableImplementedArrays,
   selectFieldsObservations,
   trueFalseFieldsObservations,
-} from "../../../data/inat_data";
+} from "../../../data/app_data";
 import { template } from "../../../components/ObservationsFilters/template";
 
 const { JSDOM } = jsdom;

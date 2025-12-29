@@ -23,12 +23,11 @@ import {
   getTaxonById,
   getUserById,
 } from "./inat_api.ts";
+import { bboxPlaceRecord, fieldsWithAny } from "../data/inat_data.ts";
 import {
-  bboxPlaceRecord,
-  fieldsWithAny,
   IdentificationsApiNames,
   ObservationsApiNames,
-} from "../data/inat_data.ts";
+} from "../data/app_data.ts";
 import type {
   PlacesResult,
   ProjectsResult,

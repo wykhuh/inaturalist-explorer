@@ -10,7 +10,7 @@ import {
 import { mapStore } from "../lib/store.ts";
 import { defaultQuery } from "./test_helpers.ts";
 import { iNatOrange } from "../lib/map_colors_utils.ts";
-import { ObservationsApiFilterableNames } from "../data/inat_data.ts";
+import { ObservationsApiFilterableNames } from "../data/app_data.ts";
 
 describe("cleanupObervationsParams", () => {
   test("if no changes to store params, returns empty string", () => {

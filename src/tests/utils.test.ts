@@ -33,7 +33,7 @@ import type {
 import {
   IdentificationsApiFilterableNames,
   ObservationsApiFilterableNames,
-} from "../data/inat_data.ts";
+} from "../data/app_data.ts";
 import { validObservationsSubviews, validViews } from "../data/app_data.ts";
 import { defaultColorScheme } from "../lib/map_colors_utils.ts";
 

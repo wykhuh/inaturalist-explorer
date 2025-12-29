@@ -1,4 +1,4 @@
-import { IdentificationsFilterableImplementedArrays } from "../../data/inat_data";
+import { IdentificationsFilterableImplementedArrays } from "../../data/app_data";
 import type {
   AppStoreType,
   IdentificationsApiParamsType,

@@ -4,7 +4,7 @@ import { expect, test, describe } from "vitest";
 import {
   ObservationsApiNonFilterableNames,
   ObservationsApiFilterableNames,
-} from "../data/inat_data";
+} from "../data/app_data";
 
 describe("check iNat keys", () => {
   test.each(ObservationsApiNonFilterableNames)(

@@ -20,11 +20,11 @@ import type {
 } from "../types/app";
 import { addOverlayToMap } from "./map_utils.ts";
 import { getiNatMapTiles } from "./inat_api.ts";
+import { allTaxaRecord } from "../data/inat_data.ts";
 import {
   IdentificationsApiNonFilterableNames,
   ObservationsApiNonFilterableNames,
-  allTaxaRecord,
-} from "../data/inat_data.ts";
+} from "../data/app_data.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
 import { logger, loggerFilters } from "./logger.ts";
 import { mapStore } from "./store.ts";

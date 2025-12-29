@@ -77,12 +77,11 @@ import type {
   IdentificationsApiParamsType,
   ObservationsApiParamsType,
 } from "../../types/app";
+import { allTaxaRecord, fieldsWithAny } from "../../data/inat_data.ts";
 import {
-  allTaxaRecord,
-  fieldsWithAny,
   IdentificationsApiFilterableNames,
   ObservationsApiFilterableNames,
-} from "../../data/inat_data.ts";
+} from "../../data/app_data.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
 import { initPopulateStore, initRenderMap } from "../../lib/init_app.ts";
 import { mapStore } from "../../lib/store.ts";

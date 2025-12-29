@@ -1,8 +1,8 @@
+import { iconicTaxaIdName } from "../data/inat_data";
 import {
-  iconicTaxaIdName,
   IdentificationsApiNames,
   ObservationsApiNames,
-} from "../data/inat_data";
+} from "../data/app_data";
 import type {
   IdentificationsApiParamsType,
   IdentificationsMapTilesAPIParamsType,
