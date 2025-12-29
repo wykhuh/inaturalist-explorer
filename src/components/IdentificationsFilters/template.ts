@@ -24,11 +24,31 @@ export const template = html`
               <legend>Date Observed</legend>
 
               <div class="form-group">
-                <label for="observed_d1">Start Date</label>
+                <label for="observed_d1"
+                  >Start Date
+                  <div class="tp-wrapper">
+                    <span class="tp-trigger" aria-describedby="tp-observed_d1"
+                      >?</span
+                    >
+                    <p id="tp-observed_d1" role="tooltip">
+                      Observation observed on or after this date
+                    </p>
+                  </div>
+                </label>
                 <input type="date" name="observed_d1" id="observed_d1" />
               </div>
               <div class="form-group">
-                <label for="observed_d2">End Date</label>
+                <label for="observed_d2"
+                  >End Date
+                  <div class="tp-wrapper">
+                    <span class="tp-trigger" aria-describedby="tp-observed_d2"
+                      >?</span
+                    >
+                    <p id="tp-observed_d2" role="tooltip">
+                      Observation observed on or before this date
+                    </p>
+                  </div>
+                </label>
                 <input type="date" name="observed_d2" id="observed_d2" />
               </div>
             </fieldset>
@@ -139,13 +159,37 @@ export const template = html`
             <fieldset class="rank">
               <legend>Observations Rank</legend>
               <div class="form-group">
-                <label for="observation_hrank">High Rank</label>
+                <label for="observation_hrank"
+                  >High Rank
+                  <div class="tp-wrapper">
+                    <span
+                      class="tp-trigger"
+                      aria-describedby="tp-observation_hrank"
+                      >?</span
+                    >
+                    <p id="tp-observation_hrank" role="tooltip">
+                      Observation taxon must have this rank or lower
+                    </p>
+                  </div>
+                </label>
                 <select id="observation_hrank" name="observation_hrank">
                   ${renderRankOptions("All")}
                 </select>
               </div>
               <div class="form-group">
-                <label for="observation_lrank">Low Rank</label>
+                <label for="observation_lrank"
+                  >Low Rank
+                  <div class="tp-wrapper">
+                    <span
+                      class="tp-trigger"
+                      aria-describedby="tp-observation_lrank"
+                      >?</span
+                    >
+                    <p id="tp-observation_lrank" role="tooltip">
+                      Observation taxon must have this rank or higher
+                    </p>
+                  </div>
+                </label>
                 <select id="observation_lrank" name="observation_lrank">
                   ${renderRankOptions("All")}
                 </select>
@@ -155,7 +199,17 @@ export const template = html`
               <legend>Observation Status</legend>
 
               <div class="form-group">
-                <label for="quality_grade">Quality Grade</label>
+                <label for="quality_grade"
+                  >Quality Grade
+                  <div class="tp-wrapper">
+                    <span class="tp-trigger" aria-describedby="tp-quality_grade"
+                      >?</span
+                    >
+                    <p id="tp-quality_grade" role="tooltip">
+                      Observation must have this quality grade
+                    </p>
+                  </div>
+                </label>
                 <select id="quality_grade" name="quality_grade">
                   <option></option>
                   <option value="research">Research Grade</option>
@@ -170,11 +224,27 @@ export const template = html`
             <fieldset class="date-observed">
               <legend>Date Identified</legend>
               <div class="form-group">
-                <label for="d1">Start Date</label>
+                <label for="d1"
+                  >Start Date
+                  <div class="tp-wrapper">
+                    <span class="tp-trigger" aria-describedby="tp-d1">?</span>
+                    <p id="tp-d1" role="tooltip">
+                      Identifications created on or after this time
+                    </p>
+                  </div>
+                </label>
                 <input type="date" name="d1" id="d1" />
               </div>
               <div class="form-group">
-                <label for="d2">End Date</label>
+                <label for="d2"
+                  >End Date
+                  <div class="tp-wrapper">
+                    <span class="tp-trigger" aria-describedby="tp-d2">?</span>
+                    <p id="tp-d2" role="tooltip">
+                      Identifications created on or before this time
+                    </p>
+                  </div>
+                </label>
                 <input type="date" name="d2" id="d2" />
               </div>
             </fieldset>
@@ -285,13 +355,33 @@ export const template = html`
             <fieldset class="rank">
               <legend>Identification Rank</legend>
               <div class="form-group">
-                <label for="hrank">High Rank</label>
+                <label for="hrank"
+                  >High Rank
+                  <div class="tp-wrapper">
+                    <span class="tp-trigger" aria-describedby="tp-hrank"
+                      >?</span
+                    >
+                    <p id="tp-hrank" role="tooltip">
+                      Identifications taxon must have this rank or lower
+                    </p>
+                  </div>
+                </label>
                 <select id="hrank" name="hrank">
                   ${renderRankOptions("All")}
                 </select>
               </div>
               <div class="form-group">
-                <label for="lrank">Low Rank</label>
+                <label for="lrank"
+                  >Low Rank
+                  <div class="tp-wrapper">
+                    <span class="tp-trigger" aria-describedby="tp-lrank"
+                      >?</span
+                    >
+                    <p id="tp-lrank" role="tooltip">
+                      Identifications taxon must have this rank or higher
+                    </p>
+                  </div>
+                </label>
                 <select id="lrank" name="lrank">
                   ${renderRankOptions("All")}
                 </select>

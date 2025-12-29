@@ -56,7 +56,6 @@ class CardIdentificationObservation extends HTMLElement {
     );
 
     content += "<div class='status'>";
-    // content += renderIdCount(observation.identifications.length);
     content += renderQualityGrade(observation.quality_grade);
     content += pluralize(observation.identifications.length, "identification");
     if (observation.identification_disagreements_count) {

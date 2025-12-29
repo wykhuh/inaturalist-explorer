@@ -73,15 +73,17 @@ class CardIdentificationIdentification extends HTMLElement {
 
       if (data.category) {
         if (data.current) {
-          content += `<span class="category ${data.category}">${capitalizeFirstLetter(data.category)}</span>`;
+          content += `<div class="category ${data.category}">${capitalizeFirstLetter(data.category)}</div>`;
         } else {
-          content += `<span class="category">ID Withdrawn </span>`;
+          content += `<div class="category">ID Withdrawn </div>`;
         }
       }
       if (data.vision) {
-        content += `<button class="btn-borderless" popovertarget="mypopover">${computer}</button>`;
+        content += '<div class="tp-wrapper">';
+        content += `<span class="btn-borderless tp-trigger" aria-describedby="tp-vision">${computer}</span>`;
         content +=
-          "<div id='mypopover' popover>Computer Vision Suggestion was used for this identification.</div>";
+          "<p id='tp-vision' role='tooltip'>Computer Vision Suggestion was used for this identification.</p>";
+        content += "</div>";
       }
       content += "</div>";
 

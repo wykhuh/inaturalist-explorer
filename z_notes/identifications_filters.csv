@@ -1,0 +1,39 @@
+Parameter,Description,Parameter Type,Data Type
+current_taxon,ID's taxon is the same it's observation's taxon,query,boolean
+own_observation,ID was added by the observer,query,boolean
+is_change,ID was created as a results of a taxon change,query,boolean
+taxon_active,ID's taxon is currently an active taxon,query,boolean
+observation_taxon_active,Observation's taxon is currently an active taxon,query,boolean
+id,Identification ID,query,Array[integer]
+rank,ID's taxon must have this rank,query,Array[string]
+observation_rank,Observation's taxon must have this rank,query,Array[string]
+user_id,Identifier must have this user ID,query,Array[integer]
+user_login,Identifier must have this login,query,Array[string]
+current,Most recent ID on a observation by a user,query,boolean
+category,Type of identification,query,Array[string]
+place_id,Observation must occur in this place,query,Array[string]
+quality_grade,Observation must have this quality grade,query,Array[string]
+taxon_change_id,Only return identifications that were created as part of the specified taxon change,query,Array[]
+taxon_id,ID taxa must match the given taxa or their descendants,query,Array[string]
+observation_taxon_id,Observation taxa must match the given taxa or their descendants,query,Array[string]
+iconic_taxon_id,ID iconic taxon ID,query,Array[string]
+observation_iconic_taxon_id,Observation iconic taxon ID,query,Array[string]
+lrank,ID taxon must have this rank or higher,query,string
+hrank,ID taxon must have this rank or lower,query,string
+observation_lrank,Observation taxon must have this rank or higher,query,string
+observation_hrank,Observation taxon must have this rank or lower,query,string
+without_taxon_id,Exclude IDs of these taxa and their descendants,query,Array[string]
+without_observation_taxon_id,Exclude IDs of observations of these taxa and their descendants,query,Array[string]
+d1,ID created on or after this time,query,date
+d2,ID created on or before this time,query,date
+observation_created_d1,Observation created on or after this date,query,date
+observation_created_d2,Observation created on or before this date,query,date
+observed_d1,Observation observed on or after this date,query,date
+observed_d2,Observation observed on or before this date,query,date
+id_above,Must have an ID above this value,query,string
+id_below,Must have an ID below this value,query,string
+page,Pagination page number,query,string
+per_page,Number of results to return in a page. The maximum value is generally 200 unless otherwise noted,query,string
+order,Sort order,query,string
+order_by,Sort field,query,string
+only_id,Return only the record IDs,query,boolean

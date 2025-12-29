@@ -298,6 +298,8 @@ export const IdentificationsFilterableTodo: IdentificationsApiParamsKeysType[] =
     // maybe
     "order",
     "order_by", // created_at,
+    "without_taxon_id", // array string
+    "without_observation_taxon_id", // array string
     // no
     "rank",
     "observation_rank",
@@ -313,8 +315,7 @@ export const IdentificationsFilterableTodo: IdentificationsApiParamsKeysType[] =
     "current",
     "category", // array string
     "taxon_change_id", // array string
-    "without_taxon_id", // array string
-    "without_observation_taxon_id", // array string
+
     "id_above",
     "id_below",
     "only_id",
