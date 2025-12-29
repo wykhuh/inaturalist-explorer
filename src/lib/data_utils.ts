@@ -118,6 +118,7 @@ export async function fetchiNatMapDataForTaxon(
 // ================
 // taxon
 // ================
+// NOTE: update when adding selectedResource
 
 export async function addDefaultTaxaRecordToStore(appStore: AppStoreType) {
   if (isObservationsCheck(appStore)) {
@@ -406,16 +407,25 @@ export function removeOneReviewerFromStore(appStore: AppStoreType) {
   resetPageNumber(appStore);
 }
 
+export function removeOneUserAnnotatorFromStore(
+  appStore: AppStoreType,
+  userId: number,
+) {
+  appStore.selectedUsersAnnotators = appStore.selectedUsersAnnotators.filter(
+    (item) => item.id !== userId,
+  );
+  resetPageNumber(appStore);
+  removeIdfromInatApiParams(appStore, "selectedUsersAnnotators", userId);
+}
+
 // ================
 // misc
 // ================
 
-function removeTaxonId(
+function updateStoreColor(
   appStore: AppStoreType,
   resource: AppStoreSelectedResourcesKeysType,
-  value: any,
 ) {
-  removeResourceId(appStore, resource, "taxon_id", value);
   if (appStore[resource].length == 0) {
     if (isObservationsCheck(appStore)) {
       delete appStore.observationsApiParams.colors;
@@ -428,46 +438,6 @@ function removeTaxonId(
         .join(",");
     }
   }
-}
-
-function removeObservationTaxonId(
-  appStore: AppStoreType,
-  resource: AppStoreSelectedResourcesKeysType,
-  value: any,
-) {
-  removeResourceId(appStore, resource, "observation_taxon_id", value);
-}
-
-function removePlaceId(
-  appStore: AppStoreType,
-  resource: AppStoreSelectedResourcesKeysType,
-  value: any,
-) {
-  removeResourceId(appStore, resource, "place_id", value);
-}
-
-function removeProjectId(
-  appStore: AppStoreType,
-  resource: AppStoreSelectedResourcesKeysType,
-  value: any,
-) {
-  removeResourceId(appStore, resource, "project_id", value);
-}
-
-function removeUserId(
-  appStore: AppStoreType,
-  resource: AppStoreSelectedResourcesKeysType,
-  value: any,
-) {
-  removeResourceId(appStore, resource, "user_id", value);
-}
-
-function removeUserIdentifierId(
-  appStore: AppStoreType,
-  resource: AppStoreSelectedResourcesKeysType,
-  value: any,
-) {
-  removeResourceId(appStore, resource, "ident_user_id", value);
 }
 
 function removeResourceId(
@@ -514,31 +484,38 @@ export function removeIdfromInatApiParams(
   value: any,
 ) {
   let isObservations = isObservationsCheck(appStore);
+
+  // NOTE: update when adding selectedResource
   if (resource === "selectedTaxaIdentified") {
     if (isObservations) {
     } else {
-      removeTaxonId(appStore, "selectedTaxaIdentified", value);
+      removeResourceId(appStore, resource, "taxon_id", value);
+      updateStoreColor(appStore, resource);
     }
   } else if (resource === "selectedTaxa") {
     if (isObservations) {
-      removeTaxonId(appStore, "selectedTaxa", value);
+      removeResourceId(appStore, resource, "taxon_id", value);
+      updateStoreColor(appStore, resource);
     } else {
-      removeObservationTaxonId(appStore, "selectedTaxa", value);
+      removeResourceId(appStore, resource, "observation_taxon_id", value);
     }
   } else if (resource === "selectedPlaces") {
-    removePlaceId(appStore, "selectedPlaces", value);
+    removeResourceId(appStore, resource, "place_id", value);
   } else if (resource === "selectedProjects") {
-    removeProjectId(appStore, "selectedProjects", value);
+    removeResourceId(appStore, resource, "project_id", value);
   } else if (resource === "selectedUsers") {
     if (isObservations) {
-      removeUserId(appStore, "selectedUsers", value);
-    } else {
+      removeResourceId(appStore, resource, "user_id", value);
     }
   } else if (resource === "selectedUsersIdentifiers") {
     if (isObservations) {
-      removeUserIdentifierId(appStore, "selectedUsersIdentifiers", value);
+      removeResourceId(appStore, resource, "ident_user_id", value);
     } else {
-      removeUserId(appStore, "selectedUsersIdentifiers", value);
+      removeResourceId(appStore, resource, "user_id", value);
+    }
+  } else if (resource === "selectedUsersAnnotators") {
+    if (isObservations) {
+      removeResourceId(appStore, resource, "annotation_user_id", value);
     }
   } else {
     throw new Error(

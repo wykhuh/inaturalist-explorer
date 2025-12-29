@@ -3,6 +3,7 @@ import type { AppStoreType } from "../types/app";
 import {
   addValueToCommaSeparatedString,
   isObservationsCheck,
+  removeOneUserAnnotatorFromStore,
   removeOneUserFromStore,
   resetPageNumber,
 } from "./data_utils.ts";
@@ -76,15 +77,18 @@ export function renderUsersAnnotatorsList(appStore: AppStoreType) {
   });
 }
 
-export async function removeUser(userId: number, appStore: AppStoreType) {
-  if (!appStore.selectedUsers) return;
+export async function removeUserAnnotator(
+  userId: number,
+  appStore: AppStoreType,
+) {
+  if (!appStore.selectedUsersAnnotators) return;
 
   // remove user
-  removeOneUserFromStore(appStore, userId);
+  removeOneUserAnnotatorFromStore(appStore, userId);
 
   // remove existing taxa tiles, and refetch taxa tiles
   await updateTilesForSelectedTaxa(appStore);
-  await updateCountForAll("selectedUsers", appStore);
+  await updateCountForAll("selectedUsersAnnotators", appStore);
 
   renderSelectedResources(appStore, true);
 }

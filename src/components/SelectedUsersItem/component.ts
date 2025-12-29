@@ -1,6 +1,7 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerRender } from "../../lib/logger";
 import { removeUser } from "../../lib/search_users";
+import { removeUserAnnotator } from "../../lib/search_users_annotators";
 import { removeUserIdentifier } from "../../lib/search_users_identifiers";
 import { renderSelectedCounts } from "../../lib/selected_items_utils";
 import type { AppStoreType, NormalizediNatUserType } from "../../types/app";
@@ -40,10 +41,15 @@ class SelectedUsersItem extends HTMLElement {
     if (butttonEl) {
       butttonEl.addEventListener("click", async function () {
         if (user.id !== undefined) {
+          // NOTE: update when adding selectedResource
           if (userType === "observer") {
             await removeUser(user.id, window.app.store);
-          } else {
+          } else if (userType === "user") {
             await removeUserIdentifier(user.id, window.app.store);
+          } else if (userType === "annotator") {
+            await removeUserAnnotator(user.id, window.app.store);
+          } else {
+            throw Error("need to add remove function for " + userType);
           }
         }
       });
