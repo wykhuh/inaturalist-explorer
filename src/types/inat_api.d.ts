@@ -515,7 +515,7 @@ type iNatObservationTilesAPI = {
   endemic?: boolean;
   expected_nearby?: boolean;
   geo?: boolean;
-  geoprivacy?: string; // comma-seperated string, type PrivacyStatus
+  geoprivacy?: PrivacyStatus; // comma-seperated string, type PrivacyStatus
   hour?: string; // comma-seperated string
   hrank?: TaxonRanks; // one value
   iconic_taxa?: string; // comma-seperated string, type IconicTaxa
@@ -564,7 +564,7 @@ type iNatObservationTilesAPI = {
   sounds?: boolean;
   swlat?: number;
   swlng?: number;
-  taxon_geoprivacy?: string; // comma-seperated string, type PrivacyStatus
+  taxon_geoprivacy?: PrivacyStatus; // comma-seperated string, type PrivacyStatus
   taxon_id?: string; // comma-seperated string
   taxon_is_active?: boolean;
   taxon_name?: string; // comma-seperated string

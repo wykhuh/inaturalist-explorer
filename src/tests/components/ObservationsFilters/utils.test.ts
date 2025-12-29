@@ -1,12 +1,21 @@
 // @vitest-environment jsdom
 
-import { expect, test, describe, beforeAll, afterAll, afterEach } from "vitest";
+import {
+  expect,
+  test,
+  describe,
+  beforeAll,
+  afterAll,
+  afterEach,
+  beforeEach,
+} from "vitest";
 import jsdom from "jsdom";
 
 import {
   processFiltersForm,
   updateAppWithFilters,
   setTermId,
+  initFilters,
 } from "../../../components/ObservationsFilters/utils";
 import { mapStore } from "../../../lib/store";
 import { createMockServer, defaultParams } from "../../test_helpers";
@@ -14,6 +23,17 @@ import {
   createHeaderCountHash,
   updateHeaderCount,
 } from "../../../components/ObservationsHeader/shared_utils";
+import {
+  inputFieldsObservations,
+  multipleSelectFieldsObservations,
+  ObservationsFilterableImplemented,
+  ObservationsFilterableImplementedArrays,
+  selectFieldsObservations,
+  trueFalseFieldsObservations,
+} from "../../../data/inat_data";
+import { template } from "../../../components/ObservationsFilters/template";
+
+const { JSDOM } = jsdom;
 
 function createFormData() {
   const formData = new FormData();
@@ -133,22 +153,11 @@ describe("processFiltersForm", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test.each([
-    "iconic_taxa",
-    "month",
-    "year",
-    "license",
-    "photo_license",
-    "sound_license",
-    "quality_grade",
-    "created_month",
-    "created_year",
-  ])(
+  test.each(ObservationsFilterableImplementedArrays)(
     "returns comma-separated string for fields that accept multiple values",
     (field) => {
       let data = createFormData();
       data.append(field, "a");
-      processFiltersForm(data);
       data.append(field, "b");
 
       let result = processFiltersForm(data);
@@ -195,11 +204,8 @@ describe("processFiltersForm", () => {
   test("returns single value fields and  multiple values fields", () => {
     let data = createFormData();
     data.append("month", "1");
-    processFiltersForm(data);
     data.append("on", "2020-01-01");
-    processFiltersForm(data);
     data.append("month", "2");
-    processFiltersForm(data);
     data.append("iconic_taxa", "Aves");
 
     let result = processFiltersForm(data);
@@ -220,7 +226,7 @@ describe("updateAppWithFilters", () => {
   test("returns original observationsApiParams and empty params if form is not changed", async () => {
     let store = structuredClone(mapStore);
     let formData = new FormData();
-    formData.set("verifiable", "true");
+    formData.append("verifiable", "true");
 
     await updateAppWithFilters(formData, store);
 
@@ -231,7 +237,7 @@ describe("updateAppWithFilters", () => {
   test("removes verifiable from observationsApiParams and url if verifiable has no value", async () => {
     let store = structuredClone(mapStore);
     let formData = new FormData();
-    formData.set("verifiable", "");
+    formData.append("verifiable", "");
 
     await updateAppWithFilters(formData, store);
 
@@ -242,13 +248,59 @@ describe("updateAppWithFilters", () => {
     expect(window.location.search).toBe("?spam=false");
   });
 
-  test("update observationsApiParams and url with form data", async () => {
+  test.each(ObservationsFilterableImplemented)(
+    "update observationsApiParams and url for each form field",
+    async (field) => {
+      let store = structuredClone(mapStore);
+      let formData = new FormData();
+      formData.append(field, "abc");
+
+      await updateAppWithFilters(formData, store);
+
+      expect(store.observationsApiParams).toStrictEqual({
+        locale: "en",
+        spam: false,
+        [field]: "abc",
+      });
+
+      let params = `?spam=false&${field}=abc`;
+      if (field === "verifiable") {
+        params = "?verifiable=abc&spam=false";
+      }
+
+      expect(window.location.search).toBe(params);
+    },
+  );
+
+  test.each(ObservationsFilterableImplementedArrays)(
+    "update observationsApiParams and url for each form field that acceps multiple values",
+    async (field) => {
+      let store = structuredClone(mapStore);
+      let formData = new FormData();
+      formData.append(field, "abc");
+      formData.append(field, "def");
+
+      await updateAppWithFilters(formData, store);
+
+      expect(store.observationsApiParams).toStrictEqual({
+        locale: "en",
+        spam: false,
+        [field]: "abc,def",
+      });
+
+      let params = `?spam=false&${field}=abc,def`;
+      expect(window.location.search).toBe(params);
+    },
+  );
+
+  test("handles multiple fields", async () => {
     let store = structuredClone(mapStore);
     let formData = new FormData();
-    formData.set("verifiable", "false");
-    formData.set("threatened", "true");
-    formData.set("iconic_taxa", "Aves");
-    formData.set("month", "1,2");
+    formData.append("verifiable", "false");
+    formData.append("threatened", "true");
+    formData.append("iconic_taxa", "Aves");
+    formData.append("month", "1");
+    formData.append("month", "2");
 
     await updateAppWithFilters(formData, store);
 
@@ -395,8 +447,6 @@ describe("updateHeaderCount", () => {
 });
 
 describe("setTermId", () => {
-  const { JSDOM } = jsdom;
-
   test("set term_id input using data-termid from term_value_id input", () => {
     let dom = new JSDOM(
       `<!doctype html>
@@ -462,4 +512,97 @@ describe("setTermId", () => {
     let termIdEl = document.querySelector("#term_id") as HTMLInputElement;
     expect(termIdEl.value).toBe("");
   });
+});
+
+describe("initFilters", () => {
+  beforeEach(() => {
+    let dom = new JSDOM(
+      `<!doctype html>
+  <html lang="en">
+    <body>
+    ${template}
+    </body>
+  </html>`,
+    );
+    global.document = dom.window.document;
+  });
+
+  test.each(trueFalseFieldsObservations)(
+    "uses observationsApiParams to set option to selected for true/false select fields",
+    (field) => {
+      let el = document.querySelector(`#${field}`) as HTMLSelectElement;
+      if (!el) return;
+      let optionEl = el.querySelector("[value='true']") as HTMLOptionElement;
+      if (!optionEl) return;
+
+      let store = structuredClone(mapStore);
+      store.observationsApiParams = {
+        [field]: true,
+      };
+
+      initFilters(store);
+
+      expect(optionEl.selected).toBe(true);
+    },
+  );
+
+  test.each(inputFieldsObservations)(
+    "uses observationsApiParams to set value input fields",
+    (field) => {
+      let store = structuredClone(mapStore);
+      store.observationsApiParams = {
+        [field]: "2000-01-01",
+      };
+
+      initFilters(store);
+
+      let el = document.querySelector(`#${field}`) as HTMLSelectElement;
+      if (!el) return;
+
+      expect(el.value).toBe("2000-01-01");
+    },
+  );
+
+  test.each(selectFieldsObservations)(
+    "uses observationsApiParams to set option to selected for select fields",
+    (field) => {
+      let el = document.querySelector(`#${field}`) as HTMLSelectElement;
+      if (!el) return;
+      let optionEl = el.querySelectorAll("option")[1];
+      if (!optionEl) return;
+
+      let store = structuredClone(mapStore);
+
+      store.observationsApiParams = {
+        [field]: optionEl.value,
+      };
+
+      initFilters(store);
+
+      expect(optionEl.selected).toBe(true);
+    },
+  );
+
+  test.only.each(multipleSelectFieldsObservations)(
+    "uses observationsApiParams to set option to selected for multi select fields",
+    (field) => {
+      let el = document.querySelector(`#${field}`) as HTMLSelectElement;
+      if (!el) return;
+      let optionEl = el.querySelectorAll("option");
+      let optionEl1 = optionEl[1];
+      let optionEl2 = optionEl[2];
+      console.log(">>>>", field, optionEl.length, optionEl2);
+
+      let store = structuredClone(mapStore);
+
+      store.observationsApiParams = {
+        [field]: `${optionEl1.value},${optionEl2.value}`,
+      };
+
+      initFilters(store);
+
+      expect(optionEl1.selected).toBe(true);
+      expect(optionEl2.selected).toBe(true);
+    },
+  );
 });

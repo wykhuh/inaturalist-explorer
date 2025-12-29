@@ -1,6 +1,7 @@
 import { circleX } from "../../assets/icons";
 import { html } from "../../lib/component_utils";
 import { identificationsHeaderLinks } from "../IdentificationsHeader/template";
+import { renderRankOptions } from "../ObservationsFilters/shared_utils";
 
 export const template = html`
   <button id="filters-btn" class="btn-primary">Filters</button>
@@ -139,17 +140,15 @@ export const template = html`
               <legend>Observations Rank</legend>
               <div class="form-group">
                 <label for="observation_hrank">High Rank</label>
-                <select
-                  id="observation_hrank"
-                  name="observation_hrank"
-                ></select>
+                <select id="observation_hrank" name="observation_hrank">
+                  ${renderRankOptions("All")}
+                </select>
               </div>
               <div class="form-group">
                 <label for="observation_lrank">Low Rank</label>
-                <select
-                  id="observation_lrank"
-                  name="observation_lrank"
-                ></select>
+                <select id="observation_lrank" name="observation_lrank">
+                  ${renderRankOptions("All")}
+                </select>
               </div>
             </fieldset>
             <fieldset class="observation-status">
@@ -287,11 +286,15 @@ export const template = html`
               <legend>Identification Rank</legend>
               <div class="form-group">
                 <label for="hrank">High Rank</label>
-                <select id="hrank" name="hrank"></select>
+                <select id="hrank" name="hrank">
+                  ${renderRankOptions("All")}
+                </select>
               </div>
               <div class="form-group">
                 <label for="lrank">Low Rank</label>
-                <select id="lrank" name="lrank"></select>
+                <select id="lrank" name="lrank">
+                  ${renderRankOptions("All")}
+                </select>
               </div>
             </fieldset>
           </div>

@@ -838,6 +838,7 @@ export function getResourceApiParams(isObservations: boolean) {
   ) as AppStoreTypeParamsKeys;
 }
 
+// reset page when changing filters so that pagination goes back to page 1
 export function resetPageNumber(appStore: AppStoreType) {
   if (isObservationsCheck(appStore)) {
     delete appStore.observationsApiParams.page;

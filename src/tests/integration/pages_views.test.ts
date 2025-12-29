@@ -213,14 +213,16 @@ describe("click on site header to change page", () => {
   test("switch from identifications page to observations page with selected taxa identified", async () => {
     let store = structuredClone(mapStore);
 
-    let life1 = lifeIdentification();
+    let life1 = structuredClone(lifeIdentification());
     delete life1.color;
-    let life1Count = allTaxa.observations_count;
     let defaultTaxa = structuredClone(allTaxa);
     let mainEl = document.querySelector("#app") as HTMLDivElement;
     let viewContainerEl = document.querySelector(
       "#view-container",
     ) as HTMLDivElement;
+    let expectedLife = structuredClone(lifeIdentification());
+    delete expectedLife.color;
+    delete expectedLife.observations_count;
 
     let searchparams = "";
     let urlData = decodeAppUrl(searchparams, "/identifications/");
@@ -243,9 +245,7 @@ describe("click on site header to change page", () => {
     await pageChangeHandler(observationsPageClick(), store, Router);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
-    expect(store.selectedTaxaIdentified).toStrictEqual([
-      { ...life1, observations_count: life1Count },
-    ]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([expectedLife]);
     expect(store.selectedTaxa).toStrictEqual([defaultTaxa]);
     expect(store.record_type).toStrictEqual("observations");
     expect(store.currentView).toStrictEqual("observations_observations");
@@ -265,9 +265,7 @@ describe("click on site header to change page", () => {
     await pageChangeHandler(identificationsClickMock(), store, Router);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
-    expect(store.selectedTaxaIdentified).toStrictEqual([
-      { ...life1, observations_count: life1Count },
-    ]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([expectedLife]);
     expect(store.selectedTaxa).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("identifications");
     expect(store.currentView).toStrictEqual("identifications_observations");

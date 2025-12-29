@@ -65,3 +65,23 @@ export const selectedResources: AppStoreSelectedResourcesKeysType[] = [
   "selectedUsersAnnotators",
   "selectedUsersIdentifiers",
 ];
+
+export const selectedResourcesIdObservations = {
+  selectedPlaces: "place_id",
+  selectedProjects: "project_id",
+  selectedTaxa: "taxon_id",
+  selectedTaxaIdentified: null,
+  selectedUsers: "user_id",
+  selectedUsersAnnotators: "annotation_user_id",
+  selectedUsersIdentifiers: "ident_user_id",
+};
+
+export const selectedResourcesIdIdentifications = {
+  selectedPlaces: "place_id",
+  selectedProjects: null,
+  selectedTaxa: "observation_taxon_id",
+  selectedTaxaIdentified: "taxon_id",
+  selectedUsers: null,
+  selectedUsersAnnotators: null,
+  selectedUsersIdentifiers: "user_id",
+};

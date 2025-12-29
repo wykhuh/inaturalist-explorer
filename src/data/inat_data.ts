@@ -89,8 +89,8 @@ export const ObservationsFilterableImplemented: ObservationsApiParamsKeysType[] 
     "lrank",
     "native",
     "on",
-    "order",
     "order_by",
+    "order",
     "photos",
     "popular",
     "reviewed",
@@ -118,25 +118,27 @@ export const ObservationsFilterableImplementedArrays: ObservationsApiParamsKeysT
 
 const ObservationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   // maybe
-  "q",
-  "search_on",
-  "without_term_id",
-  "without_term_value_id",
-  "geoprivacy",
-  "taxon_geoprivacy",
-  "obscuration",
-  // maybe
-  "without_taxon_id",
-  "not_in_project",
-  "out_of_range",
   "day",
   "hour",
+  "q",
+  "not_in_project",
+
+  "geoprivacy", // array
+  "taxon_geoprivacy", // array
+  "obscuration", // array
+
+  "without_term_id", // integer
+  "without_term_value_id", // array
+  "without_taxon_id",
+
+  // maybe
+  "out_of_range",
   "created_day",
   "acc_above",
   "acc_below",
   "acc_below_or_unknown",
   "identifications",
-  "list_id",
+  "list_id", // no way to do autocomplete lists name
 
   // no
   "csi",
@@ -168,11 +170,53 @@ const ObservationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   "radius",
   "rank",
   "site_id",
+  "search_on", // string; can only select one category at a time
   "spam",
   "taxon_is_active",
   "term_id_or_unknown",
   "updated_since",
   "user_login",
+];
+
+export const trueFalseFieldsObservations: ObservationsApiParamsKeysType[] = [
+  "captive",
+  "endemic",
+  "identified",
+  "introduced",
+  "native",
+  "photos",
+  "popular",
+  "sounds",
+  "threatened",
+  "verifiable",
+  "reviewed",
+];
+
+export let selectFieldsObservations: ObservationsApiParamsKeysType[] = [
+  "hrank",
+  "lrank",
+  "user_before",
+  "user_after",
+];
+
+export let multipleSelectFieldsObservations: ObservationsApiParamsKeysType[] = [
+  "license",
+  "photo_license",
+  "quality_grade",
+  "sound_license",
+  "month",
+  "year",
+];
+
+export let inputFieldsObservations: ObservationsApiParamsKeysType[] = [
+  "d1",
+  "d2",
+  "on",
+  // "term_id",
+];
+
+export let inputCheckedFieldsObservations: ObservationsApiParamsKeysType[] = [
+  "iconic_taxa",
 ];
 
 export const ObservationsApiFilterableNames =

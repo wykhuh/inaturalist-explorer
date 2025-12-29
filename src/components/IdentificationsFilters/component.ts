@@ -1,11 +1,6 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
-import {
-  initFilters,
-  updateAppWithFilters,
-  renderRankSelect,
-  processFiltersForm,
-} from "./utils";
+import { initFilters, updateAppWithFilters, processFiltersForm } from "./utils";
 import { template } from "./template";
 import { renderSelectedFiltersList } from "../ObservationsFilters/shared_utils";
 
@@ -76,7 +71,6 @@ class IdentificationsFilters extends HTMLElement {
     loggerRender("++ IdentificationsFilters render");
 
     this.renderModal();
-    this.renderForm();
 
     // use store to set values the form on page load
     initFilters(window.app.store);
@@ -99,13 +93,6 @@ class IdentificationsFilters extends HTMLElement {
         }
       });
     }
-  }
-
-  renderForm() {
-    renderRankSelect("#hrank", "");
-    renderRankSelect("#lrank", "");
-    renderRankSelect("#observation_hrank", "");
-    renderRankSelect("#observation_lrank", "");
   }
 
   formEventHandler() {

@@ -8,9 +8,6 @@ import { searchSetup } from "../../lib/search_utils";
 import {
   initFilters,
   updateAppWithFilters,
-  renderLicenseSelect,
-  renderRankSelect,
-  renderYearsSelect,
   processFiltersForm,
   setTermId,
 } from "./utils";
@@ -100,7 +97,6 @@ class ObservationFilters extends HTMLElement {
     loggerRender("++ ObservationFilters render");
 
     this.renderModal();
-    this.renderForm();
 
     setupUnobservedByUserSearch("#unobserved-by-user-search", window.app.store);
     searchSetup("#unobserved-by-user-search", unobservedByUserSelectedHandler);
@@ -129,16 +125,6 @@ class ObservationFilters extends HTMLElement {
         }
       });
     }
-  }
-
-  renderForm() {
-    renderRankSelect("#hrank", "");
-    renderRankSelect("#lrank", "");
-    renderYearsSelect("#year");
-    renderYearsSelect("#created_year");
-    renderLicenseSelect("#license", "All");
-    renderLicenseSelect("#photo_license", "All");
-    renderLicenseSelect("#sound_license", "All");
   }
 
   async formChangeHandler(event: Event, form: HTMLFormElement) {

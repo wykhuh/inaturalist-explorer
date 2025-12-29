@@ -1,3 +1,8 @@
+import {
+  CCLicenses,
+  iNatObservationsYears,
+  taxonRanks,
+} from "../../data/inat_data";
 import type {
   IdentificationsApiParamsType,
   IdentificationsApiParamsKeysType,
@@ -74,4 +79,28 @@ export function concatParamsWithMultivalues(
     // @ts-ignore
     values[field] = items.join(",");
   }
+}
+
+export function renderLicenseOptions(defaultValue: string) {
+  let content = `<option value="">${defaultValue}</option>`;
+  CCLicenses.forEach((license) => {
+    content += `<option id="${license}" value="${license}">${license.toUpperCase()}</option>`;
+  });
+  return content;
+}
+
+export function renderYearsOptions(defaultValue: string) {
+  let content = `<option value="">${defaultValue}</option>`;
+  iNatObservationsYears.forEach((year) => {
+    content += `<option value="${year}">${year}</option>`;
+  });
+  return content;
+}
+
+export function renderRankOptions(defaultValue: string) {
+  let content = `<option value="">${defaultValue}</option>`;
+  taxonRanks.forEach((rank) => {
+    content += `<option value="${rank.toLowerCase()}" id="${rank.toLowerCase()}">${rank}</option>`;
+  });
+  return content;
 }

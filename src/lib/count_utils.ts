@@ -13,7 +13,11 @@ import {
   cleanupObervationsParamsForRecord,
 } from "./cleanup_params_utils.ts";
 import { isObservationsCheck, updateSelectedResource } from "./data_utils.ts";
-import { selectedResources } from "../data/app_data.ts";
+import {
+  selectedResources,
+  selectedResourcesIdIdentifications,
+  selectedResourcesIdObservations,
+} from "../data/app_data.ts";
 
 export async function updateCountForOne(
   record:
@@ -153,6 +157,8 @@ export async function updateObservationsCountForResource(
   onlyFetchMissingCounts = false,
 ) {
   let idField = getIdFieldForResource(resource, appStore);
+  if (!idField) return;
+
   for await (const record of appStore[resource]) {
     let counts = appStore[resource].map((r) => r.observations_count);
     if (
@@ -203,6 +209,8 @@ export async function updateIdentificationsCountForResource(
   onlyFetchMissingCounts = false,
 ) {
   let idField = getIdFieldForResource(resource, appStore);
+  if (!idField) return;
+
   let counts = appStore[resource].map((r) => r.identifications_count);
   for await (const record of appStore[resource]) {
     if (
@@ -232,39 +240,23 @@ function getIdFieldForResource(
   appStore: AppStoreType,
 ) {
   let isObservation = isObservationsCheck(appStore);
-  let idField = "";
-  // NOTE: update when adding selectedResource
-  if (resource === "selectedPlaces") {
-    idField = "place_id";
-  } else if (resource === "selectedProjects") {
-    idField = "project_id";
-  } else if (resource === "selectedTaxa") {
-    if (isObservation) {
-      idField = "taxon_id";
-    } else {
-      idField = "observation_taxon_id";
-    }
-  } else if (resource === "selectedTaxaIdentified") {
-    if (!isObservation) {
-      idField = "taxon_id";
-    }
-  } else if (resource === "selectedUsers") {
-    if (isObservation) {
-      idField = "user_id";
-    }
-  } else if (resource === "selectedUsersIdentifiers") {
-    if (isObservation) {
-      idField = "ident_user_id";
-    } else {
-      idField = "user_id";
-    }
-  } else if (resource === "selectedUsersAnnotators") {
-    if (isObservation) {
-      idField = "annotation_user_id";
-    }
+  let idField: null | string = "";
+
+  if (isObservation) {
+    idField =
+      selectedResourcesIdObservations[
+        resource as keyof typeof selectedResourcesIdObservations
+      ];
   } else {
+    idField =
+      selectedResourcesIdIdentifications[
+        resource as keyof typeof selectedResourcesIdObservations
+      ];
+  }
+  if (idField === undefined) {
     throw Error("missing id field for selected resource: " + resource);
   }
+
   return idField;
 }
 

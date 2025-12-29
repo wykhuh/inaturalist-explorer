@@ -1,9 +1,4 @@
-import {
-  CCLicenses,
-  IdentificationsFilterableImplementedArrays,
-  iNatObservationsYears,
-  taxonRanks,
-} from "../../data/inat_data";
+import { IdentificationsFilterableImplementedArrays } from "../../data/inat_data";
 import type {
   AppStoreType,
   IdentificationsApiParamsType,
@@ -121,65 +116,4 @@ export function initFilters(appStore: AppStoreType) {
     "observation_iconic_taxon_id",
   ];
   processInputCheckedFields(inputCheckedFields, appStore);
-}
-
-export function renderRankSelect(selectSelector: string, defaultValue: string) {
-  let selectEl = document.querySelector(selectSelector);
-  if (!selectEl) return;
-
-  let optionEl = document.createElement("option");
-  optionEl.textContent = defaultValue;
-  optionEl.value = "";
-  optionEl.selected = true;
-
-  selectEl.appendChild(optionEl);
-
-  taxonRanks.forEach((rank) => {
-    let optionEl = document.createElement("option");
-    optionEl.textContent = rank;
-    optionEl.value = rank.toLowerCase();
-    optionEl.id = rank.toLowerCase();
-
-    selectEl.appendChild(optionEl);
-  });
-}
-
-export function renderLicenseSelect(
-  selectSelector: string,
-  defaultValue: string,
-) {
-  let selectEl = document.querySelector(selectSelector);
-  if (!selectEl) return;
-
-  let optionEl = document.createElement("option");
-  optionEl.textContent = defaultValue;
-  optionEl.value = "";
-  optionEl.selected = true;
-
-  selectEl.appendChild(optionEl);
-
-  CCLicenses.forEach((license) => {
-    let optionEl = document.createElement("option");
-    optionEl.textContent = license.toUpperCase();
-    optionEl.value = license;
-    optionEl.id = license;
-
-    selectEl.appendChild(optionEl);
-  });
-}
-
-export function renderYearsSelect() {
-  let selectEl = document.querySelector("#year");
-  if (selectEl) {
-    let optionEl = document.createElement("option");
-    optionEl.innerText = "Select years";
-    selectEl.appendChild(optionEl);
-
-    iNatObservationsYears.forEach((year) => {
-      let optionEl = document.createElement("option");
-      optionEl.innerText = year.toString();
-      optionEl.value = year.toString();
-      selectEl.appendChild(optionEl);
-    });
-  }
 }

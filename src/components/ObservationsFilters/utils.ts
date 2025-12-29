@@ -1,8 +1,10 @@
 import {
-  CCLicenses,
-  iNatObservationsYears,
+  inputCheckedFieldsObservations,
+  inputFieldsObservations,
+  multipleSelectFieldsObservations,
   ObservationsFilterableImplementedArrays,
-  taxonRanks,
+  selectFieldsObservations,
+  trueFalseFieldsObservations,
 } from "../../data/inat_data";
 import type {
   ObservationsApiParamsType,
@@ -111,39 +113,11 @@ export function isObservationsApiParams(
 export function initFilters(appStore: AppStoreType) {
   let { observationsApiParams } = appStore;
 
-  let trueFalseFields: ObservationsApiParamsKeysType[] = [
-    "captive",
-    "endemic",
-    "identified",
-    "introduced",
-    "native",
-    "photos",
-    "popular",
-    "sounds",
-    "threatened",
-    "verifiable",
-    "reviewed",
-  ];
-  processTrueFalseFields(trueFalseFields, appStore);
-
-  let selectFields: ObservationsApiParamsKeysType[] = ["hrank", "lrank"];
-  processSelectFields(selectFields, appStore);
-
-  let multipleSelectFields: ObservationsApiParamsKeysType[] = [
-    "license",
-    "photo_license",
-    "quality_grade",
-    "sound_license",
-    "month",
-    "year",
-  ];
-  processMultipleSelectFields(multipleSelectFields, appStore);
-
-  let inputCheckedFields: ObservationsApiParamsKeysType[] = ["iconic_taxa"];
-  processInputCheckedFields(inputCheckedFields, appStore);
-
-  let inputFields: ObservationsApiParamsKeysType[] = ["d1", "d2", "on"];
-  processInputFields(inputFields, appStore);
+  processTrueFalseFields(trueFalseFieldsObservations, appStore);
+  processSelectFields(selectFieldsObservations, appStore);
+  processMultipleSelectFields(multipleSelectFieldsObservations, appStore);
+  processInputCheckedFields(inputCheckedFieldsObservations, appStore);
+  processInputFields(inputFieldsObservations, appStore);
 
   if (observationsApiParams.unobserved_by_user_id !== undefined) {
     let inputEl = document.querySelector(
@@ -170,67 +144,6 @@ export function initFilters(appStore: AppStoreType) {
     if (inputEl) {
       inputEl.value = appStore.selectedReviewer.login;
     }
-  }
-}
-
-export function renderRankSelect(selectSelector: string, defaultValue: string) {
-  let selectEl = document.querySelector(selectSelector);
-  if (!selectEl) return;
-
-  let optionEl = document.createElement("option");
-  optionEl.textContent = defaultValue;
-  optionEl.value = "";
-  optionEl.selected = true;
-
-  selectEl.appendChild(optionEl);
-
-  taxonRanks.forEach((rank) => {
-    let optionEl = document.createElement("option");
-    optionEl.textContent = rank;
-    optionEl.value = rank.toLowerCase();
-    optionEl.id = rank.toLowerCase();
-
-    selectEl.appendChild(optionEl);
-  });
-}
-
-export function renderLicenseSelect(
-  selectSelector: string,
-  defaultValue: string,
-) {
-  let selectEl = document.querySelector(selectSelector);
-  if (!selectEl) return;
-
-  let optionEl = document.createElement("option");
-  optionEl.textContent = defaultValue;
-  optionEl.value = "";
-
-  selectEl.appendChild(optionEl);
-
-  CCLicenses.forEach((license) => {
-    let optionEl = document.createElement("option");
-    optionEl.textContent = license.toUpperCase();
-    optionEl.value = license;
-    optionEl.id = license;
-
-    selectEl.appendChild(optionEl);
-  });
-}
-
-export function renderYearsSelect(selector: string) {
-  let selectEl = document.querySelector(selector);
-  if (selectEl) {
-    let optionEl = document.createElement("option");
-    optionEl.innerText = "All";
-    optionEl.value = "";
-    selectEl.appendChild(optionEl);
-
-    iNatObservationsYears.forEach((year) => {
-      let optionEl = document.createElement("option");
-      optionEl.innerText = year.toString();
-      optionEl.value = year.toString();
-      selectEl.appendChild(optionEl);
-    });
   }
 }
 

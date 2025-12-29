@@ -1,6 +1,11 @@
 import { circleX } from "../../assets/icons";
 import { html } from "../../lib/component_utils";
 import { observationsHeaderLinks } from "../ObservationsHeader/template";
+import {
+  renderLicenseOptions,
+  renderRankOptions,
+  renderYearsOptions,
+} from "./shared_utils";
 
 let datePane = html`<div
   class="tab-pane"
@@ -47,7 +52,9 @@ let datePane = html`<div
 
       <div class="form-group multiselect">
         <label for="year">Years</label>
-        <select name="year" id="year" multiple></select>
+        <select name="year" id="year" multiple>
+          ${renderYearsOptions("All")}
+        </select>
       </div>
     </fieldset>
   </div>
@@ -89,7 +96,9 @@ let datePane = html`<div
 
       <div class="form-group multiselect">
         <label for="created_year">Years</label>
-        <select name="created_year" id="created_year" multiple></select>
+        <select name="created_year" id="created_year" multiple>
+          ${renderYearsOptions("All")}
+        </select>
       </div>
     </fieldset>
   </div>
@@ -140,6 +149,10 @@ let observationPane = html`<div
           <option value="false">False</option>
         </select>
       </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Identification Status</legend>
       <div class="form-group">
         <label for="identified">Identified</label>
         <select id="identified" name="identified">
@@ -148,10 +161,6 @@ let observationPane = html`<div
           <option value="false">False</option>
         </select>
       </div>
-    </fieldset>
-
-    <fieldset>
-      <legend>Review Status</legend>
       <div class="form-group">
         <label for="reviewed">Reviewed</label>
         <select id="reviewed" name="reviewed">
@@ -170,7 +179,9 @@ let observationPane = html`<div
         />
       </div>
     </fieldset>
-
+  </div>
+  <!--column 2-->
+  <div>
     <fieldset class="users">
       <legend>Users</legend>
 
@@ -185,7 +196,6 @@ let observationPane = html`<div
       </div>
     </fieldset>
   </div>
-  <!--column 2-->
 
   <!--column 3-->
   <div>
@@ -212,15 +222,21 @@ let observationPane = html`<div
       <legend>Licensing</legend>
       <div class="form-group multiselect">
         <label for="license">License</label>
-        <select id="license" name="license" multiple></select>
+        <select id="license" name="license" multiple>
+          ${renderLicenseOptions("All")}
+        </select>
       </div>
       <div class="form-group multiselect">
         <label for="photo_license">Photo License</label>
-        <select id="photo_license" name="photo_license" multiple></select>
+        <select id="photo_license" name="photo_license" multiple>
+          ${renderLicenseOptions("All")}
+        </select>
       </div>
       <div class="form-group multiselect">
         <label for="sound_license">Sound License</label>
-        <select id="sound_license" name="sound_license" multiple></select>
+        <select id="sound_license" name="sound_license" multiple>
+          ${renderLicenseOptions("All")}
+        </select>
       </div>
     </fieldset>
   </div>
@@ -376,11 +392,15 @@ const speciesPane = html`
       <legend>Rank</legend>
       <div class="form-group">
         <label for="hrank">High Rank</label>
-        <select id="hrank" name="hrank"></select>
+        <select id="hrank" name="hrank">
+          ${renderRankOptions("All")}
+        </select>
       </div>
       <div class="form-group">
         <label for="lrank">Low Rank</label>
-        <select id="lrank" name="lrank"></select>
+        <select id="lrank" name="lrank">
+          ${renderRankOptions("All")}
+        </select>
       </div>
     </fieldset>
   </div>

@@ -38,17 +38,18 @@ https://forum.inaturalist.org/t/access-to-the-api-denied/57916/4
 https://forum.inaturalist.org/t/is-there-a-way-to-exclude-my-observations-from-a-search/71428
 
 ==
+
+account creation
+user_after=1w - in the past week
+user_before=1w - more than a week ago
+
+
 descriptions/tag 
 q=
 
 
 without annotation
 without_term_id=17
-
-account creation
-user_after=1w - in the past week
-user_before=1w - more than a week ago
-
 
 
 Geospatial
