@@ -44,7 +44,7 @@ class SelectedUsersItem extends HTMLElement {
           // NOTE: update when adding selectedResource
           if (userType === "observer") {
             await removeUser(user.id, window.app.store);
-          } else if (userType === "user") {
+          } else if (userType === "identifier") {
             await removeUserIdentifier(user.id, window.app.store);
           } else if (userType === "annotator") {
             await removeUserAnnotator(user.id, window.app.store);
