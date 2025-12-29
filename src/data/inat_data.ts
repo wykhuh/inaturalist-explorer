@@ -208,13 +208,14 @@ export let multipleSelectFieldsObservations: ObservationsApiParamsKeysType[] = [
   "sound_license",
   "month",
   "year",
+  "term_value_id",
 ];
 
 export let inputFieldsObservations: ObservationsApiParamsKeysType[] = [
   "d1",
   "d2",
   "on",
-  // "term_id",
+  "term_id",
 ];
 
 export let inputCheckedFieldsObservations: ObservationsApiParamsKeysType[] = [

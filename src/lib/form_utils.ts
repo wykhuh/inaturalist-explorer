@@ -92,7 +92,7 @@ export function processMultipleSelectFields(
         .split(",")
         .forEach((value: any) => {
           setSelectedOption(
-            `#filters-form select#${field} option[value='${value}']`,
+            `#filters-form select[name='${field}'] option[value='${value}']`,
           );
         });
     }
