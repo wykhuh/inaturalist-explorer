@@ -128,6 +128,7 @@ export const ObservationsFilterableImplemented: ObservationsApiParamsKeysType[] 
     "order",
     "photos",
     "popular",
+    "q",
     "reviewed",
     "sounds",
     "term_id",
@@ -157,7 +158,6 @@ const ObservationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   // maybe
   "day",
   "hour",
-  "q",
   "not_in_project",
 
   "geoprivacy", // array
@@ -251,6 +251,7 @@ export let inputFieldsObservations: ObservationsApiParamsKeysType[] = [
   "d2",
   "on",
   "term_id",
+  "q",
 ];
 
 export let inputCheckedFieldsObservations: ObservationsApiParamsKeysType[] = [

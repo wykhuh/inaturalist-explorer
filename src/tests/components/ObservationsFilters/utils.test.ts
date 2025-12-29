@@ -583,7 +583,7 @@ describe("initFilters", () => {
     },
   );
 
-  test.only.each(multipleSelectFieldsObservations)(
+  test.each(multipleSelectFieldsObservations)(
     "uses observationsApiParams to set option to selected for multi select fields",
     (field) => {
       let el = document.querySelector(`#${field}`) as HTMLSelectElement;
@@ -591,7 +591,6 @@ describe("initFilters", () => {
       let optionEl = el.querySelectorAll("option");
       let optionEl1 = optionEl[1];
       let optionEl2 = optionEl[2];
-      console.log(">>>>", field, optionEl.length, optionEl2);
 
       let store = structuredClone(mapStore);
 

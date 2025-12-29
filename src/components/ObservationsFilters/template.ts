@@ -149,6 +149,11 @@ let observationPane = html`<div
           <option value="false">False</option>
         </select>
       </div>
+
+      <div class="form-group">
+        <label for="q">Description/Tags</label>
+        <input id="q" name="q" placeholder="Enter search terms" />
+      </div>
     </fieldset>
 
     <fieldset>
