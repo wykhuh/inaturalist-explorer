@@ -3,7 +3,6 @@ import type { DataComponentType, AppStoreType } from "../../types/app";
 import {
   formatAvatar,
   renderAnnotations,
-  renderAnnotationsCounts,
   renderMedia,
   renderMediaCounts,
   renderObservationMetadataCounts,
@@ -73,7 +72,6 @@ class CardObservation extends HTMLElement {
 
     detailsContent += renderMediaCounts(data.photos, data.sounds);
     if (data.annotations && data.annotations.length > 0) {
-      detailsContent += renderAnnotationsCounts(data.annotations);
       detailsContent += renderAnnotations(data.annotations);
     }
 
