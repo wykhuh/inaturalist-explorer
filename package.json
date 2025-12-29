@@ -16,8 +16,6 @@
     "format": "prettier --write ./src",
     "cleanup": "npm run type & npm run format",
     "ci": "npm run type & npm run format & npm run test ",
-    "build-ghpages": "vite build --base=/inaturalist-explorer",
-    "preview-ghpages": "vite preview --base=/inaturalist-explorer",
     "deploy": "npm run build & node node_modules/.bin/wrangler pages deploy dist"
   },
   "devDependencies": {
