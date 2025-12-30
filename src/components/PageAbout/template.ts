@@ -1,11 +1,12 @@
 import { html } from "../../lib/component_utils";
 import socal from "../../assets/images/search_socal_monarchs.png";
 import identifications from "../../assets/images/identifications.png";
-import grid from "../../assets/images/grid_subview.png";
-import table from "../../assets/images/table_subview.png";
-import media from "../../assets/images/media_subview.png";
+import grid from "../../assets/images/grid_subview.jpg";
+import table from "../../assets/images/table_subview.jpg";
+import media from "../../assets/images/media_subview.jpg";
 import annotations from "../../assets/images/annotations.png";
 import filters from "../../assets/images/filters.png";
+import searchUsers from "../../assets/images/search_users.jpg";
 
 export const template = html`
   <site-header></site-header>
@@ -30,22 +31,53 @@ export const template = html`
       </li>
       <li>
         Show iNaturalist maps as grid, points, heatmap and taxon range
-        <img src="${socal}" />
+        <img
+          src="${socal}"
+          alt="Map of monarch and narrowleaf milkweed observations in Los Angeles and San Diego. Map  allows user to select grid, points, heatmap, and taxon range. "
+        />
       </li>
 
       <li>
-        View both observations and identifications
-        <img src="${identifications}" />
+        View both observations and
+        <a
+          href="/identifications/?observation_taxon_id=48662,56851&place_id=962,829&colors=%234477aa,%2366ccee&verifiable=true&spam=false"
+          >identifications</a
+        >
+        <img
+          src="${identifications}"
+          alt="Monarch and narrowleaf milkweed identifications in Los Angeles and San Diego."
+        />
       </li>
       <li>
-        View observations by grid, table, or media
-        <img src="${grid}" />
-        <img src="${table}" />
-        <img src="${media}" />
+        <a
+          href="/?taxon_id=48662&place_id=962&colors=%234477aa&verifiable=true&spam=false&year=2025"
+          >View observations</a
+        >
+        by grid, media (all photos and audio are displayed), or table
+      </li>
+      <li>
+        View annotations on grid and media
+        <img src="${grid}" alt="Grid view of monarchs in Los Angeles" />
+        <img src="${media}" alt="Media view of monarchs in Los Angeles" />
+        <img src="${table}" alt="Table view of monarchs in Los Angeles" />
       </li>
       <li>Add more filters</li>
-      <li>Group the filters by categories <img src="${filters}" /></li>
-      <li>Filter by annotations <img src="${annotations}" /></li>
+      <li>
+        Group the filters by categories
+        <img src="${filters}" alt="Available filters" />
+      </li>
+      <li>
+        Filter by annotations
+        <img src="${annotations}" alt="Available annotations filters" />
+      </li>
+      <li>
+        Search by Observers (people who add observations), Identifiers(people
+        who add identifications), and Annotators (people who add annotations)
+        <img
+          src="${searchUsers}"
+          alt="dropdown search menu has options to search by species, places, projects, observers, identifiers, and annotators"
+        />
+      </li>
       <li>Mobile friendly layout</li>
       <li>Pagination for observations, species, identifiers, and observers</li>
       <li>
