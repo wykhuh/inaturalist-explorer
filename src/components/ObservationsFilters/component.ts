@@ -71,13 +71,12 @@ class ObservationFilters extends HTMLElement {
 
     if (this.formEl) {
       if (event.type === "input") {
-        // use formChangeHandler to clear user; use autocomplete to add user
-        if (target.id === "unobserved-by-user-search") {
-          if (target.value === "") {
-            this.formChangeHandler(event, this.formEl);
-          }
-          // use formChangeHandler to clear user; use autocomplete to add user
-        } else if (target.id === "reviewer-search") {
+        // use formChangeHandler to clear input; use autocomplete to select record
+        let searches = [
+          "unobserved-by-user-search",
+          "reviewer-search",
+        ];
+        if (searches.includes(target.id)) {
           if (target.value === "") {
             this.formChangeHandler(event, this.formEl);
           }

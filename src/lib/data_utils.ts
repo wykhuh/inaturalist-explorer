@@ -118,7 +118,7 @@ export async function fetchiNatMapDataForTaxon(
 // ================
 // taxon
 // ================
-// NOTE: update when adding selectedResource
+// NOTE: update when adding selectedResource; add remove function
 
 export async function addDefaultTaxaRecordToStore(appStore: AppStoreType) {
   if (isObservationsCheck(appStore)) {
@@ -390,21 +390,6 @@ export function removeOneUserIdentifierFromStore(
   );
   resetPageNumber(appStore);
   removeIdfromInatApiParams(appStore, "selectedUsersIdentifiers", userId);
-}
-
-export function removeOneUnobservedByUserFromStore(appStore: AppStoreType) {
-  appStore.selectedUnobservedByUser = {} as NormalizediNatUserType;
-  delete appStore.observationsApiParams.unobserved_by_user_id;
-
-  resetPageNumber(appStore);
-}
-
-export function removeOneReviewerFromStore(appStore: AppStoreType) {
-  appStore.selectedReviewer = {} as NormalizediNatUserType;
-  delete appStore.observationsApiParams.reviewed;
-  delete appStore.observationsApiParams.viewer_id;
-
-  resetPageNumber(appStore);
 }
 
 export function removeOneUserAnnotatorFromStore(

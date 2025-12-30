@@ -31,10 +31,7 @@ import {
   removeUserIdentifier,
   userIdentifierSelectedHandler,
 } from "../../lib/search_users_identifiers.ts";
-import {
-  removeUnobservedByUser,
-  unobservedByUserSelectedHandler,
-} from "../../lib/search_unobserved.ts";
+import { unobservedByUserSelectedHandler } from "../../lib/search_unobserved.ts";
 import {
   removeTaxonIdentified,
   taxonIdentifiedSelectedHandler,
@@ -388,26 +385,6 @@ describe("pagination for all views and selected resources", () => {
       expect(store.observationsApiParams.page).toBeUndefined();
     },
   );
-
-  test("remove page when removing unobserved by users", async () => {
-    let store = structuredClone(mapStore);
-
-    await setupPages(store, "/");
-
-    expect(store.viewMetadata.observations_observations.page).toBe(5);
-    expect(store.viewMetadata.observations_species.page).toBe(6);
-    expect(store.viewMetadata.observations_observers.page).toBe(7);
-    expect(store.viewMetadata.observations_identifiers.page).toBe(8);
-    expect(store.observationsApiParams.page).toBe(8);
-
-    removeUnobservedByUser(store);
-
-    expect(store.viewMetadata.observations_observations.page).toBeUndefined();
-    expect(store.viewMetadata.observations_species.page).toBeUndefined();
-    expect(store.viewMetadata.observations_observers.page).toBeUndefined();
-    expect(store.viewMetadata.observations_identifiers.page).toBeUndefined();
-    expect(store.observationsApiParams.page).toBeUndefined();
-  });
 
   test.each([
     placeSelectedHandler,

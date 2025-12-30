@@ -4,11 +4,7 @@ import {
   renderSelectedResources,
 } from "./search_utils.ts";
 import { setupUserSearch } from "./search_users.ts";
-import {
-  isObservationsCheck,
-  removeOneUnobservedByUserFromStore,
-  resetPageNumber,
-} from "./data_utils.ts";
+import { isObservationsCheck, resetPageNumber } from "./data_utils.ts";
 import { updateCountForAll } from "./count_utils.ts";
 import { renderSelectedFiltersList } from "../components/ObservationsFilters/shared_utils.ts";
 import { processFiltersForm } from "../components/ObservationsFilters/utils.ts";
@@ -51,19 +47,6 @@ export async function unobservedByUserSelectedHandler(
       renderSelectedFiltersList(results.params);
     }
   }
-
-  renderSelectedResources(appStore, true);
-}
-
-export async function removeUnobservedByUser(appStore: AppStoreType) {
-  if (!appStore.selectedUsers) return;
-
-  // remove user
-  removeOneUnobservedByUserFromStore(appStore);
-
-  // remove existing taxa tiles, and refetch taxa tiles
-  await updateTilesForSelectedTaxa(appStore);
-  await updateCountForAll("all", appStore);
 
   renderSelectedResources(appStore, true);
 }
