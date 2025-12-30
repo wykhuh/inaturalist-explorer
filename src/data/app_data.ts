@@ -56,9 +56,9 @@ export function viewAndTemplateObject(targetView: ObservationViewsType) {
   }
 }
 
-// NOTE: update when adding selectedResource
+// NOTE: update when adding selectedResource; autocomplete sidemenu
 // selected resources are the resources shown in the sidemenu with counts
-export const selectedResources: AppStoreSelectedResourcesKeysType[] = [
+export const selectedResourcesWithCount: AppStoreSelectedResourcesKeysType[] = [
   "selectedPlaces",
   "selectedProjects",
   "selectedTaxa",
@@ -68,27 +68,46 @@ export const selectedResources: AppStoreSelectedResourcesKeysType[] = [
   "selectedUsersIdentifiers",
 ];
 
+// NOTE: update when adding selectedResource; autocomplete sidemenu
+export const selectedResourcesNoCount: AppStoreSelectedResourcesKeysType[] = [
+  "selectedWithoutTaxa",
+];
+
+export const selectedResources: AppStoreSelectedResourcesKeysType[] =
+  selectedResourcesWithCount.concat(selectedResourcesNoCount);
+
+// NOTE: update when adding selectedResource; autocomplete filters modal
+export let filtersModalAutocompleteFields: ObservationsApiParamsKeysType[] = [
+  "not_in_project",
+  "unobserved_by_user_id",
+  "viewer_id",
+];
+
+// NOTE: update when adding selectedResource; autocomplete sidemenu
 export const selectedResourcesIdObservations = {
   selectedPlaces: "place_id",
   selectedProjects: "project_id",
   selectedTaxa: "taxon_id",
+  selectedWithoutTaxa: "without_taxon_id",
   selectedTaxaIdentified: null,
   selectedUsers: "user_id",
   selectedUsersAnnotators: "annotation_user_id",
   selectedUsersIdentifiers: "ident_user_id",
 };
 
+// NOTE: update when adding selectedResource; autocomplete sidemenu
 export const selectedResourcesIdIdentifications = {
   selectedPlaces: "place_id",
   selectedProjects: null,
   selectedTaxa: "observation_taxon_id",
+  selectedWithoutTaxa: null,
   selectedTaxaIdentified: "taxon_id",
   selectedUsers: null,
   selectedUsersAnnotators: null,
   selectedUsersIdentifiers: "user_id",
 };
 
-// NOTE: update when adding selectedResource
+// NOTE: update when adding selectedResource; filters
 export const ObservationsApiNonFilterableNames: ObservationsApiParamsKeysType[] =
   [
     "annotation_user_id",
@@ -107,6 +126,7 @@ export const ObservationsApiNonFilterableNames: ObservationsApiParamsKeysType[] 
     "taxon_id",
     "user_id",
     "view",
+    "without_taxon_id",
   ];
 
 export const ObservationsFilterableImplemented: ObservationsApiParamsKeysType[] =
@@ -124,6 +144,7 @@ export const ObservationsFilterableImplemented: ObservationsApiParamsKeysType[] 
     "list_id", // no way to do autocomplete lists name
     "lrank",
     "native",
+    "not_in_project",
     "on",
     "order_by",
     "order",
@@ -157,9 +178,9 @@ export const ObservationsFilterableImplementedArrays: ObservationsApiParamsKeysT
 
 const ObservationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   // maybe
-  "day",
-  "hour",
-  "not_in_project",
+  "day", // array
+  "hour", // array
+  "created_day", // array
 
   "geoprivacy", // array
   "taxon_geoprivacy", // array
@@ -167,15 +188,11 @@ const ObservationsFilterableTodo: ObservationsApiParamsKeysType[] = [
 
   "without_term_id", // integer
   "without_term_value_id", // array
-  "without_taxon_id",
 
-  // maybe
   "out_of_range",
-  "created_day",
   "acc_above",
   "acc_below",
   "acc_below_or_unknown",
-  "identifications",
 
   // no
   "csi",
@@ -193,6 +210,7 @@ const ObservationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   "expected_nearby",
   "geo",
   "id",
+  "identifications",
   "id_above",
   "id_below",
   "id_please",
@@ -251,8 +269,8 @@ export let inputFieldsObservations: ObservationsApiParamsKeysType[] = [
   "d2",
   "list_id",
   "on",
-  "term_id",
   "q",
+  "term_id",
 ];
 
 export let inputCheckedFieldsObservations: ObservationsApiParamsKeysType[] = [
@@ -283,7 +301,6 @@ export const IdentificationsFilterableImplemented: IdentificationsApiParamsKeysT
     "d2",
     "lrank",
     "hrank",
-
     "observed_d1",
     "observed_d2",
     "observation_lrank",
@@ -291,6 +308,7 @@ export const IdentificationsFilterableImplemented: IdentificationsApiParamsKeysT
     "quality_grade",
     "reviewed",
   ];
+
 export const IdentificationsFilterableImplementedArrays: IdentificationsApiParamsKeysType[] =
   ["iconic_taxon_id", "observation_iconic_taxon_id"];
 

@@ -4,9 +4,11 @@ import type {
   AppStoreType,
   AppStoreKeysType,
   NormalizediNatUserType,
+  NormalizediNatProjectType,
 } from "../types/app.d.ts";
 import { loggerEvent, loggerStore } from "./logger.ts";
 
+// NOTE: update when adding selectedResource; default mapStore
 export const mapStore: AppStoreType = {
   placesMapLayers: {},
   selectedPlaces: [],
@@ -14,10 +16,12 @@ export const mapStore: AppStoreType = {
   selectedReviewer: {} as NormalizediNatUserType,
   selectedTaxa: [],
   selectedTaxaIdentified: [],
+  selectedWithoutTaxa: [],
   selectedUnobservedByUser: {} as NormalizediNatUserType,
   selectedUsers: [],
   selectedUsersAnnotators: [],
   selectedUsersIdentifiers: [],
+  selectedNotInProject: {} as NormalizediNatProjectType,
   taxaMapLayers: {},
   observationsApiParams: { verifiable: true, spam: false, locale: "en" },
   identificationsApiParams: {},

@@ -8,6 +8,7 @@ export const template = html`
         <select id="search-type" name="search-type">
           <!--  // NOTE: update when adding selectedResource -->
           <option selected value="taxa">Species</option>
+          <option value="withoutTaxa">Without Species</option>
           <option value="places">iNaturalist Places</option>
           <option value="projects">Projects</option>
           <option value="users">Observers</option>
@@ -30,6 +31,9 @@ export const template = html`
     <!--  // NOTE: update when adding selectedResource -->
     <h2 class="taxa-heading">Species</h2>
     <ul id="selected-species-list"></ul>
+
+    <h2 class="without-taxa-heading" hidden>Without Species</h2>
+    <ul id="selected-without-taxa-list"></ul>
 
     <h2 class="places-heading" hidden>Places</h2>
     <ul id="selected-places-list"></ul>

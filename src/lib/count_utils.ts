@@ -14,9 +14,9 @@ import {
 } from "./cleanup_params_utils.ts";
 import { isObservationsCheck, updateSelectedResource } from "./data_utils.ts";
 import {
-  selectedResources,
   selectedResourcesIdIdentifications,
   selectedResourcesIdObservations,
+  selectedResourcesWithCount,
 } from "../data/app_data.ts";
 
 export async function updateCountForOne(
@@ -141,7 +141,9 @@ async function updateObservationsCountForAll(
   appStore: AppStoreType,
   onlyFetchMissingCounts = false,
 ) {
-  let targetResources = selectedResources.filter((r) => r != ignoreResource);
+  let targetResources = selectedResourcesWithCount.filter(
+    (r) => r != ignoreResource,
+  );
   for await (const resource of targetResources) {
     await updateObservationsCountForResource(
       resource,

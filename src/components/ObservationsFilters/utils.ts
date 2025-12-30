@@ -119,6 +119,7 @@ export function initFilters(appStore: AppStoreType) {
   processInputCheckedFields(inputCheckedFieldsObservations, appStore);
   processInputFields(inputFieldsObservations, appStore);
 
+  // NOTE: update when adding selectedResource; filters form autocomplete search
   if (observationsApiParams.unobserved_by_user_id !== undefined) {
     let inputEl = document.querySelector(
       "#unobserved-by-user-search",
@@ -143,6 +144,15 @@ export function initFilters(appStore: AppStoreType) {
     ) as HTMLInputElement;
     if (inputEl) {
       inputEl.value = appStore.selectedReviewer.login;
+    }
+  }
+
+  if (observationsApiParams.not_in_project !== undefined) {
+    let inputEl = document.querySelector(
+      "#not-in-project-search",
+    ) as HTMLInputElement;
+    if (inputEl) {
+      inputEl.value = appStore.selectedNotInProject.name;
     }
   }
 }

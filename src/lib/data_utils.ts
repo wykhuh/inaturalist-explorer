@@ -118,7 +118,6 @@ export async function fetchiNatMapDataForTaxon(
 // ================
 // taxon
 // ================
-// NOTE: update when adding selectedResource; add remove function
 
 export async function addDefaultTaxaRecordToStore(appStore: AppStoreType) {
   if (isObservationsCheck(appStore)) {
@@ -146,38 +145,6 @@ export async function addDefaultTaxaRecordToStore(appStore: AppStoreType) {
 
 export async function addDefaultTaxaRecordToMap(appStore: AppStoreType) {
   await fetchiNatMapDataForTaxon(structuredClone(allTaxaRecord), appStore);
-}
-
-export function removeOneTaxonFromStoreAndMap(
-  appStore: AppStoreType,
-  taxonId: number,
-) {
-  removeOneTaxonFromMap(appStore, taxonId);
-
-  appStore.selectedTaxa = appStore.selectedTaxa.filter(
-    (taxon) => taxon.id !== taxonId,
-  );
-  resetPageNumber(appStore);
-  removeIdfromInatApiParams(appStore, "selectedTaxa", taxonId);
-}
-
-export function removeOneTaxonFromMap(appStore: AppStoreType, taxonId: number) {
-  if (!appStore.taxaMapLayers) return;
-  let mapLayers = appStore.taxaMapLayers[taxonId];
-  let layerControl = appStore.map.layerControl;
-  if (!layerControl) return;
-  if (!mapLayers) return;
-
-  mapLayers.forEach((layer) => {
-    // remove layer from layer control
-    layerControl.removeLayer(layer);
-    // remove layer from map
-    layer.remove();
-  });
-
-  delete appStore.taxaMapLayers[taxonId];
-  // HACK: trigger change in proxy store
-  appStore.taxaMapLayers = appStore.taxaMapLayers;
 }
 
 export function removeTaxaFromStoreAndMap(appStore: AppStoreType) {
@@ -209,20 +176,51 @@ export function removeTaxaFromStoreAndMap(appStore: AppStoreType) {
   appStore.color = "";
 }
 
-export function removeOneTaxonIdentifiedFromStore(
-  appStore: AppStoreType,
-  taxonId: number,
-) {
-  appStore.selectedTaxaIdentified = appStore.selectedTaxaIdentified.filter(
-    (taxon) => taxon.id !== taxonId,
-  );
-  resetPageNumber(appStore);
-  removeIdfromInatApiParams(appStore, "selectedTaxaIdentified", taxonId);
-}
-
 // ================
 // place
 // ================
+
+export function renderSelectedPlacesBoundaries(appStore: AppStoreType) {
+  let map = appStore.map.map;
+  if (!map) return;
+
+  // add places layers
+  appStore.selectedPlaces.forEach((place) => {
+    let layer = renderResourceGeometryLayer(place, map, "place layer");
+
+    appStore.placesMapLayers = {
+      ...appStore.placesMapLayers,
+      [place.id]: [layer as CustomGeoJSONType],
+    };
+  });
+}
+
+// ================
+// project
+// ================
+
+export function renderSelectedProjectsBoundaries(appStore: AppStoreType) {
+  let map = appStore.map.map;
+  if (!map) return;
+
+  // add project layers
+  appStore.selectedProjects.forEach((project) => {
+    if (!project.geometry) return;
+
+    let layer = renderResourceGeometryLayer(project, map, "project layer");
+
+    appStore.projectsMapLayers = {
+      ...appStore.projectsMapLayers,
+      [project.id]: [layer as CustomGeoJSONType],
+    };
+  });
+}
+
+// ================
+// remove functions
+// ================
+
+// NOTE: update when adding selectedResource; add remove function
 
 export async function removeOnePlaceFromStoreAndMap(
   appStore: AppStoreType,
@@ -260,25 +258,6 @@ export function removeOnePlaceFromMap(appStore: AppStoreType, placeId: number) {
   delete appStore.placesMapLayers[placeId];
 }
 
-export function renderSelectedPlacesBoundaries(appStore: AppStoreType) {
-  let map = appStore.map.map;
-  if (!map) return;
-
-  // add places layers
-  appStore.selectedPlaces.forEach((place) => {
-    let layer = renderResourceGeometryLayer(place, map, "place layer");
-
-    appStore.placesMapLayers = {
-      ...appStore.placesMapLayers,
-      [place.id]: [layer as CustomGeoJSONType],
-    };
-  });
-}
-
-// ================
-// project
-// ================
-
 export function removeOneProjectFromStoreAndMap(
   appStore: AppStoreType,
   projectId: number,
@@ -302,21 +281,88 @@ export function removeOneProjectFromStoreAndMap(
   removeIdfromInatApiParams(appStore, "selectedProjects", projectId);
 }
 
-export function renderSelectedProjectsBoundaries(appStore: AppStoreType) {
-  let map = appStore.map.map;
-  if (!map) return;
+export function removeOneTaxonIdentifiedFromStore(
+  appStore: AppStoreType,
+  taxonId: number,
+) {
+  appStore.selectedTaxaIdentified = appStore.selectedTaxaIdentified.filter(
+    (taxon) => taxon.id !== taxonId,
+  );
+  resetPageNumber(appStore);
+  removeIdfromInatApiParams(appStore, "selectedTaxaIdentified", taxonId);
+}
 
-  // add project layers
-  appStore.selectedProjects.forEach((project) => {
-    if (!project.geometry) return;
+export function removeOneUserFromStore(appStore: AppStoreType, userId: number) {
+  appStore.selectedUsers = appStore.selectedUsers.filter(
+    (item) => item.id !== userId,
+  );
+  resetPageNumber(appStore);
+  removeIdfromInatApiParams(appStore, "selectedUsers", userId);
+}
 
-    let layer = renderResourceGeometryLayer(project, map, "project layer");
+export function removeOneUserIdentifierFromStore(
+  appStore: AppStoreType,
+  userId: number,
+) {
+  appStore.selectedUsersIdentifiers = appStore.selectedUsersIdentifiers.filter(
+    (item) => item.id !== userId,
+  );
+  resetPageNumber(appStore);
+  removeIdfromInatApiParams(appStore, "selectedUsersIdentifiers", userId);
+}
 
-    appStore.projectsMapLayers = {
-      ...appStore.projectsMapLayers,
-      [project.id]: [layer as CustomGeoJSONType],
-    };
+export function removeOneUserAnnotatorFromStore(
+  appStore: AppStoreType,
+  userId: number,
+) {
+  appStore.selectedUsersAnnotators = appStore.selectedUsersAnnotators.filter(
+    (item) => item.id !== userId,
+  );
+  resetPageNumber(appStore);
+  removeIdfromInatApiParams(appStore, "selectedUsersAnnotators", userId);
+}
+
+export function removeOneWithoutTaxonFromStore(
+  appStore: AppStoreType,
+  taxonId: number,
+) {
+  appStore.selectedWithoutTaxa = appStore.selectedWithoutTaxa.filter(
+    (taxon) => taxon.id !== taxonId,
+  );
+  resetPageNumber(appStore);
+  removeIdfromInatApiParams(appStore, "selectedWithoutTaxa", taxonId);
+}
+
+export function removeOneTaxonFromStoreAndMap(
+  appStore: AppStoreType,
+  taxonId: number,
+) {
+  removeOneTaxonFromMap(appStore, taxonId);
+
+  appStore.selectedTaxa = appStore.selectedTaxa.filter(
+    (taxon) => taxon.id !== taxonId,
+  );
+  resetPageNumber(appStore);
+  removeIdfromInatApiParams(appStore, "selectedTaxa", taxonId);
+}
+
+export function removeOneTaxonFromMap(appStore: AppStoreType, taxonId: number) {
+  if (!appStore.taxaMapLayers) return;
+  let mapLayers = appStore.taxaMapLayers[taxonId];
+  let layerControl = appStore.map.layerControl;
+  if (!layerControl) return;
+  if (!mapLayers) return;
+
+  mapLayers.forEach((layer) => {
+    // remove layer from layer control
+    layerControl.removeLayer(layer);
+    // remove layer from map
+    layer.remove();
   });
+
+  delete appStore.taxaMapLayers[taxonId];
+  // HACK: trigger change in proxy store
+  appStore.taxaMapLayers = appStore.taxaMapLayers;
 }
 
 // ================
@@ -367,40 +413,6 @@ export function renderResourceGeometryLayer(
   let layer = L.geoJSON(resource.geometry as any, options);
   layer.addTo(map);
   return layer;
-}
-
-// ================
-// user
-// ================
-
-export function removeOneUserFromStore(appStore: AppStoreType, userId: number) {
-  appStore.selectedUsers = appStore.selectedUsers.filter(
-    (item) => item.id !== userId,
-  );
-  resetPageNumber(appStore);
-  removeIdfromInatApiParams(appStore, "selectedUsers", userId);
-}
-
-export function removeOneUserIdentifierFromStore(
-  appStore: AppStoreType,
-  userId: number,
-) {
-  appStore.selectedUsersIdentifiers = appStore.selectedUsersIdentifiers.filter(
-    (item) => item.id !== userId,
-  );
-  resetPageNumber(appStore);
-  removeIdfromInatApiParams(appStore, "selectedUsersIdentifiers", userId);
-}
-
-export function removeOneUserAnnotatorFromStore(
-  appStore: AppStoreType,
-  userId: number,
-) {
-  appStore.selectedUsersAnnotators = appStore.selectedUsersAnnotators.filter(
-    (item) => item.id !== userId,
-  );
-  resetPageNumber(appStore);
-  removeIdfromInatApiParams(appStore, "selectedUsersAnnotators", userId);
 }
 
 // ================
@@ -501,6 +513,10 @@ export function removeIdfromInatApiParams(
   } else if (resource === "selectedUsersAnnotators") {
     if (isObservations) {
       removeResourceId(appStore, resource, "annotation_user_id", value);
+    }
+  } else if (resource === "selectedWithoutTaxa") {
+    if (isObservations) {
+      removeResourceId(appStore, resource, "without_taxon_id", value);
     }
   } else {
     throw new Error(

@@ -94,7 +94,7 @@ export async function initPopulateStore(
   // HACK: trigger store proxy
   appStore.observationsApiParams = appStore.observationsApiParams;
 
-  // NOTE: update when adding selectedResource
+  // NOTE: update when adding selectedResource;  initPopulateStore
 
   // places data
   if (
@@ -227,6 +227,21 @@ export async function initPopulateStore(
     appStore.selectedTaxaIdentified,
   );
 
+  // load selected taxa
+  if (urlStore.selectedWithoutTaxa && urlStore.selectedWithoutTaxa.length > 0) {
+    for await (const urlStoreTaxon of urlStore.selectedWithoutTaxa) {
+      let taxonData = await getTaxonById(urlStoreTaxon.id);
+      if (!taxonData) {
+        continue;
+      }
+      processWithoutTaxonData(taxonData, appStore, urlStore);
+    }
+  }
+  loggerStore(
+    "++ initPopulateStore selectedWithoutTaxa",
+    appStore.selectedWithoutTaxa,
+  );
+
   // add default taxa
   if (
     urlStore.selectedTaxa === undefined &&
@@ -236,6 +251,18 @@ export async function initPopulateStore(
       await addDefaultTaxaRecordToStore(appStore);
     }
   }
+
+  //  not in project data
+  if (urlStore.selectedNotInProject?.id) {
+    let data = await getProjectById(urlStore.selectedNotInProject.id);
+    if (data) {
+      processNotInProjectData(data, appStore);
+    }
+  }
+  loggerStore(
+    "++ initPopulateStore selectedNotInProject",
+    appStore.selectedNotInProject,
+  );
 
   await updateCountForAll("all", appStore);
 
@@ -498,7 +525,7 @@ export function addBBoxDataToMap(appStore: AppStoreType) {
   appStore.placesMapLayers["0"] = [layer as unknown as CustomGeoJSONType];
 }
 
-// NOTE: update when adding selectedResource
+// NOTE: update when adding selectedResource; initPopulateStore
 export function processProjectData(
   projectData: ProjectsResult,
   appStore: AppStoreType,
@@ -619,6 +646,58 @@ function processUserAnnotatorData(
       userData.id,
       appStore.observationsApiParams.annotation_user_id,
     );
+}
+
+export function processNotInProjectData(
+  projectData: ProjectsResult,
+  appStore: AppStoreType,
+) {
+  if (isIdentificationsCheck(appStore)) return;
+
+  let project: NormalizediNatProjectType = {
+    id: projectData.id,
+    name: projectData.title,
+    slug: projectData.slug,
+  };
+
+  appStore.selectedNotInProject = project;
+  appStore.observationsApiParams.not_in_project = projectData.id.toString();
+}
+
+export function processWithoutTaxonData(
+  taxonData: TaxaResult,
+  appStore: AppStoreType,
+  urlStore: AppStoreType,
+) {
+  let urlStoreTaxon = urlStore.selectedWithoutTaxa.find(
+    (t) => t.id === taxonData.id,
+  );
+  if (!urlStoreTaxon) return;
+
+  let isObservations = isObservationsCheck(appStore);
+
+  // create taxon object
+  let taxon: NormalizediNatTaxonType = {
+    name: taxonData.name,
+    default_photo: taxonData.default_photo?.square_url,
+    preferred_common_name: taxonData.preferred_common_name,
+    rank: taxonData.rank,
+    id: taxonData.id,
+  };
+
+  let { title, subtitle } = formatTaxonName(taxon, appStore);
+  taxon.title = title;
+  taxon.subtitle = subtitle;
+
+  appStore.selectedWithoutTaxa = [...appStore.selectedWithoutTaxa, taxon];
+
+  if (isObservations) {
+    appStore.observationsApiParams.without_taxon_id =
+      addValueToCommaSeparatedString(
+        taxonData.id,
+        appStore.observationsApiParams.without_taxon_id,
+      );
+  }
 }
 
 export async function initApp() {

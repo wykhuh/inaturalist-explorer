@@ -76,8 +76,9 @@ export function renderTaxaIdentifiedList(appStore: AppStoreType) {
 
   listEl.innerHTML = "";
   appStore.selectedTaxaIdentified.forEach((taxon) => {
-    let templateEl = document.createElement("species-identified-list-item");
+    let templateEl = document.createElement("species-basic-list-item");
     templateEl.dataset.taxon = JSON.stringify(taxon);
+    templateEl.dataset.taxon_type = "taxonIdentified";
     listEl.appendChild(templateEl);
   });
 }

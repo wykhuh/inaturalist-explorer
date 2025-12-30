@@ -250,12 +250,25 @@ export let gridLabel_allTaxaRecord_user2Identifier =
 
 export let gridLabel_allTaxaRecord_user1Unobserved =
   "overlay: iNat grid, taxon_id 0, unobserved_by_user_id 222137";
+export let gridLabel_allTaxaRecord_user2Unobserved =
+  "overlay: iNat grid, taxon_id 0, unobserved_by_user_id 677256";
 
 export let gridLabel_allTaxaRecord_user1Reviewer =
   "overlay: iNat grid, taxon_id 0, viewer_id 222137";
+export let gridLabel_allTaxaRecord_user2Reviewer =
+  "overlay: iNat grid, taxon_id 0, viewer_id 677256";
 
 export let gridLabel_allTaxaRecord_user1Annotator =
   "overlay: iNat grid, taxon_id 0, annotation_user_id 222137";
+export let gridLabel_allTaxaRecord_user2Annotator =
+  "overlay: iNat grid, taxon_id 0, annotation_user_id 677256";
+export let gridLabel_allTaxaRecord_usersAnnotator =
+  "overlay: iNat grid, taxon_id 0, annotation_user_id 222137,677256";
+
+export let gridLabel_allTaxaRecord_project1NotInProject =
+  "overlay: iNat grid, taxon_id 0, not_in_project 237729";
+export let gridLabel_allTaxaRecord_project2NotInProject =
+  "overlay: iNat grid, taxon_id 0, not_in_project 229902";
 
 export let gridLabel_life_la_user1 =
   "overlay: iNat grid, taxon_id 48460, place_id 962, user_id 222137";

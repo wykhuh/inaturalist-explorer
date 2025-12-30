@@ -22,19 +22,21 @@ type RouterType = {
 };
 
 export interface AppStoreType {
+  // NOTE: update when adding selectedResource AppStoreType
+  selectedPlaces: NormalizediNatPlaceType[];
   selectedTaxa: NormalizediNatTaxonType[];
   selectedTaxaIdentified: NormalizediNatTaxonType[];
-  taxaMapLayers: { [index: string]: TileLayer[] };
-  selectedPlaces: NormalizediNatPlaceType[];
-  placesMapLayers: { [index: string]: CustomGeoJSONType[] };
-  projectsMapLayers?: { [index: string]: CustomGeoJSONType[] };
-  // NOTE: update when adding selectedResource
   selectedUsers: NormalizediNatUserType[];
   selectedUsersIdentifiers: NormalizediNatUserType[];
   selectedUnobservedByUser: NormalizediNatUserType;
   selectedUsersAnnotators: NormalizediNatUserType[];
   selectedReviewer: NormalizediNatUserType;
   selectedProjects: NormalizediNatProjectType[];
+  selectedNotInProject: NormalizediNatProjectType;
+  selectedWithoutTaxa: NormalizediNatTaxonType[];
+  taxaMapLayers: { [index: string]: TileLayer[] };
+  placesMapLayers: { [index: string]: CustomGeoJSONType[] };
+  projectsMapLayers?: { [index: string]: CustomGeoJSONType[] };
   observationsApiParams: ObservationsApiParamsType;
   identificationsApiParams: IdentificationsApiParamsType;
   color: string;
@@ -153,7 +155,8 @@ export type AppStoreSelectedResourcesKeysType =
   | "selectedUsers"
   | "selectedProjects"
   | "selectedUsersIdentifiers"
-  | "selectedUsersAnnotators";
+  | "selectedUsersAnnotators"
+  | "selectedWithoutTaxa";
 
 export type AppStoreTypeParamsKeys =
   | "observationsApiParams"
@@ -453,7 +456,7 @@ export type PlaceTypes = {
 };
 export type PlaceTypesKey = keyof PlaceTypes;
 
-// NOTE: update when adding selectedResource
+// NOTE: update when adding selectedResource; SearchOptions type
 type SearchOptions = {
   places: SearchOption;
   projects: SearchOption;
@@ -462,6 +465,7 @@ type SearchOptions = {
   taxa: SearchOption;
   taxaIdentified: SearchOption;
   usersAnnotators: SearchOption;
+  withoutTaxa: SearchOption;
 };
 
 type SearchOption = { setup: any; selectedHandler: any };

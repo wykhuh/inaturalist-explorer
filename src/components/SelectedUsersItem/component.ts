@@ -41,7 +41,7 @@ class SelectedUsersItem extends HTMLElement {
     if (butttonEl) {
       butttonEl.addEventListener("click", async function () {
         if (user.id !== undefined) {
-          // NOTE: update when adding selectedResource
+          // NOTE: update when adding selectedResource; remove user
           if (userType === "observer") {
             await removeUser(user.id, window.app.store);
           } else if (userType === "identifier") {

@@ -72,6 +72,7 @@ import {
   gridLabel_allTaxaRecord_user1Annotator,
   expectEmptyResources,
   expectLifeTaxaIdentification,
+  gridLabel_allTaxaRecord_project1NotInProject,
 } from "../test_helpers.ts";
 import type {
   IdentificationsApiParamsType,
@@ -743,6 +744,36 @@ describe("initPopulateStore and initRenderMap resources", () => {
     let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
       annotation_user_id: user1.id.toString(),
+      taxon_id: allTaxa.id.toString(),
+      colors: iNatOrange,
+    };
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
+    expect(store.identificationsApiParams).toStrictEqual({});
+    expect(store.color).toBe(iNatOrange);
+  });
+
+  test("loads and renders not in project data based on url params", async () => {
+    let store = structuredClone(mapStore);
+
+    expectEmpytMap(store);
+
+    let searchparams = `?locale=en&not_in_project=${project_cnc1.id}&${defaultQuery}`;
+    let urlData = decodeAppUrl(searchparams, "/");
+    let allTaxaProjectCount = allTaxa.observations_count;
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expectEmptyResources(store, ["selectedTaxa"]);
+    expect(store.selectedNotInProject).toStrictEqual(project_cnc1);
+    expectDefaultTaxaRecord(store, allTaxaProjectCount);
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord_project1NotInProject,
+    ]);
+    let expectedParams: ObservationsApiParamsType = {
+      ...defaultParams,
+      not_in_project: project_cnc1.id.toString(),
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
     };

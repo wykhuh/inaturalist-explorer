@@ -393,6 +393,26 @@ let observationPane = html`<div
         </label>
         <input id="list_id" name="list_id" placeholder="Enter list ID" />
       </div>
+
+      <div class="form-group">
+        <label for="not-in-project-search"
+          >Not in project
+          <div class="tp-wrapper">
+            <span class="tp-trigger" aria-describedby="tp-not_in_project"
+              >?</span
+            >
+            <p id="tp-not_in_project" role="tooltip">
+              Observations must not be in this project
+            </p>
+          </div>
+        </label>
+        <input
+          name="not_in_project"
+          id="not-in-project-search"
+          type="text"
+          autocomplete="off"
+        />
+      </div>
     </fieldset>
   </div>
 

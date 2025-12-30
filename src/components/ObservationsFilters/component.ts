@@ -17,6 +17,8 @@ import {
   reviewerSelectedHandler,
   setupReviewerSearch,
 } from "../../lib/search_reviewer";
+import { setupProjectSearch } from "../../lib/search_projects";
+import { notInProjectSelectedHandler } from "../../lib/search_not_in_project";
 
 class ObservationFilters extends HTMLElement {
   constructor() {
@@ -75,6 +77,7 @@ class ObservationFilters extends HTMLElement {
         let searches = [
           "unobserved-by-user-search",
           "reviewer-search",
+          "not-in-project-search",
         ];
         if (searches.includes(target.id)) {
           if (target.value === "") {
@@ -102,6 +105,9 @@ class ObservationFilters extends HTMLElement {
 
     setupReviewerSearch("#reviewer-search", window.app.store);
     searchSetup("#reviewer-search", reviewerSelectedHandler);
+
+    setupProjectSearch("#not-in-project-search", window.app.store);
+    searchSetup("#not-in-project-search", notInProjectSelectedHandler);
 
     // use store to set values the form on page load
     initFilters(window.app.store);

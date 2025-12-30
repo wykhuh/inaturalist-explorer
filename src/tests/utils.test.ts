@@ -31,6 +31,7 @@ import type {
   ObservationViewsType,
 } from "../types/app";
 import {
+  filtersModalAutocompleteFields,
   IdentificationsApiFilterableNames,
   ObservationsApiFilterableNames,
 } from "../data/app_data.ts";
@@ -803,6 +804,38 @@ describe("decodeAppUrl resources", () => {
     expect(result).toStrictEqual(expected);
   });
 
+  test("returns object with project data if not_in_project is present", () => {
+    let searchParams = "?not_in_project=1";
+
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      selectedNotInProject: { id: 1 },
+      observationsApiParams: { not_in_project: 1 },
+      currentView: "observations_observations",
+      record_type: "observations",
+    };
+
+    let result = decodeAppUrl(searchParams, "/");
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("returns object with taxa data if without_taxon_id is present", () => {
+    let searchParams = "?without_taxon_id=1";
+
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      selectedWithoutTaxa: [{ id: 1 }],
+      observationsApiParams: {},
+      currentView: "observations_observations",
+      record_type: "observations",
+    };
+
+    let result = decodeAppUrl(searchParams, "/");
+
+    expect(result).toStrictEqual(expected);
+  });
+
   test(
     "returns taxa, place, project, user data if taxon_id, place_id, " +
       "project_id, user_id are present",
@@ -1028,7 +1061,7 @@ describe("decodeAppUrl options", () => {
     "adds valid params to observationsApiParams",
     (name) => {
       let value;
-      if (["unobserved_by_user_id", "viewer_id"].includes(name)) {
+      if (filtersModalAutocompleteFields.includes(name)) {
         value = 1;
       } else {
         value = true;
@@ -1043,6 +1076,7 @@ describe("decodeAppUrl options", () => {
       if (name == "order_by" || name == "order") {
         expected.viewMetadata.observations_observations[name] = "true";
       }
+      // NOTE: update when adding selectedResource; autocomplete
       if (name == "unobserved_by_user_id") {
         expected.selectedUnobservedByUser = { id: 1 };
         expected.observationsApiParams.unobserved_by_user_id = 1;
@@ -1050,6 +1084,10 @@ describe("decodeAppUrl options", () => {
       if (name == "viewer_id") {
         expected.selectedReviewer = { id: 1 };
         expected.observationsApiParams.viewer_id = 1;
+      }
+      if (name == "not_in_project") {
+        expected.selectedNotInProject = { id: 1 };
+        expected.observationsApiParams.not_in_project = 1;
       }
 
       let result = decodeAppUrl(searchParams, "/");

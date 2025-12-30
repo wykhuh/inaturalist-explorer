@@ -50,6 +50,11 @@ import {
   setupUserAnnotatorsSearch,
   userAnnotatorsSelectedHandler,
 } from "./search_users_annotators.ts";
+import {
+  renderWithoutTaxaList,
+  setupWithoutTaxaSearch,
+  withoutTaxonSelectedHandler,
+} from "./search_without_taxa.ts";
 
 export async function updateTilesForSelectedTaxa(appStore: AppStoreType) {
   for await (const taxon of appStore.selectedTaxa) {
@@ -65,7 +70,7 @@ export function renderSelectedResources(
   appStore: AppStoreType,
   doSideEffects: boolean,
 ) {
-  // NOTE: update when adding selectedResource
+  // NOTE: update when adding selectedResource; renderSelectedResources
   renderTaxaList(appStore);
   renderTaxaIdentifiedList(appStore);
   renderPlacesList(appStore);
@@ -73,6 +78,7 @@ export function renderSelectedResources(
   renderUsersList(appStore);
   renderUsersIdentifiersList(appStore);
   renderUsersAnnotatorsList(appStore);
+  renderWithoutTaxaList(appStore);
 
   if (doSideEffects) {
     updateAppUrl(window.location, appStore);
@@ -81,7 +87,7 @@ export function renderSelectedResources(
       loggerEvent("dispatch identificationsChange");
     } else if (isObservationsCheck(appStore)) {
       window.dispatchEvent(new Event("observationsChange"));
-      loggerEvent("dispatch identificationsChange");
+      loggerEvent("dispatch observationsChange");
     }
   }
 }
@@ -98,7 +104,7 @@ export function multisearchSetup(appStore: AppStoreType) {
   ) as HTMLSelectElement;
   if (!searchSelectEl) return;
 
-  // NOTE: update when adding selectedResource
+  // NOTE: update when adding selectedResource; searchOptions
   let searchOptions: SearchOptions = {
     places: {
       setup: setupPlacesSearch,
@@ -127,6 +133,10 @@ export function multisearchSetup(appStore: AppStoreType) {
     taxaIdentified: {
       setup: setupTaxaIdentifiedSearch,
       selectedHandler: taxonIdentifiedSelectedHandler,
+    },
+    withoutTaxa: {
+      setup: setupWithoutTaxaSearch,
+      selectedHandler: withoutTaxonSelectedHandler,
     },
   };
 
@@ -191,7 +201,7 @@ export function showHideHeader(
   }
 }
 
-// NOTE: update when adding selectedResource
+// NOTE: update when adding selectedResource; showHide Header
 export function showHideUsersHeader() {
   showHideHeader("#sidebar-menu .users-heading", "selectedUsers");
 }
@@ -227,4 +237,8 @@ export function showHideTaxaIdentifiedHeader() {
     "#sidebar-menu .taxa-identified-heading",
     "selectedTaxaIdentified",
   );
+}
+
+export function showHideWithoutTaxaHeader() {
+  showHideHeader("#sidebar-menu .without-taxa-heading", "selectedWithoutTaxa");
 }

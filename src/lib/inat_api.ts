@@ -44,7 +44,7 @@ function formatDescription(
   observationsApiParams: ObservationsApiParamsType,
   type: string,
 ) {
-  // NOTE: update when adding selectedResource
+  // NOTE: update when adding selectedResource; map layer name
   let text = `overlay: iNat ${type}, taxon_id ${observationsApiParams.taxon_id || 0}`;
   if (observationsApiParams.place_id) {
     text += `, place_id ${observationsApiParams.place_id}`;
@@ -66,6 +66,12 @@ function formatDescription(
   }
   if (observationsApiParams.annotation_user_id) {
     text += `, annotation_user_id ${observationsApiParams.annotation_user_id}`;
+  }
+  if (observationsApiParams.not_in_project) {
+    text += `, not_in_project ${observationsApiParams.not_in_project}`;
+  }
+  if (observationsApiParams.without_taxon_id) {
+    text += `, without_taxon_id ${observationsApiParams.without_taxon_id}`;
   }
   return text;
 }

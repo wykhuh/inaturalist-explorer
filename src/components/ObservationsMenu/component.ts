@@ -8,6 +8,7 @@ import {
   showHideUsersAnnotatorsHeader,
   showHideUsersHeader,
   showHideUsersIdentifiersHeader,
+  showHideWithoutTaxaHeader,
 } from "../../lib/search_utils";
 import type { AppStoreType } from "../../types/app";
 import { template } from "./template";
@@ -24,7 +25,7 @@ class ObservationsMenu extends HTMLElement {
 
     this.render(window.app.store);
 
-    // NOTE: update when adding selectedResource
+    // NOTE: update when adding selectedResource; showHide header
     window.addEventListener("selectedPlacesChange", showHidePlacesHeader);
     window.addEventListener("selectedProjectsChange", showHideProjectsHeader);
     window.addEventListener("selectedUsersChange", showHideUsersHeader);
@@ -36,10 +37,14 @@ class ObservationsMenu extends HTMLElement {
       "selectedUsersAnnotatorsChange",
       showHideUsersAnnotatorsHeader,
     );
+    window.addEventListener(
+      "selectedWithoutTaxaChange",
+      showHideWithoutTaxaHeader,
+    );
   }
 
   disconnectedCallback() {
-    // NOTE: update when adding selectedResource
+    // NOTE: update when adding selectedResource; showHide header
     window.removeEventListener("selectedPlacesChange", showHidePlacesHeader);
     window.removeEventListener(
       "selectedProjectsChange",
@@ -54,16 +59,21 @@ class ObservationsMenu extends HTMLElement {
       "selectedUsersAnnotatorsChange",
       showHideUsersAnnotatorsHeader,
     );
+    window.addEventListener(
+      "selectedWithoutTaxaChange",
+      showHideWithoutTaxaHeader,
+    );
   }
 
   render(appStore: AppStoreType) {
-    // NOTE: update when adding selectedResource
+    // NOTE: update when adding selectedResource; showHide header
     multisearchSetup(appStore);
     showHidePlacesHeader();
     showHideProjectsHeader();
     showHideUsersHeader();
     showHideUsersIdentifiersHeader();
     showHideUsersAnnotatorsHeader();
+    showHideWithoutTaxaHeader();
 
     renderSelectedResources(appStore, false);
   }
