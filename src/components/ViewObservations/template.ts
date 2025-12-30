@@ -6,8 +6,8 @@ export const template = html`
     <div>
       <div id="observations-subview">
         <button class="subview-grid" data-subview="grid">Grid</button>
-        <button class="subview-table" data-subview="table">Table</button>
         <button class="subview-media" data-subview="media">Media</button>
+        <button class="subview-table" data-subview="table">Table</button>
       </div>
     </div>
 
