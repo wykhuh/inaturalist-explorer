@@ -252,17 +252,6 @@ let observationPane = html`<div
           <option value="false">False</option>
         </select>
       </div>
-
-      <div class="form-group">
-        <label for="q"
-          >Description/Tags
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-q">?</span>
-            <p id="tp-q" role="tooltip">Search observation properties</p>
-          </div>
-        </label>
-        <input id="q" name="q" placeholder="Enter search terms" />
-      </div>
     </fieldset>
 
     <fieldset>
@@ -376,6 +365,33 @@ let observationPane = html`<div
           type="text"
           autocomplete="off"
         />
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Misc</legend>
+      <div class="form-group">
+        <label for="q"
+          >Description/Tags
+          <div class="tp-wrapper">
+            <span class="tp-trigger" aria-describedby="tp-q">?</span>
+            <p id="tp-q" role="tooltip">Search observation properties</p>
+          </div>
+        </label>
+        <input id="q" name="q" placeholder="Enter search terms" />
+      </div>
+
+      <div class="form-group">
+        <label for="list_id"
+          >List ID
+          <div class="tp-wrapper">
+            <span class="tp-trigger" aria-describedby="tp-list_id">?</span>
+            <p id="tp-list_id" role="tooltip">
+              Taxon must be in the list with this ID
+            </p>
+          </div>
+        </label>
+        <input id="list_id" name="list_id" placeholder="Enter list ID" />
       </div>
     </fieldset>
   </div>

@@ -121,6 +121,7 @@ export const ObservationsFilterableImplemented: ObservationsApiParamsKeysType[] 
     "hrank",
     "identified",
     "introduced",
+    "list_id", // no way to do autocomplete lists name
     "lrank",
     "native",
     "on",
@@ -175,7 +176,6 @@ const ObservationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   "acc_below",
   "acc_below_or_unknown",
   "identifications",
-  "list_id", // no way to do autocomplete lists name
 
   // no
   "csi",
@@ -249,6 +249,7 @@ export let multipleSelectFieldsObservations: ObservationsApiParamsKeysType[] = [
 export let inputFieldsObservations: ObservationsApiParamsKeysType[] = [
   "d1",
   "d2",
+  "list_id",
   "on",
   "term_id",
   "q",
