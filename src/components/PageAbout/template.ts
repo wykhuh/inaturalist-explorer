@@ -11,6 +11,8 @@ import searchUsers from "../../assets/images/search_users.jpg";
 export const template = html`
   <site-header></site-header>
   <main id="wrapper" class="flow page-about">
+    <appstore-viewer></appstore-viewer>
+
     <h1>About</h1>
     <p>
       iNaturalist Explorer is a opensource website that lets people explore
