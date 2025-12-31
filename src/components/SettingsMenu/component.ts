@@ -16,6 +16,48 @@ class SettingsMenu extends HTMLElement {
     loggerRender("++ SettingsMenu connectedCallback");
 
     this.render();
+
+    window.addEventListener("change", this);
+  }
+
+  disconnectCallback() {
+    loggerRender("++ SettingsMenu disconnectCallback");
+
+    window.removeEventListener("change", this);
+  }
+
+  async handleEvent(event: Event) {
+    let target = event.target as HTMLInputElement;
+    if (!target) return;
+
+    loggerEvent(`[SettingsMenu Event] ${target.id}`);
+
+    if (target.id === "language-select") {
+      window.app.store.observationsApiParams = {
+        ...window.app.store.observationsApiParams,
+        locale: target.value,
+      };
+
+      updateAppUrl(window.location, window.app.store);
+
+      // make api call to get common names
+      await updateComonNamesByLanguage(window.app.store);
+      renderTaxaList(window.app.store);
+
+      loggerEvent("[SettingsMenu dispatchEvent] localeChanged");
+      window.dispatchEvent(new Event("localeChanged"));
+    } else if (target.id === "name-order-select") {
+      window.app.store.viewMetadata = {
+        ...window.app.store.viewMetadata,
+        name_order: target.value as NameOrderType,
+      };
+
+      updateAppUrl(window.location, window.app.store);
+      renderTaxaList(window.app.store);
+
+      loggerEvent("[SettingsMenu dispatchEvent] nameOrderChanged");
+      window.dispatchEvent(new Event("nameOrderChanged"));
+    }
   }
 
   async render() {
@@ -41,24 +83,6 @@ class SettingsMenu extends HTMLElement {
 
       selectEl.appendChild(optionEl);
     });
-
-    selectEl.addEventListener("change", async (event) => {
-      if (event.target) {
-        let target = event.target as HTMLInputElement;
-        window.app.store.observationsApiParams = {
-          ...window.app.store.observationsApiParams,
-          locale: target.value,
-        };
-
-        updateAppUrl(window.location, window.app.store);
-        // make api call to get common name
-        await updateComonNamesByLanguage(window.app.store);
-        renderTaxaList(window.app.store);
-
-        window.dispatchEvent(new Event("localeChanged"));
-        loggerEvent("dispatch localeChanged");
-      }
-    });
   }
 
   renderNameOrderSelect() {
@@ -69,22 +93,6 @@ class SettingsMenu extends HTMLElement {
     optionsEl.forEach((optionEl) => {
       if (optionEl.value === window.app.store.viewMetadata.name_order) {
         optionEl.selected = true;
-      }
-    });
-
-    selectEl.addEventListener("change", (event) => {
-      if (event.target) {
-        let target = event.target as HTMLInputElement;
-        window.app.store.viewMetadata = {
-          ...window.app.store.viewMetadata,
-          name_order: target.value as NameOrderType,
-        };
-
-        updateAppUrl(window.location, window.app.store);
-        renderTaxaList(window.app.store);
-
-        window.dispatchEvent(new Event("nameOrderChanged"));
-        loggerEvent("dispatch nameOrderChanged");
       }
     });
   }
