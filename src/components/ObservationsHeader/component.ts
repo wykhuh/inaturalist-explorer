@@ -36,18 +36,19 @@ class ObservationHeader extends HTMLElement {
   handleEvent(event: Event) {
     let target = event.target as HTMLElement;
     if (!target) return;
+    loggerEvent(`[ObservationHeader event] ${event.type}`);
 
     // update header counts
+    // wait for storePopulated event to fetch counts so api request will have
+    // correct params
     let updateCountsEvents = [
       "observationsChange",
       "storePopulated",
       "navResourceChange",
     ];
     if (updateCountsEvents.includes(event.type)) {
-      // app uses two <identifications-header>;
-      // only execute for instance that has updatecounts="true"
+      // only update couns for component instance that has updatecounts="true"
       if (this.dataset.updatecounts === "true") {
-        loggerEvent(`++ ObservationHeader ${event.type}`);
         updateCountsHeader(window.app.store);
       }
     }

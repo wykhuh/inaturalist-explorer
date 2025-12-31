@@ -78,6 +78,7 @@ class ViewObservations extends HTMLElement {
   handleEvent(event: Event) {
     let target = event.target as HTMLElement;
     if (!target) return;
+    loggerEvent(`[ViewObservations event] ${event.type}`);
 
     let resourceChanges = [
       "observationsChange",
@@ -86,7 +87,6 @@ class ViewObservations extends HTMLElement {
       "nameOrderChanged",
     ];
     if (resourceChanges.includes(event.type)) {
-      loggerEvent(`++ ViewObservations ${event.type}`);
       fetchAndRenderData(perPage, paginationCallback, window.app.store);
     }
 

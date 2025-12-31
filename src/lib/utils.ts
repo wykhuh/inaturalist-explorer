@@ -24,6 +24,7 @@ import { defaultColorScheme } from "./map_colors_utils";
 import { convertParamsBBoxToLngLat } from "./map_utils";
 import { validObservationsSubviews, validViews } from "../data/app_data";
 import { getResourceApiParams } from "./data_utils";
+import { loggerEvent } from "./logger";
 
 export function displayJson(json: any, el: HTMLElement | null) {
   // fix cyclic object errors
@@ -271,6 +272,7 @@ export function updateAppUrl(url_location: Location, appStore: AppStoreType) {
     url += `?${paramsString}`;
   }
 
+  loggerEvent("[updateAppUrl] history.pushState");
   window.history.pushState({}, "", url);
 }
 

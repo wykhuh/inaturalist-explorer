@@ -29,6 +29,8 @@ class ViewSpecies extends HTMLElement {
   }
 
   handleEvent(event: Event) {
+    loggerEvent(`[ViewSpecies event] ${event.type}`);
+
     let resourceChanges = [
       "observationsChange",
       "identificationsChange",
@@ -36,7 +38,6 @@ class ViewSpecies extends HTMLElement {
       "nameOrderChanged",
     ];
     if (resourceChanges.includes(event.type)) {
-      loggerEvent(`++ ViewSpecies ${event.type}`);
       fetchAndRenderData(perPage, paginationCallback, window.app.store);
     }
   }

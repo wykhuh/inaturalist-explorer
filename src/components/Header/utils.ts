@@ -112,6 +112,7 @@ export async function pageChangeHandler(
 
   // emit event
   if (recordType === "identifications" || recordType === "observations") {
+    loggerEvent("[Header dispatchEvent] navResourceChange");
     window.dispatchEvent(
       new CustomEvent("navResourceChange", {
         detail: {
@@ -120,7 +121,6 @@ export async function pageChangeHandler(
         },
       }),
     );
-    loggerEvent("dispatch navResourceChange");
   }
 }
 

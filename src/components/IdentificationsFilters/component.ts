@@ -34,13 +34,15 @@ class IdentificationsFilters extends HTMLElement {
   handleEvent(event: Event) {
     let target = event.target as HTMLInputElement;
     if (target === null) return;
+    loggerEvent(`[IdentificationsFilters event] ${event.type}`);
 
+    // wait for storePopulated event to render filters because there are some
+    // fields that need info from iNat API
     let events = ["navResourceChange", "storePopulated"];
     if (events.includes(event.type)) {
-      loggerEvent(`++ IdentificationsFilters ${event.type}`);
-
       this.render();
     }
+
     if (this.formEl) {
       if (event.type === "input") {
         this.formChangeHandler(event, this.formEl);

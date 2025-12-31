@@ -58,14 +58,14 @@ const proxiedStore = new Proxy(structuredClone(mapStore), {
   set(target, property: AppStoreKeysType, value) {
     (target as any)[property] = value;
 
-    loggerStore(`proxy store.${property} changed`);
+    loggerStore(`[proxiedStore] ${property} changed`);
 
     displayAppstoreData(proxiedStore, `proxiedStore ${property}`);
 
     selectedResources.forEach((resource) => {
       if (property === resource) {
+        loggerEvent(`[proxiedStore dispatchEvent] ${property}Change`);
         window.dispatchEvent(new Event(`${resource}Change`));
-        loggerEvent(`dispatch ${property}Change`);
       }
     });
 

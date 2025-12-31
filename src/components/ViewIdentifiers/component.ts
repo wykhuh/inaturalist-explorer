@@ -25,9 +25,10 @@ class ViewIdentifiers extends HTMLElement {
   }
 
   handleEvent(event: Event) {
+    loggerEvent(`[ViewIdentifiers event] ${event.type}`);
+
     let resourceChanges = ["observationsChange", "identificationsChange"];
     if (resourceChanges.includes(event.type)) {
-      loggerEvent(`++ ViewIdentifiers ${event.type}`);
       fetchAndRenderData(perPage, paginationCallback, window.app.store);
     }
   }

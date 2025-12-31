@@ -1,5 +1,5 @@
 import { setupComponent } from "../../lib/component_utils";
-import { loggerRender } from "../../lib/logger";
+import { loggerEvent, loggerRender } from "../../lib/logger";
 import { template } from "./template";
 import { pageChangeHandler } from "./utils";
 
@@ -30,7 +30,7 @@ class Header extends HTMLElement {
   }
 
   handleEvent(event: CustomEvent) {
-    loggerRender(`++ Header ${event.type}`);
+    loggerEvent(`[Header event] ${event.type}`);
 
     if (event.type === "click") {
       event.preventDefault();

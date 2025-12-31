@@ -1,4 +1,4 @@
-import { loggerRender } from "../../lib/logger";
+import { loggerEvent, loggerRender } from "../../lib/logger";
 import type { DataComponentType, AppStoreType } from "../../types/app";
 import { createSequence } from "./utils";
 
@@ -71,6 +71,7 @@ export class Pagination extends HTMLElement {
   handleEvent(event: Event) {
     let target = event.target as HTMLElement;
     if (!target) return;
+    loggerEvent(`[Pagination event] ${event.type}`);
 
     let value = Number(target.innerText);
 

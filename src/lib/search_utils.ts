@@ -83,11 +83,13 @@ export function renderSelectedResources(
   if (doSideEffects) {
     updateAppUrl(window.location, appStore);
     if (isIdentificationsCheck(appStore)) {
+      loggerEvent(
+        "[renderSelectedResources dispatchEvent] identificationsChange",
+      );
       window.dispatchEvent(new Event("identificationsChange"));
-      loggerEvent("dispatch identificationsChange");
     } else if (isObservationsCheck(appStore)) {
+      loggerEvent("[renderSelectedResources dispatchEvent] observationsChange");
       window.dispatchEvent(new Event("observationsChange"));
-      loggerEvent("dispatch observationsChange");
     }
   }
 }

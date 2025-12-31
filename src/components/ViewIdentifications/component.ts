@@ -27,13 +27,14 @@ class ViewIdentifications extends HTMLElement {
   }
 
   handleEvent(event: CustomEvent) {
+    loggerEvent(`[ViewIdentifications event] ${event.type}`);
+
     let resourceChanges = [
       "identificationsChange",
       "localeChanged",
       "nameOrderChanged",
     ];
     if (resourceChanges.includes(event.type)) {
-      loggerEvent(`++ ViewIdentifications ${event.type}`);
       fetchAndRenderData(perPage, paginationCallback, window.app.store);
     }
   }

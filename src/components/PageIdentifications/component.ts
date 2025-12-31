@@ -1,5 +1,5 @@
 import { setupComponent } from "../../lib/component_utils";
-import { loggerRender } from "../../lib/logger";
+import { loggerEvent, loggerRender } from "../../lib/logger";
 import {
   toggleIdentificationsHandler,
   toggleSettingsHandler,
@@ -46,6 +46,7 @@ export class PageIdentifications extends HTMLElement {
   handleEvent(event: Event) {
     let target = event.target as HTMLElement;
     if (!target) return;
+    loggerEvent(`[PageIdentifications event] ${event.type}`);
 
     if (event.type === "click") {
       if (target.id === "sidebar-toggle") {

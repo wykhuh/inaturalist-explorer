@@ -270,8 +270,8 @@ export async function initPopulateStore(
 
   loggerStore("++ initPopulateStore end");
 
+  loggerEvent("[initPopulateStored dispatchEvent] storePopulated");
   window.dispatchEvent(new Event("storePopulated"));
-  loggerEvent("dispatch storePopulated");
 }
 
 function populateObservationsApiParams(

@@ -56,11 +56,12 @@ class ObservationFilters extends HTMLElement {
   handleEvent(event: Event) {
     let target = event.target as HTMLInputElement;
     if (!target) return;
+    loggerEvent(`[ObservationFilters event] ${event.type}`);
 
+    // wait for storePopulated event to render filters because there are some
+    // fields that need info from iNat API
     let events = ["navResourceChange", "storePopulated"];
     if (events.includes(event.type)) {
-      loggerEvent(`++ ObservationFilters ${event.type}`);
-
       this.render();
     }
 

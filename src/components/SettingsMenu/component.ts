@@ -29,7 +29,6 @@ class SettingsMenu extends HTMLElement {
   async handleEvent(event: Event) {
     let target = event.target as HTMLInputElement;
     if (!target) return;
-
     loggerEvent(`[SettingsMenu Event] ${target.id}`);
 
     if (target.id === "language-select") {

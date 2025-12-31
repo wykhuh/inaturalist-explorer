@@ -25,9 +25,10 @@ class ViewObservers extends HTMLElement {
   }
 
   handleEvent(event: Event) {
+    loggerEvent(`[ViewObservers event] ${event.type}`);
+
     let resourceChanges = ["observationsChange", "identificationsChange"];
     if (resourceChanges.includes(event.type)) {
-      loggerEvent(`++ ViewObservers ${event.type}`);
       fetchAndRenderData(perPage, paginationCallback, window.app.store);
     }
   }

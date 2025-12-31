@@ -36,6 +36,7 @@ class IdentificationsHeader extends HTMLElement {
   handleEvent(event: Event) {
     let target = event.target as HTMLElement;
     if (!target) return;
+    loggerEvent(`[IdentificationHeader event] ${event.type}`);
 
     // update header counts
     let updateCountsEvents = [
@@ -44,10 +45,8 @@ class IdentificationsHeader extends HTMLElement {
       "navResourceChange",
     ];
     if (updateCountsEvents.includes(event.type)) {
-      // app uses two <identifications-header>;
-      // only execute for instance that has updatecounts="true"
+      // only update counts for component instance that has updatecounts="true"
       if (this.dataset.updatecounts === "true") {
-        loggerEvent(`++ IdentificationHeader ${event.type}`);
         updateCountsHeader(window.app.store);
       }
     }
