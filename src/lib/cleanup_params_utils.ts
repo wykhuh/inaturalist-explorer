@@ -164,6 +164,8 @@ function convertIdentificationParamsToObservationParams(
         .split(",")
         .map((id: string) => (iconicTaxaIdName as any)[id])
         .join(",");
+    } else if (key.startsWith("user_id")) {
+      cleanedParms.ident_user_id = value;
     } else if (key.startsWith("observed_")) {
       let k = key.replace("observed_", "");
       cleanedParms[k] = value;
