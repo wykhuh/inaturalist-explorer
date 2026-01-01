@@ -74,8 +74,9 @@ export async function initPopulateStore(
   } else if (isIdentifications) {
     populateIdentificationsApiParams(appStore, urlStore);
   }
+  // HACK: trigger store proxy
+  appStore.observationsApiParams = appStore.observationsApiParams;
 
-  // use url store to populate store view and and subview
   appStore.currentView = urlStore.currentView;
 
   // populate viewMetadata
@@ -90,9 +91,6 @@ export async function initPopulateStore(
       };
     }
   }
-
-  // HACK: trigger store proxy
-  appStore.observationsApiParams = appStore.observationsApiParams;
 
   // NOTE: update when adding selectedResource;  initPopulateStore
 
@@ -709,8 +707,15 @@ export async function initApp() {
   let urlData = decodeAppUrl(window.location.search, window.location.pathname);
   await initPopulateStore(appStore, urlData);
 
+  initRenderView(appStore);
+}
+
+function initRenderView(appStore: AppStoreType) {
+  if (!appStore.currentView) return;
+
   addCurrentPageClass(appStore.record_type);
 
+  // load view
   let viewContainerEl = document.querySelector("#view-container");
   if (!viewContainerEl) return;
 

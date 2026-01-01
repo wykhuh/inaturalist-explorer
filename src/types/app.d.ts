@@ -18,7 +18,7 @@ declare global {
 
 type RouterType = {
   init: () => void;
-  go: (path: string, params?: string, addToHistory?: boolean) => void;
+  go: (recordType: RecordTypes) => void;
 };
 
 export interface AppStoreType {

@@ -1,3 +1,4 @@
+import { objectFlip } from "../lib/utils";
 import type {
   AppStoreSelectedResourcesKeysType,
   IdentificationsApiParamsKeysType,
@@ -350,3 +351,13 @@ export const IdentificationsApiNames: string[] =
   IdentificationsApiNonFilterableNames.concat(
     IdentificationsApiFilterableNames,
   );
+
+export let recordTypeToPathObj = {
+  about: "/about/",
+  observations: "/",
+  identifications: "/identifications/",
+};
+
+export let pathToRecordType = {
+  ...objectFlip(recordTypeToPathObj),
+};

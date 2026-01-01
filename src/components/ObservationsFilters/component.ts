@@ -32,6 +32,7 @@ class ObservationFilters extends HTMLElement {
     setupComponent(template, this);
     this.formEl = this.querySelector("#filters-form") as HTMLFormElement;
 
+    window.addEventListener("popstateAfter", this);
     this.formEl?.addEventListener("input", this);
     this.formEl?.addEventListener("reset", this);
     window.addEventListener("navResourceChange", this);
@@ -44,6 +45,7 @@ class ObservationFilters extends HTMLElement {
   disconnectedCallback() {
     loggerRender("++ ObservationFilters disconnectedCallback");
 
+    window.removeEventListener("popstateAfter", this);
     this.formEl?.removeEventListener("input", this);
     this.formEl?.removeEventListener("reset", this);
     window.removeEventListener("navResourceChange", this);
@@ -60,7 +62,7 @@ class ObservationFilters extends HTMLElement {
 
     // wait for storePopulated event to render filters because there are some
     // fields that need info from iNat API
-    let events = ["navResourceChange", "storePopulated"];
+    let events = ["navResourceChange", "storePopulated", "popstateAfter"];
     if (events.includes(event.type)) {
       this.render();
     }

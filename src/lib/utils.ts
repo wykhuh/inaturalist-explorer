@@ -19,6 +19,7 @@ import {
   IdentificationsApiNames,
   ObservationsApiFilterableNames,
   ObservationsApiNames,
+  recordTypeToPathObj,
 } from "../data/app_data";
 import { defaultColorScheme } from "./map_colors_utils";
 import { convertParamsBBoxToLngLat } from "./map_utils";
@@ -272,8 +273,18 @@ export function updateAppUrl(url_location: Location, appStore: AppStoreType) {
     url += `?${paramsString}`;
   }
 
-  loggerEvent("[updateAppUrl] history.pushState");
-  window.history.pushState({}, "", url);
+  let path = `${recordTypeToPathObj[appStore.record_type]}`;
+  if (paramsString) {
+    path += `?${paramsString}`;
+  }
+
+  let state = {
+    path,
+    view: appStore.currentView,
+    recordType: appStore.record_type,
+  };
+  loggerEvent("[updateAppUrl] history.pushState" + JSON.stringify(state));
+  window.history.pushState(state, "", path);
 }
 
 export function decodeAppUrl(searchParams: string, path = "/") {
@@ -654,4 +665,12 @@ export function sortArrayOfObjectsByDate(
     console.log(dateA, (new Date(dateA) as any) - (new Date(dateB) as any));
     return (new Date(dateA) as any) - (new Date(dateB) as any);
   });
+}
+
+export function objectFlip(obj: { [key: string]: any }) {
+  const newObj = {} as any;
+  Object.keys(obj).forEach((key) => {
+    newObj[obj[key as keyof typeof obj]] = key;
+  });
+  return newObj;
 }

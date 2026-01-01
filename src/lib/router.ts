@@ -1,31 +1,57 @@
-import type { RouterType } from "../types/app";
-import { loggerRender } from "./logger";
+import { viewChangeHandlerPopstate } from "../components/ObservationsHeader/shared_utils";
+import { pathToRecordType } from "../data/app_data";
+import type { RecordTypes, RouterType } from "../types/app";
+import { loggerEvent, loggerRender } from "./logger";
 
 const Router: RouterType = {
   init: () => {
     // Event Handler for URL changes
     window.addEventListener("popstate", (event) => {
-      Router.go(event.state.route, event.state.params, false);
+      // load new page
+      Router.go(event.state.recordType);
+
+      // create new event to trigger loading a new view
+      window.dispatchEvent(
+        new CustomEvent("popstateAfter", {
+          detail: {
+            path: event.state.path,
+            recordType: event.state.recordType,
+            view: event.state.view,
+          },
+        }),
+      );
+    });
+
+    // load new view after popstateAfter and new page is loaded
+    window.addEventListener("popstateAfter", (e) => {
+      let event = e as CustomEvent;
+      loggerEvent("[main event] popstateAfter, " + event.detail.view);
+
+      if (event.detail.view) {
+        window.app.store.record_type = event.detail.recordType;
+        window.app.store.currentView = event.detail.view;
+        viewChangeHandlerPopstate(
+          event.detail.view,
+          window.app.store,
+          document,
+        );
+      }
     });
 
     // Check the initial URL
-    Router.go(location.pathname, location.search);
+    let recordType: RecordTypes = pathToRecordType[location.pathname];
+    Router.go(recordType);
   },
-  go: (path: string, params = undefined, addToHistory = true) => {
-    loggerRender(`Going to ${path}`);
-
-    if (addToHistory) {
-      history.pushState({ path, params }, "", path + params);
-    }
+  go: (recordType: RecordTypes) => {
     let pageElement = null;
-    switch (path) {
-      case "/":
+    switch (recordType) {
+      case "observations":
         pageElement = document.createElement("page-observations");
         break;
-      case "/identifications/":
+      case "identifications":
         pageElement = document.createElement("page-identifications");
         break;
-      case "/about/":
+      case "about":
         pageElement = document.createElement("page-about");
         break;
       default:
@@ -34,7 +60,6 @@ const Router: RouterType = {
 
     loggerRender("pageElement:", pageElement);
 
-    // document.querySelector("main").children[0].remove();
     const mainEl = document.querySelector("#app") as HTMLElement;
     mainEl.innerHTML = "";
     mainEl.appendChild(pageElement);

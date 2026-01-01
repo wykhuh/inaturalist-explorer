@@ -14,6 +14,7 @@ class IdentificationsHeader extends HTMLElement {
 
     this.render();
 
+    window.addEventListener("popstateAfter", this);
     window.addEventListener("navResourceChange", this);
     window.addEventListener("storePopulated", this);
     window.addEventListener("identificationsChange", this);
@@ -25,6 +26,7 @@ class IdentificationsHeader extends HTMLElement {
   disconnectedCallback() {
     loggerRender("++ IdentificationsHeader disconnectedCallback");
 
+    window.removeEventListener("popstateAfter", this);
     window.removeEventListener("navResourceChange", this);
     window.removeEventListener("storePopulated", this);
     window.removeEventListener("identificationsChange", this);
@@ -43,6 +45,7 @@ class IdentificationsHeader extends HTMLElement {
       "identificationsChange",
       "storePopulated",
       "navResourceChange",
+      "popstateAfter",
     ];
     if (updateCountsEvents.includes(event.type)) {
       // only update counts for component instance that has updatecounts="true"
@@ -51,7 +54,7 @@ class IdentificationsHeader extends HTMLElement {
       }
     }
 
-    let viewEvents = ["storePopulated", "navResourceChange"];
+    let viewEvents = ["storePopulated", "navResourceChange", "popstateAfter"];
     if (viewEvents.includes(event.type)) {
       let itemEl = this.querySelector(`#${window.app.store.currentView}`);
       if (itemEl) {

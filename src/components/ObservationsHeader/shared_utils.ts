@@ -21,11 +21,23 @@ export function viewChangeHandler(
   }
 }
 
+export function viewChangeHandlerPopstate(
+  view: ObservationViewsType,
+  appStore: AppStoreType,
+  componentContext: Document,
+) {
+  let viewContainerEl = document.querySelector("#view-container");
+  if (!viewContainerEl) return;
+
+  updateView(view, viewContainerEl, appStore, componentContext, false);
+}
+
 export function updateView(
   targetView: ObservationViewsType,
   parentEl: Element,
   appStore: AppStoreType,
-  componentContext: HTMLElement,
+  componentContext: HTMLElement | Document,
+  updatePushState = true,
 ) {
   if (!parentEl) return;
 
@@ -64,7 +76,9 @@ export function updateView(
   let view = document.createElement(templateName);
   parentEl.appendChild(view);
 
-  updateAppUrl(window.location, appStore);
+  if (updatePushState) {
+    updateAppUrl(window.location, appStore);
+  }
 }
 
 export async function updateHeaderCount(

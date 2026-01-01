@@ -63,7 +63,7 @@ export async function pageChangeHandler(
   // load page component
   const path = target.getAttribute("href");
   if (path) {
-    router.go(path, location.search);
+    router.go(recordType);
     // HACK: trigger proxy store
     appStore.observationsApiParams = appStore.observationsApiParams;
   }
@@ -75,6 +75,8 @@ export async function pageChangeHandler(
     if (oldView) {
       if (recordType === "observations" && oldView === "identifications") {
         appStore.currentView = "observations_observations";
+      } else if (recordType === "about") {
+        appStore.currentView = undefined;
       } else {
         appStore.currentView = (recordType +
           "_" +

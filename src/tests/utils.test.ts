@@ -560,7 +560,15 @@ describe("updateAppUrl", () => {
 
     updateAppUrl(global.window.location, appStore);
 
-    expect(pushSpy).toHaveBeenCalledWith({}, "", "http://localhost:3000/");
+    expect(pushSpy).toHaveBeenCalledWith(
+      {
+        path: "/",
+        recordType: "observations",
+        view: "observations_observations",
+      },
+      "",
+      "/",
+    );
 
     pushSpy.mockRestore();
   });
@@ -580,9 +588,13 @@ describe("updateAppUrl", () => {
     updateAppUrl(global.window.location, appStore);
 
     expect(pushSpy).toHaveBeenCalledWith(
-      {},
+      {
+        path: "/?taxon_id=48460&colors=%234477aa&spam=false",
+        recordType: "observations",
+        view: "observations_observations",
+      },
       "",
-      `http://localhost:3000/?taxon_id=${life().id}&colors=${colorsEncoded[0]}&spam=false`,
+      `/?taxon_id=${life().id}&colors=${colorsEncoded[0]}&spam=false`,
     );
 
     pushSpy.mockRestore();
@@ -1246,6 +1258,22 @@ describe("decodeAppUrl if identifications path", () => {
     };
 
     let result = decodeAppUrl(searchParams, path);
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test.skip("returns object with taxa data if without_taxon_id is present", () => {
+    let searchParams = "?without_taxon_id=1";
+
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      selectedWithoutTaxa: [{ id: 1 }],
+      observationsApiParams: {},
+      currentView: "identifications_observations",
+      record_type: "identifications",
+    };
+
+    let result = decodeAppUrl(searchParams, "/identifications/");
 
     expect(result).toStrictEqual(expected);
   });

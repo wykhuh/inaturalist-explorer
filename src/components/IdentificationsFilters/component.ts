@@ -20,6 +20,7 @@ class IdentificationsFilters extends HTMLElement {
     this.formEl?.addEventListener("reset", this);
     window.addEventListener("storePopulated", this);
     window.addEventListener("navResourceChange", this);
+    window.addEventListener("popstateAfter", this);
   }
 
   disconnectedCallback() {
@@ -29,6 +30,7 @@ class IdentificationsFilters extends HTMLElement {
     this.formEl?.removeEventListener("reset", this);
     window.removeEventListener("storePopulated", this);
     window.removeEventListener("navResourceChange", this);
+    window.removeEventListener("popstateAfter", this);
   }
 
   handleEvent(event: Event) {
@@ -38,7 +40,7 @@ class IdentificationsFilters extends HTMLElement {
 
     // wait for storePopulated event to render filters because there are some
     // fields that need info from iNat API
-    let events = ["navResourceChange", "storePopulated"];
+    let events = ["navResourceChange", "storePopulated", "popstateAfter"];
     if (events.includes(event.type)) {
       this.render();
     }
