@@ -1258,7 +1258,8 @@
   ul#selected-users-identifiers-list,
   ul#selected-users-annotators-list,
   ul#selected-species-identified-list,
-  ul#selected-without-taxa-list {
+  ul#selected-without-taxa-list,
+  ul#selected-without-taxa-identified-list {
     padding: 0;
     list-style: none;
 

@@ -479,8 +479,22 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   }
 
   if ("without_taxon_id" in urlParams) {
+    let ids = urlParams.without_taxon_id.toString().split(",");
+    let taxa = ids
+      .map((id) => {
+        return { id: Number(id) };
+      })
+      .filter((p) => p);
     if (isObservations) {
-      let ids = urlParams.without_taxon_id.split(",");
+      store.selectedWithoutTaxa = taxa as any;
+    } else if (isIdentifications) {
+      store.selectedWithoutTaxaIdentified = taxa as any;
+    }
+  }
+
+  if ("without_observation_taxon_id" in urlParams) {
+    if (isIdentifications) {
+      let ids = urlParams.without_observation_taxon_id.toString().split(",");
       let taxa = ids
         .map((id) => {
           return { id: Number(id) };

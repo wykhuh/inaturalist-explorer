@@ -34,6 +34,7 @@ export interface AppStoreType {
   selectedProjects: NormalizediNatProjectType[];
   selectedNotInProject: NormalizediNatProjectType;
   selectedWithoutTaxa: NormalizediNatTaxonType[];
+  selectedWithoutTaxaIdentified: NormalizediNatTaxonType[];
   taxaMapLayers: { [index: string]: TileLayer[] };
   placesMapLayers: { [index: string]: CustomGeoJSONType[] };
   projectsMapLayers?: { [index: string]: CustomGeoJSONType[] };
@@ -156,7 +157,8 @@ export type AppStoreSelectedResourcesKeysType =
   | "selectedProjects"
   | "selectedUsersIdentifiers"
   | "selectedUsersAnnotators"
-  | "selectedWithoutTaxa";
+  | "selectedWithoutTaxa"
+  | "selectedWithoutTaxaIdentified";
 
 export type AppStoreTypeParamsKeys =
   | "observationsApiParams"
@@ -466,6 +468,7 @@ type SearchOptions = {
   taxaIdentified: SearchOption;
   usersAnnotators: SearchOption;
   withoutTaxa: SearchOption;
+  withoutTaxaIdentified: SearchOption;
 };
 
 type SearchOption = { setup: any; selectedHandler: any };

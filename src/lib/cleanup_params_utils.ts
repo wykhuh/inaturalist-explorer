@@ -151,6 +151,7 @@ function convertIdentificationParamsToObservationParams(
     "per_page",
     "order",
     "order_by",
+    "without_observation_taxon_id",
   ];
   let cleanedParms = {} as any;
 
@@ -164,6 +165,8 @@ function convertIdentificationParamsToObservationParams(
         .split(",")
         .map((id: string) => (iconicTaxaIdName as any)[id])
         .join(",");
+    } else if (key === "without_observation_taxon_id") {
+      cleanedParms.without_taxon_id = value;
     } else if (key.startsWith("user_id")) {
       cleanedParms.ident_user_id = value;
     } else if (key.startsWith("observed_")) {

@@ -127,6 +127,10 @@ import {
   removeWithoutTaxon,
   withoutTaxonSelectedHandler,
 } from "../../lib/search_without_taxa.ts";
+import {
+  removeWithoutTaxonIdentified,
+  withoutTaxonIdentifiedSelectedHandler,
+} from "../../lib/search_without_taxa_identified.ts";
 
 beforeEach(() => {
   const { JSDOM } = jsdom;
@@ -815,6 +819,39 @@ describe("withoutTaxonSelectedHandler", () => {
     );
     expect(store.selectedWithoutTaxa[0].observations_count).toBeUndefined();
     expect(store.selectedWithoutTaxa[1].observations_count).toBeUndefined();
+  });
+});
+
+describe("withoutTaxonIdentifiedSelectedHandler", () => {
+  test(`does not add taxa`, async () => {
+    let store = structuredClone(mapStore);
+    let life1 = life();
+    delete life1.color;
+    delete life1.observations_count;
+    let oak1 = redOak();
+    delete oak1.color;
+    delete oak1.observations_count;
+
+    expectEmpytMap(store);
+
+    await initPopulateStore(store, decodeAppUrl("", "/"));
+    await initRenderMap(store);
+
+    await withoutTaxonIdentifiedSelectedHandler(lifeBasic, "life", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord,
+    ]);
+    expectEmptyResources(store, ["selectedTaxa"]);
+    expect(store.selectedTaxa).toStrictEqual([allTaxa]);
+    expect(store.selectedWithoutTaxaIdentified).toStrictEqual([]);
+    let expectedParams1 = {
+      ...defaultParams,
+      taxon_id: allTaxa.id.toString(),
+      colors: iNatOrange,
+    };
+    expect(store.observationsApiParams).toStrictEqual(expectedParams1);
   });
 });
 
@@ -1592,6 +1629,58 @@ describe("taxonSelectedHandler with identifications", () => {
   });
 });
 
+describe("taxonSelectedHandler with identifications", () => {
+  test(`add life; add red oak`, async () => {
+    let store = structuredClone(mapStore);
+    let oakCount = redOakIdentification().identifications_count;
+    let lifeCount = lifeIdentification().identifications_count;
+
+    expectEmpytMap(store);
+
+    await initPopulateStore(store, decodeAppUrl("", "/identifications/"));
+    await initRenderMap(store);
+
+    await taxonSelectedHandler(lifeBasic, "life", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
+    ]);
+    expectEmptyResources(store, ["selectedTaxa"]);
+    expectLifeTaxaIdentification(store, lifeCount);
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    let expectedParams1 = {
+      observation_taxon_id: life().id.toString(),
+    };
+    expect(store.identificationsApiParams).toStrictEqual(expectedParams1);
+    expect(window.location.search).toBe(
+      `?observation_taxon_id=${life().id}&colors=${colorsEncoded[0]}`,
+    );
+    expect(store.selectedTaxa[0].identifications_count).toBe(lifeCount);
+
+    await taxonSelectedHandler(redOakBasic, "red", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_life,
+      gridLabel_oaks,
+    ]);
+    expectEmptyResources(store, ["selectedTaxa"]);
+    expectLifeOakTaxaIdentifications(store);
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    let expectedParams2 = {
+      observation_taxon_id: `${life().id},${redOak().id}`,
+    };
+    expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
+    expect(window.location.search).toBe(
+      `?observation_taxon_id=${life().id},${redOak().id}` +
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}`,
+    );
+    expect(store.selectedTaxa[0].identifications_count).toBe(lifeCount);
+    expect(store.selectedTaxa[1].identifications_count).toBe(oakCount);
+  });
+});
+
 describe("taxonIdentifiedSelectedHandler with identifications", () => {
   test(`add life`, async () => {
     let store = structuredClone(mapStore);
@@ -1781,6 +1870,120 @@ describe("userIdentifierSelectedHandler with identifications", () => {
     );
     expect(store.selectedUsersIdentifiers[1].identifications_count).toBeCloseTo(
       count * 0.55,
+    );
+  });
+});
+
+describe("withoutTaxonSelectedHandler with identifications", () => {
+  test(`add life; add red oak`, async () => {
+    let store = structuredClone(mapStore);
+    let life1 = life();
+    delete life1.color;
+    delete life1.observations_count;
+    let oak1 = redOak();
+    delete oak1.color;
+    delete oak1.observations_count;
+
+    expectEmpytMap(store);
+
+    await initPopulateStore(store, decodeAppUrl("", "/identifications/"));
+    await initRenderMap(store);
+
+    await withoutTaxonSelectedHandler(lifeBasic, "life", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord,
+    ]);
+    expectEmptyResources(store, ["selectedTaxa", "selectedWithoutTaxa"]);
+    expect(store.selectedTaxa).toStrictEqual([allTaxaIdentification]);
+    expect(store.selectedWithoutTaxa).toStrictEqual([life1]);
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    let expectedParams1 = {
+      observation_taxon_id: allTaxa.id.toString(),
+      without_observation_taxon_id: `${life1.id}`,
+    };
+    expect(store.identificationsApiParams).toStrictEqual(expectedParams1);
+    expect(window.location.search).toBe(
+      `?without_observation_taxon_id=${life1.id}`,
+    );
+
+    await withoutTaxonSelectedHandler(redOakBasic, "red", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord,
+    ]);
+    expectEmptyResources(store, ["selectedTaxa", "selectedWithoutTaxa"]);
+    expect(store.selectedTaxa).toStrictEqual([allTaxaIdentification]);
+    expect(store.selectedWithoutTaxa).toStrictEqual([life1, oak1]);
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    let expectedParams2 = {
+      observation_taxon_id: allTaxa.id.toString(),
+      without_observation_taxon_id: `${life().id},${redOak().id}`,
+    };
+    expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
+    expect(window.location.search).toBe(
+      `?without_observation_taxon_id=${life1.id},${oak1.id}`,
+    );
+  });
+});
+
+describe("withoutTaxonIdentifiedSelectedHandler with identifications", () => {
+  test(`add life; add red oak`, async () => {
+    let store = structuredClone(mapStore);
+    let life1 = life();
+    delete life1.color;
+    delete life1.observations_count;
+    let oak1 = redOak();
+    delete oak1.color;
+    delete oak1.observations_count;
+
+    expectEmpytMap(store);
+
+    await initPopulateStore(store, decodeAppUrl("", "/identifications/"));
+    await initRenderMap(store);
+
+    await withoutTaxonIdentifiedSelectedHandler(lifeBasic, "life", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord,
+    ]);
+    expectEmptyResources(store, [
+      "selectedTaxa",
+      "selectedWithoutTaxaIdentified",
+    ]);
+    expect(store.selectedTaxa).toStrictEqual([allTaxaIdentification]);
+    expect(store.selectedWithoutTaxaIdentified).toStrictEqual([life1]);
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    let expectedParams1 = {
+      observation_taxon_id: allTaxa.id.toString(),
+      without_taxon_id: `${life1.id}`,
+    };
+    expect(store.identificationsApiParams).toStrictEqual(expectedParams1);
+    expect(window.location.search).toBe(`?without_taxon_id=${life1.id}`);
+
+    await withoutTaxonIdentifiedSelectedHandler(redOakBasic, "red", store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord,
+    ]);
+    expectEmptyResources(store, [
+      "selectedTaxa",
+      "selectedWithoutTaxaIdentified",
+    ]);
+    expect(store.selectedTaxa).toStrictEqual([allTaxaIdentification]);
+    expect(store.selectedWithoutTaxaIdentified).toStrictEqual([life1, oak1]);
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    let expectedParams2 = {
+      observation_taxon_id: allTaxa.id.toString(),
+      without_taxon_id: `${life().id},${redOak().id}`,
+    };
+    expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
+    expect(window.location.search).toBe(
+      `?without_taxon_id=${life1.id},${oak1.id}`,
     );
   });
 });
@@ -2295,6 +2498,7 @@ describe("removeWithoutTaxon", () => {
 
     expectEmptyResources(store, ["selectedTaxa", "selectedWithoutTaxa"]);
     expect(store.selectedWithoutTaxa).toStrictEqual([life1, oak1]);
+    expect(store.selectedTaxa).toStrictEqual([allTaxa]);
     let expectedParams2 = {
       ...defaultParams,
       taxon_id: allTaxa.id.toString(),
@@ -2544,6 +2748,130 @@ describe("removeUserIdentifier with identifications", () => {
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
     });
+    expect(store.identificationsApiParams).toStrictEqual({
+      observation_taxon_id: allTaxa.id.toString(),
+    });
+    expect(window.location.search).toBe("");
+  });
+});
+
+describe("removeWithoutTaxon with identifications", () => {
+  test("add taxon; add taxon; remove taxon; remove taxon", async () => {
+    let store = structuredClone(mapStore);
+
+    let life1 = lifeIdentification();
+    delete life1.color;
+    delete life1.identifications_count;
+    let oak1 = redOakIdentification();
+    delete oak1.color;
+    delete oak1.identifications_count;
+
+    expectEmpytMap(store);
+
+    await initPopulateStore(store, decodeAppUrl("", "/identifications/"));
+    await initRenderMap(store);
+
+    await withoutTaxonSelectedHandler(lifeBasic, "life", store);
+    await withoutTaxonSelectedHandler(redOakBasic, "red", store);
+
+    expectEmptyResources(store, ["selectedTaxa", "selectedWithoutTaxa"]);
+    expect(store.selectedWithoutTaxa).toStrictEqual([life1, oak1]);
+    expect(store.selectedTaxa).toStrictEqual([allTaxaIdentification]);
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    let expectedParams2 = {
+      observation_taxon_id: allTaxa.id.toString(),
+      without_observation_taxon_id: `${life1.id},${oak1.id}`,
+    };
+    expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
+    expect(window.location.search).toBe(
+      `?without_observation_taxon_id=${life1.id},${oak1.id}`,
+    );
+
+    await removeWithoutTaxon(life1.id, store);
+
+    expectEmptyResources(store, ["selectedTaxa", "selectedWithoutTaxa"]);
+    expect(store.selectedWithoutTaxa).toStrictEqual([oak1]);
+    expect(store.selectedTaxa).toStrictEqual([allTaxaIdentification]);
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    let expectedParams3 = {
+      observation_taxon_id: allTaxa.id.toString(),
+      without_observation_taxon_id: `${oak1.id}`,
+    };
+    expect(store.identificationsApiParams).toStrictEqual(expectedParams3);
+    expect(window.location.search).toBe(
+      `?without_observation_taxon_id=${oak1.id}`,
+    );
+
+    await removeWithoutTaxon(oak1.id, store);
+
+    expectEmptyResources(store, ["selectedTaxa"]);
+    expect(store.selectedWithoutTaxa).toStrictEqual([]);
+    expect(store.selectedTaxa).toStrictEqual([allTaxaIdentification]);
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    expect(store.identificationsApiParams).toStrictEqual({
+      observation_taxon_id: allTaxa.id.toString(),
+    });
+    expect(window.location.search).toBe("");
+  });
+});
+
+describe("removeWithoutTaxonIdentified with identifications", () => {
+  test("add taxon; add taxon; remove taxon; remove taxon", async () => {
+    let store = structuredClone(mapStore);
+
+    let life1 = lifeIdentification();
+    delete life1.color;
+    delete life1.identifications_count;
+    let oak1 = redOakIdentification();
+    delete oak1.color;
+    delete oak1.identifications_count;
+
+    expectEmpytMap(store);
+
+    await initPopulateStore(store, decodeAppUrl("", "/identifications/"));
+    await initRenderMap(store);
+
+    await withoutTaxonIdentifiedSelectedHandler(lifeBasic, "life", store);
+    await withoutTaxonIdentifiedSelectedHandler(redOakBasic, "red", store);
+
+    expectEmptyResources(store, [
+      "selectedTaxa",
+      "selectedWithoutTaxaIdentified",
+    ]);
+    expect(store.selectedWithoutTaxaIdentified).toStrictEqual([life1, oak1]);
+    expect(store.selectedTaxa).toStrictEqual([allTaxaIdentification]);
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    let expectedParams2 = {
+      observation_taxon_id: allTaxa.id.toString(),
+      without_taxon_id: `${life1.id},${oak1.id}`,
+    };
+    expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
+    expect(window.location.search).toBe(
+      `?without_taxon_id=${life1.id},${oak1.id}`,
+    );
+
+    await removeWithoutTaxonIdentified(life1.id, store);
+
+    expectEmptyResources(store, [
+      "selectedTaxa",
+      "selectedWithoutTaxaIdentified",
+    ]);
+    expect(store.selectedWithoutTaxaIdentified).toStrictEqual([oak1]);
+    expect(store.selectedTaxa).toStrictEqual([allTaxaIdentification]);
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    let expectedParams3 = {
+      observation_taxon_id: allTaxa.id.toString(),
+      without_taxon_id: `${oak1.id}`,
+    };
+    expect(store.identificationsApiParams).toStrictEqual(expectedParams3);
+    expect(window.location.search).toBe(`?without_taxon_id=${oak1.id}`);
+
+    await removeWithoutTaxonIdentified(oak1.id, store);
+
+    expectEmptyResources(store, ["selectedTaxa"]);
+    expect(store.selectedWithoutTaxaIdentified).toStrictEqual([]);
+    expect(store.selectedTaxa).toStrictEqual([allTaxaIdentification]);
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       observation_taxon_id: allTaxa.id.toString(),
     });

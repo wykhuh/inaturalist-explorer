@@ -1262,8 +1262,24 @@ describe("decodeAppUrl if identifications path", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test.skip("returns object with taxa data if without_taxon_id is present", () => {
+  test("returns object with taxa data if without_taxon_id is present", () => {
     let searchParams = "?without_taxon_id=1";
+
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      selectedWithoutTaxaIdentified: [{ id: 1 }],
+      observationsApiParams: {},
+      currentView: "identifications_observations",
+      record_type: "identifications",
+    };
+
+    let result = decodeAppUrl(searchParams, "/identifications/");
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("returns object with taxa data if without_observation_taxon_id is present", () => {
+    let searchParams = "?without_observation_taxon_id=1";
 
     let expected = {
       ...structuredClone(defaultUrlStore),

@@ -207,6 +207,9 @@ export let gridLabel_life = "overlay: iNat grid, taxon_id 48460";
 export let gridLabel_oaks = "overlay: iNat grid, taxon_id 861036";
 export let gridLabel_monarch = "overlay: iNat grid, taxon_id 48662";
 
+export let gridLabel_withoutLife =
+  "overlay: iNat grid, taxon_id 0, without_taxon_id 48460";
+
 export let gridLabel_life_la =
   "overlay: iNat grid, taxon_id 48460, place_id 962";
 export let gridLabel_allTaxaRecord_la =

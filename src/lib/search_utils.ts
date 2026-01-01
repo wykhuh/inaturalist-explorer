@@ -16,45 +16,36 @@ import { updateAppUrl } from "./utils";
 import {
   placeSelectedHandler,
   setupPlacesSearch,
-  renderPlacesList,
 } from "../lib/search_places.ts";
 import {
   projectSelectedHandler,
   setupProjectSearch,
-  renderProjectsList,
 } from "../lib/search_projects.ts";
-import {
-  setupUserSearch,
-  userSelectedHandler,
-  renderUsersList,
-} from "../lib/search_users.ts";
-import {
-  setupTaxaSearch,
-  taxonSelectedHandler,
-  renderTaxaList,
-} from "../lib/search_taxa.ts";
+import { setupUserSearch, userSelectedHandler } from "../lib/search_users.ts";
+import { setupTaxaSearch, taxonSelectedHandler } from "../lib/search_taxa.ts";
 import { isResourceObject } from "../types/utils.ts";
 import {
-  renderUsersIdentifiersList,
   setupUserIdentifierSearch,
   userIdentifierSelectedHandler,
 } from "./search_users_identifiers.ts";
 import {
-  renderTaxaIdentifiedList,
   setupTaxaIdentifiedSearch,
   taxonIdentifiedSelectedHandler,
 } from "./search_taxa_identified.ts";
 import { loggerEvent } from "./logger.ts";
 import {
-  renderUsersAnnotatorsList,
   setupUserAnnotatorsSearch,
   userAnnotatorsSelectedHandler,
 } from "./search_users_annotators.ts";
 import {
-  renderWithoutTaxaList,
   setupWithoutTaxaSearch,
   withoutTaxonSelectedHandler,
 } from "./search_without_taxa.ts";
+import {
+  setupWithoutTaxaIdentifiedSearch,
+  withoutTaxonIdentifiedSelectedHandler,
+} from "./search_without_taxa_identified.ts";
+import { renderSelectResourcesLists } from "../data/app_data.ts";
 
 export async function updateTilesForSelectedTaxa(appStore: AppStoreType) {
   for await (const taxon of appStore.selectedTaxa) {
@@ -71,14 +62,9 @@ export function renderSelectedResources(
   doSideEffects: boolean,
 ) {
   // NOTE: update when adding selectedResource; renderSelectedResources
-  renderTaxaList(appStore);
-  renderTaxaIdentifiedList(appStore);
-  renderPlacesList(appStore);
-  renderProjectsList(appStore);
-  renderUsersList(appStore);
-  renderUsersIdentifiersList(appStore);
-  renderUsersAnnotatorsList(appStore);
-  renderWithoutTaxaList(appStore);
+  renderSelectResourcesLists.forEach((list) => {
+    list(appStore);
+  });
 
   if (doSideEffects) {
     updateAppUrl(window.location, appStore);
@@ -139,6 +125,10 @@ export function multisearchSetup(appStore: AppStoreType) {
     withoutTaxa: {
       setup: setupWithoutTaxaSearch,
       selectedHandler: withoutTaxonSelectedHandler,
+    },
+    withoutTaxaIdentified: {
+      setup: setupWithoutTaxaIdentifiedSearch,
+      selectedHandler: withoutTaxonIdentifiedSelectedHandler,
     },
   };
 
@@ -243,4 +233,11 @@ export function showHideTaxaIdentifiedHeader() {
 
 export function showHideWithoutTaxaHeader() {
   showHideHeader("#sidebar-menu .without-taxa-heading", "selectedWithoutTaxa");
+}
+
+export function showHideWithoutTaxaIdentifiedHeader() {
+  showHideHeader(
+    "#sidebar-menu .without-taxa-identified-heading",
+    "selectedWithoutTaxaIdentified",
+  );
 }

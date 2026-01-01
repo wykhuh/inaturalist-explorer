@@ -17,6 +17,7 @@ export const mapStore: AppStoreType = {
   selectedTaxa: [],
   selectedTaxaIdentified: [],
   selectedWithoutTaxa: [],
+  selectedWithoutTaxaIdentified: [],
   selectedUnobservedByUser: {} as NormalizediNatUserType,
   selectedUsers: [],
   selectedUsersAnnotators: [],

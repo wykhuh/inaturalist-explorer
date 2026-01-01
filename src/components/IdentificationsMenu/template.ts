@@ -7,7 +7,11 @@ export const template = html`
         Search for
         <select id="search-type" name="search-type">
           <option selected value="taxa">Observed Species</option>
+          <option value="withoutTaxa">Without Observed Species</option>
           <option value="taxaIdentified">Identified Species</option>
+          <option value="withoutTaxaIdentified">
+            Without Identified Species
+          </option>
           <option value="places">iNaturalist Places</option>
           <option value="usersIdentifiers">Identifiers</option>
         </select>
@@ -27,8 +31,16 @@ export const template = html`
     <h2 class="taxa-heading" hidden>Observed Species</h2>
     <ul id="selected-species-list"></ul>
 
+    <h2 class="without-taxa-heading" hidden>Without Observed Species</h2>
+    <ul id="selected-without-taxa-list"></ul>
+
     <h2 class="taxa-identified-heading" hidden>Identified Species</h2>
     <ul id="selected-species-identified-list"></ul>
+
+    <h2 class="without-taxa-identified-heading" hidden>
+      Without Identified Species
+    </h2>
+    <ul id="selected-without-taxa-identified-list"></ul>
 
     <h2 class="places-heading" hidden>Places</h2>
     <ul id="selected-places-list"></ul>

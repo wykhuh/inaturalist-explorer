@@ -5,6 +5,7 @@ import { renderTaxonNames } from "../../lib/render_utils";
 // with defaultColorScheme
 import { removeTaxonIdentified } from "../../lib/search_taxa_identified.ts";
 import { removeWithoutTaxon } from "../../lib/search_without_taxa.ts";
+import { removeWithoutTaxonIdentified } from "../../lib/search_without_taxa_identified.ts";
 import { pluralize } from "../../lib/utils.ts";
 import type { AppStoreType, NormalizediNatTaxonType } from "../../types/app";
 import { template } from "./template";
@@ -51,6 +52,8 @@ class SelectedTaxaBasicItem extends HTMLElement {
           await removeTaxonIdentified(taxon.id, window.app.store);
         } else if (taxonType === "withoutTaxon") {
           await removeWithoutTaxon(taxon.id, window.app.store);
+        } else if (taxonType === "withoutTaxonIdentified") {
+          await removeWithoutTaxonIdentified(taxon.id, window.app.store);
         }
       });
     }

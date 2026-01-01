@@ -333,6 +333,18 @@ export function removeOneWithoutTaxonFromStore(
   removeIdfromInatApiParams(appStore, "selectedWithoutTaxa", taxonId);
 }
 
+export function removeOneWithoutTaxonIdentifiedFromStore(
+  appStore: AppStoreType,
+  taxonId: number,
+) {
+  appStore.selectedWithoutTaxaIdentified =
+    appStore.selectedWithoutTaxaIdentified.filter(
+      (taxon) => taxon.id !== taxonId,
+    );
+  resetPageNumber(appStore);
+  removeIdfromInatApiParams(appStore, "selectedWithoutTaxaIdentified", taxonId);
+}
+
 export function removeOneTaxonFromStoreAndMap(
   appStore: AppStoreType,
   taxonId: number,
@@ -481,6 +493,7 @@ export function removeIdfromInatApiParams(
   value: any,
 ) {
   let isObservations = isObservationsCheck(appStore);
+  let isIdentifications = isIdentificationsCheck(appStore);
 
   // NOTE: update when adding selectedResource
   if (resource === "selectedTaxaIdentified") {
@@ -516,6 +529,17 @@ export function removeIdfromInatApiParams(
     }
   } else if (resource === "selectedWithoutTaxa") {
     if (isObservations) {
+      removeResourceId(appStore, resource, "without_taxon_id", value);
+    } else {
+      removeResourceId(
+        appStore,
+        resource,
+        "without_observation_taxon_id",
+        value,
+      );
+    }
+  } else if (resource === "selectedWithoutTaxaIdentified") {
+    if (isIdentifications) {
       removeResourceId(appStore, resource, "without_taxon_id", value);
     }
   } else {

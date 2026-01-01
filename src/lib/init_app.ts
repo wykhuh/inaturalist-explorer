@@ -225,7 +225,7 @@ export async function initPopulateStore(
     appStore.selectedTaxaIdentified,
   );
 
-  // load selected taxa
+  // load selected without taxa
   if (urlStore.selectedWithoutTaxa && urlStore.selectedWithoutTaxa.length > 0) {
     for await (const urlStoreTaxon of urlStore.selectedWithoutTaxa) {
       let taxonData = await getTaxonById(urlStoreTaxon.id);
@@ -237,6 +237,24 @@ export async function initPopulateStore(
   }
   loggerStore(
     "++ initPopulateStore selectedWithoutTaxa",
+    appStore.selectedWithoutTaxa,
+  );
+
+  // load selected without taxa identified
+  if (
+    urlStore.selectedWithoutTaxaIdentified &&
+    urlStore.selectedWithoutTaxaIdentified.length > 0
+  ) {
+    for await (const urlStoreTaxon of urlStore.selectedWithoutTaxaIdentified) {
+      let taxonData = await getTaxonById(urlStoreTaxon.id);
+      if (!taxonData) {
+        continue;
+      }
+      processWithoutTaxonIdentifiedData(taxonData, appStore, urlStore);
+    }
+  }
+  loggerStore(
+    "++ initPopulateStore selectedWithoutTaxaIdentified",
     appStore.selectedWithoutTaxa,
   );
 
@@ -673,6 +691,7 @@ export function processWithoutTaxonData(
   if (!urlStoreTaxon) return;
 
   let isObservations = isObservationsCheck(appStore);
+  let isIdentifications = isIdentificationsCheck(appStore);
 
   // create taxon object
   let taxon: NormalizediNatTaxonType = {
@@ -694,6 +713,51 @@ export function processWithoutTaxonData(
       addValueToCommaSeparatedString(
         taxonData.id,
         appStore.observationsApiParams.without_taxon_id,
+      );
+  } else if (isIdentifications) {
+    appStore.identificationsApiParams.without_observation_taxon_id =
+      addValueToCommaSeparatedString(
+        taxonData.id,
+        appStore.identificationsApiParams.without_observation_taxon_id,
+      );
+  }
+}
+
+export function processWithoutTaxonIdentifiedData(
+  taxonData: TaxaResult,
+  appStore: AppStoreType,
+  urlStore: AppStoreType,
+) {
+  let isIdentifications = isIdentificationsCheck(appStore);
+
+  let urlStoreTaxon = urlStore.selectedWithoutTaxaIdentified.find(
+    (t) => t.id === taxonData.id,
+  );
+  if (!urlStoreTaxon) return;
+
+  // create taxon object
+  let taxon: NormalizediNatTaxonType = {
+    name: taxonData.name,
+    default_photo: taxonData.default_photo?.square_url,
+    preferred_common_name: taxonData.preferred_common_name,
+    rank: taxonData.rank,
+    id: taxonData.id,
+  };
+
+  let { title, subtitle } = formatTaxonName(taxon, appStore);
+  taxon.title = title;
+  taxon.subtitle = subtitle;
+
+  appStore.selectedWithoutTaxaIdentified = [
+    ...appStore.selectedWithoutTaxaIdentified,
+    taxon,
+  ];
+
+  if (isIdentifications) {
+    appStore.identificationsApiParams.without_taxon_id =
+      addValueToCommaSeparatedString(
+        taxonData.id,
+        appStore.identificationsApiParams.without_taxon_id,
       );
   }
 }

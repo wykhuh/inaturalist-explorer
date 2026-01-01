@@ -1,3 +1,12 @@
+import { renderPlacesList } from "../lib/search_places";
+import { renderProjectsList } from "../lib/search_projects";
+import { renderTaxaList } from "../lib/search_taxa";
+import { renderTaxaIdentifiedList } from "../lib/search_taxa_identified";
+import { renderUsersList } from "../lib/search_users";
+import { renderUsersAnnotatorsList } from "../lib/search_users_annotators";
+import { renderUsersIdentifiersList } from "../lib/search_users_identifiers";
+import { renderWithoutTaxaList } from "../lib/search_without_taxa";
+import { renderWithoutTaxaIdentifiedList } from "../lib/search_without_taxa_identified";
 import { objectFlip } from "../lib/utils";
 import type {
   AppStoreSelectedResourcesKeysType,
@@ -72,6 +81,7 @@ export const selectedResourcesWithCount: AppStoreSelectedResourcesKeysType[] = [
 // NOTE: update when adding selectedResource; autocomplete sidemenu
 export const selectedResourcesNoCount: AppStoreSelectedResourcesKeysType[] = [
   "selectedWithoutTaxa",
+  "selectedWithoutTaxaIdentified",
 ];
 
 export const selectedResources: AppStoreSelectedResourcesKeysType[] =
@@ -101,14 +111,29 @@ export const selectedResourcesIdIdentifications = {
   selectedPlaces: "place_id",
   selectedProjects: null,
   selectedTaxa: "observation_taxon_id",
-  selectedWithoutTaxa: null,
+  selectedWithoutTaxa: "without_taxon_id",
+  selectedWithoutTaxaIdentified: "without_taxon_id",
   selectedTaxaIdentified: "taxon_id",
   selectedUsers: null,
   selectedUsersAnnotators: null,
   selectedUsersIdentifiers: "user_id",
 };
 
-// NOTE: update when adding selectedResource; filters
+// NOTE: update when adding selectedResource; render list
+export let renderSelectResourcesLists = [
+  renderTaxaList,
+  renderTaxaIdentifiedList,
+  renderPlacesList,
+  renderProjectsList,
+  renderUsersList,
+  renderUsersIdentifiersList,
+  renderUsersAnnotatorsList,
+  renderWithoutTaxaList,
+  renderWithoutTaxaIdentifiedList,
+];
+
+// NOTE:
+// update when adding selectedResource; filters
 export const ObservationsApiNonFilterableNames: ObservationsApiParamsKeysType[] =
   [
     "annotation_user_id",
@@ -288,12 +313,14 @@ export const ObservationsApiNames: string[] =
 
 export const IdentificationsApiNonFilterableNames: IdentificationsApiParamsKeysType[] =
   [
-    "place_id", // array string
-    "taxon_id", // array string
     "observation_taxon_id", // array string
-    "user_id", // array integer
     "page",
     "per_page",
+    "place_id", // array string
+    "taxon_id", // array string
+    "user_id", // array integer
+    "without_observation_taxon_id", // array string
+    "without_taxon_id", // array string
   ];
 
 export const IdentificationsFilterableImplemented: IdentificationsApiParamsKeysType[] =
@@ -318,8 +345,7 @@ export const IdentificationsFilterableTodo: IdentificationsApiParamsKeysType[] =
     // maybe
     "order",
     "order_by", // created_at,
-    "without_taxon_id", // array string
-    "without_observation_taxon_id", // array string
+
     // no
     "rank",
     "observation_rank",

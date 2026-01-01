@@ -61,7 +61,6 @@ import {
   lifeBasic,
   allTaxaIdentification,
   lifeIdentification,
-  gridLabel_life_places_users,
   expect_LA_SD_Place_Identifications,
   redOakIdentification,
   expectUserIdentifiersIdentifications,
@@ -74,6 +73,7 @@ import {
   expectLifeTaxaIdentification,
   gridLabel_allTaxaRecord_project1NotInProject,
   gridLabel_life_places_usersIdentifiers,
+  gridLabel_withoutLife,
 } from "../test_helpers.ts";
 import type {
   IdentificationsApiParamsType,
@@ -964,6 +964,37 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expect(store.color).toBe(life.color);
   });
 
+  test("loads and renders without taxa data based on url params", async () => {
+    let store = structuredClone(mapStore);
+    store.record_type == "identifications";
+
+    let life = lifeIdentification();
+    delete life.color;
+    delete life.identifications_count;
+
+    expectEmpytMap(store);
+
+    let searchparams = `?locale=en&without_observation_taxon_id=${lifeBasic.id}&${defaultQuery}`;
+    let urlData = decodeAppUrl(searchparams, "/identifications/");
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expectEmptyResources(store, ["selectedTaxa", "selectedWithoutTaxa"]);
+    expectDefaultTaxaRecordIdentification(store);
+    expect(store.selectedWithoutTaxa).toStrictEqual([life]);
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_withoutLife,
+    ]);
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    expect(store.identificationsApiParams).toStrictEqual({
+      observation_taxon_id: allTaxa.id.toString(),
+      without_observation_taxon_id: life.id.toString(),
+    });
+    expect(store.color).toBe(iNatOrange);
+  });
+
   test("loads and renders taxa identified data based on url params", async () => {
     let store = structuredClone(mapStore);
     store.record_type == "identifications";
@@ -987,6 +1018,39 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
       taxon_id: life.id.toString(),
     });
     expect(store.color).toBe("");
+  });
+
+  test("loads and renders without taxa identified data based on url params", async () => {
+    let store = structuredClone(mapStore);
+    store.record_type == "identifications";
+
+    let life = lifeIdentification();
+    delete life.color;
+    delete life.identifications_count;
+
+    expectEmpytMap(store);
+
+    let searchparams = `?locale=en&without_taxon_id=${lifeBasic.id}&${defaultQuery}`;
+    let urlData = decodeAppUrl(searchparams, "/identifications/");
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expectEmptyResources(store, [
+      "selectedTaxa",
+      "selectedWithoutTaxaIdentified",
+    ]);
+    expect(store.selectedWithoutTaxaIdentified).toStrictEqual([life]);
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord,
+    ]);
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    expect(store.identificationsApiParams).toStrictEqual({
+      observation_taxon_id: allTaxa.id.toString(),
+      without_taxon_id: life.id.toString(),
+    });
+    expect(store.color).toBe(iNatOrange);
   });
 
   test("loads and renders places data based on url params", async () => {

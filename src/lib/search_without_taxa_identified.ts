@@ -3,15 +3,14 @@ import {
   addValueToCommaSeparatedString,
   formatTaxonName,
   isIdentificationsCheck,
-  isObservationsCheck,
-  removeOneWithoutTaxonFromStore,
+  removeOneWithoutTaxonIdentifiedFromStore,
   resetPageNumber,
 } from "./data_utils.ts";
 import { renderSelectedResources } from "./search_utils.ts";
 import { setupTaxaSearch } from "./search_taxa.ts";
 import { updateCountForAll } from "./count_utils.ts";
 
-export function setupWithoutTaxaSearch(
+export function setupWithoutTaxaIdentifiedSearch(
   selector: string,
   appStore: AppStoreType,
 ) {
@@ -21,13 +20,13 @@ export function setupWithoutTaxaSearch(
 }
 
 // called by autocomplete search when an taxa option is selected
-export async function withoutTaxonSelectedHandler(
+export async function withoutTaxonIdentifiedSelectedHandler(
   selection: NormalizediNatTaxonType,
   _searchTerm: string,
   appStore: AppStoreType,
 ) {
-  let isObservations = isObservationsCheck(appStore);
   let isIdentifications = isIdentificationsCheck(appStore);
+  if (!isIdentifications) return;
 
   let { title, subtitle } = formatTaxonName(selection, appStore);
 
@@ -38,51 +37,44 @@ export async function withoutTaxonSelectedHandler(
     subtitle,
   };
 
-  appStore.selectedWithoutTaxa = [...appStore.selectedWithoutTaxa, taxon];
+  appStore.selectedWithoutTaxaIdentified = [
+    ...appStore.selectedWithoutTaxaIdentified,
+    taxon,
+  ];
 
   resetPageNumber(appStore);
 
-  if (isObservations) {
-    appStore.observationsApiParams = {
-      ...appStore.observationsApiParams,
-      without_taxon_id: addValueToCommaSeparatedString(
-        taxon.id,
-        appStore.observationsApiParams.without_taxon_id,
-      ),
-    };
-  } else if (isIdentifications) {
-    appStore.identificationsApiParams = {
-      ...appStore.identificationsApiParams,
-      without_observation_taxon_id: addValueToCommaSeparatedString(
-        taxon.id,
-        appStore.identificationsApiParams.without_observation_taxon_id,
-      ),
-    };
-  }
+  appStore.identificationsApiParams = {
+    ...appStore.identificationsApiParams,
+    without_taxon_id: addValueToCommaSeparatedString(
+      taxon.id,
+      appStore.identificationsApiParams.without_taxon_id,
+    ),
+  };
 
-  await updateCountForAll("selectedWithoutTaxa", appStore);
+  await updateCountForAll("selectedWithoutTaxaIdentified", appStore);
   renderSelectedResources(appStore, true);
 }
 
-export function renderWithoutTaxaList(appStore: AppStoreType) {
-  let listEl = document.querySelector("#selected-without-taxa-list");
+export function renderWithoutTaxaIdentifiedList(appStore: AppStoreType) {
+  let listEl = document.querySelector("#selected-without-taxa-identified-list");
   if (!listEl) return;
 
   listEl.innerHTML = "";
-  appStore.selectedWithoutTaxa.forEach((taxon) => {
+  appStore.selectedWithoutTaxaIdentified.forEach((taxon) => {
     let templateEl = document.createElement("species-basic-list-item");
     templateEl.dataset.taxon = JSON.stringify(taxon);
-    templateEl.dataset.taxon_type = "withoutTaxon";
+    templateEl.dataset.taxon_type = "withoutTaxonIdentified";
     listEl.appendChild(templateEl);
   });
 }
 
 // called when user deletes a taxon
-export async function removeWithoutTaxon(
+export async function removeWithoutTaxonIdentified(
   taxonId: number,
   appStore: AppStoreType,
 ) {
-  removeOneWithoutTaxonFromStore(appStore, taxonId);
+  removeOneWithoutTaxonIdentifiedFromStore(appStore, taxonId);
 
   await updateCountForAll("all", appStore);
   renderSelectedResources(appStore, true);
