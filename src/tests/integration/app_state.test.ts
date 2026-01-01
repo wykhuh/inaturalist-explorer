@@ -101,6 +101,7 @@ import {
   gridLabel_allTaxaRecord_user2Unobserved,
   gridLabel_allTaxaRecord_user1Annotator,
   gridLabel_allTaxaRecord_usersAnnotator,
+  gridLabel_allTaxaRecord_usersIdentifiers,
 } from "../test_helpers.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
 import { decodeAppUrl } from "../../lib/utils.ts";
@@ -1739,7 +1740,7 @@ describe("userIdentifierSelectedHandler with identifications", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord_user1,
+      gridLabel_allTaxaRecord_user1Identifier,
     ]);
     expectEmptyResources(store, ["selectedTaxa", "selectedUsersIdentifiers"]);
     expectDefaultTaxaRecordIdentification(store, count * 0.45);
@@ -1760,7 +1761,7 @@ describe("userIdentifierSelectedHandler with identifications", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord_users,
+      gridLabel_allTaxaRecord_usersIdentifiers,
     ]);
     expectEmptyResources(store, ["selectedTaxa", "selectedUsersIdentifiers"]);
     expectDefaultTaxaRecordIdentification(store);

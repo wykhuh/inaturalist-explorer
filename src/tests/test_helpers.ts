@@ -247,6 +247,8 @@ export let gridLabel_allTaxaRecord_user1Identifier =
   "overlay: iNat grid, taxon_id 0, ident_user_id 222137";
 export let gridLabel_allTaxaRecord_user2Identifier =
   "overlay: iNat grid, taxon_id 0, ident_user_id 677256";
+export let gridLabel_allTaxaRecord_usersIdentifiers =
+  "overlay: iNat grid, taxon_id 0, ident_user_id 222137,677256";
 
 export let gridLabel_allTaxaRecord_user1Unobserved =
   "overlay: iNat grid, taxon_id 0, unobserved_by_user_id 222137";
@@ -313,6 +315,11 @@ export let gridLabel_life_places_users =
   "overlay: iNat grid, taxon_id 48460, place_id 962,829, user_id 222137,677256";
 export let gridLabel_oaks_places_users =
   "overlay: iNat grid, taxon_id 861036, place_id 962,829, user_id 222137,677256";
+
+export let gridLabel_life_places_usersIdentifiers =
+  "overlay: iNat grid, taxon_id 48460, place_id 962,829, ident_user_id 222137,677256";
+export let gridLabel_oaks_places_usersIdentifiers =
+  "overlay: iNat grid, taxon_id 861036, place_id 962,829, ident_user_id 222137,677256";
 
 export let gridLabel_life_project1 =
   "overlay: iNat grid, taxon_id 48460, project_id 237729";

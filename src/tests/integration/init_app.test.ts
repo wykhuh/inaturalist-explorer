@@ -73,6 +73,7 @@ import {
   expectEmptyResources,
   expectLifeTaxaIdentification,
   gridLabel_allTaxaRecord_project1NotInProject,
+  gridLabel_life_places_usersIdentifiers,
 } from "../test_helpers.ts";
 import type {
   IdentificationsApiParamsType,
@@ -1097,7 +1098,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expect(store.selectedUsersIdentifiers).toStrictEqual([userA]);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord_user1,
+      gridLabel_allTaxaRecord_user1Identifier,
     ]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams2: IdentificationsApiParamsType = {
@@ -1195,7 +1196,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
       placeLabel_la,
       placeLabel_sd,
       placeLabel_sd,
-      gridLabel_life_places_users,
+      gridLabel_life_places_usersIdentifiers,
     ]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams: ObservationsApiParamsType = {

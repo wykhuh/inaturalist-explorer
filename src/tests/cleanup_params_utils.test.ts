@@ -271,7 +271,7 @@ describe("cleanupIdentificationsMapParams", () => {
       place_id: "1,2",
       quality_grade: "research",
       taxon_id: "20,21",
-      user_id: "30,31",
+      ident_user_id: "30,31",
     });
   });
 });
