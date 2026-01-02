@@ -32,6 +32,7 @@ import {
   trueFalseFieldsObservations,
 } from "../../../data/app_data";
 import { template } from "../../../components/ObservationsFilters/template";
+import type { ObservationViewsType } from "../../../types/app";
 
 const { JSDOM } = jsdom;
 
@@ -320,8 +321,8 @@ describe("updateAppWithFilters", () => {
 
 describe("createHeaderCountHash", () => {
   let expectedHash =
-    "01d13c8a58f50b9f529c28747efc1f045b7348f9ba2aa08dea6b6e6ede874198";
-  let countLabel = "observations-observations";
+    "3a50ee7ae6026e64c15ce76b50558435d6c8960343d435f807d2b4d722f5288a";
+  let countLabel: ObservationViewsType = "observations_observations";
 
   test("creates hash using given countLabel and search parans", async () => {
     let params = "?id=1";
@@ -367,11 +368,11 @@ describe("updateHeaderCount", () => {
   }
 
   let hash1 =
-    "4041e3e7f63e5818f7a81cc2944b9eb6bef63091909c559fc930eb958434ec0b";
+    "3a50ee7ae6026e64c15ce76b50558435d6c8960343d435f807d2b4d722f5288a";
   let hash2 =
-    "b7a898c2eef6719185c7d427ade59f85a7bd7234e0772c5f872bdf940f950203";
+    "4157a0a5913c8893e08b9b90e0c3208debd9ede75a71d944680b61e01d4ec46b";
   let hash3 =
-    "47565df9a7d62046d02b94872cb4cf32cacd4cea8ca56594b2d6a3d151ea8353";
+    "06217bb9ea07f2eb7d390936a5bbc87f3adff1504f07f1f9fb112eca5bf519a7";
 
   test(
     "fetches record, creates hash, saves hash to iNatStats.headerCountsIndex" +
@@ -379,7 +380,7 @@ describe("updateHeaderCount", () => {
     async () => {
       let store = structuredClone(mapStore);
 
-      let countLabel = "A-1";
+      let countLabel: ObservationViewsType = "observations_observations";
       let params1 = "?id=1";
       let params2 = "?id=2";
 
@@ -399,10 +400,11 @@ describe("updateHeaderCount", () => {
   test("delete first item in headerCountsIndex and headerCounts if cache size > maxCacheSize", async () => {
     let store = structuredClone(mapStore);
 
-    let countLabel = "A-1";
+    let countLabel: ObservationViewsType = "observations_observations";
     let params1 = "?id=1";
     let params2 = "?id=2";
     let params3 = "?id=3";
+    let tooltip = null;
     let perPage = 0;
     let maxSize = 2;
 
@@ -411,6 +413,7 @@ describe("updateHeaderCount", () => {
       () => getRecords(10),
       params1,
       store,
+      tooltip,
       perPage,
       maxSize,
     ).then(() => {
@@ -423,6 +426,7 @@ describe("updateHeaderCount", () => {
       () => getRecords(20),
       params2,
       store,
+      tooltip,
       perPage,
       maxSize,
     );
@@ -436,6 +440,7 @@ describe("updateHeaderCount", () => {
       () => getRecords(30),
       params3,
       store,
+      tooltip,
       perPage,
       maxSize,
     );

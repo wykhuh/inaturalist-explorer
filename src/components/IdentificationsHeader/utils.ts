@@ -1,6 +1,7 @@
 import {
   cleanupIdentificationParams,
   cleanupIdentificationsObservationsParams,
+  identificationOnlyParams,
 } from "../../lib/cleanup_params_utils";
 import {
   getIdentifications,
@@ -13,6 +14,19 @@ import type { AppStoreType } from "../../types/app";
 import { updateHeaderCount } from "../ObservationsHeader/shared_utils";
 
 export function updateCountsHeader(appStore: AppStoreType) {
+  let tooltip: HTMLElement | null = null;
+  let isEstimate = Object.keys(appStore.identificationsApiParams).some((p) =>
+    identificationOnlyParams.includes(p),
+  );
+  if (isEstimate) {
+    tooltip = document.createElement("app-tooltip");
+    tooltip.dataset.id = "tp-count";
+    tooltip.dataset.content = " *";
+    tooltip.dataset.tooltip =
+      "Observations are not accurate because identifications-related " +
+      "searches and filters do not work with observations.";
+  }
+
   // NOTE:observations has different search params than identifications
   let params = cleanupIdentificationsObservationsParams(appStore);
   updateHeaderCount(
@@ -20,6 +34,7 @@ export function updateCountsHeader(appStore: AppStoreType) {
     getObservations,
     params,
     appStore,
+    tooltip,
   );
 
   let identificationParams = cleanupIdentificationParams(appStore);
@@ -49,6 +64,7 @@ export function updateCountsHeader(appStore: AppStoreType) {
     getIdentificationsObservers,
     identificationParams,
     appStore,
+    null,
     1, // BUG: 0 per pages causes an error for /idenifications/observers API
   );
 }

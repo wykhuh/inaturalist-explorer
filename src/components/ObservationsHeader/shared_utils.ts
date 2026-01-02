@@ -82,10 +82,11 @@ export function updateView(
 }
 
 export async function updateHeaderCount(
-  countLabel: string,
+  countLabel: ObservationViewsType,
   dataFn: any,
   searchParams: string,
   appStore: AppStoreType,
+  tooltip: HTMLElement | null = null,
   perPage = 0,
   maxCacheSize = 1000,
 ) {
@@ -100,7 +101,7 @@ export async function updateHeaderCount(
     count = await fetchHeaderCounts(dataFn, searchParams, perPage);
   }
 
-  renderHeaderCounts(countLabel, count);
+  renderHeaderCounts(countLabel, count, tooltip);
 
   if (!cacheCount) {
     await saveHeaderCount(count, hash, appStore, maxCacheSize);
@@ -121,7 +122,12 @@ async function fetchHeaderCounts(
   return count;
 }
 
-function renderHeaderCounts(countLabel: string, count: number) {
+function renderHeaderCounts(
+  countLabel: ObservationViewsType,
+  count: number,
+  tooltip: HTMLElement | null = null,
+) {
+  // use querySelectorAll because there are header and filter counts
   let countEls = document.querySelectorAll(
     `[data-count-label="${countLabel}"] .header-count`,
   );
@@ -129,6 +135,9 @@ function renderHeaderCounts(countLabel: string, count: number) {
 
   Array.from(countEls).forEach((countEl) => {
     countEl.textContent = count.toLocaleString();
+    if (tooltip) {
+      countEl.append(tooltip);
+    }
   });
 }
 
@@ -151,7 +160,7 @@ export async function saveHeaderCount(
 }
 
 export async function createHeaderCountHash(
-  countLabel: string,
+  countLabel: ObservationViewsType,
   searchParams: string,
 ) {
   let params = searchParams

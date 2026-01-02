@@ -528,6 +528,13 @@
       font-size: var(--font-size-heading-sm);
       color: var(--clr-white);
     }
+
+    [role="tooltip"] {
+      background-color: var(--clr-white);
+      color: var(--text-main);
+      border: var(--border-dark-grey);
+      z-index: 1001; /* override leaflet z-index*/
+    }
   }
 
   #observations-nav,
