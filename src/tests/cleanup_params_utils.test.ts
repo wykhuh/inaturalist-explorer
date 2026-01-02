@@ -6,11 +6,16 @@ import {
   cleanupIdentificationsMapParams,
   cleanupObervationsParams,
   cleanupObservationsMapParams,
+  convertIdentificationParamsToObservationParams,
+  identificationOnlyParams,
 } from "../lib/cleanup_params_utils";
 import { mapStore } from "../lib/store.ts";
 import { defaultQuery } from "./test_helpers.ts";
 import { iNatOrange } from "../lib/map_colors_utils.ts";
-import { ObservationsApiFilterableNames } from "../data/app_data.ts";
+import {
+  IdentificationsApiNames,
+  ObservationsApiFilterableNames,
+} from "../data/app_data.ts";
 
 describe("cleanupObervationsParams", () => {
   test("if no changes to store params, returns empty string", () => {
@@ -365,4 +370,138 @@ describe("cleanupObservationsMapParams", () => {
       });
     },
   );
+});
+
+describe("cleanupIdentificationsObservationsParams", () => {
+  let processedParams = [
+    "observation_taxon_active",
+    "observation_created_d2",
+    "observation_created_d1",
+    "observation_rank",
+    "observation_hrank",
+    "observation_lrank",
+    "observation_taxon_id",
+    "observed_d2",
+    "observed_d1",
+    "observation_iconic_taxon_id",
+    "without_observation_taxon_id",
+    "user_id",
+  ];
+  let skipParams = processedParams.concat(identificationOnlyParams);
+  let allowedParams = IdentificationsApiNames.filter(
+    (p) => !skipParams.includes(p),
+  );
+
+  test.each(allowedParams)("returns allowed params", (param) => {
+    let store = structuredClone(mapStore);
+    store.identificationsApiParams = { [param]: true };
+
+    let res = convertIdentificationParamsToObservationParams(
+      store.identificationsApiParams,
+    );
+
+    expect(res).toStrictEqual({ [param]: true });
+  });
+
+  test("returns multiple params", () => {
+    let store = structuredClone(mapStore);
+    store.identificationsApiParams = {
+      place_id: "1,2",
+      reviewed: true,
+    };
+
+    let res = convertIdentificationParamsToObservationParams(
+      store.identificationsApiParams,
+    );
+
+    expect(res).toStrictEqual({ place_id: "1,2", reviewed: true });
+  });
+
+  test.each([
+    "observation_taxon_active",
+    "observation_created_d2",
+    "observation_created_d1",
+    "observation_rank",
+    "observation_hrank",
+    "observation_lrank",
+    "observation_taxon_id",
+  ])("removes observations_ from params", (param) => {
+    let store = structuredClone(mapStore);
+    store.identificationsApiParams = { [param]: true };
+
+    let res = convertIdentificationParamsToObservationParams(
+      store.identificationsApiParams,
+    );
+
+    expect(res).toStrictEqual({ [param.replace("observation_", "")]: true });
+  });
+
+  test.each(["observed_d2", "observed_d1"])(
+    "removes observed_ from params",
+    (param) => {
+      let store = structuredClone(mapStore);
+      store.identificationsApiParams = { [param]: true };
+
+      let res = convertIdentificationParamsToObservationParams(
+        store.identificationsApiParams,
+      );
+
+      expect(res).toStrictEqual({ [param.replace("observed_", "")]: true });
+    },
+  );
+
+  test("converts observation_iconic_taxon_id to taxa name", () => {
+    let store = structuredClone(mapStore);
+    store.identificationsApiParams = {
+      observation_iconic_taxon_id:
+        "3,20978,26036,40151,47178,47115,47119,47158,47126,47170,47686",
+    };
+    let res = convertIdentificationParamsToObservationParams(
+      store.identificationsApiParams,
+    );
+
+    expect(res).toStrictEqual({
+      iconic_taxa:
+        "Aves,Amphibia,Reptilia,Mammalia,Actinopterygii,Mollusca,Arachnida,Insecta,Plantae,Fungi,Protozoa",
+    });
+  });
+
+  test("converts without_observation_taxon_id to without_taxon_id", () => {
+    let store = structuredClone(mapStore);
+    store.identificationsApiParams = {
+      without_observation_taxon_id: "1,3",
+    };
+    let res = convertIdentificationParamsToObservationParams(
+      store.identificationsApiParams,
+    );
+
+    expect(res).toStrictEqual({
+      without_taxon_id: "1,3",
+    });
+  });
+
+  test("converts user_id to ident_user_id", () => {
+    let store = structuredClone(mapStore);
+    store.identificationsApiParams = {
+      user_id: "1,3",
+    };
+    let res = convertIdentificationParamsToObservationParams(
+      store.identificationsApiParams,
+    );
+
+    expect(res).toStrictEqual({
+      ident_user_id: "1,3",
+    });
+  });
+
+  test("ignores invalid params", () => {
+    let store = structuredClone(mapStore);
+    // @ts-ignore
+    store.identificationsApiParams = { foo: "1" };
+    let res = convertIdentificationParamsToObservationParams(
+      store.identificationsApiParams,
+    );
+
+    expect(res).toStrictEqual({});
+  });
 });

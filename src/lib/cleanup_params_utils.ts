@@ -132,34 +132,29 @@ export function cleanupIdentificationsObserversParams(
 // tiles API
 // =============
 
-function convertIdentificationParamsToObservationParams(
+export let identificationOnlyParams = [
+  "d1",
+  "d2",
+  "iconic_taxon_id",
+  "hrank",
+  "lrank",
+  "without_taxon_id",
+  "taxon_id",
+];
+
+export function convertIdentificationParamsToObservationParams(
   params: IdentificationsMapTilesAPIParamsType,
 ) {
-  let allowedParams = [
-    "place_id",
-    "observation_taxon_id",
-    "user_id",
-    "quality_grade",
-    "observed_d1",
-    "observed_d2",
-    "observation_iconic_taxon_id",
-    "observation_hrank",
-    "observation_lrank",
-    "color",
-    "colors",
-    "page",
-    "per_page",
-    "order",
-    "order_by",
-    "without_observation_taxon_id",
-  ];
   let cleanedParms = {} as any;
 
   for (const [key, value] of Object.entries(params)) {
-    if (!allowedParams.includes(key)) {
+    if (["color", "colors"].includes(key)) {
+      cleanedParms[key] = value;
+    } else if (!IdentificationsApiNames.includes(key)) {
       continue;
-    }
-    if (key === "observation_iconic_taxon_id") {
+    } else if (identificationOnlyParams.includes(key)) {
+      continue;
+    } else if (key === "observation_iconic_taxon_id") {
       cleanedParms.iconic_taxa = value
         .toString()
         .split(",")
@@ -174,7 +169,7 @@ function convertIdentificationParamsToObservationParams(
       cleanedParms[k] = value;
     } else if (key.startsWith("observation_")) {
       cleanedParms[key.replace("observation_", "")] = value;
-    } else {
+    } else if (value !== "") {
       cleanedParms[key] = value;
     }
   }
