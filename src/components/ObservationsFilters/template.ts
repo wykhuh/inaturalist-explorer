@@ -19,10 +19,11 @@ let datePane = html`<div
       <div class="form-group">
         <label for="on"
           >Exact Date
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-on">?</span>
-            <p id="tp-on" role="tooltip">Observed on this date</p>
-          </div>
+          <app-tooltip
+            data-id="tp-on"
+            data-content="?"
+            data-tooltip="Observed on this date"
+          ></app-tooltip>
         </label>
         <input type="date" name="on" id="on" />
       </div>
@@ -30,10 +31,11 @@ let datePane = html`<div
       <div class="form-group range-start">
         <label for="d1"
           >Start Date
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-on">?</span>
-            <p id="tp-on" role="tooltip">Observed on or after this date</p>
-          </div>
+          <app-tooltip
+            data-id="tp-d1"
+            data-content="?"
+            data-tooltip="Observed on or after this date"
+          ></app-tooltip>
         </label>
         <input type="date" name="d1" id="d1" />
       </div>
@@ -41,10 +43,11 @@ let datePane = html`<div
       <div class="form-group range-end">
         <label for="d2"
           >End Date
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-d2">?</span>
-            <p id="tp-d2" role="tooltip">Observed on or before this date</p>
-          </div>
+          <app-tooltip
+            data-id="tp-d2"
+            data-content="?"
+            data-tooltip="Observed on or before this date"
+          ></app-tooltip>
         </label>
         <input type="date" name="d2" id="d2" />
       </div>
@@ -52,10 +55,11 @@ let datePane = html`<div
       <div class="form-group multiselect">
         <label for="month"
           >Months
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-month">?</span>
-            <p id="tp-month" role="tooltip">Observed within this month</p>
-          </div>
+          <app-tooltip
+            data-id="tp-month"
+            data-content="?"
+            data-tooltip="Observed within this month"
+          ></app-tooltip>
         </label>
         <select name="month" id="month" multiple>
           <option value="">All</option>
@@ -77,10 +81,11 @@ let datePane = html`<div
       <div class="form-group multiselect">
         <label for="year"
           >Years
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-year">?</span>
-            <p id="tp-year" role="tooltip">Observed within this year</p>
-          </div>
+          <app-tooltip
+            data-id="tp-year"
+            data-content="?"
+            data-tooltip="Observed within this year"
+          ></app-tooltip>
         </label>
         <select name="year" id="year" multiple>
           ${renderYearsOptions("All")}
@@ -94,10 +99,11 @@ let datePane = html`<div
       <div class="form-group">
         <label for="created_on"
           >Exact Date
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-created_on">?</span>
-            <p id="tp-created_on" role="tooltip">Created on this date</p>
-          </div>
+          <app-tooltip
+            data-id="tp-created_on"
+            data-content="?"
+            data-tooltip="Created on this date"
+          ></app-tooltip>
         </label>
         <input type="date" name="created_on" id="created_on" />
       </div>
@@ -105,24 +111,22 @@ let datePane = html`<div
         <div class="form-group range-created-start">
           <label for="created_d1"
             >Start Date
-            <div class="tp-wrapper">
-              <span class="tp-trigger" aria-describedby="tp-created_d1">?</span>
-              <p id="tp-created_d1" role="tooltip">
-                Created at or after this time
-              </p>
-            </div>
+            <app-tooltip
+              data-id="tp-created_d1"
+              data-content="?"
+              data-tooltip="Created at or after this time"
+            ></app-tooltip>
           </label>
           <input type="date" name="created_d1" id="created_d1" />
         </div>
         <div class="form-group range-created-end">
           <label for="created_d2"
             >End Date
-            <div class="tp-wrapper">
-              <span class="tp-trigger" aria-describedby="tp-created_d2">?</span>
-              <p id="tp-created_d2" role="tooltip">
-                Created at or before this time
-              </p>
-            </div>
+            <app-tooltip
+              data-id="tp-created_d2"
+              data-content="?"
+              data-tooltip="Created at or before this time"
+            ></app-tooltip>
           </label>
           <input type="date" name="created_d2" id="created_d2" />
         </div>
@@ -130,14 +134,11 @@ let datePane = html`<div
       <div class="form-group multiselect">
         <label for="created_month"
           >Months
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-created_month"
-              >?</span
-            >
-            <p id="tp-created_month" role="tooltip">
-              Created within this month
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-created_month"
+            data-content="?"
+            data-tooltip="Created within this month"
+          ></app-tooltip>
         </label>
         <select name="created_month" id="created_month" multiple>
           <option value="">All</option>
@@ -159,10 +160,11 @@ let datePane = html`<div
       <div class="form-group multiselect">
         <label for="created_year"
           >Years
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-created_year">?</span>
-            <p id="tp-created_year" role="tooltip">Created within this year</p>
-          </div>
+          <app-tooltip
+            data-id="tp-created_year"
+            data-content="?"
+            data-tooltip="Created within this year"
+          ></app-tooltip>
         </label>
         <select name="created_year" id="created_year" multiple>
           ${renderYearsOptions("All")}
@@ -185,13 +187,12 @@ let observationPane = html`<div
       <div class="form-group">
         <label for="verifiable">
           Verifiable
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-verifiable">?</span>
-            <p id="tp-verifiable" role="tooltip">
-              Observations with a quality_grade of either needs_id or research.
-              Equivalent to quality_grade=needs_id,research.
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-verifiable"
+            data-content="?"
+            data-tooltip="Observations with a quality_grade of either needs_id or research.
+            Equivalent to quality_grade=needs_id,research."
+          ></app-tooltip>
         </label>
         <select id="verifiable" name="verifiable">
           <option></option>
@@ -202,12 +203,11 @@ let observationPane = html`<div
       <div class="form-group">
         <label for="captive"
           >Captive
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-captive">?</span>
-            <p id="tp-captive" role="tooltip">
-              Captive or cultivated observations
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-captive"
+            data-content="?"
+            data-tooltip="Captive or cultivated observations"
+          ></app-tooltip>
         </label>
         <select id="captive" name="captive">
           <option></option>
@@ -219,14 +219,11 @@ let observationPane = html`<div
       <div class="form-group multiselect">
         <label for="quality_grade"
           >Quality Grade
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-quality_grade"
-              >?</span
-            >
-            <p id="tp-quality_grade" role="tooltip">
-              Observations have this quality grade
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-quality_grade"
+            data-content="?"
+            data-tooltip="Observations have this quality grade"
+          ></app-tooltip>
         </label>
         <select id="quality_grade" name="quality_grade" multiple>
           <option value="">All</option>
@@ -239,12 +236,11 @@ let observationPane = html`<div
       <div class="form-group">
         <label for="popular"
           >Popular
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-popular">?</span>
-            <p id="tp-popular" role="tooltip">
-              Observations that have been favorited by at least one user
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-popular"
+            data-content="?"
+            data-tooltip="Observations that have been favorited by at least one user"
+          ></app-tooltip>
         </label>
         <select id="popular" name="popular">
           <option></option>
@@ -259,12 +255,11 @@ let observationPane = html`<div
       <div class="form-group">
         <label for="identified"
           >Identified
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-identified">?</span>
-            <p id="tp-identified" role="tooltip">
-              Observations that have community identifications
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-identified"
+            data-content="?"
+            data-tooltip="Observations that have community identifications"
+          ></app-tooltip>
         </label>
         <select id="identified" name="identified">
           <option></option>
@@ -275,12 +270,11 @@ let observationPane = html`<div
       <div class="form-group">
         <label for="reviewed"
           >Reviewed
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-reviewed">?</span>
-            <p id="tp-reviewed" role="tooltip">
-              Observations have been reviewed by the user selected next.
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-reviewed"
+            data-content="?"
+            data-tooltip="Observations have been reviewed by the user selected next"
+          ></app-tooltip>
         </label>
         <select id="reviewed" name="reviewed">
           <option></option>
@@ -291,12 +285,11 @@ let observationPane = html`<div
       <div class="form-group">
         <label for="reviewer-search"
           >Reviewer
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-viewer_id">?</span>
-            <p id="tp-viewer_id" role="tooltip">
-              Observations have been reviewed by this user.
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-viewer_id"
+            data-content="?"
+            data-tooltip="Observations have been reviewed by this user"
+          ></app-tooltip>
         </label>
         <input
           name="viewer_id"
@@ -315,12 +308,11 @@ let observationPane = html`<div
       <div class="form-group">
         <label for="user_after"
           >Recent accounts created
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-user_after">?</span>
-            <p id="tp-user_after" role="tooltip">
-              Account created within or after this time
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-user_after"
+            data-content="?"
+            data-tooltip="Account created within or after this time"
+          ></app-tooltip>
         </label>
         <select id="user_after" name="user_after">
           <option value=""></option>
@@ -332,12 +324,11 @@ let observationPane = html`<div
       <div class="form-group">
         <label for="user_before"
           >Accounts older than
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-user_before">?</span>
-            <p id="tp-user_before" role="tooltip">
-              Account created before this time
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-user_before"
+            data-content="?"
+            data-tooltip="Account created before this time"
+          ></app-tooltip>
         </label>
         <select id="user_before" name="user_before">
           <option value=""></option>
@@ -350,14 +341,11 @@ let observationPane = html`<div
       <div class="form-group">
         <label for="unobserved-by-user-search"
           >Unobserved by user
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-unobserved_by_user_id"
-              >?</span
-            >
-            <p id="tp-unobserved_by_user_id" role="tooltip">
-              Observations with taxon not previously observed by this user
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-unobserved_by_user_id"
+            data-content="?"
+            data-tooltip="Observations with taxon not previously observed by this user"
+          ></app-tooltip>
         </label>
         <input
           name="unobserved_by_user_id"
@@ -373,10 +361,11 @@ let observationPane = html`<div
       <div class="form-group">
         <label for="q"
           >Description/Tags
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-q">?</span>
-            <p id="tp-q" role="tooltip">Search observation properties</p>
-          </div>
+          <app-tooltip
+            data-id="tp-q"
+            data-content="?"
+            data-tooltip="Search observation properties"
+          ></app-tooltip>
         </label>
         <input id="q" name="q" placeholder="Enter search terms" />
       </div>
@@ -384,12 +373,11 @@ let observationPane = html`<div
       <div class="form-group">
         <label for="list_id"
           >List ID
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-list_id">?</span>
-            <p id="tp-list_id" role="tooltip">
-              Taxon must be in the list with this ID
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-list_id"
+            data-content="?"
+            data-tooltip="Taxon must be in the list with this ID"
+          ></app-tooltip>
         </label>
         <input id="list_id" name="list_id" placeholder="Enter list ID" />
       </div>
@@ -397,14 +385,11 @@ let observationPane = html`<div
       <div class="form-group">
         <label for="not-in-project-search"
           >Not in project
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-not_in_project"
-              >?</span
-            >
-            <p id="tp-not_in_project" role="tooltip">
-              Observations must not be in this project
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-not_in_project"
+            data-content="?"
+            data-tooltip="Observations must not be in this project"
+          ></app-tooltip>
         </label>
         <input
           name="not_in_project"
@@ -423,10 +408,11 @@ let observationPane = html`<div
       <div class="form-group">
         <label for="sounds"
           >Has Sounds
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-sounds">?</span>
-            <p id="tp-sounds" role="tooltip">Observations with sounds</p>
-          </div>
+          <app-tooltip
+            data-id="tp-sounds"
+            data-content="?"
+            data-tooltip="Observations with sounds"
+          ></app-tooltip>
         </label>
         <select id="sounds" name="sounds">
           <option></option>
@@ -437,10 +423,11 @@ let observationPane = html`<div
       <div class="form-group">
         <label for="photos"
           >Has Photos
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-photos">?</span>
-            <p id="tp-photos" role="tooltip">Observations with photos</p>
-          </div>
+          <app-tooltip
+            data-id="tp-photos"
+            data-content="?"
+            data-tooltip="Observations with photos"
+          ></app-tooltip>
         </label>
         <select id="photos" name="photos">
           <option></option>
@@ -454,10 +441,11 @@ let observationPane = html`<div
       <div class="form-group multiselect">
         <label for="license"
           >License
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-license">?</span>
-            <p id="tp-license" role="tooltip">Observation have this license</p>
-          </div>
+          <app-tooltip
+            data-id="tp-license"
+            data-content="?"
+            data-tooltip="Observation have this license"
+          ></app-tooltip>
         </label>
         <select id="license" name="license" multiple>
           ${renderLicenseOptions("All")}
@@ -466,14 +454,11 @@ let observationPane = html`<div
       <div class="form-group multiselect">
         <label for="photo_license"
           >Photo License
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-photo_license"
-              >?</span
-            >
-            <p id="tp-photo_license" role="tooltip">
-              Observations have at least one photo with this license
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-photo_license"
+            data-content="?"
+            data-tooltip="Observations have at least one photo with this license"
+          ></app-tooltip>
         </label>
         <select id="photo_license" name="photo_license" multiple>
           ${renderLicenseOptions("All")}
@@ -482,12 +467,11 @@ let observationPane = html`<div
       <div class="form-group multiselect">
         <label for="sound_license"
           >Sound License
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-xxx">?</span>
-            <p id="tp-xxx" role="tooltip">
-              Observations have at least one sound with this license
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-sound_license"
+            data-content="?"
+            data-tooltip="Observations have at least one sound with this license"
+          ></app-tooltip>
         </label>
         <select id="sound_license" name="sound_license" multiple>
           ${renderLicenseOptions("All")}
@@ -509,12 +493,11 @@ const speciesPane = html`
       <div class="form-group">
         <label for="threatened"
           >Threatened
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-threatened">?</span>
-            <p id="tp-threatened" role="tooltip">
-              Observations whose taxa are threatened in their location
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-threatened"
+            data-content="?"
+            data-tooltip="Observations whose taxa are threatened in their location"
+          ></app-tooltip>
         </label>
         <select id="threatened" name="threatened">
           <option></option>
@@ -525,12 +508,11 @@ const speciesPane = html`
       <div class="form-group">
         <label for="introduced"
           >Introduced
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-introduced">?</span>
-            <p id="tp-introduced" role="tooltip">
-              Observations whose taxa are introduced in their location
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-introduced"
+            data-content="?"
+            data-tooltip="Observations whose taxa are introduced in their location"
+          ></app-tooltip>
         </label>
         <select id="introduced" name="introduced">
           <option></option>
@@ -541,12 +523,11 @@ const speciesPane = html`
       <div class="form-group">
         <label for="native"
           >Native
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-native">?</span>
-            <p id="tp-native" role="tooltip">
-              Observations whose taxa are native to their location
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-native"
+            data-content="?"
+            data-tooltip="Observations whose taxa are native to their location"
+          ></app-tooltip>
         </label>
         <select id="native" name="native">
           <option></option>
@@ -557,12 +538,11 @@ const speciesPane = html`
       <div class="form-group">
         <label for="endemic"
           >Endemic
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-endemic">?</span>
-            <p id="tp-endemic" role="tooltip">
-              Observations whose taxa are endemic to their location
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-endemic"
+            data-content="?"
+            data-tooltip="Observations whose taxa are endemic to their location"
+          ></app-tooltip>
         </label>
         <select id="endemic" name="endemic">
           <option></option>
@@ -680,12 +660,11 @@ const speciesPane = html`
       <div class="form-group">
         <label for="hrank"
           >High Rank
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-hrank">?</span>
-            <p id="tp-hrank" role="tooltip">
-              Taxon must have this rank or lower
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-hrank"
+            data-content="?"
+            data-tooltip="Taxon must have this rank or lower"
+          ></app-tooltip>
         </label>
         <select id="hrank" name="hrank">
           ${renderRankOptions("All")}
@@ -694,12 +673,11 @@ const speciesPane = html`
       <div class="form-group">
         <label for="lrank"
           >Low Rank
-          <div class="tp-wrapper">
-            <span class="tp-trigger" aria-describedby="tp-lrank">?</span>
-            <p id="tp-lrank" role="tooltip">
-              Taxon must have this rank or higher
-            </p>
-          </div>
+          <app-tooltip
+            data-id="tp-lrank"
+            data-content="?"
+            data-tooltip="Taxon must have this rank or higher"
+          ></app-tooltip>
         </label>
         <select id="lrank" name="lrank">
           ${renderRankOptions("All")}

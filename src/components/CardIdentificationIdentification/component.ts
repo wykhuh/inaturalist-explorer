@@ -11,6 +11,7 @@ import {
 } from "../../lib/render_utils";
 import type { DataComponentType, AppStoreType } from "../../types/app";
 import type { Identification } from "../../types/inat_api";
+import { formatTooltip } from "../Tooltip/component";
 import { template } from "./template";
 
 class CardIdentificationIdentification extends HTMLElement {
@@ -79,11 +80,11 @@ class CardIdentificationIdentification extends HTMLElement {
         }
       }
       if (data.vision) {
-        content += '<div class="tp-wrapper">';
-        content += `<span class="btn-borderless tp-trigger" aria-describedby="tp-vision">${computer}</span>`;
-        content +=
-          "<p id='tp-vision' role='tooltip'>Computer Vision Suggestion was used for this identification.</p>";
-        content += "</div>";
+        content += formatTooltip(
+          "tp-vision",
+          computer,
+          "Computer Vision Suggestion was used for this identification",
+        );
       }
       content += "</div>";
 

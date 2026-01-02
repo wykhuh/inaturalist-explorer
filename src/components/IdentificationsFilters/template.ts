@@ -26,28 +26,22 @@ export const template = html`
               <div class="form-group">
                 <label for="observed_d1"
                   >Start Date
-                  <div class="tp-wrapper">
-                    <span class="tp-trigger" aria-describedby="tp-observed_d1"
-                      >?</span
-                    >
-                    <p id="tp-observed_d1" role="tooltip">
-                      Observation observed on or after this date
-                    </p>
-                  </div>
+                  <app-tooltip
+                    data-id="tp-observed_d1"
+                    data-content="?"
+                    data-tooltip="Observation observed on or after this date"
+                  ></app-tooltip>
                 </label>
                 <input type="date" name="observed_d1" id="observed_d1" />
               </div>
               <div class="form-group">
                 <label for="observed_d2"
                   >End Date
-                  <div class="tp-wrapper">
-                    <span class="tp-trigger" aria-describedby="tp-observed_d2"
-                      >?</span
-                    >
-                    <p id="tp-observed_d2" role="tooltip">
-                      Observation observed on or before this date
-                    </p>
-                  </div>
+                  <app-tooltip
+                    data-id="tp-observed_d2"
+                    data-content="?"
+                    data-tooltip="Observation observed on or before this date"
+                  ></app-tooltip>
                 </label>
                 <input type="date" name="observed_d2" id="observed_d2" />
               </div>
@@ -161,16 +155,11 @@ export const template = html`
               <div class="form-group">
                 <label for="observation_hrank"
                   >High Rank
-                  <div class="tp-wrapper">
-                    <span
-                      class="tp-trigger"
-                      aria-describedby="tp-observation_hrank"
-                      >?</span
-                    >
-                    <p id="tp-observation_hrank" role="tooltip">
-                      Observation taxon must have this rank or lower
-                    </p>
-                  </div>
+                  <app-tooltip
+                    data-id="tp-observation_hrank"
+                    data-content="?"
+                    data-tooltip="Observation taxon must have this rank or lower"
+                  ></app-tooltip>
                 </label>
                 <select id="observation_hrank" name="observation_hrank">
                   ${renderRankOptions("All")}
@@ -179,16 +168,11 @@ export const template = html`
               <div class="form-group">
                 <label for="observation_lrank"
                   >Low Rank
-                  <div class="tp-wrapper">
-                    <span
-                      class="tp-trigger"
-                      aria-describedby="tp-observation_lrank"
-                      >?</span
-                    >
-                    <p id="tp-observation_lrank" role="tooltip">
-                      Observation taxon must have this rank or higher
-                    </p>
-                  </div>
+                  <app-tooltip
+                    data-id="tp-observation_lrank"
+                    data-content="?"
+                    data-tooltip="Observation taxon must have this rank or higher"
+                  ></app-tooltip>
                 </label>
                 <select id="observation_lrank" name="observation_lrank">
                   ${renderRankOptions("All")}
@@ -201,14 +185,11 @@ export const template = html`
               <div class="form-group">
                 <label for="quality_grade"
                   >Quality Grade
-                  <div class="tp-wrapper">
-                    <span class="tp-trigger" aria-describedby="tp-quality_grade"
-                      >?</span
-                    >
-                    <p id="tp-quality_grade" role="tooltip">
-                      Observation must have this quality grade
-                    </p>
-                  </div>
+                  <app-tooltip
+                    data-id="tp-quality_grade"
+                    data-content="?"
+                    data-tooltip="Observation must have this quality grade"
+                  ></app-tooltip>
                 </label>
                 <select id="quality_grade" name="quality_grade">
                   <option></option>
@@ -226,24 +207,22 @@ export const template = html`
               <div class="form-group">
                 <label for="d1"
                   >Start Date
-                  <div class="tp-wrapper">
-                    <span class="tp-trigger" aria-describedby="tp-d1">?</span>
-                    <p id="tp-d1" role="tooltip">
-                      Identifications created on or after this time
-                    </p>
-                  </div>
+                  <app-tooltip
+                    data-id="tp-d1"
+                    data-content="?"
+                    data-tooltip="Identifications created on or after this time"
+                  ></app-tooltip>
                 </label>
                 <input type="date" name="d1" id="d1" />
               </div>
               <div class="form-group">
                 <label for="d2"
                   >End Date
-                  <div class="tp-wrapper">
-                    <span class="tp-trigger" aria-describedby="tp-d2">?</span>
-                    <p id="tp-d2" role="tooltip">
-                      Identifications created on or before this time
-                    </p>
-                  </div>
+                  <app-tooltip
+                    data-id="tp-d2"
+                    data-content="?"
+                    data-tooltip="Identifications created on or before this time"
+                  ></app-tooltip>
                 </label>
                 <input type="date" name="d2" id="d2" />
               </div>
@@ -357,14 +336,11 @@ export const template = html`
               <div class="form-group">
                 <label for="hrank"
                   >High Rank
-                  <div class="tp-wrapper">
-                    <span class="tp-trigger" aria-describedby="tp-hrank"
-                      >?</span
-                    >
-                    <p id="tp-hrank" role="tooltip">
-                      Identifications taxon must have this rank or lower
-                    </p>
-                  </div>
+                  <app-tooltip
+                    data-id="tp-hrank"
+                    data-content="?"
+                    data-tooltip="Identifications taxon must have this rank or lower"
+                  ></app-tooltip>
                 </label>
                 <select id="hrank" name="hrank">
                   ${renderRankOptions("All")}
@@ -373,14 +349,11 @@ export const template = html`
               <div class="form-group">
                 <label for="lrank"
                   >Low Rank
-                  <div class="tp-wrapper">
-                    <span class="tp-trigger" aria-describedby="tp-lrank"
-                      >?</span
-                    >
-                    <p id="tp-lrank" role="tooltip">
-                      Identifications taxon must have this rank or higher
-                    </p>
-                  </div>
+                  <app-tooltip
+                    data-id="tp-lrank"
+                    data-content="?"
+                    data-tooltip="Identifications taxon must have this rank or higher"
+                  ></app-tooltip>
                 </label>
                 <select id="lrank" name="lrank">
                   ${renderRankOptions("All")}
