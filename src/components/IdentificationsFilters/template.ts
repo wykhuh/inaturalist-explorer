@@ -178,6 +178,19 @@ export const template = html`
                   ${renderRankOptions("All")}
                 </select>
               </div>
+              <div class="form-group">
+                <label for="observation_rank"
+                  >Rank
+                  <app-tooltip
+                    data-id="tp-observation_rank"
+                    data-content="?"
+                    data-tooltip="Observations taxon must have this rank"
+                  ></app-tooltip>
+                </label>
+                <select id="observation_rank" name="observation_rank" multiple>
+                  ${renderRankOptions("All")}
+                </select>
+              </div>
             </fieldset>
             <fieldset class="observation-status">
               <legend>Observation Status</legend>
@@ -356,6 +369,19 @@ export const template = html`
                   ></app-tooltip>
                 </label>
                 <select id="lrank" name="lrank">
+                  ${renderRankOptions("All")}
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="rank"
+                  >Rank
+                  <app-tooltip
+                    data-id="tp-rank"
+                    data-content="?"
+                    data-tooltip="Identifications taxon must have this rank"
+                  ></app-tooltip>
+                </label>
+                <select id="rank" name="rank" multiple>
                   ${renderRankOptions("All")}
                 </select>
               </div>

@@ -1,4 +1,10 @@
-import { IdentificationsFilterableImplementedArrays } from "../../data/app_data";
+import {
+  IdentificationsFilterableImplementedArrays,
+  inputCheckedFieldsIdentifications,
+  inputFieldsIdentifications,
+  multipleSelectFieldsIdentifications,
+  selectFieldsIdentifications,
+} from "../../data/app_data";
 import type {
   AppStoreType,
   IdentificationsApiParamsType,
@@ -9,6 +15,7 @@ import { loggerFilters } from "../../lib/logger";
 import {
   processInputCheckedFields,
   processInputFields,
+  processMultipleSelectFields,
   processSelectFields,
 } from "../../lib/form_utils";
 import {
@@ -94,26 +101,8 @@ export async function updateAppWithFilters(
 
 // use store to populate the filter form fields on page load
 export function initFilters(appStore: AppStoreType) {
-  let inputFields: IdentificationsApiParamsKeysType[] = [
-    "d1",
-    "d2",
-    "observed_d1",
-    "observed_d2",
-  ];
-  processInputFields(inputFields, appStore);
-
-  let selectFields: IdentificationsApiParamsKeysType[] = [
-    "hrank",
-    "lrank",
-    "observation_hrank",
-    "observation_lrank",
-    "quality_grade",
-  ];
-  processSelectFields(selectFields, appStore);
-
-  let inputCheckedFields: IdentificationsApiParamsKeysType[] = [
-    "iconic_taxon_id",
-    "observation_iconic_taxon_id",
-  ];
-  processInputCheckedFields(inputCheckedFields, appStore);
+  processInputFields(inputFieldsIdentifications, appStore);
+  processSelectFields(selectFieldsIdentifications, appStore);
+  processInputCheckedFields(inputCheckedFieldsIdentifications, appStore);
+  processMultipleSelectFields(multipleSelectFieldsIdentifications, appStore);
 }

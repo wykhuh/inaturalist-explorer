@@ -683,6 +683,19 @@ const speciesPane = html`
           ${renderRankOptions("All")}
         </select>
       </div>
+      <div class="form-group">
+        <label for="rank"
+          >Rank
+          <app-tooltip
+            data-id="tp-rank"
+            data-content="?"
+            data-tooltip="Taxon must have this rank"
+          ></app-tooltip>
+        </label>
+        <select id="rank" name="rank" multiple>
+          ${renderRankOptions("All")}
+        </select>
+      </div>
     </fieldset>
   </div>
 `;

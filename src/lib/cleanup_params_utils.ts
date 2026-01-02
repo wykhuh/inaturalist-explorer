@@ -138,6 +138,7 @@ export let identificationOnlyParams = [
   "iconic_taxon_id",
   "hrank",
   "lrank",
+  "rank",
   "without_taxon_id",
   "taxon_id",
 ];

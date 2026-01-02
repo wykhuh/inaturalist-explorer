@@ -197,6 +197,7 @@ export const ObservationsFilterableImplementedArrays: ObservationsApiParamsKeysT
     "month",
     "photo_license",
     "quality_grade",
+    "rank",
     "sound_license",
     "term_value_id",
     "year",
@@ -226,7 +227,6 @@ const ObservationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   "acc",
   "licensed",
   "photo_licensed",
-  "rank",
   "taxon_name",
   "acc_above",
   "acc_below",
@@ -249,7 +249,6 @@ const ObservationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   "ofv_datatype",
   "pcid",
   "radius",
-  "rank",
   "site_id",
   "search_on", // string; can only select one category at a time
   "spam",
@@ -283,6 +282,7 @@ export let selectFieldsObservations: ObservationsApiParamsKeysType[] = [
 export let multipleSelectFieldsObservations: ObservationsApiParamsKeysType[] = [
   "license",
   "photo_license",
+  "rank",
   "quality_grade",
   "sound_license",
   "month",
@@ -338,7 +338,12 @@ export const IdentificationsFilterableImplemented: IdentificationsApiParamsKeysT
   ];
 
 export const IdentificationsFilterableImplementedArrays: IdentificationsApiParamsKeysType[] =
-  ["iconic_taxon_id", "observation_iconic_taxon_id"];
+  [
+    "iconic_taxon_id",
+    "observation_iconic_taxon_id",
+    "rank",
+    "observation_rank",
+  ];
 
 export const IdentificationsFilterableTodo: IdentificationsApiParamsKeysType[] =
   [
@@ -347,8 +352,6 @@ export const IdentificationsFilterableTodo: IdentificationsApiParamsKeysType[] =
     "order_by", // created_at,
 
     // no
-    "rank",
-    "observation_rank",
     "observation_created_d1",
     "observation_created_d2",
     "current_taxon",
@@ -367,6 +370,27 @@ export const IdentificationsFilterableTodo: IdentificationsApiParamsKeysType[] =
     "only_id",
     "taxon_of",
   ];
+
+export const inputFieldsIdentifications: IdentificationsApiParamsKeysType[] = [
+  "d1",
+  "d2",
+  "observed_d1",
+  "observed_d2",
+];
+
+export const selectFieldsIdentifications: IdentificationsApiParamsKeysType[] = [
+  "hrank",
+  "lrank",
+  "observation_hrank",
+  "observation_lrank",
+  "quality_grade",
+];
+
+export const multipleSelectFieldsIdentifications: IdentificationsApiParamsKeysType[] =
+  ["rank", "observation_rank"];
+
+export const inputCheckedFieldsIdentifications: IdentificationsApiParamsKeysType[] =
+  ["iconic_taxon_id", "observation_iconic_taxon_id"];
 
 export const IdentificationsApiFilterableNames =
   IdentificationsFilterableImplemented.concat(
