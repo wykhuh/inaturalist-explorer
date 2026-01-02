@@ -1186,6 +1186,11 @@
       .category.leading {
         color: var(--clr-iNat-green);
       }
+
+      .status {
+        display: flex;
+        gap: 0.75rem;
+      }
     }
   }
 
@@ -1202,12 +1207,6 @@
       background-color: var(--clr-gray-200);
     }
 
-    dt {
-      /* width: 50%; */
-    }
-    dt {
-      /* font-weight: 550; */
-    }
     dt::after {
       content: ":";
     }
@@ -1452,10 +1451,7 @@
     }
 
     .tp-wrapper {
-      display: inline;
-
       .tp-trigger {
-        /*background-color: green;*/
         border-radius: 100%;
         width: 0.9rem;
         height: 0.9rem;
