@@ -3,6 +3,7 @@ import type { DataComponentType, AppStoreType } from "../../types/app";
 import {
   formatAvatar,
   renderAnnotations,
+  renderDates,
   renderMedia,
   renderMediaCounts,
   renderObservationMetadataCounts,
@@ -66,11 +67,11 @@ class CardObservation extends HTMLElement {
       detailsContent += `<a href="${iNatObservationUrl}/${data.id}">Unknown</a>`;
       detailsContent += "</span>";
     }
-
-    detailsContent += renderQualityGrade(data.quality_grade);
-    detailsContent += renderObservationMetadataCounts(data, true);
-
     detailsContent += renderMediaCounts(data.photos, data.sounds);
+    detailsContent += renderQualityGrade(data.quality_grade);
+    detailsContent += renderObservationMetadataCounts(data);
+    detailsContent += renderDates(data);
+
     if (data.annotations && data.annotations.length > 0) {
       detailsContent += renderAnnotations(data.annotations);
     }

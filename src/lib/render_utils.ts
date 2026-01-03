@@ -261,25 +261,47 @@ function renderFavoritesCount(count: number) {
 
 export function renderObservationMetadataCounts(
   data: ObservationsResult | Observation,
-  includeDate = false,
 ) {
   let detailsContent = `<div class="metadata-counts">`;
   if (data.identifications.length > 0) {
     detailsContent += renderIdCount(data.identifications.length);
   }
-
+  if (
+    data.num_identification_disagreements &&
+    data.num_identification_disagreements > 0
+  ) {
+    detailsContent += renderDisagreementsCount(
+      data.num_identification_disagreements,
+    );
+  }
   if (data.comments_count > 0) {
     detailsContent += renderCommentCount(data.comments_count);
   }
-
   if (data.faves_count > 0) {
     detailsContent += renderFavoritesCount(data.faves_count);
   }
 
-  if (includeDate && data.observed_on) {
-    let date = formatDate(data.observed_on);
-    detailsContent += `<span class="observed">${date}</span>`;
+  detailsContent += `</div>`;
+
+  return detailsContent;
+}
+
+export function renderDates(data: ObservationsResult | Observation) {
+  let detailsContent = `<div class="dates">`;
+
+  if (data.time_observed_at) {
+    let date = formatDate(data.time_observed_at);
+    detailsContent += `<div class="observed">Observed: ${date}</div>`;
   }
+  if (data.created_at) {
+    let date = formatDate(data.created_at);
+    detailsContent += `<div class="created">Added: ${date}</div>`;
+  }
+  if (data.updated_at) {
+    let date = formatDate(data.updated_at);
+    detailsContent += `<div class="updated">Updated: ${date}</div>`;
+  }
+
   detailsContent += `</div>`;
 
   return detailsContent;
@@ -395,6 +417,25 @@ export function formatDateLong(date: string | null, timezone?: string) {
 
   // TODO: localize date
   return new Date(date).toLocaleString("en-US", options);
+}
+
+export function formatDateLong2(date: string | null, timezone?: string) {
+  if (!date) return;
+
+  let options = {
+    timeZoneName: "short",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  } as any;
+  if (timezone) {
+    options.timeZone = timezone;
+  }
+
+  // TODO: localize date
+  return new Date(date).toLocaleDateString("en-US", options);
 }
 
 // https://stackoverflow.com/a/69122877

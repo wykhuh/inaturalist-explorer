@@ -1057,10 +1057,6 @@
       }
     }
 
-    .observed {
-      flex-grow: 1;
-      text-align: right;
-    }
     .details {
       display: flex;
       flex-direction: column;

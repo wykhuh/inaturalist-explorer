@@ -7,6 +7,7 @@ import type { DataComponentType, AppStoreType } from "../../types/app";
 import {
   formatAvatar,
   renderAnnotations,
+  renderDates,
   renderMedia,
   renderObservationMetadataCounts,
   renderQualityGrade,
@@ -65,7 +66,8 @@ export function renderCard(appStore: AppStoreType, componentCtx: any) {
 
   if (mediaIndex === 0) {
     detailsContent += renderQualityGrade(observation.quality_grade);
-    detailsContent += renderObservationMetadataCounts(observation, true);
+    detailsContent += renderObservationMetadataCounts(observation);
+    detailsContent += renderDates(observation);
 
     if (observation.annotations && observation.annotations.length > 0) {
       detailsContent += renderAnnotations(observation.annotations);

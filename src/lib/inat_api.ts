@@ -223,8 +223,9 @@ export async function getObservationsYears() {
 export async function getObservations(appParams: string, perPage: number) {
   let fields =
     "(comments_count:!t," +
+    // "comments:!t," +
     "created_at:!t," +
-    "created_at_details:all," +
+    // "created_at_details:all," +
     "created_time_zone:!t," +
     "faves_count:!t," +
     "geoprivacy:!t," +
@@ -235,17 +236,17 @@ export async function getObservations(appParams: string, perPage: number) {
     // "location:!t," +
     // "mappable:!t," +
     "obscured:!t," +
-    "observed_on:!t," +
-    "observed_on_details:all," +
+    // "observed_on:!t," +
+    // "observed_on_details:all," +
     "observed_time_zone:!t," +
+    "time_observed_at:!t," +
     "updated_at:!t," +
     "photos:(id:!t,url:!t)," +
     "place_guess:!t," +
-    "private_geojson:!t," +
+    // "private_geojson:!t," +
     "quality_grade:!t," +
     "sounds:(id:!t,file_url:!t)," +
     "taxon:(iconic_taxon_id:!t,name:!t,preferred_common_name:!t,preferred_common_names:(name:!t),rank:!t,rank_level:!t)," +
-    "time_observed_at:!t," +
     "user:(icon_url:!t,icon:!t,id:!t,login:!t,name:!t))";
 
   let searchParams = normalizeAppParams(appParams);
