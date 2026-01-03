@@ -276,7 +276,8 @@ export async function getObservationsSpecies(
     "(" +
     // "ancestors:" +
     // "(iconic_taxon_name:!t,id:!t,name:!t,preferred_common_name:!t,preferred_common_names:(name:!t),rank:!t,rank_level:!t,uuid:!t)," +
-    "ancestry:!t," +
+    // "ancestry:!t," +
+    "establishment_means:(establishment_means:!t)," +
     "conservation_status:(status:!t)," +
     "default_photo:(attribution:!t,license_code:!t,medium_url:!t,square_url:!t,url:!t)," +
     "iconic_taxon_name:!t," +
