@@ -680,12 +680,13 @@
     [role="tooltip"] {
       display: none;
       position: absolute;
-      padding: 0.5em 1em;
+      padding: 0.25em 0.5em;
       background-color: var(--clr-iNat-dark-gray);
       color: var(--clr-white);
       border-radius: 5px;
       z-index: 2;
     }
+
     .tp-trigger:hover + [role="tooltip"],
     .tp-trigger:focus + [role="tooltip"] {
       display: block;
@@ -893,6 +894,10 @@
       height: 100%;
       border: var(--border-grey);
 
+      [role="tooltip"] {
+        right: 0px;
+      }
+
       .media {
         position: relative;
         border-bottom: var(--border-grey);
@@ -1033,6 +1038,10 @@
       flex-direction: column;
       height: 100%;
       border: var(--border-grey);
+
+      #tp-avatar[role="tooltip"] {
+        right: 5px;
+      }
     }
 
     .media {

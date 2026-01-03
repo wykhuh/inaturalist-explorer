@@ -41,18 +41,31 @@ class CardSpecies extends HTMLElement {
     if (mediaEl) {
       let establishmentMeans =
         data.taxon.establishment_means?.establishment_means;
+
       if (establishmentMeans) {
-        let spanEl = document.createElement("span");
+        let options = {} as any;
         if (establishmentMeans === "native") {
-          spanEl.className = "establishment-means native";
-          spanEl.textContent = "N";
-          spanEl.title = establishmentMeans;
+          options = {
+            content: "N",
+            tooltip: establishmentMeans,
+            id: "tp-native",
+            class: "establishment-means native",
+          };
         } else if (establishmentMeans === "introduced") {
-          spanEl.className = "establishment-means introduced";
-          spanEl.textContent = "IN";
-          spanEl.title = establishmentMeans;
+          options = {
+            content: "IN",
+            tooltip: establishmentMeans,
+            id: "tp-introduced",
+            class: "establishment-means introduced",
+          };
         }
-        mediaEl.appendChild(spanEl);
+        let tooltip = document.createElement("app-tooltip");
+        tooltip.className = options.class;
+        tooltip.dataset.id = options.id;
+        tooltip.dataset.content = options.content;
+        tooltip.dataset.tooltip = options.tooltip;
+
+        mediaEl.appendChild(tooltip);
       }
     }
 

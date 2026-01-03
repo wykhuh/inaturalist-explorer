@@ -33,6 +33,7 @@ import { capitalizeFirstLetter, formatTaxonName } from "./data_utils.ts";
 import { logger } from "./logger.ts";
 import { pluralize } from "./utils.ts";
 import { html } from "./component_utils.ts";
+import { formatTooltip } from "../components/Tooltip/component.ts";
 
 export function renderUser(user: ObservationUser) {
   return html`<span class="avatar-name">
@@ -59,12 +60,9 @@ export function formatAvatar(user: ObservationUser) {
     image = person2;
   }
 
-  return html`<a
-    class="avatar"
-    href="${iNatUserUrl}/${user.login}"
-    title="${user.login}"
-    >${image}</a
-  >`;
+  let link = `<a class="avatar" href="${iNatUserUrl}/${user.login}">${image}</a>`;
+  let tooltip = formatTooltip("tp-avatar", link, user.login);
+  return tooltip;
 }
 
 export function renderTaxonNames(
@@ -237,35 +235,27 @@ export function renderAnnotations(annotations: Annotation[]) {
 }
 
 export function renderIdCount(count: number) {
-  let message = `${count} identifications`;
-  return `
-  <span class="identifications" aria-label="${message}" title="${message}">
-    ${check}<span class="identifications-count">${count}</span>
-  </span>`;
+  return formatTooltip(
+    "tp-identifications",
+    `${check}${count}`,
+    `${count} identifications`,
+  );
 }
 
 function renderCommentCount(count: number) {
-  let message = `${count} comments`;
-  return `
-  <span class="speech" aria-label="${message}" title="${message}">
-    ${speech}<span class="comments-count">${count}</span>
-  </span>`;
+  return formatTooltip("tp-comments", `${speech}${count}`, `${count} comments`);
 }
 
 function renderFavoritesCount(count: number) {
-  let message = `${count} favorites`;
-  return `
-  <span class="favorites" aria-label="${message}" title="${message}">
-    ${star}<span class="favorites-count">${count}</span>
-  </span>`;
+  return formatTooltip("tp-favorites", `${star}${count}`, `${count} favorites`);
 }
 
 function renderDisagreementsCount(count: number) {
-  let message = `${count} disagreements`;
-  return `
-  <span class="disagreements" aria-label="${message}" title="${message}">
-    ${x}<span class="disagreements-count">${count}</span>
-  </span>`;
+  return formatTooltip(
+    "tp-disagreements",
+    `${x}${count}`,
+    `${count} disagreements`,
+  );
 }
 
 export function renderObservationMetadataCounts(
@@ -317,9 +307,25 @@ export function renderDates(data: ObservationsResult | Observation) {
 }
 
 export function renderPlace(place: string, obscured: boolean) {
-  let placeContent = obscured
-    ? `<span class="obscured" aria-label="location is obscured" title="location is obscured">${mapMarkerObscured}</span>`
-    : `<span class="obscured" aria-label="location is public" title="location is public">${mapMarker}</span>`;
+  let options = {} as any;
+  if (obscured) {
+    options = {
+      id: "tp-obscured",
+      content: mapMarkerObscured,
+      tooltip: "location is obscured",
+    };
+  } else {
+    options = {
+      id: "tp-obscured",
+      content: mapMarker,
+      tooltip: "location is public",
+    };
+  }
+  let placeContent = formatTooltip(
+    options.id,
+    options.content,
+    options.tooltip,
+  );
   placeContent += `<span class="place">${place}</span>`;
 
   return placeContent;
