@@ -12,6 +12,13 @@ export function setSelectedOption(selector: string) {
   }
 }
 
+export function unsetSelectedOption(selector: string) {
+  let el = document.querySelector(selector) as HTMLOptionElement;
+  if (el) {
+    el.selected = false;
+  }
+}
+
 export function setSelectedOptionTrueFalse(
   form: string,
   property: ObservationsApiParamsKeysType | IdentificationsApiParamsKeysType,
@@ -28,9 +35,14 @@ export function setInputValue(selector: string, value: any) {
 }
 
 export function setInputChecked(selector: string, value: any) {
-  let el = document.querySelector(selector) as HTMLInputElement;
-  if (el) {
-    el.checked = value;
+  try {
+    let el = document.querySelector(selector) as HTMLInputElement;
+    if (el) {
+      el.checked = value;
+      return true;
+    }
+  } catch {
+    return false;
   }
 }
 

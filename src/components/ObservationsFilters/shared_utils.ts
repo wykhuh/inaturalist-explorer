@@ -8,6 +8,7 @@ import type {
   IdentificationsApiParamsKeysType,
   ObservationsApiParamsType,
   ObservationsApiParamsKeysType,
+  DataComponentType,
 } from "../../types/app";
 
 export function tabClickHandler(
@@ -48,8 +49,11 @@ export function renderSelectedFiltersList(
 
   listEl.innerHTML = "";
   for (let [key, value] of Object.entries(params)) {
-    let itemEl = document.createElement("li");
-    itemEl.textContent = `${key}=${value}`;
+    let itemEl = document.createElement(
+      "selected-filters-item",
+    ) as unknown as DataComponentType;
+    itemEl.data = { field: key, value: value };
+
     listEl.appendChild(itemEl);
   }
 

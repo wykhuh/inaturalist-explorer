@@ -238,7 +238,7 @@ let observationPane = html`<div
           ></app-tooltip>
         </label>
         <select id="verifiable" name="verifiable">
-          <option></option>
+          <option value=""></option>
           <option value="true" selected>True</option>
           <option value="false">False</option>
         </select>
@@ -253,7 +253,7 @@ let observationPane = html`<div
           ></app-tooltip>
         </label>
         <select id="captive" name="captive">
-          <option></option>
+          <option value=""></option>
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
@@ -286,7 +286,7 @@ let observationPane = html`<div
           ></app-tooltip>
         </label>
         <select id="popular" name="popular">
-          <option></option>
+          <option value=""></option>
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
@@ -305,7 +305,7 @@ let observationPane = html`<div
           ></app-tooltip>
         </label>
         <select id="identified" name="identified">
-          <option></option>
+          <option value=""></option>
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
@@ -320,7 +320,7 @@ let observationPane = html`<div
           ></app-tooltip>
         </label>
         <select id="reviewed" name="reviewed">
-          <option></option>
+          <option value=""></option>
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
@@ -351,7 +351,7 @@ let observationPane = html`<div
           ></app-tooltip>
         </label>
         <select id="disagreements" name="disagreements">
-          <option></option>
+          <option value=""></option>
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
@@ -473,7 +473,7 @@ let observationPane = html`<div
           ></app-tooltip>
         </label>
         <select id="sounds" name="sounds">
-          <option></option>
+          <option value=""></option>
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
@@ -488,7 +488,7 @@ let observationPane = html`<div
           ></app-tooltip>
         </label>
         <select id="photos" name="photos">
-          <option></option>
+          <option value=""></option>
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
@@ -558,7 +558,7 @@ const speciesPane = html`
           ></app-tooltip>
         </label>
         <select id="threatened" name="threatened">
-          <option></option>
+          <option value=""></option>
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
@@ -573,7 +573,7 @@ const speciesPane = html`
           ></app-tooltip>
         </label>
         <select id="introduced" name="introduced">
-          <option></option>
+          <option value=""></option>
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
@@ -588,7 +588,7 @@ const speciesPane = html`
           ></app-tooltip>
         </label>
         <select id="native" name="native">
-          <option></option>
+          <option value=""></option>
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
@@ -603,7 +603,7 @@ const speciesPane = html`
           ></app-tooltip>
         </label>
         <select id="endemic" name="endemic">
-          <option></option>
+          <option value=""></option>
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
