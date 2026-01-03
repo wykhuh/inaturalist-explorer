@@ -27,7 +27,7 @@ import {
   person2,
   speech,
   star,
-  x,
+  x2,
 } from "../assets/icons.ts";
 import { capitalizeFirstLetter, formatTaxonName } from "./data_utils.ts";
 import { logger } from "./logger.ts";
@@ -253,7 +253,7 @@ function renderFavoritesCount(count: number) {
 function renderDisagreementsCount(count: number) {
   return formatTooltip(
     "tp-disagreements",
-    `${x}${count}`,
+    `${x2}${count}`,
     `${count} disagreements`,
   );
 }

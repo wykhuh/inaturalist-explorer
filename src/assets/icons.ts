@@ -69,7 +69,8 @@ export const circleX = "&#8855;";
 export const circleDot = "&#8857;";
 export const gear = "&#9881;";
 export const hamburgerMenu = "&#9776;";
-export const x = "&#10007;";
+export const x2 = "&#10007;";
+export const x = "&#215;";
 
 export const mapMarker = `
 <svg class="map-marker-icon" xmlns="http://www.w3.org/2000/svg" fill="#000000" width="800px" height="800px" viewBox="-64 0 512 512">

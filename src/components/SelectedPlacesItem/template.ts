@@ -1,3 +1,4 @@
+import { x } from "../../assets/icons";
 import { html } from "../../lib/component_utils";
 
 export const template = html`
@@ -7,7 +8,7 @@ export const template = html`
       <span class="count"></span>
     </div>
     <button class="close-button" data-testid="place-list-item-close">
-      &#215;
+      ${x}
     </button>
   </li>
 `;

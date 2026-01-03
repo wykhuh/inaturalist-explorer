@@ -1,3 +1,4 @@
+import { x } from "../../assets/icons";
 import { html } from "../../lib/component_utils";
 
 export const template = html`
@@ -5,7 +6,7 @@ export const template = html`
     <span class="swatch"></span>
     <div class="details"></div>
     <button class="close-button" data-testid="taxon-list-item-close">
-      &#215;
+      ${x}
     </button>
   </li>
 `;
@@ -17,7 +18,7 @@ export const templateIdentified = html`
       <span class="count"></span>
     </div>
     <button class="close-button" data-testid="taxon-list-item-close">
-      &#215;
+      ${x}
     </button>
   </li>
 `;
