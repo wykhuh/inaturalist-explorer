@@ -1,6 +1,10 @@
 import { viewAndTemplateObject } from "../../data/app_data";
 import { createHashString, updateAppUrl } from "../../lib/utils";
-import type { AppStoreType, ObservationViewsType } from "../../types/app";
+import type {
+  AppStoreType,
+  ObservationViewsType,
+  TooltipSettings,
+} from "../../types/app";
 
 export function viewChangeHandler(
   eventTarget: HTMLElement,
@@ -86,7 +90,7 @@ export async function updateHeaderCount(
   dataFn: any,
   searchParams: string,
   appStore: AppStoreType,
-  tooltip: HTMLElement | null = null,
+  tooltipSettings: TooltipSettings | null = null,
   perPage = 0,
   maxCacheSize = 1000,
 ) {
@@ -101,7 +105,7 @@ export async function updateHeaderCount(
     count = await fetchHeaderCounts(dataFn, searchParams, perPage);
   }
 
-  renderHeaderCounts(countLabel, count, tooltip);
+  renderHeaderCounts(countLabel, count, tooltipSettings);
 
   if (!cacheCount) {
     await saveHeaderCount(count, hash, appStore, maxCacheSize);
@@ -125,7 +129,7 @@ async function fetchHeaderCounts(
 function renderHeaderCounts(
   countLabel: ObservationViewsType,
   count: number,
-  tooltip: HTMLElement | null = null,
+  tooltipSettings: TooltipSettings | null = null,
 ) {
   // use querySelectorAll because there are header and filter counts
   let countEls = document.querySelectorAll(
@@ -135,7 +139,12 @@ function renderHeaderCounts(
 
   Array.from(countEls).forEach((countEl) => {
     countEl.textContent = count.toLocaleString();
-    if (tooltip) {
+    if (tooltipSettings) {
+      let tooltip = document.createElement("app-tooltip");
+      tooltip.dataset.id = tooltipSettings.id;
+      tooltip.dataset.content = tooltipSettings.content;
+      tooltip.dataset.tooltip = tooltipSettings.tooltip;
+
       countEl.append(tooltip);
     }
   });

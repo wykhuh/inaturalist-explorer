@@ -483,3 +483,9 @@ export interface DataComponentType extends HTMLElement {
   data?: any;
   record_type: RecordTypes;
 }
+
+export type TooltipSettings = {
+  id: string;
+  content: string;
+  tooltip: string;
+};
