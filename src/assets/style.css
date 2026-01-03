@@ -1154,6 +1154,13 @@
         }
       }
 
+      .no-photo {
+        top: 10px;
+        left: 10px;
+        width: 60px;
+        height: 60px;
+        position: absolute;
+      }
       .quality-grade {
         margin-top: 0;
       }
