@@ -238,6 +238,7 @@ export async function getObservations(appParams: string, perPage: number) {
     "observed_on:!t," +
     "observed_on_details:all," +
     "observed_time_zone:!t," +
+    "updated_at:!t," +
     "photos:(id:!t,url:!t)," +
     "place_guess:!t," +
     "private_geojson:!t," +

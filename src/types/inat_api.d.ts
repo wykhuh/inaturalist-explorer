@@ -358,6 +358,7 @@ export interface ObservationsResult {
   user: ObservationUser;
   uuid: string;
   annotations?: Annotation[];
+  updated_at?: string;
 }
 
 export interface CreatedAtDetails {

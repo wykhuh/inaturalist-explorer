@@ -15,8 +15,9 @@ export const template = html`
       <div class="form-group">
         <label for="order_by">Sort By</label>
         <select id="order_by" name="order_by">
-          <option value="created_at">Created At</option>
-          <option value="observed_on">Observed On</option>
+          <option value="created_at">Added Date</option>
+          <option value="observed_on">Observed Date</option>
+          <option value="updated_at">Updated Date</option>
           <option value="votes">Favorites</option>
         </select>
       </div>
