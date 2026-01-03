@@ -198,6 +198,7 @@ interface ObservationsApiFilterableParams {
   captive?: boolean;
   d1?: string; // date
   d2?: string; // date
+  disagreements?: boolean;
   endemic?: boolean;
   hrank?: TaxonRanks; // one value
   iconic_taxa?: string; // comma-seperated string, type IconicTaxa

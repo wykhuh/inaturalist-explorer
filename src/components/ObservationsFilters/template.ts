@@ -341,6 +341,21 @@ let observationPane = html`<div
           autocomplete="off"
         />
       </div>
+      <div class="form-group">
+        <label for="disagreements"
+          >Disagreements
+          <app-tooltip
+            data-id="tp-disagreements"
+            data-content="?"
+            data-tooltip="Observations that have community identifications disagreements"
+          ></app-tooltip>
+        </label>
+        <select id="disagreements" name="disagreements">
+          <option></option>
+          <option value="true">True</option>
+          <option value="false">False</option>
+        </select>
+      </div>
     </fieldset>
   </div>
   <!--column 2-->

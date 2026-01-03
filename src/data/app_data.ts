@@ -163,6 +163,7 @@ export const ObservationsFilterableImplemented: ObservationsApiParamsKeysType[] 
     "created_on",
     "d1",
     "d2",
+    "disagreements",
     "endemic",
     "hrank",
     "identified",
@@ -214,21 +215,21 @@ const ObservationsFilterableTodo: ObservationsApiParamsKeysType[] = [
 
   "without_term_id", // integer
   "without_term_value_id", // array
+  "term_id_or_unknown",
 
   "out_of_range",
+
   "acc_above",
   "acc_below",
   "acc_below_or_unknown",
+  "acc",
 
   // no
   "csi",
   "observed_on",
-  "acc",
   "licensed",
   "photo_licensed",
   "taxon_name",
-  "acc_above",
-  "acc_below",
   "apply_project_rules_for",
   "cs",
   "csa",
@@ -252,13 +253,13 @@ const ObservationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   "search_on", // string; can only select one category at a time
   "spam",
   "taxon_is_active",
-  "term_id_or_unknown",
   "updated_since",
   "user_login",
 ];
 
 export const trueFalseFieldsObservations: ObservationsApiParamsKeysType[] = [
   "captive",
+  "disagreements",
   "endemic",
   "identified",
   "introduced",

@@ -27,6 +27,7 @@ import {
   person2,
   speech,
   star,
+  x,
 } from "../assets/icons.ts";
 import { capitalizeFirstLetter, formatTaxonName } from "./data_utils.ts";
 import { logger } from "./logger.ts";
@@ -256,6 +257,14 @@ function renderFavoritesCount(count: number) {
   return `
   <span class="favorites" aria-label="${message}" title="${message}">
     ${star}<span class="favorites-count">${count}</span>
+  </span>`;
+}
+
+function renderDisagreementsCount(count: number) {
+  let message = `${count} disagreements`;
+  return `
+  <span class="disagreements" aria-label="${message}" title="${message}">
+    ${x}<span class="disagreements-count">${count}</span>
   </span>`;
 }
 

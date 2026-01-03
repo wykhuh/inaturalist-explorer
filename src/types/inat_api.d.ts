@@ -358,6 +358,7 @@ export interface ObservationsResult {
   user: ObservationUser;
   uuid: string;
   annotations?: Annotation[];
+  num_identification_disagreements?: number;
   updated_at?: string;
 }
 

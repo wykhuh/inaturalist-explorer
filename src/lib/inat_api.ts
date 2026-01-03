@@ -227,6 +227,7 @@ export async function getObservations(appParams: string, perPage: number) {
     "created_at:!t," +
     // "created_at_details:all," +
     "created_time_zone:!t," +
+    "num_identification_disagreements:!t," +
     "faves_count:!t," +
     "geoprivacy:!t," +
     "id:!t," +
