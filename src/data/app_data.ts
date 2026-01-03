@@ -340,6 +340,7 @@ export const IdentificationsFilterableImplemented: IdentificationsApiParamsKeysT
 
 export const IdentificationsFilterableImplementedArrays: IdentificationsApiParamsKeysType[] =
   [
+    "category",
     "iconic_taxon_id",
     "observation_iconic_taxon_id",
     "observation_rank",
@@ -364,7 +365,6 @@ export const IdentificationsFilterableTodo: IdentificationsApiParamsKeysType[] =
     "id",
     "user_login", // array string
     "current",
-    "category", // array string
     "taxon_change_id", // array string
 
     "id_above",
@@ -388,7 +388,7 @@ export const selectFieldsIdentifications: IdentificationsApiParamsKeysType[] = [
 ];
 
 export const multipleSelectFieldsIdentifications: IdentificationsApiParamsKeysType[] =
-  ["rank", "observation_rank", "quality_grade"];
+  ["rank", "observation_rank", "category", "quality_grade"];
 
 export const inputCheckedFieldsIdentifications: IdentificationsApiParamsKeysType[] =
   ["iconic_taxon_id", "observation_iconic_taxon_id"];

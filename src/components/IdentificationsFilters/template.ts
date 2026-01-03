@@ -386,6 +386,28 @@ export const template = html`
                 </select>
               </div>
             </fieldset>
+
+            <fieldset class="identification-status">
+              <legend>Identification Status</legend>
+
+              <div class="form-group">
+                <label for="category"
+                  >Category
+                  <app-tooltip
+                    data-id="tp-category"
+                    data-content="?"
+                    data-tooltip="Type of identification"
+                  ></app-tooltip>
+                </label>
+                <select id="category" name="category" multiple>
+                  <option></option>
+                  <option value="improving">Improving</option>
+                  <option value="supporting">Supporting</option>
+                  <option value="leading">Leading</option>
+                  <option value="maverick">Maverick</option>
+                </select>
+              </div>
+            </fieldset>
           </div>
         </div>
         <div class="controls">

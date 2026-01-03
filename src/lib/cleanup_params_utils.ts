@@ -141,6 +141,7 @@ export let identificationOnlyParams = [
   "rank",
   "without_taxon_id",
   "taxon_id",
+  "category",
 ];
 
 export function convertIdentificationParamsToObservationParams(
