@@ -2,6 +2,8 @@ import { circleX } from "../../assets/icons";
 import { html } from "../../lib/component_utils";
 import { observationsHeaderLinks } from "../ObservationsHeader/template";
 import {
+  renderDaysOptions,
+  renderHoursOptions,
   renderLicenseOptions,
   renderRankOptions,
   renderYearsOptions,
@@ -52,7 +54,35 @@ let datePane = html`<div
         <input type="date" name="d2" id="d2" />
       </div>
 
-      <div class="form-group multiselect">
+      <div class="form-group">
+        <label for="hour"
+          >Hours
+          <app-tooltip
+            data-id="tp-hour"
+            data-content="?"
+            data-tooltip="Observed within this hour of the day"
+          ></app-tooltip>
+        </label>
+        <select name="hour" id="hour" multiple>
+          ${renderHoursOptions("All")}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="day"
+          >Days
+          <app-tooltip
+            data-id="tp-day"
+            data-content="?"
+            data-tooltip="Observed within this day of the month"
+          ></app-tooltip>
+        </label>
+        <select name="day" id="day" multiple>
+          ${renderDaysOptions("All")}
+        </select>
+      </div>
+
+      <div class="form-group">
         <label for="month"
           >Months
           <app-tooltip
@@ -130,6 +160,19 @@ let datePane = html`<div
           </label>
           <input type="date" name="created_d2" id="created_d2" />
         </div>
+      </div>
+      <div class="form-group">
+        <label for="created_day"
+          >Days
+          <app-tooltip
+            data-id="tp-created_day"
+            data-content="?"
+            data-tooltip="Created within this day of the month"
+          ></app-tooltip>
+        </label>
+        <select name="created_day" id="created_day" multiple>
+          ${renderDaysOptions("All")}
+        </select>
       </div>
       <div class="form-group multiselect">
         <label for="created_month"

@@ -190,8 +190,11 @@ export const ObservationsFilterableImplemented: ObservationsApiParamsKeysType[] 
 
 export const ObservationsFilterableImplementedArrays: ObservationsApiParamsKeysType[] =
   [
+    "created_day", // array
     "created_month",
     "created_year",
+    "day", // array
+    "hour", // array
     "iconic_taxa",
     "license",
     "month",
@@ -205,10 +208,6 @@ export const ObservationsFilterableImplementedArrays: ObservationsApiParamsKeysT
 
 const ObservationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   // maybe
-  "day", // array
-  "hour", // array
-  "created_day", // array
-
   "geoprivacy", // array
   "taxon_geoprivacy", // array
   "obscuration", // array
@@ -280,14 +279,17 @@ export let selectFieldsObservations: ObservationsApiParamsKeysType[] = [
 ];
 
 export let multipleSelectFieldsObservations: ObservationsApiParamsKeysType[] = [
+  "created_day",
+  "day",
+  "hour",
   "license",
-  "photo_license",
-  "rank",
-  "quality_grade",
-  "sound_license",
   "month",
-  "year",
+  "photo_license",
+  "quality_grade",
+  "rank",
+  "sound_license",
   "term_value_id",
+  "year",
 ];
 
 export let inputFieldsObservations: ObservationsApiParamsKeysType[] = [

@@ -97,6 +97,22 @@ export function renderYearsOptions(defaultValue: string) {
   return content;
 }
 
+export function renderHoursOptions(defaultValue: string) {
+  let content = `<option value="">${defaultValue}</option>`;
+  [...Array(24).keys()].forEach((num) => {
+    content += `<option value="${num}">${num}</option>`;
+  });
+  return content;
+}
+
+export function renderDaysOptions(defaultValue: string) {
+  let content = `<option value="">${defaultValue}</option>`;
+  [...Array(31).keys()].forEach((num) => {
+    content += `<option value="${num + 1}">${num + 1}</option>`;
+  });
+  return content;
+}
+
 export function renderRankOptions(defaultValue: string) {
   let content = `<option value="">${defaultValue}</option>`;
   taxonRanks.forEach((rank) => {

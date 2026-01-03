@@ -691,6 +691,11 @@
       display: block;
     }
   }
+
+  fieldset legend {
+    font-weight: var(--fw-bold);
+    font-size: var(--font-size-md);
+  }
 }
 
 @layer views {
