@@ -335,7 +335,6 @@ export const IdentificationsFilterableImplemented: IdentificationsApiParamsKeysT
     "observed_d2",
     "observation_lrank",
     "observation_hrank",
-    "quality_grade",
     "reviewed",
   ];
 
@@ -343,8 +342,9 @@ export const IdentificationsFilterableImplementedArrays: IdentificationsApiParam
   [
     "iconic_taxon_id",
     "observation_iconic_taxon_id",
-    "rank",
     "observation_rank",
+    "quality_grade",
+    "rank",
   ];
 
 export const IdentificationsFilterableTodo: IdentificationsApiParamsKeysType[] =
@@ -385,11 +385,10 @@ export const selectFieldsIdentifications: IdentificationsApiParamsKeysType[] = [
   "lrank",
   "observation_hrank",
   "observation_lrank",
-  "quality_grade",
 ];
 
 export const multipleSelectFieldsIdentifications: IdentificationsApiParamsKeysType[] =
-  ["rank", "observation_rank"];
+  ["rank", "observation_rank", "quality_grade"];
 
 export const inputCheckedFieldsIdentifications: IdentificationsApiParamsKeysType[] =
   ["iconic_taxon_id", "observation_iconic_taxon_id"];

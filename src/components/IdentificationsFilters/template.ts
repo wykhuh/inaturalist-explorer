@@ -204,7 +204,7 @@ export const template = html`
                     data-tooltip="Observation must have this quality grade"
                   ></app-tooltip>
                 </label>
-                <select id="quality_grade" name="quality_grade">
+                <select id="quality_grade" name="quality_grade" multiple>
                   <option></option>
                   <option value="research">Research Grade</option>
                   <option value="needs_id">Needs Id</option>
