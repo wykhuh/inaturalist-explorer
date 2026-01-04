@@ -72,6 +72,53 @@ export function processTrueFalseFields(
   });
 }
 
+export function populateFields(
+  field_type: { [k: string]: string },
+  appStore: AppStoreType,
+) {
+  let resourceApiParams = getResourceApiParams(isObservationsCheck(appStore));
+
+  for (let [field, value] of Object.entries(appStore[resourceApiParams])) {
+    if (field_type[field] === undefined) {
+      continue;
+    }
+
+    let fieldType = field_type[field];
+    if (fieldType === "skip") {
+    } else if (fieldType === "search") {
+    } else if (fieldType === "select") {
+      setSelectedOption(
+        `#filters-form select#${field} option[value='${value}']`,
+      );
+    } else if (fieldType === "multiselect") {
+      value
+        .toString()
+        .split(",")
+        .forEach((v: any) => {
+          setSelectedOption(
+            `#filters-form select[name='${field}'] option[value='${v}']`,
+          );
+        });
+    } else if (fieldType === "textInput") {
+      setInputValue(`#filters-form input#${field}`, value);
+    } else if (fieldType === "dateInput") {
+      setInputValue(`#filters-form input#${field}`, value);
+    } else if (fieldType === "checkbox") {
+      value
+        .toString()
+        .split(",")
+        .forEach((v: any) => {
+          setInputChecked(
+            `#filters-form input[name='${field}'][value='${v}']`,
+            true,
+          );
+        });
+    } else {
+      throw new Error("processFields not implemnt for " + fieldType);
+    }
+  }
+}
+
 export function processSelectFields(
   fields: ObservationsApiParamsKeysType[] | IdentificationsApiParamsKeysType[],
   appStore: AppStoreType,
@@ -116,7 +163,6 @@ export function processInputCheckedFields(
   appStore: AppStoreType,
 ) {
   let resourceApiParams = getResourceApiParams(isObservationsCheck(appStore));
-
   fields.forEach((field) => {
     // @ts-ignore
     if (appStore[resourceApiParams][field] !== undefined) {
@@ -125,7 +171,10 @@ export function processInputCheckedFields(
         .toString()
         .split(",")
         .forEach((value: any) => {
-          setInputChecked(`#filters-form input#${value}`, true);
+          setInputChecked(
+            `#filters-form input[name='${field}'][value='${value}']`,
+            true,
+          );
         });
     }
   });

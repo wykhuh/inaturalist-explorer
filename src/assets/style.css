@@ -245,6 +245,12 @@
     margin: 1rem 0;
   }
 
+  .form-check {
+    margin: 1rem 0;
+    display: flex;
+    gap: 0.25rem;
+  }
+
   ::backdrop {
     background-color: var(--clr-black);
     opacity: 0.5;
@@ -396,7 +402,34 @@
   }
 }
 
+@layer utilities {
+  .mt-0 {
+    margin-top: 0;
+  }
+
+  .mb-0 {
+    margin-bottom: 0;
+  }
+
+  .my-0 {
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+}
+
 @layer components {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   .popover__content {
     position: absolute;
     visibility: hidden;

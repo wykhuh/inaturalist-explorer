@@ -1,8 +1,11 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
-import { initFilters, updateAppWithFilters, processFiltersForm } from "./utils";
+import { initFilters, processFiltersForm } from "./utils";
 import { template } from "./template";
-import { renderSelectedFiltersList } from "../ObservationsFilters/shared_utils";
+import {
+  renderSelectedFiltersList,
+  updateAppWithFilters,
+} from "../ObservationsFilters/shared_utils";
 
 class IdentificationsFilters extends HTMLElement {
   constructor() {

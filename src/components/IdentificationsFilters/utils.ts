@@ -1,32 +1,16 @@
 import {
-  IdentificationsFilterableImplementedArrays,
-  inputCheckedFieldsIdentifications,
-  inputFieldsIdentifications,
-  multipleSelectFieldsIdentifications,
-  selectFieldsIdentifications,
+  identificationsApiFilterableNames,
+  identificationsFieldName_InputType,
+  identificationsFilterableImplementedArrays,
 } from "../../data/app_data";
 import type {
   AppStoreType,
   IdentificationsApiParamsType,
   IdentificationsApiParamsKeysType,
 } from "../../types/app";
-import { resetPageNumber, updateStoreUsingFilters } from "../../lib/data_utils";
 import { loggerFilters } from "../../lib/logger";
-import {
-  processInputCheckedFields,
-  processInputFields,
-  processMultipleSelectFields,
-  processSelectFields,
-} from "../../lib/form_utils";
-import {
-  renderSelectedResources,
-  updateTilesForSelectedTaxa,
-} from "../../lib/search_utils";
-import { updateCountForAll } from "../../lib/count_utils";
-import {
-  concatParamsWithMultivalues,
-  renderSelectedFiltersList,
-} from "../ObservationsFilters/shared_utils";
+import { populateFields } from "../../lib/form_utils";
+import { concatParamsWithMultivalues } from "../ObservationsFilters/shared_utils";
 
 export function processFiltersForm(data: FormData): {
   params: IdentificationsApiParamsType;
@@ -41,8 +25,12 @@ export function processFiltersForm(data: FormData): {
     let key = k as IdentificationsApiParamsKeysType;
     loggerFilters(key, value);
 
+    if (!identificationsApiFilterableNames.includes(key)) {
+      continue;
+    }
+
     // ignore fields
-    if (IdentificationsFilterableImplementedArrays.includes(key)) {
+    if (identificationsFilterableImplementedArrays.includes(key)) {
       // ignore value "on"
     } else if (value === "on") {
       // convert boolean strings to boolean
@@ -58,7 +46,7 @@ export function processFiltersForm(data: FormData): {
     }
   }
 
-  IdentificationsFilterableImplementedArrays.forEach((field) => {
+  identificationsFilterableImplementedArrays.forEach((field) => {
     concatParamsWithMultivalues(data, field, values);
   });
 
@@ -80,29 +68,7 @@ export function processFiltersForm(data: FormData): {
   };
 }
 
-export async function updateAppWithFilters(
-  data: FormData,
-  appStore: AppStoreType,
-) {
-  // get values from form data
-  let results = processFiltersForm(data);
-
-  // update store observationsApiParams with form values
-  updateStoreUsingFilters(appStore, results);
-
-  await updateTilesForSelectedTaxa(appStore);
-  await updateCountForAll("all", appStore);
-
-  // update UI
-  renderSelectedFiltersList(results.params);
-  resetPageNumber(appStore);
-  renderSelectedResources(appStore, true);
-}
-
 // use store to populate the filter form fields on page load
 export function initFilters(appStore: AppStoreType) {
-  processInputFields(inputFieldsIdentifications, appStore);
-  processSelectFields(selectFieldsIdentifications, appStore);
-  processInputCheckedFields(inputCheckedFieldsIdentifications, appStore);
-  processMultipleSelectFields(multipleSelectFieldsIdentifications, appStore);
+  populateFields(identificationsFieldName_InputType, appStore);
 }

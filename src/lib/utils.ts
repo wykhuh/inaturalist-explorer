@@ -15,10 +15,10 @@ import {
   orderValues,
 } from "../data/inat_data";
 import {
-  IdentificationsApiFilterableNames,
-  IdentificationsApiNames,
-  ObservationsApiFilterableNames,
-  ObservationsApiNames,
+  identificationsApiFilterableNames,
+  identificationsApiNames,
+  observationsApiFilterableNames,
+  observationsApiNames,
   recordTypeToPathObj,
 } from "../data/app_data";
 import { defaultColorScheme } from "./map_colors_utils";
@@ -163,7 +163,7 @@ export function formatAppUrl(
     Object.entries(appStore.observationsApiParams).forEach(([key, value]) => {
       if (processedKeys.includes(key)) {
       } else {
-        if (params && ObservationsApiNames.includes(key)) {
+        if (params && observationsApiNames.includes(key)) {
           (params as any)[key] = value as any;
         }
       }
@@ -173,7 +173,7 @@ export function formatAppUrl(
       ([key, value]) => {
         if (processedKeys.includes(key)) {
         } else {
-          if (params && IdentificationsApiNames.includes(key)) {
+          if (params && identificationsApiNames.includes(key)) {
             (params as any)[key] = value as any;
           }
         }
@@ -603,7 +603,7 @@ function setUrlStoreValuesObservations(
   let cleanedValue = value as string | number | boolean;
 
   if (
-    ObservationsApiFilterableNames.includes(
+    observationsApiFilterableNames.includes(
       key as ObservationsApiParamsKeysType,
     )
   ) {
@@ -629,7 +629,7 @@ function setUrlStoreValuesIdentifications(
   let cleanedValue = value as string | number | boolean;
 
   if (
-    IdentificationsApiFilterableNames.includes(
+    identificationsApiFilterableNames.includes(
       key as IdentificationsApiParamsKeysType,
     )
   ) {

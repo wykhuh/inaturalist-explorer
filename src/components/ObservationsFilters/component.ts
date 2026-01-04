@@ -5,9 +5,13 @@ import {
   unobservedByUserSelectedHandler,
 } from "../../lib/search_unobserved";
 import { searchSetup } from "../../lib/search_utils";
-import { initFilters, updateAppWithFilters, processFiltersForm } from "./utils";
+import { initFilters, processFiltersForm } from "./utils";
 import { template } from "./template";
-import { renderSelectedFiltersList, tabClickHandler } from "./shared_utils";
+import {
+  renderSelectedFiltersList,
+  tabClickHandler,
+  updateAppWithFilters,
+} from "./shared_utils";
 import {
   reviewerSelectedHandler,
   setupReviewerSearch,
@@ -35,6 +39,13 @@ class ObservationFilters extends HTMLElement {
     this.querySelectorAll(".nav-link").forEach((el) => {
       el.addEventListener("click", this);
     });
+
+    this.querySelectorAll('[name="term_id"]').forEach((el) => {
+      el.addEventListener("click", this);
+    });
+    this.querySelectorAll('[name="without_term_id"]').forEach((el) => {
+      el.addEventListener("click", this);
+    });
   }
 
   disconnectedCallback() {
@@ -48,11 +59,20 @@ class ObservationFilters extends HTMLElement {
     this.querySelectorAll(".nav-link").forEach((el) => {
       el.removeEventListener("click", this);
     });
+
+    this.querySelectorAll('[name="term_id"]').forEach((el) => {
+      el.removeEventListener("click", this);
+    });
+    this.querySelectorAll('[name="without_term_id"]').forEach((el) => {
+      el.removeEventListener("click", this);
+    });
   }
 
   handleEvent(event: Event) {
     let target = event.target as HTMLInputElement;
     if (!target) return;
+    if (!this.formEl) return;
+
     loggerEvent(`[ObservationFilters event] ${event.type}`);
 
     // wait for storePopulated event to render filters because there are some
@@ -62,6 +82,7 @@ class ObservationFilters extends HTMLElement {
       this.render();
     }
 
+    // change tabs
     if (
       event.type === "click" &&
       target.className.split(" ").includes("nav-link")
@@ -69,27 +90,66 @@ class ObservationFilters extends HTMLElement {
       tabClickHandler(target, this);
     }
 
-    if (this.formEl) {
-      if (event.type === "input") {
-        // use formChangeHandler to clear input; use autocomplete to select record
-        let searches = [
-          "unobserved-by-user-search",
-          "reviewer-search",
-          "not-in-project-search",
-        ];
-        if (searches.includes(target.id)) {
-          if (target.value === "") {
-            this.formChangeHandler(event, this.formEl);
+    // disable/enable related term values select when term_id is checled
+    if (event.type === "click" && target.name === "term_id") {
+      let selectEl = this.querySelector<HTMLSelectElement>(
+        `select[data-related-term-id="${target.value}"]`,
+      );
+      if (selectEl) {
+        selectEl.disabled = !selectEl.disabled;
+      }
+    }
+
+    // iNat API only allows one without_term_id
+    if (event.type === "click" && target.name === "without_term_id") {
+      let selectEl = this.querySelector<HTMLSelectElement>(
+        `select[data-related-without-term-id="${target.value}"]`,
+      );
+      if (!selectEl) return;
+
+      if (target.checked) {
+        // uncheck previously checked without_term_id
+        // document.querySelector("[name='without_term_id']:not(#without_sex):checked")
+        let oldInputEl = this.querySelector<HTMLInputElement>(
+          `[name='without_term_id']:not(#${target.id}):checked`,
+        );
+        if (oldInputEl) {
+          oldInputEl.checked = false;
+          // disable previously selected related term values
+          let oldSelectEl = this.querySelector<HTMLSelectElement>(
+            `select[data-related-without-term-id="${oldInputEl.value}"]`,
+          );
+          if (oldSelectEl) {
+            oldSelectEl.disabled = true;
           }
-          // use formChangeHandler to add and clear other fields
-        } else {
+        }
+        // enable related term values select
+        selectEl.disabled = false;
+      } else {
+        // disable related term values select
+        selectEl.disabled = true;
+      }
+    }
+
+    if (event.type === "input") {
+      // use formChangeHandler to clear input; use autocomplete to select record
+      let searches = [
+        "unobserved-by-user-search",
+        "reviewer-search",
+        "not-in-project-search",
+      ];
+      if (searches.includes(target.id)) {
+        if (target.value === "") {
           this.formChangeHandler(event, this.formEl);
         }
+        // use formChangeHandler to add and clear other fields
+      } else {
+        this.formChangeHandler(event, this.formEl);
       }
+    }
 
-      if (event.type === "reset") {
-        this.resetFormHandler(this.formEl);
-      }
+    if (event.type === "reset") {
+      this.resetFormHandler(this.formEl);
     }
   }
 

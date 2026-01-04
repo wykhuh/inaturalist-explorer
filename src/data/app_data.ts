@@ -100,24 +100,39 @@ export const selectedResourcesIdObservations = {
   selectedProjects: "project_id",
   selectedTaxa: "taxon_id",
   selectedWithoutTaxa: "without_taxon_id",
+  selectedWithoutTaxaIdentified: null,
   selectedTaxaIdentified: null,
   selectedUsers: "user_id",
   selectedUsersAnnotators: "annotation_user_id",
   selectedUsersIdentifiers: "ident_user_id",
+  selectedReviewer: "viewer_id",
+  selectedUnobservedByUser: "unobserved_by_user_id",
+  selectedNotInProject: "not_in_project",
 };
+
+export const idSelectedResourcesObservations = objectFlip(
+  selectedResourcesIdObservations,
+);
 
 // NOTE: update when adding selectedResource; autocomplete sidemenu
 export const selectedResourcesIdIdentifications = {
   selectedPlaces: "place_id",
   selectedProjects: null,
   selectedTaxa: "observation_taxon_id",
-  selectedWithoutTaxa: "without_taxon_id",
+  selectedWithoutTaxa: "without_observation_taxon_id",
   selectedWithoutTaxaIdentified: "without_taxon_id",
   selectedTaxaIdentified: "taxon_id",
   selectedUsers: null,
   selectedUsersAnnotators: null,
   selectedUsersIdentifiers: "user_id",
+  selectedReviewer: null,
+  selectedUnobservedByUser: null,
+  selectedNotInProject: null,
 };
+
+export const idSelectedResourcesIdentifications = objectFlip(
+  selectedResourcesIdIdentifications,
+);
 
 // NOTE: update when adding selectedResource; render list
 export let renderSelectResourcesLists = [
@@ -132,9 +147,8 @@ export let renderSelectResourcesLists = [
   renderWithoutTaxaIdentifiedList,
 ];
 
-// NOTE:
-// update when adding selectedResource; filters
-export const ObservationsApiNonFilterableNames: ObservationsApiParamsKeysType[] =
+// NOTE: update when adding selectedResource; filters
+export const observationsApiNonFilterableNames: ObservationsApiParamsKeysType[] =
   [
     "annotation_user_id",
     "colors",
@@ -155,7 +169,7 @@ export const ObservationsApiNonFilterableNames: ObservationsApiParamsKeysType[] 
     "without_taxon_id",
   ];
 
-export const ObservationsFilterableImplemented: ObservationsApiParamsKeysType[] =
+export const observationsFilterableImplemented: ObservationsApiParamsKeysType[] =
   [
     "captive",
     "created_d1",
@@ -180,22 +194,24 @@ export const ObservationsFilterableImplemented: ObservationsApiParamsKeysType[] 
     "q",
     "reviewed",
     "sounds",
-    "term_id",
     "threatened",
     "unobserved_by_user_id",
     "user_after",
     "user_before",
     "verifiable",
     "viewer_id",
+    "without_term_id", // integer
   ];
 
-export const ObservationsFilterableImplementedArrays: ObservationsApiParamsKeysType[] =
+// used by processFiltersForm to determine if app will combine values into
+// comma separated string
+export const observationsFilterableImplementedArrays: ObservationsApiParamsKeysType[] =
   [
-    "created_day", // array
+    "created_day",
     "created_month",
     "created_year",
-    "day", // array
-    "hour", // array
+    "day",
+    "hour",
     "iconic_taxa",
     "license",
     "month",
@@ -203,20 +219,19 @@ export const ObservationsFilterableImplementedArrays: ObservationsApiParamsKeysT
     "quality_grade",
     "rank",
     "sound_license",
+    "term_id",
     "term_value_id",
+    "without_term_value_id",
     "year",
   ];
 
-const ObservationsFilterableTodo: ObservationsApiParamsKeysType[] = [
+const observationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   // maybe
   "geoprivacy", // array
   "taxon_geoprivacy", // array
   "obscuration", // array
 
-  "without_term_id", // integer
-  "without_term_value_id", // array
   "term_id_or_unknown",
-
   "out_of_range",
 
   "acc_above",
@@ -257,64 +272,58 @@ const ObservationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   "user_login",
 ];
 
-export const trueFalseFieldsObservations: ObservationsApiParamsKeysType[] = [
-  "captive",
-  "disagreements",
-  "endemic",
-  "identified",
-  "introduced",
-  "native",
-  "photos",
-  "popular",
-  "sounds",
-  "threatened",
-  "verifiable",
-  "reviewed",
-];
+// used to populate form on app init and delete a filter
+export const observationsFieldName_InputType = {
+  captive: "select",
+  created_day: "multiselect",
+  d1: "dateInput",
+  d2: "dateInput",
+  day: "multiselect",
+  disagreements: "select",
+  endemic: "select",
+  hour: "multiselect",
+  hrank: "select",
+  iconic_taxa: "checkbox",
+  ident_user_id: "search",
+  identified: "select",
+  introduced: "select",
+  license: "multiselect",
+  list_id: "textInput",
+  lrank: "select",
+  month: "multiselect",
+  native: "select",
+  not_in_project: "search",
+  on: "dateInput",
+  photo_license: "multiselect",
+  photos: "select",
+  popular: "select",
+  q: "textInput",
+  quality_grade: "multiselect",
+  rank: "multiselect",
+  reviewed: "select",
+  sound_license: "multiselect",
+  sounds: "select",
+  term_id: "skip",
+  term_value_id: "skip",
+  threatened: "select",
+  unobserved_by_user_id: "search",
+  user_after: "select",
+  user_before: "select",
+  verifiable: "select",
+  viewer_id: "search",
+  without_term_id: "skip",
+  without_term_value_id: "skip",
+  year: "multiselect",
+};
 
-export let selectFieldsObservations: ObservationsApiParamsKeysType[] = [
-  "hrank",
-  "lrank",
-  "user_before",
-  "user_after",
-];
+export const observationsApiFilterableNames = observationsFilterableImplemented
+  .concat(observationsFilterableImplementedArrays)
+  .concat(observationsFilterableTodo);
 
-export let multipleSelectFieldsObservations: ObservationsApiParamsKeysType[] = [
-  "created_day",
-  "day",
-  "hour",
-  "license",
-  "month",
-  "photo_license",
-  "quality_grade",
-  "rank",
-  "sound_license",
-  "term_value_id",
-  "year",
-];
+export const observationsApiNames: string[] =
+  observationsApiNonFilterableNames.concat(observationsApiFilterableNames);
 
-export let inputFieldsObservations: ObservationsApiParamsKeysType[] = [
-  "d1",
-  "d2",
-  "list_id",
-  "on",
-  "q",
-  "term_id",
-];
-
-export let inputCheckedFieldsObservations: ObservationsApiParamsKeysType[] = [
-  "iconic_taxa",
-];
-
-export const ObservationsApiFilterableNames =
-  ObservationsFilterableImplemented.concat(
-    ObservationsFilterableImplementedArrays,
-  ).concat(ObservationsFilterableTodo);
-
-export const ObservationsApiNames: string[] =
-  ObservationsApiNonFilterableNames.concat(ObservationsApiFilterableNames);
-
-export const IdentificationsApiNonFilterableNames: IdentificationsApiParamsKeysType[] =
+export const identificationsApiNonFilterableNames: IdentificationsApiParamsKeysType[] =
   [
     "observation_taxon_id", // array string
     "page",
@@ -326,7 +335,7 @@ export const IdentificationsApiNonFilterableNames: IdentificationsApiParamsKeysT
     "without_taxon_id", // array string
   ];
 
-export const IdentificationsFilterableImplemented: IdentificationsApiParamsKeysType[] =
+export const identificationsFilterableImplemented: IdentificationsApiParamsKeysType[] =
   [
     "d1",
     "d2",
@@ -339,7 +348,9 @@ export const IdentificationsFilterableImplemented: IdentificationsApiParamsKeysT
     "reviewed",
   ];
 
-export const IdentificationsFilterableImplementedArrays: IdentificationsApiParamsKeysType[] =
+// used by processFiltersForm to determine if app will combine values into
+// comma separated string
+export const identificationsFilterableImplementedArrays: IdentificationsApiParamsKeysType[] =
   [
     "category",
     "iconic_taxon_id",
@@ -349,7 +360,7 @@ export const IdentificationsFilterableImplementedArrays: IdentificationsApiParam
     "rank",
   ];
 
-export const IdentificationsFilterableTodo: IdentificationsApiParamsKeysType[] =
+export const identificationsFilterableTodo: IdentificationsApiParamsKeysType[] =
   [
     // maybe
     "order",
@@ -374,34 +385,32 @@ export const IdentificationsFilterableTodo: IdentificationsApiParamsKeysType[] =
     "taxon_of",
   ];
 
-export const inputFieldsIdentifications: IdentificationsApiParamsKeysType[] = [
-  "d1",
-  "d2",
-  "observed_d1",
-  "observed_d2",
-];
+// used to populate form on app init and delete a filter
+export const identificationsFieldName_InputType = {
+  d1: "dateInput",
+  d2: "dateInput",
+  observed_d1: "dateInput",
+  observed_d2: "dateInput",
+  hrank: "select",
+  lrank: "select",
+  observation_hrank: "select",
+  observation_lrank: "select",
+  rank: "multiselect",
+  observation_rank: "multiselect",
+  category: "multiselect",
+  quality_grade: "multiselect",
+  iconic_taxon_id: "checkbox",
+  observation_iconic_taxon_id: "checkbox",
+};
 
-export const selectFieldsIdentifications: IdentificationsApiParamsKeysType[] = [
-  "hrank",
-  "lrank",
-  "observation_hrank",
-  "observation_lrank",
-];
+export const identificationsApiFilterableNames =
+  identificationsFilterableImplemented
+    .concat(identificationsFilterableImplementedArrays)
+    .concat(identificationsFilterableTodo);
 
-export const multipleSelectFieldsIdentifications: IdentificationsApiParamsKeysType[] =
-  ["rank", "observation_rank", "category", "quality_grade"];
-
-export const inputCheckedFieldsIdentifications: IdentificationsApiParamsKeysType[] =
-  ["iconic_taxon_id", "observation_iconic_taxon_id"];
-
-export const IdentificationsApiFilterableNames =
-  IdentificationsFilterableImplemented.concat(
-    IdentificationsFilterableImplementedArrays,
-  ).concat(IdentificationsFilterableTodo);
-
-export const IdentificationsApiNames: string[] =
-  IdentificationsApiNonFilterableNames.concat(
-    IdentificationsApiFilterableNames,
+export const identificationsApiNames: string[] =
+  identificationsApiNonFilterableNames.concat(
+    identificationsApiFilterableNames,
   );
 
 export let recordTypeToPathObj = {

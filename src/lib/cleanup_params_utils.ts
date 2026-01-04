@@ -1,7 +1,7 @@
 import { iconicTaxaIdName } from "../data/inat_data";
 import {
-  IdentificationsApiNames,
-  ObservationsApiNames,
+  identificationsApiNames,
+  observationsApiNames,
 } from "../data/app_data";
 import type {
   IdentificationsApiParamsType,
@@ -152,7 +152,7 @@ export function convertIdentificationParamsToObservationParams(
   for (const [key, value] of Object.entries(params)) {
     if (["color", "colors"].includes(key)) {
       cleanedParms[key] = value;
-    } else if (!IdentificationsApiNames.includes(key)) {
+    } else if (!identificationsApiNames.includes(key)) {
       continue;
     } else if (identificationOnlyParams.includes(key)) {
       continue;
@@ -180,7 +180,7 @@ export function convertIdentificationParamsToObservationParams(
 }
 
 function cleanupMapParams(rawParams: MapTilesAPIParamsType) {
-  let validParams = ObservationsApiNames.concat(IdentificationsApiNames);
+  let validParams = observationsApiNames.concat(identificationsApiNames);
   Object.keys(rawParams).forEach((key) => {
     if (!validParams.includes(key)) {
       delete (rawParams as any).key;

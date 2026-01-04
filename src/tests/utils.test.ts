@@ -32,8 +32,8 @@ import type {
 } from "../types/app";
 import {
   filtersModalAutocompleteFields,
-  IdentificationsApiFilterableNames,
-  ObservationsApiFilterableNames,
+  identificationsApiFilterableNames,
+  observationsApiFilterableNames,
 } from "../data/app_data.ts";
 import { validObservationsSubviews, validViews } from "../data/app_data.ts";
 import { defaultColorScheme } from "../lib/map_colors_utils.ts";
@@ -1069,7 +1069,7 @@ describe("decodeAppUrl options", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test.each(ObservationsApiFilterableNames)(
+  test.each(observationsApiFilterableNames)(
     "adds valid params to observationsApiParams",
     (name) => {
       let value;
@@ -1194,7 +1194,7 @@ describe("decodeAppUrl if identifications path", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test.each([IdentificationsApiFilterableNames])(
+  test.each([identificationsApiFilterableNames])(
     "returns object with identificationsApiParams",
     (param) => {
       let path = `/identifications/`;

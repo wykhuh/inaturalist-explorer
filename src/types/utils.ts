@@ -1,4 +1,11 @@
-import type { NormalizediNatTaxonType, NormalizediNatUserType } from "./app";
+import { isObservationsCheck } from "../lib/data_utils";
+import type {
+  AppStoreType,
+  NormalizediNatTaxonType,
+  NormalizediNatUserType,
+  ObservationsApiParamsKeysType,
+  ObservationsApiParamsType,
+} from "./app";
 import type {
   IdentificationsObserversResult,
   IdentificationsResult,
@@ -48,4 +55,18 @@ export function isResourceSpeciesResult(
   records: any[],
 ): records is ResourceSpeciesCountResult[] {
   return "taxon" in records[0];
+}
+
+export function isObservationsApiParams(
+  _params: any,
+  appStore: AppStoreType,
+): _params is ObservationsApiParamsType {
+  return isObservationsCheck(appStore);
+}
+
+export function isObservationsApiFields(
+  _records: any[],
+  appStore: AppStoreType,
+): _records is ObservationsApiParamsKeysType[] {
+  return isObservationsCheck(appStore);
 }

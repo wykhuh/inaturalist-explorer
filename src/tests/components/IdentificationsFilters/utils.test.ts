@@ -14,14 +14,14 @@ import jsdom from "jsdom";
 import {
   processFiltersForm,
   initFilters,
-} from "../../../components/ObservationsFilters/utils";
+} from "../../../components/IdentificationsFilters/utils";
 import { mapStore } from "../../../lib/store";
 import { createMockServer } from "../../test_helpers";
 import {
-  observationsFieldName_InputType,
-  observationsFilterableImplementedArrays,
+  identificationsFieldName_InputType,
+  identificationsFilterableImplementedArrays,
 } from "../../../data/app_data";
-import { template } from "../../../components/ObservationsFilters/template";
+import { template } from "../../../components/IdentificationsFilters/template";
 
 const { JSDOM } = jsdom;
 
@@ -82,35 +82,6 @@ describe("processFiltersForm", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test("ignore field name if value is 'on'", () => {
-    let data = createFormData();
-    data.append("verifiable", "any");
-    processFiltersForm(data);
-    data.append("sounds", "on");
-
-    let result = processFiltersForm(data);
-
-    let expected = {
-      params: { verifiable: "any" },
-      string: "verifiable=any",
-    };
-    expect(result).toStrictEqual(expected);
-  });
-
-  test("convert string boolean to boolean", () => {
-    let data = createFormData();
-    data.append("verifiable", "true");
-    data.append("sounds", "false");
-
-    let result = processFiltersForm(data);
-
-    let expected = {
-      params: { verifiable: true, sounds: false },
-      string: "verifiable=true&sounds=false",
-    };
-    expect(result).toStrictEqual(expected);
-  });
-
   test("ignore fields with empty string values", () => {
     let data = createFormData();
     data.append("quality_grade", "");
@@ -139,7 +110,7 @@ describe("processFiltersForm", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test.each(observationsFilterableImplementedArrays)(
+  test.each(identificationsFilterableImplementedArrays)(
     "returns comma-separated string for fields that accept multiple values",
     (field) => {
       let data = createFormData();
@@ -174,18 +145,18 @@ describe("processFiltersForm", () => {
 
   test("returns single value fields and  multiple values fields", () => {
     let data = createFormData();
-    data.append("iconic_taxa", "Aves");
+    data.append("iconic_taxon_id", "3");
     data.append("hrank", "kingdom");
-    data.append("iconic_taxa", "Reptiles");
+    data.append("iconic_taxon_id", "26036");
 
     let result = processFiltersForm(data);
 
     let expected = {
       params: {
         hrank: "kingdom",
-        iconic_taxa: "Aves,Reptiles",
+        iconic_taxon_id: "3,26036",
       },
-      string: "hrank=kingdom&iconic_taxa=Aves,Reptiles",
+      string: "hrank=kingdom&iconic_taxon_id=3,26036",
     };
     expect(result).toStrictEqual(expected);
   });
@@ -207,7 +178,7 @@ describe("initFilters", () => {
   function getValidFields(type: string) {
     let validFields = [];
     for (let [field, value] of Object.entries(
-      observationsFieldName_InputType,
+      identificationsFieldName_InputType,
     )) {
       if (value === type) {
         validFields.push(field);
@@ -217,7 +188,7 @@ describe("initFilters", () => {
   }
 
   test.each(getValidFields("textInput"))(
-    "uses observationsApiParams to set option for text input fields",
+    "uses identificationsApiParams to set option for text input fields",
     (field) => {
       let el = document.querySelector<HTMLInputElement>(
         `input#${field}[type='text']`,
@@ -227,7 +198,8 @@ describe("initFilters", () => {
       }
 
       let store = structuredClone(mapStore);
-      store.observationsApiParams = {
+      store.record_type = "identifications";
+      store.identificationsApiParams = {
         [field]: "abc",
       };
 
@@ -240,7 +212,7 @@ describe("initFilters", () => {
   );
 
   test.each(getValidFields("dateInput"))(
-    "uses observationsApiParams to set value for input date fields",
+    "uses identificationsApiParams to set value for input date fields",
     (field) => {
       let el = document.querySelector<HTMLInputElement>(
         `input[type='date']#${field}`,
@@ -250,7 +222,8 @@ describe("initFilters", () => {
       }
 
       let store = structuredClone(mapStore);
-      store.observationsApiParams = {
+      store.record_type = "identifications";
+      store.identificationsApiParams = {
         [field]: "2000-01-01",
       };
 
@@ -263,7 +236,7 @@ describe("initFilters", () => {
   );
 
   test.each(getValidFields("select"))(
-    "uses observationsApiParams to set option for select fields",
+    "uses identificationsApiParams to set option for select fields",
     (field) => {
       let el = document.querySelector<HTMLSelectElement>(`select#${field}`);
       if (!el) {
@@ -275,14 +248,12 @@ describe("initFilters", () => {
       }
 
       let store = structuredClone(mapStore);
-
-      store.observationsApiParams = {
+      store.record_type = "identifications";
+      store.identificationsApiParams = {
         [field]: optionEl.value,
       };
 
-      if (field !== "verifiable") {
-        expect(optionEl.selected).toBe(false);
-      }
+      expect(optionEl.selected).toBe(false);
 
       initFilters(store);
 
@@ -291,7 +262,7 @@ describe("initFilters", () => {
   );
 
   test.each(getValidFields("multiselect"))(
-    "uses observationsApiParams to set option to selected for multi select fields",
+    "uses identificationsApiParams to set option to selected for multi select fields",
     (field) => {
       let el = document.querySelector<HTMLSelectElement>(`#${field}`);
       if (!el) {
@@ -302,7 +273,8 @@ describe("initFilters", () => {
       let optionEl2 = optionEl[2];
 
       let store = structuredClone(mapStore);
-      store.observationsApiParams = {
+      store.record_type = "identifications";
+      store.identificationsApiParams = {
         [field]: `${optionEl1.value},${optionEl2.value}`,
       };
 
@@ -317,7 +289,7 @@ describe("initFilters", () => {
   );
 
   test.each(getValidFields("checkbox"))(
-    "uses observationsApiParams to set option to selected for checkbox fields",
+    "uses identificationsApiParams to set option to selected for checkbox fields",
     (field) => {
       let el = document.querySelector<HTMLInputElement>(
         `input[name='${field}']`,
@@ -327,7 +299,8 @@ describe("initFilters", () => {
       }
 
       let store = structuredClone(mapStore);
-      store.observationsApiParams = {
+      store.record_type = "identifications";
+      store.identificationsApiParams = {
         [field]: el.value,
       };
 

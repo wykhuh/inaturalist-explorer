@@ -13,8 +13,8 @@ import { mapStore } from "../lib/store.ts";
 import { defaultQuery } from "./test_helpers.ts";
 import { iNatOrange } from "../lib/map_colors_utils.ts";
 import {
-  IdentificationsApiNames,
-  ObservationsApiFilterableNames,
+  identificationsApiNames,
+  observationsApiFilterableNames,
 } from "../data/app_data.ts";
 
 describe("cleanupObervationsParams", () => {
@@ -353,7 +353,7 @@ describe("cleanupObservationsMapParams", () => {
     expect(results).toStrictEqual({ color: iNatOrange });
   });
 
-  test.each(ObservationsApiFilterableNames)(
+  test.each(observationsApiFilterableNames)(
     "works with all store.observationsApiParams",
     (field) => {
       let store = structuredClone(mapStore);
@@ -388,7 +388,7 @@ describe("cleanupIdentificationsObservationsParams", () => {
     "user_id",
   ];
   let skipParams = processedParams.concat(identificationOnlyParams);
-  let allowedParams = IdentificationsApiNames.filter(
+  let allowedParams = identificationsApiNames.filter(
     (p) => !skipParams.includes(p),
   );
 

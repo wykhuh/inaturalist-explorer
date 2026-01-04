@@ -25,8 +25,8 @@ import {
 } from "./inat_api.ts";
 import { bboxPlaceRecord, fieldsWithAny } from "../data/inat_data.ts";
 import {
-  IdentificationsApiNames,
-  ObservationsApiNames,
+  identificationsApiNames,
+  observationsApiNames,
 } from "../data/app_data.ts";
 import type {
   PlacesResult,
@@ -301,7 +301,7 @@ function populateObservationsApiParams(
     if (fieldsWithAny.includes(key) && value === "any") {
       delete appStore.observationsApiParams[key];
       // add valid params to observationsApiParams
-    } else if (ObservationsApiNames.includes(key)) {
+    } else if (observationsApiNames.includes(key)) {
       delete appStore.observationsApiParams[key];
       appStore.observationsApiParams[key] = value;
     }
@@ -319,7 +319,7 @@ function populateIdentificationsApiParams(
     if (fieldsWithAny.includes(key) && value === "any") {
       delete appStore.identificationsApiParams[key];
       // add valid params to identificationsApiParams
-    } else if (IdentificationsApiNames.includes(key)) {
+    } else if (identificationsApiNames.includes(key)) {
       delete appStore.identificationsApiParams[key];
       appStore.identificationsApiParams[key] = value;
     }

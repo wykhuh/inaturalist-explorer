@@ -1,38 +1,16 @@
 import {
-  inputCheckedFieldsObservations,
-  inputFieldsObservations,
-  multipleSelectFieldsObservations,
-  ObservationsFilterableImplementedArrays,
-  selectFieldsObservations,
-  trueFalseFieldsObservations,
+  observationsApiFilterableNames,
+  observationsFieldName_InputType,
+  observationsFilterableImplementedArrays,
 } from "../../data/app_data";
 import type {
   ObservationsApiParamsType,
   ObservationsApiParamsKeysType,
   AppStoreType,
 } from "../../types/app";
-import {
-  isObservationsCheck,
-  resetPageNumber,
-  updateStoreUsingFilters,
-} from "../../lib/data_utils";
 import { loggerFilters } from "../../lib/logger";
-import {
-  renderSelectedResources,
-  updateTilesForSelectedTaxa,
-} from "../../lib/search_utils";
-import { updateCountForAll } from "../../lib/count_utils";
-import {
-  concatParamsWithMultivalues,
-  renderSelectedFiltersList,
-} from "./shared_utils";
-import {
-  processInputCheckedFields,
-  processInputFields,
-  processMultipleSelectFields,
-  processSelectFields,
-  processTrueFalseFields,
-} from "../../lib/form_utils";
+import { concatParamsWithMultivalues } from "./shared_utils";
+import { populateFields } from "../../lib/form_utils";
 
 export function processFiltersForm(data: FormData): {
   params: ObservationsApiParamsType;
@@ -46,8 +24,12 @@ export function processFiltersForm(data: FormData): {
     let key = k as ObservationsApiParamsKeysType;
     loggerFilters(key, value);
 
+    if (!observationsApiFilterableNames.includes(key)) {
+      continue;
+    }
+
     // ignore fields
-    if (ObservationsFilterableImplementedArrays.includes(key)) {
+    if (observationsFilterableImplementedArrays.includes(key)) {
       // ignore value "on"
     } else if (value === "on") {
       // convert boolean strings to boolean
@@ -64,7 +46,7 @@ export function processFiltersForm(data: FormData): {
   }
 
   // handle comma-separated params
-  ObservationsFilterableImplementedArrays.forEach((field) => {
+  observationsFilterableImplementedArrays.forEach((field) => {
     concatParamsWithMultivalues(data, field, values);
   });
 
@@ -76,48 +58,11 @@ export function processFiltersForm(data: FormData): {
   };
 }
 
-export async function updateAppWithFilters(
-  data: FormData,
-  appStore: AppStoreType,
-) {
-  // get values from form data
-  let results = processFiltersForm(data);
-
-  // update store observationsApiParams with form values
-  updateStoreUsingFilters(appStore, results);
-
-  await updateTilesForSelectedTaxa(appStore);
-  await updateCountForAll("all", appStore);
-
-  // update UI
-  renderSelectedFiltersList(results.params);
-  resetPageNumber(appStore);
-  renderSelectedResources(appStore, true);
-}
-
-export function isObservationsApiFields(
-  _records: any[],
-  appStore: AppStoreType,
-): _records is ObservationsApiParamsKeysType[] {
-  return isObservationsCheck(appStore);
-}
-
-export function isObservationsApiParams(
-  _params: any,
-  appStore: AppStoreType,
-): _params is ObservationsApiParamsType {
-  return isObservationsCheck(appStore);
-}
-
 // use store to populate the filter form fields on page load
 export function initFilters(appStore: AppStoreType) {
   let { observationsApiParams } = appStore;
 
-  processTrueFalseFields(trueFalseFieldsObservations, appStore);
-  processSelectFields(selectFieldsObservations, appStore);
-  processMultipleSelectFields(multipleSelectFieldsObservations, appStore);
-  processInputCheckedFields(inputCheckedFieldsObservations, appStore);
-  processInputFields(inputFieldsObservations, appStore);
+  populateFields(observationsFieldName_InputType, appStore);
 
   // NOTE: update when adding selectedResource; filters form autocomplete search
   if (observationsApiParams.unobserved_by_user_id !== undefined) {

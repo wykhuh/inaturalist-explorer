@@ -3,13 +3,27 @@ import {
   iNatObservationsYears,
   taxonRanks,
 } from "../../data/inat_data";
+import { updateCountForAll } from "../../lib/count_utils";
+import {
+  isObservationsCheck,
+  resetPageNumber,
+  updateStoreUsingFilters,
+  type FiltersResults,
+} from "../../lib/data_utils";
+import {
+  renderSelectedResources,
+  updateTilesForSelectedTaxa,
+} from "../../lib/search_utils";
 import type {
   IdentificationsApiParamsType,
   IdentificationsApiParamsKeysType,
   ObservationsApiParamsType,
   ObservationsApiParamsKeysType,
   DataComponentType,
+  AppStoreType,
 } from "../../types/app";
+import { processFiltersForm as processFiltersFormIdentifications } from "../IdentificationsFilters/utils";
+import { processFiltersForm as processFiltersFormObservations } from "./utils";
 
 export function tabClickHandler(
   target: HTMLElement,
@@ -123,4 +137,29 @@ export function renderRankOptions(defaultValue: string) {
     content += `<option value="${rank.toLowerCase()}" id="${rank.toLowerCase()}">${rank}</option>`;
   });
   return content;
+}
+
+export async function updateAppWithFilters(
+  data: FormData,
+  appStore: AppStoreType,
+) {
+  // get values from form data
+  let results = {} as FiltersResults;
+
+  if (isObservationsCheck(appStore)) {
+    results = processFiltersFormObservations(data);
+  } else {
+    results = processFiltersFormIdentifications(data);
+  }
+
+  // update store observationsApiParams with form values
+  updateStoreUsingFilters(appStore, results);
+
+  await updateTilesForSelectedTaxa(appStore);
+  await updateCountForAll("all", appStore);
+
+  // update UI
+  renderSelectedFiltersList(results.params);
+  resetPageNumber(appStore);
+  renderSelectedResources(appStore, true);
 }

@@ -22,8 +22,8 @@ import { addOverlayToMap } from "./map_utils.ts";
 import { getiNatMapTiles } from "./inat_api.ts";
 import { allTaxaRecord } from "../data/inat_data.ts";
 import {
-  IdentificationsApiNonFilterableNames,
-  ObservationsApiNonFilterableNames,
+  identificationsApiNonFilterableNames,
+  observationsApiNonFilterableNames,
 } from "../data/app_data.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
 import { logger, loggerFilters } from "./logger.ts";
@@ -731,7 +731,7 @@ export function removeValueFromCommaSeparatedString(
   return ids;
 }
 
-type FiltersResults = {
+export type FiltersResults = {
   params: ObservationsApiParamsType | IdentificationsApiParamsType;
   string: string;
 };
@@ -771,7 +771,7 @@ function handleObservationsFilters(
     loggerFilters(key, _value);
 
     // ignore params that can't be changed in the filter modal
-    if (ObservationsApiNonFilterableNames.includes(key)) {
+    if (observationsApiNonFilterableNames.includes(key)) {
       continue;
     }
 
@@ -798,7 +798,7 @@ function handleIdentificationsFilters(
     loggerFilters(key, _value);
 
     // ignore params that can't be changed in the filter modal
-    if (IdentificationsApiNonFilterableNames.includes(key)) {
+    if (identificationsApiNonFilterableNames.includes(key)) {
       continue;
     }
 

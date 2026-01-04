@@ -81,8 +81,8 @@ import type {
 } from "../../types/app";
 import { allTaxaRecord, fieldsWithAny } from "../../data/inat_data.ts";
 import {
-  IdentificationsApiFilterableNames,
-  ObservationsApiFilterableNames,
+  identificationsApiFilterableNames,
+  observationsApiFilterableNames,
 } from "../../data/app_data.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
 import { initPopulateStore, initRenderMap } from "../../lib/init_app.ts";
@@ -148,7 +148,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     expect(store.currentView).toBe("observations_observations");
   });
 
-  test.each([ObservationsApiFilterableNames])(
+  test.each([observationsApiFilterableNames])(
     "updates observationsApiParams with filterable params ",
     async (param) => {
       let store = structuredClone(mapStore);
@@ -914,7 +914,7 @@ describe("initPopulateStore and initRenderMap options with identifications", () 
     expect(store.currentView).toBe("identifications_observations");
   });
 
-  test.each([IdentificationsApiFilterableNames])(
+  test.each([identificationsApiFilterableNames])(
     "adds filterable params to identificationsApiParams",
     async (param) => {
       let store = structuredClone(mapStore);

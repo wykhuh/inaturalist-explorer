@@ -2,15 +2,15 @@
 
 import { expect, test, describe } from "vitest";
 import {
-  ObservationsApiNonFilterableNames,
-  ObservationsApiFilterableNames,
+  observationsApiNonFilterableNames,
+  observationsApiFilterableNames,
 } from "../data/app_data";
 
 describe("check iNat keys", () => {
-  test.each(ObservationsApiNonFilterableNames)(
-    "ObservationsApiNonFilterableNames are not in ObservationsApiFilterableNames",
+  test.each(observationsApiNonFilterableNames)(
+    "ObservationsApiNonFilterableNames are not in observationsApiFilterableNames",
     (name) => {
-      expect(ObservationsApiFilterableNames.includes(name)).toBeFalsy();
+      expect(observationsApiFilterableNames.includes(name)).toBeFalsy();
     },
   );
 });

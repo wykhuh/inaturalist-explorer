@@ -425,7 +425,7 @@ let observationPane = html`<div
             data-tooltip="Search observation properties"
           ></app-tooltip>
         </label>
-        <input id="q" name="q" placeholder="Enter search terms" />
+        <input id="q" name="q" type="text" placeholder="Enter search terms" />
       </div>
 
       <div class="form-group">
@@ -437,7 +437,12 @@ let observationPane = html`<div
             data-tooltip="Taxon must be in the list with this ID"
           ></app-tooltip>
         </label>
-        <input id="list_id" name="list_id" placeholder="Enter list ID" />
+        <input
+          id="list_id"
+          type="text"
+          name="list_id"
+          placeholder="Enter list ID"
+        />
       </div>
 
       <div class="form-group">
@@ -767,37 +772,80 @@ const annotationPane = html` <div
   <fieldset>
     <legend>General</legend>
 
-
-    <div class="form-group">
-      <label for="sex">Sex </label>
-      <select id="sex" name="term_value_id" data-termId="9" multiple>
+    <div class="form-check mb-0">
+      <input id="sex" value="9" name="term_id" type="checkbox" />
+      <label for="sex">Sex</label>
+    </div>
+    <div class="form-group mt-0">
+      <label for="sex_values" class="sr-only">Sex values</label>
+      <select
+        id="sex_values"
+        data-related-term-id="9"
+        name="term_value_id"
+        multiple
+        disabled
+      >
         <option value="">Any</option>
         <option value="10">Female</option>
         <option value="11">Male</option>
       </select>
     </div>
-    <div class="form-group">
-      <label for="alive_dead">Alive or Dead </label>
-      <select id="alive_dead" name="term_value_id" data-termId="17" multiple>
+    <div class="form-check mb-0">
+      <input id="alive_dead" value="17" name="term_id" type="checkbox" />
+      <label for="alive_dead">Alive or Dead</label>
+    </div>
+    <div class="form-group mt-0">
+      <label for="alive_dead_values" class="sr-only"
+        >Alive or Dead values</label
+      >
+      <select
+        id="alive_dead_values"
+        data-related-term-id="17"
+        name="term_value_id"
+        multiple
+        disabled
+      >
         <option value="">Any</option>
         <option value="18">Alive</option>
         <option value="19">Dead</option>
       </select>
     </div>
-    <div class="form-group">
-      <label for="established">Established </label>
-      <select id="established" name="term_value_id" data-termId="33" multiple>
+    <div class="form-check mb-0">
+      <input id="established" value="33" name="term_id" type="checkbox" />
+      <label for="established">Established</label>
+    </div>
+    <div class="form-group mt-0">
+      <label for="established_values" class="sr-only">Established Values</label>
+      <select
+        id="established_values"
+        data-related-term-id="33"
+        name="term_value_id"
+        multiple
+        disabled
+      >
         <option value="">Any</option>
         <option value="34">Not Established</option>
       </select>
     </div>
   </fieldset>
-
   <fieldset>
     <legend>Plants</legend>
-    <div class="form-group">
-      <label for="flowers">Flowers and Fruits </label>
-      <select id="flowers" name="term_value_id" data-termId="12" multiple>
+
+    <div class="form-check mb-0">
+      <input id="flowers" value="12" name="term_id" type="checkbox" />
+      <label for="flowers">Flowers and Fruits</label>
+    </div>
+    <div class="form-group mt-0">
+      <label for="flowers_values" class="sr-only"
+        >Flowers and Fruits values</label
+      >
+      <select
+        id="flowers_values"
+        data-related-term-id="12"
+        name="term_value_id"
+        multiple
+        disabled
+      >
         <option value="">Any</option>
         <option value="13">Flowers</option>
         <option value="14">Fruits or Seeds</option>
@@ -805,9 +853,19 @@ const annotationPane = html` <div
         <option value="21">No Flowers or Fruits</option>
       </select>
     </div>
-    <div class="form-group">
-      <label for="leaves">Leaves </label>
-      <select id="leaves" name="term_value_id" data-termId="36" multiple>
+    <div class="form-check mb-0">
+      <input id="leaves" value="36" name="term_id" type="checkbox" />
+      <label for="leaves">Leaves</label>
+    </div>
+    <div class="form-group mt-0">
+      <label for="leaves_values" class="sr-only">Leaves values</label>
+      <select
+        id="leaves_values"
+        data-related-term-id="36"
+        name="term_value_id"
+        multiple
+        disabled
+      >
         <option value="">Any</option>
         <option value="37">Breaking Leaf Buds</option>
         <option value="38">Green Leaves</option>
@@ -818,9 +876,19 @@ const annotationPane = html` <div
   </fieldset>
   <fieldset>
     <legend>Animals</legend>
-    <div class="form-group">
-      <label for="life_stage">Life Stage </label>
-      <select id="life_stage" name="term_value_id" data-termId="1" multiple>
+    <div class="form-check mb-0">
+      <input id="life_stage" value="1" name="term_id" type="checkbox" />
+      <label for="life_stage">Life Stage</label>
+    </div>
+    <div class="form-group mt-0">
+      <label for="life_stage_values" class="sr-only">Life Stage values</label>
+      <select
+        id="life_stage_values"
+        data-related-term-id="1"
+        name="term_value_id"
+        multiple
+        disabled
+      >
         <option value="">Any</option>
         <option value="2">Adult</option>
         <option value="3">Teneral</option>
@@ -832,9 +900,231 @@ const annotationPane = html` <div
         <option value="16">Subimago</option>
       </select>
     </div>
-    <div class="form-group">
-      <label for="presence">Evidence of Presence </label>
-      <select id="presence" name="term_value_id" data-termId="22" multiple>
+    <div class="form-check mb-0">
+      <input id="presence" value="22" name="term_id" type="checkbox" />
+      <label for="presence">Evidence of Presence</label>
+    </div>
+    <div class="form-group mt-0">
+      <label for="presence_values" class="sr-only"
+        >Evidence of Presence values</label
+      >
+      <select
+        id="presence_values"
+        data-related-term-id="22"
+        name="term_value_id"
+        multiple
+        disabled
+      >
+        <option value="">Any</option>
+        <option value="23">Feather</option>
+        <option value="24">Organism</option>
+        <option value="25">Scat</option>
+        <option value="26">Track</option>
+        <option value="27">Bone</option>
+        <option value="28">Molt</option>
+        <option value="29">Gall</option>
+        <option value="30">Egg</option>
+        <option value="31">Hair</option>
+        <option value="32">Leafmine</option>
+        <option value="35">Construction</option>
+      </select>
+    </div>
+  </fieldset>
+</div>`;
+
+const withoutAnnotationPane = html` <div
+  class="tab-pane"
+  id="without-annotations-pane"
+  role="tabpanel"
+  aria-labelledby="without-annotations-tab"
+>
+  <fieldset>
+    <legend>General</legend>
+
+    <div class="form-check mb-0">
+      <input
+        id="without_sex"
+        value="9"
+        name="without_term_id"
+        type="checkbox"
+      />
+      <label for="without_sex">without Sex</label>
+    </div>
+    <div class="form-group mt-0">
+      <label for="without_sex_values" class="sr-only">without Sex values</label>
+      <select
+        id="without_sex_values"
+        name="without_term_value_id"
+        data-related-without-term-id="9"
+        multiple
+        disabled
+      >
+        <option value="">Any</option>
+        <option value="10">Female</option>
+        <option value="11">Male</option>
+      </select>
+    </div>
+    <div class="form-check mb-0">
+      <input
+        id="without_alive_dead"
+        value="17"
+        name="without_term_id"
+        type="checkbox"
+      />
+      <label for="without_alive_dead">without Alive or Dead</label>
+    </div>
+    <div class="form-group mt-0">
+      <label for="without_alive_dead_values" class="sr-only"
+        >without Alive or Dead values</label
+      >
+      <select
+        id="without_alive_dead_values"
+        data-related-without-term-id="17"
+        name="without_term_value_id"
+        multiple
+        disabled
+      >
+        <option value="">Any</option>
+        <option value="18">Alive</option>
+        <option value="19">Dead</option>
+      </select>
+    </div>
+    <div class="form-check mb-0">
+      <input
+        id="without_established"
+        value="33"
+        name="without_term_id"
+        type="checkbox"
+      />
+      <label for="without_established">without Established</label>
+    </div>
+    <div class="form-group mt-0">
+      <label for="without_established_values" class="sr-only"
+        >without Established Values</label
+      >
+      <select
+        id="without_established_values"
+        data-related-without-term-id="33"
+        name="without_term_value_id"
+        multiple
+        disabled
+      >
+        <option value="">Any</option>
+        <option value="34">Not Established</option>
+      </select>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Plants</legend>
+
+    <div class="form-check mb-0">
+      <input
+        id="without_flowers"
+        value="12"
+        name="without_term_id"
+        type="checkbox"
+      />
+      <label for="without_flowers">without Flowers and Fruits</label>
+    </div>
+    <div class="form-group mt-0">
+      <label for="without_flowers_values" class="sr-only"
+        >without Flowers and Fruits values</label
+      >
+      <select
+        id="without_flowers_values"
+        data-related-without-term-id="12"
+        name="without_term_value_id"
+        multiple
+        disabled
+      >
+        <option value="">Any</option>
+        <option value="13">Flowers</option>
+        <option value="14">Fruits or Seeds</option>
+        <option value="15">Flower Buds</option>
+        <option value="21">No Flowers or Fruits</option>
+      </select>
+    </div>
+    <div class="form-check mb-0">
+      <input
+        id="without_leaves"
+        value="36"
+        name="without_term_id"
+        type="checkbox"
+      />
+      <label for="without_leaves">without Leaves</label>
+    </div>
+    <div class="form-group mt-0">
+      <label for="without_leaves_values" class="sr-only"
+        >without Leaves values</label
+      >
+      <select
+        id="without_leaves_values"
+        data-related-without-term-id="36"
+        name="without_term_value_id"
+        multiple
+        disabled
+      >
+        <option value="">Any</option>
+        <option value="37">Breaking Leaf Buds</option>
+        <option value="38">Green Leaves</option>
+        <option value="39">Colored Leaves</option>
+        <option value="40">No Live Leaves</option>
+      </select>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Animals</legend>
+    <div class="form-check mb-0">
+      <input
+        id="without_life_stage"
+        value="1"
+        name="without_term_id"
+        type="checkbox"
+      />
+      <label for="without_life_stage">without Life Stage</label>
+    </div>
+    <div class="form-group mt-0">
+      <label for="without_life_stage_values" class="sr-only"
+        >without Life Stage value</label
+      >
+      <select
+        id="without_life_stage_values"
+        data-related-without-term-id="1"
+        name="without_term_value_id"
+        multiple
+        disabled
+      >
+        <option value="">Any</option>
+        <option value="2">Adult</option>
+        <option value="3">Teneral</option>
+        <option value="4">Pupa</option>
+        <option value="5">Nymph</option>
+        <option value="6">Larva</option>
+        <option value="7">Egg</option>
+        <option value="8">Juvenile</option>
+        <option value="16">Subimago</option>
+      </select>
+    </div>
+    <div class="form-check mb-0">
+      <input
+        id="without_presence"
+        value="22"
+        name="without_term_id"
+        type="checkbox"
+      />
+      <label for="without_presence">without Evidence of Presence</label>
+    </div>
+    <div class="form-group mt-0">
+      <label for="without_presence_values" class="sr-only"
+        >without Evidence of Presence values</label
+      >
+      <select
+        id="without_presence_values"
+        data-related-without-term-id="22"
+        name="without_term_value_id"
+        multiple
+        disabled
+      >
         <option value="">Any</option>
         <option value="23">Feather</option>
         <option value="24">Organism</option>
@@ -910,12 +1200,24 @@ export const template = html`
             Annotations
           </button>
         </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="without-annotations-tab"
+            role="tab"
+            aria-controls="without-annotations-pane"
+            aria-selected="false"
+          >
+            Without Annotations
+          </button>
+        </li>
       </ul>
 
       <form id="filters-form">
         <div class="fields">
           <div class="tab-content" id="observations-filters-tab-content">
-            ${observationPane} ${speciesPane}${datePane} ${annotationPane}
+            ${observationPane} ${speciesPane}${datePane}
+            ${annotationPane}${withoutAnnotationPane}
           </div>
         </div>
         <div class="controls">

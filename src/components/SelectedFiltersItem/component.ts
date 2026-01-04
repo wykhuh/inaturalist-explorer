@@ -1,14 +1,7 @@
 import { x } from "../../assets/icons";
 import {
-  inputCheckedFieldsIdentifications,
-  inputCheckedFieldsObservations,
-  inputFieldsIdentifications,
-  inputFieldsObservations,
-  multipleSelectFieldsIdentifications,
-  multipleSelectFieldsObservations,
-  selectFieldsIdentifications,
-  selectFieldsObservations,
-  trueFalseFieldsObservations,
+  identificationsFieldName_InputType,
+  observationsFieldName_InputType,
 } from "../../data/app_data";
 import { isObservationsCheck } from "../../lib/data_utils";
 import {
@@ -23,7 +16,7 @@ import type {
   IdentificationsApiFilterableParamsKeys,
   ObservationsApiFilterableParamsKeys,
 } from "../../types/app";
-import { updateAppWithFilters } from "../IdentificationsFilters/utils";
+import { updateAppWithFilters } from "../ObservationsFilters/shared_utils";
 
 type PropType = {
   field:
@@ -86,61 +79,39 @@ class SelectedFiltersItem extends HTMLElement {
     value: string,
     appStore: AppStoreType,
   ) {
+    let resourceFieldName_InputType = undefined;
     if (isObservationsCheck(appStore)) {
-      let field = fieldTemp as ObservationsApiFilterableParamsKeys;
-
-      if (trueFalseFieldsObservations.includes(field)) {
-        unsetSelectedOption(
-          `#filters-form select#${field} option[value='${value}']`,
-        );
-      } else if (selectFieldsObservations.includes(field)) {
-        unsetSelectedOption(
-          `#filters-form select#${field} option[value='${value}']`,
-        );
-      } else if (multipleSelectFieldsObservations.includes(field)) {
-        debugger;
-        value.split(",").forEach((v) => {
-          unsetSelectedOption(
-            `#filters-form select#${field} option[value='${v}']`,
-          );
-        });
-      } else if (inputCheckedFieldsObservations.includes(field)) {
-        value.split(",").forEach((v) => {
-          let valid = setInputChecked(`#filters-form input#${v}`, false);
-          if (!valid) {
-            setInputChecked(`#filters-form input#${field}_${v}`, false);
-          }
-        });
-      } else if (inputFieldsObservations.includes(field)) {
-        setInputValue(`#filters-form input#${field}`, "");
-      } else {
-        throw new Error("need to add another option for SelectedFiltersItem");
-      }
+      resourceFieldName_InputType = observationsFieldName_InputType;
     } else {
-      let field = fieldTemp as IdentificationsApiFilterableParamsKeys;
-      if (selectFieldsIdentifications.includes(field)) {
-        unsetSelectedOption(
-          `#filters-form select#${field} option[value='${value}']`,
-        );
-      } else if (multipleSelectFieldsIdentifications.includes(field)) {
-        value.split(",").forEach((v) => {
-          unsetSelectedOption(
-            `#filters-form select#${field} option[value='${v}']`,
-          );
-        });
-      } else if (inputCheckedFieldsIdentifications.includes(field)) {
-        value.split(",").forEach((v) => {
-          let valid = setInputChecked(`#filters-form input#${v}`, false);
-          if (!valid) {
-            setInputChecked(`#filters-form input#${field}_${v}`, false);
-          }
-        });
-      } else if (inputFieldsIdentifications.includes(field)) {
-        setInputValue(`#filters-form input#${field}`, "");
-      } else {
-        throw new Error("need to add another option for SelectedFiltersItem");
-      }
+      resourceFieldName_InputType = identificationsFieldName_InputType;
     }
+    let field = fieldTemp as keyof typeof resourceFieldName_InputType;
+
+    if (resourceFieldName_InputType[field] === "select") {
+      unsetSelectedOption(
+        `#filters-form select#${field} option[value='${value}']`,
+      );
+    } else if (resourceFieldName_InputType[field] === "multiselect") {
+      value.split(",").forEach((v) => {
+        unsetSelectedOption(
+          `#filters-form select#${field} option[value='${v}']`,
+        );
+      });
+    } else if (resourceFieldName_InputType[field] === "checkbox") {
+      value.split(",").forEach((v) => {
+        let valid = setInputChecked(`#filters-form input#${v}`, false);
+        if (!valid) {
+          setInputChecked(`#filters-form input#${field}_${v}`, false);
+        }
+      });
+    } else if (resourceFieldName_InputType[field] === "textInput") {
+      setInputValue(`#filters-form input#${field}`, "");
+    } else if (resourceFieldName_InputType[field] === "dateInput") {
+      setInputValue(`#filters-form input#${field}`, "");
+    } else {
+      throw new Error("need to add another option for SelectedFiltersItem");
+    }
+
     this.updateForm();
   }
 
