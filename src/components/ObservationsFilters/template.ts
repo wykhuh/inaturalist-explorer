@@ -767,7 +767,6 @@ const annotationPane = html` <div
   <fieldset>
     <legend>General</legend>
 
-    <input type="text" name="term_id" id="term_id" hidden />
 
     <div class="form-group">
       <label for="sex">Sex </label>

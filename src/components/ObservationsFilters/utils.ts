@@ -156,32 +156,3 @@ export function initFilters(appStore: AppStoreType) {
     }
   }
 }
-
-export function setTermId(target: HTMLInputElement, ctx: any) {
-  let termIdEl = ctx.querySelector("#term_id") as HTMLInputElement;
-  if (!termIdEl) return;
-  if (!target.dataset.termid) return;
-  if (target.name !== "term_value_id") return;
-
-  let termId = target.dataset.termid;
-
-  let existingvalues = termIdEl.value.split(",");
-  let newValue: string[] = [];
-
-  // remove term_id when user de-selects annotation term
-  if (target.value === "") {
-    newValue = existingvalues.filter((v) => v !== termId);
-    // add term_id
-  } else {
-    let values: string[] = existingvalues;
-
-    if (existingvalues[0] == "") {
-      newValue = [target.dataset.termid];
-    } else if (!values.includes(target.dataset.termid)) {
-      existingvalues.push(target.dataset.termid);
-      newValue = existingvalues;
-    }
-  }
-
-  termIdEl.value = newValue.join(",");
-}

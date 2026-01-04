@@ -5,12 +5,7 @@ import {
   unobservedByUserSelectedHandler,
 } from "../../lib/search_unobserved";
 import { searchSetup } from "../../lib/search_utils";
-import {
-  initFilters,
-  updateAppWithFilters,
-  processFiltersForm,
-  setTermId,
-} from "./utils";
+import { initFilters, updateAppWithFilters, processFiltersForm } from "./utils";
 import { template } from "./template";
 import { renderSelectedFiltersList, tabClickHandler } from "./shared_utils";
 import {
@@ -137,9 +132,6 @@ class ObservationFilters extends HTMLElement {
 
   async formChangeHandler(event: Event, form: HTMLFormElement) {
     event.preventDefault();
-
-    let target = event.target as HTMLInputElement;
-    setTermId(target, this);
 
     const data = new FormData(form);
     await updateAppWithFilters(data, window.app.store);

@@ -14,7 +14,6 @@ import jsdom from "jsdom";
 import {
   processFiltersForm,
   updateAppWithFilters,
-  setTermId,
   initFilters,
 } from "../../../components/ObservationsFilters/utils";
 import { mapStore } from "../../../lib/store";
@@ -448,74 +447,6 @@ describe("updateHeaderCount", () => {
     expect(store.iNatStats.headerCountsIndex).toStrictEqual([hash2, hash3]);
     expect(store.iNatStats.headerCounts.get(hash2)).toStrictEqual(20);
     expect(store.iNatStats.headerCounts.get(hash3)).toStrictEqual(30);
-  });
-});
-
-describe("setTermId", () => {
-  test("set term_id input using data-termid from term_value_id input", () => {
-    let dom = new JSDOM(
-      `<!doctype html>
-  <html lang="en">
-    <body>
-    <input id="term_id" name="term_id" />
-    <input name="term_value_id" id="term_value_id" data-termid="123" value="1" />
-    </body>
-  </html>`,
-    );
-    global.document = dom.window.document;
-
-    let ctx = document.querySelector("body");
-    let target = document.querySelector("#term_value_id") as HTMLInputElement;
-    if (!target) return;
-
-    setTermId(target, ctx);
-
-    let termIdEl = document.querySelector("#term_id") as HTMLInputElement;
-    expect(termIdEl.value).toBe("123");
-  });
-
-  test("append term_id when term_id input has an existing value", () => {
-    let dom = new JSDOM(
-      `<!doctype html>
-  <html lang="en">
-    <body>
-    <input id="term_id" name="term_id" value="123" />
-    <input name="term_value_id" id="term_value_id" data-termid="234" value="1" />
-    </body>
-  </html>`,
-    );
-    global.document = dom.window.document;
-
-    let ctx = document.querySelector("body");
-    let target = document.querySelector("#term_value_id") as HTMLInputElement;
-    if (!target) return;
-
-    setTermId(target, ctx);
-
-    let termIdEl = document.querySelector("#term_id") as HTMLInputElement;
-    expect(termIdEl.value).toBe("123,234");
-  });
-
-  test("set term_id  to '' if term_value_id is ''", () => {
-    let dom = new JSDOM(
-      `<!doctype html>
-  <html lang="en">
-    <body>
-    <input id="term_id" name="term_id" value="123" />
-    <input name="term_value_id" id="term_value_id" data-termid="123" value="" />
-    </body>
-  </html>`,
-    );
-    global.document = dom.window.document;
-
-    let ctx = document.querySelector("body");
-    let target = document.querySelector("#term_value_id") as HTMLInputElement;
-    if (!target) return;
-
-    setTermId(target, ctx);
-
-    let termIdEl = document.querySelector("#term_id") as HTMLInputElement;
-    expect(termIdEl.value).toBe("");
   });
 });
 
