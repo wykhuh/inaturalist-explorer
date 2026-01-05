@@ -3,6 +3,7 @@ import {
   iNatObservationsYears,
   taxonRanks,
 } from "../../data/inat_data";
+import { html } from "../../lib/component_utils";
 import { updateCountForAll } from "../../lib/count_utils";
 import {
   isObservationsCheck,
@@ -137,6 +138,18 @@ export function renderRankOptions(defaultValue: string) {
     content += `<option value="${rank.toLowerCase()}" id="${rank.toLowerCase()}">${rank}</option>`;
   });
   return content;
+}
+
+export function renderTrueFalseSelect(
+  name: string,
+  id: string,
+  defaultText = "",
+) {
+  return html`<select id="${id}" name="${name}">
+    <option value="">${defaultText}</option>
+    <option value="true">True</option>
+    <option value="false">False</option>
+  </select>`;
 }
 
 export async function updateAppWithFilters(

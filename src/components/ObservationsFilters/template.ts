@@ -7,6 +7,7 @@ import {
   renderLicenseOptions,
   renderRankOptions,
   renderYearsOptions,
+  renderTrueFalseSelect,
 } from "./shared_utils";
 
 let datePane = html`<div
@@ -237,6 +238,7 @@ let observationPane = html`<div
             Equivalent to quality_grade=needs_id,research."
           ></app-tooltip>
         </label>
+        <!--do not use renderTrueFalseSelect since we want to set true as selected -->
         <select id="verifiable" name="verifiable">
           <option value=""></option>
           <option value="true" selected>True</option>
@@ -252,11 +254,7 @@ let observationPane = html`<div
             data-tooltip="captive: Captive or cultivated observations"
           ></app-tooltip>
         </label>
-        <select id="captive" name="captive">
-          <option value=""></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
+        ${renderTrueFalseSelect("captive", "captive")}
       </div>
 
       <div class="form-group multiselect">
@@ -285,11 +283,7 @@ let observationPane = html`<div
             data-tooltip="popular: Observations that have been favorited by at least one user"
           ></app-tooltip>
         </label>
-        <select id="popular" name="popular">
-          <option value=""></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
+        ${renderTrueFalseSelect("popular", "popular")}
       </div>
     </fieldset>
 
@@ -304,11 +298,7 @@ let observationPane = html`<div
             data-tooltip="identified: Observations that have community identifications"
           ></app-tooltip>
         </label>
-        <select id="identified" name="identified">
-          <option value=""></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
+        ${renderTrueFalseSelect("identified", "identified")}
       </div>
       <div class="form-group">
         <label for="reviewed"
@@ -319,11 +309,7 @@ let observationPane = html`<div
             data-tooltip="reviewed: Observations have been reviewed by the user selected next"
           ></app-tooltip>
         </label>
-        <select id="reviewed" name="reviewed">
-          <option value=""></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
+        ${renderTrueFalseSelect("reviewed", "reviewed")}
       </div>
       <div class="form-group">
         <label for="reviewer-search"
@@ -350,11 +336,7 @@ let observationPane = html`<div
             data-tooltip="disagreements: Observations that have community identifications disagreements"
           ></app-tooltip>
         </label>
-        <select id="disagreements" name="disagreements">
-          <option value=""></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
+        ${renderTrueFalseSelect("disagreements", "disagreements")}
       </div>
     </fieldset>
   </div>
@@ -477,11 +459,7 @@ let observationPane = html`<div
             data-tooltip="sounds: Observations with sounds"
           ></app-tooltip>
         </label>
-        <select id="sounds" name="sounds">
-          <option value=""></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
+        ${renderTrueFalseSelect("sounds", "sounds")}
       </div>
       <div class="form-group">
         <label for="photos"
@@ -492,11 +470,8 @@ let observationPane = html`<div
             data-tooltip="photos: Observations with photos"
           ></app-tooltip>
         </label>
-        <select id="photos" name="photos">
-          <option value=""></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
+        ${renderTrueFalseSelect("photos", "photos")}
+        <option value="cc0,cc-by,cc-by-nc">Accepted by GBIF</option>
       </div>
     </fieldset>
     <fieldset class="licensing">
@@ -562,11 +537,7 @@ const speciesPane = html`
             data-tooltip="threatened: Observations whose taxa are threatened in their location"
           ></app-tooltip>
         </label>
-        <select id="threatened" name="threatened">
-          <option value=""></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
+        ${renderTrueFalseSelect("threatened", "threatened")}
       </div>
       <div class="form-group">
         <label for="introduced"
@@ -577,11 +548,7 @@ const speciesPane = html`
             data-tooltip="introduced: Observations whose taxa are introduced in their location"
           ></app-tooltip>
         </label>
-        <select id="introduced" name="introduced">
-          <option value=""></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
+        ${renderTrueFalseSelect("introduced", "introduced")}
       </div>
       <div class="form-group">
         <label for="native"
@@ -592,11 +559,7 @@ const speciesPane = html`
             data-tooltip="native: Observations whose taxa are native to their location"
           ></app-tooltip>
         </label>
-        <select id="native" name="native">
-          <option value=""></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
+        ${renderTrueFalseSelect("native", "native")}
       </div>
       <div class="form-group">
         <label for="endemic"
@@ -607,11 +570,7 @@ const speciesPane = html`
             data-tooltip="endemic: Observations whose taxa are endemic to their location"
           ></app-tooltip>
         </label>
-        <select id="endemic" name="endemic">
-          <option value=""></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
+        ${renderTrueFalseSelect("endemic", "endemic")}
       </div>
     </fieldset>
     <fieldset class="iconic_taxa">
