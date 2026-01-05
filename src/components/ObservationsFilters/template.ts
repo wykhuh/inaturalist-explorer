@@ -3,8 +3,10 @@ import { html } from "../../lib/component_utils";
 import { observationsHeaderLinks } from "../ObservationsHeader/template";
 import {
   renderDaysOptions,
+  renderGeoprivacyOptions,
   renderHoursOptions,
   renderLicenseOptions,
+  renderObscurationOptions,
   renderRankOptions,
   renderYearsOptions,
   renderTrueFalseSelect,
@@ -393,6 +395,49 @@ let observationPane = html`<div
           type="text"
           autocomplete="off"
         />
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Geospatial</legend>
+      <div class="form-group">
+        <label for="geoprivacy"
+          >Geoprivacy
+          <app-tooltip
+            data-id="tp-geoprivacy"
+            data-content="?"
+            data-tooltip="geoprivacy: Observations with this geoprivacy setting"
+          ></app-tooltip
+        ></label>
+        <select name="geoprivacy" id="geoprivacy" multiple>
+          ${renderGeoprivacyOptions("All")}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="taxon_geoprivacy"
+          >Taxon Geoprivacy<app-tooltip
+            data-id="tp-taxon_geoprivacy"
+            data-content="?"
+            data-tooltip="taxon_geoprivacy: Filter observations by the most conservative geoprivacy applied by a conservation status associated with one of the taxa proposed in the current identifications."
+          ></app-tooltip
+        ></label>
+        <select name="taxon_geoprivacy" id="taxon_geoprivacy" multiple>
+          ${renderGeoprivacyOptions("All")}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="obscuration"
+          >Obscuration<app-tooltip
+            data-id="tp-obscuration"
+            data-content="?"
+            data-tooltip="obscuration: Observations have geoprivacy or taxon_geoprivacy fields matching these values"
+          ></app-tooltip
+        ></label>
+        <select name="obscuration" id="obscuration" multiple>
+          ${renderObscurationOptions("All")}
+        </select>
       </div>
     </fieldset>
 

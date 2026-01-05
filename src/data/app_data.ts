@@ -223,14 +223,13 @@ export const observationsFilterableImplementedArrays: ObservationsApiParamsKeysT
     "term_value_id",
     "without_term_value_id",
     "year",
+    "geoprivacy",
+    "taxon_geoprivacy",
+    "obscuration",
   ];
 
 const observationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   // maybe
-  "geoprivacy", // array
-  "taxon_geoprivacy", // array
-  "obscuration", // array
-
   "term_id_or_unknown",
   "out_of_range",
 
@@ -314,6 +313,9 @@ export const observationsFieldName_InputType = {
   without_term_id: "skip",
   without_term_value_id: "skip",
   year: "multiselect",
+  geoprivacy: "multiselect",
+  taxon_geoprivacy: "multiselect",
+  obscuration: "multiselect",
 };
 
 export const observationsApiFilterableNames = observationsFilterableImplemented

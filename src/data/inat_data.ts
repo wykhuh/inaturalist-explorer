@@ -119,7 +119,7 @@ export const placeTypes: PlaceTypes = {
 
 // BUG: tests are not importing defaultColorScheme correctly, so need to use
 // hexcolor
-let color = defaultColorScheme ? defaultColorScheme[0] : "#4477aa";
+const color = defaultColorScheme ? defaultColorScheme[0] : "#4477aa";
 export const lifeTaxon: NormalizediNatTaxonType = {
   name: "Life",
   default_photo:
@@ -149,7 +149,7 @@ export function bboxPlaceRecord(bbox: LngLatType[]): NormalizediNatPlaceType {
   };
 }
 
-export let fieldsWithAny = [
+export const fieldsWithAny = [
   "quality_grade",
   "reviewed",
   "verifiable",
@@ -242,3 +242,11 @@ export const annotationsValues = {
   39: "Colored Leaves",
   40: "No Live Leaves",
 };
+
+export const geoprivacyValues = [
+  "obscured",
+  "obscured_private",
+  "open",
+  "private",
+];
+export const obscurationValues = ["obscured", "private", "none"];

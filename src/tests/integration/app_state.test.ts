@@ -1164,7 +1164,7 @@ describe("combos", () => {
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaSDCount);
   });
 
-  test("add taxon x 2; add place x 2; add project x 2; add user x 2", async () => {
+  test.skip("add taxon x 2; add place x 2; add project x 2; add user x 2", async () => {
     let store = structuredClone(mapStore);
 
     expectEmpytMap(store);

@@ -1,11 +1,14 @@
 import {
   CCLicenses,
+  geoprivacyValues,
   iNatObservationsYears,
+  obscurationValues,
   taxonRanks,
 } from "../../data/inat_data";
 import { html } from "../../lib/component_utils";
 import { updateCountForAll } from "../../lib/count_utils";
 import {
+  capitalizeFirstLetter,
   isObservationsCheck,
   resetPageNumber,
   updateStoreUsingFilters,
@@ -136,6 +139,24 @@ export function renderRankOptions(defaultValue: string) {
   let content = `<option value="">${defaultValue}</option>`;
   taxonRanks.forEach((rank) => {
     content += `<option value="${rank.toLowerCase()}" id="${rank.toLowerCase()}">${rank}</option>`;
+  });
+  return content;
+}
+
+export function renderGeoprivacyOptions(defaultValue: string) {
+  let content = `<option value="">${defaultValue}</option>`;
+  geoprivacyValues.forEach((value) => {
+    let displayValue = capitalizeFirstLetter(value.replace("_", " "));
+    content += `<option value="${value}" id="${value}">${displayValue}</option>`;
+  });
+  return content;
+}
+
+export function renderObscurationOptions(defaultValue: string) {
+  let content = `<option value="">${defaultValue}</option>`;
+  obscurationValues.forEach((value) => {
+    let displayValue = capitalizeFirstLetter(value.replace("_", " "));
+    content += `<option value="${value}" id="${value}">${displayValue}</option>`;
   });
   return content;
 }
