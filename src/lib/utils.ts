@@ -687,3 +687,7 @@ export function objectFlip(obj: { [key: string]: any }) {
   });
   return newObj;
 }
+
+export function range(start = 0, stop: number) {
+  return [...Array(stop - start + 1).keys()].map((i) => i + start);
+}
