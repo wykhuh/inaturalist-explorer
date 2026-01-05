@@ -290,6 +290,15 @@ interface ObservationsApiParamsType {
   updated_since?: string;
   viewer_id?: string;
   reviewed?: boolean;
+
+  ident_taxon_id?: number;
+  ident_taxon_id_exclusive?: string; // array of number
+  exact_taxon_id?: string; // array of number
+  without_direct_taxon_id?: string; // array of number
+  not_in_place?: string; // array of number
+  not_user_id?: string; // array of number
+  without_ident_user_id?: number;
+  outlink_source?: string;
 }
 
 export type ObservationsApiParamsKeysType = keyof ObservationsApiParamsType;
@@ -459,10 +468,10 @@ type SearchOptions = {
   users: SearchOption;
   usersIdentifiers: SearchOption;
   taxa: SearchOption;
-  taxaIdentified: SearchOption;
-  usersAnnotators: SearchOption;
   withoutTaxa: SearchOption;
+  taxaIdentified: SearchOption;
   withoutTaxaIdentified: SearchOption;
+  usersAnnotators: SearchOption;
 };
 
 type SearchOption = { setup: any; selectedHandler: any };

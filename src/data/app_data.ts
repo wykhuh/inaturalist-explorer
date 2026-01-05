@@ -231,42 +231,52 @@ export const observationsFilterableImplementedArrays: ObservationsApiParamsKeysT
 const observationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   // maybe
   "term_id_or_unknown",
+  "outlink_source",
+  // geo
   "out_of_range",
-
   "acc_above",
   "acc_below",
   "acc_below_or_unknown",
   "acc",
+  "geo",
+  "mappable",
+
+  "exact_taxon_id",
+  "ident_taxon_id_exclusive", // array
+
+  "not_in_place",
+  "not_user_id",
+  "without_direct_taxon_id",
+  "without_ident_user_id",
 
   // no
-  "csi",
-  "observed_on",
-  "licensed",
-  "photo_licensed",
-  "taxon_name",
   "apply_project_rules_for",
   "cs",
   "csa",
+  "csi",
   "expected_nearby",
-  "geo",
   "id",
-  "identifications",
   "id_above",
   "id_below",
   "id_please",
+  "ident_taxon_id", // integer
+  "identifications",
   "lat",
+  "licensed",
   "lng",
-  "mappable",
   "not_id",
   "not_matching_project_rules_for",
   "observation_accuracy_experiment_id",
+  "observed_on",
   "ofv_datatype",
   "pcid",
+  "photo_licensed",
   "radius",
-  "site_id",
   "search_on", // string; can only select one category at a time
+  "site_id",
   "spam",
   "taxon_is_active",
+  "taxon_name",
   "updated_since",
   "user_login",
 ];
