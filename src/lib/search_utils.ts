@@ -147,6 +147,11 @@ export function multisearchSetup(appStore: AppStoreType) {
     let target = event.target as HTMLInputElement;
     if (target === null) return;
 
+    let targetSearch = searchOptions[target.value as SearchOptionsKeys];
+    if (!targetSearch) {
+      throw Error("missing search config for " + target.value);
+    }
+
     // unInit comes from autocomplete library. unInit removes event listerners
     // for autocomplete search
     setup.unInit();
@@ -154,11 +159,6 @@ export function multisearchSetup(appStore: AppStoreType) {
     // clear search input
     searchInputEl.innerHTML = "";
     searchInputEl.value = "";
-
-    let targetSearch = searchOptions[target.value as SearchOptionsKeys];
-    if (!targetSearch) {
-      throw Error("missing search config for " + target.value);
-    }
 
     setup = targetSearch.setup(searchSelector, appStore);
     selectedHandler = targetSearch.selectedHandler;
