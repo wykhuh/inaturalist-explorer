@@ -792,6 +792,7 @@ const annotationPane = html` <div
         <option value="">Any</option>
         <option value="10">Female</option>
         <option value="11">Male</option>
+        <option value="20">Cannot Be Determined</option>
       </select>
     </div>
     <div class="form-check mb-0">
@@ -812,6 +813,7 @@ const annotationPane = html` <div
         <option value="">Any</option>
         <option value="18">Alive</option>
         <option value="19">Dead</option>
+        <option value="20">Cannot Be Determined</option>
       </select>
     </div>
     <div class="form-check mb-0">
