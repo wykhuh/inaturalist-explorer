@@ -19,6 +19,7 @@ export const template = html`
           <option value="observed_on">Observed Date</option>
           <option value="updated_at">Updated Date</option>
           <option value="votes">Favorites</option>
+          <option value="random">Random</option>
         </select>
       </div>
       <div class="form-group">
