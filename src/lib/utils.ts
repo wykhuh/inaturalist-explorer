@@ -676,7 +676,6 @@ export function sortArrayOfObjectsByDate(
   return records.sort((a, b) => {
     let dateA = a[field];
     let dateB = b[field];
-    console.log(dateA, (new Date(dateA) as any) - (new Date(dateB) as any));
     return (new Date(dateA) as any) - (new Date(dateB) as any);
   });
 }

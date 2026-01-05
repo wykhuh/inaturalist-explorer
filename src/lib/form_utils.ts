@@ -53,6 +53,33 @@ export function setInputDisabled(selector: string, value: any) {
   }
 }
 
+export function unsetAnnotationTermId(field: string, value: string) {
+  value.split(",").forEach((v) => {
+    // uncheck term_id input
+    setInputChecked(
+      `#filters-form input[name='${field}'][value='${v}']`,
+      false,
+    );
+
+    // get related select for term_id
+    let selector =
+      field === "term_id"
+        ? `select[data-related-term-id="${v}"]`
+        : `select[data-related-without-term-id="${v}"]`;
+    let selectEl = document.querySelector<HTMLSelectElement>(selector);
+    if (selectEl) {
+      // unselect term_value_id option
+      selectEl
+        .querySelectorAll<HTMLOptionElement>("option:checked")
+        .forEach((el) => {
+          el.selected = false;
+        });
+      // disable select
+      selectEl.disabled = !selectEl.disabled;
+    }
+  });
+}
+
 export function processTrueFalseFields(
   fields: ObservationsApiParamsKeysType[] | IdentificationsApiParamsKeysType[],
   appStore: AppStoreType,

@@ -1,22 +1,11 @@
 import { x } from "../../assets/icons";
-import {
-  identificationsFieldName_InputType,
-  observationsFieldName_InputType,
-} from "../../data/app_data";
-import { isObservationsCheck } from "../../lib/data_utils";
-import {
-  setInputChecked,
-  setInputValue,
-  unsetSelectedOption,
-} from "../../lib/form_utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import type {
-  AppStoreType,
   DataComponentType,
   IdentificationsApiFilterableParamsKeys,
   ObservationsApiFilterableParamsKeys,
 } from "../../types/app";
-import { updateAppWithFilters } from "../ObservationsFilters/shared_utils";
+import { deleteFilter } from "./utils";
 
 type PropType = {
   field:
@@ -56,7 +45,7 @@ class SelectedFiltersItem extends HTMLElement {
     loggerEvent("[SelectedFiltersItem event]" + event.type);
 
     if (event.type === "click" && this.field && this.value) {
-      this.clickHandler(this.field as any, this.value, window.app.store);
+      deleteFilter(this.field as any, this.value, window.app.store);
     }
   }
 
@@ -70,55 +59,6 @@ class SelectedFiltersItem extends HTMLElement {
 
     itemEl.appendChild(button);
     this.appendChild(itemEl);
-  }
-
-  clickHandler(
-    fieldTemp:
-      | ObservationsApiFilterableParamsKeys
-      | IdentificationsApiFilterableParamsKeys,
-    value: string,
-    appStore: AppStoreType,
-  ) {
-    let resourceFieldName_InputType = undefined;
-    if (isObservationsCheck(appStore)) {
-      resourceFieldName_InputType = observationsFieldName_InputType;
-    } else {
-      resourceFieldName_InputType = identificationsFieldName_InputType;
-    }
-    let field = fieldTemp as keyof typeof resourceFieldName_InputType;
-
-    if (resourceFieldName_InputType[field] === "select") {
-      unsetSelectedOption(
-        `#filters-form select#${field} option[value='${value}']`,
-      );
-    } else if (resourceFieldName_InputType[field] === "multiselect") {
-      value.split(",").forEach((v) => {
-        unsetSelectedOption(
-          `#filters-form select#${field} option[value='${v}']`,
-        );
-      });
-    } else if (resourceFieldName_InputType[field] === "checkbox") {
-      value.split(",").forEach((v) => {
-        let valid = setInputChecked(`#filters-form input#${v}`, false);
-        if (!valid) {
-          setInputChecked(`#filters-form input#${field}_${v}`, false);
-        }
-      });
-    } else if (resourceFieldName_InputType[field] === "textInput") {
-      setInputValue(`#filters-form input#${field}`, "");
-    } else if (resourceFieldName_InputType[field] === "dateInput") {
-      setInputValue(`#filters-form input#${field}`, "");
-    } else {
-      throw new Error("need to add another option for SelectedFiltersItem");
-    }
-
-    this.updateForm();
-  }
-
-  async updateForm() {
-    let form = document.querySelector("#filters-form") as HTMLFormElement;
-    const data = new FormData(form);
-    await updateAppWithFilters(data, window.app.store);
   }
 }
 
