@@ -24,7 +24,7 @@ let datePane = html`<div
           <app-tooltip
             data-id="tp-on"
             data-content="?"
-            data-tooltip="Observed on this date"
+            data-tooltip="on: Observed on this date"
           ></app-tooltip>
         </label>
         <input type="date" name="on" id="on" />
@@ -36,7 +36,7 @@ let datePane = html`<div
           <app-tooltip
             data-id="tp-d1"
             data-content="?"
-            data-tooltip="Observed on or after this date"
+            data-tooltip="d1: Observed on or after this date"
           ></app-tooltip>
         </label>
         <input type="date" name="d1" id="d1" />
@@ -48,7 +48,7 @@ let datePane = html`<div
           <app-tooltip
             data-id="tp-d2"
             data-content="?"
-            data-tooltip="Observed on or before this date"
+            data-tooltip="d2: Observed on or before this date"
           ></app-tooltip>
         </label>
         <input type="date" name="d2" id="d2" />
@@ -60,7 +60,7 @@ let datePane = html`<div
           <app-tooltip
             data-id="tp-hour"
             data-content="?"
-            data-tooltip="Observed within this hour of the day"
+            data-tooltip="hour: Observed within this hour of the day"
           ></app-tooltip>
         </label>
         <select name="hour" id="hour" multiple>
@@ -74,7 +74,7 @@ let datePane = html`<div
           <app-tooltip
             data-id="tp-day"
             data-content="?"
-            data-tooltip="Observed within this day of the month"
+            data-tooltip="day: Observed within this day of the month"
           ></app-tooltip>
         </label>
         <select name="day" id="day" multiple>
@@ -88,7 +88,7 @@ let datePane = html`<div
           <app-tooltip
             data-id="tp-month"
             data-content="?"
-            data-tooltip="Observed within this month"
+            data-tooltip="month: Observed within this month"
           ></app-tooltip>
         </label>
         <select name="month" id="month" multiple>
@@ -114,7 +114,7 @@ let datePane = html`<div
           <app-tooltip
             data-id="tp-year"
             data-content="?"
-            data-tooltip="Observed within this year"
+            data-tooltip="year: Observed within this year"
           ></app-tooltip>
         </label>
         <select name="year" id="year" multiple>
@@ -132,7 +132,7 @@ let datePane = html`<div
           <app-tooltip
             data-id="tp-created_on"
             data-content="?"
-            data-tooltip="Created on this date"
+            data-tooltip="created_on: Created on this date"
           ></app-tooltip>
         </label>
         <input type="date" name="created_on" id="created_on" />
@@ -144,7 +144,7 @@ let datePane = html`<div
             <app-tooltip
               data-id="tp-created_d1"
               data-content="?"
-              data-tooltip="Created at or after this time"
+              data-tooltip="created_d1: Created at or after this time"
             ></app-tooltip>
           </label>
           <input type="date" name="created_d1" id="created_d1" />
@@ -155,7 +155,7 @@ let datePane = html`<div
             <app-tooltip
               data-id="tp-created_d2"
               data-content="?"
-              data-tooltip="Created at or before this time"
+              data-tooltip="created_d2: Created at or before this time"
             ></app-tooltip>
           </label>
           <input type="date" name="created_d2" id="created_d2" />
@@ -167,7 +167,7 @@ let datePane = html`<div
           <app-tooltip
             data-id="tp-created_day"
             data-content="?"
-            data-tooltip="Created within this day of the month"
+            data-tooltip="created_day: Created within this day of the month"
           ></app-tooltip>
         </label>
         <select name="created_day" id="created_day" multiple>
@@ -180,7 +180,7 @@ let datePane = html`<div
           <app-tooltip
             data-id="tp-created_month"
             data-content="?"
-            data-tooltip="Created within this month"
+            data-tooltip="created_month: Created within this month"
           ></app-tooltip>
         </label>
         <select name="created_month" id="created_month" multiple>
@@ -206,7 +206,7 @@ let datePane = html`<div
           <app-tooltip
             data-id="tp-created_year"
             data-content="?"
-            data-tooltip="Created within this year"
+            data-tooltip="created_year: Created within this year"
           ></app-tooltip>
         </label>
         <select name="created_year" id="created_year" multiple>
@@ -233,7 +233,7 @@ let observationPane = html`<div
           <app-tooltip
             data-id="tp-verifiable"
             data-content="?"
-            data-tooltip="Observations with a quality_grade of either needs_id or research.
+            data-tooltip="verifiable: Observations with a quality_grade of either needs_id or research.
             Equivalent to quality_grade=needs_id,research."
           ></app-tooltip>
         </label>
@@ -249,7 +249,7 @@ let observationPane = html`<div
           <app-tooltip
             data-id="tp-captive"
             data-content="?"
-            data-tooltip="Captive or cultivated observations"
+            data-tooltip="captive: Captive or cultivated observations"
           ></app-tooltip>
         </label>
         <select id="captive" name="captive">
@@ -265,7 +265,7 @@ let observationPane = html`<div
           <app-tooltip
             data-id="tp-quality_grade"
             data-content="?"
-            data-tooltip="Observations have this quality grade"
+            data-tooltip="quality_grade: Observations have this quality grade"
           ></app-tooltip>
         </label>
         <select id="quality_grade" name="quality_grade" multiple>
@@ -282,7 +282,7 @@ let observationPane = html`<div
           <app-tooltip
             data-id="tp-popular"
             data-content="?"
-            data-tooltip="Observations that have been favorited by at least one user"
+            data-tooltip="popular: Observations that have been favorited by at least one user"
           ></app-tooltip>
         </label>
         <select id="popular" name="popular">
@@ -301,7 +301,7 @@ let observationPane = html`<div
           <app-tooltip
             data-id="tp-identified"
             data-content="?"
-            data-tooltip="Observations that have community identifications"
+            data-tooltip="identified: Observations that have community identifications"
           ></app-tooltip>
         </label>
         <select id="identified" name="identified">
@@ -316,7 +316,7 @@ let observationPane = html`<div
           <app-tooltip
             data-id="tp-reviewed"
             data-content="?"
-            data-tooltip="Observations have been reviewed by the user selected next"
+            data-tooltip="reviewed: Observations have been reviewed by the user selected next"
           ></app-tooltip>
         </label>
         <select id="reviewed" name="reviewed">
@@ -331,7 +331,7 @@ let observationPane = html`<div
           <app-tooltip
             data-id="tp-viewer_id"
             data-content="?"
-            data-tooltip="Observations have been reviewed by this user"
+            data-tooltip="viewer_id: Observations have been reviewed by this user"
           ></app-tooltip>
         </label>
         <input
@@ -347,7 +347,7 @@ let observationPane = html`<div
           <app-tooltip
             data-id="tp-disagreements"
             data-content="?"
-            data-tooltip="Observations that have community identifications disagreements"
+            data-tooltip="disagreements: Observations that have community identifications disagreements"
           ></app-tooltip>
         </label>
         <select id="disagreements" name="disagreements">
@@ -369,7 +369,7 @@ let observationPane = html`<div
           <app-tooltip
             data-id="tp-user_after"
             data-content="?"
-            data-tooltip="Account created within or after this time"
+            data-tooltip="user_after: Account created within or after this time"
           ></app-tooltip>
         </label>
         <select id="user_after" name="user_after">
@@ -385,7 +385,7 @@ let observationPane = html`<div
           <app-tooltip
             data-id="tp-user_before"
             data-content="?"
-            data-tooltip="Account created before this time"
+            data-tooltip="user_before: Account created before this time"
           ></app-tooltip>
         </label>
         <select id="user_before" name="user_before">
@@ -402,7 +402,7 @@ let observationPane = html`<div
           <app-tooltip
             data-id="tp-unobserved_by_user_id"
             data-content="?"
-            data-tooltip="Observations with taxon not previously observed by this user"
+            data-tooltip="unobserved_by_user_id: Observations with taxon not previously observed by this user"
           ></app-tooltip>
         </label>
         <input
@@ -422,7 +422,7 @@ let observationPane = html`<div
           <app-tooltip
             data-id="tp-q"
             data-content="?"
-            data-tooltip="Search observation properties"
+            data-tooltip="q: Search observation properties"
           ></app-tooltip>
         </label>
         <input id="q" name="q" type="text" placeholder="Enter search terms" />
@@ -434,7 +434,7 @@ let observationPane = html`<div
           <app-tooltip
             data-id="tp-list_id"
             data-content="?"
-            data-tooltip="Taxon must be in the list with this ID"
+            data-tooltip="list_id: Taxon must be in the list with this ID"
           ></app-tooltip>
         </label>
         <input
@@ -451,7 +451,7 @@ let observationPane = html`<div
           <app-tooltip
             data-id="tp-not_in_project"
             data-content="?"
-            data-tooltip="Observations must not be in this project"
+            data-tooltip="not_in_project: Observations must not be in this project"
           ></app-tooltip>
         </label>
         <input
@@ -474,7 +474,7 @@ let observationPane = html`<div
           <app-tooltip
             data-id="tp-sounds"
             data-content="?"
-            data-tooltip="Observations with sounds"
+            data-tooltip="sounds: Observations with sounds"
           ></app-tooltip>
         </label>
         <select id="sounds" name="sounds">
@@ -489,7 +489,7 @@ let observationPane = html`<div
           <app-tooltip
             data-id="tp-photos"
             data-content="?"
-            data-tooltip="Observations with photos"
+            data-tooltip="photos: Observations with photos"
           ></app-tooltip>
         </label>
         <select id="photos" name="photos">
@@ -507,7 +507,7 @@ let observationPane = html`<div
           <app-tooltip
             data-id="tp-license"
             data-content="?"
-            data-tooltip="Observation have this license"
+            data-tooltip="license: Observation have this license"
           ></app-tooltip>
         </label>
         <select id="license" name="license" multiple>
@@ -520,7 +520,7 @@ let observationPane = html`<div
           <app-tooltip
             data-id="tp-photo_license"
             data-content="?"
-            data-tooltip="Observations have at least one photo with this license"
+            data-tooltip="photo_license: Observations have at least one photo with this license"
           ></app-tooltip>
         </label>
         <select id="photo_license" name="photo_license" multiple>
@@ -533,7 +533,7 @@ let observationPane = html`<div
           <app-tooltip
             data-id="tp-sound_license"
             data-content="?"
-            data-tooltip="Observations have at least one sound with this license"
+            data-tooltip="sound_license: Observations have at least one sound with this license"
           ></app-tooltip>
         </label>
         <select id="sound_license" name="sound_license" multiple>
@@ -559,7 +559,7 @@ const speciesPane = html`
           <app-tooltip
             data-id="tp-threatened"
             data-content="?"
-            data-tooltip="Observations whose taxa are threatened in their location"
+            data-tooltip="threatened: Observations whose taxa are threatened in their location"
           ></app-tooltip>
         </label>
         <select id="threatened" name="threatened">
@@ -574,7 +574,7 @@ const speciesPane = html`
           <app-tooltip
             data-id="tp-introduced"
             data-content="?"
-            data-tooltip="Observations whose taxa are introduced in their location"
+            data-tooltip="introduced: Observations whose taxa are introduced in their location"
           ></app-tooltip>
         </label>
         <select id="introduced" name="introduced">
@@ -589,7 +589,7 @@ const speciesPane = html`
           <app-tooltip
             data-id="tp-native"
             data-content="?"
-            data-tooltip="Observations whose taxa are native to their location"
+            data-tooltip="native: Observations whose taxa are native to their location"
           ></app-tooltip>
         </label>
         <select id="native" name="native">
@@ -604,7 +604,7 @@ const speciesPane = html`
           <app-tooltip
             data-id="tp-endemic"
             data-content="?"
-            data-tooltip="Observations whose taxa are endemic to their location"
+            data-tooltip="endemic: Observations whose taxa are endemic to their location"
           ></app-tooltip>
         </label>
         <select id="endemic" name="endemic">
@@ -726,7 +726,7 @@ const speciesPane = html`
           <app-tooltip
             data-id="tp-hrank"
             data-content="?"
-            data-tooltip="Taxon must have this rank or lower"
+            data-tooltip="hrank: Taxon must have this rank or lower"
           ></app-tooltip>
         </label>
         <select id="hrank" name="hrank">
@@ -739,7 +739,7 @@ const speciesPane = html`
           <app-tooltip
             data-id="tp-lrank"
             data-content="?"
-            data-tooltip="Taxon must have this rank or higher"
+            data-tooltip="lrank: Taxon must have this rank or higher"
           ></app-tooltip>
         </label>
         <select id="lrank" name="lrank">
@@ -752,7 +752,7 @@ const speciesPane = html`
           <app-tooltip
             data-id="tp-rank"
             data-content="?"
-            data-tooltip="Taxon must have this rank"
+            data-tooltip="rank: Taxon must have this rank"
           ></app-tooltip>
         </label>
         <select id="rank" name="rank" multiple>
