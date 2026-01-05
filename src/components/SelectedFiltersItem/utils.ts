@@ -11,15 +11,13 @@ import {
 } from "../../lib/form_utils";
 import type {
   AppStoreType,
-  IdentificationsApiFilterableParamsKeys,
-  ObservationsApiFilterableParamsKeys,
+  IdentificationsApiParamsKeysType,
+  ObservationsApiParamsKeysType,
 } from "../../types/app";
 import { updateAppWithFilters } from "../ObservationsFilters/shared_utils";
 
 export async function deleteFilter(
-  fieldTemp:
-    | ObservationsApiFilterableParamsKeys
-    | IdentificationsApiFilterableParamsKeys,
+  fieldTemp: ObservationsApiParamsKeysType | IdentificationsApiParamsKeysType,
   value: string,
   appStore: AppStoreType,
 ) {

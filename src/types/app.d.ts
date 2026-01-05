@@ -164,7 +164,7 @@ export type AppStoreTypeParamsKeys =
   | "observationsApiParams"
   | "identificationsApiParams";
 
-interface ObservationsApiParamsType extends ObservationsApiFilterableParams {
+interface ObservationsApiParamsType {
   nelat?: number;
   nelng?: number;
   swlat?: number;
@@ -192,9 +192,8 @@ interface ObservationsApiParamsType extends ObservationsApiFilterableParams {
   presence?: number;
   established?: number;
   leaves?: number;
-}
 
-interface ObservationsApiFilterableParams {
+  // filterable
   captive?: boolean;
   d1?: string; // date
   d2?: string; // date
@@ -294,11 +293,8 @@ interface ObservationsApiFilterableParams {
 }
 
 export type ObservationsApiParamsKeysType = keyof ObservationsApiParamsType;
-export type ObservationsApiFilterableParamsKeys =
-  keyof ObservationsApiFilterableParams;
 
-interface IdentificationsApiParamsType
-  extends IdentificationsApiFilterableParams {
+interface IdentificationsApiParamsType {
   place_id?: string; // comma-seperated string
   taxon_id?: string; // comma-seperated string
   observation_taxon_id?: string; // comma-seperated string
@@ -308,9 +304,8 @@ interface IdentificationsApiParamsType
   colors?: string; // comma-seperated string
   order?: string;
   order_by?: string;
-}
 
-interface IdentificationsApiFilterableParams {
+  // filterable
   d1?: string; // date
   d2?: string; // date
   iconic_taxon_id?: string | number; // comma-seperated string
@@ -352,8 +347,6 @@ interface IdentificationsApiFilterableParams {
 
 export type IdentificationsApiParamsKeysType =
   keyof IdentificationsApiParamsType;
-export type IdentificationsApiFilterableParamsKeys =
-  keyof IdentificationsApiFilterableParams;
 
 export interface AutoCompleteEventType {
   detail: {

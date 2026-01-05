@@ -2,15 +2,13 @@ import { x } from "../../assets/icons";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import type {
   DataComponentType,
-  IdentificationsApiFilterableParamsKeys,
-  ObservationsApiFilterableParamsKeys,
+  IdentificationsApiParamsKeysType,
+  ObservationsApiParamsKeysType,
 } from "../../types/app";
 import { deleteFilter } from "./utils";
 
 type PropType = {
-  field:
-    | ObservationsApiFilterableParamsKeys
-    | IdentificationsApiFilterableParamsKeys;
+  field: ObservationsApiParamsKeysType | IdentificationsApiParamsKeysType;
   value: string;
 };
 class SelectedFiltersItem extends HTMLElement {
@@ -20,8 +18,8 @@ class SelectedFiltersItem extends HTMLElement {
 
   field:
     | null
-    | ObservationsApiFilterableParamsKeys
-    | IdentificationsApiFilterableParamsKeys = null;
+    | ObservationsApiParamsKeysType
+    | IdentificationsApiParamsKeysType = null;
   value: null | string = null;
 
   connectedCallback() {
