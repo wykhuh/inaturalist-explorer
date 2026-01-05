@@ -293,6 +293,9 @@ export function renderDates(data: ObservationsResult | Observation) {
   if (data.time_observed_at) {
     let date = formatDate(data.time_observed_at);
     detailsContent += `<div class="observed">Observed: ${date}</div>`;
+  } else if (data.observed_on) {
+    let date = formatDate(data.observed_on, data.observed_time_zone);
+    detailsContent += `<div class="observed">Observed: ${date}</div>`;
   }
   if (data.created_at) {
     let date = formatDate(data.created_at);
@@ -409,12 +412,16 @@ export function formatTaxonPhotoAttribution(photo: DefaultPhoto) {
   return text;
 }
 
-export function formatDate(date: string) {
-  return new Date(date).toLocaleDateString("en-US", {
+export function formatDate(date: string, timezone?: string) {
+  let options = {
     year: "numeric",
     month: "short",
     day: "2-digit",
-  });
+  } as any;
+  if (timezone) {
+    options.timeZone = timezone;
+  }
+  return new Date(date).toLocaleDateString("en-US", options);
 }
 
 export function formatDateLong(date: string | null, timezone?: string) {

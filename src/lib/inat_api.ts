@@ -237,7 +237,7 @@ export async function getObservations(appParams: string, perPage: number) {
     // "location:!t," +
     // "mappable:!t," +
     "obscured:!t," +
-    // "observed_on:!t," +
+    "observed_on:!t," +
     // "observed_on_details:all," +
     "observed_time_zone:!t," +
     "time_observed_at:!t," +
