@@ -11,7 +11,7 @@ import type {
 } from "../types/app";
 import {
   bboxPlaceRecord,
-  observationsOrderByValues,
+  observationsOrderByValuesAll,
   orderValues,
 } from "../data/inat_data";
 import {
@@ -543,7 +543,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   }
 
   if (urlParams.order_by) {
-    if (observationsOrderByValues.includes(urlParams.order_by)) {
+    if (observationsOrderByValuesAll.includes(urlParams.order_by)) {
       store[resourceApiParams].order_by = urlParams.order_by;
     }
     if (urlView && validViews.includes(urlView)) {

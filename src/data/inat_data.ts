@@ -183,14 +183,6 @@ export const observationsOrderByValuesAll = [
   "votes",
 ];
 
-//
-export const observationsOrderByValues = [
-  "id",
-  "created_at",
-  "observed_on",
-  "votes",
-];
-
 export const iconicTaxaIdName = {
   3: "Aves",
   20978: "Amphibia",
