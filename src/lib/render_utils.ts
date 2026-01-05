@@ -263,7 +263,9 @@ export function renderObservationMetadataCounts(
 ) {
   let detailsContent = `<div class="metadata-counts">`;
   if (data.identifications.length > 0) {
-    detailsContent += renderIdCount(data.identifications.length);
+    detailsContent += renderIdCount(
+      data.identifications.filter((i) => i.current).length,
+    );
   }
   if (
     data.num_identification_disagreements &&
