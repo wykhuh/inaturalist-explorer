@@ -9,7 +9,7 @@ import {
   removeTaxaFromStoreAndMap,
   resetPageNumber,
 } from "./data_utils.ts";
-import { renderSelectedResources } from "./search_utils.ts";
+import { renderSelectedResources, showHideHeader } from "./search_utils.ts";
 import { setupTaxaSearch } from "./search_taxa.ts";
 import { updateCountForAll, updateCountForOne } from "./count_utils.ts";
 
@@ -68,6 +68,13 @@ export async function taxonIdentifiedSelectedHandler(
 
   await updateCountForAll("selectedTaxaIdentified", appStore);
   renderSelectedResources(appStore, true);
+}
+
+export function showHideTaxaIdentifiedHeader() {
+  showHideHeader(
+    "#sidebar-menu .taxa-identified-heading",
+    "selectedTaxaIdentified",
+  );
 }
 
 export function renderTaxaIdentifiedList(appStore: AppStoreType) {

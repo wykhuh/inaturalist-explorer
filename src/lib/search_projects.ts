@@ -20,6 +20,7 @@ import { updateCountForAll, updateCountForOne } from "./count_utils.ts";
 import {
   updateTilesForSelectedTaxa,
   renderSelectedResources,
+  showHideHeader,
 } from "./search_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
 
@@ -156,6 +157,10 @@ export async function projectSelectedHandler(
   }
 
   renderSelectedResources(appStore, true);
+}
+
+export function showHideProjectsHeader() {
+  showHideHeader("#sidebar-menu .projects-heading", "selectedProjects");
 }
 
 export function renderProjectsList(appStore: AppStoreType) {

@@ -1,12 +1,30 @@
-import { renderPlacesList } from "../lib/search_places";
-import { renderProjectsList } from "../lib/search_projects";
-import { renderTaxaList } from "../lib/search_taxa";
-import { renderTaxaIdentifiedList } from "../lib/search_taxa_identified";
-import { renderUsersList } from "../lib/search_users";
-import { renderUsersAnnotatorsList } from "../lib/search_users_annotators";
-import { renderUsersIdentifiersList } from "../lib/search_users_identifiers";
-import { renderWithoutTaxaList } from "../lib/search_without_taxa";
-import { renderWithoutTaxaIdentifiedList } from "../lib/search_without_taxa_identified";
+import { renderPlacesList, showHidePlacesHeader } from "../lib/search_places";
+import {
+  renderProjectsList,
+  showHideProjectsHeader,
+} from "../lib/search_projects";
+import { renderTaxaList, showHideTaxaHeader } from "../lib/search_taxa";
+import {
+  renderTaxaIdentifiedList,
+  showHideTaxaIdentifiedHeader,
+} from "../lib/search_taxa_identified";
+import { renderUsersList, showHideUsersHeader } from "../lib/search_users";
+import {
+  renderUsersAnnotatorsList,
+  showHideUsersAnnotatorsHeader,
+} from "../lib/search_users_annotators";
+import {
+  renderUsersIdentifiersList,
+  showHideUsersIdentifiersHeader,
+} from "../lib/search_users_identifiers";
+import {
+  renderWithoutTaxaList,
+  showHideWithoutTaxaHeader,
+} from "../lib/search_without_taxa";
+import {
+  renderWithoutTaxaIdentifiedList,
+  showHideWithoutTaxaIdentifiedHeader,
+} from "../lib/search_without_taxa_identified";
 import { objectFlip } from "../lib/utils";
 import type {
   AppStoreSelectedResourcesKeysType,
@@ -146,6 +164,30 @@ export let renderSelectResourcesLists = [
   renderWithoutTaxaList,
   renderWithoutTaxaIdentifiedList,
 ];
+
+// NOTE: update when adding selectedResource; render headers
+export const event_headerHandlerObservations = {
+  selectedTaxaChange: showHideTaxaHeader,
+  selectedWithoutTaxaChange: showHideWithoutTaxaHeader,
+  // selectedTaxaIdentifiedChange: showHideTaxaIdentifiedHeader,
+  // selectedWithoutTaxaIdentifiedChange: showHideWithoutTaxaIdentifiedHeader,
+  selectedPlacesChange: showHidePlacesHeader,
+  selectedProjectsChange: showHideProjectsHeader,
+  selectedUsersChange: showHideUsersHeader,
+  // selectedWithoutUsersChange: showHideWithoutUsersHeader,
+  selectedUsersIdentifiersChange: showHideUsersIdentifiersHeader,
+  // selectedWithoutUsersIdentifiersChange: showHideWithoutUsersIdentifiersHeader,
+  selectedUsersAnnotatorsChange: showHideUsersAnnotatorsHeader,
+};
+
+export const event_headerHandlerIdentifications = {
+  selectedTaxaChange: showHideTaxaHeader,
+  selectedWithoutTaxaChange: showHideWithoutTaxaHeader,
+  selectedTaxaIdentifiedChange: showHideTaxaIdentifiedHeader,
+  selectedWithoutTaxaIdentifiedChange: showHideWithoutTaxaIdentifiedHeader,
+  selectedPlacesChange: showHidePlacesHeader,
+  selectedUsersIdentifiersChange: showHideUsersIdentifiersHeader,
+};
 
 // NOTE: update when adding selectedResource; filters
 export const observationsApiNonFilterableNames: ObservationsApiParamsKeysType[] =

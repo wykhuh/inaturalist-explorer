@@ -7,7 +7,7 @@ import {
   removeOneWithoutTaxonFromStore,
   resetPageNumber,
 } from "./data_utils.ts";
-import { renderSelectedResources } from "./search_utils.ts";
+import { renderSelectedResources, showHideHeader } from "./search_utils.ts";
 import { setupTaxaSearch } from "./search_taxa.ts";
 import { updateCountForAll } from "./count_utils.ts";
 
@@ -62,6 +62,10 @@ export async function withoutTaxonSelectedHandler(
 
   await updateCountForAll("selectedWithoutTaxa", appStore);
   renderSelectedResources(appStore, true);
+}
+
+export function showHideWithoutTaxaHeader() {
+  showHideHeader("#sidebar-menu .without-taxa-heading", "selectedWithoutTaxa");
 }
 
 export function renderWithoutTaxaList(appStore: AppStoreType) {

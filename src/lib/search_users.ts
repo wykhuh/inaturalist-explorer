@@ -18,6 +18,7 @@ import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
 import {
   updateTilesForSelectedTaxa,
   renderSelectedResources,
+  showHideHeader,
 } from "./search_utils.ts";
 
 export function setupUserSearch(selector: string) {
@@ -119,6 +120,10 @@ export async function userSelectedHandler(
   await updateCountForAll("selectedUsers", appStore);
 
   renderSelectedResources(appStore, true);
+}
+
+export function showHideUsersHeader() {
+  showHideHeader("#sidebar-menu .users-heading", "selectedUsers");
 }
 
 export function renderUsersList(appStore: AppStoreType) {

@@ -10,6 +10,7 @@ import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
 import {
   updateTilesForSelectedTaxa,
   renderSelectedResources,
+  showHideHeader,
 } from "./search_utils.ts";
 import { setupUserSearch } from "./search_users.ts";
 
@@ -58,6 +59,13 @@ export async function userAnnotatorsSelectedHandler(
   await updateCountForAll("selectedUsersAnnotators", appStore);
 
   renderSelectedResources(appStore, true);
+}
+
+export function showHideUsersAnnotatorsHeader() {
+  showHideHeader(
+    "#sidebar-menu .users-annotators-heading",
+    "selectedUsersAnnotators",
+  );
 }
 
 export function renderUsersAnnotatorsList(appStore: AppStoreType) {

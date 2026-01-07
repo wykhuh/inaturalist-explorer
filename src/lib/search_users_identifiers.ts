@@ -9,6 +9,7 @@ import {
 import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
 import {
   renderSelectedResources,
+  showHideHeader,
   updateTilesForSelectedTaxa,
 } from "./search_utils.ts";
 import { setupUserSearch } from "./search_users.ts";
@@ -75,6 +76,13 @@ export async function userIdentifierSelectedHandler(
   await updateCountForAll("selectedUsersIdentifiers", appStore);
 
   renderSelectedResources(appStore, true);
+}
+
+export function showHideUsersIdentifiersHeader() {
+  showHideHeader(
+    "#sidebar-menu .users-identifiers-heading",
+    "selectedUsersIdentifiers",
+  );
 }
 
 export function renderUsersIdentifiersList(appStore: AppStoreType) {

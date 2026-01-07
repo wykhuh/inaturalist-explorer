@@ -6,7 +6,7 @@ import {
   removeOneWithoutTaxonIdentifiedFromStore,
   resetPageNumber,
 } from "./data_utils.ts";
-import { renderSelectedResources } from "./search_utils.ts";
+import { renderSelectedResources, showHideHeader } from "./search_utils.ts";
 import { setupTaxaSearch } from "./search_taxa.ts";
 import { updateCountForAll } from "./count_utils.ts";
 
@@ -54,6 +54,13 @@ export async function withoutTaxonIdentifiedSelectedHandler(
 
   await updateCountForAll("selectedWithoutTaxaIdentified", appStore);
   renderSelectedResources(appStore, true);
+}
+
+export function showHideWithoutTaxaIdentifiedHeader() {
+  showHideHeader(
+    "#sidebar-menu .without-taxa-identified-heading",
+    "selectedWithoutTaxaIdentified",
+  );
 }
 
 export function renderWithoutTaxaIdentifiedList(appStore: AppStoreType) {

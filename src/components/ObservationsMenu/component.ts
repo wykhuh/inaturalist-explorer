@@ -1,14 +1,9 @@
+import { event_headerHandlerObservations } from "../../data/app_data";
 import { setupComponent } from "../../lib/component_utils";
 import { loggerRender } from "../../lib/logger";
 import {
   multisearchSetup,
   renderSelectedResources,
-  showHidePlacesHeader,
-  showHideProjectsHeader,
-  showHideUsersAnnotatorsHeader,
-  showHideUsersHeader,
-  showHideUsersIdentifiersHeader,
-  showHideWithoutTaxaHeader,
 } from "../../lib/search_utils";
 import type { AppStoreType } from "../../types/app";
 import { template } from "./template";
@@ -25,55 +20,29 @@ class ObservationsMenu extends HTMLElement {
 
     this.render(window.app.store);
 
-    // NOTE: update when adding selectedResource; showHide header
-    window.addEventListener("selectedPlacesChange", showHidePlacesHeader);
-    window.addEventListener("selectedProjectsChange", showHideProjectsHeader);
-    window.addEventListener("selectedUsersChange", showHideUsersHeader);
-    window.addEventListener(
-      "selectedUsersIdentifiersChange",
-      showHideUsersIdentifiersHeader,
-    );
-    window.addEventListener(
-      "selectedUsersAnnotatorsChange",
-      showHideUsersAnnotatorsHeader,
-    );
-    window.addEventListener(
-      "selectedWithoutTaxaChange",
-      showHideWithoutTaxaHeader,
-    );
+    for (let [event, handler] of Object.entries(
+      event_headerHandlerObservations,
+    )) {
+      window.addEventListener(event, handler);
+    }
   }
 
   disconnectedCallback() {
-    // NOTE: update when adding selectedResource; showHide header
-    window.removeEventListener("selectedPlacesChange", showHidePlacesHeader);
-    window.removeEventListener(
-      "selectedProjectsChange",
-      showHideProjectsHeader,
-    );
-    window.removeEventListener("selectedUsersChange", showHideUsersHeader);
-    window.removeEventListener(
-      "selectedUsersIdentifiersChange",
-      showHideUsersIdentifiersHeader,
-    );
-    window.removeEventListener(
-      "selectedUsersAnnotatorsChange",
-      showHideUsersAnnotatorsHeader,
-    );
-    window.addEventListener(
-      "selectedWithoutTaxaChange",
-      showHideWithoutTaxaHeader,
-    );
+    loggerRender("++ ObservationsMenu disconnectedCallback");
+
+    for (let [event, handler] of Object.entries(
+      event_headerHandlerObservations,
+    )) {
+      window.removeEventListener(event, handler);
+    }
   }
 
   render(appStore: AppStoreType) {
-    // NOTE: update when adding selectedResource; showHide header
     multisearchSetup(appStore);
-    showHidePlacesHeader();
-    showHideProjectsHeader();
-    showHideUsersHeader();
-    showHideUsersIdentifiersHeader();
-    showHideUsersAnnotatorsHeader();
-    showHideWithoutTaxaHeader();
+
+    Object.values(event_headerHandlerObservations).forEach((handler) =>
+      handler(),
+    );
 
     renderSelectedResources(appStore, false);
   }

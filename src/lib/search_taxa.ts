@@ -24,7 +24,7 @@ import {
 import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
 import { renderTaxonNames } from "./render_utils";
 import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
-import { renderSelectedResources } from "./search_utils.ts";
+import { renderSelectedResources, showHideHeader } from "./search_utils.ts";
 
 export function setupTaxaSearch(selector: string, appStore: AppStoreType) {
   const autoCompleteTaxaJS = new autoComplete({
@@ -196,6 +196,10 @@ export async function taxonSelectedHandler(
   await updateCountForOne(taxon, "selectedTaxa", appStore, recordParams);
   await updateCountForAll("selectedTaxa", appStore);
   renderSelectedResources(appStore, true);
+}
+
+export function showHideTaxaHeader() {
+  showHideHeader("#sidebar-menu .taxa-heading", "selectedTaxa");
 }
 
 export function renderTaxaList(appStore: AppStoreType) {

@@ -26,6 +26,7 @@ import { placeTypes } from "../data/inat_data.ts";
 import {
   updateTilesForSelectedTaxa,
   renderSelectedResources,
+  showHideHeader,
 } from "./search_utils.ts";
 
 export function setupPlacesSearch(selector: string) {
@@ -182,6 +183,10 @@ export async function placeSelectedHandler(
     fitBoundsPlaces(appStore);
   }
   renderSelectedResources(appStore, true);
+}
+
+export function showHidePlacesHeader() {
+  showHideHeader("#sidebar-menu .places-heading", "selectedPlaces");
 }
 
 export function renderPlacesList(appStore: AppStoreType) {
