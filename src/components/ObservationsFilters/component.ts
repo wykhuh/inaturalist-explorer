@@ -16,8 +16,6 @@ import {
   reviewerSelectedHandler,
   setupReviewerSearch,
 } from "../../lib/search_reviewer";
-import { setupProjectSearch } from "../../lib/search_projects";
-import { notInProjectSelectedHandler } from "../../lib/search_not_in_project";
 
 class ObservationFilters extends HTMLElement {
   constructor() {
@@ -133,11 +131,7 @@ class ObservationFilters extends HTMLElement {
 
     if (event.type === "input") {
       // use formChangeHandler to clear input; use autocomplete to select record
-      let searches = [
-        "unobserved-by-user-search",
-        "reviewer-search",
-        "not-in-project-search",
-      ];
+      let searches = ["unobserved-by-user-search", "reviewer-search"];
       if (searches.includes(target.id)) {
         if (target.value === "") {
           this.formChangeHandler(event, this.formEl);
@@ -163,9 +157,6 @@ class ObservationFilters extends HTMLElement {
 
     setupReviewerSearch("#reviewer-search");
     searchSetup("#reviewer-search", reviewerSelectedHandler);
-
-    setupProjectSearch("#not-in-project-search", window.app.store);
-    searchSetup("#not-in-project-search", notInProjectSelectedHandler);
 
     // use store to set values the form on page load
     initFilters(window.app.store);

@@ -74,30 +74,12 @@ export function initFilters(appStore: AppStoreType) {
     }
   }
 
-  if (observationsApiParams.ident_user_id !== undefined) {
-    let inputEl = document.querySelector(
-      "#identifier-search",
-    ) as HTMLInputElement;
-    if (inputEl) {
-      inputEl.value = appStore.selectedUsersIdentifiers[0].login;
-    }
-  }
-
   if (observationsApiParams.viewer_id !== undefined) {
     let inputEl = document.querySelector(
       "#reviewer-search",
     ) as HTMLInputElement;
     if (inputEl) {
       inputEl.value = appStore.selectedReviewer.login;
-    }
-  }
-
-  if (observationsApiParams.not_in_project !== undefined) {
-    let inputEl = document.querySelector(
-      "#not-in-project-search",
-    ) as HTMLInputElement;
-    if (inputEl) {
-      inputEl.value = appStore.selectedNotInProject.name;
     }
   }
 }
