@@ -158,10 +158,10 @@ class ObservationFilters extends HTMLElement {
 
     this.renderModal();
 
-    setupUnobservedByUserSearch("#unobserved-by-user-search", window.app.store);
+    setupUnobservedByUserSearch("#unobserved-by-user-search");
     searchSetup("#unobserved-by-user-search", unobservedByUserSelectedHandler);
 
-    setupReviewerSearch("#reviewer-search", window.app.store);
+    setupReviewerSearch("#reviewer-search");
     searchSetup("#reviewer-search", reviewerSelectedHandler);
 
     setupProjectSearch("#not-in-project-search", window.app.store);

@@ -12,11 +12,8 @@ import { setupProjectSearch } from "./search_projects.ts";
 import { processFiltersForm } from "../components/ObservationsFilters/utils.ts";
 import { renderSelectedFiltersList } from "../components/ObservationsFilters/shared_utils.ts";
 
-export function setupNotInProjectSearch(
-  selector: string,
-  appStore: AppStoreType,
-) {
-  const autoCompleteProjectJS = setupProjectSearch(selector, appStore);
+export function setupNotInProjectSearch(selector: string) {
+  const autoCompleteProjectJS = setupProjectSearch(selector);
 
   return autoCompleteProjectJS;
 }

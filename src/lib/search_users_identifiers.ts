@@ -13,11 +13,8 @@ import {
 } from "./search_utils.ts";
 import { setupUserSearch } from "./search_users.ts";
 
-export function setupUserIdentifierSearch(
-  selector: string,
-  appStore: AppStoreType,
-) {
-  const autoCompleteUsersJS = setupUserSearch(selector, appStore);
+export function setupUserIdentifierSearch(selector: string) {
+  const autoCompleteUsersJS = setupUserSearch(selector);
 
   return autoCompleteUsersJS;
 }

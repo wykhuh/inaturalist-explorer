@@ -9,8 +9,8 @@ import { updateCountForAll } from "./count_utils.ts";
 import { renderSelectedFiltersList } from "../components/ObservationsFilters/shared_utils.ts";
 import { processFiltersForm } from "../components/ObservationsFilters/utils.ts";
 
-export function setupReviewerSearch(selector: string, appStore: AppStoreType) {
-  const autoCompleteUsersJS = setupUserSearch(selector, appStore);
+export function setupReviewerSearch(selector: string) {
+  const autoCompleteUsersJS = setupUserSearch(selector);
 
   return autoCompleteUsersJS;
 }

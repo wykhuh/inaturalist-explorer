@@ -20,7 +20,7 @@ import {
   renderSelectedResources,
 } from "./search_utils.ts";
 
-export function setupUserSearch(selector: string, appStore: AppStoreType) {
+export function setupUserSearch(selector: string) {
   const autoCompleteUsersJS = new autoComplete({
     autocomplete: "off",
     selector: selector,
@@ -33,12 +33,6 @@ export function setupUserSearch(selector: string, appStore: AppStoreType) {
       src: async (query: string) => {
         try {
           let url = `${autocomplete_users_api}&per_page=25&q=${query}`;
-          let projectId = appStore.observationsApiParams.project_id;
-          if (projectId) {
-            // NOTE: iNaturlist API only allows one id for project_id
-            let firstProjectId = projectId.split(",")[0];
-            url += `&project_id=${firstProjectId}`;
-          }
           loggerUrl(url);
           let res = await fetch(url);
           let data = (await res.json()) as iNatUsersAPI;
