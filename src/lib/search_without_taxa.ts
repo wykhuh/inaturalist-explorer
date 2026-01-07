@@ -4,7 +4,7 @@ import {
   formatTaxonName,
   isIdentificationsCheck,
   isObservationsCheck,
-  removeOneWithoutTaxonFromStore,
+  removeIdfromInatApiParams,
   resetPageNumber,
 } from "./data_utils.ts";
 import { renderSelectedResources, showHideHeader } from "./search_utils.ts";
@@ -90,4 +90,15 @@ export async function removeWithoutTaxon(
 
   await updateCountForAll("all", appStore);
   renderSelectedResources(appStore, true);
+}
+
+export function removeOneWithoutTaxonFromStore(
+  appStore: AppStoreType,
+  taxonId: number,
+) {
+  appStore.selectedWithoutTaxa = appStore.selectedWithoutTaxa.filter(
+    (taxon) => taxon.id !== taxonId,
+  );
+  resetPageNumber(appStore);
+  removeIdfromInatApiParams(appStore, "selectedWithoutTaxa", taxonId);
 }

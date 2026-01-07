@@ -5,12 +5,11 @@ import {
   addValueToCommaSeparatedString,
   formatTaxonName,
   isObservationsCheck,
-  removeOneTaxonIdentifiedFromStore,
-  removeTaxaFromStoreAndMap,
+  removeIdfromInatApiParams,
   resetPageNumber,
 } from "./data_utils.ts";
 import { renderSelectedResources, showHideHeader } from "./search_utils.ts";
-import { setupTaxaSearch } from "./search_taxa.ts";
+import { removeTaxaFromStoreAndMap, setupTaxaSearch } from "./search_taxa.ts";
 import { updateCountForAll, updateCountForOne } from "./count_utils.ts";
 
 export function setupTaxaIdentifiedSearch(
@@ -105,4 +104,15 @@ export async function removeTaxonIdentified(
 
   await updateCountForAll("all", appStore);
   renderSelectedResources(appStore, true);
+}
+
+export function removeOneTaxonIdentifiedFromStore(
+  appStore: AppStoreType,
+  taxonId: number,
+) {
+  appStore.selectedTaxaIdentified = appStore.selectedTaxaIdentified.filter(
+    (taxon) => taxon.id !== taxonId,
+  );
+  resetPageNumber(appStore);
+  removeIdfromInatApiParams(appStore, "selectedTaxaIdentified", taxonId);
 }

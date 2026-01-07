@@ -3,7 +3,7 @@ import type { AppStoreType } from "../types/app";
 import {
   addValueToCommaSeparatedString,
   isObservationsCheck,
-  removeOneUserAnnotatorFromStore,
+  removeIdfromInatApiParams,
   resetPageNumber,
 } from "./data_utils.ts";
 import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
@@ -95,4 +95,15 @@ export async function removeUserAnnotator(
   await updateCountForAll("selectedUsersAnnotators", appStore);
 
   renderSelectedResources(appStore, true);
+}
+
+export function removeOneUserAnnotatorFromStore(
+  appStore: AppStoreType,
+  userId: number,
+) {
+  appStore.selectedUsersAnnotators = appStore.selectedUsersAnnotators.filter(
+    (item) => item.id !== userId,
+  );
+  resetPageNumber(appStore);
+  removeIdfromInatApiParams(appStore, "selectedUsersAnnotators", userId);
 }

@@ -3,7 +3,7 @@ import {
   addValueToCommaSeparatedString,
   formatTaxonName,
   isIdentificationsCheck,
-  removeOneWithoutTaxonIdentifiedFromStore,
+  removeIdfromInatApiParams,
   resetPageNumber,
 } from "./data_utils.ts";
 import { renderSelectedResources, showHideHeader } from "./search_utils.ts";
@@ -85,4 +85,16 @@ export async function removeWithoutTaxonIdentified(
 
   await updateCountForAll("all", appStore);
   renderSelectedResources(appStore, true);
+}
+
+export function removeOneWithoutTaxonIdentifiedFromStore(
+  appStore: AppStoreType,
+  taxonId: number,
+) {
+  appStore.selectedWithoutTaxaIdentified =
+    appStore.selectedWithoutTaxaIdentified.filter(
+      (taxon) => taxon.id !== taxonId,
+    );
+  resetPageNumber(appStore);
+  removeIdfromInatApiParams(appStore, "selectedWithoutTaxaIdentified", taxonId);
 }

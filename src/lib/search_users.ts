@@ -11,7 +11,7 @@ import type { AppStoreType } from "../types/app";
 import {
   addValueToCommaSeparatedString,
   isObservationsCheck,
-  removeOneUserFromStore,
+  removeIdfromInatApiParams,
   resetPageNumber,
 } from "./data_utils.ts";
 import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
@@ -150,4 +150,12 @@ export async function removeUser(userId: number, appStore: AppStoreType) {
   await updateCountForAll("selectedUsers", appStore);
 
   renderSelectedResources(appStore, true);
+}
+
+export function removeOneUserFromStore(appStore: AppStoreType, userId: number) {
+  appStore.selectedUsers = appStore.selectedUsers.filter(
+    (item) => item.id !== userId,
+  );
+  resetPageNumber(appStore);
+  removeIdfromInatApiParams(appStore, "selectedUsers", userId);
 }

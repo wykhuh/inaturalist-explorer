@@ -12,7 +12,7 @@ import { loggerUrl } from "../lib/logger.ts";
 import {
   addValueToCommaSeparatedString,
   isObservationsCheck,
-  removeOneProjectFromStoreAndMap,
+  removeIdfromInatApiParams,
   renderResourceGeometryLayer,
   resetPageNumber,
 } from "./data_utils.ts";
@@ -192,4 +192,27 @@ export async function removeProject(projectId: number, appStore: AppStoreType) {
   }
 
   renderSelectedResources(appStore, true);
+}
+
+export function removeOneProjectFromStoreAndMap(
+  appStore: AppStoreType,
+  projectId: number,
+) {
+  if (appStore.projectsMapLayers) {
+    let mapLayers = appStore.projectsMapLayers[projectId];
+
+    if (mapLayers) {
+      mapLayers.forEach((layer) => {
+        layer.remove();
+      });
+    }
+
+    delete appStore.projectsMapLayers[projectId];
+  }
+
+  appStore.selectedProjects = appStore.selectedProjects.filter(
+    (item) => item.id !== projectId,
+  );
+  resetPageNumber(appStore);
+  removeIdfromInatApiParams(appStore, "selectedProjects", projectId);
 }

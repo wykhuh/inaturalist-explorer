@@ -16,7 +16,7 @@ import {
   getResourceApiParams,
   isIdentificationsCheck,
   isObservationsCheck,
-  removeOnePlaceFromStoreAndMap,
+  removeIdfromInatApiParams,
   renderResourceGeometryLayer,
   resetPageNumber,
 } from "./data_utils.ts";
@@ -217,11 +217,46 @@ export async function removePlace(placeId: number, appStore: AppStoreType) {
   if (!appStore.selectedPlaces) return;
 
   // remove place
-  await removeOnePlaceFromStoreAndMap(appStore, placeId);
+  removeOnePlaceFromMap(appStore, placeId);
+  await removeOnePlaceFromStore(appStore, placeId);
 
   // remove existing taxa tiles, and refetch taxa tiles
   await updateTilesForSelectedTaxa(appStore);
   await updateCountForAll("selectedPlaces", appStore);
 
   renderSelectedResources(appStore, true);
+}
+
+export async function removeOnePlaceFromStore(
+  appStore: AppStoreType,
+  placeId: number,
+) {
+  appStore.selectedPlaces = appStore.selectedPlaces.filter(
+    (place) => place.id !== placeId,
+  );
+  resetPageNumber(appStore);
+
+  // update observationsApiParams for bounding box
+  if (placeId === 0) {
+    delete appStore.observationsApiParams.nelat;
+    delete appStore.observationsApiParams.nelng;
+    delete appStore.observationsApiParams.swlat;
+    delete appStore.observationsApiParams.swlng;
+    // update observationsApiParams for places
+  } else {
+    removeIdfromInatApiParams(appStore, "selectedPlaces", placeId);
+  }
+}
+
+export function removeOnePlaceFromMap(appStore: AppStoreType, placeId: number) {
+  if (!appStore.placesMapLayers) return;
+
+  let mapLayers = appStore.placesMapLayers[placeId];
+  if (!mapLayers) return;
+
+  mapLayers.forEach((layer) => {
+    layer.remove();
+  });
+
+  delete appStore.placesMapLayers[placeId];
 }

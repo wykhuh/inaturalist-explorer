@@ -17,8 +17,7 @@ import {
   getResourceApiParams,
   isIdentificationsCheck,
   isObservationsCheck,
-  removeOneTaxonFromStoreAndMap,
-  removeTaxaFromStoreAndMap,
+  removeIdfromInatApiParams,
   resetPageNumber,
 } from "./data_utils.ts";
 import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
@@ -216,7 +215,8 @@ export function renderTaxaList(appStore: AppStoreType) {
 
 // called when user deletes a taxon
 export async function removeTaxon(taxonId: number, appStore: AppStoreType) {
-  removeOneTaxonFromStoreAndMap(appStore, taxonId);
+  removeOneTaxonFromMap(appStore, taxonId);
+  removeOneTaxonFromStore(appStore, taxonId);
 
   // if no selected taxa, load allTaxaRecord
   if (isObservationsCheck(appStore)) {
@@ -236,4 +236,63 @@ export async function removeTaxon(taxonId: number, appStore: AppStoreType) {
 
   await updateCountForAll("all", appStore);
   renderSelectedResources(appStore, true);
+}
+
+export function removeOneTaxonFromStore(
+  appStore: AppStoreType,
+  taxonId: number,
+) {
+  appStore.selectedTaxa = appStore.selectedTaxa.filter(
+    (taxon) => taxon.id !== taxonId,
+  );
+  resetPageNumber(appStore);
+  removeIdfromInatApiParams(appStore, "selectedTaxa", taxonId);
+}
+
+export function removeOneTaxonFromMap(appStore: AppStoreType, taxonId: number) {
+  if (!appStore.taxaMapLayers) return;
+  let mapLayers = appStore.taxaMapLayers[taxonId];
+  let layerControl = appStore.map.layerControl;
+  if (!layerControl) return;
+  if (!mapLayers) return;
+
+  mapLayers.forEach((layer) => {
+    // remove layer from layer control
+    layerControl.removeLayer(layer);
+    // remove layer from map
+    layer.remove();
+  });
+
+  delete appStore.taxaMapLayers[taxonId];
+  // HACK: trigger change in proxy store
+  appStore.taxaMapLayers = appStore.taxaMapLayers;
+}
+
+export function removeTaxaFromStoreAndMap(appStore: AppStoreType) {
+  let layerControl = appStore.map.layerControl;
+  let isObservations = isObservationsCheck(appStore);
+
+  if (layerControl) {
+    // remove from map
+    Object.values(appStore.taxaMapLayers).forEach((layers) => {
+      layers.forEach((layer) => {
+        // remove layer from layer control
+        layerControl.removeLayer(layer);
+        // remove layer from map
+        layer.remove();
+      });
+    });
+  }
+
+  // remove from store
+
+  if (isObservations) {
+    delete appStore.observationsApiParams.taxon_id;
+    delete appStore.observationsApiParams.colors;
+  } else {
+    delete appStore.identificationsApiParams.observation_taxon_id;
+  }
+  appStore.selectedTaxa = [];
+  appStore.taxaMapLayers = {};
+  appStore.color = "";
 }

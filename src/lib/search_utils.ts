@@ -8,11 +8,8 @@ import {
   fetchiNatMapDataForTaxon,
   isIdentificationsCheck,
   isObservationsCheck,
-  removeOneTaxonFromMap,
 } from "./data_utils";
-
 import { updateAppUrl } from "./utils";
-
 import {
   placeSelectedHandler,
   setupPlacesSearch,
@@ -22,7 +19,11 @@ import {
   setupProjectSearch,
 } from "../lib/search_projects.ts";
 import { setupUserSearch, userSelectedHandler } from "../lib/search_users.ts";
-import { setupTaxaSearch, taxonSelectedHandler } from "../lib/search_taxa.ts";
+import {
+  removeOneTaxonFromMap,
+  setupTaxaSearch,
+  taxonSelectedHandler,
+} from "../lib/search_taxa.ts";
 import { isResourceObject } from "../types/utils.ts";
 import {
   setupUserIdentifierSearch,

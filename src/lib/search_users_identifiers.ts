@@ -3,7 +3,7 @@ import {
   addValueToCommaSeparatedString,
   isIdentificationsCheck,
   isObservationsCheck,
-  removeOneUserIdentifierFromStore,
+  removeIdfromInatApiParams,
   resetPageNumber,
 } from "./data_utils.ts";
 import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
@@ -129,4 +129,15 @@ export async function removeUserIdentifier(
   await updateCountForAll("selectedUsersIdentifiers", appStore);
 
   renderSelectedResources(appStore, true);
+}
+
+export function removeOneUserIdentifierFromStore(
+  appStore: AppStoreType,
+  userId: number,
+) {
+  appStore.selectedUsersIdentifiers = appStore.selectedUsersIdentifiers.filter(
+    (item) => item.id !== userId,
+  );
+  resetPageNumber(appStore);
+  removeIdfromInatApiParams(appStore, "selectedUsersIdentifiers", userId);
 }

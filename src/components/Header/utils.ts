@@ -16,8 +16,8 @@ import {
   addDefaultTaxaRecordToStore,
   isIdentificationsCheck,
   isObservationsCheck,
-  removeOneTaxonFromMap,
 } from "../../lib/data_utils";
+import { removeOneTaxonFromMap } from "../../lib/search_taxa";
 
 export async function resetDefaultTaxa(appStore: AppStoreType) {
   if (isObservationsCheck(appStore)) {
