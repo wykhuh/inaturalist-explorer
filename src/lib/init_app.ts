@@ -23,8 +23,9 @@ import {
   getTaxonById,
   getUserById,
 } from "./inat_api.ts";
-import { bboxPlaceRecord, fieldsWithAny } from "../data/inat_data.ts";
+import { bboxPlaceRecord } from "../data/inat_data.ts";
 import {
+  fieldsWithAny,
   identificationsApiNames,
   observationsApiNames,
 } from "../data/app_data.ts";
@@ -76,7 +77,6 @@ export async function initPopulateStore(
   }
   // HACK: trigger store proxy
   appStore.observationsApiParams = appStore.observationsApiParams;
-
   appStore.currentView = urlStore.currentView;
 
   // populate viewMetadata
@@ -267,6 +267,10 @@ export async function initPopulateStore(
       await addDefaultTaxaRecordToStore(appStore);
     }
   }
+  loggerStore(
+    "++ initPopulateStore selectedTaxa",
+    appStore.selectedWithoutTaxa,
+  );
 
   //  not in project data
   if (urlStore.selectedNotInProject?.id) {
@@ -297,12 +301,17 @@ function populateObservationsApiParams(
   // use url store to populate appStore.observationsApiParams
   for (const [k, value] of Object.entries(urlStore.observationsApiParams)) {
     let key = k as ObservationsApiParamsKeysType;
-    // ignore params whose value is any
-    if (fieldsWithAny.includes(key) && value === "any") {
-      delete appStore.observationsApiParams[key];
-      // add valid params to observationsApiParams
-    } else if (observationsApiNames.includes(key)) {
-      delete appStore.observationsApiParams[key];
+    if (!observationsApiNames.includes(key)) continue;
+
+    // delete default values
+    delete appStore.observationsApiParams[key];
+
+    // only allow any for certain fields
+    if (value === "any") {
+      if (fieldsWithAny.includes(key)) {
+        appStore.observationsApiParams[key] = value;
+      }
+    } else {
       appStore.observationsApiParams[key] = value;
     }
   }

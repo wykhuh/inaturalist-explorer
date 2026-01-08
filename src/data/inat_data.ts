@@ -149,14 +149,6 @@ export function bboxPlaceRecord(bbox: LngLatType[]): NormalizediNatPlaceType {
   };
 }
 
-export const fieldsWithAny = [
-  "quality_grade",
-  "reviewed",
-  "verifiable",
-  "place_id",
-  "captive",
-];
-
 export const iNatObservationUrl = "https://www.inaturalist.org/observations";
 export const iNatUserUrl = "https://www.inaturalist.org/people";
 export const iNatTaxaUrl = "https://www.inaturalist.org/taxa";

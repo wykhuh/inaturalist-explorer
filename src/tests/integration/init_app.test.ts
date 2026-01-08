@@ -72,14 +72,14 @@ import {
   expectEmptyResources,
   expectLifeTaxaIdentification,
   gridLabel_allTaxaRecord_project1NotInProject,
-  gridLabel_life_places_usersIdentifiers,
   gridLabel_withoutLife,
+  gridLabel_life_places_user2Identifiers,
 } from "../test_helpers.ts";
 import type {
   IdentificationsApiParamsType,
   ObservationsApiParamsType,
 } from "../../types/app";
-import { allTaxaRecord, fieldsWithAny } from "../../data/inat_data.ts";
+import { allTaxaRecord } from "../../data/inat_data.ts";
 import {
   identificationsApiFilterableNames,
   observationsApiFilterableNames,
@@ -91,6 +91,7 @@ import {
   validIdentificationsViews,
   validObservationsSubviews,
   validObservationsViews,
+  fieldsWithAny,
 } from "../../data/app_data.ts";
 
 beforeEach(() => {
@@ -292,13 +293,13 @@ describe("initPopulateStore and initRenderMap options", () => {
   });
 
   test.each(fieldsWithAny)(
-    "loads and renders taxa data, ignore field set to any",
+    " allow fieldsWithAny to have any value",
     async (field) => {
       let store = structuredClone(mapStore);
 
       expectEmpytMap(store);
 
-      let searchparams = `?locale=en&taxon_id=${life().id}&${field}=any`;
+      let searchparams = `?locale=en&${field}=any`;
       let urlData = decodeAppUrl(searchparams, "/");
 
       await initPopulateStore(store, urlData);
@@ -306,25 +307,53 @@ describe("initPopulateStore and initRenderMap options", () => {
 
       expect(leafletVisibleLayers(store)).toStrictEqual([
         basemapLabel_osm,
-        gridLabel_life,
+        gridLabel_allTaxaRecord,
       ]);
       expectEmptyResources(store, ["selectedTaxa"]);
-      expectLifeTaxa(store);
+      expectDefaultTaxaRecord(store);
 
       let expectedParams: ObservationsApiParamsType = {
-        colors: colors[0],
-        taxon_id: life().id.toString(),
+        colors: iNatOrange,
+        taxon_id: allTaxa.id.toString(),
         spam: false,
         locale: "en",
+        [field]: "any",
       };
-      if (field != "verifiable") {
-        expectedParams.verifiable = true;
-      }
 
       expect(store.observationsApiParams).toStrictEqual(expectedParams);
-      expect(store.color).toBe(colors[0]);
+      expect(store.color).toBe(iNatOrange);
     },
   );
+
+  test("ignore param if it has any value", async () => {
+    let store = structuredClone(mapStore);
+
+    expectEmpytMap(store);
+
+    let searchparams = `?locale=any&place_id=any&captive=any&foo=any`;
+    let urlData = decodeAppUrl(searchparams, "/");
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord,
+    ]);
+    expectEmptyResources(store, ["selectedTaxa"]);
+    expectDefaultTaxaRecord(store);
+
+    let expectedParams: ObservationsApiParamsType = {
+      colors: iNatOrange,
+      taxon_id: allTaxa.id.toString(),
+      spam: false,
+      verifiable: true,
+      locale: "en",
+    };
+
+    expect(store.observationsApiParams).toStrictEqual(expectedParams);
+    expect(store.color).toBe(iNatOrange);
+  });
 
   test("loads and renders taxa data if colors not in url", async () => {
     let store = structuredClone(mapStore);

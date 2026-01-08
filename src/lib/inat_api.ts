@@ -20,7 +20,6 @@ import type {
   IdentificationsSpeciesCountAPI,
   UserResult,
 } from "../types/inat_api.d.ts";
-import { normalizeAppParams } from "./data_utils.ts";
 import { loggerUrl } from "./logger.ts";
 
 export const api_base = "https://api.inaturalist.org/v1/";
@@ -250,9 +249,8 @@ export async function getObservations(appParams: string, perPage: number) {
     "taxon:(iconic_taxon_id:!t,name:!t,preferred_common_name:!t,preferred_common_names:(name:!t),rank:!t,rank_level:!t)," +
     "user:(icon_url:!t,icon:!t,id:!t,login:!t,name:!t))";
 
-  let searchParams = normalizeAppParams(appParams);
   let url =
-    `${observations_api}?${searchParams}&ttl=180` +
+    `${observations_api}?${appParams}&ttl=180` +
     `&per_page=${perPage}` +
     `&fields=${fields}`;
 
@@ -270,7 +268,6 @@ export async function getObservationsSpecies(
   appParams: string,
   perPage: number,
 ) {
-  let searchParams = normalizeAppParams(appParams);
   let fields =
     "(taxon:" +
     "(" +
@@ -287,7 +284,7 @@ export async function getObservationsSpecies(
     "preferred_common_names:(name:!t)," +
     "rank:!t))";
   let url =
-    `${observations_api}/species_counts?${searchParams}&ttl=3600` +
+    `${observations_api}/species_counts?${appParams}&ttl=3600` +
     `&per_page=${perPage}` +
     `&fields=${fields}`;
 
@@ -307,9 +304,8 @@ export async function getObservationsObservers(
   appParams: string,
   perPage: number,
 ) {
-  let searchParams = normalizeAppParams(appParams);
   let url =
-    `${observations_api}/observers?${searchParams}&ttl=3600` +
+    `${observations_api}/observers?${appParams}&ttl=3600` +
     `&per_page=${perPage}` +
     `&fields=(user:(icon_url:!t,id:!t,login:!t,name:!t))`;
   try {
@@ -326,9 +322,8 @@ export async function getObservationsIdentifiers(
   appParams: string,
   perPage: number,
 ) {
-  let searchParams = normalizeAppParams(appParams);
   let url =
-    `${observations_api}/identifiers?${searchParams}&ttl=3600` +
+    `${observations_api}/identifiers?${appParams}&ttl=3600` +
     `&per_page=${perPage}` +
     `&fields=(user:(icon_url:!t,id:!t,login:!t,name:!t))`;
   try {
@@ -342,9 +337,8 @@ export async function getObservationsIdentifiers(
 }
 
 export async function getIdentifications(appParams: string, perPage: number) {
-  let searchParams = normalizeAppParams(appParams);
   let url =
-    `${identifications_api}/?${searchParams}&ttl=3600` + `&per_page=${perPage}`;
+    `${identifications_api}/?${appParams}&ttl=3600` + `&per_page=${perPage}`;
   try {
     let resp = await fetch(url);
     let data = (await resp.json()) as IdentificationsAPI;
@@ -359,9 +353,8 @@ export async function getIdentificationsSpecies(
   appParams: string,
   perPage: number,
 ) {
-  let searchParams = normalizeAppParams(appParams);
   let url =
-    `${identifications_api}/species_counts?${searchParams}&ttl=3600` +
+    `${identifications_api}/species_counts?${appParams}&ttl=3600` +
     `&per_page=${perPage}`;
   try {
     let resp = await fetch(url);
@@ -377,9 +370,8 @@ export async function getIdentificationsObservers(
   appParams: string,
   perPage: number,
 ) {
-  let searchParams = normalizeAppParams(appParams);
   let url =
-    `${identifications_api}/observers?${searchParams}&ttl=3600` +
+    `${identifications_api}/observers?${appParams}&ttl=3600` +
     `&per_page=${perPage}`;
   try {
     let resp = await fetch(url);
@@ -395,9 +387,8 @@ export async function getIdentificationsIdentifiers(
   appParams: string,
   perPage: number,
 ) {
-  let searchParams = normalizeAppParams(appParams);
   let url =
-    `${identifications_api}/identifiers?${searchParams}&ttl=3600` +
+    `${identifications_api}/identifiers?${appParams}&ttl=3600` +
     `&per_page=${perPage}`;
   try {
     let resp = await fetch(url);

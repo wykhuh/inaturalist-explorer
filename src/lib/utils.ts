@@ -208,7 +208,6 @@ export function formatAppUrl(
   if (appStore.viewMetadata.name_order) {
     params.name_order = appStore.viewMetadata.name_order;
   }
-
   let searchParams = new URLSearchParams(params as any)
     .toString()
     .replaceAll("%2C", ",");
@@ -324,7 +323,10 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   // NOTE: update when adding selectedResource; decodeAppUrl
 
   // convert observation_taxon_id into selectedTaxa
-  if ("observation_taxon_id" in urlParams) {
+  if (
+    "observation_taxon_id" in urlParams &&
+    urlParams.observation_taxon_id !== "any"
+  ) {
     if (!isObservations) {
       let taxa: NormalizediNatTaxonType[] = [];
       let ids = urlParams.observation_taxon_id.split(",");
@@ -344,7 +346,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   }
 
   // convert taxon_id into basic selectedTaxa or selectedTaxaIdentified id
-  if ("taxon_id" in urlParams) {
+  if ("taxon_id" in urlParams && urlParams.taxon_id !== "any") {
     let taxa: NormalizediNatTaxonType[] = [];
     let ids = urlParams.taxon_id.split(",");
 
@@ -391,7 +393,12 @@ export function decodeAppUrl(searchParams: string, path = "/") {
       store.selectedPlaces = places as any;
     }
   }
-  if (isObservations && "nelat" in urlParams) {
+  if (
+    "nelat" in urlParams &&
+    "nelng" in urlParams &&
+    "swlat" in urlParams &&
+    "swlng" in urlParams
+  ) {
     let coords = {
       nelat: Number(urlParams.nelat),
       nelng: Number(urlParams.nelng),
@@ -434,7 +441,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   }
 
   // convert ident_user_id into basic selectedUserIdentifier with id
-  if ("ident_user_id" in urlParams) {
+  if ("ident_user_id" in urlParams && urlParams.ident_user_id !== "any") {
     if (isObservations) {
       let ids = urlParams.ident_user_id.split(",");
 
@@ -448,7 +455,10 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     }
   }
 
-  if ("unobserved_by_user_id" in urlParams) {
+  if (
+    "unobserved_by_user_id" in urlParams &&
+    urlParams.unobserved_by_user_id !== "any"
+  ) {
     if (isObservations) {
       store.selectedUnobservedByUser = {
         id: Number(urlParams.unobserved_by_user_id),
@@ -456,7 +466,10 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     }
   }
 
-  if ("annotation_user_id" in urlParams) {
+  if (
+    "annotation_user_id" in urlParams &&
+    urlParams.annotation_user_id !== "any"
+  ) {
     if (isObservations) {
       let ids = urlParams.annotation_user_id.split(",");
       let users = ids
@@ -468,7 +481,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     }
   }
 
-  if ("viewer_id" in urlParams) {
+  if ("viewer_id" in urlParams && urlParams.viewer_id !== "any") {
     if (isObservations) {
       store.selectedReviewer = {
         id: Number(urlParams.viewer_id),
@@ -476,7 +489,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     }
   }
 
-  if ("not_in_project" in urlParams) {
+  if ("not_in_project" in urlParams && urlParams.not_in_project !== "any") {
     if (isObservations) {
       store.selectedNotInProject = {
         id: Number(urlParams.not_in_project),
@@ -484,7 +497,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     }
   }
 
-  if ("without_taxon_id" in urlParams) {
+  if ("without_taxon_id" in urlParams && urlParams.without_taxon_id !== "any") {
     let ids = urlParams.without_taxon_id.toString().split(",");
     let taxa = ids
       .map((id) => {
@@ -498,7 +511,10 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     }
   }
 
-  if ("without_observation_taxon_id" in urlParams) {
+  if (
+    "without_observation_taxon_id" in urlParams &&
+    urlParams.without_observation_taxon_id !== "any"
+  ) {
     if (isIdentifications) {
       let ids = urlParams.without_observation_taxon_id.toString().split(",");
       let taxa = ids
@@ -532,7 +548,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     store.viewMetadata.identifications_identifications = {};
   }
 
-  if (urlParams.order) {
+  if (urlParams.order && urlParams.order !== "any") {
     if (orderValues.includes(urlParams.order)) {
       store[resourceApiParams].order = urlParams.order;
     }
@@ -548,7 +564,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     }
   }
 
-  if (urlParams.order_by) {
+  if (urlParams.order_by && urlParams.order_by !== "any") {
     if (observationsOrderByValuesAll.includes(urlParams.order_by)) {
       store[resourceApiParams].order_by = urlParams.order_by;
     }
@@ -565,7 +581,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     }
   }
 
-  if (urlParams.page) {
+  if (urlParams.page && urlParams.page !== "any") {
     store[resourceApiParams].page = Number(urlParams.page);
 
     if (urlView && validViews.includes(urlView)) {
@@ -583,10 +599,10 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     }
   }
 
-  if (isObservations && urlParams.locale) {
+  if (urlParams.locale && urlParams.locale !== "any") {
     store.observationsApiParams.locale = urlParams.locale;
   }
-  if (urlParams.name_order) {
+  if (urlParams.name_order && urlParams.name_order !== "any") {
     store.viewMetadata.name_order = urlParams.name_order as NameOrderType;
   }
 
@@ -597,6 +613,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
       setUrlStoreValuesIdentifications(key, value, store);
     }
   }
+
   return store;
 }
 

@@ -33,7 +33,12 @@ import type {
 import {
   filtersModalAutocompleteFields,
   identificationsApiFilterableNames,
+  identificationsApiNonFilterableNames,
   observationsApiFilterableNames,
+  observationsApiNonFilterableNames,
+  selectedResourcesIdIdentifications,
+  selectedResourcesIdObservations,
+  validIdentificationsViews,
 } from "../data/app_data.ts";
 import { validObservationsSubviews, validViews } from "../data/app_data.ts";
 import { defaultColorScheme } from "../lib/map_colors_utils.ts";
@@ -779,28 +784,10 @@ describe("decodeAppUrl resources", () => {
   });
 
   test("returns object with bounding box if nelat is present", () => {
-    let searchParams = "?place_id=0&nelat=0&nelng=-1&swlat=2&swlng=-3";
+    let searchParams = "?nelat=0&nelng=-1&swlat=2&swlng=-3";
 
     let expected = {
       ...structuredClone(defaultUrlStore),
-      selectedPlaces: [
-        {
-          id: 0,
-          name: "Custom Boundary",
-          display_name: "Custom Boundary",
-          bounding_box: {
-            coordinates: [
-              [
-                [-1, 0],
-                [-1, 2],
-                [-3, 2],
-                [-3, 0],
-              ],
-            ],
-            type: "Polygon",
-          },
-        },
-      ],
       observationsApiParams: {
         nelat: 0,
         nelng: -1,
@@ -895,18 +882,83 @@ describe("decodeAppUrl resources", () => {
 });
 
 describe("decodeAppUrl options", () => {
-  test("returns object with if spam and verifiable are false", () => {
-    let searchParams =
-      "?taxon_id=123&colors=%23ffffff&spam=false&verifiable=false";
+  test.each(observationsApiFilterableNames)(
+    "adds params to observationsApiParams, selected resouces, and metadata",
+    (name) => {
+      let value;
+      if (filtersModalAutocompleteFields.includes(name)) {
+        value = 1;
+      } else {
+        value = true;
+      }
+      let searchParams = `?${name}=${value}`;
+      let expected = {
+        ...structuredClone(defaultUrlStore),
+        observationsApiParams: { [name]: value },
+        currentView: "observations_observations",
+        record_type: "observations",
+      } as any;
+      if (name == "order_by" || name == "order") {
+        expected.viewMetadata.observations_observations[name] = "true";
+      }
+      // NOTE: update when adding selectedResource; autocomplete
+      if (name == "unobserved_by_user_id") {
+        expected.selectedUnobservedByUser = { id: value };
+      }
+      if (name == "viewer_id") {
+        expected.selectedReviewer = { id: value };
+      }
+      if (name == "not_in_project") {
+        expected.selectedNotInProject = { id: value };
+      }
+
+      let result = decodeAppUrl(searchParams, "/");
+
+      expect(result).toStrictEqual(expected);
+    },
+  );
+
+  test.each(
+    observationsApiNonFilterableNames
+      .filter(
+        (p) => !Object.values(selectedResourcesIdObservations).includes(p),
+      )
+      .filter((p) => !["locale", "page", "order_by", "order"].includes(p)),
+  )("selected params do not update observationsApiParams", (name) => {
+    let value = "123";
+    let searchParams = `?${name}=${value}`;
     let expected = {
       ...structuredClone(defaultUrlStore),
-      color: "#ffffff",
-      selectedTaxa: [
-        {
-          id: 123,
-          color: "#ffffff",
-        },
-      ],
+      currentView: "observations_observations",
+      record_type: "observations",
+    } as any;
+
+    let result = decodeAppUrl(searchParams, "/");
+    expect(result).toStrictEqual(expected);
+  });
+
+  test.each(observationsApiNonFilterableNames)(
+    "ignore any value for observationsApiNonFilterableNames",
+    (name) => {
+      let value = "any";
+
+      let searchParams = `?${name}=${value}`;
+      let expected = {
+        ...structuredClone(defaultUrlStore),
+        currentView: "observations_observations",
+        record_type: "observations",
+      } as any;
+
+      let result = decodeAppUrl(searchParams, "/");
+
+      expect(result).toStrictEqual(expected);
+    },
+  );
+
+  test("updates observationsApiParams if spam and verifiable are false", () => {
+    let searchParams = "?spam=false&verifiable=false";
+    let expected = {
+      ...structuredClone(defaultUrlStore),
       observationsApiParams: {
         verifiable: false,
         spam: false,
@@ -920,18 +972,10 @@ describe("decodeAppUrl options", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test("returns object with if spam and verifiable are true", () => {
-    let searchParams =
-      "?taxon_id=123&colors=%23ffffff&spam=true&verifiable=true";
+  test("updates observationsApiParams  if spam and verifiable are true", () => {
+    let searchParams = "?spam=true&verifiable=true";
     let expected = {
       ...structuredClone(defaultUrlStore),
-      color: "#ffffff",
-      selectedTaxa: [
-        {
-          id: 123,
-          color: "#ffffff",
-        },
-      ],
       observationsApiParams: {
         verifiable: true,
         spam: true,
@@ -945,40 +989,13 @@ describe("decodeAppUrl options", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test("returns object with if verifiable is any", () => {
-    let searchParams = "?taxon_id=123&colors=%23ffffff&verifiable=any";
+  test("updates observationsApiParams if verifiable is any", () => {
+    let searchParams = "?verifiable=any";
     let expected = {
       ...structuredClone(defaultUrlStore),
-      color: "#ffffff",
-      selectedTaxa: [
-        {
-          id: 123,
-          color: "#ffffff",
-        },
-      ],
       observationsApiParams: {
         verifiable: "any",
       },
-      currentView: "observations_observations",
-      record_type: "observations",
-    };
-
-    let result = decodeAppUrl(searchParams, "/");
-
-    expect(result).toStrictEqual(expected);
-  });
-
-  test("returns object with if place_id is any", () => {
-    let searchParams = "?taxon_id=123&colors=%23ffffff&place_id=any";
-    let expected = {
-      ...structuredClone(defaultUrlStore),
-      color: "#ffffff",
-      selectedTaxa: [
-        {
-          id: 123,
-          color: "#ffffff",
-        },
-      ],
       currentView: "observations_observations",
       record_type: "observations",
     };
@@ -1043,7 +1060,7 @@ describe("decodeAppUrl options", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test("set params if invalid views and subview", () => {
+  test("ignore invalid views and subview", () => {
     let searchParams = "?view=boo&subview=boo";
     let expected = {
       ...structuredClone(defaultUrlStore),
@@ -1069,46 +1086,7 @@ describe("decodeAppUrl options", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test.each(observationsApiFilterableNames)(
-    "adds valid params to observationsApiParams",
-    (name) => {
-      let value;
-      if (filtersModalAutocompleteFields.includes(name)) {
-        value = 1;
-      } else {
-        value = true;
-      }
-      let searchParams = `?${name}=${value}`;
-      let expected = {
-        ...structuredClone(defaultUrlStore),
-        observationsApiParams: { [name]: true },
-        currentView: "observations_observations",
-        record_type: "observations",
-      } as any;
-      if (name == "order_by" || name == "order") {
-        expected.viewMetadata.observations_observations[name] = "true";
-      }
-      // NOTE: update when adding selectedResource; autocomplete
-      if (name == "unobserved_by_user_id") {
-        expected.selectedUnobservedByUser = { id: 1 };
-        expected.observationsApiParams.unobserved_by_user_id = 1;
-      }
-      if (name == "viewer_id") {
-        expected.selectedReviewer = { id: 1 };
-        expected.observationsApiParams.viewer_id = 1;
-      }
-      if (name == "not_in_project") {
-        expected.selectedNotInProject = { id: 1 };
-        expected.observationsApiParams.not_in_project = 1;
-      }
-
-      let result = decodeAppUrl(searchParams, "/");
-
-      expect(result).toStrictEqual(expected);
-    },
-  );
-
-  test("returns object with page, order, order_by", () => {
+  test("updates observationsApiParams and metadata with page, order, order_by", () => {
     let searchParams = "?page=2&order=desc&order_by=id";
     let expected = {
       ...structuredClone(defaultUrlStore),
@@ -1127,7 +1105,7 @@ describe("decodeAppUrl options", () => {
   });
 
   test.each(validViews)(
-    "returns object with view, page, order, order_by",
+    "updates observationsApiParams and metadata with view, page, order, order_by",
     (name) => {
       let searchParams = `?view=${name}&page=2&order=desc&order_by=id`;
       let expected = {
@@ -1147,7 +1125,7 @@ describe("decodeAppUrl options", () => {
     },
   );
 
-  test("returns object with locale", () => {
+  test("updates observationsApiParams with locale", () => {
     let searchParams = "?locale=fr";
     let expected = {
       ...structuredClone(defaultUrlStore),
@@ -1161,7 +1139,7 @@ describe("decodeAppUrl options", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test("returns object with name_order", () => {
+  test("updates metadata with name_order", () => {
     let searchParams = "?name_order=sc";
     let expected = {
       ...structuredClone(defaultUrlStore),
@@ -1179,39 +1157,7 @@ describe("decodeAppUrl options", () => {
   });
 });
 
-describe("decodeAppUrl if identifications path", () => {
-  test("returns object with record_type = 'identifications'", () => {
-    let path = "/identifications/";
-    let searchParams = "";
-    let expected = {
-      ...structuredClone(defaultUrlStore),
-      currentView: "identifications_observations",
-      record_type: "identifications",
-    };
-
-    let result = decodeAppUrl(searchParams, path);
-
-    expect(result).toStrictEqual(expected);
-  });
-
-  test.each([identificationsApiFilterableNames])(
-    "returns object with identificationsApiParams",
-    (param) => {
-      let path = `/identifications/`;
-      let searchParams = `?${param}=true`;
-      let expected = {
-        ...structuredClone(defaultUrlStore),
-        currentView: "identifications_observations",
-        record_type: "identifications",
-        identificationsApiParams: { [param]: true },
-      };
-
-      let result = decodeAppUrl(searchParams, path);
-
-      expect(result).toStrictEqual(expected);
-    },
-  );
-
+describe("decodeAppUrl  resources if identifications", () => {
   test("returns object with selectedTaxaIdentified and selectedTaxa", () => {
     let path = "/identifications/";
     let searchParams = "?taxon_id=1,2&observation_taxon_id=3,4";
@@ -1293,8 +1239,100 @@ describe("decodeAppUrl if identifications path", () => {
 
     expect(result).toStrictEqual(expected);
   });
+});
 
-  test("returns object with page, order, order_by", () => {
+describe("decodeAppUrl options if identifications", () => {
+  test.each(identificationsApiFilterableNames)(
+    "adds params to identificationsApiParams, selected resouces, and metadata",
+    (name) => {
+      let value = true;
+      let searchParams = `?${name}=${value}`;
+      let expected = {
+        ...structuredClone(defaultUrlStore),
+        identificationsApiParams: { [name]: value },
+        currentView: "identifications_observations",
+        record_type: "identifications",
+      } as any;
+      if (name == "order_by" || name == "order") {
+        expected.viewMetadata.identifications_observations[name] = "true";
+      }
+
+      let result = decodeAppUrl(searchParams, "/identifications/");
+
+      expect(result).toStrictEqual(expected);
+    },
+  );
+
+  test.each(
+    identificationsApiNonFilterableNames
+      .filter(
+        (p) => !Object.values(selectedResourcesIdIdentifications).includes(p),
+      )
+      .filter((p) => !["page", "order_by", "order"].includes(p)),
+  )("selected params do not update identificationsApiParams", (name) => {
+    let value = "123";
+    let searchParams = `?${name}=${value}`;
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      currentView: "identifications_observations",
+      record_type: "identifications",
+    } as any;
+
+    let result = decodeAppUrl(searchParams, "/identifications/");
+    expect(result).toStrictEqual(expected);
+  });
+
+  test.each(identificationsApiNonFilterableNames)(
+    "ignore any value for observationsApiNonFilterableNames",
+    (name) => {
+      let value = "any";
+
+      let searchParams = `?${name}=${value}`;
+      let expected = {
+        ...structuredClone(defaultUrlStore),
+        currentView: "identifications_observations",
+        record_type: "identifications",
+      } as any;
+
+      let result = decodeAppUrl(searchParams, "/identifications/");
+
+      expect(result).toStrictEqual(expected);
+    },
+  );
+
+  test.each(validIdentificationsViews)(
+    "returns view if view is valid",
+    (view) => {
+      let searchParams = "?view=" + view;
+      let expected = {
+        ...structuredClone(defaultUrlStore),
+        currentView: view,
+        record_type: "identifications",
+      } as any;
+      if (view === "identifications_identifications") {
+        expected.viewMetadata.identifications_identifications = {};
+      }
+
+      let result = decodeAppUrl(searchParams, "/identifications/");
+
+      expect(result).toStrictEqual(expected);
+    },
+  );
+
+  test("ignores invalid params", () => {
+    let searchParams = "?foo=boo";
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      currentView: "identifications_observations",
+      record_type: "identifications",
+    };
+
+    let result = decodeAppUrl(searchParams, "/identifications/");
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("updates identificationsApiParams and metadata with page, order, order_by", () => {
     let searchParams = "?page=2&order=desc&order_by=id";
     let expected = {
       ...structuredClone(defaultUrlStore),
@@ -1317,7 +1355,7 @@ describe("decodeAppUrl if identifications path", () => {
   });
 
   test.each(validViews)(
-    "returns object with view, page, order, order_by",
+    "updates identificationsApiParams and metadata with view, page, order, order_by",
     (name) => {
       let searchParams = `?view=${name}&page=2&order=desc&order_by=id`;
       let expected = {
@@ -1336,6 +1374,37 @@ describe("decodeAppUrl if identifications path", () => {
       expect(result).toStrictEqual(expected);
     },
   );
+
+  test("updates identificationsApiParams with locale", () => {
+    let searchParams = "?locale=fr";
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      observationsApiParams: { locale: "fr" },
+      currentView: "identifications_observations",
+      record_type: "identifications",
+    };
+
+    let result = decodeAppUrl(searchParams, "/identifications/");
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("updates metadata with name_order", () => {
+    let searchParams = "?name_order=sc";
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      currentView: "identifications_observations",
+      record_type: "identifications",
+      viewMetadata: {
+        ...structuredClone(defaultUrlStore.viewMetadata),
+        name_order: "sc",
+      },
+    };
+
+    let result = decodeAppUrl(searchParams, "/identifications/");
+
+    expect(result).toStrictEqual(expected);
+  });
 });
 
 describe("removeDefaultParams", () => {

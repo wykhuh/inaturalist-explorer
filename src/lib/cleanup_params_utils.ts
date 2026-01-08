@@ -1,5 +1,6 @@
 import { iconicTaxaIdName } from "../data/inat_data";
 import {
+  fieldsWithAny,
   identificationsApiNames,
   observationsApiNames,
 } from "../data/app_data";
@@ -39,6 +40,16 @@ function cleanupParams(params: URLSearchParams) {
   }
   if (params.get("place_id") === "0") {
     params.delete("place_id");
+  }
+
+  fieldsWithAny.forEach((field) => {
+    if (params.get(field) === "any") {
+      params.delete(field);
+    }
+  });
+
+  if (params.get("spam") === null) {
+    params.append("spam", "false");
   }
 }
 

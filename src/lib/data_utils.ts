@@ -134,7 +134,6 @@ export async function addDefaultTaxaRecordToStore(appStore: AppStoreType) {
   }
 
   appStore.color = iNatOrange;
-
   await updateCountForOne(
     structuredClone(allTaxaRecord),
     "selectedTaxa",
@@ -615,17 +614,6 @@ function handleIdentificationsFilters(
       }
     }
   }
-}
-
-export function normalizeAppParams(appParams: string) {
-  let rawParams = new URLSearchParams(appParams);
-  if (rawParams.get("verifiable") === null) {
-    rawParams.append("verifiable", "true");
-  }
-  if (rawParams.get("spam") === null) {
-    rawParams.append("spam", "false");
-  }
-  return rawParams;
 }
 
 export function isIdentificationsCheck(appStore: AppStoreType) {

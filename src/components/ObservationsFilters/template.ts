@@ -242,7 +242,7 @@ let observationPane = html`<div
         </label>
         <!--do not use renderTrueFalseSelect since we want to set true as selected -->
         <select id="verifiable" name="verifiable">
-          <option value=""></option>
+          <option value="any"></option>
           <option value="true" selected>True</option>
           <option value="false">False</option>
         </select>

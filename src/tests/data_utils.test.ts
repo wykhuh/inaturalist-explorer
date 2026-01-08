@@ -7,7 +7,6 @@ import {
   addValueToCommaSeparatedString,
   removeValueFromCommaSeparatedString,
   removeIdfromInatApiParams,
-  normalizeAppParams,
 } from "../lib/data_utils.ts";
 import { renderTaxonNames } from "../lib/render_utils";
 import type { NormalizediNatTaxonType } from "../types/app.d.ts";
@@ -932,28 +931,5 @@ describe("removeIdfromInatApiParams", () => {
     expect(store.observationsApiParams.place_id).toBe(
       `${losangeles.id},${sandiego.id}`,
     );
-  });
-});
-
-describe("normalizeAppParams", () => {
-  test("sets verifiable and spam if app params is empty string", () => {
-    let appParams = "";
-    let result = normalizeAppParams(appParams);
-
-    expect(result.toString()).toBe("verifiable=true&spam=false");
-  });
-
-  test("does not change verifiable and spam if they are in app params", () => {
-    let appParams = "verifiable=false&spam=true";
-    let result = normalizeAppParams(appParams);
-
-    expect(result.toString()).toBe(appParams);
-  });
-
-  test("does not change existing app params", () => {
-    let appParams = "taxon_id=123&verifiable=false&spam=true&locale=en";
-    let result = normalizeAppParams(appParams);
-
-    expect(result.toString()).toBe(appParams);
   });
 });

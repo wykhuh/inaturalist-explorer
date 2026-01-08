@@ -13,17 +13,19 @@ import { mapStore } from "../lib/store.ts";
 import { defaultQuery } from "./test_helpers.ts";
 import { iNatOrange } from "../lib/map_colors_utils.ts";
 import {
+  fieldsWithAny,
   identificationsApiNames,
   observationsApiFilterableNames,
 } from "../data/app_data.ts";
+import type { ObservationsApiParamsKeysType } from "../types/app";
 
 describe("cleanupObervationsParams", () => {
-  test("if no changes to store params, returns empty string", () => {
+  test("if no changes to store params, returns spam=false", () => {
     let store = structuredClone(mapStore);
 
     let results = cleanupObervationsParams(store);
 
-    expect(results).toStrictEqual("");
+    expect(results).toStrictEqual("spam=false");
   });
 
   test("returns params if params are valid properites for iNat API", () => {
@@ -51,8 +53,20 @@ describe("cleanupObervationsParams", () => {
 
     let results = cleanupObervationsParams(store);
 
-    expect(results).toStrictEqual("");
+    expect(results).toStrictEqual("spam=false");
   });
+
+  test.each(fieldsWithAny as ObservationsApiParamsKeysType[])(
+    "ignores fieldsWithAny  fields if value is any",
+    (field) => {
+      let store = structuredClone(mapStore);
+      store.observationsApiParams[field] = "any";
+
+      let results = cleanupObervationsParams(store);
+
+      expect(results).toStrictEqual("spam=false");
+    },
+  );
 
   test("ignores taxon_id and place_id when they are 0", () => {
     let store = structuredClone(mapStore);
@@ -276,7 +290,7 @@ describe("cleanupIdentificationsMapParams", () => {
       place_id: "1,2",
       quality_grade: "research",
       taxon_id: "20,21",
-      ident_user_id: "30,31",
+      ident_user_id: "31",
     });
   });
 });
@@ -480,7 +494,7 @@ describe("cleanupIdentificationsObservationsParams", () => {
     });
   });
 
-  test("converts user_id to ident_user_id", () => {
+  test("converts user_id to ident_user_id and only allow last id", () => {
     let store = structuredClone(mapStore);
     store.identificationsApiParams = {
       user_id: "1,3",
@@ -490,7 +504,7 @@ describe("cleanupIdentificationsObservationsParams", () => {
     );
 
     expect(res).toStrictEqual({
-      ident_user_id: "1,3",
+      ident_user_id: "3",
     });
   });
 

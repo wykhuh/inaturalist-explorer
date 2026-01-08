@@ -370,12 +370,20 @@ export const observationsFieldName_InputType = {
   obscuration: "multiselect",
 };
 
+// API v2 accepts true, false, or do not send field for verifiable. The default
+// value is true with no params in url. Use any to not send field to API.
+export const fieldsWithAny = ["verifiable"];
+
 export const observationsApiFilterableNames = observationsFilterableImplemented
   .concat(observationsFilterableImplementedArrays)
   .concat(observationsFilterableTodo);
 
 export const observationsApiNames: string[] =
   observationsApiNonFilterableNames.concat(observationsApiFilterableNames);
+
+// export const observationsApiNonResources: string[] = observationsApiNames
+//   .filter((p) => !Object.values(selectedResourcesIdObservations).includes(p))
+//   .filter((p) => p);
 
 export const identificationsApiNonFilterableNames: IdentificationsApiParamsKeysType[] =
   [

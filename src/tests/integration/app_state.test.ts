@@ -102,7 +102,6 @@ import {
   gridLabel_allTaxaRecord_user1Annotator,
   gridLabel_allTaxaRecord_usersAnnotator,
   gridLabel_allTaxaRecord_usersIdentifiers,
-  gridLabel_allTaxaRecord_user2,
 } from "../test_helpers.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
 import { decodeAppUrl } from "../../lib/utils.ts";
