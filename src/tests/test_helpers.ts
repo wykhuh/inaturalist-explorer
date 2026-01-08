@@ -319,6 +319,11 @@ export let gridLabel_life_places_users =
 export let gridLabel_oaks_places_users =
   "overlay: iNat grid, taxon_id 861036, place_id 962,829, user_id 222137,677256";
 
+export let gridLabel_life_places_user2Identifiers =
+  "overlay: iNat grid, taxon_id 48460, place_id 962,829, ident_user_id 677256";
+export let gridLabel_life_places_use2Identifiers =
+  "overlay: iNat grid, taxon_id 48460, place_id 962,829, ident_user_id 222137,677256";
+
 export let gridLabel_life_places_usersIdentifiers =
   "overlay: iNat grid, taxon_id 48460, place_id 962,829, ident_user_id 222137,677256";
 export let gridLabel_oaks_places_usersIdentifiers =

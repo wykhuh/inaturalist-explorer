@@ -76,7 +76,7 @@ export function renderUsersAnnotatorsList(appStore: AppStoreType) {
   appStore.selectedUsersAnnotators.forEach((user) => {
     let templateEl = document.createElement("users-list-item");
     templateEl.dataset.user = JSON.stringify(user);
-    templateEl.dataset.user_type = "annotator";
+    templateEl.dataset.type = "annotator";
     listEl.appendChild(templateEl);
   });
 }

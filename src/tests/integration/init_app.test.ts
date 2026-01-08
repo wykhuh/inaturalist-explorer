@@ -1260,7 +1260,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
       placeLabel_la,
       placeLabel_sd,
       placeLabel_sd,
-      gridLabel_life_places_usersIdentifiers,
+      gridLabel_life_places_user2Identifiers,
     ]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams: ObservationsApiParamsType = {

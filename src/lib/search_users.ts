@@ -134,7 +134,7 @@ export function renderUsersList(appStore: AppStoreType) {
   appStore.selectedUsers.forEach((user) => {
     let templateEl = document.createElement("users-list-item");
     templateEl.dataset.user = JSON.stringify(user);
-    templateEl.dataset.user_type = "observer";
+    templateEl.dataset.type = "observer";
     listEl.appendChild(templateEl);
   });
 }

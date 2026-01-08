@@ -1,7 +1,6 @@
 import type { NormalizediNatUserType, AppStoreType } from "../types/app.d.ts";
 import {
   addValueToCommaSeparatedString,
-  isIdentificationsCheck,
   isObservationsCheck,
   removeIdfromInatApiParams,
   resetPageNumber,
@@ -29,20 +28,22 @@ export async function userIdentifierSelectedHandler(
   let isObservations = isObservationsCheck(appStore);
 
   // add user to store
+  appStore.selectedUsersIdentifiers = [
+    ...appStore.selectedUsersIdentifiers,
+    selection,
+  ];
+  resetPageNumber(appStore);
 
   if (isObservations) {
-    appStore.selectedUsersIdentifiers = [selection];
-    resetPageNumber(appStore);
     appStore.observationsApiParams = {
       ...appStore.observationsApiParams,
-      ident_user_id: selection.id.toString(),
+      ident_user_id: addValueToCommaSeparatedString(
+        selection.id,
+        appStore.observationsApiParams.ident_user_id,
+      ),
     };
   } else {
-    appStore.selectedUsersIdentifiers = [
-      ...appStore.selectedUsersIdentifiers,
-      selection,
-    ];
-    resetPageNumber(appStore);
+    // NOTE: multiple identifiers result in zero identifications
     appStore.identificationsApiParams = {
       ...appStore.identificationsApiParams,
       user_id: addValueToCommaSeparatedString(
@@ -90,28 +91,23 @@ export function renderUsersIdentifiersList(appStore: AppStoreType) {
   if (!listEl) return;
 
   listEl.innerHTML = "";
-  if (isIdentificationsCheck(appStore)) {
+  if (isObservationsCheck(appStore)) {
     appStore.selectedUsersIdentifiers.forEach((user) => {
       let templateEl = document.createElement("users-list-item");
       templateEl.dataset.user = JSON.stringify(user);
-      templateEl.dataset.user_type = "identifier";
+      templateEl.dataset.type = "identifier";
       listEl.appendChild(templateEl);
     });
-  } else if (
-    isObservationsCheck(appStore) &&
-    appStore.selectedUsersIdentifiers.length > 0
-  ) {
-    // NOTE: only show last identifier since iNat observations API only allows
-    // one identifier
-    let user =
-      appStore.selectedUsersIdentifiers[
-        appStore.selectedUsersIdentifiers.length - 1
-      ];
-
-    let templateEl = document.createElement("users-list-item");
-    templateEl.dataset.user = JSON.stringify(user);
-    templateEl.dataset.user_type = "identifier";
-    listEl.appendChild(templateEl);
+  } else {
+    // show last identifier for identifications
+    let users = appStore.selectedUsersIdentifiers;
+    let user = users[users.length - 1];
+    if (user) {
+      let templateEl = document.createElement("users-list-item");
+      templateEl.dataset.user = JSON.stringify(user);
+      templateEl.dataset.type = "identifier";
+      listEl.appendChild(templateEl);
+    }
   }
 }
 

@@ -102,6 +102,7 @@ import {
   gridLabel_allTaxaRecord_user1Annotator,
   gridLabel_allTaxaRecord_usersAnnotator,
   gridLabel_allTaxaRecord_usersIdentifiers,
+  gridLabel_allTaxaRecord_user2,
 } from "../test_helpers.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
 import { decodeAppUrl } from "../../lib/utils.ts";
@@ -477,7 +478,7 @@ describe("userIdentifierSelectedHandler", () => {
 
     expectEmpytMap(store);
 
-    let allTaxaCount = allTaxa.observations_count;
+    let allTaxaCount = allTaxa.observations_count * 0.75;
     await initPopulateStore(store, decodeAppUrl("", "/"));
     await initRenderMap(store);
     await userIdentifierSelectedHandler(user1, "user", store);
@@ -487,7 +488,7 @@ describe("userIdentifierSelectedHandler", () => {
       gridLabel_allTaxaRecord_user1Identifier,
     ]);
     expectEmptyResources(store, ["selectedTaxa", "selectedUsersIdentifiers"]);
-    expectDefaultTaxaRecord(store, allTaxaCount * 0.75);
+    expectDefaultTaxaRecord(store, allTaxaCount);
     expect(store.selectedUsersIdentifiers).toStrictEqual([user1]);
     let expectedParams = {
       ...defaultParams,
@@ -504,20 +505,20 @@ describe("userIdentifierSelectedHandler", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord_user2Identifier,
+      gridLabel_allTaxaRecord_usersIdentifiers,
     ]);
     expectEmptyResources(store, ["selectedTaxa", "selectedUsersIdentifiers"]);
-    expectDefaultTaxaRecord(store);
-    expect(store.selectedUsersIdentifiers).toStrictEqual([user2]);
+    expectDefaultTaxaRecord(store, allTaxaCount);
+    expect(store.selectedUsersIdentifiers).toStrictEqual([user1, user2]);
     let expectedParams2 = {
       ...defaultParams,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
-      ident_user_id: `${user2.id}`,
+      ident_user_id: `${user1.id},${user2.id}`,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?ident_user_id=${user2.id}&${defaultQuery}`,
+      `?ident_user_id=${user1.id},${user2.id}&${defaultQuery}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedUsersIdentifiers[0].observations_count).toBe(
@@ -1825,6 +1826,7 @@ describe("userIdentifierSelectedHandler with identifications", () => {
 
     await initPopulateStore(store, decodeAppUrl("", "/identifications/"));
     await initRenderMap(store);
+
     await userIdentifierSelectedHandler(user1, "user", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -1850,7 +1852,7 @@ describe("userIdentifierSelectedHandler with identifications", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord_usersIdentifiers,
+      gridLabel_allTaxaRecord_user2Identifier,
     ]);
     expectEmptyResources(store, ["selectedTaxa", "selectedUsersIdentifiers"]);
     expectDefaultTaxaRecordIdentification(store);
@@ -2381,7 +2383,7 @@ describe("removeUser", () => {
 });
 
 describe("removeUserIdentifier", () => {
-  test("add user; add user; remove user;", async () => {
+  test("add user; add user; remove user; remove user;", async () => {
     let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
@@ -2392,21 +2394,38 @@ describe("removeUserIdentifier", () => {
     await userIdentifierSelectedHandler(user2, "user", store);
 
     expectEmptyResources(store, ["selectedTaxa", "selectedUsersIdentifiers"]);
-    expectDefaultTaxaRecord(store);
+    expectDefaultTaxaRecord(store, allTaxa.observations_count * 0.75);
     let expectedParams2 = {
       ...defaultParams,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
-      ident_user_id: `${user2.id}`,
+      ident_user_id: `${user1.id},${user2.id}`,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(store.identificationsApiParams).toStrictEqual({});
     expect(window.location.search).toBe(
-      `?ident_user_id=${user2.id}&${defaultQuery}`,
+      `?ident_user_id=${user1.id},${user2.id}&${defaultQuery}`,
     );
-    expect(store.selectedUsersIdentifiers).toStrictEqual([user2]);
+    expect(store.selectedUsersIdentifiers).toStrictEqual([user1, user2]);
 
     await removeUserIdentifier(user2.id, store);
+
+    expectEmptyResources(store, ["selectedTaxa", "selectedUsersIdentifiers"]);
+    expectDefaultTaxaRecord(store, allTaxa.observations_count * 0.75);
+    let expectedParams4 = {
+      ...defaultParams,
+      colors: iNatOrange,
+      taxon_id: allTaxa.id.toString(),
+      ident_user_id: `${user1.id}`,
+    };
+    expect(store.observationsApiParams).toStrictEqual(expectedParams4);
+    expect(store.identificationsApiParams).toStrictEqual({});
+    expect(window.location.search).toBe(
+      `?ident_user_id=${user1.id}&${defaultQuery}`,
+    );
+    expect(store.selectedUsersIdentifiers).toStrictEqual([user1]);
+
+    await removeUserIdentifier(user1.id, store);
 
     expectEmptyResources(store, ["selectedTaxa"]);
     expectDefaultTaxaRecord(store);

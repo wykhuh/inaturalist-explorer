@@ -12,7 +12,7 @@ export const template = html`
           <option value="places">iNaturalist Places</option>
           <option value="projects">Projects</option>
           <option value="users">Observers</option>
-          <option value="usersIdentifiers">Identifier</option>
+          <option value="usersIdentifiers">Identifiers</option>
           <option value="usersAnnotators">Annotators</option>
         </select>
       </label>
@@ -44,7 +44,7 @@ export const template = html`
     <h2 class="users-heading" hidden>Observers</h2>
     <ul id="selected-users-list"></ul>
 
-    <h2 class="users-identifiers-heading" hidden>Identifier</h2>
+    <h2 class="users-identifiers-heading" hidden>Identifiers</h2>
     <ul id="selected-users-identifiers-list"></ul>
 
     <h2 class="users-annotators-heading" hidden>Annotators</h2>

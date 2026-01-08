@@ -18,7 +18,7 @@ class SelectedUsersItem extends HTMLElement {
 
   async render(appStore: AppStoreType) {
     if (!this.dataset.user) return;
-    let userType = this.dataset.user_type;
+    let userType = this.dataset.type;
     if (!userType) return;
 
     loggerRender("++ SelectedUsersItem render");

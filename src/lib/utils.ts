@@ -438,7 +438,13 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     if (isObservations) {
       let ids = urlParams.ident_user_id.split(",");
 
-      store.selectedUsersIdentifiers = [{ id: Number(ids[0]) }] as any;
+      let users = ids
+        .map((id) => {
+          return { id: Number(id) };
+        })
+        .filter((p) => p);
+
+      store.selectedUsersIdentifiers = users as any;
     }
   }
 

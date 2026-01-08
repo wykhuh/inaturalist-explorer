@@ -61,12 +61,6 @@ export function cleanupObervationsParams(
 ) {
   let params = cleanupParamsStore(appStore, recordType);
 
-  // NOTE: iNat observations API only allows one ident_user_id value
-  let identifierId = params.get("ident_user_id");
-  if (identifierId) {
-    params.set("ident_user_id", identifierId.split(",")[0]);
-  }
-
   return params.toString();
 }
 
@@ -113,6 +107,13 @@ export function cleanupIdentificationParams(
 ) {
   let params = cleanupParamsStore(appStore, recordType);
 
+  // NOTE: iNat API only allows one identifier for identifications,
+  let identifierId = params.get("user_id");
+  if (identifierId) {
+    let ids = identifierId.split(",");
+    params.set("user_id", ids[ids.length - 1]);
+  }
+
   return params.toString();
 }
 
@@ -124,6 +125,13 @@ export function cleanupIdentificationsObserversParams(
 
   params.delete("order");
   params.delete("order_by");
+
+  // NOTE: iNat API only allows one identifier for identifications,
+  let identifierId = params.get("user_id");
+  if (identifierId) {
+    let ids = identifierId.split(",");
+    params.set("user_id", ids[ids.length - 1]);
+  }
 
   return params.toString();
 }
@@ -165,7 +173,10 @@ export function convertIdentificationParamsToObservationParams(
     } else if (key === "without_observation_taxon_id") {
       cleanedParms.without_taxon_id = value;
     } else if (key.startsWith("user_id")) {
-      cleanedParms.ident_user_id = value;
+      // NOTE: iNat API only allows one identifier for identifications,
+      // therefore we send only one ident_user_id to observations
+      let ids = value.toString().split(",");
+      cleanedParms.ident_user_id = ids[ids.length - 1];
     } else if (key.startsWith("observed_")) {
       let k = key.replace("observed_", "");
       cleanedParms[k] = value;
@@ -238,12 +249,5 @@ export function cleanupObservationsMapParams(
   if (!params.color) {
     params.color = iNatOrange;
   }
-
-  let identifierId = params.ident_user_id;
-  if (identifierId) {
-    identifierId = identifierId.split(",")[0];
-    params.ident_user_id = identifierId;
-  }
-
   return params;
 }

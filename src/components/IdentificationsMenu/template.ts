@@ -13,7 +13,7 @@ export const template = html`
             Without Identified Species
           </option>
           <option value="places">iNaturalist Places</option>
-          <option value="usersIdentifiers">Identifiers</option>
+          <option value="usersIdentifiers">Identifier</option>
         </select>
       </label>
     </div>
