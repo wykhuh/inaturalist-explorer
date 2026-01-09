@@ -4,7 +4,7 @@ export const template = html`
   <header id="site-header">
     <div class="wrapper-fullwidth">
       <nav id="site-nav">
-        <span>iNaturalist Explorer</span>
+        <span>iNat Explorer</span>
         <ul>
           <li>
             <a href="/" class="navlink" data-record-type="observations"
