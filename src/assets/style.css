@@ -610,6 +610,9 @@
         display: none;
       }
     }
+    @media (max-width: 450px) {
+      font-size: var(--font-size-sm);
+    }
   }
 
   #observations-list-controls {
