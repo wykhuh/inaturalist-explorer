@@ -1087,7 +1087,7 @@
     .media {
       position: relative;
       border-bottom: var(--border-grey);
-      background-color: var(--clr-gray-500);
+      background-color: var(--clr-gray-200);
       height: 250px;
 
       img {
@@ -1130,11 +1130,26 @@
     }
   }
 
+  /*.observations-media-grid {
+    .media {
+      height: initial;
+      img {
+        height: initial;
+      }
+    }
+  }*/
+
   .observations-media-grid {
     .media.sound {
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+    .media {
+      img {
+        width: initial;
+        margin: 0 auto;
+      }
     }
   }
 
