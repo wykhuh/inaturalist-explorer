@@ -602,7 +602,7 @@ const speciesPane = html`
       </div>
     </fieldset>
     <fieldset class="iconic_taxa">
-      <legend>Categories</legend>
+      <legend>Iconic Taxa</legend>
       <div class="iconic_taxa_list">
         <div class="form-group">
           <input type="checkbox" id="Aves" value="Aves" name="iconic_taxa" />

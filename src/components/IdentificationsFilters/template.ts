@@ -47,7 +47,7 @@ export const template = html`
               </div>
             </fieldset>
             <fieldset class="iconic_taxa">
-              <legend>Observation Categories</legend>
+              <legend>Observation Iconic Taxa</legend>
               <div class="iconic_taxa_list">
                 <div class="form-group">
                   <input
@@ -255,7 +255,7 @@ export const template = html`
               </div>
             </fieldset>
             <fieldset class="iconic_taxa">
-              <legend>Identification Categories</legend>
+              <legend>Identification Iconic Taxa</legend>
               <div class="iconic_taxa_list">
                 <div class="form-group">
                   <input
