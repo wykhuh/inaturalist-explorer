@@ -13,20 +13,21 @@ export const template = html`
 
     <form id="order-form">
       <div class="form-group">
-        <label for="order_by">Sort By</label>
-        <select id="order_by" name="order_by">
-          <option value="created_at">Added Date</option>
-          <option value="observed_on">Observed Date</option>
-          <option value="updated_at">Updated Date</option>
-          <option value="votes">Favorites</option>
+        <label for="order_combo">Sort By</label>
+        <select id="order_combo" name="order_combo">
+          <option value="created_at:desc">Added Date, New to Old</option>
+          <option value="created_at:asc">Added Date, Old to New</option>
+
+          <option value="observed_on:desc">Observed Date, New to Old</option>
+          <option value="observed_on:asc">Observed Date, Old to New</option>
+
+          <option value="updated_at:desc">Updated Date, New to Old</option>
+          <option value="updated_at:asc">Updated Date, Old to New</option>
+
+          <option value="votes:desc">Favorites, High to Low</option>
+          <option value="votes:asc">Favorites, Low to High</option>
+
           <option value="random">Random</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="order">Direction</label>
-        <select id="order" name="order">
-          <option value="desc">Descending</option>
-          <option value="asc">Ascending</option>
         </select>
       </div>
     </form>

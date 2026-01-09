@@ -28,6 +28,7 @@ import { updateSelectedResourcesId } from "../../lib/count_utils";
 import {
   isObservationsCheck,
   replaceWithCacheImages,
+  resetPageNumber,
 } from "../../lib/data_utils";
 
 export let perPage = 24;
@@ -368,14 +369,13 @@ export function updateSubviewState(
 export function initFilters(appStore: AppStoreType) {
   let { observationsApiParams } = appStore;
 
-  if (observationsApiParams.order !== undefined) {
+  if (observationsApiParams.order_by && observationsApiParams.order) {
     setSelectedOption(
-      `#order-form select#order option[value='${observationsApiParams.order}']`,
+      `#order-form select#order_combo option[value='${observationsApiParams.order_by}:${observationsApiParams.order}']`,
     );
-  }
-  if (observationsApiParams.order_by !== undefined) {
+  } else if (observationsApiParams.order_by) {
     setSelectedOption(
-      `#order-form select#order_by option[value='${observationsApiParams.order_by}']`,
+      `#order-form select#order_combo option[value='${observationsApiParams.order_by}']`,
     );
   }
 }
@@ -384,27 +384,28 @@ export async function updateOrderState(data: FormData, appStore: AppStoreType) {
   // get values from form data
   let orderBy;
   let order;
-  data.forEach((v, k) => {
-    if (k === "order_by") {
-      orderBy = v;
-    } else {
-      order = v;
-    }
+  data.forEach((v, _k) => {
+    let values = v.toString().split(":");
+    orderBy = values[0];
+    order = values[1];
   });
 
-  if (orderBy === "created_at" && order === "desc") {
-    delete appStore.observationsApiParams.order_by;
-    delete appStore.observationsApiParams.order;
-  } else {
+  if (orderBy) {
     appStore.observationsApiParams.order_by = orderBy;
-    appStore.observationsApiParams.order = order;
+    if (appStore.currentView) {
+      appStore.viewMetadata[appStore.currentView].order_by = orderBy;
+    }
   }
-  if (appStore.currentView) {
-    appStore.viewMetadata[appStore.currentView].order = order;
-    appStore.viewMetadata[appStore.currentView].order_by = orderBy;
+  if (order) {
+    appStore.observationsApiParams.order = order;
+    if (appStore.currentView) {
+      appStore.viewMetadata[appStore.currentView].order = order;
+    }
+  } else {
+    delete appStore.observationsApiParams.order;
   }
 
+  resetPageNumber(appStore);
   await fetchAndRenderData(perPage, paginationCallback, appStore);
-  // update browser url
   updateAppUrl(window.location, appStore);
 }
