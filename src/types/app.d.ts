@@ -184,13 +184,6 @@ interface ObservationsApiParamsType {
   order?: string;
   order_by?: string;
   locale?: string;
-  life_stage?: number;
-  sex?: number;
-  flowers_fruits?: number;
-  alive_dead?: number;
-  presence?: number;
-  established?: number;
-  leaves?: number;
 
   // filterable
   captive?: boolean;
