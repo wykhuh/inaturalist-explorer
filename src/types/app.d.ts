@@ -184,7 +184,6 @@ interface ObservationsApiParamsType {
   order?: string;
   order_by?: string;
   locale?: string;
-  name_order?: NameOrderType;
   life_stage?: number;
   sex?: number;
   flowers_fruits?: number;

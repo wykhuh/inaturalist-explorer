@@ -205,9 +205,6 @@ export function formatAppUrl(
     }
   }
 
-  if (appStore.viewMetadata.name_order) {
-    params.name_order = appStore.viewMetadata.name_order;
-  }
   let searchParams = new URLSearchParams(params as any)
     .toString()
     .replaceAll("%2C", ",");

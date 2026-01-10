@@ -56,6 +56,7 @@ import { decodeAppUrl } from "./utils.ts";
 import { updateCountForAll } from "./count_utils.ts";
 import { viewAndTemplateObject } from "../data/app_data.ts";
 import { addCurrentPageClass } from "../components/Header/utils.ts";
+import { populateStoreWithLocaleStorage } from "./localStorage.ts";
 
 // populate store with basic view data from app url.
 // used on initial page load.
@@ -64,6 +65,8 @@ export async function initPopulateStore(
   urlStore: AppStoreType,
 ) {
   loggerStore("++ initPopulateStore start");
+  populateStoreWithLocaleStorage(appStore);
+
   if (urlStore.record_type) {
     appStore.record_type = urlStore.record_type;
   }

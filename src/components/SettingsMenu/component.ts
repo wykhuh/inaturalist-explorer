@@ -6,6 +6,7 @@ import { renderTaxaList } from "../../lib/search_taxa";
 import { updateComonNamesByLanguage } from "./utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import { template } from "./template";
+import { saveItem } from "../../lib/localStorage";
 
 class SettingsMenu extends HTMLElement {
   constructor() {
@@ -37,6 +38,7 @@ class SettingsMenu extends HTMLElement {
         locale: target.value,
       };
 
+      saveItem("locale", target.value);
       updateAppUrl(window.location, window.app.store);
 
       // make api call to get common names
@@ -51,6 +53,7 @@ class SettingsMenu extends HTMLElement {
         name_order: target.value as NameOrderType,
       };
 
+      saveItem("name_order", target.value);
       updateAppUrl(window.location, window.app.store);
       renderTaxaList(window.app.store);
 

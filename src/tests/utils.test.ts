@@ -390,8 +390,8 @@ describe("formatAppUrl", () => {
     },
   );
 
-  test.each(["sc", "s"] as NameOrderType[])(
-    "return name_order if name_order is sc or s",
+  test.each(["cs", "sc", "s"] as NameOrderType[])(
+    "ignores name_order",
     (name_order) => {
       let appStore: AppStoreType = {
         ...mapStore,
@@ -404,7 +404,7 @@ describe("formatAppUrl", () => {
 
       let result = formatAppUrl(appStore);
 
-      expect(result).toBe(`${defaultQuery}&name_order=${name_order}`);
+      expect(result).toBe(``);
     },
   );
 
