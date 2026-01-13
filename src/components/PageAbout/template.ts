@@ -110,7 +110,7 @@ export const template = html`
       </li>
     </ol>
 
-    <h2>Techinical Details</h2>
+    <h2>Technical Details</h2>
     <p>
       This static site is built using JavaScript/TypeScript, custom web
       components, CSS, and HTML. I wanted to use the built-in features of
