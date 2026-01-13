@@ -26,3 +26,28 @@ export async function updateComonNamesByLanguage(appStore: AppStoreType) {
   }
   appStore.selectedTaxa = appStore.selectedTaxa;
 }
+
+export function initSettings(
+  appStore: AppStoreType,
+  componentCtx: HTMLElement,
+) {
+  let locale = appStore.observationsApiParams.locale;
+  if (locale) {
+    let optionEl = componentCtx.querySelector<HTMLOptionElement>(
+      `#language-select [value='${locale}']`,
+    );
+    if (optionEl) {
+      optionEl.selected = true;
+    }
+  }
+
+  let nameOrder = appStore.viewMetadata.name_order;
+  if (nameOrder) {
+    let optionEl = componentCtx.querySelector<HTMLOptionElement>(
+      `#name-order-select [value='${nameOrder}']`,
+    );
+    if (optionEl) {
+      optionEl.selected = true;
+    }
+  }
+}

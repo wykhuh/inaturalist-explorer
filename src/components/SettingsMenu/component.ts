@@ -1,9 +1,9 @@
 import { setupComponent } from "../../lib/component_utils";
 import { languageCodes } from "../../data/locale";
 import { updateAppUrl } from "../../lib/utils";
-import type { NameOrderType } from "../../types/app";
+import type { NameOrderType, ObservationViewsType } from "../../types/app";
 import { renderTaxaList } from "../../lib/search_taxa";
-import { updateComonNamesByLanguage } from "./utils";
+import { initSettings, updateComonNamesByLanguage } from "./utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import { template } from "./template";
 import { saveItem } from "../../lib/localStorage";
@@ -19,19 +19,32 @@ class SettingsMenu extends HTMLElement {
     this.render();
 
     window.addEventListener("change", this);
+    window.addEventListener("storePopulated", this);
   }
 
   disconnectCallback() {
     loggerRender("++ SettingsMenu disconnectCallback");
 
     window.removeEventListener("change", this);
+    window.removeEventListener("storePopulated", this);
   }
 
   async handleEvent(event: Event) {
     let target = event.target as HTMLInputElement;
     if (!target) return;
+    let view = window.app.store.currentView;
+    if (!view) return;
+
     loggerEvent(`[SettingsMenu Event] ${target.id}`);
 
+    if (event.type === "change") {
+      this.changeHandler(target, view);
+    } else if (event.type === "storePopulated") {
+      initSettings(window.app.store, this);
+    }
+  }
+
+  async changeHandler(target: HTMLInputElement, view: ObservationViewsType) {
     if (target.id === "language-select") {
       window.app.store.observationsApiParams = {
         ...window.app.store.observationsApiParams,
