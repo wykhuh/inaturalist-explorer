@@ -50,4 +50,15 @@ export function initSettings(
       optionEl.selected = true;
     }
   }
+
+  let perPageObservations =
+    appStore.viewMetadata.observations_observations.perPage;
+  if (perPageObservations) {
+    let optionEl = componentCtx.querySelector<HTMLOptionElement>(
+      `#per-page-observations [value='${perPageObservations}']`,
+    );
+    if (optionEl) {
+      optionEl.selected = true;
+    }
+  }
 }

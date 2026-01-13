@@ -6,7 +6,7 @@ import { renderTaxaList } from "../../lib/search_taxa";
 import { initSettings, updateComonNamesByLanguage } from "./utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import { template } from "./template";
-import { saveItem } from "../../lib/localStorage";
+import { dbKeys, saveItem } from "../../lib/localStorage";
 
 class SettingsMenu extends HTMLElement {
   constructor() {
@@ -51,7 +51,7 @@ class SettingsMenu extends HTMLElement {
         locale: target.value,
       };
 
-      saveItem("locale", target.value);
+      saveItem(dbKeys.locale, target.value);
       updateAppUrl(window.location, window.app.store);
 
       // make api call to get common names
@@ -66,12 +66,47 @@ class SettingsMenu extends HTMLElement {
         name_order: target.value as NameOrderType,
       };
 
-      saveItem("name_order", target.value);
+      saveItem(dbKeys.name_order, target.value);
       updateAppUrl(window.location, window.app.store);
       renderTaxaList(window.app.store);
-
       loggerEvent("[SettingsMenu dispatchEvent] nameOrderChanged");
       window.dispatchEvent(new Event("nameOrderChanged"));
+    } else if (target.id === "per-page-observations") {
+      window.app.store.viewMetadata.observations_observations = {
+        ...window.app.store.viewMetadata.observations_observations,
+        perPage: Number(target.value),
+      };
+      window.app.store.viewMetadata.identifications_observations = {
+        ...window.app.store.viewMetadata.identifications_observations,
+        perPage: Number(target.value),
+      };
+
+      if (view === "observations_observations") {
+        window.app.store.observationsApiParams = {
+          ...window.app.store.observationsApiParams,
+          per_page: Number(target.value),
+        };
+      }
+      if (view === "identifications_observations") {
+        window.app.store.identificationsApiParams = {
+          ...window.app.store.identificationsApiParams,
+          per_page: Number(target.value),
+        };
+      }
+
+      // HACK: force proxy store to update
+      window.app.store.viewMetadata = window.app.store.viewMetadata;
+
+      saveItem(dbKeys.per_page_observations, target.value);
+      updateAppUrl(window.location, window.app.store);
+
+      if (
+        view === "observations_observations" ||
+        view === "identifications_observations"
+      ) {
+        loggerEvent("[SettingsMenu dispatchEvent] perPageChanged");
+        window.dispatchEvent(new Event("perPageChanged"));
+      }
     }
   }
 

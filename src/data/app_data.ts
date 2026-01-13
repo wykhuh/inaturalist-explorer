@@ -1,3 +1,4 @@
+import { dbKeys } from "../lib/localStorage";
 import { renderPlacesList, showHidePlacesHeader } from "../lib/search_places";
 import {
   renderProjectsList,
@@ -60,27 +61,44 @@ export const validObservationsSubviews: ObservationSubviewsType[] = [
 ];
 
 export function viewAndTemplateObject(targetView: ObservationViewsType) {
-  switch (targetView) {
-    case "observations_species":
-      return "view-species";
-    case "observations_identifiers":
-      return "view-identifiers";
-    case "observations_observers":
-      return "view-observers";
-    case "observations_observations":
-      return "view-observations";
-    case "identifications_species":
-      return "view-species";
-    case "identifications_identifiers":
-      return "view-identifiers";
-    case "identifications_observers":
-      return "view-observers";
-    case "identifications_observations":
-      return "view-observations";
-    case "identifications_identifications":
-      return "view-identifications";
-    default:
-      throw Error(`Need to add view /template: ${targetView}`);
+  let obj = {
+    observations_species: "view-species",
+    observations_identifiers: "view-identifiers",
+    observations_observers: "view-observers",
+    observations_observations: "view-observations",
+    identifications_species: "view-species",
+    identifications_identifiers: "view-identifiers",
+    identifications_observers: "view-observers",
+    identifications_observations: "view-observations",
+    identifications_identifications: "view-identifications",
+  };
+
+  let view = obj[targetView];
+  if (view) {
+    return view;
+  } else {
+    throw Error(`Need to add view /template: ${targetView}`);
+  }
+}
+
+export function viewAndPerPageDbKeyObject(targetView: ObservationViewsType) {
+  let obj = {
+    observations_species: dbKeys.per_page_species,
+    observations_identifiers: dbKeys.per_page_users,
+    observations_observers: dbKeys.per_page_users,
+    observations_observations: dbKeys.per_page_observations,
+    identifications_species: dbKeys.per_page_species,
+    identifications_identifiers: dbKeys.per_page_users,
+    identifications_observers: dbKeys.per_page_users,
+    identifications_observations: dbKeys.per_page_observations,
+    identifications_identifications: dbKeys.per_page_identifications,
+  };
+
+  let dbKey = obj[targetView];
+  if (dbKey) {
+    return dbKey;
+  } else {
+    throw Error(`Need to add view /DB key: ${targetView}`);
   }
 }
 

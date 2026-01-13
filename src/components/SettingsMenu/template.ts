@@ -24,5 +24,17 @@ export const template = html`
         <option>Select language</option>
       </select>
     </div>
+
+    <h3>Records per Page</h3>
+    <p>Set the number of records shown on Observations >> Grid/Media/Table</p>
+    <div class="form-group">
+      <label for="per-page-observations">Per page</label>
+      <select id="per-page-observations">
+        <option value="24">24</option>
+        <option value="48">48</option>
+        <option value="96">96</option>
+        <option value="192">192</option>
+      </select>
+    </div>
   </div>
 `;
