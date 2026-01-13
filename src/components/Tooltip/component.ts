@@ -1,5 +1,3 @@
-import { loggerRender } from "../../lib/logger";
-
 export class Tooltip extends HTMLElement {
   constructor() {
     super();
@@ -10,8 +8,6 @@ export class Tooltip extends HTMLElement {
   id = "";
 
   connectedCallback() {
-    loggerRender("++ Tooltip connectedCallback");
-
     this.content =
       this.getAttribute("data-content") || "Tooltip content not defined";
     this.tooltip = this.getAttribute("data-tooltip") || "Tooltip not defined";
@@ -21,8 +17,6 @@ export class Tooltip extends HTMLElement {
   }
 
   render() {
-    loggerRender("++ Tooltip render");
-
     let content = formatTooltip(this.id, this.content, this.tooltip);
 
     this.innerHTML = content;
