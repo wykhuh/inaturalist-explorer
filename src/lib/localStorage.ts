@@ -7,7 +7,11 @@ export function saveItem(key: string, value: any) {
 export function getItem(key: string) {
   let value = localStorage.getItem(key);
   if (value) {
-    return JSON.parse(value);
+    try {
+      return JSON.parse(value);
+    } catch {
+      return value;
+    }
   }
 }
 
