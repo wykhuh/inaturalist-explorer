@@ -1,6 +1,15 @@
+import { viewAndPerPageDbKeyObject } from "../../data/app_data";
 import { formatTaxonName } from "../../lib/data_utils";
 import { getTaxa } from "../../lib/inat_api";
-import type { AppStoreType } from "../../types/app";
+import { dbKeys, saveItem } from "../../lib/localStorage";
+import { loggerEvent } from "../../lib/logger";
+import { renderTaxaList } from "../../lib/search_taxa";
+import { updateAppUrl } from "../../lib/utils";
+import type {
+  AppStoreType,
+  NameOrderType,
+  ObservationViewsType,
+} from "../../types/app";
 
 export async function updateComonNamesByLanguage(appStore: AppStoreType) {
   if (appStore.observationsApiParams.taxon_id === "0") return;
@@ -61,4 +70,85 @@ export function initSettings(
       optionEl.selected = true;
     }
   }
+}
+
+export function perPageHandler(
+  target: HTMLInputElement,
+  view: ObservationViewsType,
+  appStore: AppStoreType,
+  type: string,
+) {
+  let observationView = `observations_${type}` as ObservationViewsType;
+
+  let identificationView = `identifications_${type}` as ObservationViewsType;
+
+  if (type !== "identifications") {
+    appStore.viewMetadata[observationView] = {
+      ...appStore.viewMetadata[observationView],
+      perPage: Number(target.value),
+    };
+  }
+  appStore.viewMetadata[identificationView] = {
+    ...appStore.viewMetadata[identificationView],
+    perPage: Number(target.value),
+  };
+
+  if (view === observationView && type !== "identifications") {
+    appStore.observationsApiParams = {
+      ...appStore.observationsApiParams,
+      per_page: Number(target.value),
+    };
+  } else if (view === identificationView) {
+    appStore.identificationsApiParams = {
+      ...appStore.identificationsApiParams,
+      per_page: Number(target.value),
+    };
+  }
+
+  // HACK: force proxy store to update
+  appStore.viewMetadata = appStore.viewMetadata;
+
+  saveItem(viewAndPerPageDbKeyObject(identificationView), target.value);
+  updateAppUrl(window.location, appStore);
+
+  if (view === observationView || view === identificationView) {
+    loggerEvent("[SettingsMenu dispatchEvent] perPageChanged");
+    window.dispatchEvent(new Event("perPageChanged"));
+  }
+}
+
+export function nameOrderHandler(
+  target: HTMLInputElement,
+  appStore: AppStoreType,
+) {
+  appStore.viewMetadata = {
+    ...appStore.viewMetadata,
+    name_order: target.value as NameOrderType,
+  };
+
+  saveItem(dbKeys.name_order, target.value);
+  updateAppUrl(window.location, appStore);
+  renderTaxaList(appStore);
+  loggerEvent("[SettingsMenu dispatchEvent] nameOrderChanged");
+  window.dispatchEvent(new Event("nameOrderChanged"));
+}
+
+export async function languageHandler(
+  target: HTMLInputElement,
+  appStore: AppStoreType,
+) {
+  appStore.observationsApiParams = {
+    ...appStore.observationsApiParams,
+    locale: target.value,
+  };
+
+  saveItem(dbKeys.locale, target.value);
+  updateAppUrl(window.location, appStore);
+
+  // make api call to get common names
+  await updateComonNamesByLanguage(appStore);
+  renderTaxaList(appStore);
+
+  loggerEvent("[SettingsMenu dispatchEvent] localeChanged");
+  window.dispatchEvent(new Event("localeChanged"));
 }

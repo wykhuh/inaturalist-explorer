@@ -47,5 +47,20 @@ export function populateStoreWithLocaleStorage(appStore: AppStoreType) {
       Number(perPageObservations);
   }
 
+  let perPageSpecies = getItem(dbKeys.per_page_species);
+  if (perPageSpecies) {
+    appStore.viewMetadata.observations_species.perPage = Number(perPageSpecies);
+    appStore.viewMetadata.identifications_species.perPage =
+      Number(perPageSpecies);
+  }
+
+  let perPageIdentifications = getItem(dbKeys.per_page_identifications);
+  if (perPageIdentifications) {
+    appStore.viewMetadata.identifications_identifications.perPage = Number(
+      perPageIdentifications,
+    );
+  }
+
+  // HACK: force proxy store to update
   appStore.observationsApiParams = appStore.observationsApiParams;
 }

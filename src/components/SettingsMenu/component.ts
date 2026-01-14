@@ -1,12 +1,14 @@
 import { setupComponent } from "../../lib/component_utils";
 import { languageCodes } from "../../data/locale";
-import { updateAppUrl } from "../../lib/utils";
-import type { NameOrderType, ObservationViewsType } from "../../types/app";
-import { renderTaxaList } from "../../lib/search_taxa";
-import { initSettings, updateComonNamesByLanguage } from "./utils";
+import type { ObservationViewsType } from "../../types/app";
+import {
+  initSettings,
+  languageHandler,
+  nameOrderHandler,
+  perPageHandler,
+} from "./utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import { template } from "./template";
-import { dbKeys, saveItem } from "../../lib/localStorage";
 
 class SettingsMenu extends HTMLElement {
   constructor() {
@@ -46,67 +48,15 @@ class SettingsMenu extends HTMLElement {
 
   async changeHandler(target: HTMLInputElement, view: ObservationViewsType) {
     if (target.id === "language-select") {
-      window.app.store.observationsApiParams = {
-        ...window.app.store.observationsApiParams,
-        locale: target.value,
-      };
-
-      saveItem(dbKeys.locale, target.value);
-      updateAppUrl(window.location, window.app.store);
-
-      // make api call to get common names
-      await updateComonNamesByLanguage(window.app.store);
-      renderTaxaList(window.app.store);
-
-      loggerEvent("[SettingsMenu dispatchEvent] localeChanged");
-      window.dispatchEvent(new Event("localeChanged"));
+      languageHandler(target, window.app.store);
     } else if (target.id === "name-order-select") {
-      window.app.store.viewMetadata = {
-        ...window.app.store.viewMetadata,
-        name_order: target.value as NameOrderType,
-      };
-
-      saveItem(dbKeys.name_order, target.value);
-      updateAppUrl(window.location, window.app.store);
-      renderTaxaList(window.app.store);
-      loggerEvent("[SettingsMenu dispatchEvent] nameOrderChanged");
-      window.dispatchEvent(new Event("nameOrderChanged"));
+      nameOrderHandler(target, window.app.store);
     } else if (target.id === "per-page-observations") {
-      window.app.store.viewMetadata.observations_observations = {
-        ...window.app.store.viewMetadata.observations_observations,
-        perPage: Number(target.value),
-      };
-      window.app.store.viewMetadata.identifications_observations = {
-        ...window.app.store.viewMetadata.identifications_observations,
-        perPage: Number(target.value),
-      };
-
-      if (view === "observations_observations") {
-        window.app.store.observationsApiParams = {
-          ...window.app.store.observationsApiParams,
-          per_page: Number(target.value),
-        };
-      }
-      if (view === "identifications_observations") {
-        window.app.store.identificationsApiParams = {
-          ...window.app.store.identificationsApiParams,
-          per_page: Number(target.value),
-        };
-      }
-
-      // HACK: force proxy store to update
-      window.app.store.viewMetadata = window.app.store.viewMetadata;
-
-      saveItem(dbKeys.per_page_observations, target.value);
-      updateAppUrl(window.location, window.app.store);
-
-      if (
-        view === "observations_observations" ||
-        view === "identifications_observations"
-      ) {
-        loggerEvent("[SettingsMenu dispatchEvent] perPageChanged");
-        window.dispatchEvent(new Event("perPageChanged"));
-      }
+      perPageHandler(target, view, window.app.store, "observations");
+    } else if (target.id === "per-page-species") {
+      perPageHandler(target, view, window.app.store, "species");
+    } else if (target.id === "per-page-identifications") {
+      perPageHandler(target, view, window.app.store, "identifications");
     }
   }
 

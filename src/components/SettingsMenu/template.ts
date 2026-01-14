@@ -36,5 +36,27 @@ export const template = html`
         <option value="192">192</option>
       </select>
     </div>
+
+    <p>Set the number of records shown on Species</p>
+    <div class="form-group">
+      <label for="per-page-species">Per page</label>
+      <select id="per-page-species">
+        <option value="24">24</option>
+        <option value="48">48</option>
+        <option value="96">96</option>
+        <option value="192">192</option>
+      </select>
+    </div>
+
+    <p>Set the number of records shown on Identifications</p>
+    <div class="form-group">
+      <label for="per-page-identifications">Per page</label>
+      <select id="per-page-identifications">
+        <option value="24">24</option>
+        <option value="48">48</option>
+        <option value="96">96</option>
+        <option value="192">192</option>
+      </select>
+    </div>
   </div>
 `;
