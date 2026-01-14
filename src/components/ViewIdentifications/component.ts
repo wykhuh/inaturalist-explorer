@@ -1,6 +1,6 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
-import { fetchAndRenderData, paginationCallback, perPage } from "./utils";
+import { fetchAndRenderData, paginationCallback } from "./utils";
 import { template } from "./template";
 
 class ViewIdentifications extends HTMLElement {
@@ -16,6 +16,7 @@ class ViewIdentifications extends HTMLElement {
     window.addEventListener("identificationsChange", this);
     window.addEventListener("localeChanged", this);
     window.addEventListener("nameOrderChanged", this);
+    window.addEventListener("perPageChanged", this);
   }
 
   disconnectedCallback() {
@@ -24,6 +25,7 @@ class ViewIdentifications extends HTMLElement {
     window.removeEventListener("identificationsChange", this);
     window.removeEventListener("localeChanged", this);
     window.removeEventListener("nameOrderChanged", this);
+    window.removeEventListener("perPageChanged", this);
   }
 
   handleEvent(event: CustomEvent) {
@@ -33,9 +35,10 @@ class ViewIdentifications extends HTMLElement {
       "identificationsChange",
       "localeChanged",
       "nameOrderChanged",
+      "perPageChanged",
     ];
     if (resourceChanges.includes(event.type)) {
-      fetchAndRenderData(perPage, paginationCallback, window.app.store);
+      fetchAndRenderData(paginationCallback, window.app.store);
     }
   }
 
@@ -43,7 +46,7 @@ class ViewIdentifications extends HTMLElement {
     loggerRender("++ ViewIdentifications render");
     setupComponent(template, this);
 
-    await fetchAndRenderData(perPage, paginationCallback, window.app.store);
+    await fetchAndRenderData(paginationCallback, window.app.store);
   }
 }
 

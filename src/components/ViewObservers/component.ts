@@ -1,6 +1,6 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
-import { fetchAndRenderData, paginationCallback, perPage } from "./utils";
+import { fetchAndRenderData, paginationCallback } from "./utils";
 import { template } from "./template";
 
 class ViewObservers extends HTMLElement {
@@ -29,7 +29,7 @@ class ViewObservers extends HTMLElement {
 
     let resourceChanges = ["observationsChange", "identificationsChange"];
     if (resourceChanges.includes(event.type)) {
-      fetchAndRenderData(perPage, paginationCallback, window.app.store);
+      fetchAndRenderData(paginationCallback, window.app.store);
     }
   }
 
@@ -37,7 +37,7 @@ class ViewObservers extends HTMLElement {
     loggerRender("++ ViewObservers render");
     setupComponent(template, this);
 
-    await fetchAndRenderData(perPage, paginationCallback, window.app.store);
+    await fetchAndRenderData(paginationCallback, window.app.store);
   }
 }
 

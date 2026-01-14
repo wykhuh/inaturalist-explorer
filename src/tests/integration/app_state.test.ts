@@ -102,6 +102,7 @@ import {
   gridLabel_allTaxaRecord_user1Annotator,
   gridLabel_allTaxaRecord_usersAnnotator,
   gridLabel_allTaxaRecord_usersIdentifiers,
+  perPage,
 } from "../test_helpers.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
 import { decodeAppUrl } from "../../lib/utils.ts";
@@ -178,13 +179,14 @@ describe("taxonSelectedHandler", () => {
     expectEmptyResources(store, ["selectedTaxa"]);
     expectLifeTaxa(store);
     let expectedParams1 = {
+      ...defaultParams,
       taxon_id: life().id.toString(),
       colors: colors[0],
-      ...defaultParams,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams1);
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}`,
+      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
 
@@ -198,14 +200,15 @@ describe("taxonSelectedHandler", () => {
     expectEmptyResources(store, ["selectedTaxa"]);
     expectLifeOakTaxa(store);
     let expectedParams2 = {
+      ...defaultParams,
       taxon_id: `${life().id},${redOak().id}`,
       colors: `${colors[0]},${colors[1]}`,
-      ...defaultParams,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
       `?taxon_id=${life().id},${redOak().id}` +
-        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&${defaultQuery}`,
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
     expect(store.selectedTaxa[1].observations_count).toBe(oakCount);
@@ -232,6 +235,7 @@ describe("taxonIdentifiedSelectedHandler", () => {
       ...defaultParams,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.identificationsApiParams).toStrictEqual({});
@@ -263,10 +267,11 @@ describe("placeSelectedHandler", () => {
       colors: iNatOrange,
       place_id: losangeles.id.toString(),
       taxon_id: allTaxa.id.toString(),
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams1);
     expect(window.location.search).toBe(
-      `?place_id=${losangeles.id}&${defaultQuery}`,
+      `?place_id=${losangeles.id}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount * 0.6);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaCount * 0.6);
@@ -289,10 +294,11 @@ describe("placeSelectedHandler", () => {
       colors: iNatOrange,
       place_id: `${losangeles.id},${sandiego.id}`,
       taxon_id: allTaxa.id.toString(),
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?place_id=${losangeles.id},${sandiego.id}&${defaultQuery}`,
+      `?place_id=${losangeles.id},${sandiego.id}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaCount * 0.6);
@@ -327,11 +333,12 @@ describe("refreshBoundingBox", () => {
       swlng: 0,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     let refreshlayer1 = store.refreshMap.layer;
     expect(window.location.search).toBe(
-      `?${defaultQuery}&nelat=0&nelng=0&swlat=0&swlng=0`,
+      `?${defaultQuery}&per_page=${perPage}&nelat=0&nelng=0&swlat=0&swlng=0`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaCount);
@@ -350,7 +357,7 @@ describe("refreshBoundingBox", () => {
     let refreshlayer2 = store.refreshMap.layer;
     expect(refreshlayer1).not.toStrictEqual(refreshlayer2);
     expect(window.location.search).toBe(
-      `?${defaultQuery}&nelat=0&nelng=0&swlat=0&swlng=0`,
+      `?${defaultQuery}&per_page=${perPage}&nelat=0&nelng=0&swlat=0&swlng=0`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaCount);
@@ -380,10 +387,11 @@ describe("projectSelectedHandler", () => {
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       project_id: project_cnc1.id.toString(),
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(window.location.search).toBe(
-      `?project_id=${project_cnc1.id}&${defaultQuery}`,
+      `?project_id=${project_cnc1.id}&${defaultQuery}&per_page=${perPage}`,
     );
 
     await projectSelectedHandler(project_cnc2, "city", store);
@@ -400,10 +408,11 @@ describe("projectSelectedHandler", () => {
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       project_id: `${project_cnc1.id},${project_cnc2.id}`,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?project_id=${project_cnc1.id},${project_cnc2.id}&${defaultQuery}`,
+      `?project_id=${project_cnc1.id},${project_cnc2.id}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedProjects[0].observations_count).toBe(
@@ -438,9 +447,12 @@ describe("userSelectedHandler", () => {
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       user_id: user1.id.toString(),
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
-    expect(window.location.search).toBe(`?user_id=${user1.id}&${defaultQuery}`);
+    expect(window.location.search).toBe(
+      `?user_id=${user1.id}&${defaultQuery}&per_page=${perPage}`,
+    );
 
     await userSelectedHandler(user2, "user", store);
 
@@ -456,10 +468,11 @@ describe("userSelectedHandler", () => {
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       user_id: `${user1.id},${user2.id}`,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?user_id=${user1.id},${user2.id}&${defaultQuery}`,
+      `?user_id=${user1.id},${user2.id}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedUsers[0].observations_count).toBeCloseTo(
@@ -494,10 +507,11 @@ describe("userIdentifierSelectedHandler", () => {
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       ident_user_id: user1.id.toString(),
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(window.location.search).toBe(
-      `?ident_user_id=${user1.id}&${defaultQuery}`,
+      `?ident_user_id=${user1.id}&${defaultQuery}&per_page=${perPage}`,
     );
 
     await userIdentifierSelectedHandler(user2, "user", store);
@@ -514,10 +528,11 @@ describe("userIdentifierSelectedHandler", () => {
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       ident_user_id: `${user1.id},${user2.id}`,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?ident_user_id=${user1.id},${user2.id}&${defaultQuery}`,
+      `?ident_user_id=${user1.id},${user2.id}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedUsersIdentifiers[0].observations_count).toBe(
@@ -545,7 +560,7 @@ describe("notInProjectSelectedHandler", () => {
       basemapLabel_osm,
       gridLabel_allTaxaRecord_project1NotInProject,
     ]);
-    expectEmptyResources(store, ["selectedTaxa"]);
+    expectEmptyResources(store, ["selectedTaxa", "selectedNotInProject"]);
     expectDefaultTaxaRecord(store, allTaxaCount);
     expect(store.selectedNotInProject).toStrictEqual(projectA);
     let expectedParams = {
@@ -553,10 +568,11 @@ describe("notInProjectSelectedHandler", () => {
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       not_in_project: projectA.id.toString(),
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(window.location.search).toBe(
-      `?${defaultQuery}&not_in_project=${projectA.id}`,
+      `?${defaultQuery}&per_page=${perPage}&not_in_project=${projectA.id}`,
     );
 
     await notInProjectSelectedHandler(projectB, "city", store);
@@ -565,7 +581,7 @@ describe("notInProjectSelectedHandler", () => {
       basemapLabel_osm,
       gridLabel_allTaxaRecord_project2NotInProject,
     ]);
-    expectEmptyResources(store, ["selectedTaxa"]);
+    expectEmptyResources(store, ["selectedTaxa", "selectedNotInProject"]);
     expectDefaultTaxaRecord(store, allTaxaCount);
     expect(store.selectedNotInProject).toStrictEqual(projectB);
     let expectedParams2 = {
@@ -573,10 +589,11 @@ describe("notInProjectSelectedHandler", () => {
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       not_in_project: `${projectB.id}`,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?${defaultQuery}&not_in_project=${projectB.id}`,
+      `?${defaultQuery}&per_page=${perPage}&not_in_project=${projectB.id}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedNotInProject.observations_count).toBeUndefined();
@@ -602,7 +619,7 @@ describe("reviewerSelectedHandler", () => {
       basemapLabel_osm,
       gridLabel_allTaxaRecord_user1Reviewer,
     ]);
-    expectEmptyResources(store, ["selectedTaxa"]);
+    expectEmptyResources(store, ["selectedTaxa", "selectedReviewer"]);
     expectDefaultTaxaRecord(store, allTaxaCount);
     expect(store.selectedReviewer).toStrictEqual(userA);
     let expectedParams = {
@@ -610,10 +627,11 @@ describe("reviewerSelectedHandler", () => {
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       viewer_id: userA.id,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(window.location.search).toBe(
-      `?${defaultQuery}&viewer_id=${userA.id}`,
+      `?${defaultQuery}&per_page=${perPage}&viewer_id=${userA.id}`,
     );
 
     await reviewerSelectedHandler(userB, "user", store);
@@ -622,7 +640,7 @@ describe("reviewerSelectedHandler", () => {
       basemapLabel_osm,
       gridLabel_allTaxaRecord_user2Reviewer,
     ]);
-    expectEmptyResources(store, ["selectedTaxa"]);
+    expectEmptyResources(store, ["selectedTaxa", "selectedReviewer"]);
     expectDefaultTaxaRecord(store);
     expect(store.selectedReviewer).toStrictEqual(userB);
     let expectedParams2 = {
@@ -630,10 +648,11 @@ describe("reviewerSelectedHandler", () => {
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       viewer_id: userB.id,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?${defaultQuery}&viewer_id=${userB.id}`,
+      `?${defaultQuery}&per_page=${perPage}&viewer_id=${userB.id}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedReviewer.observations_count).toBeUndefined();
@@ -660,7 +679,7 @@ describe("unobservedByUserSelectedHandler", () => {
       basemapLabel_osm,
       gridLabel_allTaxaRecord_user1Unobserved,
     ]);
-    expectEmptyResources(store, ["selectedTaxa"]);
+    expectEmptyResources(store, ["selectedTaxa", "selectedUnobservedByUser"]);
     expectDefaultTaxaRecord(store, allTaxaCount * 0.65);
     expect(store.selectedUnobservedByUser).toStrictEqual(userA);
     let expectedParams = {
@@ -668,10 +687,11 @@ describe("unobservedByUserSelectedHandler", () => {
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       unobserved_by_user_id: userA.id,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(window.location.search).toBe(
-      `?${defaultQuery}&unobserved_by_user_id=${userA.id}`,
+      `?${defaultQuery}&per_page=${perPage}&unobserved_by_user_id=${userA.id}`,
     );
 
     await unobservedByUserSelectedHandler(userB, "user", store);
@@ -680,7 +700,7 @@ describe("unobservedByUserSelectedHandler", () => {
       basemapLabel_osm,
       gridLabel_allTaxaRecord_user2Unobserved,
     ]);
-    expectEmptyResources(store, ["selectedTaxa"]);
+    expectEmptyResources(store, ["selectedTaxa", "selectedUnobservedByUser"]);
     expectDefaultTaxaRecord(store);
     expect(store.selectedUnobservedByUser).toStrictEqual(userB);
     let expectedParams2 = {
@@ -688,11 +708,12 @@ describe("unobservedByUserSelectedHandler", () => {
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       unobserved_by_user_id: userB.id,
+      per_page: perPage,
     };
 
     expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?${defaultQuery}&unobserved_by_user_id=${userB.id}`,
+      `?${defaultQuery}&per_page=${perPage}&unobserved_by_user_id=${userB.id}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
 
@@ -723,10 +744,11 @@ describe("userAnnotatorsSelectedHandler", () => {
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       annotation_user_id: user1.id.toString(),
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(window.location.search).toBe(
-      `?${defaultQuery}&annotation_user_id=${user1.id}`,
+      `?${defaultQuery}&per_page=${perPage}&annotation_user_id=${user1.id}`,
     );
 
     await userAnnotatorsSelectedHandler(user2, "user", store);
@@ -743,10 +765,11 @@ describe("userAnnotatorsSelectedHandler", () => {
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       annotation_user_id: `${user1.id},${user2.id}`,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?${defaultQuery}&annotation_user_id=${user1.id},${user2.id}`,
+      `?${defaultQuery}&per_page=${perPage}&annotation_user_id=${user1.id},${user2.id}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedUsersAnnotators[0].observations_count).toBeCloseTo(
@@ -787,10 +810,11 @@ describe("withoutTaxonSelectedHandler", () => {
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
       without_taxon_id: `${life1.id}`,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams1);
     expect(window.location.search).toBe(
-      `?${defaultQuery}&without_taxon_id=${life1.id}`,
+      `?${defaultQuery}&per_page=${perPage}&without_taxon_id=${life1.id}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(
       allTaxa.observations_count,
@@ -809,10 +833,11 @@ describe("withoutTaxonSelectedHandler", () => {
       taxon_id: allTaxa.id.toString(),
       without_taxon_id: `${life().id},${redOak().id}`,
       colors: iNatOrange,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?${defaultQuery}&without_taxon_id=${life1.id},${oak1.id}`,
+      `?${defaultQuery}&per_page=${perPage}&without_taxon_id=${life1.id},${oak1.id}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(
       allTaxa.observations_count,
@@ -850,6 +875,7 @@ describe("withoutTaxonIdentifiedSelectedHandler", () => {
       ...defaultParams,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams1);
   });
@@ -875,10 +901,11 @@ describe("combos", () => {
       ...defaultParams,
       colors: colors[0],
       taxon_id: redOak(colors[0]).id.toString(),
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(params1);
     expect(window.location.search).toBe(
-      `?taxon_id=${redOak().id}&colors=${colorsEncoded[0]}&${defaultQuery}`,
+      `?taxon_id=${redOak().id}&colors=${colorsEncoded[0]}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(oakCount);
 
@@ -893,6 +920,7 @@ describe("combos", () => {
     expectRefreshPlace(store, oakCount);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
+      per_page: perPage,
       taxon_id: redOak(colors[0]).id.toString(),
       colors: colors[0],
       nelat: 0,
@@ -902,7 +930,7 @@ describe("combos", () => {
     });
 
     expect(window.location.search).toBe(
-      `?taxon_id=${redOak().id}&colors=${colorsEncoded[0]}&${defaultQuery}` +
+      `?taxon_id=${redOak().id}&colors=${colorsEncoded[0]}&${defaultQuery}&per_page=${perPage}` +
         `&nelat=0&nelng=0&swlat=0&swlng=0`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(oakCount);
@@ -930,13 +958,14 @@ describe("combos", () => {
     expectLosAngelesPlace(store, allTaxaLACount);
     let params = {
       ...defaultParams,
+      per_page: perPage,
       colors: iNatOrange,
       place_id: losangeles.id.toString(),
       taxon_id: allTaxa.id.toString(),
     };
     expect(store.observationsApiParams).toStrictEqual(params);
     expect(window.location.search).toBe(
-      `?place_id=${losangeles.id}&${defaultQuery}`,
+      `?place_id=${losangeles.id}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaLACount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaLACount);
@@ -952,6 +981,7 @@ describe("combos", () => {
     expectRefreshPlace(store, allTaxaCount, "LA");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
+      per_page: perPage,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
       nelat: 34.30714385628804,
@@ -960,7 +990,8 @@ describe("combos", () => {
       swlng: -118.12500000000001,
     });
     expect(window.location.search).toBe(
-      `?${defaultQuery}&nelat=34.30714385628804&nelng=-118.12500000000001&swlat=34.30714385628804&swlng=-118.12500000000001`,
+      `?${defaultQuery}&per_page=${perPage}` +
+        `&nelat=34.30714385628804&nelng=-118.12500000000001&swlat=34.30714385628804&swlng=-118.12500000000001`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaCount);
@@ -984,12 +1015,13 @@ describe("combos", () => {
     expectProject1(store);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
+      per_page: perPage,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
       project_id: project_cnc1.id.toString(),
     });
     expect(window.location.search).toBe(
-      `?project_id=${project_cnc1.id}&${defaultQuery}`,
+      `?project_id=${project_cnc1.id}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaProjectCount);
     expect(store.selectedProjects[0].observations_count).toBe(
@@ -1008,6 +1040,7 @@ describe("combos", () => {
     expectRefreshPlace(store, allTaxaProjectCount);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
+      per_page: perPage,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
       nelat: 0,
@@ -1017,7 +1050,7 @@ describe("combos", () => {
       project_id: project_cnc1.id.toString(),
     });
     expect(window.location.search).toBe(
-      `?project_id=${project_cnc1.id}&${defaultQuery}` +
+      `?project_id=${project_cnc1.id}&${defaultQuery}&per_page=${perPage}` +
         `&nelat=0&nelng=0&swlat=0&swlng=0`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaProjectCount);
@@ -1044,11 +1077,14 @@ describe("combos", () => {
     expectUser1(store);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
+      per_page: perPage,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
       user_id: user1.id.toString(),
     });
-    expect(window.location.search).toBe(`?user_id=${user1.id}&${defaultQuery}`);
+    expect(window.location.search).toBe(
+      `?user_id=${user1.id}&${defaultQuery}&per_page=${perPage}`,
+    );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount * 0.45);
 
     await refreshBoundingBox(store);
@@ -1063,6 +1099,7 @@ describe("combos", () => {
     expectRefreshPlace(store, allTaxaCount * 0.45);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
+      per_page: perPage,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
       nelat: 0,
@@ -1073,7 +1110,7 @@ describe("combos", () => {
     });
 
     expect(window.location.search).toBe(
-      `?user_id=${user1.id}&${defaultQuery}` +
+      `?user_id=${user1.id}&${defaultQuery}&per_page=${perPage}` +
         `&nelat=0&nelng=0&swlat=0&swlng=0`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount * 0.45);
@@ -1104,13 +1141,14 @@ describe("combos", () => {
     expectLosAngelesPlace(store, allTaxaLACount);
     let params = {
       ...defaultParams,
+      per_page: perPage,
       colors: iNatOrange,
       place_id: losangeles.id.toString(),
       taxon_id: allTaxa.id.toString(),
     };
     expect(store.observationsApiParams).toStrictEqual(params);
     expect(window.location.search).toBe(
-      `?place_id=${losangeles.id}&${defaultQuery}`,
+      `?place_id=${losangeles.id}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaLACount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaLACount);
@@ -1126,6 +1164,7 @@ describe("combos", () => {
     expectRefreshPlace(store, allTaxaCount, "LA");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
+      per_page: perPage,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
       nelat: 34.30714385628804,
@@ -1134,7 +1173,7 @@ describe("combos", () => {
       swlng: -118.12500000000001,
     });
     expect(window.location.search).toBe(
-      `?${defaultQuery}&nelat=34.30714385628804&nelng=-118.12500000000001&swlat=34.30714385628804&swlng=-118.12500000000001`,
+      `?${defaultQuery}&per_page=${perPage}&nelat=34.30714385628804&nelng=-118.12500000000001&swlat=34.30714385628804&swlng=-118.12500000000001`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaCount);
@@ -1151,6 +1190,7 @@ describe("combos", () => {
     expectSanDiegoPlace(store, allTaxaSDCount);
     let params2 = {
       ...defaultParams,
+      per_page: perPage,
       colors: iNatOrange,
       place_id: sandiego.id.toString(),
       taxon_id: allTaxa.id.toString(),
@@ -1158,7 +1198,7 @@ describe("combos", () => {
     expect(store.observationsApiParams).toStrictEqual(params2);
 
     expect(window.location.search).toBe(
-      `?place_id=${sandiego.id}&${defaultQuery}`,
+      `?place_id=${sandiego.id}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaSDCount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaSDCount);
@@ -1181,14 +1221,12 @@ describe("combos", () => {
     ]);
     expectLifeTaxa(store, count1);
     expect(store.observationsApiParams).toStrictEqual({
+      ...defaultParams,
       taxon_id: life().id.toString(),
       colors: colors[0],
-      verifiable: true,
-      spam: false,
-      locale: "en",
     });
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultParams}`,
     );
 
     await placeSelectedHandler(losangeles, "los", store);
@@ -1203,16 +1241,14 @@ describe("combos", () => {
     expectLifeTaxa(store, count2);
     expectLosAngelesPlace(store, count2);
     expect(store.observationsApiParams).toStrictEqual({
+      ...defaultParams,
       taxon_id: life().id.toString(),
       colors: colors[0],
       place_id: losangeles.id.toString(),
-      verifiable: true,
-      spam: false,
-      locale: "en",
     });
     expect(window.location.search).toBe(
       `?taxon_id=${life().id}&place_id=${losangeles.id}&colors=${colorsEncoded[0]}` +
-        `&verifiable=true&spam=false`,
+        `&${defaultParams}`,
     );
 
     await projectSelectedHandler(project_cnc1, "city", store);
@@ -1228,17 +1264,15 @@ describe("combos", () => {
     expectLosAngelesPlace(store, count3);
     expectProject1(store, count3);
     expect(store.observationsApiParams).toStrictEqual({
+      ...defaultParams,
       taxon_id: life().id.toString(),
       colors: colors[0],
       place_id: losangeles.id.toString(),
-      verifiable: true,
-      spam: false,
       project_id: project_cnc1.id.toString(),
-      locale: "en",
     });
     expect(window.location.search).toBe(
       `?taxon_id=${life().id}&place_id=${losangeles.id}&project_id=${project_cnc1.id}` +
-        `&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+        `&colors=${colorsEncoded[0]}&${defaultParams}`,
     );
 
     await userSelectedHandler(user1, "user", store);
@@ -1255,18 +1289,16 @@ describe("combos", () => {
     expectProject1(store, count4);
     expectUser1(store, count4);
     expect(store.observationsApiParams).toStrictEqual({
+      ...defaultParams,
       taxon_id: life().id.toString(),
       colors: colors[0],
       place_id: losangeles.id.toString(),
-      verifiable: true,
-      spam: false,
       project_id: project_cnc1.id.toString(),
       user_id: user1.id.toString(),
-      locale: "en",
     });
     expect(window.location.search).toBe(
       `?taxon_id=${life().id}&place_id=${losangeles.id}&project_id=${project_cnc1.id}` +
-        `&user_id=${user1.id}&colors=${colorsEncoded[0]}&verifiable=true&spam=false`,
+        `&user_id=${user1.id}&colors=${colorsEncoded[0]}&${defaultParams}`,
     );
 
     await taxonSelectedHandler(redOakBasic, "red", store);
@@ -1597,11 +1629,13 @@ describe("taxonSelectedHandler with identifications", () => {
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams1 = {
       observation_taxon_id: life().id.toString(),
+      per_page: perPage,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams1);
 
     expect(window.location.search).toBe(
-      `?observation_taxon_id=${life().id}&colors=${colorsEncoded[0]}`,
+      `?observation_taxon_id=${life().id}&colors=${colorsEncoded[0]}` +
+        `&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].identifications_count).toBe(lifeCount);
 
@@ -1616,13 +1650,15 @@ describe("taxonSelectedHandler with identifications", () => {
     expectLifeOakTaxaIdentifications(store, [lifeCount, oakCount]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams2 = {
+      per_page: perPage,
       observation_taxon_id: `${life().id},${redOak().id}`,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
 
     expect(window.location.search).toBe(
       `?observation_taxon_id=${life().id},${redOak().id}` +
-        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}`,
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}` +
+        `&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].identifications_count).toBe(lifeCount);
     expect(store.selectedTaxa[1].identifications_count).toBe(oakCount);
@@ -1650,11 +1686,13 @@ describe("taxonSelectedHandler with identifications", () => {
     expectLifeTaxaIdentification(store, lifeCount);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams1 = {
+      per_page: perPage,
       observation_taxon_id: life().id.toString(),
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams1);
     expect(window.location.search).toBe(
-      `?observation_taxon_id=${life().id}&colors=${colorsEncoded[0]}`,
+      `?observation_taxon_id=${life().id}&colors=${colorsEncoded[0]}` +
+        `&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].identifications_count).toBe(lifeCount);
 
@@ -1669,12 +1707,14 @@ describe("taxonSelectedHandler with identifications", () => {
     expectLifeOakTaxaIdentifications(store);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams2 = {
+      per_page: perPage,
       observation_taxon_id: `${life().id},${redOak().id}`,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
       `?observation_taxon_id=${life().id},${redOak().id}` +
-        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}`,
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}` +
+        `&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].identifications_count).toBe(lifeCount);
     expect(store.selectedTaxa[1].identifications_count).toBe(oakCount);
@@ -1703,9 +1743,10 @@ describe("taxonIdentifiedSelectedHandler with identifications", () => {
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       taxon_id: life().id.toString(),
     });
-    expect(window.location.search).toBe(`?taxon_id=48460`);
+    expect(window.location.search).toBe(`?taxon_id=48460&per_page=${perPage}`);
   });
 });
 
@@ -1734,11 +1775,14 @@ describe("placeSelectedHandler with identifications", () => {
     expectLosAngelesPlaceIdentifications(store, count * 0.6);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams1 = {
+      per_page: perPage,
       place_id: losangeles.id.toString(),
       observation_taxon_id: allTaxa.id.toString(),
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams1);
-    expect(window.location.search).toBe(`?place_id=${losangeles.id}`);
+    expect(window.location.search).toBe(
+      `?place_id=${losangeles.id}&per_page=${perPage}`,
+    );
 
     await placeSelectedHandler(sandiego, "san", store);
 
@@ -1755,12 +1799,13 @@ describe("placeSelectedHandler with identifications", () => {
     expect_LA_SD_Place_Identifications(store, [count * 0.6, count * 0.4]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams2 = {
+      per_page: perPage,
       place_id: `${losangeles.id},${sandiego.id}`,
       observation_taxon_id: allTaxa.id.toString(),
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?place_id=${losangeles.id},${sandiego.id}`,
+      `?place_id=${losangeles.id},${sandiego.id}&per_page=${perPage}`,
     );
   });
 });
@@ -1785,6 +1830,7 @@ describe("projectSelectedHandler with identifications", () => {
     expectDefaultTaxaRecordIdentification(store);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       observation_taxon_id: allTaxa.id.toString(),
     });
   });
@@ -1809,6 +1855,7 @@ describe("userSelectedHandler with identifications", () => {
     expectDefaultTaxaRecordIdentification(store);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       observation_taxon_id: allTaxa.id.toString(),
     });
   });
@@ -1838,11 +1885,14 @@ describe("userIdentifierSelectedHandler with identifications", () => {
     expect(store.selectedUsersIdentifiers).toStrictEqual([user1]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams = {
+      per_page: perPage,
       user_id: user1.id.toString(),
       observation_taxon_id: allTaxa.id.toString(),
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams);
-    expect(window.location.search).toBe(`?user_id=${user1.id}`);
+    expect(window.location.search).toBe(
+      `?user_id=${user1.id}&per_page=${perPage}`,
+    );
     expect(store.selectedUsersIdentifiers[0].identifications_count).toBe(
       count * 0.45,
     );
@@ -1861,11 +1911,14 @@ describe("userIdentifierSelectedHandler with identifications", () => {
       ...defaultParams,
     });
     let expectedParams2 = {
+      per_page: perPage,
       user_id: `${user1.id},${user2.id}`,
       observation_taxon_id: allTaxa.id.toString(),
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
-    expect(window.location.search).toBe(`?user_id=${user1.id},${user2.id}`);
+    expect(window.location.search).toBe(
+      `?user_id=${user1.id},${user2.id}&per_page=${perPage}`,
+    );
     expect(store.selectedUsersIdentifiers[0].identifications_count).toBe(
       count * 0.45,
     );
@@ -1903,10 +1956,11 @@ describe("withoutTaxonSelectedHandler with identifications", () => {
     let expectedParams1 = {
       observation_taxon_id: allTaxa.id.toString(),
       without_observation_taxon_id: `${life1.id}`,
+      per_page: perPage,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams1);
     expect(window.location.search).toBe(
-      `?without_observation_taxon_id=${life1.id}`,
+      `?per_page=${perPage}&without_observation_taxon_id=${life1.id}`,
     );
 
     await withoutTaxonSelectedHandler(redOakBasic, "red", store);
@@ -1922,10 +1976,11 @@ describe("withoutTaxonSelectedHandler with identifications", () => {
     let expectedParams2 = {
       observation_taxon_id: allTaxa.id.toString(),
       without_observation_taxon_id: `${life().id},${redOak().id}`,
+      per_page: perPage,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?without_observation_taxon_id=${life1.id},${oak1.id}`,
+      `?per_page=${perPage}&without_observation_taxon_id=${life1.id},${oak1.id}`,
     );
   });
 });
@@ -1959,11 +2014,14 @@ describe("withoutTaxonIdentifiedSelectedHandler with identifications", () => {
     expect(store.selectedWithoutTaxaIdentified).toStrictEqual([life1]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams1 = {
+      per_page: perPage,
       observation_taxon_id: allTaxa.id.toString(),
       without_taxon_id: `${life1.id}`,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams1);
-    expect(window.location.search).toBe(`?without_taxon_id=${life1.id}`);
+    expect(window.location.search).toBe(
+      `?per_page=${perPage}&without_taxon_id=${life1.id}`,
+    );
 
     await withoutTaxonIdentifiedSelectedHandler(redOakBasic, "red", store);
 
@@ -1979,12 +2037,13 @@ describe("withoutTaxonIdentifiedSelectedHandler with identifications", () => {
     expect(store.selectedWithoutTaxaIdentified).toStrictEqual([life1, oak1]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams2 = {
+      per_page: perPage,
       observation_taxon_id: allTaxa.id.toString(),
       without_taxon_id: `${life().id},${redOak().id}`,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?without_taxon_id=${life1.id},${oak1.id}`,
+      `?per_page=${perPage}&without_taxon_id=${life1.id},${oak1.id}`,
     );
   });
 });
@@ -2012,13 +2071,14 @@ describe("removePlace", () => {
     let params2 = {
       ...defaultParams,
       colors: iNatOrange,
+      per_page: perPage,
       place_id: `${LosAngeles.id},${SanDiego.id}`,
       taxon_id: allTaxa.id.toString(),
     };
     expect(store.observationsApiParams).toStrictEqual(params2);
     expect(store.identificationsApiParams).toStrictEqual({});
     expect(window.location.search).toBe(
-      `?place_id=${LosAngeles.id},${SanDiego.id}&${defaultQuery}`,
+      `?place_id=${LosAngeles.id},${SanDiego.id}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedPlaces).toStrictEqual([LosAngeles, SanDiego]);
 
@@ -2028,6 +2088,7 @@ describe("removePlace", () => {
     expectDefaultTaxaRecord(store, SanDiego.observations_count);
     let params3 = {
       ...defaultParams,
+      per_page: perPage,
       colors: iNatOrange,
       place_id: SanDiego.id.toString(),
       taxon_id: allTaxa.id.toString(),
@@ -2035,7 +2096,7 @@ describe("removePlace", () => {
     expect(store.observationsApiParams).toStrictEqual(params3);
     expect(store.identificationsApiParams).toStrictEqual({});
     expect(window.location.search).toBe(
-      `?place_id=${SanDiego.id}&${defaultQuery}`,
+      `?place_id=${SanDiego.id}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedPlaces).toStrictEqual([SanDiego]);
 
@@ -2045,12 +2106,13 @@ describe("removePlace", () => {
     expectDefaultTaxaRecord(store);
     let params4 = {
       ...defaultParams,
+      per_page: perPage,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
     };
     expect(store.observationsApiParams).toStrictEqual(params4);
     expect(store.identificationsApiParams).toStrictEqual({});
-    expect(window.location.search).toBe("");
+    expect(window.location.search).toBe(`?${defaultQuery}&per_page=${perPage}`);
   });
 
   test("add refresh bounding box; remove place", async () => {
@@ -2067,6 +2129,7 @@ describe("removePlace", () => {
     expectDefaultTaxaRecord(store);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
+      per_page: perPage,
       nelat: 0,
       nelng: 0,
       swlat: 0,
@@ -2075,7 +2138,7 @@ describe("removePlace", () => {
       colors: iNatOrange,
     });
     expect(window.location.search).toBe(
-      `?${defaultQuery}&nelat=0&nelng=0&swlat=0&swlng=0`,
+      `?${defaultQuery}&per_page=${perPage}&nelat=0&nelng=0&swlat=0&swlng=0`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaCount);
@@ -2085,11 +2148,12 @@ describe("removePlace", () => {
     expectDefaultTaxaRecord(store);
     let params2 = {
       ...defaultParams,
+      per_page: perPage,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
     };
     expect(store.observationsApiParams).toStrictEqual(params2);
-    expect(window.location.search).toBe("");
+    expect(window.location.search).toBe(`?${defaultQuery}&per_page=${perPage}`);
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
   });
 
@@ -2106,11 +2170,13 @@ describe("removePlace", () => {
 
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
+      per_page: perPage,
       taxon_id: life().id.toString(),
       colors: colors[0],
     });
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}`,
+      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}` +
+        `&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
 
@@ -2118,6 +2184,7 @@ describe("removePlace", () => {
 
     let params1 = {
       ...defaultParams,
+      per_page: perPage,
       colors: colors[0],
       place_id: losangeles.id.toString(),
       taxon_id: life().id.toString(),
@@ -2125,7 +2192,8 @@ describe("removePlace", () => {
     expect(store.observationsApiParams).toStrictEqual(params1);
     expect(window.location.search).toBe(
       `?taxon_id=${life().id}&place_id=${losangeles.id}` +
-        `&colors=${colorsEncoded[0]}&${defaultQuery}`,
+        `&colors=${colorsEncoded[0]}&${defaultQuery}` +
+        `&per_page=${perPage}`,
     );
     expectLosAngelesPlace(store, lifeCount * 0.6);
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount * 0.6);
@@ -2135,12 +2203,14 @@ describe("removePlace", () => {
 
     let params2 = {
       ...defaultParams,
+      per_page: perPage,
       colors: colors[0],
       taxon_id: life().id.toString(),
     };
     expect(store.observationsApiParams).toStrictEqual(params2);
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}`,
+      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}` +
+        `&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
   });
@@ -2157,11 +2227,13 @@ describe("removePlace", () => {
     let lifeCount = life().observations_count;
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
+      per_page: perPage,
       taxon_id: life().id.toString(),
       colors: colors[0],
     });
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}`,
+      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}` +
+        `&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
 
@@ -2169,6 +2241,7 @@ describe("removePlace", () => {
 
     let params1 = {
       ...defaultParams,
+      per_page: perPage,
       colors: colors[0],
       taxon_id: life().id.toString(),
       nelat: 0,
@@ -2179,7 +2252,7 @@ describe("removePlace", () => {
     expect(store.observationsApiParams).toStrictEqual(params1);
     expect(window.location.search).toBe(
       `?taxon_id=${life().id}&colors=${colorsEncoded[0]}` +
-        `&${defaultQuery}&nelat=0&nelng=0&swlat=0&swlng=0`,
+        `&${defaultQuery}&per_page=${perPage}&nelat=0&nelng=0&swlat=0&swlng=0`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
     expect(store.selectedPlaces[0].observations_count).toBe(lifeCount);
@@ -2188,12 +2261,13 @@ describe("removePlace", () => {
 
     let params2 = {
       ...defaultParams,
+      per_page: perPage,
       colors: colors[0],
       taxon_id: life().id.toString(),
     };
     expect(store.observationsApiParams).toStrictEqual(params2);
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}`,
+      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
   });
@@ -2216,6 +2290,7 @@ describe("removeTaxon", () => {
     expectEmptyResources(store, ["selectedTaxa"]);
     let params2 = {
       ...defaultParams,
+      per_page: perPage,
       colors: `${colors[0]},${colors[1]}`,
       taxon_id: `${Life.id},${RedOak.id}`,
     };
@@ -2223,7 +2298,8 @@ describe("removeTaxon", () => {
     expect(store.identificationsApiParams).toStrictEqual({});
     expect(window.location.search).toBe(
       `?taxon_id=${Life.id},${RedOak.id}` +
-        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&${defaultQuery}`,
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&${defaultQuery}` +
+        `&per_page=${perPage}`,
     );
     expect(store.selectedTaxa).toStrictEqual([Life, RedOak]);
 
@@ -2231,13 +2307,15 @@ describe("removeTaxon", () => {
 
     let params3 = {
       ...defaultParams,
+      per_page: perPage,
       colors: colors[1],
       taxon_id: RedOak.id.toString(),
     };
     expect(store.observationsApiParams).toStrictEqual(params3);
     expect(store.identificationsApiParams).toStrictEqual({});
     expect(window.location.search).toBe(
-      `?taxon_id=${RedOak.id}&colors=${colorsEncoded[1]}&${defaultQuery}`,
+      `?taxon_id=${RedOak.id}&colors=${colorsEncoded[1]}&${defaultQuery}` +
+        `&per_page=${perPage}`,
     );
     expect(store.selectedTaxa).toStrictEqual([RedOak]);
 
@@ -2245,12 +2323,13 @@ describe("removeTaxon", () => {
 
     let params4 = {
       ...defaultParams,
+      per_page: perPage,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
     };
     expect(store.observationsApiParams).toStrictEqual(params4);
     expect(store.identificationsApiParams).toStrictEqual({});
-    expect(window.location.search).toBe("");
+    expect(window.location.search).toBe(`?${defaultQuery}&per_page=${perPage}`);
     expectDefaultTaxaRecord(store);
   });
 });
@@ -2279,6 +2358,7 @@ describe("removeProject", () => {
     expectDefaultTaxaRecord(store);
     let expectedParams2 = {
       ...defaultParams,
+      per_page: perPage,
       project_id: `${project1.id},${project2.id}`,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
@@ -2286,7 +2366,8 @@ describe("removeProject", () => {
     expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(store.identificationsApiParams).toStrictEqual({});
     expect(window.location.search).toBe(
-      `?project_id=${project1.id},${project2.id}&${defaultQuery}`,
+      `?project_id=${project1.id},${project2.id}&${defaultQuery}` +
+        `&per_page=${perPage}`,
     );
     expect(store.selectedProjects).toStrictEqual([project1, project2]);
 
@@ -2296,6 +2377,7 @@ describe("removeProject", () => {
     expectDefaultTaxaRecord(store, allTaxa.observations_count * 0.3);
     let expectedParams3 = {
       ...defaultParams,
+      per_page: perPage,
       project_id: `${project2.id}`,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
@@ -2303,7 +2385,7 @@ describe("removeProject", () => {
     expect(store.observationsApiParams).toStrictEqual(expectedParams3);
     expect(store.identificationsApiParams).toStrictEqual({});
     expect(window.location.search).toBe(
-      `?project_id=${project2.id}&${defaultQuery}`,
+      `?project_id=${project2.id}&${defaultQuery}` + `&per_page=${perPage}`,
     );
     expect(store.selectedProjects).toStrictEqual([project2]);
 
@@ -2313,12 +2395,13 @@ describe("removeProject", () => {
     expectDefaultTaxaRecord(store);
     let expectedParams4 = {
       ...defaultParams,
+      per_page: perPage,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams4);
     expect(store.identificationsApiParams).toStrictEqual({});
-    expect(window.location.search).toBe("");
+    expect(window.location.search).toBe(`?${defaultQuery}&per_page=${perPage}`);
   });
 });
 
@@ -2340,6 +2423,7 @@ describe("removeUser", () => {
     expectDefaultTaxaRecord(store);
     let expectedParams2 = {
       ...defaultParams,
+      per_page: perPage,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       user_id: `${userA.id},${userB.id}`,
@@ -2347,7 +2431,8 @@ describe("removeUser", () => {
     expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(store.identificationsApiParams).toStrictEqual({});
     expect(window.location.search).toBe(
-      `?user_id=${userA.id},${userB.id}&${defaultQuery}`,
+      `?user_id=${userA.id},${userB.id}&${defaultQuery}` +
+        `&per_page=${perPage}`,
     );
     expect(store.selectedUsers).toStrictEqual([userA, userB]);
 
@@ -2357,13 +2442,16 @@ describe("removeUser", () => {
     expectDefaultTaxaRecord(store, allTaxa.observations_count * 0.55);
     let expectedParams3 = {
       ...defaultParams,
+      per_page: perPage,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       user_id: `${userB.id}`,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams3);
     expect(store.identificationsApiParams).toStrictEqual({});
-    expect(window.location.search).toBe(`?user_id=${userB.id}&${defaultQuery}`);
+    expect(window.location.search).toBe(
+      `?user_id=${userB.id}&${defaultQuery}` + `&per_page=${perPage}`,
+    );
     expect(store.selectedUsers).toStrictEqual([userB]);
 
     await removeUser(userB.id, store);
@@ -2372,12 +2460,13 @@ describe("removeUser", () => {
     expectDefaultTaxaRecord(store);
     let expectedParams4 = {
       ...defaultParams,
+      per_page: perPage,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams4);
     expect(store.identificationsApiParams).toStrictEqual({});
-    expect(window.location.search).toBe("");
+    expect(window.location.search).toBe(`?${defaultQuery}&per_page=${perPage}`);
   });
 });
 
@@ -2396,6 +2485,7 @@ describe("removeUserIdentifier", () => {
     expectDefaultTaxaRecord(store, allTaxa.observations_count * 0.75);
     let expectedParams2 = {
       ...defaultParams,
+      per_page: perPage,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       ident_user_id: `${user1.id},${user2.id}`,
@@ -2403,7 +2493,8 @@ describe("removeUserIdentifier", () => {
     expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(store.identificationsApiParams).toStrictEqual({});
     expect(window.location.search).toBe(
-      `?ident_user_id=${user1.id},${user2.id}&${defaultQuery}`,
+      `?ident_user_id=${user1.id},${user2.id}&${defaultQuery}` +
+        `&per_page=${perPage}`,
     );
     expect(store.selectedUsersIdentifiers).toStrictEqual([user1, user2]);
 
@@ -2413,6 +2504,7 @@ describe("removeUserIdentifier", () => {
     expectDefaultTaxaRecord(store, allTaxa.observations_count * 0.75);
     let expectedParams4 = {
       ...defaultParams,
+      per_page: perPage,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       ident_user_id: `${user1.id}`,
@@ -2420,7 +2512,7 @@ describe("removeUserIdentifier", () => {
     expect(store.observationsApiParams).toStrictEqual(expectedParams4);
     expect(store.identificationsApiParams).toStrictEqual({});
     expect(window.location.search).toBe(
-      `?ident_user_id=${user1.id}&${defaultQuery}`,
+      `?ident_user_id=${user1.id}&${defaultQuery}` + `&per_page=${perPage}`,
     );
     expect(store.selectedUsersIdentifiers).toStrictEqual([user1]);
 
@@ -2430,12 +2522,13 @@ describe("removeUserIdentifier", () => {
     expectDefaultTaxaRecord(store);
     let expectedParams3 = {
       ...defaultParams,
+      per_page: perPage,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams3);
     expect(store.identificationsApiParams).toStrictEqual({});
-    expect(window.location.search).toBe("");
+    expect(window.location.search).toBe(`?${defaultQuery}&per_page=${perPage}`);
   });
 });
 
@@ -2455,13 +2548,15 @@ describe("removeUserAnnotator", () => {
     expect(store.selectedUsersAnnotators).toStrictEqual([user1, user2]);
     let expectedParams2 = {
       ...defaultParams,
+      per_page: perPage,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       annotation_user_id: `${user1.id},${user2.id}`,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?${defaultQuery}&annotation_user_id=${user1.id},${user2.id}`,
+      `?${defaultQuery}&per_page=${perPage}` +
+        `&annotation_user_id=${user1.id},${user2.id}`,
     );
 
     await removeUserAnnotator(user1.id, store);
@@ -2471,13 +2566,15 @@ describe("removeUserAnnotator", () => {
     expect(store.selectedUsersAnnotators).toStrictEqual([user2]);
     let expectedParams3 = {
       ...defaultParams,
+      per_page: perPage,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       annotation_user_id: `${user2.id}`,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams3);
     expect(window.location.search).toBe(
-      `?${defaultQuery}&annotation_user_id=${user2.id}`,
+      `?${defaultQuery}&per_page=${perPage}` +
+        `&annotation_user_id=${user2.id}`,
     );
 
     await removeUserAnnotator(user2.id, store);
@@ -2487,11 +2584,12 @@ describe("removeUserAnnotator", () => {
     expect(store.selectedUsersAnnotators).toStrictEqual([]);
     let expectedParams4 = {
       ...defaultParams,
+      per_page: perPage,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams4);
-    expect(window.location.search).toBe("");
+    expect(window.location.search).toBe(`?${defaultQuery}&per_page=${perPage}`);
   });
 });
 
@@ -2519,13 +2617,15 @@ describe("removeWithoutTaxon", () => {
     expect(store.selectedTaxa).toStrictEqual([allTaxa]);
     let expectedParams2 = {
       ...defaultParams,
+      per_page: perPage,
       taxon_id: allTaxa.id.toString(),
       without_taxon_id: `${life1.id},${oak1.id}`,
       colors: iNatOrange,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?${defaultQuery}&without_taxon_id=${life1.id},${oak1.id}`,
+      `?${defaultQuery}&per_page=${perPage}` +
+        `&without_taxon_id=${life1.id},${oak1.id}`,
     );
 
     await removeWithoutTaxon(life1.id, store);
@@ -2534,13 +2634,14 @@ describe("removeWithoutTaxon", () => {
     expect(store.selectedWithoutTaxa).toStrictEqual([oak1]);
     let expectedParams3 = {
       ...defaultParams,
+      per_page: perPage,
       taxon_id: allTaxa.id.toString(),
       without_taxon_id: `${oak1.id}`,
       colors: iNatOrange,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams3);
     expect(window.location.search).toBe(
-      `?${defaultQuery}&without_taxon_id=${oak1.id}`,
+      `?${defaultQuery}&per_page=${perPage}` + `&without_taxon_id=${oak1.id}`,
     );
 
     await removeWithoutTaxon(oak1.id, store);
@@ -2549,11 +2650,12 @@ describe("removeWithoutTaxon", () => {
     expect(store.selectedWithoutTaxa).toStrictEqual([]);
     let expectedParams4 = {
       ...defaultParams,
+      per_page: perPage,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams4);
-    expect(window.location.search).toBe("");
+    expect(window.location.search).toBe(`?${defaultQuery}&per_page=${perPage}`);
   });
 });
 
@@ -2580,11 +2682,12 @@ describe("removePlace with identifications", () => {
     expectDefaultTaxaRecordIdentification(store);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       place_id: `${LosAngeles.id},${SanDiego.id}`,
       observation_taxon_id: allTaxa.id.toString(),
     });
     expect(window.location.search).toBe(
-      `?place_id=${LosAngeles.id},${SanDiego.id}`,
+      `?place_id=${LosAngeles.id},${SanDiego.id}` + `&per_page=${perPage}`,
     );
     expect(store.selectedPlaces).toStrictEqual([LosAngeles, SanDiego]);
 
@@ -2597,10 +2700,13 @@ describe("removePlace with identifications", () => {
     );
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       place_id: `${SanDiego.id}`,
       observation_taxon_id: allTaxa.id.toString(),
     });
-    expect(window.location.search).toBe(`?place_id=${SanDiego.id}`);
+    expect(window.location.search).toBe(
+      `?place_id=${SanDiego.id}` + `&per_page=${perPage}`,
+    );
     expect(store.selectedPlaces).toStrictEqual([SanDiego]);
 
     await removePlace(SanDiego.id, store);
@@ -2609,9 +2715,10 @@ describe("removePlace with identifications", () => {
     expectDefaultTaxaRecordIdentification(store);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       observation_taxon_id: allTaxa.id.toString(),
     });
-    expect(window.location.search).toBe(``);
+    expect(window.location.search).toBe(`?per_page=${perPage}`);
   });
 });
 
@@ -2635,11 +2742,13 @@ describe("removeTaxon with identifications", () => {
     expect(store.selectedTaxa).toStrictEqual([Life, RedOak]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       observation_taxon_id: `${Life.id},${RedOak.id}`,
     });
     expect(window.location.search).toBe(
       `?observation_taxon_id=${Life.id},${RedOak.id}` +
-        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}`,
+        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}` +
+        `&per_page=${perPage}`,
     );
 
     await removeTaxon(Life.id, store);
@@ -2649,9 +2758,12 @@ describe("removeTaxon with identifications", () => {
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       observation_taxon_id: `${RedOak.id}`,
+      per_page: perPage,
     });
     expect(window.location.search).toBe(
-      `?observation_taxon_id=${RedOak.id}` + `&colors=${colorsEncoded[1]}`,
+      `?observation_taxon_id=${RedOak.id}` +
+        `&colors=${colorsEncoded[1]}` +
+        `&per_page=${perPage}`,
     );
 
     await removeTaxon(RedOak.id, store);
@@ -2660,9 +2772,10 @@ describe("removeTaxon with identifications", () => {
     expectDefaultTaxaRecordIdentification(store);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       observation_taxon_id: allTaxa.id.toString(),
     });
-    expect(window.location.search).toBe("");
+    expect(window.location.search).toBe(`?per_page=${perPage}`);
   });
 
   test("add taxon; add taxon identified; remove taxon;", async () => {
@@ -2687,13 +2800,15 @@ describe("removeTaxon with identifications", () => {
     ]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       observation_taxon_id: `${Life.id}`,
       taxon_id: `${RedOak.id}`,
     });
     expect(window.location.search).toBe(
       `?observation_taxon_id=${Life.id}` +
         `&taxon_id=${RedOak.id}` +
-        `&colors=${colorsEncoded[0]}`,
+        `&colors=${colorsEncoded[0]}` +
+        `&per_page=${perPage}`,
     );
 
     await removeTaxon(Life.id, store);
@@ -2702,9 +2817,12 @@ describe("removeTaxon with identifications", () => {
     expect(store.selectedTaxaIdentified).toStrictEqual([RedOak]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       taxon_id: `${RedOak.id}`,
     });
-    expect(window.location.search).toBe(`?taxon_id=${RedOak.id}`);
+    expect(window.location.search).toBe(
+      `?taxon_id=${RedOak.id}` + `&per_page=${perPage}`,
+    );
 
     await removeTaxonIdentified(RedOak.id, store);
 
@@ -2712,9 +2830,10 @@ describe("removeTaxon with identifications", () => {
     expectDefaultTaxaRecordIdentification(store);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       observation_taxon_id: allTaxa.id.toString(),
     });
-    expect(window.location.search).toBe("");
+    expect(window.location.search).toBe(`?per_page=${perPage}`);
   });
 });
 
@@ -2734,11 +2853,14 @@ describe("removeUserIdentifier with identifications", () => {
     expectDefaultTaxaRecordIdentification(store);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams2 = {
+      per_page: perPage,
       user_id: `${user1.id},${user2.id}`,
       observation_taxon_id: allTaxa.id.toString(),
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
-    expect(window.location.search).toBe(`?user_id=${user1.id},${user2.id}`);
+    expect(window.location.search).toBe(
+      `?user_id=${user1.id},${user2.id}&per_page=${perPage}`,
+    );
     expect(store.selectedUsersIdentifiers).toStrictEqual([user1, user2]);
 
     await removeUserIdentifier(user1.id, store);
@@ -2752,11 +2874,14 @@ describe("removeUserIdentifier with identifications", () => {
       ...defaultParams,
     });
     let expectedParams3 = {
+      per_page: perPage,
       user_id: `${user2.id}`,
       observation_taxon_id: allTaxa.id.toString(),
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams3);
-    expect(window.location.search).toBe(`?user_id=${user2.id}`);
+    expect(window.location.search).toBe(
+      `?user_id=${user2.id}&per_page=${perPage}`,
+    );
     expect(store.selectedUsersIdentifiers).toStrictEqual([user2]);
 
     await removeUserIdentifier(user2.id, store);
@@ -2767,9 +2892,10 @@ describe("removeUserIdentifier with identifications", () => {
       ...defaultParams,
     });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       observation_taxon_id: allTaxa.id.toString(),
     });
-    expect(window.location.search).toBe("");
+    expect(window.location.search).toBe(`?per_page=${perPage}`);
   });
 });
 
@@ -2797,12 +2923,13 @@ describe("removeWithoutTaxon with identifications", () => {
     expect(store.selectedTaxa).toStrictEqual([allTaxaIdentification]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams2 = {
+      per_page: perPage,
       observation_taxon_id: allTaxa.id.toString(),
       without_observation_taxon_id: `${life1.id},${oak1.id}`,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?without_observation_taxon_id=${life1.id},${oak1.id}`,
+      `?per_page=${perPage}&without_observation_taxon_id=${life1.id},${oak1.id}`,
     );
 
     await removeWithoutTaxon(life1.id, store);
@@ -2812,12 +2939,13 @@ describe("removeWithoutTaxon with identifications", () => {
     expect(store.selectedTaxa).toStrictEqual([allTaxaIdentification]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams3 = {
+      per_page: perPage,
       observation_taxon_id: allTaxa.id.toString(),
       without_observation_taxon_id: `${oak1.id}`,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams3);
     expect(window.location.search).toBe(
-      `?without_observation_taxon_id=${oak1.id}`,
+      `?per_page=${perPage}&without_observation_taxon_id=${oak1.id}`,
     );
 
     await removeWithoutTaxon(oak1.id, store);
@@ -2827,9 +2955,10 @@ describe("removeWithoutTaxon with identifications", () => {
     expect(store.selectedTaxa).toStrictEqual([allTaxaIdentification]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       observation_taxon_id: allTaxa.id.toString(),
     });
-    expect(window.location.search).toBe("");
+    expect(window.location.search).toBe(`?per_page=${perPage}`);
   });
 });
 
@@ -2860,12 +2989,13 @@ describe("removeWithoutTaxonIdentified with identifications", () => {
     expect(store.selectedTaxa).toStrictEqual([allTaxaIdentification]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams2 = {
+      per_page: perPage,
       observation_taxon_id: allTaxa.id.toString(),
       without_taxon_id: `${life1.id},${oak1.id}`,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?without_taxon_id=${life1.id},${oak1.id}`,
+      `?per_page=${perPage}&without_taxon_id=${life1.id},${oak1.id}`,
     );
 
     await removeWithoutTaxonIdentified(life1.id, store);
@@ -2878,11 +3008,14 @@ describe("removeWithoutTaxonIdentified with identifications", () => {
     expect(store.selectedTaxa).toStrictEqual([allTaxaIdentification]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams3 = {
+      per_page: perPage,
       observation_taxon_id: allTaxa.id.toString(),
       without_taxon_id: `${oak1.id}`,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams3);
-    expect(window.location.search).toBe(`?without_taxon_id=${oak1.id}`);
+    expect(window.location.search).toBe(
+      `?per_page=${perPage}&without_taxon_id=${oak1.id}`,
+    );
 
     await removeWithoutTaxonIdentified(oak1.id, store);
 
@@ -2891,8 +3024,9 @@ describe("removeWithoutTaxonIdentified with identifications", () => {
     expect(store.selectedTaxa).toStrictEqual([allTaxaIdentification]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       observation_taxon_id: allTaxa.id.toString(),
     });
-    expect(window.location.search).toBe("");
+    expect(window.location.search).toBe(`?per_page=${perPage}`);
   });
 });

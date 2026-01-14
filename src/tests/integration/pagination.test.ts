@@ -22,6 +22,8 @@ import {
   expectEmpytMap,
   allTaxa,
   defaultParams,
+  perPage,
+  perPageUsers,
 } from "../test_helpers.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
 import { decodeAppUrl } from "../../lib/utils.ts";
@@ -268,9 +270,11 @@ test("add page when user changes view and page for each view", async () => {
 
   expect(store.observationsApiParams).toStrictEqual({
     ...testParams,
+    per_page: perPage,
   });
   expect(store.viewMetadata.observations_observations).toStrictEqual({
     subview: "grid",
+    perPage: perPage,
   });
   expect(store.currentView).toBe("observations_observations");
 
@@ -278,6 +282,7 @@ test("add page when user changes view and page for each view", async () => {
 
   expect(store.viewMetadata.observations_observations).toStrictEqual({
     subview: "grid",
+    perPage: perPage,
     page: 5,
   });
 
@@ -286,6 +291,7 @@ test("add page when user changes view and page for each view", async () => {
 
   expect(store.viewMetadata.observations_species).toStrictEqual({
     page: 6,
+    perPage: perPage,
   });
   expect(store.currentView).toBe("observations_species");
 
@@ -294,6 +300,7 @@ test("add page when user changes view and page for each view", async () => {
 
   expect(store.viewMetadata.observations_observers).toStrictEqual({
     page: 7,
+    perPage: perPageUsers,
   });
   expect(store.currentView).toBe("observations_observers");
 
@@ -302,6 +309,7 @@ test("add page when user changes view and page for each view", async () => {
 
   expect(store.viewMetadata.observations_identifiers).toStrictEqual({
     page: 8,
+    perPage: perPageUsers,
   });
   expect(store.currentView).toBe("observations_identifiers");
 });

@@ -5,7 +5,7 @@ import {
   removeIdfromInatApiParams,
   resetPageNumber,
 } from "./data_utils.ts";
-import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
+import { updateCountForOneRecord, updateCountForAll } from "./count_utils.ts";
 import {
   renderSelectedResources,
   showHideHeader,
@@ -67,7 +67,7 @@ export async function userIdentifierSelectedHandler(
     };
   }
 
-  await updateCountForOne(
+  await updateCountForOneRecord(
     selection,
     "selectedUsersIdentifiers",
     appStore,

@@ -1,4 +1,8 @@
 import { viewAndTemplateObject } from "../../data/app_data";
+import {
+  getResourceApiParams,
+  isObservationsCheck,
+} from "../../lib/data_utils";
 import { createHashString, updateAppUrl } from "../../lib/utils";
 import type {
   AppStoreType,
@@ -51,27 +55,34 @@ export function updateView(
   let itemEl = componentContext.querySelector(`#${targetView}`);
   itemEl?.classList.add("currentView");
 
+  let resourceParams = getResourceApiParams(isObservationsCheck(appStore));
+
   // update store
   appStore.currentView = targetView;
   let page = appStore.viewMetadata[targetView]?.page;
   if (page) {
-    appStore.observationsApiParams.page = page;
+    appStore[resourceParams].page = page;
   } else {
-    delete appStore.observationsApiParams.page;
+    delete appStore[resourceParams].page;
+  }
+
+  let perPage = appStore.viewMetadata[targetView]?.perPage;
+  if (perPage) {
+    appStore[resourceParams].per_page = perPage;
   }
 
   let order = appStore.viewMetadata[targetView]?.order;
   if (order) {
-    appStore.observationsApiParams.order = order;
+    appStore[resourceParams].order = order;
   } else {
-    delete appStore.observationsApiParams.order;
+    delete appStore[resourceParams].order;
   }
 
   let order_by = appStore.viewMetadata[targetView]?.order_by;
   if (order_by) {
-    appStore.observationsApiParams.order_by = order_by;
+    appStore[resourceParams].order_by = order_by;
   } else {
-    delete appStore.observationsApiParams.order_by;
+    delete appStore[resourceParams].order_by;
   }
 
   // load view component and fetch data
@@ -95,6 +106,7 @@ export async function updateHeaderCount(
   maxCacheSize = 1000,
 ) {
   let count = 0;
+  searchParams = searchParams.replace(/per_page=[0-9]+/, `per_page=${perPage}`);
 
   // get count from cache or API
   let hash = await createHeaderCountHash(countLabel, searchParams);
@@ -102,7 +114,7 @@ export async function updateHeaderCount(
   if (cacheCount) {
     count = cacheCount;
   } else {
-    count = await fetchHeaderCounts(dataFn, searchParams, perPage);
+    count = await fetchHeaderCounts(dataFn, searchParams);
   }
 
   renderHeaderCounts(countLabel, count, tooltipSettings);
@@ -112,16 +124,12 @@ export async function updateHeaderCount(
   }
 }
 
-async function fetchHeaderCounts(
-  dataFn: any,
-  searchParams: string,
-  perPage: number,
-) {
+async function fetchHeaderCounts(dataFn: any, searchParams: string) {
   if (import.meta.env?.VITE_CACHE === "true") {
     return -999;
   }
 
-  let data = await dataFn(searchParams, perPage);
+  let data = await dataFn(searchParams);
   let count = data?.total_results;
   return count;
 }

@@ -27,6 +27,7 @@ import {
   redOakIdentification,
   expectLifeOakTaxa,
   gridLabel_allTaxaRecord,
+  perPage,
 } from "../../test_helpers.ts";
 import { decodeAppUrl } from "../../../lib/utils.ts";
 import { initPopulateStore, initRenderMap } from "../../../lib/init_app.ts";
@@ -106,6 +107,7 @@ describe("click on header to change page", () => {
     expect(store.currentView).toStrictEqual("identifications_observations");
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       observation_taxon_id: `${life1.id},${oak1.id}`,
     });
     expect(store.selectedTaxa).toStrictEqual([life1, oak1]);
@@ -123,8 +125,10 @@ describe("click on header to change page", () => {
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       taxon_id: `${life2.id},${oak2.id}`,
+      per_page: perPage,
     });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       observation_taxon_id: `${life2.id},${oak2.id}`,
     });
 
@@ -178,6 +182,7 @@ describe("click on header to change page", () => {
     expect(store.currentView).toStrictEqual("observations_observations");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
+      per_page: perPage,
       taxon_id: `${life2.id},${oak2.id}`,
       colors: `${life2.color},${oak2.color}`,
     });
@@ -196,11 +201,13 @@ describe("click on header to change page", () => {
     expect(store.currentView).toStrictEqual("identifications_observations");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
+      per_page: perPage,
       taxon_id: `${life2.id},${oak2.id}`,
       colors: `${life2.color},${oak2.color}`,
     });
     expect(store.identificationsApiParams).toStrictEqual({
       observation_taxon_id: `${life2.id},${oak2.id}`,
+      per_page: perPage,
     });
 
     let mainEl = document.querySelector("#app") as HTMLDivElement;

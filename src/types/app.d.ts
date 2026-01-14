@@ -83,6 +83,7 @@ type ViewOptions = {
   order?: string;
   order_by?: string;
   subview?: ObservationSubviewsType;
+  perPage?: number;
 };
 
 export type AppStoreKeysType = keyof AppStoreType;
@@ -150,15 +151,20 @@ export type AppStoreKeysType = keyof AppStoreType;
 
 // NOTE: update when adding selectedResource
 export type AppStoreSelectedResourcesKeysType =
-  | "selectedTaxa"
-  | "selectedTaxaIdentified"
   | "selectedPlaces"
-  | "selectedUsers"
   | "selectedProjects"
-  | "selectedUsersIdentifiers"
-  | "selectedUsersAnnotators"
+  | "selectedTaxa"
   | "selectedWithoutTaxa"
-  | "selectedWithoutTaxaIdentified";
+  | "selectedTaxaIdentified"
+  | "selectedWithoutTaxaIdentified"
+  | "selectedUsers"
+  | "selectedUsersAnnotators"
+  | "selectedUsersIdentifiers";
+
+export type AppStoreSelectedResourceKeysType =
+  | "selectedNotInProject"
+  | "selectedReviewer"
+  | "selectedUnobservedByUser";
 
 export type AppStoreTypeParamsKeys =
   | "observationsApiParams"

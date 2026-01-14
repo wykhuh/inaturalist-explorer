@@ -219,7 +219,7 @@ export async function getObservationsYears() {
   }
 }
 
-export async function getObservations(appParams: string, perPage: number) {
+export async function getObservations(appParams: string) {
   let fields =
     "(comments_count:!t," +
     // "comments:!t," +
@@ -249,10 +249,7 @@ export async function getObservations(appParams: string, perPage: number) {
     "taxon:(iconic_taxon_id:!t,name:!t,preferred_common_name:!t,preferred_common_names:(name:!t),rank:!t,rank_level:!t)," +
     "user:(icon_url:!t,icon:!t,id:!t,login:!t,name:!t))";
 
-  let url =
-    `${observations_api}?${appParams}&ttl=180` +
-    `&per_page=${perPage}` +
-    `&fields=${fields}`;
+  let url = `${observations_api}?${appParams}&ttl=180` + `&fields=${fields}`;
 
   try {
     let resp = await fetch(url);
@@ -264,10 +261,7 @@ export async function getObservations(appParams: string, perPage: number) {
   }
 }
 
-export async function getObservationsSpecies(
-  appParams: string,
-  perPage: number,
-) {
+export async function getObservationsSpecies(appParams: string) {
   let fields =
     "(taxon:" +
     "(" +
@@ -285,7 +279,6 @@ export async function getObservationsSpecies(
     "rank:!t))";
   let url =
     `${observations_api}/species_counts?${appParams}&ttl=3600` +
-    `&per_page=${perPage}` +
     `&fields=${fields}`;
 
   try {
@@ -300,13 +293,9 @@ export async function getObservationsSpecies(
 
 // order_by=id&order=desc
 // order_by=observed_on&order=desc
-export async function getObservationsObservers(
-  appParams: string,
-  perPage: number,
-) {
+export async function getObservationsObservers(appParams: string) {
   let url =
     `${observations_api}/observers?${appParams}&ttl=3600` +
-    `&per_page=${perPage}` +
     `&fields=(user:(icon_url:!t,id:!t,login:!t,name:!t))`;
   try {
     let resp = await fetch(url);
@@ -318,13 +307,9 @@ export async function getObservationsObservers(
   }
 }
 
-export async function getObservationsIdentifiers(
-  appParams: string,
-  perPage: number,
-) {
+export async function getObservationsIdentifiers(appParams: string) {
   let url =
     `${observations_api}/identifiers?${appParams}&ttl=3600` +
-    `&per_page=${perPage}` +
     `&fields=(user:(icon_url:!t,id:!t,login:!t,name:!t))`;
   try {
     let resp = await fetch(url);
@@ -336,9 +321,8 @@ export async function getObservationsIdentifiers(
   }
 }
 
-export async function getIdentifications(appParams: string, perPage: number) {
-  let url =
-    `${identifications_api}/?${appParams}&ttl=3600` + `&per_page=${perPage}`;
+export async function getIdentifications(appParams: string) {
+  let url = `${identifications_api}/?${appParams}&ttl=3600`;
   try {
     let resp = await fetch(url);
     let data = (await resp.json()) as IdentificationsAPI;
@@ -349,13 +333,8 @@ export async function getIdentifications(appParams: string, perPage: number) {
   }
 }
 
-export async function getIdentificationsSpecies(
-  appParams: string,
-  perPage: number,
-) {
-  let url =
-    `${identifications_api}/species_counts?${appParams}&ttl=3600` +
-    `&per_page=${perPage}`;
+export async function getIdentificationsSpecies(appParams: string) {
+  let url = `${identifications_api}/species_counts?${appParams}&ttl=3600`;
   try {
     let resp = await fetch(url);
     let data = (await resp.json()) as IdentificationsSpeciesCountAPI;
@@ -366,13 +345,8 @@ export async function getIdentificationsSpecies(
   }
 }
 
-export async function getIdentificationsObservers(
-  appParams: string,
-  perPage: number,
-) {
-  let url =
-    `${identifications_api}/observers?${appParams}&ttl=3600` +
-    `&per_page=${perPage}`;
+export async function getIdentificationsObservers(appParams: string) {
+  let url = `${identifications_api}/observers?${appParams}&ttl=3600`;
   try {
     let resp = await fetch(url);
     let data = (await resp.json()) as IdentificationsObserversAPI;
@@ -383,13 +357,8 @@ export async function getIdentificationsObservers(
   }
 }
 
-export async function getIdentificationsIdentifiers(
-  appParams: string,
-  perPage: number,
-) {
-  let url =
-    `${identifications_api}/identifiers?${appParams}&ttl=3600` +
-    `&per_page=${perPage}`;
+export async function getIdentificationsIdentifiers(appParams: string) {
+  let url = `${identifications_api}/identifiers?${appParams}&ttl=3600`;
   try {
     let resp = await fetch(url);
     let data = (await resp.json()) as IdentificationsIdentifiersAPI;

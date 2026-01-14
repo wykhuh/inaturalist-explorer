@@ -1,6 +1,6 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
-import { fetchAndRenderData, paginationCallback, perPage } from "./utils";
+import { fetchAndRenderData, paginationCallback } from "./utils";
 import { template } from "./template";
 
 class ViewSpecies extends HTMLElement {
@@ -17,6 +17,7 @@ class ViewSpecies extends HTMLElement {
     window.addEventListener("identificationsChange", this);
     window.addEventListener("localeChanged", this);
     window.addEventListener("nameOrderChanged", this);
+    window.addEventListener("perPageChanged", this);
   }
 
   disconnectedCallback() {
@@ -26,6 +27,7 @@ class ViewSpecies extends HTMLElement {
     window.removeEventListener("identificationsChange", this);
     window.removeEventListener("localeChanged", this);
     window.removeEventListener("nameOrderChanged", this);
+    window.removeEventListener("perPageChanged", this);
   }
 
   handleEvent(event: Event) {
@@ -36,9 +38,10 @@ class ViewSpecies extends HTMLElement {
       "identificationsChange",
       "localeChanged",
       "nameOrderChanged",
+      "perPageChanged",
     ];
     if (resourceChanges.includes(event.type)) {
-      fetchAndRenderData(perPage, paginationCallback, window.app.store);
+      fetchAndRenderData(paginationCallback, window.app.store);
     }
   }
 
@@ -46,7 +49,7 @@ class ViewSpecies extends HTMLElement {
     loggerRender("++ ViewSpecies render");
     setupComponent(template, this);
 
-    await fetchAndRenderData(perPage, paginationCallback, window.app.store);
+    await fetchAndRenderData(paginationCallback, window.app.store);
   }
 }
 

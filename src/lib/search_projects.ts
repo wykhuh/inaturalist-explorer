@@ -16,7 +16,7 @@ import {
   renderResourceGeometryLayer,
   resetPageNumber,
 } from "./data_utils.ts";
-import { updateCountForAll, updateCountForOne } from "./count_utils.ts";
+import { updateCountForAll, updateCountForOneRecord } from "./count_utils.ts";
 import {
   updateTilesForSelectedTaxa,
   renderSelectedResources,
@@ -147,7 +147,12 @@ export async function projectSelectedHandler(
     ...appStore.observationsApiParams,
     project_id: project.id.toString(),
   };
-  await updateCountForOne(project, "selectedProjects", appStore, paramsTemp);
+  await updateCountForOneRecord(
+    project,
+    "selectedProjects",
+    appStore,
+    paramsTemp,
+  );
   await updateTilesForSelectedTaxa(appStore);
   await updateCountForAll("selectedProjects", appStore);
 

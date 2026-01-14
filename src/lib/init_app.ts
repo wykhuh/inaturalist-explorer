@@ -46,6 +46,7 @@ import {
   isIdentificationsCheck,
   getResourceApiParams,
   isOtherCheck,
+  setPerPage,
 } from "./data_utils";
 import { loggerEvent, loggerRender, loggerStore } from "./logger.ts";
 import {
@@ -65,7 +66,6 @@ export async function initPopulateStore(
   urlStore: AppStoreType,
 ) {
   loggerStore("++ initPopulateStore start");
-  populateStoreWithLocaleStorage(appStore);
 
   if (urlStore.record_type) {
     appStore.record_type = urlStore.record_type;
@@ -94,6 +94,8 @@ export async function initPopulateStore(
       };
     }
   }
+
+  setPerPage(appStore);
 
   // NOTE: update when adding selectedResource;  initPopulateStore
 
@@ -267,7 +269,7 @@ export async function initPopulateStore(
     urlStore.selectedTaxaIdentified === undefined
   ) {
     if (isIdentifications || isObservations) {
-      await addDefaultTaxaRecordToStore(appStore);
+      await addDefaultTaxaRecordToStore(appStore, false);
     }
   }
   loggerStore(
@@ -779,6 +781,8 @@ export async function initApp() {
 
   let appStore = window.app.store;
   if (!appStore.currentView) return;
+
+  populateStoreWithLocaleStorage(appStore);
 
   let urlData = decodeAppUrl(window.location.search, window.location.pathname);
   await initPopulateStore(appStore, urlData);

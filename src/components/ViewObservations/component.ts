@@ -7,9 +7,8 @@ import {
   fetchAndRenderData,
   initFilters,
   paginationCallback,
-  perPage,
   updateSubviewState,
-  updateOrderState,
+  updateOrderForStore,
 } from "./utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import { initRenderMap } from "../../lib/init_app";
@@ -25,6 +24,7 @@ class ViewObservations extends HTMLElement {
   tableLinkEl: null | HTMLElement = null;
   gridLinkEl: null | HTMLElement = null;
   mediaLinkEl: null | HTMLElement = null;
+  orderForm: null | HTMLFormElement = null;
 
   connectedCallback() {
     loggerRender("++ ViewObservations connectedCallback");
@@ -33,9 +33,11 @@ class ViewObservations extends HTMLElement {
     this.tableLinkEl = document.querySelector<HTMLElement>(".subview-table");
     this.gridLinkEl = document.querySelector<HTMLElement>(".subview-grid");
     this.mediaLinkEl = document.querySelector<HTMLElement>(".subview-media");
+    this.orderForm = this.querySelector<HTMLFormElement>("#order-form");
     if (!this.tableLinkEl) return;
     if (!this.gridLinkEl) return;
     if (!this.mediaLinkEl) return;
+    if (!this.orderForm) return;
 
     this.render(window.app.store);
 
@@ -43,10 +45,12 @@ class ViewObservations extends HTMLElement {
     window.addEventListener("localeChanged", this);
     window.addEventListener("nameOrderChanged", this);
     window.addEventListener("identificationsChange", this);
+    window.addEventListener("perPageChanged", this);
 
     this.tableLinkEl.addEventListener("click", this);
     this.gridLinkEl.addEventListener("click", this);
     this.mediaLinkEl.addEventListener("click", this);
+    this.orderForm.addEventListener("change", this);
   }
 
   disconnectedCallback() {
@@ -70,24 +74,26 @@ class ViewObservations extends HTMLElement {
     window.removeEventListener("localeChanged", this);
     window.removeEventListener("nameOrderChanged", this);
     window.removeEventListener("identificationsChange", this);
+    window.removeEventListener("perPageChanged", this);
     this.tableLinkEl?.removeEventListener("click", this);
     this.gridLinkEl?.removeEventListener("click", this);
     this.mediaLinkEl?.removeEventListener("click", this);
+    this.orderForm?.removeEventListener("change", this);
   }
 
   handleEvent(event: Event) {
     let target = event.target as HTMLElement;
     if (!target) return;
     loggerEvent(`[ViewObservations event] ${event.type}`);
-
     let resourceChanges = [
       "observationsChange",
       "identificationsChange",
       "localeChanged",
       "nameOrderChanged",
+      "perPageChanged",
     ];
     if (resourceChanges.includes(event.type)) {
-      fetchAndRenderData(perPage, paginationCallback, window.app.store);
+      fetchAndRenderData(paginationCallback, window.app.store);
     }
 
     let subview = target.dataset?.subview as ObservationSubviewsType;
@@ -95,6 +101,11 @@ class ViewObservations extends HTMLElement {
       if (subview && this.tableLinkEl && this.gridLinkEl && this.mediaLinkEl) {
         updateSubviewState(subview, this, window.app.store);
       }
+    }
+
+    if (this.orderForm && target.id === "order_combo") {
+      const data = new FormData(this.orderForm);
+      updateOrderForStore(data, window.app.store);
     }
   }
 
@@ -115,29 +126,18 @@ class ViewObservations extends HTMLElement {
     }
 
     // create new map
-    await initRenderMap(window.app.store);
+    await initRenderMap(appStore);
 
     // use store to set values the form on page load
-    initFilters(window.app.store);
+    initFilters(appStore);
 
     // load observation data for grid/table
-    await fetchAndRenderData(perPage, paginationCallback, window.app.store);
+    await fetchAndRenderData(paginationCallback, appStore);
 
     this.orderFormHandler();
   }
 
-  orderFormHandler() {
-    const form = this.querySelector("#order-form") as HTMLFormElement;
-
-    if (form) {
-      form.addEventListener("change", async (event) => {
-        if (event.target === null) return;
-
-        const data = new FormData(form);
-        updateOrderState(data, window.app.store);
-      });
-    }
-  }
+  orderFormHandler() {}
 }
 
 customElements.define("view-observations", ViewObservations);

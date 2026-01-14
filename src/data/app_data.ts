@@ -28,6 +28,7 @@ import {
 } from "../lib/search_without_taxa_identified";
 import { objectFlip } from "../lib/utils";
 import type {
+  AppStoreSelectedResourceKeysType,
   AppStoreSelectedResourcesKeysType,
   IdentificationsApiParamsKeysType,
   ObservationsApiParamsKeysType,
@@ -102,27 +103,6 @@ export function viewAndPerPageDbKeyObject(targetView: ObservationViewsType) {
   }
 }
 
-// NOTE: update when adding selectedResource; autocomplete sidemenu
-// selected resources are the resources shown in the sidemenu with counts
-export const selectedResourcesWithCount: AppStoreSelectedResourcesKeysType[] = [
-  "selectedPlaces",
-  "selectedProjects",
-  "selectedTaxa",
-  "selectedTaxaIdentified",
-  "selectedUsers",
-  "selectedUsersAnnotators",
-  "selectedUsersIdentifiers",
-];
-
-// NOTE: update when adding selectedResource; autocomplete sidemenu
-export const selectedResourcesNoCount: AppStoreSelectedResourcesKeysType[] = [
-  "selectedWithoutTaxa",
-  "selectedWithoutTaxaIdentified",
-];
-
-export const selectedResources: AppStoreSelectedResourcesKeysType[] =
-  selectedResourcesWithCount.concat(selectedResourcesNoCount);
-
 // NOTE: update when adding selectedResource; autocomplete filters modal
 export let filtersModalAutocompleteFields: ObservationsApiParamsKeysType[] = [
   "not_in_project",
@@ -146,10 +126,6 @@ export const selectedResourcesIdObservations = {
   selectedNotInProject: "not_in_project",
 };
 
-export const idSelectedResourcesObservations = objectFlip(
-  selectedResourcesIdObservations,
-);
-
 // NOTE: update when adding selectedResource; autocomplete sidemenu
 export const selectedResourcesIdIdentifications = {
   selectedPlaces: "place_id",
@@ -166,9 +142,45 @@ export const selectedResourcesIdIdentifications = {
   selectedNotInProject: null,
 };
 
-export const idSelectedResourcesIdentifications = objectFlip(
+// NOTE: update when adding selectedResource; autocomplete sidemenu
+// resources that don't have observation/identification counts
+const selectedResourcesNoCount: (
+  | AppStoreSelectedResourcesKeysType
+  | AppStoreSelectedResourceKeysType
+)[] = ["selectedWithoutTaxa", "selectedWithoutTaxaIdentified"];
+
+// resources that are single objects
+const selectedResource: AppStoreSelectedResourceKeysType[] = [
+  "selectedReviewer",
+  "selectedUnobservedByUser",
+  "selectedNotInProject",
+];
+
+export const selectedResourcesAll = Object.keys(
   selectedResourcesIdIdentifications,
-);
+) as (AppStoreSelectedResourcesKeysType | AppStoreSelectedResourceKeysType)[];
+
+export const selectedResources = selectedResourcesAll.filter(
+  (resource) => !selectedResource.includes(resource as any),
+) as AppStoreSelectedResourcesKeysType[];
+
+export const selectedObservationsResourcesWithCount = selectedResources
+  .filter((resource) => !selectedResourcesNoCount.includes(resource as any))
+  .filter(
+    (r) =>
+      selectedResourcesIdObservations[
+        r as keyof typeof selectedResourcesIdObservations
+      ],
+  ) as AppStoreSelectedResourcesKeysType[];
+
+export const selectedIdentifictionsResourcesWithCount = selectedResources
+  .filter((resource) => !selectedResourcesNoCount.includes(resource as any))
+  .filter(
+    (resource) =>
+      selectedResourcesIdIdentifications[
+        resource as keyof typeof selectedResourcesIdObservations
+      ],
+  ) as AppStoreSelectedResourcesKeysType[];
 
 // NOTE: update when adding selectedResource; render list
 export let renderSelectResourcesLists = [

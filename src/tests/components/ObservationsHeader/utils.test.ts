@@ -64,6 +64,7 @@ describe("updateView", () => {
     (view) => {
       const store = structuredClone(mapStore);
       let template = viewAndTemplateObject(view);
+      let perPage = store.viewMetadata[view].perPage;
 
       let parentEl = document.querySelector(
         "#view-container",
@@ -82,8 +83,13 @@ describe("updateView", () => {
       expect(targetLI?.className).toBe("currentView");
       expect(parentEl?.innerHTML).toBe(`<${template}></${template}>`);
       expect(store.currentView).toBe(view);
-      expect(store.observationsApiParams).toStrictEqual(defaultParams);
-      expect(window.location.search).toBe(`?${defaultQuery}&view=${view}`);
+      expect(store.observationsApiParams).toStrictEqual({
+        ...defaultParams,
+        per_page: perPage,
+      });
+      expect(window.location.search).toBe(
+        `?${defaultQuery}&per_page=${perPage}&view=${view}`,
+      );
     },
   );
 

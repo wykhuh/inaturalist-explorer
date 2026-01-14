@@ -31,11 +31,10 @@ import {
   resetPageNumber,
 } from "../../lib/data_utils";
 
-export let perPage = 24;
+export let defaultPerPage = 24;
 
 // fetch new data from api when changing pages, order, filters and view
 export async function fetchAndRenderData(
-  perPage: number,
   paginationCallback: (
     currentPage: number,
     appStore: AppStoreType,
@@ -50,7 +49,7 @@ export async function fetchAndRenderData(
 
   const t1 = performance.now();
   // fetch data from api
-  let data = await getAPIData(perPage, appStore);
+  let data = await getAPIData(appStore);
   const t10 = performance.now();
   loggerTime(`api ${t10 - t1} milliseconds`);
 
@@ -107,7 +106,7 @@ export async function fetchAndRenderData(
   containerEl.appendChild(pagination2);
 }
 
-async function getAPIData(perPage: number, appStore: AppStoreType) {
+async function getAPIData(appStore: AppStoreType) {
   if (import.meta.env?.VITE_CACHE === "true") {
     let page = isObservationsCheck(appStore)
       ? appStore.observationsApiParams.page
@@ -126,7 +125,7 @@ async function getAPIData(perPage: number, appStore: AppStoreType) {
   }
 
   try {
-    let data = await getObservations(params, perPage);
+    let data = await getObservations(params);
     if (!data) return;
 
     return data;
@@ -308,7 +307,7 @@ export async function paginationCallback(num: number, appStore: AppStoreType) {
   // HACK: update store
   appStore.viewMetadata = appStore.viewMetadata;
 
-  await fetchAndRenderData(perPage, paginationCallback, appStore);
+  await fetchAndRenderData(paginationCallback, appStore);
   updateAppUrl(window.location, appStore);
 }
 
@@ -380,14 +379,18 @@ export function initFilters(appStore: AppStoreType) {
   }
 }
 
-export async function updateOrderState(data: FormData, appStore: AppStoreType) {
-  // get values from form data
+export async function updateOrderForStore(
+  data: FormData,
+  appStore: AppStoreType,
+) {
   let orderBy;
   let order;
-  data.forEach((v, _k) => {
-    let values = v.toString().split(":");
-    orderBy = values[0];
-    order = values[1];
+  data.forEach((v, k) => {
+    if (k === "order_combo") {
+      let values = v.toString().split(":");
+      orderBy = values[0];
+      order = values[1];
+    }
   });
 
   if (orderBy) {
@@ -406,6 +409,6 @@ export async function updateOrderState(data: FormData, appStore: AppStoreType) {
   }
 
   resetPageNumber(appStore);
-  await fetchAndRenderData(perPage, paginationCallback, appStore);
+  await fetchAndRenderData(paginationCallback, appStore);
   updateAppUrl(window.location, appStore);
 }

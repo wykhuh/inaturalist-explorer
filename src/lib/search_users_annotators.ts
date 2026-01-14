@@ -6,7 +6,7 @@ import {
   removeIdfromInatApiParams,
   resetPageNumber,
 } from "./data_utils.ts";
-import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
+import { updateCountForOneRecord, updateCountForAll } from "./count_utils.ts";
 import {
   updateTilesForSelectedTaxa,
   renderSelectedResources,
@@ -49,7 +49,7 @@ export async function userAnnotatorsSelectedHandler(
     ...appStore.observationsApiParams,
     annotation_user_id: user.id.toString(),
   };
-  await updateCountForOne(
+  await updateCountForOneRecord(
     user,
     "selectedUsersAnnotators",
     appStore,

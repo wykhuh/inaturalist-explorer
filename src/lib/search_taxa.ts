@@ -20,7 +20,7 @@ import {
   removeIdfromInatApiParams,
   resetPageNumber,
 } from "./data_utils.ts";
-import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
+import { updateCountForOneRecord, updateCountForAll } from "./count_utils.ts";
 import { renderTaxonNames } from "./render_utils";
 import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
 import { renderSelectedResources, showHideHeader } from "./search_utils.ts";
@@ -192,7 +192,7 @@ export async function taxonSelectedHandler(
     };
   }
 
-  await updateCountForOne(taxon, "selectedTaxa", appStore, recordParams);
+  await updateCountForOneRecord(taxon, "selectedTaxa", appStore, recordParams);
   await updateCountForAll("selectedTaxa", appStore);
   renderSelectedResources(appStore, true);
 }

@@ -74,6 +74,8 @@ import {
   gridLabel_allTaxaRecord_project1NotInProject,
   gridLabel_withoutLife,
   gridLabel_life_places_user2Identifiers,
+  perPage,
+  perPageUsers,
 } from "../test_helpers.ts";
 import type {
   IdentificationsApiParamsType,
@@ -145,6 +147,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       ...defaultParams,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.identificationsApiParams).toStrictEqual({});
@@ -178,6 +181,7 @@ describe("initPopulateStore and initRenderMap options", () => {
         colors: iNatOrange,
         taxon_id: allTaxaRecord.id.toString(),
         [param]: true,
+        per_page: perPage,
       };
       expect(store.observationsApiParams).toStrictEqual(expectedParams);
       expect(store.color).toBe(iNatOrange);
@@ -206,6 +210,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       ...defaultParams,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(iNatOrange);
@@ -235,6 +240,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       verifiable: false,
       spam: false,
       locale: "en",
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(colors[0]);
@@ -264,6 +270,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       verifiable: true,
       spam: true,
       locale: "en",
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(colors[0]);
@@ -291,6 +298,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       ...defaultParams,
       colors: colors[0],
       taxon_id: life().id.toString(),
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(colors[0]);
@@ -322,6 +330,7 @@ describe("initPopulateStore and initRenderMap options", () => {
         spam: false,
         locale: "en",
         [field]: "any",
+        per_page: perPage,
       };
 
       expect(store.observationsApiParams).toStrictEqual(expectedParams);
@@ -353,6 +362,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       spam: false,
       verifiable: true,
       locale: "en",
+      per_page: perPage,
     };
 
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
@@ -381,6 +391,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       ...defaultParams,
       colors: colors[0],
       taxon_id: life().id.toString(),
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(colors[0]);
@@ -406,6 +417,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       page: 3,
       order: "desc",
       order_by: "id",
+      per_page: perPageUsers,
     });
     expect(store.color).toBe(iNatOrange);
     expect(store.viewMetadata).toStrictEqual({
@@ -414,6 +426,7 @@ describe("initPopulateStore and initRenderMap options", () => {
         page: 3,
         order: "desc",
         order_by: "id",
+        perPage: perPageUsers,
       },
       name_order: "cs",
     });
@@ -422,6 +435,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       page: 3,
       order: "desc",
       order_by: "id",
+      perPage: perPageUsers,
     });
   });
 
@@ -443,6 +457,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
       locale: "es",
+      per_page: perPage,
     });
     expect(store.color).toBe(iNatOrange);
   });
@@ -464,6 +479,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       ...defaultParams,
       colors: iNatOrange,
       taxon_id: allTaxa.id.toString(),
+      per_page: perPage,
     });
     expect(store.color).toBe(iNatOrange);
     expect(store.viewMetadata.name_order).toBe("sc");
@@ -485,6 +501,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       observation_iconic_taxon_id: 1,
       iconic_taxon_id: 3,
       observation_taxon_id: allTaxa.id.toString(),
+      per_page: perPage,
     });
   });
 
@@ -504,6 +521,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       observation_iconic_taxon_id: "1,2",
       iconic_taxon_id: "3,4",
       observation_taxon_id: allTaxa.id.toString(),
+      per_page: perPage,
     });
   });
 });
@@ -531,6 +549,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       ...defaultParams,
       colors: colors[0],
       taxon_id: life().id.toString(),
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.identificationsApiParams).toStrictEqual({});
@@ -564,6 +583,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       place_id: losangeles.id.toString(),
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.identificationsApiParams).toStrictEqual({});
@@ -600,6 +620,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       swlng: 0,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.identificationsApiParams).toStrictEqual({});
@@ -630,6 +651,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       project_id: project_cnc1.id.toString(),
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.identificationsApiParams).toStrictEqual({});
@@ -660,6 +682,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       user_id: user1.id.toString(),
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.identificationsApiParams).toStrictEqual({});
@@ -691,6 +714,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       ident_user_id: `${user1.id}`,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.identificationsApiParams).toStrictEqual({});
@@ -709,7 +733,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectEmptyResources(store, ["selectedTaxa"]);
+    expectEmptyResources(store, ["selectedTaxa", "selectedUnobservedByUser"]);
     expectDefaultTaxaRecord(store, allTaxaCount * 0.65);
     expectUser1UnobservedByUser(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -721,6 +745,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       unobserved_by_user_id: user1.id,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.identificationsApiParams).toStrictEqual({});
@@ -738,7 +763,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectEmptyResources(store, ["selectedTaxa"]);
+    expectEmptyResources(store, ["selectedTaxa", "selectedReviewer"]);
     expectDefaultTaxaRecord(store);
     expectUser1Reviewer(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -750,6 +775,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       viewer_id: user1.id,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.identificationsApiParams).toStrictEqual({});
@@ -780,6 +806,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       annotation_user_id: user1.id.toString(),
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.identificationsApiParams).toStrictEqual({});
@@ -798,7 +825,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectEmptyResources(store, ["selectedTaxa"]);
+    expectEmptyResources(store, ["selectedTaxa", "selectedNotInProject"]);
     expect(store.selectedNotInProject).toStrictEqual(project_cnc1);
     expectDefaultTaxaRecord(store, allTaxaProjectCount);
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -810,6 +837,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       not_in_project: project_cnc1.id.toString(),
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.identificationsApiParams).toStrictEqual({});
@@ -865,6 +893,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       project_id: `${project_cnc1.id},${project_cnc2.id}`,
       user_id: `${user1.id},${user2.id}`,
       ident_user_id: `${user1.id}`,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.identificationsApiParams).toStrictEqual({});
@@ -913,6 +942,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       swlat: 0,
       swlng: 0,
       user_id: `${user1.id},${user2.id}`,
+      per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
     expect(store.identificationsApiParams).toStrictEqual({});
@@ -941,6 +971,7 @@ describe("initPopulateStore and initRenderMap options with identifications", () 
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       observation_taxon_id: allTaxa.id.toString(),
+      per_page: perPage,
     });
     expect(store.color).toBe(allTaxaIdentification.color);
     expect(store.record_type).toBe("identifications");
@@ -963,6 +994,7 @@ describe("initPopulateStore and initRenderMap options with identifications", () 
       expect(store.identificationsApiParams).toStrictEqual({
         [param]: true,
         observation_taxon_id: allTaxa.id.toString(),
+        per_page: perPage,
       });
       expect(store.color).toBe(iNatOrange);
     },
@@ -993,6 +1025,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       observation_taxon_id: life.id.toString(),
+      per_page: perPage,
     });
     expect(store.color).toBe(life.color);
   });
@@ -1024,6 +1057,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expect(store.identificationsApiParams).toStrictEqual({
       observation_taxon_id: allTaxa.id.toString(),
       without_observation_taxon_id: life.id.toString(),
+      per_page: perPage,
     });
     expect(store.color).toBe(iNatOrange);
   });
@@ -1049,6 +1083,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       taxon_id: life.id.toString(),
+      per_page: perPage,
     });
     expect(store.color).toBe("");
   });
@@ -1082,6 +1117,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expect(store.identificationsApiParams).toStrictEqual({
       observation_taxon_id: allTaxa.id.toString(),
       without_taxon_id: life.id.toString(),
+      per_page: perPage,
     });
     expect(store.color).toBe(iNatOrange);
   });
@@ -1117,6 +1153,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     let expectedParams2: IdentificationsApiParamsType = {
       place_id: placeA.id.toString(),
       observation_taxon_id: allTaxa.id.toString(),
+      per_page: perPage,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
     expect(store.color).toBe(iNatOrange);
@@ -1143,6 +1180,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       observation_taxon_id: allTaxaIdentification.id.toString(),
+      per_page: perPage,
     });
     expect(store.color).toBe(iNatOrange);
   });
@@ -1167,6 +1205,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       observation_taxon_id: allTaxaIdentification.id.toString(),
+      per_page: perPage,
     });
     expect(store.color).toBe(iNatOrange);
   });
@@ -1201,6 +1240,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     let expectedParams2: IdentificationsApiParamsType = {
       user_id: userA.id.toString(),
       observation_taxon_id: allTaxa.id.toString(),
+      per_page: perPage,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
     expect(store.color).toBe(iNatOrange);
@@ -1226,6 +1266,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       observation_taxon_id: allTaxa.id.toString(),
+      per_page: perPage,
     });
     expect(store.color).toBe(iNatOrange);
   });
@@ -1250,6 +1291,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       observation_taxon_id: allTaxa.id.toString(),
+      per_page: perPage,
     });
     expect(store.color).toBe(iNatOrange);
   });
@@ -1301,6 +1343,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
       taxon_id: `${oak.id}`,
       place_id: `${losangeles.id},${sandiego.id}`,
       user_id: `${user1.id},${user2.id}`,
+      per_page: perPage,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams);
     expect(store.color).toBe(life.color);
@@ -1335,13 +1378,16 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
     "adds observation view to store",
     async (view) => {
       let store = structuredClone(mapStore);
+      let perpage = store.viewMetadata[view].perPage;
 
       expectEmpytMap(store);
 
       let searchparams = `?locale=en&view=${view}`;
       let urlData = decodeAppUrl(searchparams, "/");
       let subview =
-        view === "observations_observations" ? { subview: "grid" } : {};
+        view === "observations_observations"
+          ? { subview: "grid", perPage: perpage }
+          : { perPage: perpage };
 
       await initPopulateStore(store, urlData);
       await initRenderMap(store);
@@ -1352,6 +1398,7 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
         ...defaultParams,
         colors: iNatOrange,
         taxon_id: allTaxa.id.toString(),
+        per_page: perpage,
       });
       expect(store.identificationsApiParams).toStrictEqual({});
       expect(store.color).toBe(iNatOrange);
@@ -1371,7 +1418,9 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       let searchparams = `?locale=en&view=${view}`;
       let urlData = decodeAppUrl(searchparams, "/identifications/");
       let subview =
-        view === "identifications_observations" ? { subview: "grid" } : {};
+        view === "identifications_observations"
+          ? { subview: "grid", perPage: store.viewMetadata[view].perPage }
+          : { perPage: store.viewMetadata[view].perPage };
 
       await initPopulateStore(store, urlData);
       await initRenderMap(store);
@@ -1381,6 +1430,7 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
       expect(store.identificationsApiParams).toStrictEqual({
         observation_taxon_id: allTaxa.id.toString(),
+        per_page: store.viewMetadata[view].perPage,
       });
       expect(store.color).toBe(iNatOrange);
       expect(store.record_type).toBe("identifications");
@@ -1406,6 +1456,7 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       expectDefaultTaxaRecord(store);
       expect(store.observationsApiParams).toStrictEqual({
         ...defaultParams,
+        per_page: perPage,
         colors: iNatOrange,
         taxon_id: allTaxa.id.toString(),
       });
@@ -1413,6 +1464,7 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       expect(store.color).toBe(iNatOrange);
       expect(store.currentView).toBe("observations_observations");
       expect(store.viewMetadata.observations_observations).toStrictEqual({
+        perPage: 24,
         subview: subview,
       });
     },
@@ -1435,11 +1487,13 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       expectDefaultTaxaRecordIdentification(store);
       expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
       expect(store.identificationsApiParams).toStrictEqual({
+        per_page: perPage,
         observation_taxon_id: allTaxa.id.toString(),
       });
       expect(store.color).toBe(iNatOrange);
       expect(store.currentView).toBe("identifications_observations");
       expect(store.viewMetadata.identifications_observations).toStrictEqual({
+        perPage: 24,
         subview: subview,
       });
     },

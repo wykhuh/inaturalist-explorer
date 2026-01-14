@@ -44,7 +44,7 @@ import {
   isResourceIdentifierResult,
   isResourceSpeciesResult,
 } from "../types/utils.ts";
-import { updateCountForOne } from "./count_utils.ts";
+import { updateCountForOneRecord } from "./count_utils.ts";
 import {
   cleanupIdentificationsMapParams,
   cleanupObservationsMapParams,
@@ -54,6 +54,7 @@ import squareImg from "../assets/images/square.jpeg";
 import mediumImg from "../assets/images/medium.jpeg";
 import userMedium from "../assets/images/user_medium.jpg";
 import userThumb from "../assets/images/user_thumb.jpg";
+import { getItem } from "./localStorage.ts";
 
 // called when user select taxa or place
 export async function fetchiNatMapDataForTaxon(
@@ -119,7 +120,10 @@ export async function fetchiNatMapDataForTaxon(
 // default taxon
 // ================
 
-export async function addDefaultTaxaRecordToStore(appStore: AppStoreType) {
+export async function addDefaultTaxaRecordToStore(
+  appStore: AppStoreType,
+  fetchCount = true,
+) {
   if (isObservationsCheck(appStore)) {
     appStore.observationsApiParams = {
       ...appStore.observationsApiParams,
@@ -134,12 +138,25 @@ export async function addDefaultTaxaRecordToStore(appStore: AppStoreType) {
   }
 
   appStore.color = iNatOrange;
-  await updateCountForOne(
+
+  let params = isObservationsCheck(appStore)
+    ? { ...appStore.observationsApiParams }
+    : { ...appStore.identificationsApiParams };
+
+  updateSelectedResource(
     structuredClone(allTaxaRecord),
     "selectedTaxa",
     appStore,
-    appStore.observationsApiParams,
   );
+
+  if (fetchCount) {
+    await updateCountForOneRecord(
+      structuredClone(allTaxaRecord),
+      "selectedTaxa",
+      appStore,
+      params,
+    );
+  }
 }
 
 export async function addDefaultTaxaRecordToMap(appStore: AppStoreType) {
@@ -734,4 +751,21 @@ function replaceWithCacheImagesIdentifications(
   });
 
   return results;
+}
+
+export function setPerPage(appStore: AppStoreType) {
+  let defaultPerPage = 24;
+  let view = appStore.currentView;
+  if (!view) return defaultPerPage;
+
+  let viewPerPage = appStore.viewMetadata[view].perPage;
+  let resourceParams = getResourceApiParams(isObservationsCheck(appStore));
+  let savedPerPage;
+  if (
+    view === "observations_observations" ||
+    view === "identifications_observations"
+  ) {
+    savedPerPage = getItem("perPageObservations");
+  }
+  appStore[resourceParams].per_page = savedPerPage || viewPerPage;
 }

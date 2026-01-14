@@ -10,7 +10,7 @@ import {
   updateTilesForSelectedTaxa,
   renderSelectedResources,
 } from "./search_utils.ts";
-import { updateCountForOne, updateCountForAll } from "./count_utils.ts";
+import { updateCountForOneRecord, updateCountForAll } from "./count_utils.ts";
 
 // called when user clicks refresh map button
 export async function refreshBoundingBox(appStore: AppStoreType) {
@@ -48,11 +48,9 @@ export async function refreshBoundingBox(appStore: AppStoreType) {
   await updateTilesForSelectedTaxa(appStore);
   await updateCountForAll("selectedPlaces", appStore);
 
-  let paramsTemp = {
+  await updateCountForOneRecord(place, "selectedPlaces", appStore, {
     ...appStore.observationsApiParams,
-  };
-
-  await updateCountForOne(place, "selectedPlaces", appStore, paramsTemp);
+  });
 
   renderSelectedResources(appStore, true);
 }

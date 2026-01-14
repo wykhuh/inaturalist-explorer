@@ -90,6 +90,17 @@ export async function pageChangeHandler(
       "observations") as ObservationViewsType;
   }
 
+  // update per_page
+  if (appStore.currentView) {
+    if (recordType === "observations") {
+      appStore.observationsApiParams.per_page =
+        appStore.viewMetadata[appStore.currentView].perPage;
+    } else if (recordType === "identifications") {
+      appStore.identificationsApiParams.per_page =
+        appStore.viewMetadata[appStore.currentView].perPage;
+    }
+  }
+
   // update app url
   updateAppUrl(window.location, appStore);
 

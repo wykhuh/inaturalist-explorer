@@ -20,7 +20,7 @@ import {
   renderResourceGeometryLayer,
   resetPageNumber,
 } from "./data_utils.ts";
-import { updateCountForAll, updateCountForOne } from "./count_utils.ts";
+import { updateCountForAll, updateCountForOneRecord } from "./count_utils.ts";
 import { fitBoundsPlaces } from "./map_utils.ts";
 import { placeTypes } from "../data/inat_data.ts";
 import {
@@ -174,7 +174,7 @@ export async function placeSelectedHandler(
     ...appStore[resourceApiParams],
     place_id: place.id.toString(),
   };
-  await updateCountForOne(place, "selectedPlaces", appStore, paramsTemp);
+  await updateCountForOneRecord(place, "selectedPlaces", appStore, paramsTemp);
   await updateTilesForSelectedTaxa(appStore);
   await updateCountForAll("selectedPlaces", appStore);
 

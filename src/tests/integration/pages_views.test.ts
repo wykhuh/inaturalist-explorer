@@ -31,6 +31,7 @@ import {
   gridLabel_allTaxaRecord,
   allTaxaIdentification,
   expectDefaultTaxaRecord,
+  perPage,
 } from "../test_helpers.ts";
 import { decodeAppUrl } from "../../lib/utils.ts";
 import { initPopulateStore, initRenderMap } from "../../lib/init_app.ts";
@@ -114,6 +115,7 @@ describe("click on site header to change page", () => {
     expect(store.currentView).toStrictEqual("identifications_observations");
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       observation_taxon_id: `${defaultTaxa.id}`,
     });
     expect(store.selectedTaxa).toStrictEqual([defaultTaxa]);
@@ -132,8 +134,10 @@ describe("click on site header to change page", () => {
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       taxon_id: `${defaultTaxa.id}`,
+      per_page: perPage,
     });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       observation_taxon_id: `${defaultTaxa.id}`,
     });
 
@@ -174,6 +178,7 @@ describe("click on site header to change page", () => {
     expect(store.currentView).toStrictEqual("identifications_observations");
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       observation_taxon_id: `${life1.id},${oak1.id}`,
     });
     expect(store.selectedTaxa).toStrictEqual([life1, oak1]);
@@ -194,8 +199,10 @@ describe("click on site header to change page", () => {
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       taxon_id: `${life1.id},${oak1.id}`,
+      per_page: perPage,
     });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       observation_taxon_id: `${life1.id},${oak1.id}`,
     });
 
@@ -237,6 +244,7 @@ describe("click on site header to change page", () => {
     expect(store.currentView).toStrictEqual("identifications_observations");
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       taxon_id: `${life1.id}`,
     });
     expect(store.selectedTaxaIdentified).toStrictEqual([life1]);
@@ -253,8 +261,10 @@ describe("click on site header to change page", () => {
       ...defaultParams,
       taxon_id: `${defaultTaxa.id}`,
       colors: iNatOrange,
+      per_page: perPage,
     });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       taxon_id: `${life1.id}`,
     });
     expect(mainEl?.innerHTML).toBe(`<page-observations></page-observations>`);
@@ -273,8 +283,10 @@ describe("click on site header to change page", () => {
       ...defaultParams,
       taxon_id: `${defaultTaxa.id}`,
       colors: iNatOrange,
+      per_page: perPage,
     });
     expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
       taxon_id: `${life1.id}`,
       observation_taxon_id: `${defaultTaxa.id}`,
     });
@@ -307,6 +319,7 @@ describe("click on site header to change page", () => {
     expect(store.currentView).toStrictEqual("observations_observations");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
+      per_page: perPage,
       taxon_id: `${defaultTaxa.id}`,
       colors: `${defaultTaxa.color}`,
     });
@@ -326,11 +339,13 @@ describe("click on site header to change page", () => {
     expect(store.currentView).toStrictEqual("identifications_observations");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
+      per_page: perPage,
       taxon_id: `${defaultTaxa.id}`,
       colors: `${defaultTaxa.color}`,
     });
     expect(store.identificationsApiParams).toStrictEqual({
       observation_taxon_id: `${defaultTaxa.id}`,
+      per_page: perPage,
     });
 
     let mainEl = document.querySelector("#app") as HTMLDivElement;
@@ -372,6 +387,7 @@ describe("click on site header to change page", () => {
     expect(store.currentView).toStrictEqual("observations_observations");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
+      per_page: perPage,
       taxon_id: `${life1.id},${oak1.id}`,
       colors: `${life1.color},${oak1.color}`,
     });
@@ -393,11 +409,13 @@ describe("click on site header to change page", () => {
     expect(store.currentView).toStrictEqual("identifications_observations");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
+      per_page: perPage,
       taxon_id: `${life1.id},${oak1.id}`,
       colors: `${life1.color},${oak1.color}`,
     });
     expect(store.identificationsApiParams).toStrictEqual({
       observation_taxon_id: `${life1.id},${oak1.id}`,
+      per_page: perPage,
     });
 
     let mainEl = document.querySelector("#app") as HTMLDivElement;
@@ -435,6 +453,7 @@ describe("click on site header to change page", () => {
       ...defaultParams,
       taxon_id: `${allTaxa.id}`,
       colors: `${allTaxa.color}`,
+      per_page: perPage,
     });
     expect(store.identificationsApiParams).toStrictEqual({});
 

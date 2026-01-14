@@ -16,10 +16,11 @@ import { isObservationsCheck, updateSelectedResource } from "./data_utils.ts";
 import {
   selectedResourcesIdIdentifications,
   selectedResourcesIdObservations,
-  selectedResourcesWithCount,
+  selectedObservationsResourcesWithCount,
+  selectedIdentifictionsResourcesWithCount,
 } from "../data/app_data.ts";
 
-export async function updateCountForOne(
+export async function updateCountForOneRecord(
   record:
     | NormalizediNatUserType
     | NormalizediNatProjectType
@@ -28,34 +29,19 @@ export async function updateCountForOne(
   resource: AppStoreSelectedResourcesKeysType,
   appStore: AppStoreType,
   paramsTemp: ObservationsApiParamsType,
+  perPage = 0,
 ) {
+  paramsTemp.per_page = perPage;
+
   if (isObservationsCheck(appStore)) {
-    await updateObservationsCountForOne(record, resource, appStore, paramsTemp);
+    await getObservationsCountForRecord(record, paramsTemp);
   } else {
-    await updateIdentificationsCountForOne(
-      record,
-      resource,
-      appStore,
-      paramsTemp,
-    );
+    await getIdentificationsCountForRecord(record, paramsTemp);
   }
-}
-
-async function updateObservationsCountForOne(
-  record:
-    | NormalizediNatUserType
-    | NormalizediNatProjectType
-    | NormalizediNatPlaceType
-    | NormalizediNatTaxonType,
-  resource: AppStoreSelectedResourcesKeysType,
-  appStore: AppStoreType,
-  paramsTemp: ObservationsApiParamsType,
-) {
-  await getObservationsCountForRecord(record, paramsTemp, appStore);
-
   updateSelectedResource(record, resource, appStore);
 }
 
+// get count for one selected resource record
 async function getObservationsCountForRecord(
   record:
     | NormalizediNatPlaceType
@@ -63,38 +49,21 @@ async function getObservationsCountForRecord(
     | NormalizediNatProjectType
     | NormalizediNatUserType,
   paramsTemp: ObservationsApiParamsType,
-  appStore: AppStoreType,
 ) {
   if (import.meta.env?.VITE_CACHE === "true") {
     record.observations_count = -888;
     return record;
   }
 
-  let params = cleanupObervationsParamsForRecord(paramsTemp).toString();
-  let perPage = 0;
-  let data = await getObservations(params, perPage);
-  if (isObservationsCheck(appStore)) {
-    record.observations_count = data?.total_results;
-  } else {
-    record.identifications_count = data?.total_results;
-  }
+  let params = cleanupObervationsParamsForRecord(paramsTemp);
+
+  let data = await getObservations(params);
+  record.observations_count = data?.total_results;
+
   return record;
 }
 
-export async function updateIdentificationsCountForOne(
-  record:
-    | NormalizediNatPlaceType
-    | NormalizediNatTaxonType
-    | NormalizediNatUserType,
-  resource: AppStoreSelectedResourcesKeysType,
-  appStore: AppStoreType,
-  paramsTemp: ObservationsApiParamsType,
-) {
-  await getIdentificationsCountForRecord(record, paramsTemp);
-
-  updateSelectedResource(record, resource, appStore);
-}
-
+// get count for one selected resource record
 async function getIdentificationsCountForRecord(
   record:
     | NormalizediNatPlaceType
@@ -107,10 +76,9 @@ async function getIdentificationsCountForRecord(
     record.identifications_count = -555;
     return record;
   }
-
   let params = cleanupIdentificationsParamsForRecord(paramsTemp);
-  let perPage = 0;
-  let data = await getIdentifications(params, perPage);
+
+  let data = await getIdentifications(params);
   record.identifications_count = data?.total_results;
 
   return record;
@@ -141,9 +109,9 @@ async function updateObservationsCountForAll(
   appStore: AppStoreType,
   onlyFetchMissingCounts = false,
 ) {
-  let targetResources = selectedResourcesWithCount.filter(
-    (r) => r != ignoreResource,
-  );
+  let targetResources = selectedObservationsResourcesWithCount
+    .filter((r) => r != ignoreResource)
+    .filter((r) => appStore[r].length > 0);
   for await (const resource of targetResources) {
     await updateObservationsCountForResource(
       resource,
@@ -174,8 +142,11 @@ export async function updateObservationsCountForResource(
     let paramsTemp = {
       ...appStore.observationsApiParams,
       [idField]: record.id.toString(),
+      per_page: 0,
     };
-    await updateObservationsCountForOne(record, resource, appStore, paramsTemp);
+    await getObservationsCountForRecord(record, paramsTemp);
+
+    updateSelectedResource(record, resource, appStore);
   }
 }
 
@@ -184,15 +155,7 @@ async function updateIdentificationsCountForAll(
   appStore: AppStoreType,
   onlyFetchMissingCounts = false,
 ) {
-  let resources = [
-    "selectedTaxa",
-    "selectedTaxaIdentified",
-    "selectedPlaces",
-    "selectedUsers",
-    "selectedUsersIdentifiers",
-  ] as AppStoreSelectedResourcesKeysType[];
-
-  let targetResources = resources
+  let targetResources = selectedIdentifictionsResourcesWithCount
     .filter((r) => r != ignoreResource)
     .filter((r) => appStore[r].length > 0);
 
@@ -226,14 +189,13 @@ export async function updateIdentificationsCountForResource(
     let paramsTemp = {
       ...appStore.identificationsApiParams,
       [idField]: record.id.toString(),
+      per_page: 0,
     };
     cleanupIdentificationsParamsForRecord(paramsTemp);
-    await updateIdentificationsCountForOne(
-      record,
-      resource,
-      appStore,
-      paramsTemp,
-    );
+
+    await getIdentificationsCountForRecord(record, paramsTemp);
+
+    updateSelectedResource(record, resource, appStore);
   }
 }
 

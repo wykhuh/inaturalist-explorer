@@ -27,10 +27,8 @@ import {
 // - returns 0 results for any page greater than 1.
 // - returns only 100 observers
 // https://api.inaturalist.org/v1/identifications/observers?page=2&per_page=25
-export let perPage = 200;
 
 export async function fetchAndRenderData(
-  perPage: number,
   paginationCallback: (
     currentPage: number,
     appStore: AppStoreType,
@@ -44,7 +42,7 @@ export async function fetchAndRenderData(
   spinner.start();
 
   const t1 = performance.now();
-  let data = await getAPIData(perPage, appStore);
+  let data = await getAPIData(appStore);
   const t10 = performance.now();
   loggerTime(`api ${t10 - t1} milliseconds`);
 
@@ -83,9 +81,9 @@ export async function fetchAndRenderData(
 
   let tableEl;
   if (isIdentificationsObserversResult(data.results)) {
-    tableEl = createIdentificationsTable(data.results, page, perPage);
+    tableEl = createIdentificationsTable(data.results, page, data.per_page);
   } else {
-    tableEl = createTable(data.results, page, perPage);
+    tableEl = createTable(data.results, page, data.per_page);
   }
   containerEl.appendChild(tableEl);
 
@@ -102,7 +100,7 @@ export async function fetchAndRenderData(
   containerEl.appendChild(pagination2);
 }
 
-async function getAPIData(perPage: number, appStore: AppStoreType) {
+async function getAPIData(appStore: AppStoreType) {
   if (import.meta.env?.VITE_CACHE === "true") {
     let page = isObservationsCheck(appStore)
       ? appStore.observationsApiParams.page
@@ -116,10 +114,10 @@ async function getAPIData(perPage: number, appStore: AppStoreType) {
     let data;
     if (isIdentificationsCheck(appStore)) {
       let params = cleanupIdentificationsObserversParams(appStore);
-      data = await getIdentificationsObservers(params, perPage);
+      data = await getIdentificationsObservers(params);
     } else if (isObservationsCheck(appStore)) {
       let params = cleanupObervationsObserversParams(appStore);
-      data = await getObservationsObservers(params, perPage);
+      data = await getObservationsObservers(params);
     }
 
     return data;
@@ -250,6 +248,6 @@ export async function paginationCallback(num: number, appStore: AppStoreType) {
   // HACK: update store
   appStore.viewMetadata = appStore.viewMetadata;
 
-  await fetchAndRenderData(perPage, paginationCallback, appStore);
+  await fetchAndRenderData(paginationCallback, appStore);
   updateAppUrl(window.location, appStore);
 }

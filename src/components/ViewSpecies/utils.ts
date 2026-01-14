@@ -22,10 +22,7 @@ import type {
   ResourceSpeciesCountResult,
 } from "../../types/inat_api";
 
-export let perPage = 24;
-
 export async function fetchAndRenderData(
-  perPage: number,
   paginationCallback: (
     currentPage: number,
     appStore: AppStoreType,
@@ -39,7 +36,7 @@ export async function fetchAndRenderData(
   spinner.start();
 
   const t1 = performance.now();
-  let data = await getAPIData(perPage, appStore);
+  let data = await getAPIData(appStore);
 
   const t10 = performance.now();
   loggerTime(`api ${t10 - t1} milliseconds`);
@@ -81,7 +78,7 @@ export async function fetchAndRenderData(
   containerEl.appendChild(pagination2);
 }
 
-async function getAPIData(perPage: number, appStore: AppStoreType) {
+async function getAPIData(appStore: AppStoreType) {
   if (import.meta.env?.VITE_CACHE === "true") {
     let page = isObservationsCheck(appStore)
       ? appStore.observationsApiParams.page
@@ -94,10 +91,10 @@ async function getAPIData(perPage: number, appStore: AppStoreType) {
     let data;
     if (isIdentificationsCheck(appStore)) {
       let params = cleanupIdentificationParams(appStore);
-      data = await getIdentificationsSpecies(params, perPage);
+      data = await getIdentificationsSpecies(params);
     } else if (isObservationsCheck(appStore)) {
       let params = cleanupObervationsParams(appStore);
-      data = await getObservationsSpecies(params, perPage);
+      data = await getObservationsSpecies(params);
     }
 
     return data;
@@ -152,6 +149,6 @@ export async function paginationCallback(num: number, appStore: AppStoreType) {
   // HACK: update store
   appStore.viewMetadata = appStore.viewMetadata;
 
-  await fetchAndRenderData(perPage, paginationCallback, appStore);
+  await fetchAndRenderData(paginationCallback, appStore);
   updateAppUrl(window.location, appStore);
 }

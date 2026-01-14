@@ -5,6 +5,7 @@ import { expect } from "vitest";
 
 import { addLayerToMap, getMapTiles } from "../lib/map_utils";
 import type {
+  AppStoreSelectedResourceKeysType,
   AppStoreSelectedResourcesKeysType,
   AppStoreType,
   NormalizediNatPlaceType,
@@ -29,7 +30,7 @@ import {
   user2UserApi,
 } from "./fixtures/inatApi.ts";
 import type { PolygonJson } from "../types/inat_api";
-import { selectedResources } from "../data/app_data.ts";
+import { selectedResourcesAll } from "../data/app_data.ts";
 
 function adjustCount(url: string, count: number) {
   let lifeCount = life().observations_count as number;
@@ -191,7 +192,11 @@ export function createMockServer() {
   return server;
 }
 
-export let defaultParams = { verifiable: true, spam: false, locale: "en" };
+export let defaultParams = {
+  verifiable: true,
+  spam: false,
+  locale: "en",
+};
 export let defaultQuery = "verifiable=true&spam=false";
 
 export let colors = ["#4477aa", "#66ccee", "#228833"];
@@ -598,11 +603,14 @@ export function expectDefaultTaxaRecordIdentification(
 
 export function expectEmptyResources(
   store: AppStoreType,
-  changedResources: AppStoreSelectedResourcesKeysType[] = [],
+  changedResources: (
+    | AppStoreSelectedResourcesKeysType
+    | AppStoreSelectedResourceKeysType
+  )[] = [],
 ) {
   let defaultStore = structuredClone(mapStore);
 
-  selectedResources.forEach((resource) => {
+  selectedResourcesAll.forEach((resource) => {
     if (changedResources.includes(resource)) return;
 
     expect(store[resource]).toStrictEqual(defaultStore[resource]);
@@ -984,3 +992,6 @@ export function expectUser2Identifier(store: AppStoreType, count = 0) {
 export function roundCounts(number: number) {
   return Math.round(number * 10) / 10;
 }
+
+export const perPage = 24;
+export const perPageUsers = 100;

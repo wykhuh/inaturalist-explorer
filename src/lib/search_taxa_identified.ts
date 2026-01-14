@@ -10,7 +10,7 @@ import {
 } from "./data_utils.ts";
 import { renderSelectedResources, showHideHeader } from "./search_utils.ts";
 import { removeTaxaFromStoreAndMap, setupTaxaSearch } from "./search_taxa.ts";
-import { updateCountForAll, updateCountForOne } from "./count_utils.ts";
+import { updateCountForAll, updateCountForOneRecord } from "./count_utils.ts";
 
 export function setupTaxaIdentifiedSearch(
   selector: string,
@@ -58,7 +58,7 @@ export async function taxonIdentifiedSelectedHandler(
     ...appStore.identificationsApiParams,
     taxon_id: taxon.id.toString(),
   };
-  await updateCountForOne(
+  await updateCountForOneRecord(
     taxon,
     "selectedTaxaIdentified",
     appStore,
