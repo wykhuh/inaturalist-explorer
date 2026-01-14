@@ -93,6 +93,10 @@ import {
   validObservationsViews,
   fieldsWithAny,
 } from "../../data/app_data.ts";
+import {
+  dbKeys,
+  populateStoreWithLocaleStorage,
+} from "../../lib/localStorage.ts";
 
 beforeEach(() => {
   const { JSDOM } = jsdom;
@@ -1440,4 +1444,83 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       });
     },
   );
+});
+
+describe("populateStoreWithLocaleStorage", () => {
+  afterEach(() => {
+    localStorage.clear();
+  });
+  test("does nothing if no values in local storage", () => {
+    let store = structuredClone(mapStore);
+
+    populateStoreWithLocaleStorage(store);
+
+    let expected = structuredClone(mapStore);
+    expect(store).toStrictEqual(expected);
+  });
+
+  test("sets locale if local is in locale storage", () => {
+    let store = structuredClone(mapStore);
+    localStorage.setItem(dbKeys.locale, JSON.stringify("fr"));
+
+    populateStoreWithLocaleStorage(store);
+
+    let expected = structuredClone(mapStore);
+    expected.observationsApiParams.locale = "fr";
+    expect(store).toStrictEqual(expected);
+  });
+
+  test("sets name order if name_order is in local storage", () => {
+    let store = structuredClone(mapStore);
+    localStorage.setItem(dbKeys.name_order, JSON.stringify("s"));
+
+    populateStoreWithLocaleStorage(store);
+
+    let expected = structuredClone(mapStore);
+    expected.viewMetadata.name_order = "s";
+    expect(store).toStrictEqual(expected);
+  });
+
+  test("sets page for observation if local is in local storage", () => {
+    let store = structuredClone(mapStore);
+    localStorage.setItem(dbKeys.per_page_observations, JSON.stringify("48"));
+
+    populateStoreWithLocaleStorage(store);
+
+    let expected = structuredClone(mapStore);
+    expected.viewMetadata.identifications_observations.perPage = 48;
+    expected.viewMetadata.observations_observations.perPage = 48;
+    expect(store).toStrictEqual(expected);
+  });
+});
+
+describe("initApp when there are valus in local storage", () => {
+  afterEach(() => {
+    localStorage.clear();
+  });
+  test("sets locale and page in store", async () => {
+    let store = structuredClone(mapStore);
+    localStorage.setItem(dbKeys.name_order, JSON.stringify("s"));
+    localStorage.setItem(dbKeys.locale, JSON.stringify("fr"));
+    localStorage.setItem(dbKeys.per_page_observations, JSON.stringify("48"));
+
+    populateStoreWithLocaleStorage(store);
+
+    let searchparams = ``;
+    let urlData = decodeAppUrl(searchparams, "/");
+
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expect(store.observationsApiParams).toStrictEqual({
+      ...defaultParams,
+      taxon_id: allTaxa.id.toString(),
+      colors: iNatOrange,
+      locale: "fr",
+      per_page: 48,
+    });
+    expect(store.viewMetadata.name_order).toBe("s");
+    expect(store.viewMetadata.identifications_observations.perPage).toBe(48);
+    expect(store.viewMetadata.observations_observations.perPage).toBe(48);
+  });
 });

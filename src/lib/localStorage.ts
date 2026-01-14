@@ -1,4 +1,3 @@
-import { viewAndPerPageDbKeyObject } from "../data/app_data";
 import type { AppStoreType } from "../types/app";
 
 export function saveItem(key: string, value: any) {
@@ -36,11 +35,13 @@ export function populateStoreWithLocaleStorage(appStore: AppStoreType) {
     appStore.viewMetadata.name_order = savedNameOrder;
   }
 
-  if (!appStore.currentView) return;
-  let dbKey = viewAndPerPageDbKeyObject(appStore.currentView);
-  let savedPerPage = getItem(dbKey);
-  if (savedPerPage) {
-    appStore.viewMetadata[appStore.currentView].perPage = savedPerPage;
+  let perPageObservations = getItem(dbKeys.per_page_observations);
+  if (perPageObservations) {
+    appStore.viewMetadata.observations_observations.perPage =
+      Number(perPageObservations);
+    appStore.viewMetadata.identifications_observations.perPage =
+      Number(perPageObservations);
   }
+
   appStore.observationsApiParams = appStore.observationsApiParams;
 }
