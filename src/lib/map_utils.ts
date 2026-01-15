@@ -447,3 +447,19 @@ function formatBoundingBox(
     [swlng, nelat],
   ];
 }
+
+export function removeMap(appStore: AppStoreType) {
+  if (appStore.map.map) {
+    // save map bounds before switching views so app can return to this map location
+    appStore.map.bounds = appStore.map.map.getBounds();
+
+    // remove map and event listeners
+    appStore.map.map.remove();
+    appStore.map.map = null;
+  }
+
+  if (appStore.map.layerControl) {
+    appStore.map.layerControl.remove();
+    appStore.map.layerControl = null;
+  }
+}

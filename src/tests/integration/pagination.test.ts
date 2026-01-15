@@ -273,7 +273,7 @@ test("add page when user changes view and page for each view", async () => {
     per_page: perPage,
   });
   expect(store.viewMetadata.observations_observations).toStrictEqual({
-    subview: "grid",
+    subview: "map",
     perPage: perPage,
   });
   expect(store.currentView).toBe("observations_observations");
@@ -281,7 +281,7 @@ test("add page when user changes view and page for each view", async () => {
   paginationCallbackObservations(5, store);
 
   expect(store.viewMetadata.observations_observations).toStrictEqual({
-    subview: "grid",
+    subview: "map",
     perPage: perPage,
     page: 5,
   });

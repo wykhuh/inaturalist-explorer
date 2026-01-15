@@ -41,11 +41,11 @@ export const mapStore: AppStoreType = {
   observationsSubviewData: [],
   currentView: "observations_observations",
   viewMetadata: {
-    observations_observations: { subview: "grid", perPage: 24 },
+    observations_observations: { subview: "map", perPage: 24 },
     observations_species: { perPage: 24 },
     observations_identifiers: { perPage: 100 },
     observations_observers: { perPage: 100 },
-    identifications_observations: { subview: "grid", perPage: 24 },
+    identifications_observations: { subview: "map", perPage: 24 },
     identifications_species: { perPage: 24 },
     identifications_identifiers: { perPage: 100 },
     identifications_identifications: { perPage: 24 },

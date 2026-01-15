@@ -183,19 +183,13 @@ export function formatAppUrl(
 
   if (appStore.currentView === "observations_observations") {
     let subview = appStore.viewMetadata.observations_observations?.subview;
-    if (subview === "table") {
-      params.view = appStore.currentView;
-      params.subview = subview;
-    } else if (subview === "media") {
+    if (subview && ["table", "media", "grid"].includes(subview)) {
       params.view = appStore.currentView;
       params.subview = subview;
     }
   } else if (appStore.currentView === "identifications_observations") {
     let subview = appStore.viewMetadata.identifications_observations?.subview;
-    if (subview === "table") {
-      params.view = appStore.currentView;
-      params.subview = subview;
-    } else if (subview === "media") {
+    if (subview && ["table", "media", "grid"].includes(subview)) {
       params.view = appStore.currentView;
       params.subview = subview;
     }
@@ -221,7 +215,7 @@ export function removeDefaultParams(searchParams: string) {
     parts.includes("verifiable=true") && parts.includes("spam=false");
   let defaultView =
     parts.includes("view=observations_observations") &&
-    parts.includes("subview=grid");
+    parts.includes("subview=map");
   let defaultNameOrder = parts.includes("name_order=cs");
   let defaultLocale = parts.includes("locale=en");
 
@@ -230,12 +224,12 @@ export function removeDefaultParams(searchParams: string) {
     parts = removeValueFromArray("spam=false", parts);
     parts = removeValueFromArray("locale=en", parts);
     parts = removeValueFromArray("view=observations_observations", parts);
-    parts = removeValueFromArray("subview=grid", parts);
+    parts = removeValueFromArray("subview=map", parts);
   }
 
   if (defaultView) {
     parts = removeValueFromArray("view=observations_observations", parts);
-    parts = removeValueFromArray("subview=grid", parts);
+    parts = removeValueFromArray("subview=map", parts);
   }
 
   if (defaultNameOrder) {

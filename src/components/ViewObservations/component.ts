@@ -11,16 +11,17 @@ import {
   updateOrderForStore,
 } from "./utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
-import { initRenderMap } from "../../lib/init_app";
 import { setupComponent } from "../../lib/component_utils";
 import type { AppStoreType, ObservationSubviewsType } from "../../types/app";
 import { isObservationsCheck } from "../../lib/data_utils";
+import { removeMap } from "../../lib/map_utils";
 
 class ViewObservations extends HTMLElement {
   constructor() {
     super();
   }
 
+  mapLinkEl: null | HTMLElement = null;
   tableLinkEl: null | HTMLElement = null;
   gridLinkEl: null | HTMLElement = null;
   mediaLinkEl: null | HTMLElement = null;
@@ -30,10 +31,12 @@ class ViewObservations extends HTMLElement {
     loggerRender("++ ViewObservations connectedCallback");
     setupComponent(template, this);
 
+    this.mapLinkEl = document.querySelector<HTMLElement>(".subview-map");
     this.tableLinkEl = document.querySelector<HTMLElement>(".subview-table");
     this.gridLinkEl = document.querySelector<HTMLElement>(".subview-grid");
     this.mediaLinkEl = document.querySelector<HTMLElement>(".subview-media");
     this.orderForm = this.querySelector<HTMLFormElement>("#order-form");
+    if (!this.mapLinkEl) return;
     if (!this.tableLinkEl) return;
     if (!this.gridLinkEl) return;
     if (!this.mediaLinkEl) return;
@@ -47,6 +50,7 @@ class ViewObservations extends HTMLElement {
     window.addEventListener("identificationsChange", this);
     window.addEventListener("perPageChanged", this);
 
+    this.mapLinkEl.addEventListener("click", this);
     this.tableLinkEl.addEventListener("click", this);
     this.gridLinkEl.addEventListener("click", this);
     this.mediaLinkEl.addEventListener("click", this);
@@ -56,25 +60,14 @@ class ViewObservations extends HTMLElement {
   disconnectedCallback() {
     loggerRender("++ ViewObservations disconnectedCallback");
 
-    if (window.app.store.map.map) {
-      // save map bounds before switching views so app can return to this map location
-      window.app.store.map.bounds = window.app.store.map.map.getBounds();
-
-      // remove map and event listeners
-      window.app.store.map.map.remove();
-      window.app.store.map.map = null;
-    }
-
-    if (window.app.store.map.layerControl) {
-      window.app.store.map.layerControl.remove();
-      window.app.store.map.layerControl = null;
-    }
+    removeMap(window.app.store);
 
     window.removeEventListener("observationsChange", this);
     window.removeEventListener("localeChanged", this);
     window.removeEventListener("nameOrderChanged", this);
     window.removeEventListener("identificationsChange", this);
     window.removeEventListener("perPageChanged", this);
+    this.mapLinkEl?.removeEventListener("click", this);
     this.tableLinkEl?.removeEventListener("click", this);
     this.gridLinkEl?.removeEventListener("click", this);
     this.mediaLinkEl?.removeEventListener("click", this);
@@ -98,7 +91,13 @@ class ViewObservations extends HTMLElement {
 
     let subview = target.dataset?.subview as ObservationSubviewsType;
     if (event.type === "click") {
-      if (subview && this.tableLinkEl && this.gridLinkEl && this.mediaLinkEl) {
+      if (
+        subview &&
+        this.tableLinkEl &&
+        this.gridLinkEl &&
+        this.mediaLinkEl &&
+        this.mapLinkEl
+      ) {
         updateSubviewState(subview, this, window.app.store);
       }
     }
@@ -121,12 +120,11 @@ class ViewObservations extends HTMLElement {
       this.tableLinkEl?.classList.add("current-subview");
     } else if (subview === "media") {
       this.mediaLinkEl?.classList.add("current-subview");
+    } else if (subview === "map") {
+      this.mapLinkEl?.classList.add("current-subview");
     } else {
       this.gridLinkEl?.classList.add("current-subview");
     }
-
-    // create new map
-    await initRenderMap(appStore);
 
     // use store to set values the form on page load
     initFilters(appStore);

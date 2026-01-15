@@ -1386,7 +1386,7 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       let urlData = decodeAppUrl(searchparams, "/");
       let subview =
         view === "observations_observations"
-          ? { subview: "grid", perPage: perpage }
+          ? { subview: "map", perPage: perpage }
           : { perPage: perpage };
 
       await initPopulateStore(store, urlData);
@@ -1419,7 +1419,7 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       let urlData = decodeAppUrl(searchparams, "/identifications/");
       let subview =
         view === "identifications_observations"
-          ? { subview: "grid", perPage: store.viewMetadata[view].perPage }
+          ? { subview: "map", perPage: store.viewMetadata[view].perPage }
           : { perPage: store.viewMetadata[view].perPage };
 
       await initPopulateStore(store, urlData);

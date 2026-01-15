@@ -1,38 +1,39 @@
 import { html } from "../../lib/component_utils";
 
 export const template = html`
-  <div id="map"></div>
-  <div id="observations-list-controls" data-testid="observations-controls">
-    <div>
-      <div id="observations-subview">
-        <button class="subview-grid" data-subview="grid">Grid</button>
-        <button class="subview-media" data-subview="media">Media</button>
-        <button class="subview-table" data-subview="table">Table</button>
-      </div>
-    </div>
-
-    <form id="order-form">
-      <div class="form-group">
-        <label for="order_combo">Sort By</label>
-        <select id="order_combo" name="order_combo">
-          <option value="created_at:desc">Added Date, New to Old</option>
-          <option value="created_at:asc">Added Date, Old to New</option>
-
-          <option value="observed_on:desc">Observed Date, New to Old</option>
-          <option value="observed_on:asc">Observed Date, Old to New</option>
-
-          <option value="updated_at:desc">Updated Date, New to Old</option>
-          <option value="updated_at:asc">Updated Date, Old to New</option>
-
-          <option value="votes:desc">Favorites, High to Low</option>
-          <option value="votes:asc">Favorites, Low to High</option>
-
-          <option value="random">Random</option>
-        </select>
-      </div>
-    </form>
-  </div>
-
   <span class="loader"></span>
-  <div class="observations-list-container"></div>
+  <div class="observations-list-container">
+    <div id="observations-list-controls" data-testid="observations-controls">
+      <div>
+        <div id="observations-subview">
+          <button class="subview-map" data-subview="map">Map</button>
+          <button class="subview-grid" data-subview="grid">Grid</button>
+          <button class="subview-media" data-subview="media">Media</button>
+          <button class="subview-table" data-subview="table">Table</button>
+        </div>
+      </div>
+
+      <form id="order-form">
+        <div class="form-group">
+          <label for="order_combo">Sort By</label>
+          <select id="order_combo" name="order_combo">
+            <option value="created_at:desc">Added Date, New to Old</option>
+            <option value="created_at:asc">Added Date, Old to New</option>
+
+            <option value="observed_on:desc">Observed Date, New to Old</option>
+            <option value="observed_on:asc">Observed Date, Old to New</option>
+
+            <option value="updated_at:desc">Updated Date, New to Old</option>
+            <option value="updated_at:asc">Updated Date, Old to New</option>
+
+            <option value="votes:desc">Favorites, High to Low</option>
+            <option value="votes:asc">Favorites, Low to High</option>
+
+            <option value="random">Random</option>
+          </select>
+        </div>
+      </form>
+    </div>
+    <div class="subview-container"></div>
+  </div>
 `;

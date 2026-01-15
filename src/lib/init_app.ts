@@ -344,6 +344,8 @@ function populateIdentificationsApiParams(
 // used on inital app load, changing views, changing pages.
 export async function initRenderMap(appStore: AppStoreType) {
   loggerRender("++ initRenderMap start");
+  if (!document.querySelector("#map")) return;
+
   let isObservations = isObservationsCheck(appStore);
   let isOther = isOtherCheck(appStore);
 

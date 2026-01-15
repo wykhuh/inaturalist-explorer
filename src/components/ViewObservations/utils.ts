@@ -16,7 +16,10 @@ import { getObservations } from "../../lib/inat_api";
 import { loggerTime } from "../../lib/logger";
 import { createSpinner } from "../../lib/spinner";
 import { updateAppUrl } from "../../lib/utils";
-import type { ObservationsResult } from "../../types/inat_api";
+import type {
+  iNatObservationsAPI,
+  ObservationsResult,
+} from "../../types/inat_api";
 import type {
   DataComponentType,
   AppStoreType,
@@ -30,6 +33,8 @@ import {
   replaceWithCacheImages,
   resetPageNumber,
 } from "../../lib/data_utils";
+import { initRenderMap } from "../../lib/init_app";
+import { removeMap } from "../../lib/map_utils";
 
 export let defaultPerPage = 24;
 
@@ -62,48 +67,80 @@ export async function fetchAndRenderData(
   }
 
   // store results in store for switching subview
-  appStore.observationsSubviewData = data.results;
+  appStore.observationsSubviewData = data;
+
+  render(data, paginationCallback, appStore);
+}
+
+function render(
+  data: iNatObservationsAPI,
+  paginationCallback: any,
+  appStore: AppStoreType,
+) {
+  let containerEl = document.querySelector(".subview-container");
+  let formEl = document.querySelector("#order-form");
+  if (!containerEl) return;
+  if (!formEl) return;
 
   containerEl.innerHTML = "";
 
-  let pagination1 = document.createElement(
-    "app-pagination",
-  ) as unknown as DataComponentType;
-  pagination1.data = {
-    perPage: data.per_page,
-    currentPage: data.page,
-    totalRecords: data.total_results,
-    paginationCallback,
-  };
-  containerEl.appendChild(pagination1);
+  let view = isObservationsCheck(appStore)
+    ? appStore.viewMetadata.observations_observations
+    : appStore.viewMetadata.identifications_observations;
+
+  if (view.subview === "map") {
+    formEl.className = "hide";
+  } else {
+    formEl.className = "";
+  }
+
+  if (view.subview !== "map") {
+    let pagination1 = document.createElement(
+      "app-pagination",
+    ) as unknown as DataComponentType;
+    pagination1.data = {
+      perPage: data.per_page,
+      currentPage: data.page,
+      totalRecords: data.total_results,
+      paginationCallback,
+    };
+    containerEl.appendChild(pagination1);
+  }
 
   // switch between table and grid subview
   let subviewEl = document.createElement("div");
   subviewEl.className = "observations-subview";
-  let view = isObservationsCheck(appStore)
-    ? appStore.viewMetadata.observations_observations
-    : appStore.viewMetadata.identifications_observations;
 
   if (view.subview === "table") {
     subviewEl.appendChild(createTable(data.results, appStore));
   } else if (view.subview === "media") {
     subviewEl.appendChild(createMediaGrid(data.results));
+  } else if (view.subview === "map") {
+    subviewEl.appendChild(createMap());
+
+    // HACK: use setTimeout to ensure initRenderMap is called after createMap
+    // adds div#map
+    setTimeout(() => {
+      initRenderMap(appStore);
+    }, 0);
   } else {
     subviewEl.appendChild(createGrid(data.results));
   }
   containerEl.append(subviewEl);
 
-  let pagination2 = document.createElement(
-    "app-pagination",
-  ) as unknown as DataComponentType;
-  pagination2.data = {
-    perPage: data.per_page,
-    currentPage: data.page,
-    totalRecords: data.total_results,
-    paginationCallback,
-    scrollToSelector: "#observations-list-controls",
-  };
-  containerEl.appendChild(pagination2);
+  if (view.subview !== "map") {
+    let pagination2 = document.createElement(
+      "app-pagination",
+    ) as unknown as DataComponentType;
+    pagination2.data = {
+      perPage: data.per_page,
+      currentPage: data.page,
+      totalRecords: data.total_results,
+      paginationCallback,
+      scrollToSelector: "#observations-list-controls",
+    };
+    containerEl.appendChild(pagination2);
+  }
 }
 
 async function getAPIData(appStore: AppStoreType) {
@@ -283,6 +320,12 @@ function createMediaGrid(results: ObservationsResult[]) {
   return containerEl;
 }
 
+function createMap() {
+  let divEl = document.createElement("div");
+  divEl.id = "map";
+  return divEl;
+}
+
 export async function paginationCallback(num: number, appStore: AppStoreType) {
   if (isObservationsCheck(appStore)) {
     appStore.observationsApiParams = {
@@ -316,18 +359,13 @@ export function updateSubviewState(
   componentContext: any,
   appStore: AppStoreType,
 ) {
-  let containerEl = document.querySelector(".observations-subview");
-  if (!containerEl) {
-    return;
-  }
-
-  if (!subview) return;
-
   // early return if this is current subview
   let view = isObservationsCheck(appStore)
     ? appStore.viewMetadata.observations_observations
     : appStore.viewMetadata.identifications_observations;
   if (subview === view.subview) return;
+
+  removeMap(appStore);
 
   // update store
   view.subview = subview;
@@ -335,30 +373,29 @@ export function updateSubviewState(
   // HACK: force triggering store proxy
   appStore.viewMetadata = appStore.viewMetadata;
 
-  containerEl.innerHTML = "";
-
-  // load store.observationsSubviewData to populate table and grid to avoid API call
   if (subview === "table") {
     componentContext.tableLinkEl.classList.add("current-subview");
     componentContext.gridLinkEl.classList.remove("current-subview");
     componentContext.mediaLinkEl.classList.remove("current-subview");
-
-    containerEl.appendChild(
-      createTable(appStore.observationsSubviewData, appStore),
-    );
+    componentContext.mapLinkEl.classList.remove("current-subview");
   } else if (subview === "grid") {
     componentContext.tableLinkEl.classList.remove("current-subview");
     componentContext.gridLinkEl.classList.add("current-subview");
     componentContext.mediaLinkEl.classList.remove("current-subview");
-
-    containerEl.appendChild(createGrid(appStore.observationsSubviewData));
-  } else {
+    componentContext.mapLinkEl.classList.remove("current-subview");
+  } else if (subview === "media") {
     componentContext.tableLinkEl.classList.remove("current-subview");
     componentContext.gridLinkEl.classList.remove("current-subview");
     componentContext.mediaLinkEl.classList.add("current-subview");
-
-    containerEl.appendChild(createMediaGrid(appStore.observationsSubviewData));
+    componentContext.mapLinkEl.classList.remove("current-subview");
+  } else {
+    componentContext.tableLinkEl.classList.remove("current-subview");
+    componentContext.gridLinkEl.classList.remove("current-subview");
+    componentContext.mediaLinkEl.classList.remove("current-subview");
+    componentContext.mapLinkEl.classList.add("current-subview");
   }
+
+  render(appStore.observationsSubviewData, paginationCallback, appStore);
 
   // add subview to url
   updateAppUrl(window.location, appStore);

@@ -60,7 +60,7 @@ export interface AppStoreType {
     headerCountsIndex: string[];
   };
   currentView?: ObservationViewsType;
-  observationsSubviewData: ObservationsResult[];
+  observationsSubviewData: iNatObservationsAPI;
   viewMetadata: {
     observations_observations: ViewOptions;
     observations_species: ViewOptions;
@@ -99,7 +99,7 @@ export type ObservationViewsType =
   | "identifications_observers"
   | "identifications_identifications";
 
-export type ObservationSubviewsType = "table" | "grid" | "media";
+export type ObservationSubviewsType = "table" | "grid" | "media" | "map";
 export type NameOrderType = "cs" | "sc" | "s";
 
 export type NormalizediNatTaxonType = {

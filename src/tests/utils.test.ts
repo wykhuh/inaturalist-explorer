@@ -331,14 +331,14 @@ describe("formatAppUrl", () => {
     "observations_observations",
     "identifications_observations",
   ] as ObservationViewsType[])(
-    "return empty string if subview is grid ",
+    "return empty string if subview is map ",
     (view) => {
       let appStore: AppStoreType = {
         ...mapStore,
         currentView: view as ObservationViewsType,
         viewMetadata: {
           ...mapStore.viewMetadata,
-          [view]: { subview: "grid" },
+          [view]: { subview: "map" },
         },
       };
 
@@ -1410,7 +1410,7 @@ describe("decodeAppUrl options if identifications", () => {
 describe("removeDefaultParams", () => {
   test("return empty string if default observationsApiParams and view", () => {
     let params =
-      `${defaultQuery}` + `&view=observations_observations&subview=grid`;
+      `${defaultQuery}` + `&view=observations_observations&subview=map`;
 
     let result = removeDefaultParams(params);
 
@@ -1453,7 +1453,9 @@ describe("removeDefaultParams", () => {
 
     let result = removeDefaultParams(params);
 
-    expect(result).toBe("verifiable=false&spam=true&locale=es");
+    expect(result).toBe(
+      "verifiable=false&spam=true&locale=es&view=observations_observations&subview=grid",
+    );
   });
 });
 

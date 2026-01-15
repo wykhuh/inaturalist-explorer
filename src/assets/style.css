@@ -618,7 +618,7 @@
   #observations-list-controls {
     display: flex;
     gap: 1rem;
-    margin-top: 2rem;
+    margin-top: 1rem;
     align-items: center;
 
     @media (max-width: 450px) {
@@ -641,12 +641,14 @@
     #order-form {
       display: flex;
       gap: 1rem;
-    }
-  }
 
-  @media (max-width: 900px) {
-    #observations-list-controls {
-      padding: 0 1rem;
+      .form-group {
+        margin: 0;
+      }
+    }
+
+    #order-form.hide {
+      display: none;
     }
   }
 
@@ -746,6 +748,7 @@
     width: 100%;
 
     #map {
+      margin-top: 1rem;
       height: min(85vw, 75vh);
     }
 
