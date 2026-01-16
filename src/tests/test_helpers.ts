@@ -8,6 +8,7 @@ import type {
   AppStoreSelectedResourceKeysType,
   AppStoreSelectedResourcesKeysType,
   AppStoreType,
+  LngLatType,
   NormalizediNatPlaceType,
   NormalizediNatProjectType,
   NormalizediNatTaxonType,
@@ -206,7 +207,6 @@ export let placeLabel_la = "place layer: Los Angeles, 962";
 export let placeLabel_sd = "place layer: San Diego, 829";
 export let projectLabel_cnc2 =
   "project layer: City Nature Challenge 2025: Ōtautahi/Christchurch, 229902";
-export let projectLabel_refresh = "project layer: Custom Boundary, 0";
 
 export let gridLabel_life = "overlay: iNat grid, taxon_id 48460";
 export let gridLabel_oaks = "overlay: iNat grid, taxon_id 861036";
@@ -283,7 +283,7 @@ export let gridLabel_allTaxaRecord_project2NotInProject =
 export let gridLabel_life_la_user1 =
   "overlay: iNat grid, taxon_id 48460, place_id 962, user_id 222137";
 
-export let refreshBBoxLabel = "refresh bounding box";
+export let bBoxLabel = "bounding box";
 export let basemapLabel_osm = "basemap: Open Street Map";
 export let placeBBoxLabel = "place layer: Custom Boundary, 0";
 
@@ -475,24 +475,27 @@ export let sandiego: NormalizediNatPlaceType = {
   geometry: sandiegoSearchApi.results[0].record.geometry_geojson,
 };
 
-export let refreshPlace: NormalizediNatPlaceType = {
+export let bbox = [
+  [-100, 30],
+  [-100, 40],
+  [-90, 40],
+  [-90, 30],
+  [-100, 30],
+] as LngLatType[];
+
+export let iNatBboxParams = "nelng=-90&nelat=30&swlat=40&swlng=-100";
+
+export let bBoxPlace: NormalizediNatPlaceType = {
   id: 0,
   name: "Custom Boundary",
   display_name: "Custom Boundary",
   bounding_box: {
     type: "Polygon",
-    coordinates: [
-      [
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [0, 0],
-      ],
-    ],
+    coordinates: [bbox],
   },
 };
 
-export let refreshPlaceLA: NormalizediNatPlaceType = {
+export let bBoxPlaceLA: NormalizediNatPlaceType = {
   id: 0,
   name: "Custom Boundary",
   display_name: "Custom Boundary",
@@ -548,7 +551,7 @@ export function setupMapAndStore() {
   let dup = structuredClone(mapStore);
   let store: AppStoreType = {
     ...dup,
-    map: { map: map, layerControl: layerControl },
+    map: { map: map, layerControl: layerControl, terraDraw: null },
   };
 
   return { map, layerControl, store };
@@ -562,9 +565,6 @@ export function expectEmpytMap(store: AppStoreType) {
   expect(store.taxaMapLayers).toStrictEqual({});
   expect(store.selectedPlaces).toStrictEqual([]);
   expect(store.placesMapLayers).toStrictEqual({});
-  expect(store.refreshMap.refreshMapButtonEl).toBeNull();
-  expect(store.refreshMap.showRefreshMapButton).toBeFalsy();
-  expect(store.refreshMap.layer).toBeNull();
 }
 
 export function expectNoTaxa(store: AppStoreType) {
@@ -717,10 +717,6 @@ export function expectNoPlaces(store: AppStoreType) {
   expect(store.placesMapLayers).toStrictEqual({});
 }
 
-export function expectNoRefresh(store: AppStoreType) {
-  expect(store.refreshMap.layer).toBeNull();
-}
-
 export function expectLosAngelesPlace(store: AppStoreType, count = 0) {
   let place = structuredClone(losangeles);
   if (count > 0) {
@@ -822,14 +818,13 @@ export function expectRefreshPlace(
   count = 0,
   type = "zero",
 ) {
-  let place = structuredClone(refreshPlace);
+  let place = structuredClone(bBoxPlace);
   if (type !== "zero") {
-    place = structuredClone(refreshPlaceLA);
+    place = structuredClone(bBoxPlaceLA);
   }
   if (count > 0) {
     place.observations_count = Math.round(count);
   }
-  expect(store.refreshMap.layer).toBeDefined();
   expect(store.selectedPlaces).toEqual([place]);
   expect(Object.keys(store.placesMapLayers)).toStrictEqual(["0"]);
   expect(store.placesMapLayers["0"].length).toBe(1);

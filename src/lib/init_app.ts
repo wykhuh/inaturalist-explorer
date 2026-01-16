@@ -3,19 +3,20 @@ import L from "leaflet";
 import type {
   NormalizediNatTaxonType,
   AppStoreType,
-  CustomGeoJSONType,
   ObservationsApiParamsKeysType,
   ObservationViewsType,
   NormalizediNatProjectType,
   IdentificationsApiParamsKeysType,
+  LngLatType,
 } from "../types/app";
 import {
   addLayerToMap,
-  convertParamsBBoxToLngLat,
-  createRefreshMapButton,
-  drawMapBoundingBox,
+  convertiNatBBoxToLngLat,
+  createDrawRectButton,
   fitBoundsPlaces,
   getMapTiles,
+  setupTerraDraw,
+  addiNatBBoxToMap,
 } from "./map_utils.ts";
 import {
   getPlaceById,
@@ -58,6 +59,7 @@ import { updateCountForAll } from "./count_utils.ts";
 import { viewAndTemplateObject } from "../data/app_data.ts";
 import { addCurrentPageClass } from "../components/Header/utils.ts";
 import { populateStoreWithLocaleStorage } from "./localStorage.ts";
+import { saveBBoxToStore } from "./search_bounding_box.ts";
 
 // populate store with basic view data from app url.
 // used on initial page load.
@@ -349,6 +351,7 @@ export async function initRenderMap(appStore: AppStoreType) {
   let isObservations = isObservationsCheck(appStore);
   let isOther = isOtherCheck(appStore);
 
+  // setup map
   let map = L.map("map", {
     center: [0, 0],
     zoom: 2,
@@ -356,13 +359,23 @@ export async function initRenderMap(appStore: AppStoreType) {
   });
   var layerControl = L.control.layers().addTo(map);
 
+  // setup library to draw rectangles
+  const terraDraw = setupTerraDraw(map);
+  terraDraw.start();
+
+  terraDraw.on("finish", () => {
+    // add bounding box
+    const snapshot = terraDraw.getSnapshot();
+    let coors = snapshot[0].geometry.coordinates[0] as LngLatType[];
+    saveBBoxToStore(coors, appStore);
+  });
+
   appStore.map.map = map;
   appStore.map.layerControl = layerControl;
+  appStore.map.terraDraw = terraDraw;
 
-  appStore.refreshMap.showRefreshMapButton = false;
   if (isObservations) {
-    let button = createRefreshMapButton(appStore);
-    appStore.refreshMap.refreshMapButtonEl = button;
+    createDrawRectButton(appStore);
   }
 
   // add basemaps
@@ -378,7 +391,7 @@ export async function initRenderMap(appStore: AppStoreType) {
 
   // add bounding box layer
   if (appStore.observationsApiParams.nelat !== undefined && isObservations) {
-    addBBoxDataToMap(appStore);
+    addiNatBBoxToMap(appStore);
   }
 
   // load default or selected taxa map layer
@@ -402,20 +415,6 @@ export async function initRenderMap(appStore: AppStoreType) {
   } else {
     fitBoundsPlaces(appStore);
   }
-
-  map.on("zoomend", function () {
-    if (
-      appStore.refreshMap.refreshMapButtonEl &&
-      appStore.refreshMap.showRefreshMapButton === false
-    ) {
-      appStore.refreshMap.refreshMapButtonEl.hidden = false;
-      // refreshMap.showRefreshMapButton = true;
-      appStore.refreshMap = {
-        ...appStore.refreshMap,
-        showRefreshMapButton: true,
-      };
-    }
-  });
 }
 
 export function processTaxonData(
@@ -531,7 +530,7 @@ export function processBBoxData(
   urlStore: AppStoreType,
 ) {
   if (!isObservationsCheck(appStore)) return;
-  let lngLatCoors = convertParamsBBoxToLngLat(urlStore.observationsApiParams);
+  let lngLatCoors = convertiNatBBoxToLngLat(urlStore.observationsApiParams);
   if (!lngLatCoors) return;
 
   appStore.observationsApiParams.nelat = urlStore.observationsApiParams.nelat;
@@ -540,21 +539,6 @@ export function processBBoxData(
   appStore.observationsApiParams.swlng = urlStore.observationsApiParams.swlng;
 
   appStore.selectedPlaces = [bboxPlaceRecord(lngLatCoors)];
-}
-
-export function addBBoxDataToMap(appStore: AppStoreType) {
-  let map = appStore.map.map;
-  if (!map) return;
-  let lngLatCoors = convertParamsBBoxToLngLat(appStore.observationsApiParams);
-  if (!lngLatCoors) return;
-
-  let layer = drawMapBoundingBox(map, lngLatCoors) as any;
-  appStore.refreshMap = {
-    ...appStore.refreshMap,
-    layer: layer,
-  };
-
-  appStore.placesMapLayers["0"] = [layer as unknown as CustomGeoJSONType];
 }
 
 // NOTE: update when adding selectedResource; initPopulateStore

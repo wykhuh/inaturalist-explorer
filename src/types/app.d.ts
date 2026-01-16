@@ -9,6 +9,7 @@ import type {
   Polygon,
 } from "leaflet";
 import type { PolygonJson, MultiPolygonJson } from "./inat_api";
+import type { TerraDraw } from "terra-draw";
 
 declare global {
   interface Window {
@@ -45,12 +46,9 @@ export interface AppStoreType {
     map: Map | null;
     layerControl: Control.Layers | null;
     bounds?: LatLngBoundsExpression;
+    terraDraw: TerraDraw | null;
   };
-  refreshMap: {
-    refreshMapButtonEl: HTMLElement | null;
-    showRefreshMapButton: boolean;
-    layer: CustomPolygon | null;
-  };
+
   formFilters: {
     params: ObservationsApiParamsType;
     string: string;

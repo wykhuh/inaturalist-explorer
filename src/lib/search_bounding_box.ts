@@ -1,10 +1,5 @@
-import type { Map } from "leaflet";
-
-import type { AppStoreType, CustomGeoJSONType } from "../types/app";
-import {
-  formatiNatAPIBoundingBoxParams,
-  getAndDrawMapBoundingBox,
-} from "./map_utils.ts";
+import type { AppStoreType, CustomGeoJSONType, LngLatType } from "../types/app";
+import { convertLnLatToiNatBBox, renderBoundingBoxLayer } from "./map_utils.ts";
 import { bboxPlaceRecord } from "../data/inat_data.ts";
 import {
   updateTilesForSelectedTaxa,
@@ -12,53 +7,49 @@ import {
 } from "./search_utils.ts";
 import { updateCountForOneRecord, updateCountForAll } from "./count_utils.ts";
 
-// called when user clicks refresh map button
-export async function refreshBoundingBox(appStore: AppStoreType) {
+// called when user clicks draw rectangle icon
+//coordinates is array of 5 sets of long, lat [[-105.032343864, 46.120849022]]
+export async function saveBBoxToStore(
+  coordinates: LngLatType[],
+  appStore: AppStoreType,
+) {
   let map = appStore.map.map;
   let layerControl = appStore.map.layerControl;
-
   if (map === null) return;
   if (layerControl === null) return;
-
-  // remove old refresh box
-  removeRefreshBBox(appStore, map);
 
   // remove old places
   removePlacesFromStoreAndMap(appStore);
 
-  // create bounding box using the boundaries of the map
-  let { layer, lngLatCoors } = getAndDrawMapBoundingBox(map);
-  appStore.refreshMap = {
-    ...appStore.refreshMap,
-    layer: layer as any,
-  };
+  // render leaflet layer
+  let layer = renderBoundingBoxLayer(map, coordinates) as any;
 
-  // save place to store
-  let place = bboxPlaceRecord(lngLatCoors);
+  // delete terradraw layer
+  appStore.map.terraDraw?.clear();
+
+  // save place
+  let place = bboxPlaceRecord(coordinates);
   appStore.selectedPlaces = [place];
   appStore.placesMapLayers = { "0": [layer as unknown as CustomGeoJSONType] };
 
-  let bbox = map.getBounds();
-  let inatBbox = formatiNatAPIBoundingBoxParams(bbox);
+  // update observationsApiParams
+  let { nelng, swlng, nelat, swlat } = convertLnLatToiNatBBox(coordinates);
   appStore.observationsApiParams = {
     ...appStore.observationsApiParams,
-    ...inatBbox,
+    nelng,
+    nelat,
+    swlat,
+    swlng,
   };
 
   await updateTilesForSelectedTaxa(appStore);
-  await updateCountForAll("selectedPlaces", appStore);
 
   await updateCountForOneRecord(place, "selectedPlaces", appStore, {
     ...appStore.observationsApiParams,
   });
+  await updateCountForAll("selectedPlaces", appStore);
 
   renderSelectedResources(appStore, true);
-}
-
-export function removeRefreshBBox(appStore: AppStoreType, map: Map) {
-  if (appStore.refreshMap.layer) {
-    appStore.refreshMap.layer.removeFrom(map);
-  }
 }
 
 function removePlacesFromStoreAndMap(appStore: AppStoreType) {
@@ -69,8 +60,6 @@ function removePlacesFromStoreAndMap(appStore: AppStoreType) {
       layer.remove();
     });
   });
-
-  appStore.refreshMap.layer = null;
 
   // remove from store
   appStore.placesMapLayers = {};

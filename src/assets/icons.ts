@@ -72,6 +72,16 @@ export const hamburgerMenu = "&#9776;";
 export const x2 = "&#10007;";
 export const x = "&#215;";
 
+export const square = `<svg class="square-icon" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.0"
+  width="25" height="25" viewBox="0 0 25 25" id="svg1886">
+  <defs id="defs1888" />
+  <path
+     d="M 1.8171014,1.8171016 L 23.182898,1.8171016 L 23.182898,23.182899 L 1.8171014,23.182899 L 1.8171014,1.8171016 z "
+     style="fill:none;stroke:black;stroke-width:3.63420272"
+     id="Square" />
+</svg>
+`;
+
 export const mapMarker = `
 <svg class="map-marker-icon" xmlns="http://www.w3.org/2000/svg" fill="#000000" width="800px" height="800px" viewBox="-64 0 512 512">
 <path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"/>

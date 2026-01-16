@@ -36,7 +36,7 @@ import {
   placeLabel_sd,
   gridLabel_life,
   gridLabel_oaks,
-  refreshBBoxLabel,
+  bBoxLabel,
   basemapLabel_osm,
   gridLabel_allTaxaRecord,
   expectDefaultTaxaRecord,
@@ -103,6 +103,9 @@ import {
   gridLabel_allTaxaRecord_usersAnnotator,
   gridLabel_allTaxaRecord_usersIdentifiers,
   perPage,
+  bbox,
+  iNatBboxParams,
+  bBoxPlaceLA,
 } from "../test_helpers.ts";
 import { iNatOrange } from "../../lib/map_colors_utils.ts";
 import { decodeAppUrl } from "../../lib/utils.ts";
@@ -117,7 +120,7 @@ import {
   removeTaxonIdentified,
   taxonIdentifiedSelectedHandler,
 } from "../../lib/search_taxa_identified.ts";
-import { refreshBoundingBox } from "../../lib/search_bounding_box.ts";
+import { saveBBoxToStore } from "../../lib/search_bounding_box.ts";
 import { reviewerSelectedHandler } from "../../lib/search_reviewer.ts";
 import { notInProjectSelectedHandler } from "../../lib/search_not_in_project.ts";
 import {
@@ -132,6 +135,7 @@ import {
   removeWithoutTaxonIdentified,
   withoutTaxonIdentifiedSelectedHandler,
 } from "../../lib/search_without_taxa_identified.ts";
+import type { LngLatType } from "../../types/app";
 
 beforeEach(() => {
   const { JSDOM } = jsdom;
@@ -306,20 +310,21 @@ describe("placeSelectedHandler", () => {
   });
 });
 
-describe("refreshBoundingBox", () => {
-  test(`refresh map; refresh map;`, async () => {
+describe("saveBBoxToStore", () => {
+  test(`draw bounding box; draw bounding box;`, async () => {
     let store = structuredClone(mapStore);
+    let coors2 = bBoxPlaceLA.bounding_box?.coordinates[0] as LngLatType[];
 
     expectEmpytMap(store);
 
     await initPopulateStore(store, decodeAppUrl("", "/"));
     await initRenderMap(store);
-    await refreshBoundingBox(store);
+    await saveBBoxToStore(bbox, store);
 
     let allTaxaCount = allTaxa.observations_count;
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      refreshBBoxLabel,
+      bBoxLabel,
       gridLabel_allTaxaRecord,
     ]);
     expectEmptyResources(store, ["selectedTaxa", "selectedPlaces"]);
@@ -327,37 +332,45 @@ describe("refreshBoundingBox", () => {
     expectRefreshPlace(store, allTaxaCount);
     let expectedParams = {
       ...defaultParams,
-      nelat: 0,
-      nelng: 0,
-      swlat: 0,
-      swlng: 0,
+      nelat: 30,
+      nelng: -90,
+      swlat: 40,
+      swlng: -100,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
       per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams);
-    let refreshlayer1 = store.refreshMap.layer;
     expect(window.location.search).toBe(
-      `?${defaultQuery}&per_page=${perPage}&nelat=0&nelng=0&swlat=0&swlng=0`,
+      `?${defaultQuery}&per_page=${perPage}&${iNatBboxParams}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaCount);
 
-    await refreshBoundingBox(store);
+    await saveBBoxToStore(coors2, store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      refreshBBoxLabel,
+      bBoxLabel,
       gridLabel_allTaxaRecord,
     ]);
     expectEmptyResources(store, ["selectedTaxa", "selectedPlaces"]);
     expectDefaultTaxaRecord(store);
-    expectRefreshPlace(store, allTaxaCount);
-    expect(store.observationsApiParams).toStrictEqual(expectedParams);
-    let refreshlayer2 = store.refreshMap.layer;
-    expect(refreshlayer1).not.toStrictEqual(refreshlayer2);
+    expectRefreshPlace(store, allTaxaCount, "LA");
+    let expectedParams2 = {
+      ...defaultParams,
+      nelat: 34.30714385628804,
+      nelng: -118.12500000000001,
+      swlat: 34.30714385628804,
+      swlng: -118.12500000000001,
+      taxon_id: allTaxa.id.toString(),
+      colors: iNatOrange,
+      per_page: perPage,
+    };
+    expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?${defaultQuery}&per_page=${perPage}&nelat=0&nelng=0&swlat=0&swlng=0`,
+      `?${defaultQuery}&per_page=${perPage}` +
+        `&nelng=-118.12500000000001&nelat=34.30714385628804&swlat=34.30714385628804&swlng=-118.12500000000001`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaCount);
@@ -882,7 +895,7 @@ describe("withoutTaxonIdentifiedSelectedHandler", () => {
 });
 
 describe("combos", () => {
-  test(`add taxon; refresh map;`, async () => {
+  test(`add taxon; add bounding box;`, async () => {
     let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
@@ -909,11 +922,11 @@ describe("combos", () => {
     );
     expect(store.selectedTaxa[0].observations_count).toBe(oakCount);
 
-    await refreshBoundingBox(store);
+    await saveBBoxToStore(bbox, store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      refreshBBoxLabel,
+      bBoxLabel,
       gridLabel_oaks,
     ]);
     expectOakTaxa(store, colors[0]);
@@ -923,21 +936,21 @@ describe("combos", () => {
       per_page: perPage,
       taxon_id: redOak(colors[0]).id.toString(),
       colors: colors[0],
-      nelat: 0,
-      nelng: 0,
-      swlat: 0,
-      swlng: 0,
+      nelat: 30,
+      nelng: -90,
+      swlat: 40,
+      swlng: -100,
     });
 
     expect(window.location.search).toBe(
       `?taxon_id=${redOak().id}&colors=${colorsEncoded[0]}&${defaultQuery}&per_page=${perPage}` +
-        `&nelat=0&nelng=0&swlat=0&swlng=0`,
+        `&${iNatBboxParams}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(oakCount);
     expect(store.selectedPlaces[0].observations_count).toBe(oakCount);
   });
 
-  test(`add place; refresh map;`, async () => {
+  test(`add place; add boundong box;`, async () => {
     let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
@@ -970,34 +983,33 @@ describe("combos", () => {
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaLACount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaLACount);
 
-    await refreshBoundingBox(store);
+    await saveBBoxToStore(bbox, store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      refreshBBoxLabel,
+      bBoxLabel,
       gridLabel_allTaxaRecord,
     ]);
     expectDefaultTaxaRecord(store);
-    expectRefreshPlace(store, allTaxaCount, "LA");
+    expectRefreshPlace(store, allTaxaCount);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       per_page: perPage,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
-      nelat: 34.30714385628804,
-      nelng: -118.12500000000001,
-      swlat: 34.30714385628804,
-      swlng: -118.12500000000001,
+      nelat: 30,
+      nelng: -90,
+      swlat: 40,
+      swlng: -100,
     });
     expect(window.location.search).toBe(
-      `?${defaultQuery}&per_page=${perPage}` +
-        `&nelat=34.30714385628804&nelng=-118.12500000000001&swlat=34.30714385628804&swlng=-118.12500000000001`,
+      `?${defaultQuery}&per_page=${perPage}` + `&${iNatBboxParams}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaCount);
   });
 
-  test(`add project; refresh map;`, async () => {
+  test(`add project; add bounding box map;`, async () => {
     let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
@@ -1028,11 +1040,11 @@ describe("combos", () => {
       allTaxaProjectCount,
     );
 
-    await refreshBoundingBox(store);
+    await saveBBoxToStore(bbox, store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      refreshBBoxLabel,
+      bBoxLabel,
       gridLabel_allTaxaRecord_project1,
     ]);
     expectDefaultTaxaRecord(store, allTaxaProjectCount);
@@ -1043,15 +1055,15 @@ describe("combos", () => {
       per_page: perPage,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
-      nelat: 0,
-      nelng: 0,
-      swlat: 0,
-      swlng: 0,
+      nelat: 30,
+      nelng: -90,
+      swlat: 40,
+      swlng: -100,
       project_id: project_cnc1.id.toString(),
     });
     expect(window.location.search).toBe(
       `?project_id=${project_cnc1.id}&${defaultQuery}&per_page=${perPage}` +
-        `&nelat=0&nelng=0&swlat=0&swlng=0`,
+        `&${iNatBboxParams}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaProjectCount);
     expect(store.selectedProjects[0].observations_count).toBe(
@@ -1059,7 +1071,7 @@ describe("combos", () => {
     );
   });
 
-  test(`add user; refresh map;`, async () => {
+  test(`add user; add boundong box map;`, async () => {
     let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
@@ -1087,11 +1099,11 @@ describe("combos", () => {
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount * 0.45);
 
-    await refreshBoundingBox(store);
+    await saveBBoxToStore(bbox, store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      refreshBBoxLabel,
+      bBoxLabel,
       gridLabel_allTaxaRecord_user1,
     ]);
     expectDefaultTaxaRecord(store, allTaxaCount * 0.45);
@@ -1102,16 +1114,16 @@ describe("combos", () => {
       per_page: perPage,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
-      nelat: 0,
-      nelng: 0,
-      swlat: 0,
-      swlng: 0,
+      nelat: 30,
+      nelng: -90,
+      swlat: 40,
+      swlng: -100,
       user_id: user1.id.toString(),
     });
 
     expect(window.location.search).toBe(
       `?user_id=${user1.id}&${defaultQuery}&per_page=${perPage}` +
-        `&nelat=0&nelng=0&swlat=0&swlng=0`,
+        `&${iNatBboxParams}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount * 0.45);
     expect(store.selectedPlaces[0].observations_count).toBe(
@@ -1119,7 +1131,7 @@ describe("combos", () => {
     );
   });
 
-  test(`add place; refresh map; add place`, async () => {
+  test(`add place; add bounding box; add place`, async () => {
     let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
@@ -1153,27 +1165,27 @@ describe("combos", () => {
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaLACount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaLACount);
 
-    await refreshBoundingBox(store);
+    await saveBBoxToStore(bbox, store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      refreshBBoxLabel,
+      bBoxLabel,
       gridLabel_allTaxaRecord,
     ]);
     expectDefaultTaxaRecord(store);
-    expectRefreshPlace(store, allTaxaCount, "LA");
+    expectRefreshPlace(store, allTaxaCount);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       per_page: perPage,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
-      nelat: 34.30714385628804,
-      nelng: -118.12500000000001,
-      swlat: 34.30714385628804,
-      swlng: -118.12500000000001,
+      nelat: 30,
+      nelng: -90,
+      swlat: 40,
+      swlng: -100,
     });
     expect(window.location.search).toBe(
-      `?${defaultQuery}&per_page=${perPage}&nelat=34.30714385628804&nelng=-118.12500000000001&swlat=34.30714385628804&swlng=-118.12500000000001`,
+      `?${defaultQuery}&per_page=${perPage}&${iNatBboxParams}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaCount);
@@ -2115,14 +2127,14 @@ describe("removePlace", () => {
     expect(window.location.search).toBe(`?${defaultQuery}&per_page=${perPage}`);
   });
 
-  test("add refresh bounding box; remove place", async () => {
+  test("add bounding box; remove place", async () => {
     let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
 
     await initPopulateStore(store, decodeAppUrl("", "/"));
     await initRenderMap(store);
-    await refreshBoundingBox(store);
+    await saveBBoxToStore(bbox, store);
 
     let allTaxaCount = allTaxa.observations_count;
 
@@ -2130,15 +2142,15 @@ describe("removePlace", () => {
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       per_page: perPage,
-      nelat: 0,
-      nelng: 0,
-      swlat: 0,
-      swlng: 0,
+      nelat: 30,
+      nelng: -90,
+      swlat: 40,
+      swlng: -100,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
     });
     expect(window.location.search).toBe(
-      `?${defaultQuery}&per_page=${perPage}&nelat=0&nelng=0&swlat=0&swlng=0`,
+      `?${defaultQuery}&per_page=${perPage}&${iNatBboxParams}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaCount);
@@ -2215,7 +2227,7 @@ describe("removePlace", () => {
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
   });
 
-  test("add taxon; add refresh; remove place", async () => {
+  test("add taxon; add bounding box; remove place", async () => {
     let store = structuredClone(mapStore);
 
     expectEmpytMap(store);
@@ -2237,22 +2249,22 @@ describe("removePlace", () => {
     );
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
 
-    await refreshBoundingBox(store);
+    await saveBBoxToStore(bbox, store);
 
     let params1 = {
       ...defaultParams,
       per_page: perPage,
       colors: colors[0],
       taxon_id: life().id.toString(),
-      nelat: 0,
-      nelng: 0,
-      swlat: 0,
-      swlng: 0,
+      nelat: 30,
+      nelng: -90,
+      swlat: 40,
+      swlng: -100,
     };
     expect(store.observationsApiParams).toStrictEqual(params1);
     expect(window.location.search).toBe(
       `?taxon_id=${life().id}&colors=${colorsEncoded[0]}` +
-        `&${defaultQuery}&per_page=${perPage}&nelat=0&nelng=0&swlat=0&swlng=0`,
+        `&${defaultQuery}&per_page=${perPage}&${iNatBboxParams}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
     expect(store.selectedPlaces[0].observations_count).toBe(lifeCount);

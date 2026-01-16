@@ -17,14 +17,12 @@ import {
   expectEmpytMap,
   expectLifeTaxa,
   expectLosAngelesPlace,
-  expectNoRefresh,
-  expectRefreshPlace,
   losangeles,
   life,
   colors,
   placeLabel_la,
   gridLabel_life,
-  refreshBBoxLabel,
+  bBoxLabel,
   basemapLabel_osm,
   gridLabel_allTaxaRecord,
   gridLabel_allTaxaRecord_la,
@@ -76,6 +74,7 @@ import {
   gridLabel_life_places_user2Identifiers,
   perPage,
   perPageUsers,
+  iNatBboxParams,
 } from "../test_helpers.ts";
 import type {
   IdentificationsApiParamsType,
@@ -570,7 +569,6 @@ describe("initPopulateStore and initRenderMap resources", () => {
 
     expectEmptyResources(store, ["selectedPlaces", "selectedTaxa"]);
     expectLosAngelesPlace(store, allTaxaLACount);
-    expectNoRefresh(store);
     expectDefaultTaxaRecord(store, allTaxaLACount);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -595,29 +593,27 @@ describe("initPopulateStore and initRenderMap resources", () => {
 
     expectEmpytMap(store);
 
-    let searchparams =
-      "?spam=false&verifiable=true&nelat=0&nelng=0&swlat=0&swlng=0";
+    let searchparams = `?spam=false&verifiable=true&${iNatBboxParams}`;
     let urlData = decodeAppUrl(searchparams, "/");
-    let allTaxaCount = allTaxa.observations_count;
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
     expectEmptyResources(store, ["selectedPlaces", "selectedTaxa"]);
-    expectRefreshPlace(store, allTaxaCount);
+    // expectRefreshPlace(store, allTaxaCount);
     expectDefaultTaxaRecord(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeBBoxLabel,
-      refreshBBoxLabel,
+      bBoxLabel,
       gridLabel_allTaxaRecord,
     ]);
     let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
-      nelat: 0,
-      nelng: 0,
-      swlat: 0,
-      swlng: 0,
+      nelat: 30,
+      nelng: -90,
+      swlat: 40,
+      swlng: -100,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
       per_page: perPage,
@@ -865,7 +861,6 @@ describe("initPopulateStore and initRenderMap resources", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectNoRefresh(store);
     expect_LA_SD_Place(store, [count * 0.6 * 0.75, count * 0.4 * 0.75]);
     expectProjects(store, [count * 0.7 * 0.75, count * 0.3 * 0.75]);
     expectLifeOakTaxa(store, [lifeCount * 0.75, oakCount * 0.75]);
@@ -928,7 +923,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       placeBBoxLabel,
       projectLabel_cnc2,
       projectLabel_cnc2,
-      refreshBBoxLabel,
+      bBoxLabel,
       gridLabel_life_bbox_resources,
       gridLabel_oaks_bbox_resources,
     ]);
@@ -1318,7 +1313,6 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     await initRenderMap(store);
 
     expect_LA_SD_Place_Identifications(store, [count * 0.6, count * 0.4]);
-    expectNoRefresh(store);
     expect(store.selectedTaxa).toStrictEqual([life]);
     expect(Object.keys(store.taxaMapLayers)).toEqual([life.id.toString()]);
     expect(store.taxaMapLayers[life.id].length).toBe(4);

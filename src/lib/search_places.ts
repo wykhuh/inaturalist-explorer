@@ -127,11 +127,10 @@ export async function placeSelectedHandler(
     }
   }
 
-  // remove refresh bound box from map
-  if (appStore.refreshMap.layer) {
+  // remove bound box from map
+  if (appStore.observationsApiParams.swlat) {
     if (map) {
-      appStore.refreshMap.layer.removeFrom(map);
-      appStore.refreshMap.layer = null;
+      appStore.placesMapLayers["0"].forEach((l) => l.removeFrom(map));
     }
     if (isObservations) {
       delete appStore.observationsApiParams.swlat;

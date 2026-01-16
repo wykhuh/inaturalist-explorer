@@ -1,16 +1,18 @@
 import L from "leaflet";
 import type { Map, LatLngExpression } from "leaflet";
+import { TerraDraw, TerraDrawRectangleMode } from "terra-draw";
+import { TerraDrawLeafletAdapter } from "terra-draw-leaflet-adapter";
 
 import type {
   AppStoreType,
-  LeafletBoundsType,
   LngLatType,
   CoordinatesType,
   ObservationsApiParamsType,
   ObservationTilesSettingType,
+  CustomGeoJSONType,
 } from "../types/app.d.ts";
-import { refreshBoundingBox } from "./search_bounding_box.ts";
 import { loggerUrl } from "./logger.ts";
+import { square } from "../assets/icons.ts";
 
 export function getMonthName(month: number) {
   // https://reactgo.com/convert-month-number-to-name-js/
@@ -317,40 +319,33 @@ export function addOverlayToMap(
   }
 }
 
-// convert Leaflet bounds Object into format that works with iNaturalist API
-export function formatiNatAPIBoundingBoxParams(bounds: any) {
-  return {
-    nelat: bounds._northEast.lat,
-    nelng: bounds._northEast.lng,
-    swlat: bounds._southWest.lat,
-    swlng: bounds._southWest.lng,
-  };
-}
-
-export function createRefreshMapButton(
+export function createDrawRectButton(
   appStore: AppStoreType,
 ): HTMLButtonElement | null {
   let buttonEl: HTMLButtonElement = null as unknown as HTMLButtonElement;
   let map = appStore.map.map;
   if (!map) return null;
 
-  const RefreshMap = L.Control.extend({
+  const DrawRect = L.Control.extend({
     onAdd: function (_map: Map) {
       buttonEl = L.DomUtil.create(
         "button",
-        "leaflet-bar leaflet-control leaflet-control-refresh-map",
+        "leaflet-bar leaflet-control leaflet-control-draw-rect",
       );
 
-      buttonEl.textContent = "Redo search in map";
-      buttonEl.hidden = true;
+      buttonEl.innerHTML = square;
 
       buttonEl.onclick = async function () {
-        appStore.refreshMap.showRefreshMapButton = false;
-        if (buttonEl) {
-          buttonEl.hidden = true;
+        let terraDraw = appStore.map.terraDraw;
+        if (!terraDraw) return;
+        let mode = terraDraw.getMode();
+        if (mode === "static") {
+          buttonEl.classList.add("active");
+          terraDraw.setMode("rectangle");
+        } else {
+          buttonEl.classList.remove("active");
+          terraDraw.setMode("static");
         }
-
-        await refreshBoundingBox(appStore);
       };
 
       return buttonEl;
@@ -360,10 +355,10 @@ export function createRefreshMapButton(
     },
   });
 
-  let refreshmap = function (opts: any) {
-    return new RefreshMap(opts);
-  };
-  refreshmap({ position: "topleft" }).addTo(map);
+  function drawRect(opts: any) {
+    return new DrawRect(opts);
+  }
+  drawRect({ position: "topleft" }).addTo(map);
 
   return buttonEl;
 }
@@ -372,32 +367,13 @@ export function flipLatLng(coordinates: CoordinatesType): CoordinatesType {
   return [coordinates[1], coordinates[0]];
 }
 
-export function getBoundingBox(coordinates: LngLatType[]) {
-  let latLngCoors = coordinates.map(flipLatLng);
-  return L.latLngBounds(latLngCoors);
-}
-
-export function getAndDrawMapBoundingBox(
-  map: Map,
-  options = {
-    fillColor: "none",
-    weight: 1,
-    layer_description: "refresh bounding box",
-  },
-) {
-  let bounds = map.getBounds() as unknown as LeafletBoundsType;
-  let lngLatCoors = convertBoundsObjectToLngLat(bounds);
-  let layer = drawMapBoundingBox(map, lngLatCoors, options);
-  return { layer, lngLatCoors };
-}
-
-export function drawMapBoundingBox(
+export function renderBoundingBoxLayer(
   map: Map,
   lngLatCoors: LngLatType[],
   options = {
     fillColor: "none",
     weight: 1,
-    layer_description: "refresh bounding box",
+    layer_description: "bounding box",
   },
 ) {
   let latLngCoors = lngLatCoors.map(flipLatLng);
@@ -406,18 +382,8 @@ export function drawMapBoundingBox(
   return layer;
 }
 
-export function convertBoundsObjectToLngLat(
-  bounds: LeafletBoundsType,
-): LngLatType[] {
-  return formatBoundingBox(
-    bounds._northEast.lng,
-    bounds._northEast.lat,
-    bounds._southWest.lng,
-    bounds._southWest.lat,
-  );
-}
-
-export function convertParamsBBoxToLngLat(
+// turn iNat nelng,nelat,swlng,swlat into gemetry that leaflet understands
+export function convertiNatBBoxToLngLat(
   params: ObservationsApiParamsType,
 ): LngLatType[] | undefined {
   const { nelng, nelat, swlng, swlat } = params;
@@ -448,6 +414,15 @@ function formatBoundingBox(
   ];
 }
 
+export function convertLnLatToiNatBBox(coordinates: LngLatType[]) {
+  let nelng = coordinates[2][0];
+  let swlng = coordinates[0][0];
+  let nelat = coordinates[0][1];
+  let swlat = coordinates[1][1];
+
+  return { nelng, swlng, nelat, swlat };
+}
+
 export function removeMap(appStore: AppStoreType) {
   if (appStore.map.map) {
     // save map bounds before switching views so app can return to this map location
@@ -462,4 +437,32 @@ export function removeMap(appStore: AppStoreType) {
     appStore.map.layerControl.remove();
     appStore.map.layerControl = null;
   }
+
+  if (appStore.map.terraDraw) {
+    appStore.map.terraDraw.stop();
+  }
+}
+
+export function setupTerraDraw(map: Map) {
+  return new TerraDraw({
+    adapter: new TerraDrawLeafletAdapter({
+      lib: L,
+      map,
+    }),
+    modes: [new TerraDrawRectangleMode()],
+  });
+}
+
+export function addiNatBBoxToMap(appStore: AppStoreType) {
+  let map = appStore.map.map;
+  if (!map) return;
+
+  // convert bounding box
+  let lngLatCoors = convertiNatBBoxToLngLat(appStore.observationsApiParams);
+  if (!lngLatCoors) return;
+
+  // draw bounding box
+  let layer = renderBoundingBoxLayer(map, lngLatCoors) as any;
+  // appStore.bbox = { layer: layer };
+  appStore.placesMapLayers["0"] = [layer as unknown as CustomGeoJSONType];
 }

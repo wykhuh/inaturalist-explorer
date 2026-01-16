@@ -22,7 +22,7 @@ import {
   recordTypeToPathObj,
 } from "../data/app_data";
 import { defaultColorScheme } from "./map_colors_utils";
-import { convertParamsBBoxToLngLat } from "./map_utils";
+import { convertiNatBBoxToLngLat } from "./map_utils";
 import { validObservationsSubviews, validViews } from "../data/app_data";
 import { getResourceApiParams } from "./data_utils";
 import { loggerEvent } from "./logger";
@@ -370,7 +370,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     let places = ids
       .map((id) => {
         if (id === "0") {
-          let lngLatCoors = convertParamsBBoxToLngLat(urlParams);
+          let lngLatCoors = convertiNatBBoxToLngLat(urlParams);
           if (lngLatCoors) {
             return bboxPlaceRecord(lngLatCoors);
           }

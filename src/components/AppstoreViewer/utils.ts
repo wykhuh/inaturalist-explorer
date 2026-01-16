@@ -38,18 +38,9 @@ function formatSelectedPlaces(appStore: AppStoreType) {
 function formatPlacesMapLayers(appStore: AppStoreType) {
   let temp: any = {};
   Object.entries(appStore.placesMapLayers).forEach(([key, val]) => {
-    temp[key] = val.map((v: any) => v.options.layer_description);
+    temp[key] = val.map((v: any) => v.options?.layer_description);
   });
   return temp;
-}
-function formatRefreshMap(appStore: AppStoreType) {
-  return {
-    showRefreshMapButton: appStore.refreshMap.showRefreshMapButton,
-    layer: {
-      layer_description: appStore.refreshMap.layer?.options.layer_description,
-      bounds: appStore.refreshMap.layer?._bounds,
-    },
-  };
 }
 
 export function displayAppstoreData(appStore: AppStoreType, _source: string) {
@@ -74,8 +65,6 @@ export function displayAppstoreData(appStore: AppStoreType, _source: string) {
       data.mapLayerDescriptions = leafletVisibleLayers(appStore);
     } else if (key === "selectedPlaces") {
       data.selectedPlaces = formatSelectedPlaces(appStore);
-    } else if (key === "refreshMap") {
-      data.refreshMap = formatRefreshMap(appStore);
     } else if (key === "observationsSubviewData") {
       data.observationsSubviewData =
         appStore.observationsSubviewData?.length || 0;

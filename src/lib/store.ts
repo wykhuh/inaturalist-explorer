@@ -27,12 +27,7 @@ export const mapStore: AppStoreType = {
   observationsApiParams: { verifiable: true, spam: false, locale: "en" },
   identificationsApiParams: {},
   color: "",
-  map: { map: null, layerControl: null },
-  refreshMap: {
-    refreshMapButtonEl: null,
-    showRefreshMapButton: false,
-    layer: null,
-  },
+  map: { map: null, layerControl: null, terraDraw: null },
   formFilters: { params: {}, string: "" },
   iNatStats: {
     headerCounts: new Map() as unknown as Record<string, number>,
