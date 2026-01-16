@@ -46,8 +46,8 @@ export async function fetchAndRenderData(
   ) => Promise<void>,
   appStore: AppStoreType,
 ) {
-  let containerEl = document.querySelector(".observations-list-container");
-  if (!containerEl) return;
+  let subcontainerEl = document.querySelector(".subview-container");
+  if (!subcontainerEl) return;
 
   let spinner = createSpinner();
   spinner.start();
@@ -57,12 +57,13 @@ export async function fetchAndRenderData(
   let data = await getAPIData(appStore);
   const t10 = performance.now();
   loggerTime(`api ${t10 - t1} milliseconds`);
-
   spinner.stop();
 
   if (!data) return;
+
   if (data.results.length == 0) {
-    containerEl.innerHTML = "No records found";
+    subcontainerEl.innerHTML = "No records found";
+    appStore.observationsSubviewData = [];
     return;
   }
 
@@ -393,6 +394,10 @@ export function updateSubviewState(
     componentContext.gridLinkEl.classList.remove("current-subview");
     componentContext.mediaLinkEl.classList.remove("current-subview");
     componentContext.mapLinkEl.classList.add("current-subview");
+  }
+
+  if (appStore.observationsSubviewData.length === 0) {
+    return;
   }
 
   render(appStore.observationsSubviewData, paginationCallback, appStore);
