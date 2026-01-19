@@ -407,9 +407,10 @@ function formatBoundingBox(
   swlat: number,
 ): LngLatType[] {
   return [
-    [nelng, nelat],
-    [nelng, swlat],
+    [swlng, nelat],
     [swlng, swlat],
+    [nelng, swlat],
+    [nelng, nelat],
     [swlng, nelat],
   ];
 }

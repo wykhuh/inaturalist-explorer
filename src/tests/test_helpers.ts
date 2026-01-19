@@ -487,14 +487,14 @@ export let sandiego: NormalizediNatPlaceType = {
 };
 
 export let bbox = [
-  [-100, 30],
-  [-100, 40],
-  [-90, 40],
-  [-90, 30],
-  [-100, 30],
+  [-111, 45],
+  [-111, 41],
+  [-104, 41],
+  [-104, 45],
+  [-111, 45],
 ] as LngLatType[];
 
-export let iNatBboxParams = "nelng=-90&nelat=30&swlat=40&swlng=-100";
+export let iNatBboxParams = "nelng=-104&nelat=45&swlat=41&swlng=-111";
 
 export let bBoxPlace: NormalizediNatPlaceType = {
   id: 0,
@@ -845,11 +845,7 @@ export function expectNoUsersAnnotators(store: AppStoreType) {
   expect(store.selectedUsersAnnotators).toStrictEqual({});
 }
 
-export function expectRefreshPlace(
-  store: AppStoreType,
-  count = 0,
-  type = "zero",
-) {
+export function expectBboxPlace(store: AppStoreType, count = 0, type = "zero") {
   let place = structuredClone(bBoxPlace);
   if (type !== "zero") {
     place = structuredClone(bBoxPlaceLA);

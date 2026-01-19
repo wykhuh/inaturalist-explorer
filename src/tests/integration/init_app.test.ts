@@ -74,9 +74,12 @@ import {
   gridLabel_withoutLifeOak,
   gridLabel_life_places_use2Identifiers,
   gridLabel_allTaxaRecord_withoutTaxa,
+  iNatBboxParams,
+  expectBboxPlace,
 } from "../test_helpers.ts";
 import type {
   IdentificationsApiParamsType,
+  LngLatType,
   ObservationsApiParamsType,
 } from "../../types/app";
 import { allTaxaRecord } from "../../data/inat_data.ts";
@@ -97,6 +100,7 @@ import {
   dbKeys,
   populateStoreWithLocaleStorage,
 } from "../../lib/localStorage.ts";
+import { saveBBoxToStore } from "../../lib/search_bounding_box.ts";
 
 beforeEach(() => {
   const { JSDOM } = jsdom;
@@ -669,14 +673,14 @@ describe("initPopulateStore and initRenderMap resources", () => {
 
     expectEmpytMap(store);
 
-    let searchparams =
-      "?spam=false&verifiable=true&nelat=0&nelng=0&swlat=0&swlng=0";
+    let searchparams = `?spam=false&verifiable=true&${iNatBboxParams}`;
     let urlData = decodeAppUrl(searchparams, "/");
 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
     expectEmptyResources(store, ["selectedPlaces", "selectedTaxa"]);
+    expectBboxPlace(store, allTaxa.observations_count);
     expectDefaultTaxaRecord(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -687,10 +691,10 @@ describe("initPopulateStore and initRenderMap resources", () => {
     let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
       per_page: perPage,
-      nelat: 0,
-      nelng: 0,
-      swlat: 0,
-      swlng: 0,
+      nelng: -104,
+      nelat: 45,
+      swlat: 41,
+      swlng: -111,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
     };
@@ -1747,5 +1751,77 @@ describe("initApp when there are valus in local storage", () => {
     expect(store.viewMetadata.name_order).toBe("s");
     expect(store.viewMetadata.identifications_observations.perPage).toBe(48);
     expect(store.viewMetadata.observations_observations.perPage).toBe(48);
+  });
+});
+
+test("decodeAppUrl, initApp, and saveBBoxToStore handles bounding box", async () => {
+  let store = structuredClone(mapStore);
+
+  let coors = [
+    [-111, 45],
+    [-111, 41],
+    [-104, 41],
+    [-104, 45],
+    [-111, 45],
+  ] as LngLatType[];
+
+  let searchparams = "nelng=-104&nelat=45&swlat=41&swlng=-111";
+  let urlData = decodeAppUrl(searchparams, "/");
+  expect(urlData.observationsApiParams).toStrictEqual({
+    nelng: -104,
+    nelat: 45,
+    swlat: 41,
+    swlng: -111,
+  });
+
+  await initPopulateStore(store, urlData);
+  await initRenderMap(store);
+
+  expect(store.selectedPlaces).toStrictEqual([
+    {
+      bounding_box: {
+        coordinates: [coors],
+        type: "Polygon",
+      },
+      display_name: "Custom Boundary",
+      id: 0,
+      name: "Custom Boundary",
+      observations_count: 100000,
+    },
+  ]);
+  expect(store.observationsApiParams).toStrictEqual({
+    ...defaultParams,
+    nelng: -104,
+    nelat: 45,
+    swlat: 41,
+    swlng: -111,
+    per_page: perPage,
+    taxon_id: allTaxa.id.toString(),
+    colors: iNatOrange,
+  });
+
+  await saveBBoxToStore(coors, store);
+
+  expect(store.selectedPlaces).toStrictEqual([
+    {
+      bounding_box: {
+        coordinates: [coors],
+        type: "Polygon",
+      },
+      display_name: "Custom Boundary",
+      id: 0,
+      name: "Custom Boundary",
+      observations_count: 100000,
+    },
+  ]);
+  expect(store.observationsApiParams).toStrictEqual({
+    ...defaultParams,
+    nelng: -104,
+    nelat: 45,
+    swlat: 41,
+    swlng: -111,
+    per_page: perPage,
+    taxon_id: allTaxa.id.toString(),
+    colors: iNatOrange,
   });
 });

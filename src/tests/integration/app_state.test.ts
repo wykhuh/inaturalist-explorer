@@ -24,7 +24,7 @@ import {
   expectLifeTaxa,
   expectLosAngelesPlace,
   expectOakTaxa,
-  expectRefreshPlace,
+  expectBboxPlace,
   losangeles,
   sandiego,
   life,
@@ -300,13 +300,13 @@ describe("saveBBoxToStore", () => {
     ]);
     expectEmptyResources(store, ["selectedTaxa", "selectedPlaces"]);
     expectDefaultTaxaRecord(store);
-    expectRefreshPlace(store, allTaxaCount);
+    expectBboxPlace(store, allTaxaCount);
     let expectedParams = {
       ...defaultParams,
-      nelat: 30,
-      nelng: -90,
-      swlat: 40,
-      swlng: -100,
+      nelng: -104,
+      nelat: 45,
+      swlat: 41,
+      swlng: -111,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
       per_page: perPage,
@@ -327,7 +327,7 @@ describe("saveBBoxToStore", () => {
     ]);
     expectEmptyResources(store, ["selectedTaxa", "selectedPlaces"]);
     expectDefaultTaxaRecord(store);
-    expectRefreshPlace(store, allTaxaCount, "LA");
+    expectBboxPlace(store, allTaxaCount, "LA");
     let expectedParams2 = {
       ...defaultParams,
       nelat: 34.30714385628804,
@@ -1096,16 +1096,16 @@ describe("combos", () => {
       gridLabel_oaks,
     ]);
     expectOakTaxa(store, colors[0]);
-    expectRefreshPlace(store, oakCount);
+    expectBboxPlace(store, oakCount);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       per_page: perPage,
       taxon_id: redOak(colors[0]).id.toString(),
       colors: colors[0],
-      nelat: 30,
-      nelng: -90,
-      swlat: 40,
-      swlng: -100,
+      nelng: -104,
+      nelat: 45,
+      swlat: 41,
+      swlng: -111,
     });
 
     expect(window.location.search).toBe(
@@ -1157,16 +1157,16 @@ describe("combos", () => {
       gridLabel_allTaxaRecord,
     ]);
     expectDefaultTaxaRecord(store);
-    expectRefreshPlace(store, allTaxaCount);
+    expectBboxPlace(store, allTaxaCount);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       per_page: perPage,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
-      nelat: 30,
-      nelng: -90,
-      swlat: 40,
-      swlng: -100,
+      nelng: -104,
+      nelat: 45,
+      swlat: 41,
+      swlng: -111,
     });
     expect(window.location.search).toBe(
       `?${defaultQuery}&per_page=${perPage}` + `&${iNatBboxParams}`,
@@ -1215,16 +1215,16 @@ describe("combos", () => {
     ]);
     expectDefaultTaxaRecord(store, allTaxaProjectCount);
     expectProject1(store);
-    expectRefreshPlace(store, allTaxaProjectCount);
+    expectBboxPlace(store, allTaxaProjectCount);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       per_page: perPage,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
-      nelat: 30,
-      nelng: -90,
-      swlat: 40,
-      swlng: -100,
+      nelng: -104,
+      nelat: 45,
+      swlat: 41,
+      swlng: -111,
       project_id: project_cnc1.id.toString(),
     });
     expect(window.location.search).toBe(
@@ -1274,16 +1274,16 @@ describe("combos", () => {
     ]);
     expectDefaultTaxaRecord(store, allTaxaCount * 0.45);
     expectUser1(store);
-    expectRefreshPlace(store, allTaxaCount * 0.45);
+    expectBboxPlace(store, allTaxaCount * 0.45);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       per_page: perPage,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
-      nelat: 30,
-      nelng: -90,
-      swlat: 40,
-      swlng: -100,
+      nelng: -104,
+      nelat: 45,
+      swlat: 41,
+      swlng: -111,
       user_id: user1.id.toString(),
     });
 
@@ -1339,16 +1339,16 @@ describe("combos", () => {
       gridLabel_allTaxaRecord,
     ]);
     expectDefaultTaxaRecord(store);
-    expectRefreshPlace(store, allTaxaCount);
+    expectBboxPlace(store, allTaxaCount);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       per_page: perPage,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
-      nelat: 30,
-      nelng: -90,
-      swlat: 40,
-      swlng: -100,
+      nelng: -104,
+      nelat: 45,
+      swlat: 41,
+      swlng: -111,
     });
     expect(window.location.search).toBe(
       `?${defaultQuery}&per_page=${perPage}&${iNatBboxParams}`,
@@ -1496,7 +1496,6 @@ describe("taxonSelectedHandler with identifications", () => {
       per_page: perPage,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams1);
-
     expect(window.location.search).toBe(
       `?observation_taxon_id=${life().id}&colors=${colorsEncoded[0]}` +
         `&per_page=${perPage}`,
@@ -1866,10 +1865,10 @@ describe("removePlace", () => {
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       per_page: perPage,
-      nelat: 30,
-      nelng: -90,
-      swlat: 40,
-      swlng: -100,
+      nelng: -104,
+      nelat: 45,
+      swlat: 41,
+      swlng: -111,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
     });
@@ -1980,10 +1979,10 @@ describe("removePlace", () => {
       per_page: perPage,
       colors: colors[0],
       taxon_id: life().id.toString(),
-      nelat: 30,
-      nelng: -90,
-      swlat: 40,
-      swlng: -100,
+      nelng: -104,
+      nelat: 45,
+      swlat: 41,
+      swlng: -111,
     };
     expect(store.observationsApiParams).toStrictEqual(params1);
     expect(window.location.search).toBe(

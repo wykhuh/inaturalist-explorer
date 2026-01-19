@@ -19,13 +19,25 @@ function formatSelectedPlaces(appStore: AppStoreType) {
       if (["bounding_box", "geometry"].includes(key)) {
         let value = val as PolygonJson;
 
+        let coors;
+        if (value.coordinates[0][0]) {
+          if (value.coordinates[0][0].length <= 5) {
+            coors = value.coordinates[0];
+          } else {
+            coors = value.coordinates[0][0].length;
+          }
+        } else if (value.coordinates[0]) {
+          if (value.coordinates[0].length <= 5) {
+            coors = value.coordinates[0];
+          } else {
+            coors = value.coordinates[0].length;
+          }
+        }
+
         if (value !== null) {
           temp[key] = {
             type: value.type,
-            coordinates:
-              value.type === "Polygon"
-                ? value.coordinates[0].length
-                : value.coordinates[0][0].length,
+            coordinates: coors,
           };
         }
       } else {
