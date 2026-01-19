@@ -103,6 +103,7 @@ export async function userSelectedHandler(
   // add user to store
   appStore.selectedUsers = [...appStore.selectedUsers, selection];
   resetPageNumber(appStore);
+
   appStore.observationsApiParams = {
     ...appStore.observationsApiParams,
     user_id: addValueToCommaSeparatedString(

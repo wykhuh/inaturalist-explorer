@@ -21,7 +21,7 @@ import {
   observationsApiNames,
   recordTypeToPathObj,
 } from "../data/app_data";
-import { defaultColorScheme } from "./map_colors_utils";
+import { defaultColorScheme, getColor } from "./map_colors_utils";
 import { convertiNatBBoxToLngLat } from "./map_utils";
 import { validObservationsSubviews, validViews } from "../data/app_data";
 import { getResourceApiParams } from "./data_utils";
@@ -277,6 +277,29 @@ export function updateAppUrl(url_location: Location, appStore: AppStoreType) {
   window.history.pushState(state, "", path);
 }
 
+function formatBasicRecords(stringIds: string) {
+  return stringIds
+    .split(",")
+    .map((id) => {
+      return { id: Number(id) };
+    })
+    .filter((p) => p);
+}
+
+function formatBasicTaxaRecords(
+  urlIds: string,
+  urlColors: string | undefined,
+  appStore: AppStoreType,
+) {
+  let colors = urlColors ? urlColors.split(",") : defaultColorScheme;
+
+  return urlIds.split(",").map((id, i) => {
+    let color = colors[i] || getColor(appStore, defaultColorScheme);
+    appStore.color = color;
+    return { id: Number(id), color: color };
+  });
+}
+
 export function decodeAppUrl(searchParams: string, path = "/") {
   const urlParams = Object.fromEntries(new URLSearchParams(searchParams));
   let store = {
@@ -338,27 +361,15 @@ export function decodeAppUrl(searchParams: string, path = "/") {
 
   // convert taxon_id into basic selectedTaxa or selectedTaxaIdentified id
   if ("taxon_id" in urlParams && urlParams.taxon_id !== "any") {
-    let taxa: NormalizediNatTaxonType[] = [];
-    let ids = urlParams.taxon_id.split(",");
-
     if (isObservations) {
-      let colors = urlParams.colors
-        ? urlParams.colors.split(",")
-        : defaultColorScheme;
-      ids.forEach((id, i) => {
-        taxa.push({
-          id: Number(id),
-          color: colors[i],
-        });
-      });
-      store.color = colors[ids.length - 1];
+      let taxa = formatBasicTaxaRecords(
+        urlParams.taxon_id,
+        urlParams.colors,
+        store,
+      );
       store.selectedTaxa = taxa;
     } else {
-      ids.forEach((id) => {
-        taxa.push({
-          id: Number(id),
-        });
-      });
+      let taxa = formatBasicRecords(urlParams.taxon_id);
       store.selectedTaxaIdentified = taxa;
     }
   }
@@ -416,17 +427,13 @@ export function decodeAppUrl(searchParams: string, path = "/") {
 
   // convert user_id into basic selectedUser with id
   if ("user_id" in urlParams && urlParams.user_id !== "any") {
-    let ids = urlParams.user_id.split(",");
-
-    let users = ids
-      .map((id) => {
-        return { id: Number(id) };
-      })
-      .filter((p) => p);
+    let users = formatBasicRecords(urlParams.user_id);
 
     if (isObservations) {
       store.selectedUsers = users as any;
     } else {
+      // NOTE: iNat API allows multiple identifiers. However, sending multiple
+      // identfiers will result in zero results.
       store.selectedUsersIdentifiers = users as any;
     }
   }
@@ -434,14 +441,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   // convert ident_user_id into basic selectedUserIdentifier with id
   if ("ident_user_id" in urlParams && urlParams.ident_user_id !== "any") {
     if (isObservations) {
-      let ids = urlParams.ident_user_id.split(",");
-
-      let users = ids
-        .map((id) => {
-          return { id: Number(id) };
-        })
-        .filter((p) => p);
-
+      let users = formatBasicRecords(urlParams.ident_user_id);
       store.selectedUsersIdentifiers = users as any;
     }
   }
@@ -452,7 +452,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   ) {
     if (isObservations) {
       store.selectedUnobservedByUser = {
-        id: Number(urlParams.unobserved_by_user_id),
+        id: Number(urlParams.unobserved_by_user_id.split(",")[0]),
       } as any;
     }
   }
@@ -462,12 +462,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     urlParams.annotation_user_id !== "any"
   ) {
     if (isObservations) {
-      let ids = urlParams.annotation_user_id.split(",");
-      let users = ids
-        .map((id) => {
-          return { id: Number(id) };
-        })
-        .filter((p) => p);
+      let users = formatBasicRecords(urlParams.annotation_user_id);
       store.selectedUsersAnnotators = users as any;
     }
   }
@@ -475,26 +470,25 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   if ("viewer_id" in urlParams && urlParams.viewer_id !== "any") {
     if (isObservations) {
       store.selectedReviewer = {
-        id: Number(urlParams.viewer_id),
+        id: Number(urlParams.viewer_id.split(",")[0]),
       } as any;
     }
+  }
+
+  if ("not_in_place" in urlParams && urlParams.not_in_place !== "any") {
+    let places = formatBasicRecords(urlParams.not_in_place);
+    store.selectedWithoutPlaces = places;
   }
 
   if ("not_in_project" in urlParams && urlParams.not_in_project !== "any") {
     if (isObservations) {
-      store.selectedNotInProject = {
-        id: Number(urlParams.not_in_project),
-      } as any;
+      let projects = formatBasicRecords(urlParams.not_in_project);
+      store.selectedWithoutProjects = projects as any;
     }
   }
 
   if ("without_taxon_id" in urlParams && urlParams.without_taxon_id !== "any") {
-    let ids = urlParams.without_taxon_id.toString().split(",");
-    let taxa = ids
-      .map((id) => {
-        return { id: Number(id) };
-      })
-      .filter((p) => p);
+    let taxa = formatBasicRecords(urlParams.without_taxon_id);
     if (isObservations) {
       store.selectedWithoutTaxa = taxa as any;
     } else if (isIdentifications) {
@@ -507,13 +501,25 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     urlParams.without_observation_taxon_id !== "any"
   ) {
     if (isIdentifications) {
-      let ids = urlParams.without_observation_taxon_id.toString().split(",");
-      let taxa = ids
-        .map((id) => {
-          return { id: Number(id) };
-        })
-        .filter((p) => p);
+      let taxa = formatBasicRecords(urlParams.without_observation_taxon_id);
       store.selectedWithoutTaxa = taxa as any;
+    }
+  }
+
+  if ("not_user_id" in urlParams && urlParams.not_user_id !== "any") {
+    if (isObservations) {
+      let users = formatBasicRecords(urlParams.not_user_id);
+      store.selectedWithoutUsers = users as any;
+    }
+  }
+
+  if (
+    "without_ident_user_id" in urlParams &&
+    urlParams.without_ident_user_id !== "any"
+  ) {
+    if (isObservations) {
+      let users = formatBasicRecords(urlParams.without_ident_user_id);
+      store.selectedWithoutUsersIdentifiers = users as any;
     }
   }
 

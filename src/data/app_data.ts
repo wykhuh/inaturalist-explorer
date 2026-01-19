@@ -19,6 +19,14 @@ import {
   showHideUsersIdentifiersHeader,
 } from "../lib/search_users_identifiers";
 import {
+  renderWithoutPlacesList,
+  showHideWithoutPlacesHeader,
+} from "../lib/search_without_places";
+import {
+  renderWithoutProjectsList,
+  showHideWithoutProjectsHeader,
+} from "../lib/search_without_project";
+import {
   renderWithoutTaxaList,
   showHideWithoutTaxaHeader,
 } from "../lib/search_without_taxa";
@@ -26,6 +34,14 @@ import {
   renderWithoutTaxaIdentifiedList,
   showHideWithoutTaxaIdentifiedHeader,
 } from "../lib/search_without_taxa_identified";
+import {
+  renderWithoutUsersList,
+  showHideWithoutUsersHeader,
+} from "../lib/search_without_users";
+import {
+  renderWithoutUsersIdentifiersList,
+  showHideWithoutUsersIdentifiersHeader,
+} from "../lib/search_without_users_identifiers";
 import { objectFlip } from "../lib/utils";
 import type {
   AppStoreSelectedResourceKeysType,
@@ -105,41 +121,50 @@ export function viewAndPerPageDbKeyObject(targetView: ObservationViewsType) {
 
 // NOTE: update when adding selectedResource; autocomplete filters modal
 export let filtersModalAutocompleteFields: ObservationsApiParamsKeysType[] = [
-  "not_in_project",
   "unobserved_by_user_id",
   "viewer_id",
 ];
 
 // NOTE: update when adding selectedResource; autocomplete sidemenu
-export const selectedResourcesIdObservations = {
+export const selectedResourcesIdObservations: {
+  [k: string]: ObservationsApiParamsKeysType | null;
+} = {
   selectedPlaces: "place_id",
+  selectedWithoutPlaces: "not_in_place",
   selectedProjects: "project_id",
+  selectedWithoutProjects: "not_in_project",
   selectedTaxa: "taxon_id",
   selectedWithoutTaxa: "without_taxon_id",
-  selectedWithoutTaxaIdentified: null,
   selectedTaxaIdentified: null,
+  selectedWithoutTaxaIdentified: null,
   selectedUsers: "user_id",
+  selectedWithoutUsers: "not_user_id",
   selectedUsersAnnotators: "annotation_user_id",
   selectedUsersIdentifiers: "ident_user_id",
+  selectedWithoutUsersIdentifiers: "without_ident_user_id",
   selectedReviewer: "viewer_id",
   selectedUnobservedByUser: "unobserved_by_user_id",
-  selectedNotInProject: "not_in_project",
 };
 
 // NOTE: update when adding selectedResource; autocomplete sidemenu
-export const selectedResourcesIdIdentifications = {
+export const selectedResourcesIdIdentifications: {
+  [k: string]: IdentificationsApiParamsKeysType | null;
+} = {
   selectedPlaces: "place_id",
+  selectedWithoutPlaces: "not_in_place",
   selectedProjects: null,
+  selectedWithoutProjects: null,
   selectedTaxa: "observation_taxon_id",
   selectedWithoutTaxa: "without_observation_taxon_id",
-  selectedWithoutTaxaIdentified: "without_taxon_id",
   selectedTaxaIdentified: "taxon_id",
+  selectedWithoutTaxaIdentified: "without_taxon_id",
   selectedUsers: null,
+  selectedWithoutUsers: null,
   selectedUsersAnnotators: null,
   selectedUsersIdentifiers: "user_id",
+  selectedWithoutUsersIdentifiers: null,
   selectedReviewer: null,
   selectedUnobservedByUser: null,
-  selectedNotInProject: null,
 };
 
 // NOTE: update when adding selectedResource; autocomplete sidemenu
@@ -147,13 +172,19 @@ export const selectedResourcesIdIdentifications = {
 const selectedResourcesNoCount: (
   | AppStoreSelectedResourcesKeysType
   | AppStoreSelectedResourceKeysType
-)[] = ["selectedWithoutTaxa", "selectedWithoutTaxaIdentified"];
+)[] = [
+  "selectedWithoutPlaces",
+  "selectedWithoutProjects",
+  "selectedWithoutTaxa",
+  "selectedWithoutTaxaIdentified",
+  "selectedWithoutUsers",
+  "selectedWithoutUsersIdentifiers",
+];
 
 // resources that are single objects
 const selectedResource: AppStoreSelectedResourceKeysType[] = [
   "selectedReviewer",
   "selectedUnobservedByUser",
-  "selectedNotInProject",
 ];
 
 export const selectedResourcesAll = Object.keys(
@@ -184,29 +215,35 @@ export const selectedIdentifictionsResourcesWithCount = selectedResources
 
 // NOTE: update when adding selectedResource; render list
 export let renderSelectResourcesLists = [
-  renderTaxaList,
-  renderTaxaIdentifiedList,
   renderPlacesList,
+  renderWithoutPlacesList,
   renderProjectsList,
-  renderUsersList,
-  renderUsersIdentifiersList,
-  renderUsersAnnotatorsList,
+  renderWithoutProjectsList,
+  renderTaxaList,
   renderWithoutTaxaList,
+  renderTaxaIdentifiedList,
   renderWithoutTaxaIdentifiedList,
+  renderUsersList,
+  renderWithoutUsersList,
+  renderUsersIdentifiersList,
+  renderWithoutUsersIdentifiersList,
+  renderUsersAnnotatorsList,
 ];
 
 // NOTE: update when adding selectedResource; render headers
 export const event_headerHandlerObservations = {
   selectedTaxaChange: showHideTaxaHeader,
   selectedWithoutTaxaChange: showHideWithoutTaxaHeader,
-  // selectedTaxaIdentifiedChange: showHideTaxaIdentifiedHeader,
-  // selectedWithoutTaxaIdentifiedChange: showHideWithoutTaxaIdentifiedHeader,
+  selectedTaxaIdentifiedChange: showHideTaxaIdentifiedHeader,
+  selectedWithoutTaxaIdentifiedChange: showHideWithoutTaxaIdentifiedHeader,
   selectedPlacesChange: showHidePlacesHeader,
+  selectedWithoutPlacesChange: showHideWithoutPlacesHeader,
   selectedProjectsChange: showHideProjectsHeader,
+  selectedWithoutProjectsChange: showHideWithoutProjectsHeader,
   selectedUsersChange: showHideUsersHeader,
-  // selectedWithoutUsersChange: showHideWithoutUsersHeader,
+  selectedWithoutUsersChange: showHideWithoutUsersHeader,
   selectedUsersIdentifiersChange: showHideUsersIdentifiersHeader,
-  // selectedWithoutUsersIdentifiersChange: showHideWithoutUsersIdentifiersHeader,
+  selectedWithoutUsersIdentifiersChange: showHideWithoutUsersIdentifiersHeader,
   selectedUsersAnnotatorsChange: showHideUsersAnnotatorsHeader,
 };
 
@@ -216,15 +253,14 @@ export const event_headerHandlerIdentifications = {
   selectedTaxaIdentifiedChange: showHideTaxaIdentifiedHeader,
   selectedWithoutTaxaIdentifiedChange: showHideWithoutTaxaIdentifiedHeader,
   selectedPlacesChange: showHidePlacesHeader,
+  selectedWithoutPlacesChange: showHideWithoutPlacesHeader,
   selectedUsersIdentifiersChange: showHideUsersIdentifiersHeader,
 };
 
 // NOTE: update when adding selectedResource; filters
 export const observationsApiNonFilterableNames: ObservationsApiParamsKeysType[] =
   [
-    "annotation_user_id",
     "colors",
-    "ident_user_id",
     "locale",
     "nelat",
     "nelng",
@@ -232,15 +268,22 @@ export const observationsApiNonFilterableNames: ObservationsApiParamsKeysType[] 
     "order_by",
     "page",
     "per_page",
-    "place_id",
-    "project_id",
     "subview",
     "swlat",
     "swlng",
-    "taxon_id",
-    "user_id",
     "view",
+    // selected resources
+    "place_id",
+    "not_in_place",
+    "project_id",
+    "not_in_project",
+    "taxon_id",
     "without_taxon_id",
+    "user_id",
+    "not_user_id",
+    "annotation_user_id",
+    "ident_user_id",
+    "without_ident_user_id",
   ];
 
 export const observationsFilterableImplemented: ObservationsApiParamsKeysType[] =
@@ -259,7 +302,6 @@ export const observationsFilterableImplemented: ObservationsApiParamsKeysType[] 
     "list_id", // no way to do autocomplete lists name
     "lrank",
     "native",
-    "not_in_project",
     "on",
     "photos",
     "popular",
@@ -283,21 +325,21 @@ export const observationsFilterableImplementedArrays: ObservationsApiParamsKeysT
     "created_month",
     "created_year",
     "day",
+    "geoprivacy",
     "hour",
     "iconic_taxa",
     "license",
     "month",
+    "obscuration",
     "photo_license",
     "quality_grade",
     "rank",
     "sound_license",
+    "taxon_geoprivacy",
     "term_id",
     "term_value_id",
     "without_term_value_id",
     "year",
-    "geoprivacy",
-    "taxon_geoprivacy",
-    "obscuration",
   ];
 
 const observationsFilterableTodo: ObservationsApiParamsKeysType[] = [
@@ -314,12 +356,8 @@ const observationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   "mappable",
 
   "exact_taxon_id",
-  "ident_taxon_id_exclusive", // array
-
-  "not_in_place",
-  "not_user_id",
   "without_direct_taxon_id",
-  "without_ident_user_id",
+  "ident_taxon_id_exclusive", // array
 
   // no
   "apply_project_rules_for",
@@ -362,10 +400,10 @@ export const observationsFieldName_InputType = {
   day: "multiselect",
   disagreements: "select",
   endemic: "select",
+  geoprivacy: "multiselect",
   hour: "multiselect",
   hrank: "select",
   iconic_taxa: "checkbox",
-  ident_user_id: "search",
   identified: "select",
   introduced: "select",
   license: "multiselect",
@@ -373,7 +411,7 @@ export const observationsFieldName_InputType = {
   lrank: "select",
   month: "multiselect",
   native: "select",
-  not_in_project: "search",
+  obscuration: "multiselect",
   on: "dateInput",
   photo_license: "multiselect",
   photos: "select",
@@ -384,6 +422,7 @@ export const observationsFieldName_InputType = {
   reviewed: "select",
   sound_license: "multiselect",
   sounds: "select",
+  taxon_geoprivacy: "multiselect",
   term_id: "skip",
   term_value_id: "skip",
   threatened: "select",
@@ -395,9 +434,6 @@ export const observationsFieldName_InputType = {
   without_term_id: "skip",
   without_term_value_id: "skip",
   year: "multiselect",
-  geoprivacy: "multiselect",
-  taxon_geoprivacy: "multiselect",
-  obscuration: "multiselect",
 };
 
 // API v2 accepts true, false, or do not send field for verifiable. The default
@@ -425,6 +461,7 @@ export const identificationsApiNonFilterableNames: IdentificationsApiParamsKeysT
     "user_id", // array integer
     "without_observation_taxon_id", // array string
     "without_taxon_id", // array string
+    "not_in_place", // array string
   ];
 
 export const identificationsFilterableImplemented: IdentificationsApiParamsKeysType[] =

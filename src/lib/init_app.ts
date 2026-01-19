@@ -119,6 +119,21 @@ export async function initPopulateStore(
   }
   loggerStore("++ initPopulateStore selectedPlaces", appStore.selectedPlaces);
 
+  // without places data
+  if (urlStore.selectedWithoutPlaces?.length > 0) {
+    for await (const urlStorePlace of urlStore.selectedWithoutPlaces) {
+      let placeData = await getPlaceById(urlStorePlace.id);
+      if (!placeData) {
+        continue;
+      }
+      processWithoutPlaceData(placeData, appStore);
+    }
+  }
+  loggerStore(
+    "++ initPopulateStore selectedWithoutPlaces",
+    appStore.selectedWithoutPlaces,
+  );
+
   // project data
   if (urlStore.selectedProjects?.length > 0) {
     for await (const urlStoreProject of urlStore.selectedProjects) {
@@ -139,6 +154,21 @@ export async function initPopulateStore(
     appStore.selectedProjects,
   );
 
+  //  not in project data
+  if (urlStore.selectedWithoutProjects) {
+    for await (const urlStoreProject of urlStore.selectedWithoutProjects) {
+      let data = await getProjectById(urlStoreProject.id);
+
+      if (data) {
+        processNotInProjectData(data, appStore);
+      }
+    }
+  }
+  loggerStore(
+    "++ initPopulateStore selectedWithoutProjects",
+    appStore.selectedWithoutProjects,
+  );
+
   // user data
   if (urlStore.selectedUsers?.length > 0) {
     for await (const urlStoreUser of urlStore.selectedUsers) {
@@ -150,6 +180,20 @@ export async function initPopulateStore(
     }
   }
   loggerStore("++ initPopulateStore selectedUsers", appStore.selectedUsers);
+
+  if (urlStore.selectedWithoutUsers?.length > 0) {
+    for await (const urlStoreUser of urlStore.selectedWithoutUsers) {
+      let data = await getUserById(urlStoreUser.id);
+      if (!data) {
+        continue;
+      }
+      processWithoutUserData(data, appStore);
+    }
+  }
+  loggerStore(
+    "++ initPopulateStore selectedWithoutUsers",
+    appStore.selectedWithoutUsers,
+  );
 
   if (urlStore.selectedUsersIdentifiers?.length > 0) {
     for await (const urlStoreUser of urlStore.selectedUsersIdentifiers) {
@@ -163,6 +207,20 @@ export async function initPopulateStore(
   loggerStore(
     "++ initPopulateStore selectedUsersIdentifiers",
     appStore.selectedUsersIdentifiers,
+  );
+
+  if (urlStore.selectedWithoutUsersIdentifiers?.length > 0) {
+    for await (const urlStoreUser of urlStore.selectedWithoutUsersIdentifiers) {
+      let data = await getUserById(urlStoreUser.id);
+      if (!data) {
+        continue;
+      }
+      processWithoutUserIdentifierData(data, appStore);
+    }
+  }
+  loggerStore(
+    "++ initPopulateStore selectedWithoutUsersIdentifiers",
+    appStore.selectedWithoutUsersIdentifiers,
   );
 
   // unobserved user data
@@ -214,6 +272,21 @@ export async function initPopulateStore(
   }
   loggerStore("++ initPopulateStore selectedTaxa", appStore.selectedTaxa);
 
+  // load selected without taxa
+  if (urlStore.selectedWithoutTaxa && urlStore.selectedWithoutTaxa.length > 0) {
+    for await (const urlStoreTaxon of urlStore.selectedWithoutTaxa) {
+      let taxonData = await getTaxonById(urlStoreTaxon.id);
+      if (!taxonData) {
+        continue;
+      }
+      processWithoutTaxonData(taxonData, appStore, urlStore);
+    }
+  }
+  loggerStore(
+    "++ initPopulateStore selectedWithoutTaxa",
+    appStore.selectedWithoutTaxa,
+  );
+
   // load taxa identified data
   if (
     urlStore.selectedTaxaIdentified &&
@@ -230,21 +303,6 @@ export async function initPopulateStore(
   loggerStore(
     "++ initPopulateStore selectedTaxaIdentified",
     appStore.selectedTaxaIdentified,
-  );
-
-  // load selected without taxa
-  if (urlStore.selectedWithoutTaxa && urlStore.selectedWithoutTaxa.length > 0) {
-    for await (const urlStoreTaxon of urlStore.selectedWithoutTaxa) {
-      let taxonData = await getTaxonById(urlStoreTaxon.id);
-      if (!taxonData) {
-        continue;
-      }
-      processWithoutTaxonData(taxonData, appStore, urlStore);
-    }
-  }
-  loggerStore(
-    "++ initPopulateStore selectedWithoutTaxa",
-    appStore.selectedWithoutTaxa,
   );
 
   // load selected without taxa identified
@@ -277,18 +335,6 @@ export async function initPopulateStore(
   loggerStore(
     "++ initPopulateStore selectedTaxa",
     appStore.selectedWithoutTaxa,
-  );
-
-  //  not in project data
-  if (urlStore.selectedNotInProject?.id) {
-    let data = await getProjectById(urlStore.selectedNotInProject.id);
-    if (data) {
-      processNotInProjectData(data, appStore);
-    }
-  }
-  loggerStore(
-    "++ initPopulateStore selectedNotInProject",
-    appStore.selectedNotInProject,
   );
 
   await updateCountForAll("all", appStore);
@@ -417,6 +463,123 @@ export async function initRenderMap(appStore: AppStoreType) {
   }
 }
 
+export function processPlaceData(
+  placeData: PlacesResult,
+  appStore: AppStoreType,
+) {
+  let isObservations = isObservationsCheck(appStore);
+
+  // save place to store
+  let bbox = placeData.bounding_box_geojson;
+  appStore.selectedPlaces = [
+    ...appStore.selectedPlaces,
+    {
+      id: placeData.id,
+      name: placeData.name,
+      display_name: placeData.display_name,
+      bounding_box: bbox,
+      geometry: placeData.geometry_geojson,
+    },
+  ];
+
+  let resourceApiParams = getResourceApiParams(isObservations);
+  // create comma seperated place_id
+  appStore[resourceApiParams].place_id = addValueToCommaSeparatedString(
+    placeData.id,
+    appStore[resourceApiParams].place_id,
+  );
+}
+
+export function processWithoutPlaceData(
+  placeData: PlacesResult,
+  appStore: AppStoreType,
+) {
+  let isObservations = isObservationsCheck(appStore);
+
+  // save place to store
+  appStore.selectedWithoutPlaces = [
+    ...appStore.selectedWithoutPlaces,
+    {
+      id: placeData.id,
+      name: placeData.name,
+      display_name: placeData.display_name,
+    },
+  ];
+
+  // create comma seperated place_id
+  let resourceApiParams = getResourceApiParams(isObservations);
+  appStore[resourceApiParams].not_in_place = addValueToCommaSeparatedString(
+    placeData.id,
+    appStore[resourceApiParams].not_in_place,
+  );
+}
+
+export function processBBoxData(
+  appStore: AppStoreType,
+  urlStore: AppStoreType,
+) {
+  if (!isObservationsCheck(appStore)) return;
+  let lngLatCoors = convertiNatBBoxToLngLat(urlStore.observationsApiParams);
+  if (!lngLatCoors) return;
+
+  appStore.observationsApiParams.nelat = urlStore.observationsApiParams.nelat;
+  appStore.observationsApiParams.nelng = urlStore.observationsApiParams.nelng;
+  appStore.observationsApiParams.swlat = urlStore.observationsApiParams.swlat;
+  appStore.observationsApiParams.swlng = urlStore.observationsApiParams.swlng;
+
+  appStore.selectedPlaces = [bboxPlaceRecord(lngLatCoors)];
+}
+
+// NOTE: update when adding selectedResource; initPopulateStore
+export function processProjectData(
+  projectData: ProjectsResult,
+  appStore: AppStoreType,
+  placeData?: PlacesResult,
+) {
+  if (isIdentificationsCheck(appStore)) return;
+
+  let project: NormalizediNatProjectType = {
+    id: projectData.id,
+    name: projectData.title,
+    slug: projectData.slug,
+  };
+
+  if (placeData) {
+    project.geometry = placeData.geometry_geojson;
+    project.bounding_box = placeData.bounding_box_geojson;
+  }
+  appStore.selectedProjects = [...appStore.selectedProjects, project];
+
+  // create comma seperated project_id
+  appStore.observationsApiParams.project_id = addValueToCommaSeparatedString(
+    projectData.id,
+    appStore.observationsApiParams.project_id,
+  );
+}
+
+export function processNotInProjectData(
+  projectData: ProjectsResult,
+  appStore: AppStoreType,
+) {
+  if (isIdentificationsCheck(appStore)) return;
+
+  let project: NormalizediNatProjectType = {
+    id: projectData.id,
+    name: projectData.title,
+    slug: projectData.slug,
+  };
+
+  appStore.selectedWithoutProjects = [
+    ...appStore.selectedWithoutProjects,
+    project,
+  ];
+  appStore.observationsApiParams.not_in_project =
+    addValueToCommaSeparatedString(
+      projectData.id,
+      appStore.observationsApiParams.not_in_project,
+    );
+}
+
 export function processTaxonData(
   taxonData: TaxaResult,
   appStore: AppStoreType,
@@ -496,188 +659,6 @@ export function processTaxonIdentifiedData(
     taxonData.id,
     appStore.identificationsApiParams.taxon_id,
   );
-}
-
-export function processPlaceData(
-  placeData: PlacesResult,
-  appStore: AppStoreType,
-) {
-  let isObservations = isObservationsCheck(appStore);
-
-  // save place to store
-  let bbox = placeData.bounding_box_geojson;
-  appStore.selectedPlaces = [
-    ...appStore.selectedPlaces,
-    {
-      id: placeData.id,
-      name: placeData.name,
-      display_name: placeData.display_name,
-      bounding_box: bbox,
-      geometry: placeData.geometry_geojson,
-    },
-  ];
-
-  let resourceApiParams = getResourceApiParams(isObservations);
-  // create comma seperated place_id
-  appStore[resourceApiParams].place_id = addValueToCommaSeparatedString(
-    placeData.id,
-    appStore[resourceApiParams].place_id,
-  );
-}
-
-export function processBBoxData(
-  appStore: AppStoreType,
-  urlStore: AppStoreType,
-) {
-  if (!isObservationsCheck(appStore)) return;
-  let lngLatCoors = convertiNatBBoxToLngLat(urlStore.observationsApiParams);
-  if (!lngLatCoors) return;
-
-  appStore.observationsApiParams.nelat = urlStore.observationsApiParams.nelat;
-  appStore.observationsApiParams.nelng = urlStore.observationsApiParams.nelng;
-  appStore.observationsApiParams.swlat = urlStore.observationsApiParams.swlat;
-  appStore.observationsApiParams.swlng = urlStore.observationsApiParams.swlng;
-
-  appStore.selectedPlaces = [bboxPlaceRecord(lngLatCoors)];
-}
-
-// NOTE: update when adding selectedResource; initPopulateStore
-export function processProjectData(
-  projectData: ProjectsResult,
-  appStore: AppStoreType,
-  placeData?: PlacesResult,
-) {
-  if (isIdentificationsCheck(appStore)) return;
-
-  let project: NormalizediNatProjectType = {
-    id: projectData.id,
-    name: projectData.title,
-    slug: projectData.slug,
-  };
-
-  if (placeData) {
-    project.geometry = placeData.geometry_geojson;
-    project.bounding_box = placeData.bounding_box_geojson;
-  }
-  appStore.selectedProjects = [...appStore.selectedProjects, project];
-
-  // create comma seperated project_id
-  appStore.observationsApiParams.project_id = addValueToCommaSeparatedString(
-    projectData.id,
-    appStore.observationsApiParams.project_id,
-  );
-}
-
-function processUserData(userData: UserResult, appStore: AppStoreType) {
-  if (isIdentificationsCheck(appStore)) return;
-
-  appStore.selectedUsers = [
-    ...appStore.selectedUsers,
-    {
-      id: userData.id,
-      name: userData.name,
-      login: userData.login,
-    },
-  ];
-
-  // create comma seperated user_id
-  appStore.observationsApiParams.user_id = addValueToCommaSeparatedString(
-    userData.id,
-    appStore.observationsApiParams.user_id,
-  );
-}
-
-function processUserIdentifierData(
-  userData: UserResult,
-  appStore: AppStoreType,
-) {
-  appStore.selectedUsersIdentifiers = [
-    ...appStore.selectedUsersIdentifiers,
-    {
-      id: userData.id,
-      name: userData.name,
-      login: userData.login,
-    },
-  ];
-
-  if (isObservationsCheck(appStore)) {
-    appStore.observationsApiParams.ident_user_id =
-      addValueToCommaSeparatedString(
-        userData.id,
-        appStore.observationsApiParams.ident_user_id,
-      );
-  } else {
-    appStore.identificationsApiParams.user_id = addValueToCommaSeparatedString(
-      userData.id,
-      appStore.identificationsApiParams.user_id,
-    );
-  }
-}
-
-function processUnobservedByUserData(
-  userData: UserResult,
-  appStore: AppStoreType,
-) {
-  if (isIdentificationsCheck(appStore)) return;
-
-  appStore.selectedUnobservedByUser = {
-    id: userData.id,
-    name: userData.name,
-    login: userData.login,
-  };
-
-  appStore.observationsApiParams.unobserved_by_user_id = userData.id;
-}
-
-function processReviewerData(userData: UserResult, appStore: AppStoreType) {
-  if (isIdentificationsCheck(appStore)) return;
-
-  appStore.selectedReviewer = {
-    id: userData.id,
-    name: userData.name,
-    login: userData.login,
-  };
-
-  appStore.observationsApiParams.viewer_id = userData.id;
-}
-
-function processUserAnnotatorData(
-  userData: UserResult,
-  appStore: AppStoreType,
-) {
-  if (isIdentificationsCheck(appStore)) return;
-
-  appStore.selectedUsersAnnotators = [
-    ...appStore.selectedUsersAnnotators,
-    {
-      id: userData.id,
-      name: userData.name,
-      login: userData.login,
-    },
-  ];
-
-  // create comma seperated user_id
-  appStore.observationsApiParams.annotation_user_id =
-    addValueToCommaSeparatedString(
-      userData.id,
-      appStore.observationsApiParams.annotation_user_id,
-    );
-}
-
-export function processNotInProjectData(
-  projectData: ProjectsResult,
-  appStore: AppStoreType,
-) {
-  if (isIdentificationsCheck(appStore)) return;
-
-  let project: NormalizediNatProjectType = {
-    id: projectData.id,
-    name: projectData.title,
-    slug: projectData.slug,
-  };
-
-  appStore.selectedNotInProject = project;
-  appStore.observationsApiParams.not_in_project = projectData.id.toString();
 }
 
 export function processWithoutTaxonData(
@@ -760,6 +741,144 @@ export function processWithoutTaxonIdentifiedData(
         appStore.identificationsApiParams.without_taxon_id,
       );
   }
+}
+
+function processUserData(userData: UserResult, appStore: AppStoreType) {
+  if (isIdentificationsCheck(appStore)) return;
+
+  appStore.selectedUsers = [
+    ...appStore.selectedUsers,
+    {
+      id: userData.id,
+      name: userData.name,
+      login: userData.login,
+    },
+  ];
+
+  // create comma seperated user_id
+  appStore.observationsApiParams.user_id = addValueToCommaSeparatedString(
+    userData.id,
+    appStore.observationsApiParams.user_id,
+  );
+}
+
+function processWithoutUserData(userData: UserResult, appStore: AppStoreType) {
+  if (isIdentificationsCheck(appStore)) return;
+
+  appStore.selectedWithoutUsers = [
+    ...appStore.selectedWithoutUsers,
+    {
+      id: userData.id,
+      name: userData.name,
+      login: userData.login,
+    },
+  ];
+
+  // create comma seperated user_id
+  appStore.observationsApiParams.not_user_id = addValueToCommaSeparatedString(
+    userData.id,
+    appStore.observationsApiParams.not_user_id,
+  );
+}
+
+function processUserIdentifierData(
+  userData: UserResult,
+  appStore: AppStoreType,
+) {
+  appStore.selectedUsersIdentifiers = [
+    ...appStore.selectedUsersIdentifiers,
+    {
+      id: userData.id,
+      name: userData.name,
+      login: userData.login,
+    },
+  ];
+
+  if (isObservationsCheck(appStore)) {
+    appStore.observationsApiParams.ident_user_id =
+      addValueToCommaSeparatedString(
+        userData.id,
+        appStore.observationsApiParams.ident_user_id,
+      );
+  } else {
+    appStore.identificationsApiParams.user_id = addValueToCommaSeparatedString(
+      userData.id,
+      appStore.identificationsApiParams.user_id,
+    );
+  }
+}
+
+function processWithoutUserIdentifierData(
+  userData: UserResult,
+  appStore: AppStoreType,
+) {
+  if (isIdentificationsCheck(appStore)) return;
+
+  appStore.selectedWithoutUsersIdentifiers = [
+    ...appStore.selectedWithoutUsersIdentifiers,
+    {
+      id: userData.id,
+      name: userData.name,
+      login: userData.login,
+    },
+  ];
+
+  // create comma seperated user_id
+  appStore.observationsApiParams.without_ident_user_id =
+    addValueToCommaSeparatedString(
+      userData.id,
+      appStore.observationsApiParams.without_ident_user_id,
+    );
+}
+
+function processUnobservedByUserData(
+  userData: UserResult,
+  appStore: AppStoreType,
+) {
+  if (isIdentificationsCheck(appStore)) return;
+
+  appStore.selectedUnobservedByUser = {
+    id: userData.id,
+    name: userData.name,
+    login: userData.login,
+  };
+
+  appStore.observationsApiParams.unobserved_by_user_id = userData.id;
+}
+
+function processReviewerData(userData: UserResult, appStore: AppStoreType) {
+  if (isIdentificationsCheck(appStore)) return;
+
+  appStore.selectedReviewer = {
+    id: userData.id,
+    name: userData.name,
+    login: userData.login,
+  };
+
+  appStore.observationsApiParams.viewer_id = userData.id;
+}
+
+function processUserAnnotatorData(
+  userData: UserResult,
+  appStore: AppStoreType,
+) {
+  if (isIdentificationsCheck(appStore)) return;
+
+  appStore.selectedUsersAnnotators = [
+    ...appStore.selectedUsersAnnotators,
+    {
+      id: userData.id,
+      name: userData.name,
+      login: userData.login,
+    },
+  ];
+
+  // create comma seperated user_id
+  appStore.observationsApiParams.annotation_user_id =
+    addValueToCommaSeparatedString(
+      userData.id,
+      appStore.observationsApiParams.annotation_user_id,
+    );
 }
 
 export async function initApp() {

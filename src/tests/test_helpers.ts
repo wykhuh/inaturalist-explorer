@@ -214,6 +214,8 @@ export let gridLabel_monarch = "overlay: iNat grid, taxon_id 48662";
 
 export let gridLabel_withoutLife =
   "overlay: iNat grid, taxon_id 0, without_taxon_id 48460";
+export let gridLabel_withoutLifeOak =
+  "overlay: iNat grid, taxon_id 0, without_taxon_id 48460,861036";
 
 export let gridLabel_life_la =
   "overlay: iNat grid, taxon_id 48460, place_id 962";
@@ -279,6 +281,15 @@ export let gridLabel_allTaxaRecord_project1NotInProject =
   "overlay: iNat grid, taxon_id 0, not_in_project 237729";
 export let gridLabel_allTaxaRecord_project2NotInProject =
   "overlay: iNat grid, taxon_id 0, not_in_project 229902";
+export let gridLabel_allTaxaRecord_projectsNotInProject =
+  "overlay: iNat grid, taxon_id 0, not_in_project 237729,229902";
+
+export let gridLabel_allTaxaRecord_withoutLife =
+  "overlay: iNat grid, taxon_id 0, without_taxon_id 48460";
+export let gridLabel_allTaxaRecord_withoutOak =
+  "overlay: iNat grid, taxon_id 0, without_taxon_id 861036";
+export let gridLabel_allTaxaRecord_withoutTaxa =
+  "overlay: iNat grid, taxon_id 0, without_taxon_id 48460,861036";
 
 export let gridLabel_life_la_user1 =
   "overlay: iNat grid, taxon_id 48460, place_id 962, user_id 222137";
@@ -729,6 +740,15 @@ export function expectLosAngelesPlace(store: AppStoreType, count = 0) {
   expect(store.placesMapLayers[place.id].length).toBe(1);
 }
 
+export function expectWithoutLosAngelesPlace(store: AppStoreType) {
+  let place = structuredClone(losangeles);
+  delete place.geometry;
+  delete place.bounding_box;
+
+  expect(store.selectedWithoutPlaces).toEqual([place]);
+  expect(store.placesMapLayers).toStrictEqual({});
+}
+
 export function expectLosAngelesPlaceIdentifications(
   store: AppStoreType,
   count = 0,
@@ -773,6 +793,18 @@ export function expect_LA_SD_Place(store: AppStoreType, counts = [0, 0]) {
   ]);
   expect(store.placesMapLayers[losangeles.id].length).toBe(1);
   expect(store.placesMapLayers[sandiego.id].length).toBe(1);
+}
+
+export function expect_withoutPlaces(store: AppStoreType) {
+  let place1 = structuredClone(losangeles);
+  delete place1.geometry;
+  delete place1.bounding_box;
+  let place2 = structuredClone(sandiego);
+  delete place2.geometry;
+  delete place2.bounding_box;
+
+  expect(store.selectedWithoutPlaces).toStrictEqual([place1, place2]);
+  expect(store.placesMapLayers).toStrictEqual({});
 }
 
 export function expect_LA_SD_Place_Identifications(
@@ -882,6 +914,11 @@ export function expectUser1(store: AppStoreType, count = 0) {
   expect(store.selectedUsers).toEqual([userA]);
 }
 
+export function expectWithoutUser1(store: AppStoreType) {
+  let userA = structuredClone(user1);
+  expect(store.selectedWithoutUsers).toEqual([userA]);
+}
+
 export function expectUser2(store: AppStoreType, count = 0) {
   let userB = structuredClone(user2);
   if (count > 0) {
@@ -900,6 +937,13 @@ export function expectUsers(store: AppStoreType, counts = [0, 0]) {
     userB.observations_count = Math.round(counts[1]);
   }
   expect(store.selectedUsers).toEqual([userA, userB]);
+}
+
+export function expectWithoutUsers(store: AppStoreType) {
+  let userA = structuredClone(user1);
+  let userB = structuredClone(user2);
+
+  expect(store.selectedWithoutUsers).toEqual([userA, userB]);
 }
 
 export function expectUser1Identifier(store: AppStoreType, count = 0) {

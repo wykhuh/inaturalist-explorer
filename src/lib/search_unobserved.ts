@@ -27,6 +27,7 @@ export async function unobservedByUserSelectedHandler(
   // add to store
   appStore.selectedUnobservedByUser = selection;
   resetPageNumber(appStore);
+
   appStore.observationsApiParams = {
     ...appStore.observationsApiParams,
     unobserved_by_user_id: selection.id,

@@ -7,13 +7,14 @@ export const template = html`
         Search for
         <select id="search-type" name="search-type">
           <option selected value="taxa">Observed Species</option>
-          <option value="withoutTaxa">Without Observed Species</option>
           <option value="taxaIdentified">Identified Species</option>
-          <option value="withoutTaxaIdentified">
-            Without Identified Species
-          </option>
           <option value="places">iNaturalist Places</option>
-          <option value="usersIdentifiers">Identifier</option>
+          <option value="usersIdentifiers">Identifiers</option>
+          <option value="withoutTaxa">Exclude Observed Species</option>
+          <option value="withoutTaxaIdentified">
+            Exclude Identified Species
+          </option>
+          <option value="withoutPlaces">Exclude Places</option>
         </select>
       </label>
     </div>
@@ -31,21 +32,24 @@ export const template = html`
     <h2 class="taxa-heading" hidden>Observed Species</h2>
     <ul id="selected-species-list"></ul>
 
-    <h2 class="without-taxa-heading" hidden>Without Observed Species</h2>
-    <ul id="selected-without-taxa-list"></ul>
-
     <h2 class="taxa-identified-heading" hidden>Identified Species</h2>
     <ul id="selected-species-identified-list"></ul>
-
-    <h2 class="without-taxa-identified-heading" hidden>
-      Without Identified Species
-    </h2>
-    <ul id="selected-without-taxa-identified-list"></ul>
 
     <h2 class="places-heading" hidden>Places</h2>
     <ul id="selected-places-list"></ul>
 
     <h2 class="users-identifiers-heading" hidden>Identifier</h2>
     <ul id="selected-users-identifiers-list"></ul>
+
+    <h2 class="without-taxa-heading" hidden>Exclude Observed Species</h2>
+    <ul id="selected-without-taxa-list"></ul>
+
+    <h2 class="without-taxa-identified-heading" hidden>
+      Exclude Identified Species
+    </h2>
+    <ul id="selected-without-taxa-identified-list"></ul>
+
+    <h2 class="without-places-heading" hidden>Exclude Places</h2>
+    <ul id="selected-without-places-list"></ul>
   </div>
 `;

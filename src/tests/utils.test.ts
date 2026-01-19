@@ -653,12 +653,47 @@ describe("decodeAppUrl resources", () => {
     expect(result).toStrictEqual(expected);
   });
 
+  test("returns object with taxa data if without_taxon_id is present", () => {
+    let searchParams = "?without_taxon_id=1";
+
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      selectedWithoutTaxa: [{ id: 1 }],
+      observationsApiParams: {},
+      currentView: "observations_observations",
+      record_type: "observations",
+    };
+
+    let result = decodeAppUrl(searchParams, "/");
+
+    expect(result).toStrictEqual(expected);
+  });
+
   test("returns object with place data if place_id is present", () => {
     let searchParams = "?place_id=987&spam=false&verifiable=true";
 
     let expected = {
       ...structuredClone(defaultUrlStore),
       selectedPlaces: [{ id: 987 }],
+      observationsApiParams: {
+        verifiable: true,
+        spam: false,
+      },
+      currentView: "observations_observations",
+      record_type: "observations",
+    };
+
+    let result = decodeAppUrl(searchParams, "/");
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("returns object with place data if not_in_place is present", () => {
+    let searchParams = "?not_in_place=987&spam=false&verifiable=true";
+
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      selectedWithoutPlaces: [{ id: 987 }],
       observationsApiParams: {
         verifiable: true,
         spam: false,
@@ -691,12 +726,66 @@ describe("decodeAppUrl resources", () => {
     expect(result).toStrictEqual(expected);
   });
 
+  test("returns object with project data if not_in_project is present", () => {
+    let searchParams = "?not_in_project=1";
+
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      selectedWithoutProjects: [{ id: 1 }],
+      observationsApiParams: {},
+      currentView: "observations_observations",
+      record_type: "observations",
+    };
+
+    let result = decodeAppUrl(searchParams, "/");
+
+    expect(result).toStrictEqual(expected);
+  });
+
   test("returns object with user data if user_id is present", () => {
     let searchParams = "?user_id=1&spam=false&verifiable=true";
 
     let expected = {
       ...structuredClone(defaultUrlStore),
       selectedUsers: [{ id: 1 }],
+      observationsApiParams: {
+        verifiable: true,
+        spam: false,
+      },
+      currentView: "observations_observations",
+      record_type: "observations",
+    };
+
+    let result = decodeAppUrl(searchParams, "/");
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("returns object with user data if not_user_id is present", () => {
+    let searchParams = "?not_user_id=987&spam=false&verifiable=true";
+
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      selectedWithoutUsers: [{ id: 987 }],
+      observationsApiParams: {
+        verifiable: true,
+        spam: false,
+      },
+      currentView: "observations_observations",
+      record_type: "observations",
+    };
+
+    let result = decodeAppUrl(searchParams, "/");
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("returns object with user data if without_ident_user_id is present", () => {
+    let searchParams = "?without_ident_user_id=987&spam=false&verifiable=true";
+
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      selectedWithoutUsersIdentifiers: [{ id: 987 }],
       observationsApiParams: {
         verifiable: true,
         spam: false,
@@ -803,38 +892,6 @@ describe("decodeAppUrl resources", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test("returns object with project data if not_in_project is present", () => {
-    let searchParams = "?not_in_project=1";
-
-    let expected = {
-      ...structuredClone(defaultUrlStore),
-      selectedNotInProject: { id: 1 },
-      observationsApiParams: { not_in_project: 1 },
-      currentView: "observations_observations",
-      record_type: "observations",
-    };
-
-    let result = decodeAppUrl(searchParams, "/");
-
-    expect(result).toStrictEqual(expected);
-  });
-
-  test("returns object with taxa data if without_taxon_id is present", () => {
-    let searchParams = "?without_taxon_id=1";
-
-    let expected = {
-      ...structuredClone(defaultUrlStore),
-      selectedWithoutTaxa: [{ id: 1 }],
-      observationsApiParams: {},
-      currentView: "observations_observations",
-      record_type: "observations",
-    };
-
-    let result = decodeAppUrl(searchParams, "/");
-
-    expect(result).toStrictEqual(expected);
-  });
-
   test(
     "returns taxa, place, project, user data if taxon_id, place_id, " +
       "project_id, user_id are present",
@@ -904,12 +961,15 @@ describe("decodeAppUrl options", () => {
       // NOTE: update when adding selectedResource; autocomplete
       if (name == "unobserved_by_user_id") {
         expected.selectedUnobservedByUser = { id: value };
+        expected.observationsApiParams.unobserved_by_user_id = value;
       }
       if (name == "viewer_id") {
         expected.selectedReviewer = { id: value };
+        expected.observationsApiParams.viewer_id = value;
       }
       if (name == "not_in_project") {
         expected.selectedNotInProject = { id: value };
+        expected.observationsApiParams.not_in_project = value;
       }
 
       let result = decodeAppUrl(searchParams, "/");
@@ -1086,7 +1146,7 @@ describe("decodeAppUrl options", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test("updates observationsApiParams and metadata with page, order, order_by", () => {
+  test("returns object with page, order, order_by", () => {
     let searchParams = "?page=2&order=desc&order_by=id";
     let expected = {
       ...structuredClone(defaultUrlStore),

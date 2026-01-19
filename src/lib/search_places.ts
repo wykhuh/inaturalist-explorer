@@ -154,6 +154,7 @@ export async function placeSelectedHandler(
   let resourceApiParams = getResourceApiParams(isObservations);
   appStore.selectedPlaces = [...appStore.selectedPlaces, place];
   resetPageNumber(appStore);
+
   appStore[resourceApiParams] = {
     ...appStore[resourceApiParams],
     place_id: addValueToCommaSeparatedString(
@@ -207,6 +208,8 @@ export function renderPlacesList(appStore: AppStoreType) {
       observations_count: place.observations_count,
       identifications_count: place.identifications_count,
     });
+    templateEl.dataset.type = "place";
+
     listEl.appendChild(templateEl);
   });
 }

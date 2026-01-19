@@ -27,6 +27,7 @@ export async function reviewerSelectedHandler(
   // add to store
   appStore.selectedReviewer = selection;
   resetPageNumber(appStore);
+
   appStore.observationsApiParams = {
     ...appStore.observationsApiParams,
     viewer_id: selection.id,

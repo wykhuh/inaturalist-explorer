@@ -3,6 +3,7 @@ import { loggerRender } from "../../lib/logger";
 import { removeUser } from "../../lib/search_users";
 import { removeUserAnnotator } from "../../lib/search_users_annotators";
 import { removeUserIdentifier } from "../../lib/search_users_identifiers";
+import { removeWithoutUser } from "../../lib/search_without_users";
 import { renderSelectedCounts } from "../../lib/selected_items_utils";
 import type { AppStoreType, NormalizediNatUserType } from "../../types/app";
 import { template } from "./template";
@@ -35,7 +36,9 @@ class SelectedUsersItem extends HTMLElement {
       nameEl.textContent = text;
     }
 
-    renderSelectedCounts(user, appStore, this);
+    if (["observer", "identifier", "annotator"].includes(userType)) {
+      renderSelectedCounts(user, appStore, this);
+    }
 
     let butttonEl = this.querySelector(".close-button");
     if (butttonEl) {
@@ -48,6 +51,8 @@ class SelectedUsersItem extends HTMLElement {
             await removeUserIdentifier(user.id, window.app.store);
           } else if (userType === "annotator") {
             await removeUserAnnotator(user.id, window.app.store);
+          } else if (userType === "withoutObserver") {
+            await removeWithoutUser(user.id, window.app.store);
           } else {
             throw Error("need to add remove function for " + userType);
           }

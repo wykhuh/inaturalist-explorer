@@ -135,6 +135,7 @@ export async function projectSelectedHandler(
   // add project to store
   appStore.selectedProjects = [...appStore.selectedProjects, project];
   resetPageNumber(appStore);
+
   appStore.observationsApiParams = {
     ...appStore.observationsApiParams,
     project_id: addValueToCommaSeparatedString(
@@ -177,6 +178,7 @@ export function renderProjectsList(appStore: AppStoreType) {
   appStore.selectedProjects.forEach((project) => {
     let templateEl = document.createElement("projects-list-item");
     templateEl.dataset.project = JSON.stringify(project);
+    templateEl.dataset.type = "project";
     listEl.appendChild(templateEl);
   });
 }

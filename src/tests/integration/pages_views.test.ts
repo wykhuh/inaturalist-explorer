@@ -229,7 +229,6 @@ describe("click on site header to change page", () => {
     ) as HTMLDivElement;
     let expectedLife = structuredClone(lifeIdentification());
     delete expectedLife.color;
-    delete expectedLife.observations_count;
 
     let searchparams = "";
     let urlData = decodeAppUrl(searchparams, "/identifications/");
@@ -281,9 +280,9 @@ describe("click on site header to change page", () => {
     expect(store.currentView).toStrictEqual("identifications_observations");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
+      per_page: perPage,
       taxon_id: `${defaultTaxa.id}`,
       colors: iNatOrange,
-      per_page: perPage,
     });
     expect(store.identificationsApiParams).toStrictEqual({
       per_page: perPage,

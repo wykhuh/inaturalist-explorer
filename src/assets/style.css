@@ -1363,7 +1363,11 @@
   ul#selected-users-annotators-list,
   ul#selected-species-identified-list,
   ul#selected-without-taxa-list,
-  ul#selected-without-taxa-identified-list {
+  ul#selected-without-taxa-identified-list,
+  ul#selected-without-places-list,
+  ul#selected-without-projects-list,
+  ul#selected-without-users-list,
+  ul#selected-without-users-identifiers-list {
     padding: 0;
     list-style: none;
 

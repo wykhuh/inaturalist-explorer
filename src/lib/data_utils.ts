@@ -163,6 +163,35 @@ export async function addDefaultTaxaRecordToMap(appStore: AppStoreType) {
   await fetchiNatMapDataForTaxon(structuredClone(allTaxaRecord), appStore);
 }
 
+export function removeDefaultTaxaFromStoreAndMap(appStore: AppStoreType) {
+  let layerControl = appStore.map.layerControl;
+  let isObservations = isObservationsCheck(appStore);
+
+  if (layerControl) {
+    // remove from map
+    Object.values(appStore.taxaMapLayers).forEach((layers) => {
+      layers.forEach((layer) => {
+        // remove layer from layer control
+        layerControl.removeLayer(layer);
+        // remove layer from map
+        layer.remove();
+      });
+    });
+  }
+
+  // remove from store
+
+  if (isObservations) {
+    delete appStore.observationsApiParams.taxon_id;
+    delete appStore.observationsApiParams.colors;
+  } else {
+    delete appStore.identificationsApiParams.observation_taxon_id;
+  }
+  appStore.selectedTaxa = [];
+  appStore.taxaMapLayers = {};
+  appStore.color = "";
+}
+
 // ================
 // map layers
 // ================
@@ -349,6 +378,10 @@ export function removeIdfromInatApiParams(
     if (isObservations) {
       removeResourceId(appStore, resource, "annotation_user_id", value);
     }
+  } else if (resource === "selectedWithoutPlaces") {
+    if (isObservations) {
+      removeResourceId(appStore, resource, "not_in_place", value);
+    }
   } else if (resource === "selectedWithoutTaxa") {
     if (isObservations) {
       removeResourceId(appStore, resource, "without_taxon_id", value);
@@ -364,6 +397,12 @@ export function removeIdfromInatApiParams(
     if (isIdentifications) {
       removeResourceId(appStore, resource, "without_taxon_id", value);
     }
+  } else if (resource === "selectedWithoutProjects") {
+    removeResourceId(appStore, resource, "not_in_project", value);
+  } else if (resource === "selectedWithoutUsers") {
+    removeResourceId(appStore, resource, "not_user_id", value);
+  } else if (resource === "selectedWithoutUsersIdentifiers") {
+    removeResourceId(appStore, resource, "without_ident_user_id", value);
   } else {
     throw new Error(
       `removeIdfromInatApiParams not implemented for ${resource}`,

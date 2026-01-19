@@ -8,12 +8,16 @@ export const template = html`
         <select id="search-type" name="search-type">
           <!--  // NOTE: update when adding selectedResource -->
           <option selected value="taxa">Species</option>
-          <option value="withoutTaxa">Without Species</option>
           <option value="places">iNaturalist Places</option>
           <option value="projects">Projects</option>
           <option value="users">Observers</option>
           <option value="usersIdentifiers">Identifiers</option>
           <option value="usersAnnotators">Annotators</option>
+          <option value="withoutTaxa">Exclude Species</option>
+          <option value="withoutPlaces">Exclude Places</option>
+          <option value="withoutProjects">Exclude Projects</option>
+          <option value="withoutUsers">Exclude Observers</option>
+          <option value="withoutUsersIdentifiers">Exclude Identifiers</option>
         </select>
       </label>
     </div>
@@ -29,11 +33,8 @@ export const template = html`
     </div>
 
     <!--  // NOTE: update when adding selectedResource -->
-    <h2 class="taxa-heading">Species</h2>
+    <h2 class="taxa-heading" hidden>Observed Species</h2>
     <ul id="selected-species-list"></ul>
-
-    <h2 class="without-taxa-heading" hidden>Without Species</h2>
-    <ul id="selected-without-taxa-list"></ul>
 
     <h2 class="places-heading" hidden>Places</h2>
     <ul id="selected-places-list"></ul>
@@ -49,5 +50,22 @@ export const template = html`
 
     <h2 class="users-annotators-heading" hidden>Annotators</h2>
     <ul id="selected-users-annotators-list"></ul>
+
+    <h2 class="without-taxa-heading" hidden>Exclude Species</h2>
+    <ul id="selected-without-taxa-list"></ul>
+
+    <h2 class="without-places-heading" hidden>Exclude Places</h2>
+    <ul id="selected-without-places-list"></ul>
+
+    <h2 class="without-projects-heading" hidden>Exclude Projects</h2>
+    <ul id="selected-without-projects-list"></ul>
+
+    <h2 class="without-users-heading" hidden>Exclude Observers</h2>
+    <ul id="selected-without-users-list"></ul>
+
+    <h2 class="without-users-identifiers-heading" hidden>
+      Exclude Identifiers
+    </h2>
+    <ul id="selected-without-users-identifiers-list"></ul>
   </div>
 `;

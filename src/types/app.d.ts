@@ -23,22 +23,29 @@ type RouterType = {
 };
 
 export interface AppStoreType {
+  // selected resources
   // NOTE: update when adding selectedResource AppStoreType
   selectedPlaces: NormalizediNatPlaceType[];
+  selectedWithoutPlaces: NormalizediNatPlaceType[];
   selectedTaxa: NormalizediNatTaxonType[];
+  selectedWithoutTaxa: NormalizediNatTaxonType[];
   selectedTaxaIdentified: NormalizediNatTaxonType[];
+  selectedWithoutTaxaIdentified: NormalizediNatTaxonType[];
   selectedUsers: NormalizediNatUserType[];
+  selectedWithoutUsers: NormalizediNatUserType[];
   selectedUsersIdentifiers: NormalizediNatUserType[];
+  selectedWithoutUsersIdentifiers: NormalizediNatUserType[];
   selectedUnobservedByUser: NormalizediNatUserType;
   selectedUsersAnnotators: NormalizediNatUserType[];
   selectedReviewer: NormalizediNatUserType;
   selectedProjects: NormalizediNatProjectType[];
-  selectedNotInProject: NormalizediNatProjectType;
-  selectedWithoutTaxa: NormalizediNatTaxonType[];
-  selectedWithoutTaxaIdentified: NormalizediNatTaxonType[];
+  selectedWithoutProjects: NormalizediNatProjectType[];
+  // map layers
   taxaMapLayers: { [index: string]: TileLayer[] };
+  taxaIdentifiedMapLayers?: { [index: string]: TileLayer[] };
   placesMapLayers: { [index: string]: CustomGeoJSONType[] };
   projectsMapLayers?: { [index: string]: CustomGeoJSONType[] };
+  // misc
   observationsApiParams: ObservationsApiParamsType;
   identificationsApiParams: IdentificationsApiParamsType;
   color: string;
@@ -150,17 +157,20 @@ export type AppStoreKeysType = keyof AppStoreType;
 // NOTE: update when adding selectedResource
 export type AppStoreSelectedResourcesKeysType =
   | "selectedPlaces"
+  | "selectedWithoutPlaces"
   | "selectedProjects"
+  | "selectedWithoutProjects"
   | "selectedTaxa"
   | "selectedWithoutTaxa"
   | "selectedTaxaIdentified"
   | "selectedWithoutTaxaIdentified"
   | "selectedUsers"
+  | "selectedWithoutUsers"
   | "selectedUsersAnnotators"
-  | "selectedUsersIdentifiers";
+  | "selectedUsersIdentifiers"
+  | "selectedWithoutUsersIdentifiers";
 
 export type AppStoreSelectedResourceKeysType =
-  | "selectedNotInProject"
   | "selectedReviewer"
   | "selectedUnobservedByUser";
 
@@ -309,6 +319,7 @@ interface IdentificationsApiParamsType {
   colors?: string; // comma-seperated string
   order?: string;
   order_by?: string;
+  not_in_place?: string; // array of number
 
   // filterable
   d1?: string; // date
@@ -460,9 +471,13 @@ export type PlaceTypesKey = keyof PlaceTypes;
 // NOTE: update when adding selectedResource; SearchOptions type
 type SearchOptions = {
   places: SearchOption;
+  withoutPlaces: SearchOption;
   projects: SearchOption;
+  withoutProjects: SearchOption;
   users: SearchOption;
+  withoutUsers: SearchOption;
   usersIdentifiers: SearchOption;
+  withoutUsersIdentifiers: SearchOption;
   taxa: SearchOption;
   withoutTaxa: SearchOption;
   taxaIdentified: SearchOption;

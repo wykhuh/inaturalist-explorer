@@ -1,4 +1,5 @@
 import { setupComponent } from "../../lib/component_utils.ts";
+import { isObservationsCheck } from "../../lib/data_utils.ts";
 import { loggerRender } from "../../lib/logger.ts";
 import { renderTaxonNames } from "../../lib/render_utils";
 // BUG: if data_utils is imported before render_utils, there is import error
@@ -21,9 +22,9 @@ class SelectedTaxaBasicItem extends HTMLElement {
 
   async render(appStore: AppStoreType) {
     if (!this.dataset.taxon) return;
-    let taxonType = this.dataset.taxon_type;
+    let taxonType = this.dataset.type;
     if (!taxonType) return;
-    loggerRender("++ SelectedTaxaItem render");
+    loggerRender(`++ SelectedTaxaItem ${taxonType} render`);
 
     setupComponent(template, this);
 
@@ -33,7 +34,11 @@ class SelectedTaxaBasicItem extends HTMLElement {
     if (dataEl) {
       let content = renderTaxonNames(taxon, appStore);
       if (taxonType === "taxonIdentified") {
-        content += `<span class="count">${pluralize(taxon.identifications_count, "identification", true)}</span>`;
+        if (isObservationsCheck(appStore)) {
+          content += `<span class="count">${pluralize(taxon.observations_count, "observation", true)}</span>`;
+        } else {
+          content += `<span class="count">${pluralize(taxon.identifications_count, "identification", true)}</span>`;
+        }
       }
       dataEl.innerHTML = content;
     }

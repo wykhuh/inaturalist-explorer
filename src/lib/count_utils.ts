@@ -232,47 +232,94 @@ export function updateSelectedResourcesId(
   recordType = appStore.record_type,
 ) {
   let place_id = appStore.selectedPlaces.map((r) => r.id);
+  let without_place_id = appStore.selectedWithoutPlaces.map((r) => r.id);
   let project_id = appStore.selectedProjects.map((r) => r.id);
+  let without_project_id = appStore.selectedWithoutProjects.map((r) => r.id);
   let taxon_observed_id = appStore.selectedTaxa.map((r) => r.id);
+  let without_taxon_observed_id = appStore.selectedWithoutTaxa.map((r) => r.id);
   let taxon_identified_id = appStore.selectedTaxaIdentified.map((r) => r.id);
-  let unobserved_id = appStore.selectedUnobservedByUser.id;
-  let viewer_id = appStore.selectedReviewer.id;
+  let without_taxon_identified_id = appStore.selectedWithoutTaxaIdentified.map(
+    (r) => r.id,
+  );
   let user_observer_id = appStore.selectedUsers.map((r) => r.id);
+  let without_user_observer_id = appStore.selectedWithoutUsers.map((r) => r.id);
+  let user_annotator_id = appStore.selectedUsersAnnotators.map((r) => r.id);
   let user_identifier_id = appStore.selectedUsersIdentifiers.map((r) => r.id);
+  let without_user_identifier_id = appStore.selectedWithoutUsersIdentifiers.map(
+    (r) => r.id,
+  );
+  let viewer_id = appStore.selectedReviewer.id;
+  let unobserved_id = appStore.selectedUnobservedByUser.id;
+
   if (recordType === "observations") {
     if (place_id.length > 0) {
       appStore.observationsApiParams.place_id = place_id.join(",");
     }
+    if (without_place_id.length > 0) {
+      appStore.observationsApiParams.not_in_place = without_place_id.join(",");
+    }
     if (project_id.length > 0) {
       appStore.observationsApiParams.project_id = project_id.join(",");
+    }
+    if (without_project_id.length > 0) {
+      appStore.observationsApiParams.not_in_project =
+        without_project_id.join(",");
     }
     if (taxon_observed_id.length > 0) {
       appStore.observationsApiParams.taxon_id = taxon_observed_id.join(",");
     }
-    if (unobserved_id) {
-      appStore.observationsApiParams.unobserved_by_user_id = unobserved_id;
-    }
-    if (viewer_id) {
-      appStore.observationsApiParams.viewer_id = viewer_id;
+    if (without_taxon_observed_id.length > 0) {
+      appStore.observationsApiParams.without_taxon_id =
+        without_taxon_observed_id.join(",");
     }
     if (user_observer_id.length > 0) {
       appStore.observationsApiParams.user_id = user_observer_id.join(",");
+    }
+    if (without_user_observer_id.length > 0) {
+      appStore.observationsApiParams.not_user_id =
+        without_user_observer_id.join(",");
+    }
+    if (user_annotator_id.length > 0) {
+      appStore.observationsApiParams.annotation_user_id =
+        user_annotator_id.join(",");
     }
     if (user_identifier_id.length > 0) {
       appStore.observationsApiParams.ident_user_id =
         user_identifier_id.join(",");
     }
+    if (without_user_identifier_id.length > 0) {
+      appStore.observationsApiParams.without_ident_user_id =
+        without_user_identifier_id.join(",");
+    }
+    if (viewer_id) {
+      appStore.observationsApiParams.viewer_id = viewer_id;
+    }
+    if (unobserved_id) {
+      appStore.observationsApiParams.unobserved_by_user_id = unobserved_id;
+    }
   } else {
     if (place_id.length > 0) {
       appStore.identificationsApiParams.place_id = place_id.join(",");
+    }
+    if (without_place_id.length > 0) {
+      appStore.identificationsApiParams.not_in_place =
+        without_place_id.join(",");
+    }
+    if (taxon_observed_id.length > 0) {
+      appStore.identificationsApiParams.observation_taxon_id =
+        taxon_observed_id.join(",");
+    }
+    if (without_taxon_observed_id.length > 0) {
+      appStore.identificationsApiParams.without_observation_taxon_id =
+        without_taxon_observed_id.join(",");
     }
     if (taxon_identified_id.length > 0) {
       appStore.identificationsApiParams.taxon_id =
         taxon_identified_id.join(",");
     }
-    if (taxon_observed_id.length > 0) {
-      appStore.identificationsApiParams.observation_taxon_id =
-        taxon_observed_id.join(",");
+    if (without_taxon_identified_id.length > 0) {
+      appStore.identificationsApiParams.without_taxon_id =
+        without_taxon_identified_id.join(",");
     }
     if (user_identifier_id.length > 0) {
       appStore.identificationsApiParams.user_id = user_identifier_id.join(",");

@@ -37,6 +37,7 @@ export async function userAnnotatorsSelectedHandler(
     selection,
   ];
   resetPageNumber(appStore);
+
   appStore.observationsApiParams = {
     ...appStore.observationsApiParams,
     annotation_user_id: addValueToCommaSeparatedString(

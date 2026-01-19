@@ -47,6 +47,22 @@ import {
   withoutTaxonIdentifiedSelectedHandler,
 } from "./search_without_taxa_identified.ts";
 import { renderSelectResourcesLists } from "../data/app_data.ts";
+import {
+  notInProjectSelectedHandler,
+  setupNotInProjectSearch,
+} from "./search_without_project.ts";
+import {
+  setupWithoutPlacesSearch,
+  withoutPlaceSelectedHandler,
+} from "./search_without_places.ts";
+import {
+  setupWithoutUserSearch,
+  withoutUserSelectedHandler,
+} from "./search_without_users.ts";
+import {
+  setupWithoutUserIdentifierSearch,
+  withoutUserIdentifierSelectedHandler,
+} from "./search_without_users_identifiers.ts";
 
 export async function updateTilesForSelectedTaxa(appStore: AppStoreType) {
   for await (const taxon of appStore.selectedTaxa) {
@@ -99,21 +115,41 @@ export function multisearchSetup(appStore: AppStoreType) {
       setup: setupPlacesSearch,
       selectedHandler: placeSelectedHandler,
     },
+    withoutPlaces: {
+      setup: setupWithoutPlacesSearch,
+      selectedHandler: withoutPlaceSelectedHandler,
+    },
     projects: {
       setup: setupProjectSearch,
       selectedHandler: projectSelectedHandler,
+    },
+    withoutProjects: {
+      setup: setupNotInProjectSearch,
+      selectedHandler: notInProjectSelectedHandler,
     },
     users: {
       setup: setupUserSearch,
       selectedHandler: userSelectedHandler,
     },
+    withoutUsers: {
+      setup: setupWithoutUserSearch,
+      selectedHandler: withoutUserSelectedHandler,
+    },
     taxa: {
       setup: setupTaxaSearch,
       selectedHandler: taxonSelectedHandler,
     },
+    withoutTaxa: {
+      setup: setupWithoutTaxaSearch,
+      selectedHandler: withoutTaxonSelectedHandler,
+    },
     usersIdentifiers: {
       setup: setupUserIdentifierSearch,
       selectedHandler: userIdentifierSelectedHandler,
+    },
+    withoutUsersIdentifiers: {
+      setup: setupWithoutUserIdentifierSearch,
+      selectedHandler: withoutUserIdentifierSelectedHandler,
     },
     usersAnnotators: {
       setup: setupUserAnnotatorsSearch,
@@ -122,10 +158,6 @@ export function multisearchSetup(appStore: AppStoreType) {
     taxaIdentified: {
       setup: setupTaxaIdentifiedSearch,
       selectedHandler: taxonIdentifiedSelectedHandler,
-    },
-    withoutTaxa: {
-      setup: setupWithoutTaxaSearch,
-      selectedHandler: withoutTaxonSelectedHandler,
     },
     withoutTaxaIdentified: {
       setup: setupWithoutTaxaIdentifiedSearch,

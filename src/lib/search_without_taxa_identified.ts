@@ -6,7 +6,11 @@ import {
   removeIdfromInatApiParams,
   resetPageNumber,
 } from "./data_utils.ts";
-import { renderSelectedResources, showHideHeader } from "./search_utils.ts";
+import {
+  renderSelectedResources,
+  showHideHeader,
+  updateTilesForSelectedTaxa,
+} from "./search_utils.ts";
 import { setupTaxaSearch } from "./search_taxa.ts";
 import { updateCountForAll } from "./count_utils.ts";
 
@@ -41,7 +45,6 @@ export async function withoutTaxonIdentifiedSelectedHandler(
     ...appStore.selectedWithoutTaxaIdentified,
     taxon,
   ];
-
   resetPageNumber(appStore);
 
   appStore.identificationsApiParams = {
@@ -52,6 +55,7 @@ export async function withoutTaxonIdentifiedSelectedHandler(
     ),
   };
 
+  updateTilesForSelectedTaxa(appStore);
   await updateCountForAll("selectedWithoutTaxaIdentified", appStore);
   renderSelectedResources(appStore, true);
 }
@@ -66,12 +70,11 @@ export function showHideWithoutTaxaIdentifiedHeader() {
 export function renderWithoutTaxaIdentifiedList(appStore: AppStoreType) {
   let listEl = document.querySelector("#selected-without-taxa-identified-list");
   if (!listEl) return;
-
   listEl.innerHTML = "";
   appStore.selectedWithoutTaxaIdentified.forEach((taxon) => {
     let templateEl = document.createElement("species-basic-list-item");
     templateEl.dataset.taxon = JSON.stringify(taxon);
-    templateEl.dataset.taxon_type = "withoutTaxonIdentified";
+    templateEl.dataset.type = "withoutTaxonIdentified";
     listEl.appendChild(templateEl);
   });
 }
@@ -83,6 +86,7 @@ export async function removeWithoutTaxonIdentified(
 ) {
   removeOneWithoutTaxonIdentifiedFromStore(appStore, taxonId);
 
+  updateTilesForSelectedTaxa(appStore);
   await updateCountForAll("all", appStore);
   renderSelectedResources(appStore, true);
 }

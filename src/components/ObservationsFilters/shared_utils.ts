@@ -186,6 +186,8 @@ export async function updateAppWithFilters(
     results = processFiltersFormIdentifications(data);
   }
 
+  resetPageNumber(appStore);
+
   // update store observationsApiParams with form values
   updateStoreUsingFilters(appStore, results);
 
@@ -194,6 +196,5 @@ export async function updateAppWithFilters(
 
   // update UI
   renderSelectedFiltersList(results.params);
-  resetPageNumber(appStore);
   renderSelectedResources(appStore, true);
 }

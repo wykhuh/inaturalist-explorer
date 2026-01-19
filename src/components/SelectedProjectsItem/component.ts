@@ -4,6 +4,7 @@ import type { AppStoreType, NormalizediNatProjectType } from "../../types/app";
 import { loggerRender } from "../../lib/logger.ts";
 import { template } from "./template";
 import { renderSelectedCounts } from "../../lib/selected_items_utils.ts";
+import { removeWithoutProject } from "../../lib/search_without_project.ts";
 
 class MyComponent extends HTMLElement {
   constructor() {
@@ -16,7 +17,10 @@ class MyComponent extends HTMLElement {
 
   async render(appStore: AppStoreType) {
     if (!this.dataset.project) return;
+    if (!this.dataset.type) return;
     loggerRender("++ SelectedProjectsItem render");
+
+    let type = this.dataset.type;
 
     setupComponent(template, this);
 
@@ -27,13 +31,17 @@ class MyComponent extends HTMLElement {
       nameEl.textContent = project.name;
     }
 
-    renderSelectedCounts(project, appStore, this);
+    if (type === "project") {
+      renderSelectedCounts(project, appStore, this);
+    }
 
     let butttonEl = this.querySelector(".close-button");
     if (butttonEl) {
       butttonEl.addEventListener("click", async function () {
-        if (project.id !== undefined) {
+        if (type === "project") {
           await removeProject(project.id, window.app.store);
+        } else if (type === "withoutProject") {
+          await removeWithoutProject(project.id, window.app.store);
         }
       });
     }

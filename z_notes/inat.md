@@ -215,3 +215,7 @@ Patagioenas fasciata
 ==
 
 http://localhost:5173/identifications/?observation_taxon_id=81977&place_id=962&colors=%234477aa&view=identifications_identifications
+
+==
+
+http://localhost:5173/?taxon_id=3,47158&place_id=829,962&project_id=224219,224063&user_id=8159696,1518277&ident_user_id=80984,1653276&colors=%2366ccee,%23ccbb44&verifiable=true&spam=false&view=observations_species

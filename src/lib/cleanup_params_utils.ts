@@ -163,6 +163,21 @@ export let identificationOnlyParams = [
   "category",
 ];
 
+export const processedIdentificationsToObservationsParams = [
+  "observation_taxon_active",
+  "observation_created_d2",
+  "observation_created_d1",
+  "observation_rank",
+  "observation_hrank",
+  "observation_lrank",
+  "observation_taxon_id",
+  "observed_d2",
+  "observed_d1",
+  "observation_iconic_taxon_id",
+  "user_id",
+  "without_observation_taxon_id",
+];
+
 export function convertIdentificationParamsToObservationParams(
   params: IdentificationsMapTilesAPIParamsType,
 ) {
@@ -181,13 +196,10 @@ export function convertIdentificationParamsToObservationParams(
         .split(",")
         .map((id: string) => (iconicTaxaIdName as any)[id])
         .join(",");
+    } else if (key.startsWith("user_id")) {
+      cleanedParms.ident_user_id = value;
     } else if (key === "without_observation_taxon_id") {
       cleanedParms.without_taxon_id = value;
-    } else if (key.startsWith("user_id")) {
-      // NOTE: iNat API only allows one identifier for identifications,
-      // therefore we send only one ident_user_id to observations
-      let ids = value.toString().split(",");
-      cleanedParms.ident_user_id = ids[ids.length - 1];
     } else if (key.startsWith("observed_")) {
       let k = key.replace("observed_", "");
       cleanedParms[k] = value;
@@ -200,6 +212,8 @@ export function convertIdentificationParamsToObservationParams(
 
   return cleanedParms;
 }
+
+export const ignoreMapParams = ["page", "per_page", "view", "subview"];
 
 function cleanupMapParams(rawParams: MapTilesAPIParamsType) {
   let validParams = observationsApiNames.concat(identificationsApiNames);
@@ -222,18 +236,12 @@ function cleanupMapParams(rawParams: MapTilesAPIParamsType) {
     (rawParams as any)["color"] = rawParams.colors?.split(",")[0];
     delete rawParams.colors;
   }
-  if (rawParams.page) {
-    delete rawParams.page;
-  }
-  if (rawParams.per_page) {
-    delete rawParams.per_page;
-  }
-  if (rawParams.view) {
-    delete rawParams.view;
-  }
-  if (rawParams.subview) {
-    delete rawParams.subview;
-  }
+
+  ignoreMapParams.forEach((param) => {
+    if (rawParams[param]) {
+      delete rawParams[param];
+    }
+  });
 }
 
 // convert fields for /identifications to work with map tiles
@@ -247,7 +255,6 @@ export function cleanupIdentificationsMapParams(
   if (!cleanedParms.color) {
     cleanedParms.color = iNatOrange;
   }
-
   return cleanedParms;
 }
 

@@ -8,6 +8,8 @@ import {
   cleanupObservationsMapParams,
   convertIdentificationParamsToObservationParams,
   identificationOnlyParams,
+  ignoreMapParams,
+  processedIdentificationsToObservationsParams,
 } from "../lib/cleanup_params_utils";
 import { mapStore } from "../lib/store.ts";
 import { defaultQuery } from "./test_helpers.ts";
@@ -18,6 +20,12 @@ import {
   observationsApiFilterableNames,
 } from "../data/app_data.ts";
 import type { ObservationsApiParamsKeysType } from "../types/app";
+
+let allowedIdentificationsParams = identificationsApiNames.filter(
+  (p) =>
+    !identificationOnlyParams.includes(p) &&
+    !processedIdentificationsToObservationsParams.includes(p),
+);
 
 describe("cleanupObervationsParams", () => {
   test("if no changes to store params, returns spam=false", () => {
@@ -205,7 +213,6 @@ describe("cleanupIdentificationsMapParams", () => {
   test("ignores params for identifications fields ", () => {
     let store = structuredClone(mapStore);
     store.identificationsApiParams = {
-      taxon_id: "10,11",
       d1: "2000-01-01",
       d2: "2000-02-02",
       iconic_taxon_id: "1,2",
@@ -251,29 +258,13 @@ describe("cleanupIdentificationsMapParams", () => {
     expect(results).toStrictEqual({ color: iNatOrange });
   });
 
-  test("works with all store.identificationAPIParams", () => {
+  test.each(
+    allowedIdentificationsParams.filter((p) => !ignoreMapParams.includes(p)),
+  )("returns allowed params", (param) => {
     let store = structuredClone(mapStore);
     store.identificationsApiParams = {
-      place_id: "1,2",
-      taxon_id: "10,11",
-      observation_taxon_id: "20,21",
-      user_id: "30,31",
-      page: 1,
-      per_page: 10,
-      d1: "2000-01-01",
-      d2: "2000-02-02",
-      iconic_taxon_id: "1,2",
-      hrank: "kingdom",
-      lrank: "phylum",
-      observed_d1: "2000-03-03",
-      observed_d2: "2000-04-04",
-      observation_iconic_taxon_id: "3,20978",
-      observation_hrank: "genus",
-      observation_lrank: "species",
-      quality_grade: "research",
-      view: "observation",
-      subview: "grid",
-      colors: "red,blue",
+      colors: "#f16f3a",
+      [param]: true,
     };
 
     let results = cleanupIdentificationsMapParams(
@@ -281,16 +272,8 @@ describe("cleanupIdentificationsMapParams", () => {
     );
 
     expect(results).toStrictEqual({
-      color: "red",
-      d1: "2000-03-03",
-      d2: "2000-04-04",
-      hrank: "genus",
-      iconic_taxa: "Aves,Amphibia",
-      lrank: "species",
-      place_id: "1,2",
-      quality_grade: "research",
-      taxon_id: "20,21",
-      ident_user_id: "31",
+      color: "#f16f3a",
+      [param]: true,
     });
   });
 });
@@ -387,26 +370,7 @@ describe("cleanupObservationsMapParams", () => {
 });
 
 describe("cleanupIdentificationsObservationsParams", () => {
-  let processedParams = [
-    "observation_taxon_active",
-    "observation_created_d2",
-    "observation_created_d1",
-    "observation_rank",
-    "observation_hrank",
-    "observation_lrank",
-    "observation_taxon_id",
-    "observed_d2",
-    "observed_d1",
-    "observation_iconic_taxon_id",
-    "without_observation_taxon_id",
-    "user_id",
-  ];
-  let skipParams = processedParams.concat(identificationOnlyParams);
-  let allowedParams = identificationsApiNames.filter(
-    (p) => !skipParams.includes(p),
-  );
-
-  test.each(allowedParams)("returns allowed params", (param) => {
+  test.each(allowedIdentificationsParams)("returns allowed params", (param) => {
     let store = structuredClone(mapStore);
     store.identificationsApiParams = { [param]: true };
 
@@ -494,7 +458,19 @@ describe("cleanupIdentificationsObservationsParams", () => {
     });
   });
 
-  test("converts user_id to ident_user_id and only allow last id", () => {
+  test("doe not convert taxon_id", () => {
+    let store = structuredClone(mapStore);
+    store.identificationsApiParams = {
+      taxon_id: "1,3",
+    };
+    let res = convertIdentificationParamsToObservationParams(
+      store.identificationsApiParams,
+    );
+
+    expect(res).toStrictEqual({});
+  });
+
+  test("converts user_id to ident_user_id", () => {
     let store = structuredClone(mapStore);
     store.identificationsApiParams = {
       user_id: "1,3",
@@ -504,7 +480,7 @@ describe("cleanupIdentificationsObservationsParams", () => {
     );
 
     expect(res).toStrictEqual({
-      ident_user_id: "3",
+      ident_user_id: "1,3",
     });
   });
 

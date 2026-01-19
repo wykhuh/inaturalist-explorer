@@ -4,7 +4,6 @@ import type {
   AppStoreType,
   AppStoreKeysType,
   NormalizediNatUserType,
-  NormalizediNatProjectType,
 } from "../types/app.d.ts";
 import { loggerEvent, loggerStore } from "./logger.ts";
 
@@ -12,17 +11,20 @@ import { loggerEvent, loggerStore } from "./logger.ts";
 export const mapStore: AppStoreType = {
   placesMapLayers: {},
   selectedPlaces: [],
+  selectedWithoutPlaces: [],
   selectedProjects: [],
+  selectedWithoutProjects: [],
   selectedReviewer: {} as NormalizediNatUserType,
   selectedTaxa: [],
-  selectedTaxaIdentified: [],
   selectedWithoutTaxa: [],
+  selectedTaxaIdentified: [],
   selectedWithoutTaxaIdentified: [],
   selectedUnobservedByUser: {} as NormalizediNatUserType,
   selectedUsers: [],
+  selectedWithoutUsers: [],
   selectedUsersAnnotators: [],
   selectedUsersIdentifiers: [],
-  selectedNotInProject: {} as NormalizediNatProjectType,
+  selectedWithoutUsersIdentifiers: [],
   taxaMapLayers: {},
   observationsApiParams: { verifiable: true, spam: false, locale: "en" },
   identificationsApiParams: {},
