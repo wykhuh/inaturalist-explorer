@@ -231,13 +231,17 @@ export function updateSelectedResourcesId(
   appStore: AppStoreType,
   recordType = appStore.record_type,
 ) {
-  let place_id = appStore.selectedPlaces.map((r) => r.id);
+  let place_id = appStore.selectedPlaces.map((r) => r.id).filter((id) => id);
   let without_place_id = appStore.selectedWithoutPlaces.map((r) => r.id);
   let project_id = appStore.selectedProjects.map((r) => r.id);
   let without_project_id = appStore.selectedWithoutProjects.map((r) => r.id);
-  let taxon_observed_id = appStore.selectedTaxa.map((r) => r.id);
+  let taxon_observed_id = appStore.selectedTaxa
+    .map((r) => r.id)
+    .filter((id) => id);
   let without_taxon_observed_id = appStore.selectedWithoutTaxa.map((r) => r.id);
-  let taxon_identified_id = appStore.selectedTaxaIdentified.map((r) => r.id);
+  let taxon_identified_id = appStore.selectedTaxaIdentified
+    .map((r) => r.id)
+    .filter((id) => id);
   let without_taxon_identified_id = appStore.selectedWithoutTaxaIdentified.map(
     (r) => r.id,
   );
@@ -251,6 +255,7 @@ export function updateSelectedResourcesId(
   let viewer_id = appStore.selectedReviewer.id;
   let unobserved_id = appStore.selectedUnobservedByUser.id;
 
+  // switch from identifications to observations
   if (recordType === "observations") {
     if (place_id.length > 0) {
       appStore.observationsApiParams.place_id = place_id.join(",");
@@ -271,6 +276,10 @@ export function updateSelectedResourcesId(
     if (without_taxon_observed_id.length > 0) {
       appStore.observationsApiParams.without_taxon_id =
         without_taxon_observed_id.join(",");
+    }
+    if (taxon_identified_id.length > 0) {
+      appStore.observationsApiParams.ident_taxon_id =
+        taxon_identified_id.join(",");
     }
     if (user_observer_id.length > 0) {
       appStore.observationsApiParams.user_id = user_observer_id.join(",");
@@ -297,6 +306,7 @@ export function updateSelectedResourcesId(
     if (unobserved_id) {
       appStore.observationsApiParams.unobserved_by_user_id = unobserved_id;
     }
+    // switch from observations to identifications
   } else {
     if (place_id.length > 0) {
       appStore.identificationsApiParams.place_id = place_id.join(",");

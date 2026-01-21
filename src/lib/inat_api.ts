@@ -2,7 +2,7 @@ import type {
   iNatObservationTilesSettingsType,
   MapTilesAPIParamsType,
   NormalizediNatTaxonType,
-  ObservationsApiParamsType,
+  RecordTypes,
 } from "../types/app";
 import type {
   iNatObservationsSpeciesCountAPI,
@@ -40,37 +40,43 @@ const projects_api = "https://api.inaturalist.org/v1/projects/";
 const users_api = "https://api.inaturalist.org/v1/users/";
 
 function formatDescription(
-  observationsApiParams: ObservationsApiParamsType,
+  mapTilesApiParams: MapTilesAPIParamsType,
+  recordType: RecordTypes,
   type: string,
 ) {
   // NOTE: update when adding selectedResource; map layer name
-  let text = `overlay: iNat ${type}, taxon_id ${observationsApiParams.taxon_id || 0}`;
-  if (observationsApiParams.place_id) {
-    text += `, place_id ${observationsApiParams.place_id}`;
+  let text = `overlay: iNat ${type}`;
+  if (recordType === "observations") {
+    text += `, taxon_id ${mapTilesApiParams.taxon_id || 0}`;
+  } else {
+    text += `, ident_taxon_id ${mapTilesApiParams.ident_taxon_id || 0}`;
   }
-  if (observationsApiParams.project_id) {
-    text += `, project_id ${observationsApiParams.project_id}`;
+  if (mapTilesApiParams.place_id) {
+    text += `, place_id ${mapTilesApiParams.place_id}`;
   }
-  if (observationsApiParams.user_id) {
-    text += `, user_id ${observationsApiParams.user_id}`;
+  if (mapTilesApiParams.project_id) {
+    text += `, project_id ${mapTilesApiParams.project_id}`;
   }
-  if (observationsApiParams.ident_user_id) {
-    text += `, ident_user_id ${observationsApiParams.ident_user_id}`;
+  if (mapTilesApiParams.user_id) {
+    text += `, user_id ${mapTilesApiParams.user_id}`;
   }
-  if (observationsApiParams.unobserved_by_user_id) {
-    text += `, unobserved_by_user_id ${observationsApiParams.unobserved_by_user_id}`;
+  if (mapTilesApiParams.ident_user_id) {
+    text += `, ident_user_id ${mapTilesApiParams.ident_user_id}`;
   }
-  if (observationsApiParams.viewer_id) {
-    text += `, viewer_id ${observationsApiParams.viewer_id}`;
+  if (mapTilesApiParams.unobserved_by_user_id) {
+    text += `, unobserved_by_user_id ${mapTilesApiParams.unobserved_by_user_id}`;
   }
-  if (observationsApiParams.annotation_user_id) {
-    text += `, annotation_user_id ${observationsApiParams.annotation_user_id}`;
+  if (mapTilesApiParams.viewer_id) {
+    text += `, viewer_id ${mapTilesApiParams.viewer_id}`;
   }
-  if (observationsApiParams.not_in_project) {
-    text += `, not_in_project ${observationsApiParams.not_in_project}`;
+  if (mapTilesApiParams.annotation_user_id) {
+    text += `, annotation_user_id ${mapTilesApiParams.annotation_user_id}`;
   }
-  if (observationsApiParams.without_taxon_id) {
-    text += `, without_taxon_id ${observationsApiParams.without_taxon_id}`;
+  if (mapTilesApiParams.not_in_project) {
+    text += `, not_in_project ${mapTilesApiParams.not_in_project}`;
+  }
+  if (mapTilesApiParams.without_taxon_id) {
+    text += `, without_taxon_id ${mapTilesApiParams.without_taxon_id}`;
   }
   return text;
 }
@@ -78,6 +84,7 @@ function formatDescription(
 export const getiNatMapTiles = (
   mapTilesApiParams: MapTilesAPIParamsType,
   taxonObj: NormalizediNatTaxonType,
+  recordType: RecordTypes,
 ): iNatObservationTilesSettingsType => {
   let dupParams = structuredClone(mapTilesApiParams) as any;
   if (dupParams.taxon_id === "0") {
@@ -103,7 +110,11 @@ export const getiNatMapTiles = (
           'Observation data by <a href="https://www.inaturalist.org/">iNaturalist</a>.',
         minZoom: 0,
         maxZoom: 21,
-        layer_description: formatDescription(mapTilesApiParams, "grid"),
+        layer_description: formatDescription(
+          mapTilesApiParams,
+          recordType,
+          "grid",
+        ),
         control_name: `${taxonObj.title} Grid`,
       },
     },
@@ -116,7 +127,11 @@ export const getiNatMapTiles = (
           'Observation data by <a href="https://www.inaturalist.org/">iNaturalist</a>.',
         minZoom: 0,
         maxZoom: 21,
-        layer_description: formatDescription(mapTilesApiParams, "points"),
+        layer_description: formatDescription(
+          mapTilesApiParams,
+          recordType,
+          "points",
+        ),
         control_name: `${taxonObj.title} Points`,
       },
     },
@@ -129,7 +144,11 @@ export const getiNatMapTiles = (
           'Taxon range by <a href="https://www.inaturalist.org/">iNaturalist</a>.',
         minZoom: 0,
         maxZoom: 21,
-        layer_description: formatDescription(mapTilesApiParams, "taxon range"),
+        layer_description: formatDescription(
+          mapTilesApiParams,
+          recordType,
+          "taxon range",
+        ),
         control_name: `${taxonObj.title} Taxon Range`,
       },
     },
@@ -142,15 +161,20 @@ export const getiNatMapTiles = (
           'Observation data by <a href="https://www.inaturalist.org/">iNaturalist</a>.',
         minZoom: 0,
         maxZoom: 21,
-        layer_description: formatDescription(mapTilesApiParams, "heatmap"),
+        layer_description: formatDescription(
+          mapTilesApiParams,
+          recordType,
+          "heatmap",
+        ),
         control_name: `${taxonObj.title} Heatmap`,
       },
     },
   };
 
-  if (dupParams.taxon_id === "0" || dupParams.taxon_id === undefined) {
+  if (taxonObj.id === 0 || taxonObj.id === undefined) {
     delete tiles.iNatTaxonRange;
   }
+
   return tiles;
 };
 

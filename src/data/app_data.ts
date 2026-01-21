@@ -135,7 +135,7 @@ export const selectedResourcesIdObservations: {
   selectedWithoutProjects: "not_in_project",
   selectedTaxa: "taxon_id",
   selectedWithoutTaxa: "without_taxon_id",
-  selectedTaxaIdentified: null,
+  selectedTaxaIdentified: "ident_taxon_id",
   selectedWithoutTaxaIdentified: null,
   selectedUsers: "user_id",
   selectedWithoutUsers: "not_user_id",
@@ -279,6 +279,7 @@ export const observationsApiNonFilterableNames: ObservationsApiParamsKeysType[] 
     "not_in_project",
     "taxon_id",
     "without_taxon_id",
+    "ident_taxon_id", // array
     "user_id",
     "not_user_id",
     "annotation_user_id",
@@ -369,7 +370,6 @@ const observationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   "id_above",
   "id_below",
   "id_please",
-  "ident_taxon_id", // integer
   "identifications",
   "lat",
   "licensed",

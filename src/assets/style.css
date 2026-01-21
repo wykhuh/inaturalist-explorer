@@ -1396,7 +1396,8 @@
     }
   }
 
-  ul#selected-species-list {
+  ul#selected-species-list,
+  ul#selected-species-identified-list {
     padding: 0;
     list-style: none;
 

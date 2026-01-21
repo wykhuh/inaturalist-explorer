@@ -179,6 +179,7 @@ export let iNatOrange = "#f16f3a";
 export let iNatGreen = "#86a91c";
 
 export let defaultColorScheme = colorsSixTolBright;
+export let secondaryColorScheme = colorsSixDivergeGroup[3];
 
 export function getColor(appStore: AppStoreType, colorArray: string[]) {
   let color = appStore.color;

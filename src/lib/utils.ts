@@ -369,7 +369,22 @@ export function decodeAppUrl(searchParams: string, path = "/") {
       );
       store.selectedTaxa = taxa;
     } else {
-      let taxa = formatBasicRecords(urlParams.taxon_id);
+      let taxa = formatBasicTaxaRecords(
+        urlParams.taxon_id,
+        urlParams.colors,
+        store,
+      );
+      store.selectedTaxaIdentified = taxa;
+    }
+  }
+
+  if ("ident_taxon_id" in urlParams && urlParams.ident_taxon_id !== "any") {
+    if (isObservations) {
+      let taxa = formatBasicTaxaRecords(
+        urlParams.ident_taxon_id,
+        urlParams.colors,
+        store,
+      );
       store.selectedTaxaIdentified = taxa;
     }
   }

@@ -26,6 +26,7 @@ export const mapStore: AppStoreType = {
   selectedUsersIdentifiers: [],
   selectedWithoutUsersIdentifiers: [],
   taxaMapLayers: {},
+  taxaIdentifiedMapLayers: {},
   observationsApiParams: { verifiable: true, spam: false, locale: "en" },
   identificationsApiParams: {},
   color: "",

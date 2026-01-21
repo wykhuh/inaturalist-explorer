@@ -2,6 +2,7 @@ import { setupComponent } from "../../lib/component_utils.ts";
 import { isObservationsCheck } from "../../lib/data_utils.ts";
 import { loggerRender } from "../../lib/logger.ts";
 import { renderTaxonNames } from "../../lib/render_utils";
+import { removeTaxon } from "../../lib/search_taxa.ts";
 // BUG: if data_utils is imported before render_utils, there is import error
 // with defaultColorScheme
 import { removeTaxonIdentified } from "../../lib/search_taxa_identified.ts";
@@ -33,12 +34,10 @@ class SelectedTaxaBasicItem extends HTMLElement {
     let dataEl = this.querySelector(".data");
     if (dataEl) {
       let content = renderTaxonNames(taxon, appStore);
-      if (taxonType === "taxonIdentified") {
-        if (isObservationsCheck(appStore)) {
-          content += `<span class="count">${pluralize(taxon.observations_count, "observation", true)}</span>`;
-        } else {
-          content += `<span class="count">${pluralize(taxon.identifications_count, "identification", true)}</span>`;
-        }
+      if (isObservationsCheck(appStore)) {
+        content += `<span class="count">${pluralize(taxon.observations_count, "observation", true)}</span>`;
+      } else {
+        content += `<span class="count">${pluralize(taxon.identifications_count, "identification", true)}</span>`;
       }
       dataEl.innerHTML = content;
     }
@@ -55,6 +54,8 @@ class SelectedTaxaBasicItem extends HTMLElement {
         // NOTE: update when adding selectedResource; remove taxon
         if (taxonType === "taxonIdentified") {
           await removeTaxonIdentified(taxon.id, window.app.store);
+        } else if (taxonType === "taxon") {
+          await removeTaxon(taxon.id, window.app.store);
         } else if (taxonType === "withoutTaxon") {
           await removeWithoutTaxon(taxon.id, window.app.store);
         } else if (taxonType === "withoutTaxonIdentified") {

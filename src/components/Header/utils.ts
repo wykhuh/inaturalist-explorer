@@ -13,32 +13,40 @@ import type {
 } from "../../types/app";
 import { viewAndTemplateObject } from "../../data/app_data";
 import {
-  addDefaultTaxaRecordToStore,
+  addDefaultTaxonToStoreAndMap,
   isIdentificationsCheck,
   isObservationsCheck,
+  removeDefaultTaxonFromStoreAndMapSwitchPage,
+  updateSelectedTaxaColor,
 } from "../../lib/data_utils";
-import { removeOneTaxonFromMap } from "../../lib/search_taxa";
 
 export async function resetDefaultTaxa(appStore: AppStoreType) {
-  if (isObservationsCheck(appStore)) {
+  if (
+    appStore.selectedTaxa.length === 0 &&
+    appStore.selectedTaxaIdentified.length === 0
+  ) {
+    await addDefaultTaxonToStoreAndMap(appStore);
+  } else if (isObservationsCheck(appStore)) {
+    if (appStore.selectedTaxaIdentified[0]?.id === 0) {
+      removeDefaultTaxonFromStoreAndMapSwitchPage(appStore);
+    }
     if (appStore.selectedTaxa.length === 0) {
-      await addDefaultTaxaRecordToStore(appStore);
+      await addDefaultTaxonToStoreAndMap(appStore);
     }
   } else if (isIdentificationsCheck(appStore)) {
-    if (
-      appStore.observationsApiParams.taxon_id === "0" &&
-      appStore.selectedTaxaIdentified.length > 0
-    ) {
-      appStore.selectedTaxa = [];
-      removeOneTaxonFromMap(appStore, 0);
-    } else if (
-      appStore.selectedTaxa.length === 0 &&
-      appStore.selectedTaxaIdentified.length === 0
-    ) {
-      await addDefaultTaxaRecordToStore(appStore);
+    if (appStore.selectedTaxa[0]?.id === 0) {
+      removeDefaultTaxonFromStoreAndMapSwitchPage(appStore);
+    }
+    if (appStore.selectedTaxaIdentified.length === 0) {
+      await addDefaultTaxonToStoreAndMap(appStore);
+    }
+  } else {
+    if (appStore.selectedTaxa[0]?.id === 0) {
+      removeDefaultTaxonFromStoreAndMapSwitchPage(appStore);
+    } else if (appStore.selectedTaxaIdentified[0]?.id === 0) {
+      removeDefaultTaxonFromStoreAndMapSwitchPage(appStore);
     }
   }
-  appStore.selectedTaxa = appStore.selectedTaxa;
 }
 
 export async function pageChangeHandler(
@@ -56,6 +64,13 @@ export async function pageChangeHandler(
 
   // update selected items ids in observationsApiParams or identificationsApiParams
   updateSelectedResourcesId(appStore);
+
+  // update taxa colors
+  if (recordType === "observations") {
+    updateSelectedTaxaColor(appStore, "selectedTaxa");
+  } else if (recordType === "identifications") {
+    updateSelectedTaxaColor(appStore, "selectedTaxaIdentified");
+  }
 
   // remove or add default taxa
   await resetDefaultTaxa(appStore);

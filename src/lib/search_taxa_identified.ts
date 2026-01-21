@@ -1,16 +1,22 @@
 import type { NormalizediNatTaxonType, AppStoreType } from "../types/app.d.ts";
 import {
-  addDefaultTaxaRecordToMap,
-  addDefaultTaxaRecordToStore,
+  addDefaultTaxonToStoreAndMap,
   addValueToCommaSeparatedString,
   formatTaxonName,
+  isIdentificationsCheck,
   isObservationsCheck,
+  removeDefaultTaxonFromStoreAndMap,
   removeIdfromInatApiParams,
   resetPageNumber,
 } from "./data_utils.ts";
-import { renderSelectedResources, showHideHeader } from "./search_utils.ts";
-import { removeTaxaFromStoreAndMap, setupTaxaSearch } from "./search_taxa.ts";
+import {
+  renderSelectedResources,
+  showHideHeader,
+  updateTilesForSelectedTaxaIdentified,
+} from "./search_utils.ts";
+import { setupTaxaSearch } from "./search_taxa.ts";
 import { updateCountForAll, updateCountForOneRecord } from "./count_utils.ts";
+import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
 
 export function setupTaxaIdentifiedSearch(
   selector: string,
@@ -28,43 +34,70 @@ export async function taxonIdentifiedSelectedHandler(
   appStore: AppStoreType,
 ) {
   let isObservations = isObservationsCheck(appStore);
-  if (isObservations) return;
+  let isIdentifications = isIdentificationsCheck(appStore);
+
+  // remove default taxon
+  if (isIdentifications) {
+    if (appStore.identificationsApiParams.taxon_id === "0") {
+      removeDefaultTaxonFromStoreAndMap(appStore);
+    }
+  }
 
   let { title, subtitle } = formatTaxonName(selection, appStore);
+  let color = getColor(appStore, defaultColorScheme);
 
   // save taxa to store
   let taxon = {
     ...selection,
     title,
     subtitle,
+    color,
   };
-
-  // remove default taxa
-  if (appStore.identificationsApiParams.observation_taxon_id === "0") {
-    removeTaxaFromStoreAndMap(appStore);
-  }
 
   appStore.selectedTaxaIdentified = [...appStore.selectedTaxaIdentified, taxon];
   resetPageNumber(appStore);
-  appStore.identificationsApiParams = {
-    ...appStore.identificationsApiParams,
-    taxon_id: addValueToCommaSeparatedString(
-      taxon.id,
-      appStore.identificationsApiParams.taxon_id,
-    ),
-  };
 
-  let recordParams = {
-    ...appStore.identificationsApiParams,
-    taxon_id: taxon.id.toString(),
-  };
+  let recordParams;
+  if (isObservations) {
+    appStore.observationsApiParams = {
+      ...appStore.observationsApiParams,
+      ident_taxon_id: addValueToCommaSeparatedString(
+        taxon.id,
+        appStore.observationsApiParams.ident_taxon_id,
+      ),
+    };
+
+    recordParams = {
+      ...appStore.observationsApiParams,
+      ident_taxon_id: taxon.id.toString(),
+    };
+  } else {
+    appStore.identificationsApiParams = {
+      ...appStore.identificationsApiParams,
+      taxon_id: addValueToCommaSeparatedString(
+        taxon.id,
+        appStore.identificationsApiParams.taxon_id,
+      ),
+      colors: addValueToCommaSeparatedString(
+        taxon.color,
+        appStore.identificationsApiParams.colors,
+      ),
+    };
+
+    recordParams = {
+      ...appStore.identificationsApiParams,
+      taxon_id: taxon.id.toString(),
+    };
+  }
+  appStore.color = color;
+
   await updateCountForOneRecord(
     taxon,
     "selectedTaxaIdentified",
     appStore,
     recordParams,
   );
-
+  await updateTilesForSelectedTaxaIdentified(appStore);
   await updateCountForAll("selectedTaxaIdentified", appStore);
   renderSelectedResources(appStore, true);
 }
@@ -82,9 +115,14 @@ export function renderTaxaIdentifiedList(appStore: AppStoreType) {
 
   listEl.innerHTML = "";
   appStore.selectedTaxaIdentified.forEach((taxon) => {
-    let templateEl = document.createElement("species-basic-list-item");
+    let element = isObservationsCheck(appStore)
+      ? "species-basic-list-item"
+      : "species-list-item";
+
+    let templateEl = document.createElement(element);
     templateEl.dataset.taxon = JSON.stringify(taxon);
     templateEl.dataset.type = "taxonIdentified";
+
     listEl.appendChild(templateEl);
   });
 }
@@ -94,12 +132,15 @@ export async function removeTaxonIdentified(
   taxonId: number,
   appStore: AppStoreType,
 ) {
+  removeOneTaxonIdentifiedFromMap(appStore, taxonId);
   removeOneTaxonIdentifiedFromStore(appStore, taxonId);
 
   // if no selected taxa, load allTaxaRecord
-  if (appStore.selectedTaxa.length === 0) {
-    await addDefaultTaxaRecordToStore(appStore);
-    await addDefaultTaxaRecordToMap(appStore);
+  if (
+    isIdentificationsCheck(appStore) &&
+    appStore.selectedTaxaIdentified.length === 0
+  ) {
+    await addDefaultTaxonToStoreAndMap(appStore);
   }
 
   await updateCountForAll("all", appStore);
@@ -115,4 +156,26 @@ export function removeOneTaxonIdentifiedFromStore(
   );
   resetPageNumber(appStore);
   removeIdfromInatApiParams(appStore, "selectedTaxaIdentified", taxonId);
+}
+
+export function removeOneTaxonIdentifiedFromMap(
+  appStore: AppStoreType,
+  taxonId: number,
+) {
+  if (!appStore.taxaIdentifiedMapLayers) return;
+  let mapLayers = appStore.taxaIdentifiedMapLayers[taxonId];
+  if (!mapLayers) return;
+  let layerControl = appStore.map.layerControl;
+  if (!layerControl) return;
+
+  mapLayers.forEach((layer) => {
+    // remove layer from layer control
+    layerControl.removeLayer(layer);
+    // remove layer from map
+    layer.remove();
+  });
+
+  delete appStore.taxaIdentifiedMapLayers[taxonId];
+  // HACK: trigger change in proxy store
+  appStore.taxaIdentifiedMapLayers = appStore.taxaIdentifiedMapLayers;
 }

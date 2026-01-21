@@ -35,6 +35,9 @@ function cleanupParams(params: URLSearchParams) {
   if (params.get("taxon_id") === "0") {
     params.delete("taxon_id");
   }
+  if (params.get("ident_taxon_id") === "0") {
+    params.delete("ident_taxon_id");
+  }
   if (params.get("observation_taxon_id") === "0") {
     params.delete("observation_taxon_id");
   }
@@ -159,7 +162,6 @@ export let identificationOnlyParams = [
   "lrank",
   "rank",
   "without_taxon_id",
-  "taxon_id",
   "category",
 ];
 
@@ -198,6 +200,8 @@ export function convertIdentificationParamsToObservationParams(
         .join(",");
     } else if (key.startsWith("user_id")) {
       cleanedParms.ident_user_id = value;
+    } else if (key === "taxon_id") {
+      cleanedParms.ident_taxon_id = value;
     } else if (key === "without_observation_taxon_id") {
       cleanedParms.without_taxon_id = value;
     } else if (key.startsWith("observed_")) {
@@ -228,6 +232,9 @@ function cleanupMapParams(rawParams: MapTilesAPIParamsType) {
   }
   if (rawParams.observation_taxon_id == "0") {
     delete rawParams.observation_taxon_id;
+  }
+  if (rawParams.ident_taxon_id == "0") {
+    delete rawParams.ident_taxon_id;
   }
   if (rawParams.place_id == "0") {
     delete rawParams.place_id;

@@ -12,6 +12,15 @@ function formatTaxaMapLayers(appStore: AppStoreType) {
   });
   return temp;
 }
+function formatTaxaIdentifiedMapLayers(appStore: AppStoreType) {
+  let temp: any = {};
+  Object.entries(appStore.taxaIdentifiedMapLayers).forEach(([key, val]) => {
+    temp[key] = val
+      .filter((v) => v)
+      .map((v: any) => v.options?.layer_description);
+  });
+  return temp;
+}
 function formatSelectedPlaces(appStore: AppStoreType) {
   return appStore.selectedPlaces.map((place) => {
     let temp = {} as any;
@@ -67,6 +76,8 @@ export function displayAppstoreData(appStore: AppStoreType, _source: string) {
     let key = k as AppStoreKeysType;
     if (key === "taxaMapLayers") {
       data.taxaMapLayers = formatTaxaMapLayers(appStore);
+    } else if (key === "taxaIdentifiedMapLayers") {
+      data.taxaIdentifiedMapLayers = formatTaxaIdentifiedMapLayers(appStore);
     } else if (key === "placesMapLayers") {
       data.placesMapLayers = formatPlacesMapLayers(appStore);
     } else if (key === "map") {

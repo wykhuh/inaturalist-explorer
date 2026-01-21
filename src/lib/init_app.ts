@@ -53,6 +53,7 @@ import { loggerEvent, loggerRender, loggerStore } from "./logger.ts";
 import {
   renderSelectedResources,
   updateTilesForSelectedTaxa,
+  updateTilesForSelectedTaxaIdentified,
 } from "./search_utils.ts";
 import { decodeAppUrl } from "./utils.ts";
 import { updateCountForAll } from "./count_utils.ts";
@@ -324,13 +325,13 @@ export async function initPopulateStore(
   );
 
   // add default taxa
-  if (
-    urlStore.selectedTaxa === undefined &&
+  if (isObservations && urlStore.selectedTaxa === undefined) {
+    await addDefaultTaxaRecordToStore(appStore, false);
+  } else if (
+    isIdentifications &&
     urlStore.selectedTaxaIdentified === undefined
   ) {
-    if (isIdentifications || isObservations) {
-      await addDefaultTaxaRecordToStore(appStore, false);
-    }
+    await addDefaultTaxaRecordToStore(appStore, false);
   }
   loggerStore(
     "++ initPopulateStore selectedTaxa",
@@ -451,7 +452,11 @@ export async function initRenderMap(appStore: AppStoreType) {
     await addDefaultTaxaRecordToMap(appStore);
   } else {
     // update taxa tiles for selected taxa
-    await updateTilesForSelectedTaxa(appStore);
+    if (isObservations) {
+      await updateTilesForSelectedTaxa(appStore);
+    } else {
+      await updateTilesForSelectedTaxaIdentified(appStore);
+    }
   }
 
   // return map to previous position when switching views
@@ -633,8 +638,6 @@ export function processTaxonIdentifiedData(
   appStore: AppStoreType,
   urlStore: AppStoreType,
 ) {
-  if (isObservationsCheck(appStore)) return;
-
   let urlStoreTaxon = urlStore.selectedTaxaIdentified.find(
     (t) => t.id === taxonData.id,
   );
@@ -647,6 +650,7 @@ export function processTaxonIdentifiedData(
     preferred_common_name: taxonData.preferred_common_name,
     rank: taxonData.rank,
     id: taxonData.id,
+    color: urlStoreTaxon.color,
   };
 
   let { title, subtitle } = formatTaxonName(taxon, appStore);
@@ -655,10 +659,18 @@ export function processTaxonIdentifiedData(
 
   appStore.selectedTaxaIdentified = [...appStore.selectedTaxaIdentified, taxon];
 
-  appStore.identificationsApiParams.taxon_id = addValueToCommaSeparatedString(
-    taxonData.id,
-    appStore.identificationsApiParams.taxon_id,
-  );
+  if (isObservationsCheck(appStore)) {
+    appStore.observationsApiParams.ident_taxon_id =
+      addValueToCommaSeparatedString(
+        taxonData.id,
+        appStore.observationsApiParams.ident_taxon_id,
+      );
+  } else {
+    appStore.identificationsApiParams.taxon_id = addValueToCommaSeparatedString(
+      taxonData.id,
+      appStore.identificationsApiParams.taxon_id,
+    );
+  }
 }
 
 export function processWithoutTaxonData(

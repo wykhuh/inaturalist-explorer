@@ -219,3 +219,65 @@ http://localhost:5173/identifications/?observation_taxon_id=81977&place_id=962&c
 ==
 
 http://localhost:5173/?taxon_id=3,47158&place_id=829,962&project_id=224219,224063&user_id=8159696,1518277&ident_user_id=80984,1653276&colors=%2366ccee,%23ccbb44&verifiable=true&spam=false&view=observations_species
+
+
+==
+
+western honey bee identified as western fence lizard
+
+http://localhost:5173/?taxon_id=47219&colors=%23228833&verifiable=true&spam=false&per_page=24&ident_taxon_id=36204
+
+
+==
+
+observations page
+
+http://localhost:5173/?taxon_id=47851&place_id=14&colors=%234477aa&verifiable=true&spam=false&per_page=24&ident_taxon_id=49011,47850
+
+observed: oaks 76,315 observations
+identified: Valley Oak 20,518 observations, Coast Live Oak 55,892 observations
+
+~~
+click on identifications
+identifications page
+
+http://localhost:5173/identifications/?observation_taxon_id=47851&taxon_id=49011,47850&place_id=14&colors=%234477aa&per_page=24
+
+observed: oaks 142,284 identifications
+identified: Valley Oak 37,883 identifications, Coast Live Oak 104,401 identifications
+
+~~
+
+click on observations
+observations page
+
+http://localhost:5173/?taxon_id=47851&place_id=14&colors=%234477aa&verifiable=true&spam=false&per_page=24&ident_taxon_id=49011,47850
+
+==
+
+identifications page
+
+http://localhost:5173/identifications/?observation_taxon_id=47851&taxon_id=49011,47850&place_id=14&colors=%234477aa&per_page=24
+
+~~
+
+click on observations
+observations page
+
+http://localhost:5173/?taxon_id=47851&place_id=14&colors=%234477aa&verifiable=true&spam=false&ident_taxon_id=49011,47850&per_page=24
+
+~~
+
+click on identifications
+identifications page
+
+http://localhost:5173/identifications/?observation_taxon_id=47851&taxon_id=49011,47850&place_id=14&colors=%234477aa&per_page=24
+
+==
+
+ 
+
+http://localhost:5173/?taxon_id=47367&colors=%2366ccee&verifiable=true&spam=false&ident_taxon_id=47118&per_page=24
+
+Observed Species: Harvestmen
+Identified Species: Spiders

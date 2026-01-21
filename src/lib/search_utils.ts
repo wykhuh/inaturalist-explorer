@@ -30,6 +30,7 @@ import {
   userIdentifierSelectedHandler,
 } from "./search_users_identifiers.ts";
 import {
+  removeOneTaxonIdentifiedFromMap,
   setupTaxaIdentifiedSearch,
   taxonIdentifiedSelectedHandler,
 } from "./search_taxa_identified.ts";
@@ -64,13 +65,38 @@ import {
   withoutUserIdentifierSelectedHandler,
 } from "./search_without_users_identifiers.ts";
 
+// TODO: check if updateTilesForSelectedTaxa is needed
 export async function updateTilesForSelectedTaxa(appStore: AppStoreType) {
   for await (const taxon of appStore.selectedTaxa) {
     // remove existing taxon layers from map
     removeOneTaxonFromMap(appStore, taxon.id);
 
     // get new iNat map tiles
-    await fetchiNatMapDataForTaxon(taxon, appStore);
+    let layers = await fetchiNatMapDataForTaxon(taxon, appStore);
+    if (layers) {
+      appStore.taxaMapLayers = {
+        ...appStore.taxaMapLayers,
+        [taxon.id]: layers,
+      };
+    }
+  }
+}
+
+// TODO: check if updateTilesForSelectedTaxaIdentified is needed
+export async function updateTilesForSelectedTaxaIdentified(
+  appStore: AppStoreType,
+) {
+  for await (const taxon of appStore.selectedTaxaIdentified) {
+    // remove existing taxon layers from map
+    removeOneTaxonIdentifiedFromMap(appStore, taxon.id);
+    // get new iNat map tiles
+    let layers = await fetchiNatMapDataForTaxon(taxon, appStore);
+    if (layers) {
+      appStore.taxaIdentifiedMapLayers = {
+        ...appStore.taxaIdentifiedMapLayers,
+        [taxon.id]: layers,
+      };
+    }
   }
 }
 

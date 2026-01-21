@@ -9,21 +9,24 @@ import { autocomplete_taxa_api } from "../lib/inat_api.ts";
 import type { iNatAutocompleteTaxaAPI } from "../types/inat_api";
 import { loggerUrl } from "../lib/logger.ts";
 import {
-  addDefaultTaxaRecordToMap,
-  addDefaultTaxaRecordToStore,
+  addDefaultTaxonToStoreAndMap,
   addValueToCommaSeparatedString,
-  fetchiNatMapDataForTaxon,
   formatTaxonName,
   getResourceApiParams,
   isIdentificationsCheck,
   isObservationsCheck,
+  removeDefaultTaxonFromStoreAndMap,
   removeIdfromInatApiParams,
   resetPageNumber,
 } from "./data_utils.ts";
 import { updateCountForOneRecord, updateCountForAll } from "./count_utils.ts";
 import { renderTaxonNames } from "./render_utils";
 import { defaultColorScheme, getColor } from "./map_colors_utils.ts";
-import { renderSelectedResources, showHideHeader } from "./search_utils.ts";
+import {
+  renderSelectedResources,
+  showHideHeader,
+  updateTilesForSelectedTaxa,
+} from "./search_utils.ts";
 
 export function setupTaxaSearch(selector: string, appStore: AppStoreType) {
   const autoCompleteTaxaJS = new autoComplete({
@@ -128,14 +131,10 @@ export async function taxonSelectedHandler(
 
   let resourceApiParams = getResourceApiParams(isObservations);
 
-  // remove all taxa if allTaxaRecord is the current taxon
+  // remove default taxon
   if (isObservations) {
     if (appStore.observationsApiParams.taxon_id === "0") {
-      removeTaxaFromStoreAndMap(appStore);
-    }
-  } else if (isIdentifications) {
-    if (appStore.identificationsApiParams.observation_taxon_id === "0") {
-      removeTaxaFromStoreAndMap(appStore);
+      removeDefaultTaxonFromStoreAndMap(appStore);
     }
   }
 
@@ -151,9 +150,9 @@ export async function taxonSelectedHandler(
   };
 
   appStore.selectedTaxa = [...appStore.selectedTaxa, taxon];
+  resetPageNumber(appStore);
 
   if (isObservations) {
-    resetPageNumber(appStore);
     appStore.observationsApiParams = {
       ...appStore.observationsApiParams,
       taxon_id: addValueToCommaSeparatedString(
@@ -166,7 +165,6 @@ export async function taxonSelectedHandler(
       ),
     };
   } else if (isIdentifications) {
-    resetPageNumber(appStore);
     appStore.identificationsApiParams = {
       ...appStore.identificationsApiParams,
       observation_taxon_id: addValueToCommaSeparatedString(
@@ -176,8 +174,6 @@ export async function taxonSelectedHandler(
     };
   }
   appStore.color = color;
-
-  await fetchiNatMapDataForTaxon(taxon, appStore);
 
   let recordParams = {};
   if (isObservations) {
@@ -193,6 +189,7 @@ export async function taxonSelectedHandler(
   }
 
   await updateCountForOneRecord(taxon, "selectedTaxa", appStore, recordParams);
+  await updateTilesForSelectedTaxa(appStore);
   await updateCountForAll("selectedTaxa", appStore);
   renderSelectedResources(appStore, true);
 }
@@ -205,10 +202,15 @@ export function renderTaxaList(appStore: AppStoreType) {
   let listEl = document.querySelector("#selected-species-list");
   if (!listEl) return;
 
+  let element = isObservationsCheck(appStore)
+    ? "species-list-item"
+    : "species-basic-list-item";
+
   listEl.innerHTML = "";
   appStore.selectedTaxa.forEach((taxon) => {
-    let templateEl = document.createElement("species-list-item");
+    let templateEl = document.createElement(element);
     templateEl.dataset.taxon = JSON.stringify(taxon);
+    templateEl.dataset.type = "taxon";
     listEl.appendChild(templateEl);
   });
 }
@@ -219,19 +221,8 @@ export async function removeTaxon(taxonId: number, appStore: AppStoreType) {
   removeOneTaxonFromStore(appStore, taxonId);
 
   // if no selected taxa, load allTaxaRecord
-  if (isObservationsCheck(appStore)) {
-    if (appStore.selectedTaxa.length === 0) {
-      await addDefaultTaxaRecordToStore(appStore);
-      await addDefaultTaxaRecordToMap(appStore);
-    }
-  } else if (isIdentificationsCheck(appStore)) {
-    if (
-      appStore.selectedTaxa.length === 0 &&
-      appStore.selectedTaxaIdentified.length === 0
-    ) {
-      await addDefaultTaxaRecordToStore(appStore);
-      await addDefaultTaxaRecordToMap(appStore);
-    }
+  if (isObservationsCheck(appStore) && appStore.selectedTaxa.length === 0) {
+    await addDefaultTaxonToStoreAndMap(appStore);
   }
 
   await updateCountForAll("all", appStore);
@@ -252,9 +243,9 @@ export function removeOneTaxonFromStore(
 export function removeOneTaxonFromMap(appStore: AppStoreType, taxonId: number) {
   if (!appStore.taxaMapLayers) return;
   let mapLayers = appStore.taxaMapLayers[taxonId];
+  if (!mapLayers) return;
   let layerControl = appStore.map.layerControl;
   if (!layerControl) return;
-  if (!mapLayers) return;
 
   mapLayers.forEach((layer) => {
     // remove layer from layer control
@@ -266,33 +257,4 @@ export function removeOneTaxonFromMap(appStore: AppStoreType, taxonId: number) {
   delete appStore.taxaMapLayers[taxonId];
   // HACK: trigger change in proxy store
   appStore.taxaMapLayers = appStore.taxaMapLayers;
-}
-
-export function removeTaxaFromStoreAndMap(appStore: AppStoreType) {
-  let layerControl = appStore.map.layerControl;
-  let isObservations = isObservationsCheck(appStore);
-
-  if (layerControl) {
-    // remove from map
-    Object.values(appStore.taxaMapLayers).forEach((layers) => {
-      layers.forEach((layer) => {
-        // remove layer from layer control
-        layerControl.removeLayer(layer);
-        // remove layer from map
-        layer.remove();
-      });
-    });
-  }
-
-  // remove from store
-
-  if (isObservations) {
-    delete appStore.observationsApiParams.taxon_id;
-    delete appStore.observationsApiParams.colors;
-  } else {
-    delete appStore.identificationsApiParams.observation_taxon_id;
-  }
-  appStore.selectedTaxa = [];
-  appStore.taxaMapLayers = {};
-  appStore.color = "";
 }

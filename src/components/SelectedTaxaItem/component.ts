@@ -8,6 +8,7 @@ import { removeTaxon } from "../../lib/search_taxa.ts";
 import { pluralize } from "../../lib/utils.ts";
 import type { AppStoreType, NormalizediNatTaxonType } from "../../types/app";
 import { template } from "./template";
+import { removeTaxonIdentified } from "../../lib/search_taxa_identified.ts";
 
 class SelectedTaxaItem extends HTMLElement {
   constructor() {
@@ -20,6 +21,8 @@ class SelectedTaxaItem extends HTMLElement {
 
   async render(appStore: AppStoreType) {
     if (!this.dataset.taxon) return;
+    let taxonType = this.dataset.type;
+    if (!taxonType) return;
 
     loggerRender("++ SelectedTaxaItem render");
     setupComponent(template, this);
@@ -51,7 +54,11 @@ class SelectedTaxaItem extends HTMLElement {
     // don't add event listener for allTaxaRecord with id = 0
     if (butttonEl && taxon.id !== 0) {
       butttonEl.addEventListener("click", async function () {
-        await removeTaxon(taxon.id, window.app.store);
+        if (taxonType === "taxonIdentified") {
+          await removeTaxonIdentified(taxon.id, window.app.store);
+        } else if (taxonType === "taxon") {
+          await removeTaxon(taxon.id, window.app.store);
+        }
       });
     }
   }

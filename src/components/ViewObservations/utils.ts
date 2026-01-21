@@ -154,6 +154,7 @@ async function getAPIData(appStore: AppStoreType) {
   }
 
   // NOTE: set record type to observations since parmas are for getObservations
+  // TODO: check if this is needed
   updateSelectedResourcesId(appStore, "observations");
   let params = "";
   if (isObservationsCheck(appStore)) {

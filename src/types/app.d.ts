@@ -42,7 +42,7 @@ export interface AppStoreType {
   selectedWithoutProjects: NormalizediNatProjectType[];
   // map layers
   taxaMapLayers: { [index: string]: TileLayer[] };
-  taxaIdentifiedMapLayers?: { [index: string]: TileLayer[] };
+  taxaIdentifiedMapLayers: { [index: string]: TileLayer[] };
   placesMapLayers: { [index: string]: CustomGeoJSONType[] };
   projectsMapLayers?: { [index: string]: CustomGeoJSONType[] };
   // misc
