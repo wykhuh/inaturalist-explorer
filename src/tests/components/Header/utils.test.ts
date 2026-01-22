@@ -22,12 +22,19 @@ import {
   redOak,
   gridLabel_life,
   gridLabel_oaks,
-  expectLifeOakTaxaIdentifications,
   lifeIdentification,
   redOakIdentification,
   expectLifeOakTaxa,
-  gridLabel_allTaxaRecord,
   perPage,
+  gridLabel_allTaxaRecordIdent,
+  gridLabel_lifeIdent,
+  gridLabel_oakIdent,
+  expectDefaultTaxaRecordIdentification,
+  allTaxaIdentification,
+  allTaxa,
+  expectLifeOakTaxaIdentifications,
+  gridLabel_allTaxaRecord,
+  expectDefaultTaxaRecord,
 } from "../../test_helpers.ts";
 import { decodeAppUrl } from "../../../lib/utils.ts";
 import { initPopulateStore, initRenderMap } from "../../../lib/init_app.ts";
@@ -36,7 +43,7 @@ import { pageChangeHandler } from "../../../components/Header/utils.ts";
 import Router from "../../../lib/router.ts";
 import { taxonSelectedHandler } from "../../../lib/search_taxa.ts";
 import { viewChangeHandler } from "../../../components/ObservationsHeader/shared_utils.ts";
-
+import { iNatOrange } from "../../../lib/map_colors_utils.ts";
 beforeEach(() => {
   const { JSDOM } = jsdom;
 
@@ -71,7 +78,7 @@ afterAll(() => {
 });
 
 describe("click on header to change page", () => {
-  test("switch from identifications to observations", async () => {
+  test("add taxa; switch from identifications to observations", async () => {
     let store = structuredClone(mapStore);
 
     let observationsPageClick = {
@@ -99,37 +106,49 @@ describe("click on header to change page", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_life,
-      gridLabel_oaks,
+      gridLabel_allTaxaRecordIdent,
+      gridLabel_lifeIdent,
+      gridLabel_oakIdent,
     ]);
     expectLifeOakTaxaIdentifications(store, [20000, 2000]);
+    expectDefaultTaxaRecordIdentification(store, 22000);
     expect(store.record_type).toStrictEqual("identifications");
     expect(store.currentView).toStrictEqual("identifications_observations");
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       per_page: perPage,
       observation_taxon_id: `${life1.id},${oak1.id}`,
+      taxon_id: `${allTaxaIdentification.id}`,
+      colors: iNatOrange,
     });
-    expect(store.selectedTaxa).toStrictEqual([life1, oak1]);
 
     await pageChangeHandler(observationsPageClick, store, Router);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_life,
-      gridLabel_oaks,
+      gridLabel_lifeIdent,
+      gridLabel_oakIdent,
     ]);
     expect(store.selectedTaxa).toStrictEqual([life2, oak2]);
+    expect(Object.keys(store.taxaMapLayers)).toEqual([
+      life2.id.toString(),
+      oak2.id.toString(),
+    ]);
+    expect(store.taxaMapLayers[life2.id].length).toBe(4);
+    expect(store.taxaMapLayers[oak2.id].length).toBe(4);
+    expect(store.selectedTaxaIdentified).toStrictEqual([]);
+    expect(store.taxaIdentifiedMapLayers).toStrictEqual({});
     expect(store.record_type).toStrictEqual("observations");
     expect(store.currentView).toStrictEqual("observations_observations");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
+      colors: `${life2.color},${oak2.color}`,
       taxon_id: `${life2.id},${oak2.id}`,
       per_page: perPage,
     });
     expect(store.identificationsApiParams).toStrictEqual({
       per_page: perPage,
-      observation_taxon_id: `${life2.id},${oak2.id}`,
+      observation_taxon_id: `${life1.id},${oak1.id}`,
     });
 
     let mainEl = document.querySelector("#app") as HTMLDivElement;
@@ -146,7 +165,7 @@ describe("click on header to change page", () => {
     expect(store.selectedTaxa[1].observations_count).toBe(1000);
   });
 
-  test("switch from observations to identifications", async () => {
+  test("add taxa; switch from observations to identifications", async () => {
     let store = structuredClone(mapStore);
 
     let identificationsClickMock = {
@@ -178,6 +197,8 @@ describe("click on header to change page", () => {
       gridLabel_oaks,
     ]);
     expectLifeOakTaxa(store, [10000, 1000]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([]);
+    expect(store.taxaIdentifiedMapLayers).toStrictEqual({});
     expect(store.record_type).toStrictEqual("observations");
     expect(store.currentView).toStrictEqual("observations_observations");
     expect(store.observationsApiParams).toStrictEqual({
@@ -187,7 +208,6 @@ describe("click on header to change page", () => {
       colors: `${life2.color},${oak2.color}`,
     });
     expect(store.identificationsApiParams).toStrictEqual({});
-    expect(store.selectedTaxa).toStrictEqual([life1, oak1]);
 
     await pageChangeHandler(identificationsClickMock, store, Router);
 
@@ -195,6 +215,7 @@ describe("click on header to change page", () => {
       basemapLabel_osm,
       gridLabel_life,
       gridLabel_oaks,
+      gridLabel_allTaxaRecordIdent,
     ]);
     expect(store.selectedTaxa).toStrictEqual([life2, oak2]);
     expect(store.record_type).toStrictEqual("identifications");
@@ -208,6 +229,8 @@ describe("click on header to change page", () => {
     expect(store.identificationsApiParams).toStrictEqual({
       observation_taxon_id: `${life2.id},${oak2.id}`,
       per_page: perPage,
+      colors: iNatOrange,
+      taxon_id: allTaxa.id.toString(),
     });
 
     let mainEl = document.querySelector("#app") as HTMLDivElement;
@@ -224,6 +247,132 @@ describe("click on header to change page", () => {
 
     expect(store.selectedTaxa[0].identifications_count).toBe(20000);
     expect(store.selectedTaxa[1].identifications_count).toBe(2000);
+  });
+
+  test("switch from about to identifications", async () => {
+    let store = structuredClone(mapStore);
+
+    let identificationsClickMock = {
+      target: {
+        dataset: { recordType: "identifications" },
+        getAttribute: () => {
+          return "/identifications/";
+        },
+      },
+    } as unknown as CustomEvent;
+
+    let searchparams = "";
+    let urlData = decodeAppUrl(searchparams, "/about/");
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
+    expect(store.selectedTaxa).toStrictEqual([]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([]);
+    expect(store.taxaIdentifiedMapLayers).toStrictEqual({});
+    expect(store.record_type).toStrictEqual("about");
+    expect(store.currentView).toStrictEqual(undefined);
+    expect(store.observationsApiParams).toStrictEqual({
+      ...defaultParams,
+    });
+    expect(store.identificationsApiParams).toStrictEqual({});
+
+    await pageChangeHandler(identificationsClickMock, store, Router);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecordIdent,
+    ]);
+    expect(store.selectedTaxa).toStrictEqual([]);
+    expectDefaultTaxaRecordIdentification(store);
+    expect(store.record_type).toStrictEqual("identifications");
+    expect(store.currentView).toStrictEqual("identifications_observations");
+    expect(store.observationsApiParams).toStrictEqual({
+      ...defaultParams,
+    });
+    expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
+      colors: iNatOrange,
+      taxon_id: allTaxa.id.toString(),
+    });
+
+    let mainEl = document.querySelector("#app") as HTMLDivElement;
+    expect(mainEl?.innerHTML).toBe(
+      `<page-identifications></page-identifications>`,
+    );
+
+    let viewContainerEl = document.querySelector(
+      "#view-container",
+    ) as HTMLDivElement;
+    expect(viewContainerEl?.innerHTML).toBe(
+      `<view-observations></view-observations>`,
+    );
+  });
+
+  test("switch from about to observations", async () => {
+    let store = structuredClone(mapStore);
+
+    let observationsPageClick = {
+      target: {
+        dataset: { recordType: "observations" },
+        getAttribute: () => {
+          return "/";
+        },
+      },
+    } as unknown as CustomEvent;
+    let life1 = lifeIdentification();
+    let life2 = structuredClone(life1);
+    life2.observations_count = 10000;
+    let oak1 = redOakIdentification();
+    let oak2 = structuredClone(oak1);
+    oak2.observations_count = 1000;
+
+    let searchparams = "";
+    let urlData = decodeAppUrl(searchparams, "/identifications/");
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecordIdent,
+    ]);
+    expectDefaultTaxaRecordIdentification(store, 200000);
+    expect(store.record_type).toStrictEqual("identifications");
+    expect(store.currentView).toStrictEqual("identifications_observations");
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    expect(store.identificationsApiParams).toStrictEqual({
+      per_page: perPage,
+      taxon_id: `${allTaxaIdentification.id}`,
+      colors: iNatOrange,
+    });
+
+    await pageChangeHandler(observationsPageClick, store, Router);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord,
+    ]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([]);
+    expectDefaultTaxaRecord(store);
+    expect(store.record_type).toStrictEqual("observations");
+    expect(store.currentView).toStrictEqual("observations_observations");
+    expect(store.observationsApiParams).toStrictEqual({
+      ...defaultParams,
+      colors: iNatOrange,
+      per_page: perPage,
+      taxon_id: allTaxa.id.toString(),
+    });
+    expect(store.identificationsApiParams).toStrictEqual({ per_page: perPage });
+
+    let mainEl = document.querySelector("#app") as HTMLDivElement;
+    expect(mainEl?.innerHTML).toBe(`<page-observations></page-observations>`);
+
+    let viewContainerEl = document.querySelector(
+      "#view-container",
+    ) as HTMLDivElement;
+    expect(viewContainerEl?.innerHTML).toBe(
+      `<view-observations></view-observations>`,
+    );
   });
 });
 
@@ -247,7 +396,7 @@ describe("click on headers to change view and page", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord,
+      gridLabel_allTaxaRecordIdent,
     ]);
 
     await taxonSelectedHandler(lifeBasic, "", store);
@@ -257,8 +406,9 @@ describe("click on headers to change view and page", () => {
     expect(store.currentView).toStrictEqual("identifications_observations");
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_life,
-      gridLabel_oaks,
+      gridLabel_allTaxaRecordIdent,
+      gridLabel_lifeIdent,
+      gridLabel_oakIdent,
     ]);
 
     let spanEl = document.querySelector(".header-count") as HTMLDivElement;
@@ -269,8 +419,9 @@ describe("click on headers to change view and page", () => {
     expect(store.currentView).toStrictEqual("identifications_identifications");
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_life,
-      gridLabel_oaks,
+      gridLabel_allTaxaRecordIdent,
+      gridLabel_lifeIdent,
+      gridLabel_oakIdent,
     ]);
 
     let viewContainerEl = document.querySelector(
@@ -286,8 +437,8 @@ describe("click on headers to change view and page", () => {
     expect(store.currentView).toStrictEqual("observations_observations");
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_life,
-      gridLabel_oaks,
+      gridLabel_lifeIdent,
+      gridLabel_oakIdent,
     ]);
 
     let mainEl = document.querySelector("#app") as HTMLDivElement;

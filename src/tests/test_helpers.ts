@@ -211,6 +211,7 @@ export let projectLabel_cnc2 =
 export let gridLabel_life = "overlay: iNat grid, taxon_id 48460";
 export let gridLabel_oaks = "overlay: iNat grid, taxon_id 861036";
 export let gridLabel_monarch = "overlay: iNat grid, taxon_id 48662";
+export let gridLabel_lifeoaks = "overlay: iNat grid, taxon_id 48460,861036";
 
 export let gridLabel_withoutLife =
   "overlay: iNat grid, taxon_id 0, without_taxon_id 48460";
@@ -291,6 +292,27 @@ export let gridLabel_allTaxaRecord_withoutOak =
 export let gridLabel_allTaxaRecord_withoutTaxa =
   "overlay: iNat grid, taxon_id 0, without_taxon_id 48460,861036";
 
+export let gridLabel_allTaxaRecordIdent =
+  "overlay: iNat grid, ident_taxon_id 0";
+
+export let gridLabel_allTaxaRecordIdent_la =
+  "overlay: iNat grid, ident_taxon_id 0, place_id 962";
+export let gridLabel_allTaxaRecordIdent_la_sd =
+  "overlay: iNat grid, ident_taxon_id 0, place_id 962,829";
+
+export let gridLabel_allTaxaRecordIdent_user1Identifier =
+  "overlay: iNat grid, ident_taxon_id 0, ident_user_id 222137";
+export let gridLabel_allTaxaRecordIdent_usersIdentifiers =
+  "overlay: iNat grid, ident_taxon_id 0, ident_user_id 222137,677256";
+
+export let gridLabel_allTaxaRecordIdent_withoutTaxa =
+  "overlay: iNat grid, ident_taxon_id 0, without_taxon_id 48460,861036";
+export let gridLabel_allTaxaRecordIdent_withoutLife =
+  "overlay: iNat grid, ident_taxon_id 0, without_taxon_id 48460";
+
+export let gridLabel_lifeIdent = "overlay: iNat grid, ident_taxon_id 48460";
+export let gridLabel_oakIdent = "overlay: iNat grid, ident_taxon_id 861036";
+
 export let gridLabel_life_la_user1 =
   "overlay: iNat grid, taxon_id 48460, place_id 962, user_id 222137";
 
@@ -337,8 +359,6 @@ export let gridLabel_oaks_places_users =
 
 export let gridLabel_life_places_user2Identifiers =
   "overlay: iNat grid, taxon_id 48460, place_id 962,829, ident_user_id 677256";
-export let gridLabel_life_places_use2Identifiers =
-  "overlay: iNat grid, taxon_id 48460, place_id 962,829, ident_user_id 222137,677256";
 
 export let gridLabel_life_places_usersIdentifiers =
   "overlay: iNat grid, taxon_id 48460, place_id 962,829, ident_user_id 222137,677256";
@@ -349,6 +369,9 @@ export let gridLabel_life_project1 =
   "overlay: iNat grid, taxon_id 48460, project_id 237729";
 export let gridLabel_life_project1_user1 =
   "overlay: iNat grid, taxon_id 48460, project_id 237729, user_id 222137";
+
+export let gridLabel_life_identified_places_usersIdentifiers =
+  "overlay: iNat grid, ident_taxon_id 861036, place_id 962,829, ident_user_id 222137,677256";
 
 export let gridLabel_allTaxaRecord_la_project1 =
   "overlay: iNat grid, taxon_id 0, place_id 962, project_id 237729";
@@ -607,9 +630,9 @@ export function expectDefaultTaxaRecordIdentification(
     taxa.identifications_count = Math.round(count);
   }
 
-  expect(store.selectedTaxa).toStrictEqual([taxa]);
-  expect(Object.keys(store.taxaMapLayers)).toEqual([taxa.id.toString()]);
-  expect(store.taxaMapLayers[0].length).toBe(3);
+  expect(store.selectedTaxaIdentified).toStrictEqual([taxa]);
+  expect(Object.keys(store.taxaIdentifiedMapLayers)).toStrictEqual(["0"]);
+  expect(store.taxaIdentifiedMapLayers["0"].length).toBe(3);
 }
 
 export function expectEmptyResources(
@@ -644,6 +667,12 @@ export function expectLifeTaxa(
   expect(store.taxaMapLayers[taxa.id].length).toBe(4);
 }
 
+export function expectLifeTaxaMapOnly(store: AppStoreType) {
+  let taxa = structuredClone(life());
+  expect(Object.keys(store.taxaMapLayers)).toEqual([taxa.id.toString()]);
+  expect(store.taxaMapLayers[taxa.id].length).toBe(4);
+}
+
 export function expectLifeTaxaIdentification(store: AppStoreType, count = 0) {
   let taxa = structuredClone(life());
   delete taxa.observations_count;
@@ -670,9 +699,23 @@ export function expectLifeTaxaIdentifiedIdentification(
   expect(store.selectedTaxaIdentified).toStrictEqual([taxa]);
 }
 
+export function expectLifeTaxaIdentifiedMapOnly(store: AppStoreType) {
+  let taxa = structuredClone(lifeIdentification());
+  expect(Object.keys(store.taxaIdentifiedMapLayers)).toEqual([
+    taxa.id.toString(),
+  ]);
+  expect(store.taxaIdentifiedMapLayers[taxa.id].length).toEqual(4);
+}
+
 export function expectOakTaxa(store: AppStoreType, color = colors[1]) {
   let oak = redOak(color);
   expect(store.selectedTaxa).toStrictEqual([oak]);
+  expect(Object.keys(store.taxaMapLayers)).toEqual([oak.id.toString()]);
+  expect(store.taxaMapLayers[oak.id].length).toBe(4);
+}
+
+export function expectOakTaxaMapOnly(store: AppStoreType) {
+  let oak = redOak();
   expect(Object.keys(store.taxaMapLayers)).toEqual([oak.id.toString()]);
   expect(store.taxaMapLayers[oak.id].length).toBe(4);
 }
@@ -697,6 +740,39 @@ export function expectLifeOakTaxa(
   ]);
   expect(store.taxaMapLayers[taxa1.id].length).toBe(4);
   expect(store.taxaMapLayers[taxa2.id].length).toBe(4);
+}
+
+export function expectLifeOakTaxaMapOnly(store: AppStoreType) {
+  let taxa1 = life();
+  let taxa2 = redOak();
+
+  expect(Object.keys(store.taxaMapLayers)).toEqual([
+    taxa1.id.toString(),
+    taxa2.id.toString(),
+  ]);
+  expect(store.taxaMapLayers[taxa1.id].length).toBe(4);
+  expect(store.taxaMapLayers[taxa2.id].length).toBe(4);
+}
+
+export function expectLifeOakTaxaIdentifiedMapOnly(store: AppStoreType) {
+  let taxa1 = life();
+  let taxa2 = redOak();
+
+  expect(Object.keys(store.taxaIdentifiedMapLayers)).toEqual([
+    taxa1.id.toString(),
+    taxa2.id.toString(),
+  ]);
+  expect(store.taxaIdentifiedMapLayers[taxa1.id].length).toBe(4);
+  expect(store.taxaIdentifiedMapLayers[taxa2.id].length).toBe(4);
+}
+
+export function expectOakTaxaIdentifiedMapOnly(store: AppStoreType) {
+  let taxa2 = redOak();
+
+  expect(Object.keys(store.taxaIdentifiedMapLayers)).toEqual([
+    taxa2.id.toString(),
+  ]);
+  expect(store.taxaIdentifiedMapLayers[taxa2.id].length).toBe(4);
 }
 
 export function expectLifeOakTaxaIdentifications(

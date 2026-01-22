@@ -29,7 +29,7 @@ describe("getiNatMapTiles", () => {
     };
     let taxon = { ...lifeBasic, color: iNatOrange };
 
-    let result = getiNatMapTiles(mapTilesAPIParams, taxon);
+    let result = getiNatMapTiles(mapTilesAPIParams, taxon, "observations");
 
     expect(result.iNatGrid.url).toBe(
       `https://api.inaturalist.org/v1/grid/{z}/{x}/{y}.png?${color}&taxon_id=${lifeBasic.id}`,
@@ -52,7 +52,7 @@ describe("getiNatMapTiles", () => {
     };
     let taxon = { ...allTaxaRecord, color: iNatOrange };
 
-    let result = getiNatMapTiles(mapTilesAPIParams, taxon);
+    let result = getiNatMapTiles(mapTilesAPIParams, taxon, "observations");
 
     expect(result.iNatGrid.url).toBe(
       `https://api.inaturalist.org/v1/grid/{z}/{x}/{y}.png?${color}`,
@@ -72,7 +72,7 @@ describe("getiNatMapTiles", () => {
     };
     let taxon = {} as NormalizediNatTaxonType;
 
-    let result = getiNatMapTiles(mapTilesAPIParams, taxon);
+    let result = getiNatMapTiles(mapTilesAPIParams, taxon, "observations");
 
     expect(result.iNatGrid.url).toBe(
       `https://api.inaturalist.org/v1/grid/{z}/{x}/{y}.png?${color}`,

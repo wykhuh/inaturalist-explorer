@@ -1223,7 +1223,10 @@ describe("decodeAppUrl  resources if identifications", () => {
     let searchParams = "?taxon_id=1,2&observation_taxon_id=3,4";
     let expected = {
       ...structuredClone(defaultUrlStore),
-      selectedTaxaIdentified: [{ id: 1 }, { id: 2 }],
+      selectedTaxaIdentified: [
+        { id: 1, color: defaultColorScheme[0] },
+        { id: 2, color: defaultColorScheme[1] },
+      ],
       selectedTaxa: [
         { id: 3, color: defaultColorScheme[0] },
         { id: 4, color: defaultColorScheme[1] },

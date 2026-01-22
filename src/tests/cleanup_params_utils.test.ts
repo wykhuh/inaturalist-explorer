@@ -271,6 +271,10 @@ describe("cleanupIdentificationsMapParams", () => {
       store.identificationsApiParams,
     );
 
+    if (param === "taxon_id") {
+      param = "ident_taxon_id";
+    }
+
     expect(results).toStrictEqual({
       color: "#f16f3a",
       [param]: true,
@@ -378,6 +382,9 @@ describe("cleanupIdentificationsObservationsParams", () => {
       store.identificationsApiParams,
     );
 
+    if (param === "taxon_id") {
+      param = "ident_taxon_id";
+    }
     expect(res).toStrictEqual({ [param]: true });
   });
 
@@ -467,7 +474,7 @@ describe("cleanupIdentificationsObservationsParams", () => {
       store.identificationsApiParams,
     );
 
-    expect(res).toStrictEqual({});
+    expect(res).toStrictEqual({ ident_taxon_id: "1,3" });
   });
 
   test("converts user_id to ident_user_id", () => {

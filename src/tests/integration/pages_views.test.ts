@@ -32,6 +32,9 @@ import {
   allTaxaIdentification,
   expectDefaultTaxaRecord,
   perPage,
+  gridLabel_lifeIdent,
+  gridLabel_oakIdent,
+  gridLabel_allTaxaRecordIdent,
 } from "../test_helpers.ts";
 import { decodeAppUrl } from "../../lib/utils.ts";
 import { initPopulateStore, initRenderMap } from "../../lib/init_app.ts";
@@ -83,7 +86,7 @@ function observationsPageClick() {
   } as unknown as CustomEvent;
 }
 
-function identificationsClickMock() {
+function identificationsPageClick() {
   return {
     target: {
       dataset: { recordType: "identifications" },
@@ -99,7 +102,6 @@ describe("click on site header to change page", () => {
     let store = structuredClone(mapStore);
 
     let defaultTaxa = structuredClone(allTaxaIdentification);
-    let defaultTaxaCount = allTaxa.observations_count;
 
     let searchparams = "";
     let urlData = decodeAppUrl(searchparams, "/identifications/");
@@ -108,17 +110,18 @@ describe("click on site header to change page", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord,
+      gridLabel_allTaxaRecordIdent,
     ]);
+    expect(store.selectedTaxa).toStrictEqual([]);
     expectDefaultTaxaRecordIdentification(store);
     expect(store.record_type).toStrictEqual("identifications");
     expect(store.currentView).toStrictEqual("identifications_observations");
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       per_page: perPage,
-      observation_taxon_id: `${defaultTaxa.id}`,
+      taxon_id: `${defaultTaxa.id}`,
+      colors: iNatOrange,
     });
-    expect(store.selectedTaxa).toStrictEqual([defaultTaxa]);
 
     await pageChangeHandler(observationsPageClick(), store, Router);
 
@@ -126,19 +129,18 @@ describe("click on site header to change page", () => {
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
-    expect(store.selectedTaxa).toStrictEqual([
-      { ...defaultTaxa, observations_count: defaultTaxaCount },
-    ]);
+    expectDefaultTaxaRecord(store);
+    expect(store.selectedTaxaIdentified).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("observations");
     expect(store.currentView).toStrictEqual("observations_observations");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       taxon_id: `${defaultTaxa.id}`,
       per_page: perPage,
+      colors: iNatOrange,
     });
     expect(store.identificationsApiParams).toStrictEqual({
       per_page: perPage,
-      observation_taxon_id: `${defaultTaxa.id}`,
     });
 
     let mainEl = document.querySelector("#app") as HTMLDivElement;
@@ -170,34 +172,39 @@ describe("click on site header to change page", () => {
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_life,
-      gridLabel_oaks,
+      gridLabel_allTaxaRecordIdent,
+      gridLabel_lifeIdent,
+      gridLabel_oakIdent,
     ]);
     expectLifeOakTaxaIdentifications(store);
+    expectDefaultTaxaRecordIdentification(store, 22000);
     expect(store.record_type).toStrictEqual("identifications");
     expect(store.currentView).toStrictEqual("identifications_observations");
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       per_page: perPage,
       observation_taxon_id: `${life1.id},${oak1.id}`,
+      taxon_id: allTaxa.id.toString(),
+      colors: iNatOrange,
     });
-    expect(store.selectedTaxa).toStrictEqual([life1, oak1]);
 
     await pageChangeHandler(observationsPageClick(), store, Router);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_life,
-      gridLabel_oaks,
+      gridLabel_lifeIdent,
+      gridLabel_oakIdent,
     ]);
     expect(store.selectedTaxa).toStrictEqual([
       { ...life1, observations_count: life1Count },
       { ...oak1, observations_count: oak1Count },
     ]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("observations");
     expect(store.currentView).toStrictEqual("observations_observations");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
+      colors: `${life1.color},${oak1.color}`,
       taxon_id: `${life1.id},${oak1.id}`,
       per_page: perPage,
     });
@@ -220,15 +227,13 @@ describe("click on site header to change page", () => {
   test("switch from identifications page to observations page with selected taxa identified", async () => {
     let store = structuredClone(mapStore);
 
-    let life1 = structuredClone(lifeIdentification());
-    delete life1.color;
-    let defaultTaxa = structuredClone(allTaxa);
     let mainEl = document.querySelector("#app") as HTMLDivElement;
     let viewContainerEl = document.querySelector(
       "#view-container",
     ) as HTMLDivElement;
+    let life1 = structuredClone(lifeIdentification());
     let expectedLife = structuredClone(lifeIdentification());
-    delete expectedLife.color;
+    expectedLife.observations_count = allTaxa.observations_count;
 
     let searchparams = "";
     let urlData = decodeAppUrl(searchparams, "/identifications/");
@@ -237,32 +242,43 @@ describe("click on site header to change page", () => {
 
     await taxonIdentifiedSelectedHandler(lifeBasic, "", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
-
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_lifeIdent,
+    ]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([life1]);
+    expect(store.selectedTaxa).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("identifications");
     expect(store.currentView).toStrictEqual("identifications_observations");
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       per_page: perPage,
       taxon_id: `${life1.id}`,
+      colors: life1.color,
     });
-    expect(store.selectedTaxaIdentified).toStrictEqual([life1]);
-    expect(store.selectedTaxa).toStrictEqual([]);
 
     await pageChangeHandler(observationsPageClick(), store, Router);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
-    expect(store.selectedTaxaIdentified).toStrictEqual([expectedLife]);
-    expect(store.selectedTaxa).toStrictEqual([defaultTaxa]);
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_lifeIdent,
+      gridLabel_allTaxaRecord,
+    ]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([
+      { ...life1, observations_count: allTaxa.observations_count },
+    ]);
+    expectDefaultTaxaRecord(store);
     expect(store.record_type).toStrictEqual("observations");
     expect(store.currentView).toStrictEqual("observations_observations");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
-      taxon_id: `${defaultTaxa.id}`,
-      colors: iNatOrange,
       per_page: perPage,
+      ident_taxon_id: life1.id.toString(),
+      taxon_id: allTaxa.id.toString(),
+      colors: iNatOrange,
     });
     expect(store.identificationsApiParams).toStrictEqual({
+      colors: life1.color,
       per_page: perPage,
       taxon_id: `${life1.id}`,
     });
@@ -271,23 +287,27 @@ describe("click on site header to change page", () => {
       `<view-observations></view-observations>`,
     );
 
-    await pageChangeHandler(identificationsClickMock(), store, Router);
+    await pageChangeHandler(identificationsPageClick(), store, Router);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
-    expect(store.selectedTaxaIdentified).toStrictEqual([expectedLife]);
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_lifeIdent,
+    ]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([
+      { ...life1, observations_count: allTaxa.observations_count },
+    ]);
     expect(store.selectedTaxa).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("identifications");
     expect(store.currentView).toStrictEqual("identifications_observations");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
+      ident_taxon_id: life1.id.toString(),
       per_page: perPage,
-      taxon_id: `${defaultTaxa.id}`,
-      colors: iNatOrange,
     });
     expect(store.identificationsApiParams).toStrictEqual({
+      colors: life1.color,
       per_page: perPage,
       taxon_id: `${life1.id}`,
-      observation_taxon_id: `${defaultTaxa.id}`,
     });
 
     expect(mainEl?.innerHTML).toBe(
@@ -302,7 +322,6 @@ describe("click on site header to change page", () => {
     let store = structuredClone(mapStore);
 
     let defaultTaxa = allTaxa;
-    let defaultTaxaCount = allTaxaIdentification.identifications_count;
 
     let searchparams = "";
     let urlData = decodeAppUrl(searchparams, "/");
@@ -314,6 +333,7 @@ describe("click on site header to change page", () => {
       gridLabel_allTaxaRecord,
     ]);
     expectDefaultTaxaRecord(store);
+    expect(store.selectedTaxaIdentified).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("observations");
     expect(store.currentView).toStrictEqual("observations_observations");
     expect(store.observationsApiParams).toStrictEqual({
@@ -323,28 +343,25 @@ describe("click on site header to change page", () => {
       colors: `${defaultTaxa.color}`,
     });
     expect(store.identificationsApiParams).toStrictEqual({});
-    expect(store.selectedTaxa).toStrictEqual([defaultTaxa]);
 
-    await pageChangeHandler(identificationsClickMock(), store, Router);
+    await pageChangeHandler(identificationsPageClick(), store, Router);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord,
+      gridLabel_allTaxaRecordIdent,
     ]);
-    expect(store.selectedTaxa).toStrictEqual([
-      { ...defaultTaxa, identifications_count: defaultTaxaCount },
-    ]);
+    expectDefaultTaxaRecordIdentification(store);
+    expect(store.selectedTaxa).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("identifications");
     expect(store.currentView).toStrictEqual("identifications_observations");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       per_page: perPage,
-      taxon_id: `${defaultTaxa.id}`,
-      colors: `${defaultTaxa.color}`,
     });
     expect(store.identificationsApiParams).toStrictEqual({
-      observation_taxon_id: `${defaultTaxa.id}`,
       per_page: perPage,
+      taxon_id: `${defaultTaxa.id}`,
+      colors: `${defaultTaxa.color}`,
     });
 
     let mainEl = document.querySelector("#app") as HTMLDivElement;
@@ -364,9 +381,9 @@ describe("click on site header to change page", () => {
     let store = structuredClone(mapStore);
 
     let life1 = life();
-    let life1IdentCount = lifeIdentification().identifications_count;
+    let life1IdentCount = lifeIdentification().identifications_count as number;
     let oak1 = redOak();
-    let oak1IdentCount = redOakIdentification().identifications_count;
+    let oak1IdentCount = redOakIdentification().identifications_count as number;
 
     let searchparams = "";
     let urlData = decodeAppUrl(searchparams, "/");
@@ -382,6 +399,7 @@ describe("click on site header to change page", () => {
       gridLabel_oaks,
     ]);
     expectLifeOakTaxa(store);
+    expect(store.selectedTaxaIdentified).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("observations");
     expect(store.currentView).toStrictEqual("observations_observations");
     expect(store.observationsApiParams).toStrictEqual({
@@ -391,19 +409,23 @@ describe("click on site header to change page", () => {
       colors: `${life1.color},${oak1.color}`,
     });
     expect(store.identificationsApiParams).toStrictEqual({});
-    expect(store.selectedTaxa).toStrictEqual([life1, oak1]);
 
-    await pageChangeHandler(identificationsClickMock(), store, Router);
+    await pageChangeHandler(identificationsPageClick(), store, Router);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_life,
       gridLabel_oaks,
+      gridLabel_allTaxaRecordIdent,
     ]);
     expect(store.selectedTaxa).toStrictEqual([
       { ...life1, identifications_count: life1IdentCount },
       { ...oak1, identifications_count: oak1IdentCount },
     ]);
+    expectDefaultTaxaRecordIdentification(
+      store,
+      life1IdentCount + oak1IdentCount,
+    );
     expect(store.record_type).toStrictEqual("identifications");
     expect(store.currentView).toStrictEqual("identifications_observations");
     expect(store.observationsApiParams).toStrictEqual({
@@ -415,6 +437,8 @@ describe("click on site header to change page", () => {
     expect(store.identificationsApiParams).toStrictEqual({
       observation_taxon_id: `${life1.id},${oak1.id}`,
       per_page: perPage,
+      taxon_id: allTaxa.id.toString(),
+      colors: iNatOrange,
     });
 
     let mainEl = document.querySelector("#app") as HTMLDivElement;
@@ -439,13 +463,19 @@ describe("click on site header to change page", () => {
     await initRenderMap(store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
+    expect(store.selectedTaxa).toStrictEqual([]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("about");
     expect(store.currentView).toBeUndefined();
 
     await pageChangeHandler(observationsPageClick(), store, Router);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecord,
+    ]);
     expect(store.selectedTaxa).toStrictEqual([allTaxa]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("observations");
     expect(store.currentView).toStrictEqual("observations_observations");
     expect(store.observationsApiParams).toStrictEqual({
@@ -458,6 +488,50 @@ describe("click on site header to change page", () => {
 
     let mainEl = document.querySelector("#app") as HTMLDivElement;
     expect(mainEl?.innerHTML).toBe(`<page-observations></page-observations>`);
+
+    let viewContainerEl = document.querySelector(
+      "#view-container",
+    ) as HTMLDivElement;
+    expect(viewContainerEl?.innerHTML).toBe(
+      `<view-observations></view-observations>`,
+    );
+  });
+
+  test("switch from about page to identifications page", async () => {
+    let store = structuredClone(mapStore);
+
+    let searchparams = "";
+    let urlData = decodeAppUrl(searchparams, "/about/");
+    await initPopulateStore(store, urlData);
+    await initRenderMap(store);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
+    expect(store.selectedTaxa).toStrictEqual([]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([]);
+    expect(store.record_type).toStrictEqual("about");
+    expect(store.currentView).toBeUndefined();
+
+    await pageChangeHandler(identificationsPageClick(), store, Router);
+
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_allTaxaRecordIdent,
+    ]);
+    expect(store.selectedTaxa).toStrictEqual([]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([allTaxaIdentification]);
+    expect(store.record_type).toStrictEqual("identifications");
+    expect(store.currentView).toStrictEqual("identifications_observations");
+    expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
+    expect(store.identificationsApiParams).toStrictEqual({
+      taxon_id: `${allTaxa.id}`,
+      colors: `${allTaxa.color}`,
+      per_page: perPage,
+    });
+
+    let mainEl = document.querySelector("#app") as HTMLDivElement;
+    expect(mainEl?.innerHTML).toBe(
+      `<page-identifications></page-identifications>`,
+    );
 
     let viewContainerEl = document.querySelector(
       "#view-container",
@@ -516,7 +590,7 @@ describe("click on headers to change view and page", () => {
     ]);
     expect(viewContainerEl?.innerHTML).toBe(`<view-species></view-species>`);
 
-    await pageChangeHandler(identificationsClickMock(), store, Router);
+    await pageChangeHandler(identificationsPageClick(), store, Router);
 
     expect(store.record_type).toStrictEqual("identifications");
     expect(store.currentView).toStrictEqual("identifications_species");
@@ -526,6 +600,7 @@ describe("click on headers to change view and page", () => {
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_life,
+      gridLabel_allTaxaRecordIdent,
     ]);
     expect(mainEl?.innerHTML).toBe(
       `<page-identifications></page-identifications>`,

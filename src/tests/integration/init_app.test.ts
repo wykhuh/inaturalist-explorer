@@ -66,16 +66,20 @@ import {
   gridLabel_allTaxaRecord_usersIdentifiers,
   expectUserAnnotators,
   gridLabel_allTaxaRecord_usersAnnotator,
-  expectLifeOakTaxaIdentifications,
   redOakBasic,
   gridLabel_allTaxaRecord_projects,
   gridLabel_allTaxaRecord_projectsNotInProject,
   gridLabel_allTaxaRecord_users,
-  gridLabel_withoutLifeOak,
-  gridLabel_life_places_use2Identifiers,
+  gridLabel_life_identified_places_usersIdentifiers,
   gridLabel_allTaxaRecord_withoutTaxa,
   iNatBboxParams,
   expectBboxPlace,
+  gridLabel_allTaxaRecordIdent,
+  gridLabel_allTaxaRecordIdent_usersIdentifiers,
+  gridLabel_allTaxaRecordIdent_la_sd,
+  gridLabel_lifeIdent,
+  gridLabel_oakIdent,
+  gridLabel_allTaxaRecordIdent_withoutTaxa,
 } from "../test_helpers.ts";
 import type {
   IdentificationsApiParamsType,
@@ -87,7 +91,7 @@ import {
   identificationsApiFilterableNames,
   observationsApiFilterableNames,
 } from "../../data/app_data.ts";
-import { iNatOrange } from "../../lib/map_colors_utils.ts";
+import { defaultColorScheme, iNatOrange } from "../../lib/map_colors_utils.ts";
 import { initPopulateStore, initRenderMap } from "../../lib/init_app.ts";
 import { mapStore } from "../../lib/store.ts";
 import {
@@ -502,8 +506,9 @@ describe("initPopulateStore and initRenderMap options", () => {
     expect(store.identificationsApiParams).toStrictEqual({
       observation_iconic_taxon_id: 1,
       iconic_taxon_id: 3,
-      observation_taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxa.id.toString(),
       per_page: perPage,
+      colors: iNatOrange,
     });
   });
 
@@ -522,8 +527,9 @@ describe("initPopulateStore and initRenderMap options", () => {
     expect(store.identificationsApiParams).toStrictEqual({
       observation_iconic_taxon_id: "1,2",
       iconic_taxon_id: "3,4",
-      observation_taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxa.id.toString(),
       per_page: perPage,
+      colors: iNatOrange,
     });
   });
 });
@@ -1117,16 +1123,18 @@ describe("initPopulateStore and initRenderMap options with identifications", () 
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectEmptyResources(store, ["selectedTaxa"]);
+    expectEmptyResources(store, ["selectedTaxaIdentified"]);
+    expect(store.selectedTaxa).toStrictEqual([]);
     expectDefaultTaxaRecordIdentification(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord,
+      gridLabel_allTaxaRecordIdent,
     ]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
-      observation_taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxa.id.toString(),
       per_page: perPage,
+      colors: iNatOrange,
     });
     expect(store.color).toBe(allTaxaIdentification.color);
     expect(store.record_type).toBe("identifications");
@@ -1143,13 +1151,14 @@ describe("initPopulateStore and initRenderMap options with identifications", () 
       await initPopulateStore(store, urlData);
       await initRenderMap(store);
 
-      expectEmptyResources(store, ["selectedTaxa"]);
+      expectEmptyResources(store, ["selectedTaxaIdentified"]);
       expectDefaultTaxaRecordIdentification(store);
       expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
       expect(store.identificationsApiParams).toStrictEqual({
         [param]: true,
-        observation_taxon_id: allTaxa.id.toString(),
+        taxon_id: allTaxa.id.toString(),
         per_page: perPage,
+        colors: iNatOrange,
       });
       expect(store.color).toBe(iNatOrange);
     },
@@ -1172,22 +1181,22 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectEmptyResources(store, ["selectedTaxa"]);
-    expectLifeOakTaxaIdentifications(store, [
-      life.identifications_count as number,
-      oak.identifications_count as number,
-    ]);
+    expectEmptyResources(store, ["selectedTaxaIdentified", "selectedTaxa"]);
+    expectDefaultTaxaRecordIdentification(store, 22000);
+    expect(store.selectedTaxa).toStrictEqual([life, oak]);
+    expect(store.taxaMapLayers).toStrictEqual({});
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_life,
-      gridLabel_oaks,
+      gridLabel_allTaxaRecordIdent,
     ]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       per_page: perPage,
       observation_taxon_id: `${life.id},${oak.id}`,
+      taxon_id: allTaxa.id.toString(),
+      colors: iNatOrange,
     });
-    expect(store.color).toBe(oak.color);
+    expect(store.color).toBe(iNatOrange);
   });
 
   test("loads and renders without taxa data based on url params", async () => {
@@ -1209,18 +1218,23 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectEmptyResources(store, ["selectedTaxa", "selectedWithoutTaxa"]);
+    expectEmptyResources(store, [
+      "selectedTaxaIdentified",
+      "selectedWithoutTaxa",
+    ]);
+    expect(store.selectedTaxa).toStrictEqual([]);
     expectDefaultTaxaRecordIdentification(store);
     expect(store.selectedWithoutTaxa).toStrictEqual([life, oak]);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_withoutLifeOak,
+      gridLabel_allTaxaRecordIdent_withoutTaxa,
     ]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
-      observation_taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxa.id.toString(),
       without_observation_taxon_id: `${lifeBasic.id},${redOakBasic.id}`,
       per_page: perPage,
+      colors: iNatOrange,
     });
     expect(store.color).toBe(iNatOrange);
   });
@@ -1230,9 +1244,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     store.record_type == "identifications";
 
     let life = lifeIdentification();
-    delete life.color;
     let oak = redOakIdentification();
-    delete oak.color;
 
     expectEmpytMap(store);
 
@@ -1243,8 +1255,13 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     await initRenderMap(store);
 
     expectEmptyResources(store, ["selectedTaxaIdentified"]);
+    expect(store.selectedTaxa).toStrictEqual([]);
     expect(store.selectedTaxaIdentified).toStrictEqual([life, oak]);
-    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
+    expect(leafletVisibleLayers(store)).toStrictEqual([
+      basemapLabel_osm,
+      gridLabel_lifeIdent,
+      gridLabel_oakIdent,
+    ]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       taxon_id: `${life.id},${oak.id}`,
@@ -1273,19 +1290,22 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     await initRenderMap(store);
 
     expectEmptyResources(store, [
-      "selectedTaxa",
+      "selectedTaxaIdentified",
       "selectedWithoutTaxaIdentified",
     ]);
+    expect(store.selectedTaxa).toStrictEqual([]);
+    expectDefaultTaxaRecordIdentification(store);
     expect(store.selectedWithoutTaxaIdentified).toStrictEqual([life, oak]);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord,
+      gridLabel_allTaxaRecordIdent,
     ]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
-      observation_taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxa.id.toString(),
       without_taxon_id: `${life.id},${oak.id}`,
       per_page: perPage,
+      colors: iNatOrange,
     });
     expect(store.color).toBe(iNatOrange);
   });
@@ -1308,8 +1328,9 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectEmptyResources(store, ["selectedPlaces", "selectedTaxa"]);
+    expectEmptyResources(store, ["selectedPlaces", "selectedTaxaIdentified"]);
     expect(store.selectedPlaces).toStrictEqual([placeA, placeB]);
+    expect(store.selectedTaxa).toStrictEqual([]);
     expectDefaultTaxaRecordIdentification(
       store,
       allTaxaIdentification.identifications_count,
@@ -1320,13 +1341,14 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
       placeLabel_la,
       placeLabel_sd,
       placeLabel_sd,
-      gridLabel_allTaxaRecord_la_sd,
+      gridLabel_allTaxaRecordIdent_la_sd,
     ]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams2: IdentificationsApiParamsType = {
       place_id: `${placeA.id},${placeB.id}`,
-      observation_taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxa.id.toString(),
       per_page: perPage,
+      colors: iNatOrange,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
     expect(store.color).toBe(iNatOrange);
@@ -1344,16 +1366,18 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectEmptyResources(store, ["selectedTaxa"]);
+    expectEmptyResources(store, ["selectedTaxaIdentified"]);
+    expect(store.selectedTaxa).toStrictEqual([]);
     expectDefaultTaxaRecordIdentification(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord,
+      gridLabel_allTaxaRecordIdent,
     ]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
-      observation_taxon_id: allTaxaIdentification.id.toString(),
+      taxon_id: allTaxaIdentification.id.toString(),
       per_page: perPage,
+      colors: iNatOrange,
     });
     expect(store.color).toBe(iNatOrange);
   });
@@ -1369,16 +1393,18 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectEmptyResources(store, ["selectedTaxa"]);
+    expectEmptyResources(store, ["selectedTaxaIdentified"]);
+    expect(store.selectedTaxa).toStrictEqual([]);
     expectDefaultTaxaRecordIdentification(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord,
+      gridLabel_allTaxaRecordIdent,
     ]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
-      observation_taxon_id: allTaxaIdentification.id.toString(),
+      taxon_id: allTaxaIdentification.id.toString(),
       per_page: perPage,
+      colors: iNatOrange,
     });
     expect(store.color).toBe(iNatOrange);
   });
@@ -1402,7 +1428,11 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectEmptyResources(store, ["selectedTaxa", "selectedUsersIdentifiers"]);
+    expectEmptyResources(store, [
+      "selectedTaxaIdentified",
+      "selectedUsersIdentifiers",
+    ]);
+    expect(store.selectedTaxa).toStrictEqual([]);
     expectDefaultTaxaRecordIdentification(
       store,
       allTaxaIdentification.identifications_count,
@@ -1410,13 +1440,14 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expect(store.selectedUsersIdentifiers).toStrictEqual([userA, userB]);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord_usersIdentifiers,
+      gridLabel_allTaxaRecordIdent_usersIdentifiers,
     ]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams2: IdentificationsApiParamsType = {
       user_id: `${userA.id},${userB.id}`,
-      observation_taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxa.id.toString(),
       per_page: perPage,
+      colors: iNatOrange,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
     expect(store.color).toBe(iNatOrange);
@@ -1433,15 +1464,17 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectEmptyResources(store, ["selectedTaxa"]);
+    expectEmptyResources(store, ["selectedTaxaIdentified"]);
+    expect(store.selectedTaxa).toStrictEqual([]);
     expectDefaultTaxaRecordIdentification(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord,
+      gridLabel_allTaxaRecordIdent,
     ]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
-      observation_taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxa.id.toString(),
+      colors: iNatOrange,
       per_page: perPage,
     });
     expect(store.color).toBe(iNatOrange);
@@ -1458,15 +1491,17 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expectEmptyResources(store, ["selectedTaxa"]);
+    expectEmptyResources(store, ["selectedTaxaIdentified"]);
+    expect(store.selectedTaxa).toStrictEqual([]);
     expectDefaultTaxaRecordIdentification(store);
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
-      gridLabel_allTaxaRecord,
+      gridLabel_allTaxaRecordIdent,
     ]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
-      observation_taxon_id: allTaxa.id.toString(),
+      taxon_id: allTaxa.id.toString(),
+      colors: iNatOrange,
       per_page: perPage,
     });
     expect(store.color).toBe(iNatOrange);
@@ -1478,7 +1513,6 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     let life = lifeIdentification();
     let count = life.identifications_count as number;
     let oak = redOakIdentification();
-    delete oak.color;
 
     expectEmpytMap(store);
 
@@ -1495,10 +1529,12 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
 
     expect_LA_SD_Place_Identifications(store, [count * 0.6, count * 0.4]);
     expect(store.selectedTaxa).toStrictEqual([life]);
-    expect(Object.keys(store.taxaMapLayers)).toEqual([life.id.toString()]);
-    expect(store.taxaMapLayers[life.id].length).toBe(4);
+    expect(Object.keys(store.taxaIdentifiedMapLayers)).toEqual([
+      oak.id.toString(),
+    ]);
+    expect(store.taxaIdentifiedMapLayers[oak.id].length).toBe(4);
     expect(store.selectedTaxaIdentified).toStrictEqual([
-      { ...oak, identifications_count: count },
+      { ...oak, identifications_count: count, color: defaultColorScheme[0] },
     ]);
     expectUserIdentifiersIdentifications(store, [
       Math.round(count * 0.45),
@@ -1510,7 +1546,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
       placeLabel_la,
       placeLabel_sd,
       placeLabel_sd,
-      gridLabel_life_places_use2Identifiers,
+      gridLabel_life_identified_places_usersIdentifiers,
     ]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams: ObservationsApiParamsType = {
@@ -1538,6 +1574,8 @@ describe("initPopulateStore and initRenderMap resources with about page", () => 
     await initRenderMap(store);
 
     expectEmptyResources(store);
+    expect(store.selectedTaxa).toStrictEqual([]);
+    expect(store.selectedTaxaIdentified).toStrictEqual([]);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
     });
@@ -1600,11 +1638,12 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       await initPopulateStore(store, urlData);
       await initRenderMap(store);
 
-      expectEmptyResources(store, ["selectedTaxa"]);
+      expectEmptyResources(store, ["selectedTaxaIdentified"]);
       expectDefaultTaxaRecordIdentification(store);
       expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
       expect(store.identificationsApiParams).toStrictEqual({
-        observation_taxon_id: allTaxa.id.toString(),
+        taxon_id: allTaxa.id.toString(),
+        colors: iNatOrange,
         per_page: store.viewMetadata[view].perPage,
       });
       expect(store.color).toBe(iNatOrange);
@@ -1658,12 +1697,13 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       await initPopulateStore(store, urlData);
       await initRenderMap(store);
 
-      expectEmptyResources(store, ["selectedTaxa"]);
+      expectEmptyResources(store, ["selectedTaxaIdentified"]);
       expectDefaultTaxaRecordIdentification(store);
       expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
       expect(store.identificationsApiParams).toStrictEqual({
         per_page: perPage,
-        observation_taxon_id: allTaxa.id.toString(),
+        colors: iNatOrange,
+        taxon_id: allTaxa.id.toString(),
       });
       expect(store.color).toBe(iNatOrange);
       expect(store.currentView).toBe("identifications_observations");
