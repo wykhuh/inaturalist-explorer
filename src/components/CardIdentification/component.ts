@@ -38,6 +38,9 @@ class CardIdentification extends HTMLElement {
     let identification = data.observation.identifications.find(
       (ident) => ident.id === data.id,
     );
+    if (!identification) {
+      return;
+    }
 
     let identificationEl = document.createElement(
       "card-identification-identification",
