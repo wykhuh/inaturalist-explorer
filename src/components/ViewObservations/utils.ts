@@ -73,6 +73,9 @@ export async function fetchAndRenderData(
   render(data, paginationCallback, appStore);
 }
 
+// re-render grids, tables, pagination everytime we fetch new data. only render
+// map if it does not exist since we have another function to add/delete map
+// layers when data changes.
 function render(
   data: iNatObservationsAPI,
   paginationCallback: any,
@@ -83,15 +86,17 @@ function render(
   if (!containerEl) return;
   if (!formEl) return;
 
-  containerEl.innerHTML = "";
-
   let view = isObservationsCheck(appStore)
     ? appStore.viewMetadata.observations_observations
     : appStore.viewMetadata.identifications_observations;
 
   if (view.subview === "map") {
+    if (!appStore.map.map) {
+      containerEl.innerHTML = "";
+    }
     formEl.className = "hide";
   } else {
+    containerEl.innerHTML = "";
     formEl.className = "";
   }
 
@@ -117,13 +122,15 @@ function render(
   } else if (view.subview === "media") {
     subviewEl.appendChild(createMediaGrid(data.results));
   } else if (view.subview === "map") {
-    subviewEl.appendChild(createMap());
+    if (!appStore.map.map) {
+      subviewEl.appendChild(createMap());
 
-    // HACK: use setTimeout to ensure initRenderMap is called after createMap
-    // adds div#map
-    setTimeout(() => {
-      initRenderMap(appStore);
-    }, 0);
+      // HACK: use setTimeout to ensure initRenderMap is called after createMap
+      // adds div#map
+      setTimeout(() => {
+        initRenderMap(appStore);
+      }, 0);
+    }
   } else {
     subviewEl.appendChild(createGrid(data.results));
   }

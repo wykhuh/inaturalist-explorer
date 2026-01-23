@@ -65,7 +65,6 @@ import {
   withoutUserIdentifierSelectedHandler,
 } from "./search_without_users_identifiers.ts";
 
-// TODO: check if updateTilesForSelectedTaxa is needed
 export async function updateTilesForSelectedTaxa(appStore: AppStoreType) {
   for await (const taxon of appStore.selectedTaxa) {
     // remove existing taxon layers from map
@@ -82,7 +81,6 @@ export async function updateTilesForSelectedTaxa(appStore: AppStoreType) {
   }
 }
 
-// TODO: check if updateTilesForSelectedTaxaIdentified is needed
 export async function updateTilesForSelectedTaxaIdentified(
   appStore: AppStoreType,
 ) {
