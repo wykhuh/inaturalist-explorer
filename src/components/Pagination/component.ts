@@ -75,17 +75,17 @@ export class Pagination extends HTMLElement {
 
     let value = Number(target.innerText);
 
+    // do fetch request and render new records
     if (target.className === "next") {
       this.paginationCallback(this.currentPage + 1, window.app.store);
     } else if (target.className === "prev") {
       this.paginationCallback(this.currentPage - 1, window.app.store);
     } else if (value !== this.currentPage) {
-      // do fetch request and render new records
       this.paginationCallback(Number(value), window.app.store);
-      // scroll to top of page
-      if (this.scrollToSelector) {
-        document.querySelector(this.scrollToSelector)?.scrollIntoView();
-      }
+    }
+    // scroll to top of page
+    if (this.scrollToSelector) {
+      document.querySelector(this.scrollToSelector)?.scrollIntoView();
     }
   }
 
