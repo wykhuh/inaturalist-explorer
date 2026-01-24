@@ -7,6 +7,7 @@ import media from "../../assets/images/observations_media.jpg";
 import grid_ident from "../../assets/images/identifications_grid.jpg";
 import history_ident from "../../assets/images/identifications_history.jpg";
 import settings from "../../assets/images/settings.jpg";
+import custom_boundaries from "../../assets/images/custom_boundaries.jpg";
 
 import annotations from "../../assets/images/annotations.jpg";
 import filters from "../../assets/images/filters.jpg";
@@ -125,14 +126,20 @@ export const template = html`
         <img src="${annotations}" alt="Available annotations filters" />
       </li>
       <li>
-        Search by Species, iNaturalist places, Projects, Observers (people who
-        add observations), Identifiers(people who add identifications), and
-        Annotators (people who add annotations). Also exclude items from search.
+        Search observations by Species, iNaturalist places, Projects, Observers
+        (people who add observations), Identifiers(people who add
+        identifications), and Annotators (people who add annotations). Also
+        exclude items from search.
         <img
           src="${searchUsers}"
           alt="dropdown search menu has options to search by species, places, projects, observers, identifiers, and annotators"
         />
       </li>
+      <li>
+        Draw a rectangle to select observations within the rectangle
+        <img src="${custom_boundaries}" alt="" />
+      </li>
+
       <li>Mobile friendly layout</li>
       <li>Pagination for observations, species, identifiers, and observers</li>
       <li>Set the order for species common names and Latin scientific names</li>
