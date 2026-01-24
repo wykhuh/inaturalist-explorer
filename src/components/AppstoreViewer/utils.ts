@@ -6,6 +6,7 @@ import { displayJson } from "../../lib/utils";
 function formatTaxaMapLayers(appStore: AppStoreType) {
   let temp: any = {};
   Object.entries(appStore.taxaMapLayers).forEach(([key, val]) => {
+    if (val === undefined || val === null) return;
     temp[key] = val
       .filter((v) => v)
       .map((v: any) => v.options?.layer_description);
@@ -15,6 +16,7 @@ function formatTaxaMapLayers(appStore: AppStoreType) {
 function formatTaxaIdentifiedMapLayers(appStore: AppStoreType) {
   let temp: any = {};
   Object.entries(appStore.taxaIdentifiedMapLayers).forEach(([key, val]) => {
+    if (val === undefined || val === null) return;
     temp[key] = val
       .filter((v) => v)
       .map((v: any) => v.options?.layer_description);
@@ -25,6 +27,7 @@ function formatSelectedPlaces(appStore: AppStoreType) {
   return appStore.selectedPlaces.map((place) => {
     let temp = {} as any;
     Object.entries(place).forEach(([key, val]) => {
+      if (val === undefined || val === null) return;
       if (["bounding_box", "geometry"].includes(key)) {
         let value = val as PolygonJson;
 
