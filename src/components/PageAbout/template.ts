@@ -1,12 +1,17 @@
 import { html } from "../../lib/component_utils";
-import socal from "../../assets/images/search_socal_monarchs.png";
-import identifications from "../../assets/images/identifications.png";
-import grid from "../../assets/images/grid_subview.jpg";
-import table from "../../assets/images/table_subview.jpg";
-import media from "../../assets/images/media_subview.jpg";
-import annotations from "../../assets/images/annotations.png";
-import filters from "../../assets/images/filters.png";
-import searchUsers from "../../assets/images/search_users.jpg";
+import observations from "../../assets/images/observations.jpg";
+import identifications from "../../assets/images/identifications.jpg";
+import grid from "../../assets/images/observations_grid.jpg";
+import table from "../../assets/images/observations_table.jpg";
+import media from "../../assets/images/observations_media.jpg";
+import grid_ident from "../../assets/images/identifications_grid.jpg";
+import history_ident from "../../assets/images/identifications_history.jpg";
+import settings from "../../assets/images/settings.jpg";
+
+import annotations from "../../assets/images/annotations.jpg";
+import filters from "../../assets/images/filters.jpg";
+import searchUsers from "../../assets/images/search_types.jpg";
+import map_layers from "../../assets/images/map_layers.jpg";
 
 export const template = html`
   <site-header></site-header>
@@ -25,20 +30,18 @@ export const template = html`
     <h2>Features</h2>
     <ol>
       <li>
+        Search for multiple species, places, projects, and people. Here's a
+        search for
         <a
           href="/?taxon_id=48662,56851&place_id=962,829&colors=%234477aa,%2366ccee&verifiable=true&spam=false"
-          >Search for multiple</a
+          >monarchs and narrowleaf milkweed</a
         >
-        species, places, projects, and people
-      </li>
-      <li>
-        Show iNaturalist maps as grid, points, heatmap and taxon range
+        in Los Angeles and San Diego.
         <img
-          src="${socal}"
-          alt="Map of monarch and narrowleaf milkweed observations in Los Angeles and San Diego. Map  allows user to select grid, points, heatmap, and taxon range. "
+          src="${observations}"
+          alt="Monarch and narrowleaf milkweed observations in Los Angeles and San Diego."
         />
       </li>
-
       <li>
         View both observations and
         <a
@@ -51,19 +54,68 @@ export const template = html`
         />
       </li>
       <li>
+        Show iNaturalist maps as grid, points, heatmap and taxon range
+        <img
+          src="${map_layers}"
+          alt="Map of monarch and narrowleaf milkweed observations in Los Angeles and San Diego. Map  allows user to select grid, points, heatmap, and taxon range. "
+        />
+      </li>
+
+      <li>
         <a
           href="/?taxon_id=48662&place_id=962&colors=%234477aa&verifiable=true&spam=false&year=2025"
           >View observations</a
         >
-        by grid, media (all photos and audio are displayed), or table
+        as map, grid (one photo is displayed), media (all photos and audio are
+        displayed), or table
       </li>
       <li>
         View annotations on grid and media
-        <img src="${grid}" alt="Grid view of monarchs in Los Angeles" />
-        <img src="${media}" alt="Media view of monarchs in Los Angeles" />
-        <img src="${table}" alt="Table view of monarchs in Los Angeles" />
+        <figure>
+          <figcaption>Grid view</figcaption>
+          <img
+            src="${grid}"
+            alt="Grid view of monarchs observations in Los Angeles"
+          />
+        </figure>
+        <figure>
+          <figcaption>Media view</figcaption>
+          <img
+            src="${media}"
+            alt="Media view of monarchs observations in Los Angeles"
+          />
+        </figure>
+        <figure>
+          <figcaption>Table view</figcaption>
+          <img
+            src="${table}"
+            alt="Table view of monarchs observations in Los Angeles"
+          />
+        </figure>
       </li>
-      <li>Add more filters</li>
+      <li>
+        <a
+          href="/identifications/?taxon_id=48662&place_id=962&colors=%234477aa&verifiable=true&spam=false&year=2025"
+          >View identifications</a
+        >
+        as map, grid (one identification per observation), or history (all
+        identifications per observation)
+        <figure>
+          <figcaption>Grid view</figcaption>
+          <img
+            src="${grid_ident}"
+            alt="Grid view of monarchs identifications in Los Angeles"
+          />
+        </figure>
+        <figure>
+          <figcaption>History view</figcaption>
+          <img
+            src="${history_ident}"
+            alt="History view of monarchs identifications in Los Angeles"
+          />
+        </figure>
+      </li>
+      <li>Add more filters options</li>
       <li>
         Group the filters by categories
         <img src="${filters}" alt="Available filters" />
@@ -73,8 +125,9 @@ export const template = html`
         <img src="${annotations}" alt="Available annotations filters" />
       </li>
       <li>
-        Search by Observers (people who add observations), Identifiers(people
-        who add identifications), and Annotators (people who add annotations)
+        Search by Species, iNaturalist places, Projects, Observers (people who
+        add observations), Identifiers(people who add identifications), and
+        Annotators (people who add annotations). Also exclude items from search.
         <img
           src="${searchUsers}"
           alt="dropdown search menu has options to search by species, places, projects, observers, identifiers, and annotators"
@@ -82,6 +135,15 @@ export const template = html`
       </li>
       <li>Mobile friendly layout</li>
       <li>Pagination for observations, species, identifiers, and observers</li>
+      <li>Set the order for species common names and Latin scientific names</li>
+      <li>Set the language for the species common names</li>
+      <li>
+        Set the number of records show per page
+        <img
+          src="${settings}"
+          alt="Settings menu with common names/scientific names order, common names language, and records per page"
+        />
+      </li>
       <li>
         <p>
           This site gets data from the iNaturalist API. As a result, the urls
