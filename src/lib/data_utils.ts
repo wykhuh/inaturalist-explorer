@@ -241,14 +241,15 @@ export function removeDefaultTaxonFromStoreAndMapSwitchPage(
   appStore: AppStoreType,
 ) {
   let layerControl = appStore.map.layerControl;
-  if (!layerControl) return;
   let isObservations = isObservationsCheck(appStore);
 
   // remove from map
-  let mapLayers = isObservations
-    ? appStore.taxaIdentifiedMapLayers
-    : appStore.taxaMapLayers;
-  clearMapLayers(mapLayers, layerControl);
+  if (layerControl) {
+    let mapLayers = isObservations
+      ? appStore.taxaIdentifiedMapLayers
+      : appStore.taxaMapLayers;
+    clearMapLayers(mapLayers, layerControl);
+  }
 
   // remove from store
   if (isObservations) {
