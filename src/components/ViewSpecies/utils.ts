@@ -62,7 +62,7 @@ export async function fetchAndRenderData(
   };
   containerEl.appendChild(pagination1);
 
-  let tableEl = createGrid(data.results, appStore);
+  let tableEl = createGrid(data.results);
   containerEl.appendChild(tableEl);
 
   let pagination2 = document.createElement(
@@ -108,7 +108,6 @@ function createGrid(
     | ObservationsResult[]
     | IdentificationsResult[]
     | ResourceSpeciesCountResult[],
-  appStore: AppStoreType,
 ) {
   let containerEl = document.createElement("div");
   containerEl.className = "species-grid grid-auto-fill";
@@ -118,7 +117,6 @@ function createGrid(
       "card-species",
     ) as unknown as DataComponentType;
     cardEl.data = row;
-    cardEl.record_type = appStore.record_type;
     containerEl.appendChild(cardEl);
   });
 

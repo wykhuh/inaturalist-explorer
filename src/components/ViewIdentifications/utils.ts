@@ -10,7 +10,7 @@ import { updateAppUrl } from "../../lib/utils";
 import type {
   DataComponentType,
   AppStoreType,
-  ObservationSubviewsType,
+  IdentificationSubviewsType,
 } from "../../types/app";
 import { identifications } from "../../data/inat_api_cache";
 import {
@@ -91,7 +91,6 @@ function render(
     containerEl.appendChild(pagination1);
   }
 
-  // switch between table and grid subview
   let subviewEl = document.createElement("div");
   subviewEl.className = "observations-subview";
 
@@ -105,8 +104,10 @@ function render(
         initRenderMap(appStore);
       }, 0);
     }
-  } else {
+  } else if (view.subview === "grid") {
     subviewEl.appendChild(createGrid(data.results));
+  } else {
+    subviewEl.appendChild(createHistory(data.results));
   }
   containerEl.append(subviewEl);
 
@@ -157,6 +158,29 @@ function createGrid(results: IdentificationsResult[]) {
       "card-identification",
     ) as unknown as DataComponentType;
     recordEl.data = row;
+    recordEl.type = "grid";
+    containerEl.append(recordEl);
+  });
+
+  return containerEl;
+}
+
+function createHistory(results: IdentificationsResult[]) {
+  let containerEl = document.createElement("div");
+  containerEl.className = "identifications-history";
+
+  let observationIds = new Set();
+  results.forEach((row) => {
+    if (observationIds.has(row.observation.id)) {
+      return;
+    }
+
+    observationIds.add(row.observation.id);
+    let recordEl = document.createElement(
+      "card-identification",
+    ) as unknown as DataComponentType;
+    recordEl.data = row;
+    recordEl.type = "history";
     containerEl.append(recordEl);
   });
 
@@ -188,7 +212,7 @@ function createMap() {
 }
 
 export function updateSubviewState(
-  subview: ObservationSubviewsType,
+  subview: IdentificationSubviewsType,
   componentContext: any,
   appStore: AppStoreType,
 ) {
@@ -198,7 +222,10 @@ export function updateSubviewState(
     : appStore.viewMetadata.identifications_identifications;
   if (subview === view.subview) return;
 
-  removeMap(appStore);
+  // remove map when change from map to other subview
+  if (view.subview === "map") {
+    removeMap(appStore);
+  }
 
   // update store
   view.subview = subview;
@@ -209,9 +236,15 @@ export function updateSubviewState(
   if (subview === "grid") {
     componentContext.gridLinkEl.classList.add("current-subview");
     componentContext.mapLinkEl.classList.remove("current-subview");
+    componentContext.historyLinkEl.classList.remove("current-subview");
+  } else if (subview === "history") {
+    componentContext.gridLinkEl.classList.remove("current-subview");
+    componentContext.mapLinkEl.classList.remove("current-subview");
+    componentContext.historyLinkEl.classList.add("current-subview");
   } else {
     componentContext.gridLinkEl.classList.remove("current-subview");
     componentContext.mapLinkEl.classList.add("current-subview");
+    componentContext.historyLinkEl.classList.remove("current-subview");
   }
 
   if (appStore.observationsSubviewData.length === 0) {
@@ -227,13 +260,14 @@ export function updateSubviewState(
 // use store to populate the filter form fields on page load
 export function initFilters(appStore: AppStoreType, componentContext: any) {
   let { identificationsApiParams } = appStore;
-
   // set initial current-subview class
   let subview = appStore.viewMetadata.identifications_identifications?.subview;
   if (subview === "map") {
     componentContext.mapLinkEl?.classList.add("current-subview");
-  } else {
+  } else if (subview === "grid") {
     componentContext.gridLinkEl?.classList.add("current-subview");
+  } else {
+    componentContext.historyLinkEl?.classList.add("current-subview");
   }
 
   if (identificationsApiParams.order_by && identificationsApiParams.order) {

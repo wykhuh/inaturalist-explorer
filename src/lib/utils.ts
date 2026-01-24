@@ -8,6 +8,7 @@ import type {
   IdentificationsApiParamsKeysType,
   IdentificationsApiParamsType,
   ObservationSubviewsType,
+  IdentificationSubviewsType,
 } from "../types/app";
 import {
   bboxPlaceRecord,
@@ -20,6 +21,7 @@ import {
   observationsApiFilterableNames,
   observationsApiNames,
   recordTypeToPathObj,
+  validIdentificationsSubviews,
 } from "../data/app_data";
 import { defaultColorScheme, getColor } from "./map_colors_utils";
 import { convertiNatBBoxToLngLat } from "./map_utils";
@@ -190,7 +192,7 @@ export function formatAppUrl(
   } else if (appStore.currentView === "identifications_identifications") {
     let subview =
       appStore.viewMetadata.identifications_identifications?.subview;
-    if (subview && ["grid"].includes(subview)) {
+    if (subview && ["grid", "history"].includes(subview)) {
       params.view = appStore.currentView;
       params.subview = subview;
     }
@@ -539,7 +541,9 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   }
 
   let urlView = urlParams.view as ObservationViewsType;
-  let urlSubview = urlParams.subview as ObservationSubviewsType;
+  let urlSubview = urlParams.subview as
+    | ObservationSubviewsType
+    | IdentificationSubviewsType;
   if (urlView && validViews.includes(urlView)) {
     store.currentView = urlView;
   } else if (isObservations) {
@@ -549,11 +553,17 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   }
 
   if (urlView === "observations_observations") {
-    if (validObservationsSubviews.includes(urlSubview)) {
+    if (
+      validObservationsSubviews.includes(urlSubview as ObservationSubviewsType)
+    ) {
       store.viewMetadata.observations_observations.subview = urlSubview;
     }
   } else if (urlView === "identifications_identifications") {
-    if (validObservationsSubviews.includes(urlSubview)) {
+    if (
+      validIdentificationsSubviews.includes(
+        urlSubview as IdentificationSubviewsType,
+      )
+    ) {
       store.viewMetadata.identifications_identifications.subview = urlSubview;
     }
   }

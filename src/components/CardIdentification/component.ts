@@ -1,4 +1,5 @@
 import { setupComponent } from "../../lib/component_utils";
+import { sortArrayOfObjectsByDate } from "../../lib/utils";
 import type { DataComponentType } from "../../types/app";
 import type { IdentificationsResult } from "../../types/inat_api";
 import { template } from "./template";
@@ -28,6 +29,7 @@ class CardIdentification extends HTMLElement {
     if (!cardEl) return;
     let data = (this as unknown as DataComponentType)
       .data as IdentificationsResult;
+    let type = (this as unknown as DataComponentType).type;
 
     let observationEl = document.createElement(
       "card-identification-observation",
@@ -35,18 +37,32 @@ class CardIdentification extends HTMLElement {
     observationEl.data = data.observation;
     cardEl.append(observationEl);
 
-    let identification = data.observation.identifications.find(
-      (ident) => ident.id === data.id,
-    );
-    if (!identification) {
-      return;
-    }
+    if (type === "grid") {
+      let identification = data.observation.identifications.find(
+        (ident) => ident.id === data.id,
+      );
+      if (!identification) {
+        return;
+      }
 
-    let identificationEl = document.createElement(
-      "card-identification-identification",
-    ) as unknown as DataComponentType;
-    identificationEl.data = identification;
-    cardEl.append(identificationEl);
+      let identificationEl = document.createElement(
+        "card-identification-identification",
+      ) as unknown as DataComponentType;
+      identificationEl.data = identification;
+      cardEl.append(identificationEl);
+    } else {
+      let identifications = sortArrayOfObjectsByDate(
+        data.observation.identifications,
+        "created_at",
+      );
+      identifications.forEach((ident) => {
+        let identificationEl = document.createElement(
+          "card-identification-identification",
+        ) as unknown as DataComponentType;
+        identificationEl.data = ident;
+        cardEl.append(identificationEl);
+      });
+    }
   }
 }
 

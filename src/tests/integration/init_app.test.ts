@@ -90,6 +90,7 @@ import { allTaxaRecord } from "../../data/inat_data.ts";
 import {
   identificationsApiFilterableNames,
   observationsApiFilterableNames,
+  validIdentificationsSubviews,
 } from "../../data/app_data.ts";
 import { defaultColorScheme, iNatOrange } from "../../lib/map_colors_utils.ts";
 import { initPopulateStore, initRenderMap } from "../../lib/init_app.ts";
@@ -1684,7 +1685,7 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
     },
   );
 
-  test.each(validObservationsSubviews)(
+  test.each(validIdentificationsSubviews)(
     "adds observations view and subview for identifications to store",
     async (subview) => {
       let store = structuredClone(mapStore);

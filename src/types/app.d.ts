@@ -86,7 +86,7 @@ type ViewOptions = {
   page?: number;
   order?: string;
   order_by?: string;
-  subview?: ObservationSubviewsType;
+  subview?: ObservationSubviewsType | IdentificationSubviewsType;
   perPage?: number;
 };
 
@@ -103,6 +103,9 @@ export type ObservationViewsType =
   | "identifications_identifications";
 
 export type ObservationSubviewsType = "table" | "grid" | "media" | "map";
+
+export type IdentificationSubviewsType = "grid" | "map" | "history";
+
 export type NameOrderType = "cs" | "sc" | "s";
 
 export type NormalizediNatTaxonType = {
@@ -493,7 +496,7 @@ type Spinner = {
 
 export interface DataComponentType extends HTMLElement {
   data?: any;
-  record_type: RecordTypes;
+  type: string;
 }
 
 export type TooltipSettings = {

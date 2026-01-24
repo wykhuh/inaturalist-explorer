@@ -353,7 +353,10 @@ export function updateSubviewState(
   let view = appStore.viewMetadata.observations_observations;
   if (subview === view.subview) return;
 
-  removeMap(appStore);
+  // remove map when change from map to other subview
+  if (view.subview === "map") {
+    removeMap(appStore);
+  }
 
   // update store
   view.subview = subview;

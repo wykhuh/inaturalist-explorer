@@ -8,6 +8,9 @@ export const template = html`
         <div id="subview-menu">
           <button class="subview-map" data-subview="map">Map</button>
           <button class="subview-grid" data-subview="grid">Grid</button>
+          <button class="subview-history" data-subview="history">
+            History
+          </button>
         </div>
       </div>
 

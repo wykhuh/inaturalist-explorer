@@ -8,6 +8,7 @@ import {
   renderTaxonNames,
 } from "../../lib/render_utils";
 import { template } from "./template";
+import { isObservationsCheck } from "../../lib/data_utils";
 
 class CardSpecies extends HTMLElement {
   constructor() {
@@ -27,7 +28,6 @@ class CardSpecies extends HTMLElement {
   renderCard(appStore: AppStoreType) {
     let data = (this as unknown as DataComponentType)
       .data as ResourceSpeciesCountResult;
-    let record_type = (this as unknown as DataComponentType).record_type;
 
     let photoEl = this.querySelector(".photo") as HTMLLinkElement;
     if (photoEl) {
@@ -96,7 +96,10 @@ class CardSpecies extends HTMLElement {
         appStore,
         `${iNatTaxaUrl}/${data.taxon.id}`,
       );
-      content += `<span class="observations-count">${pluralize(data.count, record_type, true)}</span>`;
+      let type = isObservationsCheck(appStore)
+        ? "observation"
+        : "identification";
+      content += `<span class="observations-count">${pluralize(data.count, type, true)}</span>`;
 
       detailsEl.innerHTML = content;
     }

@@ -789,7 +789,8 @@
   .observations-table,
   .observations-grid,
   .observations-media-grid,
-  .identifications-grid {
+  .identifications-grid,
+  .identifications-history {
     .details {
       a {
         color: var(--text-main);
@@ -1175,7 +1176,8 @@
     }
   }
 
-  .identifications-grid {
+  .identifications-grid,
+  .identifications-history {
     .card-record {
       border: var(--border-grey);
       margin-bottom: 1rem;
@@ -1260,6 +1262,7 @@
 
     .card-identification {
       grid-template-columns: 75px 1fr;
+      border-top: var(--border-grey);
 
       .media {
         width: 75px;

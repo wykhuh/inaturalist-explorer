@@ -47,6 +47,7 @@ import type {
   AppStoreSelectedResourceKeysType,
   AppStoreSelectedResourcesKeysType,
   IdentificationsApiParamsKeysType,
+  IdentificationSubviewsType,
   ObservationsApiParamsKeysType,
   ObservationSubviewsType,
   ObservationViewsType,
@@ -71,9 +72,15 @@ export const validViews: ObservationViewsType[] = validObservationsViews.concat(
 );
 
 export const validObservationsSubviews: ObservationSubviewsType[] = [
+  "map",
   "grid",
   "table",
   "media",
+];
+export const validIdentificationsSubviews: IdentificationSubviewsType[] = [
+  "map",
+  "grid",
+  "history",
 ];
 
 export function viewAndTemplateObject(targetView: ObservationViewsType) {
