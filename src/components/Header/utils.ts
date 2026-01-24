@@ -88,8 +88,16 @@ export async function pageChangeHandler(
   if (appStore.currentView) {
     let oldView = appStore.currentView.split("_")[1];
     if (oldView) {
+      //  switch from identifications_identifications to observations
       if (recordType === "observations" && oldView === "identifications") {
         appStore.currentView = "observations_observations";
+        //  switch from observations_observations to identifications
+      } else if (
+        recordType === "identifications" &&
+        oldView === "observations"
+      ) {
+        appStore.currentView = "identifications_identifications";
+        // switch to about
       } else if (recordType === "about") {
         appStore.currentView = undefined;
       } else {
@@ -100,9 +108,10 @@ export async function pageChangeHandler(
     }
     // about page does not have currentView
   } else {
-    appStore.currentView = (recordType +
-      "_" +
-      "observations") as ObservationViewsType;
+    appStore.currentView =
+      recordType === "observations"
+        ? "observations_observations"
+        : "identifications_identifications";
   }
 
   // update per_page

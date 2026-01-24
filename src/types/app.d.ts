@@ -71,7 +71,6 @@ export interface AppStoreType {
     observations_species: ViewOptions;
     observations_identifiers: ViewOptions;
     observations_observers: ViewOptions;
-    identifications_observations: ViewOptions;
     identifications_species: ViewOptions;
     identifications_identifiers: ViewOptions;
     identifications_observers: ViewOptions;
@@ -98,7 +97,6 @@ export type ObservationViewsType =
   | "observations_species"
   | "observations_identifiers"
   | "observations_observers"
-  | "identifications_observations"
   | "identifications_species"
   | "identifications_identifiers"
   | "identifications_observers"

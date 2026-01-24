@@ -60,7 +60,6 @@ export const validObservationsViews: ObservationViewsType[] = [
 ];
 
 export const validIdentificationsViews: ObservationViewsType[] = [
-  "identifications_observations",
   "identifications_species",
   "identifications_identifiers",
   "identifications_observers",
@@ -86,7 +85,6 @@ export function viewAndTemplateObject(targetView: ObservationViewsType) {
     identifications_species: "view-species",
     identifications_identifiers: "view-identifiers",
     identifications_observers: "view-observers",
-    identifications_observations: "view-observations",
     identifications_identifications: "view-identifications",
   };
 
@@ -107,7 +105,6 @@ export function viewAndPerPageDbKeyObject(targetView: ObservationViewsType) {
     identifications_species: dbKeys.per_page_species,
     identifications_identifiers: dbKeys.per_page_users,
     identifications_observers: dbKeys.per_page_users,
-    identifications_observations: dbKeys.per_page_observations,
     identifications_identifications: dbKeys.per_page_identifications,
   };
 

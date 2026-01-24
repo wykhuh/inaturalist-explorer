@@ -187,9 +187,10 @@ export function formatAppUrl(
       params.view = appStore.currentView;
       params.subview = subview;
     }
-  } else if (appStore.currentView === "identifications_observations") {
-    let subview = appStore.viewMetadata.identifications_observations?.subview;
-    if (subview && ["table", "media", "grid"].includes(subview)) {
+  } else if (appStore.currentView === "identifications_identifications") {
+    let subview =
+      appStore.viewMetadata.identifications_identifications?.subview;
+    if (subview && ["grid"].includes(subview)) {
       params.view = appStore.currentView;
       params.subview = subview;
     }
@@ -310,7 +311,6 @@ export function decodeAppUrl(searchParams: string, path = "/") {
       observations_identifiers: {},
       observations_observers: {},
       observations_species: {},
-      identifications_observations: {},
       identifications_identifiers: {},
       identifications_observers: {},
       identifications_species: {},
@@ -545,19 +545,17 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   } else if (isObservations) {
     store.currentView = "observations_observations";
   } else if (isIdentifications) {
-    store.currentView = "identifications_observations";
+    store.currentView = "identifications_identifications";
   }
 
   if (urlView === "observations_observations") {
     if (validObservationsSubviews.includes(urlSubview)) {
       store.viewMetadata.observations_observations.subview = urlSubview;
     }
-  } else if (urlView === "identifications_observations") {
-    if (validObservationsSubviews.includes(urlSubview)) {
-      store.viewMetadata.identifications_observations.subview = urlSubview;
-    }
   } else if (urlView === "identifications_identifications") {
-    store.viewMetadata.identifications_identifications = {};
+    if (validObservationsSubviews.includes(urlSubview)) {
+      store.viewMetadata.identifications_identifications.subview = urlSubview;
+    }
   }
 
   if (urlParams.order && urlParams.order !== "any") {
@@ -571,7 +569,8 @@ export function decodeAppUrl(searchParams: string, path = "/") {
       if (isObservations) {
         store.viewMetadata.observations_observations.order = urlParams.order;
       } else if (isIdentifications) {
-        store.viewMetadata.identifications_observations.order = urlParams.order;
+        store.viewMetadata.identifications_identifications.order =
+          urlParams.order;
       }
     }
   }
@@ -587,7 +586,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
         store.viewMetadata.observations_observations.order_by =
           urlParams.order_by;
       } else if (isIdentifications) {
-        store.viewMetadata.identifications_observations.order_by =
+        store.viewMetadata.identifications_identifications.order_by =
           urlParams.order_by;
       }
     }
@@ -604,7 +603,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
           urlParams.page,
         );
       } else if (isIdentifications) {
-        store.viewMetadata.identifications_observations.page = Number(
+        store.viewMetadata.identifications_identifications.page = Number(
           urlParams.page,
         );
       }

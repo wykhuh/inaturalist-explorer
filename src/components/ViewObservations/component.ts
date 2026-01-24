@@ -13,7 +13,6 @@ import {
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import { setupComponent } from "../../lib/component_utils";
 import type { AppStoreType, ObservationSubviewsType } from "../../types/app";
-import { isObservationsCheck } from "../../lib/data_utils";
 import { removeMap } from "../../lib/map_utils";
 
 class ViewObservations extends HTMLElement {
@@ -111,31 +110,12 @@ class ViewObservations extends HTMLElement {
   async render(appStore: AppStoreType) {
     loggerRender("++ ViewObservations render");
 
-    // set initial current-subview class
-    let isObservations = isObservationsCheck(appStore);
-    let subview = isObservations
-      ? appStore.viewMetadata.observations_observations?.subview
-      : appStore.viewMetadata.identifications_observations?.subview;
-    if (subview === "table") {
-      this.tableLinkEl?.classList.add("current-subview");
-    } else if (subview === "media") {
-      this.mediaLinkEl?.classList.add("current-subview");
-    } else if (subview === "map") {
-      this.mapLinkEl?.classList.add("current-subview");
-    } else {
-      this.gridLinkEl?.classList.add("current-subview");
-    }
-
     // use store to set values the form on page load
-    initFilters(appStore);
+    initFilters(appStore, this);
 
     // load observation data for grid/table
     await fetchAndRenderData(paginationCallback, appStore);
-
-    this.orderFormHandler();
   }
-
-  orderFormHandler() {}
 }
 
 customElements.define("view-observations", ViewObservations);

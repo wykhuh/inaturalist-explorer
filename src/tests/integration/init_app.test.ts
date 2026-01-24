@@ -1138,7 +1138,7 @@ describe("initPopulateStore and initRenderMap options with identifications", () 
     });
     expect(store.color).toBe(allTaxaIdentification.color);
     expect(store.record_type).toBe("identifications");
-    expect(store.currentView).toBe("identifications_observations");
+    expect(store.currentView).toBe("identifications_identifications");
   });
 
   test.each([identificationsApiFilterableNames])(
@@ -1631,7 +1631,7 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       let searchparams = `?locale=en&view=${view}`;
       let urlData = decodeAppUrl(searchparams, "/identifications/");
       let subview =
-        view === "identifications_observations"
+        view === "identifications_identifications"
           ? { subview: "map", perPage: store.viewMetadata[view].perPage }
           : { perPage: store.viewMetadata[view].perPage };
 
@@ -1691,7 +1691,7 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
 
       expectEmpytMap(store);
 
-      let searchparams = `?locale=en&view=identifications_observations&subview=${subview}`;
+      let searchparams = `?locale=en&view=identifications_identifications&subview=${subview}`;
       let urlData = decodeAppUrl(searchparams, "/identifications/");
 
       await initPopulateStore(store, urlData);
@@ -1706,8 +1706,8 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
         taxon_id: allTaxa.id.toString(),
       });
       expect(store.color).toBe(iNatOrange);
-      expect(store.currentView).toBe("identifications_observations");
-      expect(store.viewMetadata.identifications_observations).toStrictEqual({
+      expect(store.currentView).toBe("identifications_identifications");
+      expect(store.viewMetadata.identifications_identifications).toStrictEqual({
         perPage: 24,
         subview: subview,
       });
@@ -1757,7 +1757,7 @@ describe("populateStoreWithLocaleStorage", () => {
     populateStoreWithLocaleStorage(store);
 
     let expected = structuredClone(mapStore);
-    expected.viewMetadata.identifications_observations.perPage = 48;
+    expected.viewMetadata.identifications_identifications.perPage = 48;
     expected.viewMetadata.observations_observations.perPage = 48;
     expect(store).toStrictEqual(expected);
   });
@@ -1789,7 +1789,7 @@ describe("initApp when there are valus in local storage", () => {
       per_page: 48,
     });
     expect(store.viewMetadata.name_order).toBe("s");
-    expect(store.viewMetadata.identifications_observations.perPage).toBe(48);
+    expect(store.viewMetadata.identifications_identifications.perPage).toBe(48);
     expect(store.viewMetadata.observations_observations.perPage).toBe(48);
   });
 });

@@ -3,12 +3,6 @@ import { html } from "../../lib/component_utils";
 export const identificationsHeaderLinks = html`
   <ul class="identifications-stats">
     <li
-      id="identifications_observations"
-      data-count-label="identifications_observations"
-    >
-      <span class="header-count">&nbsp;</span><span>Observations</span>
-    </li>
-    <li
       id="identifications_identifications"
       data-count-label="identifications_identifications"
     >

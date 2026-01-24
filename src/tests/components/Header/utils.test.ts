@@ -44,6 +44,7 @@ import Router from "../../../lib/router.ts";
 import { taxonSelectedHandler } from "../../../lib/search_taxa.ts";
 import { viewChangeHandler } from "../../../components/ObservationsHeader/shared_utils.ts";
 import { iNatOrange } from "../../../lib/map_colors_utils.ts";
+import { identificationsHeaderLinks } from "../../../components/IdentificationsHeader/template.ts";
 beforeEach(() => {
   const { JSDOM } = jsdom;
 
@@ -52,12 +53,7 @@ beforeEach(() => {
 <html lang="en">
   <body>
   <div id="app"></div>
-    <li
-      id="identifications"
-      data-count-label="identifications_identifications"
-    >
-      <span class="header-count">&nbsp;</span><span>Identifications</span>
-    </li>
+    ${identificationsHeaderLinks}
     <div id="map" style="width: 400px; height: 400px"></div>
     <div id="view-container"></div>
   </body>
@@ -113,7 +109,7 @@ describe("click on header to change page", () => {
     expectLifeOakTaxaIdentifications(store, [20000, 2000]);
     expectDefaultTaxaRecordIdentification(store, 22000);
     expect(store.record_type).toStrictEqual("identifications");
-    expect(store.currentView).toStrictEqual("identifications_observations");
+    expect(store.currentView).toStrictEqual("identifications_identifications");
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       per_page: perPage,
@@ -219,7 +215,7 @@ describe("click on header to change page", () => {
     ]);
     expect(store.selectedTaxa).toStrictEqual([life2, oak2]);
     expect(store.record_type).toStrictEqual("identifications");
-    expect(store.currentView).toStrictEqual("identifications_observations");
+    expect(store.currentView).toStrictEqual("identifications_identifications");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       per_page: perPage,
@@ -242,7 +238,7 @@ describe("click on header to change page", () => {
       "#view-container",
     ) as HTMLDivElement;
     expect(viewContainerEl?.innerHTML).toBe(
-      `<view-observations></view-observations>`,
+      `<view-identifications></view-identifications>`,
     );
 
     expect(store.selectedTaxa[0].identifications_count).toBe(20000);
@@ -286,7 +282,7 @@ describe("click on header to change page", () => {
     expect(store.selectedTaxa).toStrictEqual([]);
     expectDefaultTaxaRecordIdentification(store);
     expect(store.record_type).toStrictEqual("identifications");
-    expect(store.currentView).toStrictEqual("identifications_observations");
+    expect(store.currentView).toStrictEqual("identifications_identifications");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
     });
@@ -305,7 +301,7 @@ describe("click on header to change page", () => {
       "#view-container",
     ) as HTMLDivElement;
     expect(viewContainerEl?.innerHTML).toBe(
-      `<view-observations></view-observations>`,
+      `<view-identifications></view-identifications>`,
     );
   });
 
@@ -338,7 +334,7 @@ describe("click on header to change page", () => {
     ]);
     expectDefaultTaxaRecordIdentification(store, 200000);
     expect(store.record_type).toStrictEqual("identifications");
-    expect(store.currentView).toStrictEqual("identifications_observations");
+    expect(store.currentView).toStrictEqual("identifications_identifications");
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       per_page: perPage,
@@ -403,7 +399,7 @@ describe("click on headers to change view and page", () => {
     await taxonSelectedHandler(redOakBasic, "", store);
 
     expect(store.record_type).toStrictEqual("identifications");
-    expect(store.currentView).toStrictEqual("identifications_observations");
+    expect(store.currentView).toStrictEqual("identifications_identifications");
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
@@ -411,12 +407,14 @@ describe("click on headers to change view and page", () => {
       gridLabel_oakIdent,
     ]);
 
-    let spanEl = document.querySelector(".header-count") as HTMLDivElement;
+    let spanEl = document.querySelector(
+      "#identifications_species .header-count",
+    ) as HTMLDivElement;
     let thisMock = { querySelector: () => {} } as any;
     viewChangeHandler(spanEl, store, thisMock);
 
     expect(store.record_type).toStrictEqual("identifications");
-    expect(store.currentView).toStrictEqual("identifications_identifications");
+    expect(store.currentView).toStrictEqual("identifications_species");
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
@@ -427,14 +425,12 @@ describe("click on headers to change view and page", () => {
     let viewContainerEl = document.querySelector(
       "#view-container",
     ) as HTMLDivElement;
-    expect(viewContainerEl?.innerHTML).toBe(
-      `<view-identifications></view-identifications>`,
-    );
+    expect(viewContainerEl?.innerHTML).toBe(`<view-species></view-species>`);
 
     await pageChangeHandler(observationsPageClick, store, Router);
 
     expect(store.record_type).toStrictEqual("observations");
-    expect(store.currentView).toStrictEqual("observations_observations");
+    expect(store.currentView).toStrictEqual("observations_species");
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_lifeIdent,
@@ -444,8 +440,6 @@ describe("click on headers to change view and page", () => {
     let mainEl = document.querySelector("#app") as HTMLDivElement;
     expect(mainEl?.innerHTML).toBe(`<page-observations></page-observations>`);
 
-    expect(viewContainerEl?.innerHTML).toBe(
-      `<view-observations></view-observations>`,
-    );
+    expect(viewContainerEl?.innerHTML).toBe(`<view-species></view-species>`);
   });
 });

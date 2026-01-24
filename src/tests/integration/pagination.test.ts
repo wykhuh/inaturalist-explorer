@@ -185,25 +185,6 @@ describe("paginationCallback for ViewObservations", () => {
     expect(store.observationsApiParams.page).toBe(5);
     expect(store.viewMetadata.observations_observations.page).toBe(5);
   });
-
-  test("add page to observationsApiParams and viewMetadata.identifications_observations if identifications", async () => {
-    let store = structuredClone(mapStore);
-
-    expectEmpytMap(store);
-
-    await initPopulateStore(store, decodeAppUrl("", "/identifications/"));
-    await initRenderMap(store);
-
-    expect(store.identificationsApiParams.page).toBeUndefined();
-    expect(
-      store.viewMetadata.identifications_observations.page,
-    ).toBeUndefined();
-
-    paginationCallbackObservations(5, store);
-
-    expect(store.identificationsApiParams.page).toBe(5);
-    expect(store.viewMetadata.identifications_observations.page).toBe(5);
-  });
 });
 
 describe("paginationCallback for ViewSpecies", () => {
@@ -406,7 +387,6 @@ describe("pagination for all views and selected resources", () => {
 
       await setupPages(store, "/identifications/");
 
-      expect(store.viewMetadata.identifications_observations.page).toBe(5);
       expect(store.viewMetadata.identifications_species.page).toBe(6);
       expect(store.viewMetadata.identifications_observers.page).toBe(7);
       expect(store.viewMetadata.identifications_identifiers.page).toBe(8);
@@ -416,7 +396,7 @@ describe("pagination for all views and selected resources", () => {
       selectedHandler(fakeRecord, "", store);
 
       expect(
-        store.viewMetadata.identifications_observations.page,
+        store.viewMetadata.identifications_identifications.page,
       ).toBeUndefined();
       expect(store.viewMetadata.identifications_species.page).toBeUndefined();
       expect(store.viewMetadata.identifications_observers.page).toBeUndefined();
@@ -439,7 +419,6 @@ describe("pagination for all views and selected resources", () => {
 
       await setupPages(store, "/identifications/");
 
-      expect(store.viewMetadata.identifications_observations.page).toBe(5);
       expect(store.viewMetadata.identifications_species.page).toBe(6);
       expect(store.viewMetadata.identifications_observers.page).toBe(7);
       expect(store.viewMetadata.identifications_identifiers.page).toBe(8);
@@ -449,7 +428,7 @@ describe("pagination for all views and selected resources", () => {
       remove(fakeRecord, store);
 
       expect(
-        store.viewMetadata.identifications_observations.page,
+        store.viewMetadata.identifications_identifications.page,
       ).toBeUndefined();
       expect(store.viewMetadata.identifications_species.page).toBeUndefined();
       expect(store.viewMetadata.identifications_observers.page).toBeUndefined();

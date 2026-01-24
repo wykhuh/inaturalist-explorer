@@ -807,7 +807,6 @@ export function resetPageNumber(appStore: AppStoreType) {
 
   delete appStore.viewMetadata.identifications_identifications.page;
   delete appStore.viewMetadata.identifications_identifiers.page;
-  delete appStore.viewMetadata.identifications_observations.page;
   delete appStore.viewMetadata.identifications_observers.page;
   delete appStore.viewMetadata.identifications_species.page;
   delete appStore.viewMetadata.observations_identifiers.page;
@@ -909,7 +908,7 @@ export function setPerPage(appStore: AppStoreType) {
   let savedPerPage;
   if (
     view === "observations_observations" ||
-    view === "identifications_observations"
+    view === "identifications_identifications"
   ) {
     savedPerPage = getItem("perPageObservations");
   }

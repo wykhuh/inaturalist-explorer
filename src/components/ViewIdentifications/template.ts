@@ -2,5 +2,25 @@ import { html } from "../../lib/component_utils";
 
 export const template = html`
   <span class="loader"></span>
-  <div class="identifications-grid"></div>
+  <div class="identifications-list-container">
+    <div id="view-controls" data-testid="identifications-controls">
+      <div>
+        <div id="subview-menu">
+          <button class="subview-map" data-subview="map">Map</button>
+          <button class="subview-grid" data-subview="grid">Grid</button>
+        </div>
+      </div>
+
+      <form id="order-form">
+        <div class="form-group">
+          <label for="order_combo">Sort By</label>
+          <select id="order_combo" name="order_combo">
+            <option value="created_at:desc">Added Date, New to Old</option>
+            <option value="created_at:asc">Added Date, Old to New</option>
+          </select>
+        </div>
+      </form>
+    </div>
+    <div class="subview-container"></div>
+  </div>
 `;

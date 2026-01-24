@@ -615,7 +615,7 @@
     }
   }
 
-  #observations-list-controls {
+  #view-controls {
     display: flex;
     gap: 1rem;
     margin-top: 1rem;
@@ -625,7 +625,7 @@
       display: block;
     }
 
-    #observations-subview {
+    #subview-menu {
       display: flex;
 
       button {
@@ -1175,7 +1175,7 @@
     }
   }
 
-  .identification-grid {
+  .identifications-grid {
     .card-record {
       border: var(--border-grey);
       margin-bottom: 1rem;

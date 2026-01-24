@@ -1,8 +1,5 @@
 import { iNatObservationUrl } from "../../data/inat_data";
-import {
-  cleanupIdentificationsObservationsParams,
-  cleanupObervationsParams,
-} from "../../lib/cleanup_params_utils";
+import { cleanupObervationsParams } from "../../lib/cleanup_params_utils";
 import {
   formatDateLong,
   renderMedia,
@@ -86,10 +83,7 @@ function render(
   if (!containerEl) return;
   if (!formEl) return;
 
-  let view = isObservationsCheck(appStore)
-    ? appStore.viewMetadata.observations_observations
-    : appStore.viewMetadata.identifications_observations;
-
+  let view = appStore.viewMetadata.observations_observations;
   if (view.subview === "map") {
     if (!appStore.map.map) {
       containerEl.innerHTML = "";
@@ -153,9 +147,7 @@ function render(
 
 async function getAPIData(appStore: AppStoreType) {
   if (import.meta.env?.VITE_CACHE === "true") {
-    let page = isObservationsCheck(appStore)
-      ? appStore.observationsApiParams.page
-      : appStore.identificationsApiParams.page;
+    let page = appStore.observationsApiParams.page;
     replaceWithCacheImages(observations.results);
     return { ...observations, page: page || 1 };
   }
@@ -166,8 +158,6 @@ async function getAPIData(appStore: AppStoreType) {
   let params = "";
   if (isObservationsCheck(appStore)) {
     params = cleanupObervationsParams(appStore, "observations");
-  } else {
-    params = cleanupIdentificationsObservationsParams(appStore);
   }
 
   try {
@@ -345,15 +335,6 @@ export async function paginationCallback(num: number, appStore: AppStoreType) {
       ...appStore.viewMetadata.observations_observations,
       page: num,
     };
-  } else {
-    appStore.identificationsApiParams = {
-      ...appStore.identificationsApiParams,
-      page: num,
-    };
-    appStore.viewMetadata.identifications_observations = {
-      ...appStore.viewMetadata.identifications_observations,
-      page: num,
-    };
   }
 
   // HACK: update store
@@ -369,9 +350,7 @@ export function updateSubviewState(
   appStore: AppStoreType,
 ) {
   // early return if this is current subview
-  let view = isObservationsCheck(appStore)
-    ? appStore.viewMetadata.observations_observations
-    : appStore.viewMetadata.identifications_observations;
+  let view = appStore.viewMetadata.observations_observations;
   if (subview === view.subview) return;
 
   removeMap(appStore);
@@ -415,8 +394,20 @@ export function updateSubviewState(
 }
 
 // use store to populate the filter form fields on page load
-export function initFilters(appStore: AppStoreType) {
+export function initFilters(appStore: AppStoreType, componentContext: any) {
   let { observationsApiParams } = appStore;
+
+  // set initial current-subview class
+  let subview = appStore.viewMetadata.observations_observations?.subview;
+  if (subview === "table") {
+    componentContext.tableLinkEl?.classList.add("current-subview");
+  } else if (subview === "media") {
+    componentContext.mediaLinkEl?.classList.add("current-subview");
+  } else if (subview === "map") {
+    componentContext.mapLinkEl?.classList.add("current-subview");
+  } else {
+    componentContext.gridLinkEl?.classList.add("current-subview");
+  }
 
   if (observationsApiParams.order_by && observationsApiParams.order) {
     setSelectedOption(

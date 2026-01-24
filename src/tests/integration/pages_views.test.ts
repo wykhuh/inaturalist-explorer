@@ -115,7 +115,7 @@ describe("click on site header to change page", () => {
     expect(store.selectedTaxa).toStrictEqual([]);
     expectDefaultTaxaRecordIdentification(store);
     expect(store.record_type).toStrictEqual("identifications");
-    expect(store.currentView).toStrictEqual("identifications_observations");
+    expect(store.currentView).toStrictEqual("identifications_identifications");
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       per_page: perPage,
@@ -179,7 +179,7 @@ describe("click on site header to change page", () => {
     expectLifeOakTaxaIdentifications(store);
     expectDefaultTaxaRecordIdentification(store, 22000);
     expect(store.record_type).toStrictEqual("identifications");
-    expect(store.currentView).toStrictEqual("identifications_observations");
+    expect(store.currentView).toStrictEqual("identifications_identifications");
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       per_page: perPage,
@@ -249,7 +249,7 @@ describe("click on site header to change page", () => {
     expect(store.selectedTaxaIdentified).toStrictEqual([life1]);
     expect(store.selectedTaxa).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("identifications");
-    expect(store.currentView).toStrictEqual("identifications_observations");
+    expect(store.currentView).toStrictEqual("identifications_identifications");
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       per_page: perPage,
@@ -298,7 +298,7 @@ describe("click on site header to change page", () => {
     ]);
     expect(store.selectedTaxa).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("identifications");
-    expect(store.currentView).toStrictEqual("identifications_observations");
+    expect(store.currentView).toStrictEqual("identifications_identifications");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       ident_taxon_id: life1.id.toString(),
@@ -314,7 +314,7 @@ describe("click on site header to change page", () => {
       `<page-identifications></page-identifications>`,
     );
     expect(viewContainerEl?.innerHTML).toBe(
-      `<view-observations></view-observations>`,
+      `<view-identifications></view-identifications>`,
     );
   });
 
@@ -353,7 +353,7 @@ describe("click on site header to change page", () => {
     expectDefaultTaxaRecordIdentification(store);
     expect(store.selectedTaxa).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("identifications");
-    expect(store.currentView).toStrictEqual("identifications_observations");
+    expect(store.currentView).toStrictEqual("identifications_identifications");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       per_page: perPage,
@@ -373,7 +373,7 @@ describe("click on site header to change page", () => {
       "#view-container",
     ) as HTMLDivElement;
     expect(viewContainerEl?.innerHTML).toBe(
-      `<view-observations></view-observations>`,
+      `<view-identifications></view-identifications>`,
     );
   });
 
@@ -427,7 +427,7 @@ describe("click on site header to change page", () => {
       life1IdentCount + oak1IdentCount,
     );
     expect(store.record_type).toStrictEqual("identifications");
-    expect(store.currentView).toStrictEqual("identifications_observations");
+    expect(store.currentView).toStrictEqual("identifications_identifications");
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
       per_page: perPage,
@@ -450,7 +450,7 @@ describe("click on site header to change page", () => {
       "#view-container",
     ) as HTMLDivElement;
     expect(viewContainerEl?.innerHTML).toBe(
-      `<view-observations></view-observations>`,
+      `<view-identifications></view-identifications>`,
     );
   });
 
@@ -520,7 +520,7 @@ describe("click on site header to change page", () => {
     expect(store.selectedTaxa).toStrictEqual([]);
     expect(store.selectedTaxaIdentified).toStrictEqual([allTaxaIdentification]);
     expect(store.record_type).toStrictEqual("identifications");
-    expect(store.currentView).toStrictEqual("identifications_observations");
+    expect(store.currentView).toStrictEqual("identifications_identifications");
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     expect(store.identificationsApiParams).toStrictEqual({
       taxon_id: `${allTaxa.id}`,
@@ -537,7 +537,7 @@ describe("click on site header to change page", () => {
       "#view-container",
     ) as HTMLDivElement;
     expect(viewContainerEl?.innerHTML).toBe(
-      `<view-observations></view-observations>`,
+      `<view-identifications></view-identifications>`,
     );
   });
 });

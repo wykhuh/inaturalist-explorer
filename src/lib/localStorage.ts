@@ -43,7 +43,7 @@ export function populateStoreWithLocaleStorage(appStore: AppStoreType) {
   if (perPageObservations) {
     appStore.viewMetadata.observations_observations.perPage =
       Number(perPageObservations);
-    appStore.viewMetadata.identifications_observations.perPage =
+    appStore.viewMetadata.identifications_identifications.perPage =
       Number(perPageObservations);
   }
 

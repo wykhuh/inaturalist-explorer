@@ -302,21 +302,24 @@ describe("formatAppUrl", () => {
     expect(result).toBe("verifiable=false&spam=true");
   });
 
-  test.each(validViews.filter((v) => !v.endsWith("_observations")))(
-    "return parameters if view is not observations_observations",
-    (view) => {
-      let appStore: AppStoreType = {
-        ...mapStore,
-        currentView: view as ObservationViewsType,
-      };
+  test.each(
+    validViews.filter(
+      (v) =>
+        v !== "observations_observations" &&
+        v !== "identifications_identifications",
+    ),
+  )("return parameters if view is not observations_observations", (view) => {
+    let appStore: AppStoreType = {
+      ...mapStore,
+      currentView: view as ObservationViewsType,
+    };
 
-      let result = formatAppUrl(appStore);
+    let result = formatAppUrl(appStore);
 
-      expect(result).toBe(`${defaultQuery}&view=${view}`);
-    },
-  );
+    expect(result).toBe(`${defaultQuery}&view=${view}`);
+  });
 
-  test("return empty string if view is observations", () => {
+  test("return empty string if view is observations_observations", () => {
     let appStore: AppStoreType = {
       ...mapStore,
       currentView: "observations_observations",
@@ -329,7 +332,7 @@ describe("formatAppUrl", () => {
 
   test.each([
     "observations_observations",
-    "identifications_observations",
+    "identifications_identifications",
   ] as ObservationViewsType[])(
     "return empty string if subview is map ",
     (view) => {
@@ -348,10 +351,7 @@ describe("formatAppUrl", () => {
     },
   );
 
-  test.each([
-    "observations_observations",
-    "identifications_observations",
-  ] as ObservationViewsType[])(
+  test.each(["observations_observations"] as ObservationViewsType[])(
     "return view & subview if subview is table ",
     (view) => {
       let appStore: AppStoreType = {
@@ -369,10 +369,7 @@ describe("formatAppUrl", () => {
     },
   );
 
-  test.each([
-    "observations_observations",
-    "identifications_observations",
-  ] as ObservationViewsType[])(
+  test.each(["observations_observations"] as ObservationViewsType[])(
     "return view & subview if subview is photos ",
     (view) => {
       let appStore: AppStoreType = {
@@ -438,42 +435,45 @@ describe("formatAppUrl", () => {
     );
   });
 
-  test.each(validViews.filter((v) => !v.endsWith("_observations")))(
-    "return params for page, order, order_by if not observation",
-    (name) => {
-      let appStore: AppStoreType = {
-        ...mapStore,
-        observationsApiParams: {
-          verifiable: true,
-          spam: false,
-          page: 1,
+  test.each(
+    validViews.filter(
+      (v) =>
+        v !== "observations_observations" &&
+        v !== "identifications_identifications",
+    ),
+  )("return params for page, order, order_by if not observation", (name) => {
+    let appStore: AppStoreType = {
+      ...mapStore,
+      observationsApiParams: {
+        verifiable: true,
+        spam: false,
+        page: 1,
+        order: "desc",
+        order_by: "id",
+      },
+
+      selectedPlaces: [],
+      currentView: name as any,
+      viewMetadata: {
+        ...mapStore.viewMetadata,
+        observations_observations: {
+          page: 10,
           order: "desc",
           order_by: "id",
         },
+        observations_identifiers: { page: 11, order: "desc", order_by: "id" },
+        observations_species: { page: 12, order: "desc", order_by: "id" },
+        observations_observers: { page: 13, order: "desc", order_by: "id" },
+        name_order: "cs",
+      },
+    };
 
-        selectedPlaces: [],
-        currentView: name as any,
-        viewMetadata: {
-          ...mapStore.viewMetadata,
-          observations_observations: {
-            page: 10,
-            order: "desc",
-            order_by: "id",
-          },
-          observations_identifiers: { page: 11, order: "desc", order_by: "id" },
-          observations_species: { page: 12, order: "desc", order_by: "id" },
-          observations_observers: { page: 13, order: "desc", order_by: "id" },
-          name_order: "cs",
-        },
-      };
+    let result = formatAppUrl(appStore);
 
-      let result = formatAppUrl(appStore);
-
-      expect(result).toBe(
-        `verifiable=true&spam=false&page=1&order=desc&order_by=id&view=${name}`,
-      );
-    },
-  );
+    expect(result).toBe(
+      `verifiable=true&spam=false&page=1&order=desc&order_by=id&view=${name}`,
+    );
+  });
 
   test.each(["es", "fr"])("return params for locale that is not en", (lang) => {
     let appStore: AppStoreType = {
@@ -614,7 +614,6 @@ let defaultUrlStore = {
     observations_identifiers: {},
     observations_observers: {},
     observations_species: {},
-    identifications_observations: {},
     identifications_identifiers: {},
     identifications_observers: {},
     identifications_species: {},
@@ -1231,7 +1230,7 @@ describe("decodeAppUrl  resources if identifications", () => {
         { id: 3, color: defaultColorScheme[0] },
         { id: 4, color: defaultColorScheme[1] },
       ],
-      currentView: "identifications_observations",
+      currentView: "identifications_identifications",
       record_type: "identifications",
       color: defaultColorScheme[1],
     };
@@ -1247,7 +1246,7 @@ describe("decodeAppUrl  resources if identifications", () => {
     let expected = {
       ...structuredClone(defaultUrlStore),
       selectedUsersIdentifiers: [{ id: 1 }, { id: 2 }],
-      currentView: "identifications_observations",
+      currentView: "identifications_identifications",
       record_type: "identifications",
     };
 
@@ -1262,7 +1261,7 @@ describe("decodeAppUrl  resources if identifications", () => {
     let expected = {
       ...structuredClone(defaultUrlStore),
       selectedPlaces: [{ id: 1 }, { id: 2 }],
-      currentView: "identifications_observations",
+      currentView: "identifications_identifications",
       record_type: "identifications",
     };
 
@@ -1278,7 +1277,7 @@ describe("decodeAppUrl  resources if identifications", () => {
       ...structuredClone(defaultUrlStore),
       selectedWithoutTaxaIdentified: [{ id: 1 }],
       observationsApiParams: {},
-      currentView: "identifications_observations",
+      currentView: "identifications_identifications",
       record_type: "identifications",
     };
 
@@ -1294,7 +1293,7 @@ describe("decodeAppUrl  resources if identifications", () => {
       ...structuredClone(defaultUrlStore),
       selectedWithoutTaxa: [{ id: 1 }],
       observationsApiParams: {},
-      currentView: "identifications_observations",
+      currentView: "identifications_identifications",
       record_type: "identifications",
     };
 
@@ -1313,11 +1312,11 @@ describe("decodeAppUrl options if identifications", () => {
       let expected = {
         ...structuredClone(defaultUrlStore),
         identificationsApiParams: { [name]: value },
-        currentView: "identifications_observations",
+        currentView: "identifications_identifications",
         record_type: "identifications",
       } as any;
       if (name == "order_by" || name == "order") {
-        expected.viewMetadata.identifications_observations[name] = "true";
+        expected.viewMetadata.identifications_identifications[name] = "true";
       }
 
       let result = decodeAppUrl(searchParams, "/identifications/");
@@ -1337,7 +1336,7 @@ describe("decodeAppUrl options if identifications", () => {
     let searchParams = `?${name}=${value}`;
     let expected = {
       ...structuredClone(defaultUrlStore),
-      currentView: "identifications_observations",
+      currentView: "identifications_identifications",
       record_type: "identifications",
     } as any;
 
@@ -1353,7 +1352,7 @@ describe("decodeAppUrl options if identifications", () => {
       let searchParams = `?${name}=${value}`;
       let expected = {
         ...structuredClone(defaultUrlStore),
-        currentView: "identifications_observations",
+        currentView: "identifications_identifications",
         record_type: "identifications",
       } as any;
 
@@ -1386,7 +1385,7 @@ describe("decodeAppUrl options if identifications", () => {
     let searchParams = "?foo=boo";
     let expected = {
       ...structuredClone(defaultUrlStore),
-      currentView: "identifications_observations",
+      currentView: "identifications_identifications",
       record_type: "identifications",
     };
 
@@ -1400,11 +1399,11 @@ describe("decodeAppUrl options if identifications", () => {
     let expected = {
       ...structuredClone(defaultUrlStore),
       identificationsApiParams: { page: 2, order: "desc", order_by: "id" },
-      currentView: "identifications_observations",
+      currentView: "identifications_identifications",
       record_type: "identifications",
       viewMetadata: {
         ...structuredClone(defaultUrlStore.viewMetadata),
-        identifications_observations: {
+        identifications_identifications: {
           page: 2,
           order: "desc",
           order_by: "id",
@@ -1443,7 +1442,7 @@ describe("decodeAppUrl options if identifications", () => {
     let expected = {
       ...structuredClone(defaultUrlStore),
       observationsApiParams: { locale: "fr" },
-      currentView: "identifications_observations",
+      currentView: "identifications_identifications",
       record_type: "identifications",
     };
 
@@ -1456,7 +1455,7 @@ describe("decodeAppUrl options if identifications", () => {
     let searchParams = "?name_order=sc";
     let expected = {
       ...structuredClone(defaultUrlStore),
-      currentView: "identifications_observations",
+      currentView: "identifications_identifications",
       record_type: "identifications",
       viewMetadata: {
         ...structuredClone(defaultUrlStore.viewMetadata),
