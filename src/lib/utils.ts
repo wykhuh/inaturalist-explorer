@@ -84,6 +84,7 @@ export function formatAppUrl(
   appStore: AppStoreType,
   recordType = appStore.record_type,
   format = "string",
+  processRemovedDefaultParams = true,
 ) {
   let isIdentifications = recordType === "identifications";
   let isObservations = recordType === "observations";
@@ -206,7 +207,10 @@ export function formatAppUrl(
     }
   }
 
-  removeDefaultParams(params);
+  if (processRemovedDefaultParams) {
+    removeDefaultParams(params);
+  }
+
   let searchParams = new URLSearchParams(params as any);
 
   if (format === "string") {
@@ -261,6 +265,43 @@ export function removeDefaultParams(
     delete params.verifiable;
     delete params.spam;
   }
+}
+
+export function formatInatDownloadUrl(appStore: AppStoreType) {
+  let params = formatAppUrl(
+    appStore,
+    "observations",
+    "object",
+    false,
+  ) as URLSearchParams;
+
+  let ignoreParams = [
+    "per_page",
+    "page",
+    "view",
+    "subview",
+    "colors",
+    "name_order",
+  ];
+  ignoreParams.forEach((param) => {
+    if (params.get(param)) {
+      params.delete(param);
+    }
+  });
+
+  if (!params.get("spam")) {
+    params.append("spam", "false");
+  }
+  if (!params.get("verifiable")) {
+    params.append("verifiable", "true");
+  }
+  let taxon_id = params.get("taxon_id");
+  if (taxon_id) {
+    params.append("taxon_ids", taxon_id);
+    params.delete("taxon_id");
+  }
+
+  return params.toString();
 }
 
 export function updateAppUrl(url_location: Location, appStore: AppStoreType) {

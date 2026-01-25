@@ -135,3 +135,36 @@ export const computer = `
 <svg class="computer-icon" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M2 6C2 4.34315 3.34315 3 5 3H19C20.6569 3 22 4.34315 22 6V15C22 16.6569 20.6569 18 19 18H13V19H15C15.5523 19 16 19.4477 16 20C16 20.5523 15.5523 21 15 21H9C8.44772 21 8 20.5523 8 20C8 19.4477 8.44772 19 9 19H11V18H5C3.34315 18 2 16.6569 2 15V6ZM5 5C4.44772 5 4 5.44772 4 6V15C4 15.5523 4.44772 16 5 16H19C19.5523 16 20 15.5523 20 15V6C20 5.44772 19.5523 5 19 5H5Z" fill="#000000"/>
 </svg>`;
+
+// https://freesvg.org/download-icon-pictogram
+export const download = `<svg
+   xmlns="http://www.w3.org/2000/svg"
+   width="37mm"
+   height="26mm"
+   viewBox="0 0 131.10236 92.125983"
+   id="download-icon"
+   version="1.1" >
+  <g
+     id="layer1" >
+    <path
+       style="opacity:1;fill:#000000;fill-rule:nonzero;stroke:none;stroke-width:1.58158517;stroke-miterlimit:4;stroke-dasharray:1.58158517, 3.16317034;stroke-dashoffset:0;stroke-opacity:1"
+       d=""
+       id="path6839"
+         />
+    <g
+    id="g3"
+       style="fill:#000000">
+      <path
+         d="m 25.462,19.105 0,6.848 -20.947,0 0,-6.848 -4.026,0 0,8.861 c 0,1.111 0.9,2.012 2.016,2.012 l 24.967,0 c 1.115,0 2.016,-0.9 2.016,-2.012 l 0,-8.861 -4.026,0 z"
+         id="path5"
+         style="fill:#000000" />
+      <path
+         d="M 14.62,18.426 8.856,11.461 c 0,0 -0.877,-0.828 0.074,-0.828 0.951,0 3.248,0 3.248,0 0,0 0,-0.557 0,-1.416 0,-2.449 0,-6.906 0,-8.723 0,0 -0.129,-0.494 0.615,-0.494 0.75,0 4.035,0 4.572,0 0.536,0 0.524,0.416 0.524,0.416 0,1.762 0,6.373 0,8.742 0,0.768 0,1.266 0,1.266 0,0 1.842,0 2.998,0 1.154,0 0.285,0.867 0.285,0.867 0,0 -4.904,6.51 -5.588,7.193 -0.492,0.495 -0.964,-0.058 -0.964,-0.058 z"
+         id="path7"
+         style="fill:#000000" />
+    </g>
+  </g>
+</svg>
+`;
+
+export const downArrow = `<span style="display:block;transform:rotate(90deg);">&#8677;</span>`;

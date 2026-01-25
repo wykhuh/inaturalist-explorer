@@ -1,6 +1,7 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import {
+  toggleDownloadHandler,
   toggleObservationsHandler,
   toggleSettingsHandler,
   toggleSidebar,
@@ -15,6 +16,7 @@ export class PageObservations extends HTMLElement {
   toggleSidebarEl: HTMLButtonElement | null = null;
   searchMenuToggleEl: HTMLButtonElement | null = null;
   settingsMenuToggleEl: HTMLButtonElement | null = null;
+  downloadMenuToggleEl: HTMLButtonElement | null = null;
 
   connectedCallback() {
     loggerRender("++ PageObservations connectedCallback");
@@ -29,10 +31,14 @@ export class PageObservations extends HTMLElement {
     this.settingsMenuToggleEl = this.querySelector<HTMLButtonElement>(
       "#settings-menu-toggle",
     );
+    this.downloadMenuToggleEl = this.querySelector<HTMLButtonElement>(
+      "#download-menu-toggle",
+    );
 
     this.toggleSidebarEl?.addEventListener("click", this);
     this.searchMenuToggleEl?.addEventListener("click", this);
     this.settingsMenuToggleEl?.addEventListener("click", this);
+    this.downloadMenuToggleEl?.addEventListener("click", this);
   }
 
   disconnectedCallback() {
@@ -41,6 +47,7 @@ export class PageObservations extends HTMLElement {
     this.toggleSidebarEl?.removeEventListener("click", this);
     this.searchMenuToggleEl?.removeEventListener("click", this);
     this.settingsMenuToggleEl?.removeEventListener("click", this);
+    this.downloadMenuToggleEl?.removeEventListener("click", this);
   }
 
   handleEvent(event: Event) {
@@ -58,6 +65,11 @@ export class PageObservations extends HTMLElement {
         toggleObservationsHandler(this);
       } else if (target.id === "settings-menu-toggle") {
         toggleSettingsHandler(this);
+      } else if (
+        target.id === "download-menu-toggle" ||
+        target.closest("button")?.id === "download-menu-toggle"
+      ) {
+        toggleDownloadHandler(this);
       }
     }
   }

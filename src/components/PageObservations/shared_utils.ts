@@ -16,6 +16,7 @@ export function toggleSidebar(componentCtx: HTMLElement) {
 export function toggleObservationsHandler(componentCtx: HTMLElement) {
   showMenu("#observations-menu", componentCtx);
   hideMenu("#settings-menu", componentCtx);
+  hideMenu("#download-menu", componentCtx);
 }
 
 export function toggleIdentificationsHandler(componentCtx: HTMLElement) {
@@ -27,6 +28,13 @@ export function toggleSettingsHandler(componentCtx: HTMLElement) {
   hideMenu("#observations-menu", componentCtx);
   hideMenu("#identifications-menu", componentCtx);
   showMenu("#settings-menu", componentCtx);
+  hideMenu("#download-menu", componentCtx);
+}
+
+export function toggleDownloadHandler(componentCtx: HTMLElement) {
+  hideMenu("#observations-menu", componentCtx);
+  hideMenu("#settings-menu", componentCtx);
+  showMenu("#download-menu", componentCtx);
 }
 
 function hideMenu(selector: string, componentCtx: HTMLElement) {

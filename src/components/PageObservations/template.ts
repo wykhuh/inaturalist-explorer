@@ -1,4 +1,4 @@
-import { gear, hamburgerMenu, search } from "../../assets/icons";
+import { downArrow, gear, hamburgerMenu, search } from "../../assets/icons";
 import { html } from "../../lib/component_utils";
 
 export const template = html`
@@ -13,12 +13,14 @@ export const template = html`
         ${search}
       </button>
       <button id="settings-menu-toggle" title="Settings">${gear}</button>
+      <button id="download-menu-toggle" title="Download">${downArrow}</button>
     </div>
 
     <section class="two-columns sidebar-open" id="site-layout">
       <div id="sidebar-menu">
         <observations-menu></observations-menu>
         <settings-menu></settings-menu>
+        <download-menu></download-menu>
         <appstore-viewer></appstore-viewer>
       </div>
       <div id="view-container"></div>
