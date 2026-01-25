@@ -4,6 +4,7 @@ import { removeUser } from "../../lib/search_users";
 import { removeUserAnnotator } from "../../lib/search_users_annotators";
 import { removeUserIdentifier } from "../../lib/search_users_identifiers";
 import { removeWithoutUser } from "../../lib/search_without_users";
+import { removeWithoutUserIdentifier } from "../../lib/search_without_users_identifiers";
 import { renderSelectedCounts } from "../../lib/selected_items_utils";
 import type { AppStoreType, NormalizediNatUserType } from "../../types/app";
 import { template } from "./template";
@@ -36,8 +37,14 @@ class SelectedUsersItem extends HTMLElement {
       nameEl.textContent = text;
     }
 
-    if (["observer", "identifier", "annotator"].includes(userType)) {
-      renderSelectedCounts(user, appStore, this);
+    if (userType === "observer") {
+      renderSelectedCounts(user, appStore, this, "observation");
+    }
+    if (userType === "identifier") {
+      renderSelectedCounts(user, appStore, this, "identification");
+    }
+    if (userType === "annotator") {
+      renderSelectedCounts(user, appStore, this, "observation");
     }
 
     let butttonEl = this.querySelector(".close-button");

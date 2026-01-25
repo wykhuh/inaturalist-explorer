@@ -16,21 +16,16 @@ export function renderSelectedCounts(
     | NormalizediNatTaxonType,
   appStore: AppStoreType,
   context: any,
+  countText?: string,
 ) {
   let countEl = context.querySelector(".count");
   if (!countEl) return;
 
   if (isObservationsCheck(appStore)) {
-    countEl.textContent = pluralize(
-      record.observations_count,
-      "observation",
-      true,
-    );
+    let text = countText ? countText : "observation";
+    countEl.textContent = pluralize(record.observations_count, text, true);
   } else {
-    countEl.textContent = pluralize(
-      record.identifications_count,
-      "identification",
-      true,
-    );
+    let text = countText ? countText : "identification";
+    countEl.textContent = pluralize(record.identifications_count, text, true);
   }
 }
