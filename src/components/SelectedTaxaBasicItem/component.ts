@@ -34,10 +34,12 @@ class SelectedTaxaBasicItem extends HTMLElement {
     let dataEl = this.querySelector(".data");
     if (dataEl) {
       let content = renderTaxonNames(taxon, appStore);
-      if (isObservationsCheck(appStore)) {
-        content += `<span class="count">${pluralize(taxon.observations_count, "observation", true)}</span>`;
-      } else {
-        content += `<span class="count">${pluralize(taxon.identifications_count, "identification", true)}</span>`;
+      if (["taxonIdentified", "taxon"].includes(taxonType)) {
+        if (isObservationsCheck(appStore)) {
+          content += `<span class="count">${pluralize(taxon.observations_count, "observation", true)}</span>`;
+        } else {
+          content += `<span class="count">${pluralize(taxon.identifications_count, "identification", true)}</span>`;
+        }
       }
       dataEl.innerHTML = content;
     }
