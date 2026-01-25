@@ -8,6 +8,7 @@ import grid_ident from "../../assets/images/identifications_grid.jpg";
 import history_ident from "../../assets/images/identifications_history.jpg";
 import settings from "../../assets/images/settings.jpg";
 import custom_boundaries from "../../assets/images/custom_boundaries.jpg";
+import download from "../../assets/images/download.jpg";
 
 import annotations from "../../assets/images/annotations.jpg";
 import filters from "../../assets/images/filters.jpg";
@@ -149,6 +150,14 @@ export const template = html`
         <img
           src="${settings}"
           alt="Settings menu with common names/scientific names order, common names language, and records per page"
+        />
+      </li>
+      <li>
+        Download the observations as a CSV by clicking a link to the iNaturalist
+        "Export Observations" page.
+        <img
+          src="${download}"
+          alt="Download menu to download the observations"
         />
       </li>
       <li>
