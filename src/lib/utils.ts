@@ -144,7 +144,10 @@ export function formatAppUrl(
     if (isObservations) {
       params.ident_user_id = usersIdentifiersIds;
     } else {
-      params.user_id = usersIdentifiersIds;
+      // NOTE: only allow one user id because iNat identifications api returns
+      // zero records if there are multiple user ids
+      let ids = usersIdentifiersIds.split(",");
+      params.user_id = ids[ids.length - 1];
     }
   }
   if (colors.length > 0) {

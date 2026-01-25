@@ -1809,20 +1809,20 @@ describe("userIdentifierSelectedHandler with identifications", () => {
       "selectedTaxaIdentified",
       "selectedUsersIdentifiers",
     ]);
-    expectDefaultTaxaRecordIdentification(store);
+    expectDefaultTaxaRecordIdentification(store, count * 0.55);
     expect(store.selectedUsersIdentifiers).toStrictEqual([user1, user2]);
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
     });
     let expectedParams2 = {
       per_page: perPage,
-      user_id: `${user1.id},${user2.id}`,
+      user_id: `${user2.id}`,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?user_id=${user1.id},${user2.id}&per_page=${perPage}`,
+      `?user_id=${user2.id}&per_page=${perPage}`,
     );
     expect(store.selectedUsersIdentifiers[0].identifications_count).toBe(
       count * 0.45,
@@ -2947,21 +2947,24 @@ describe("removeUserIdentifier with identifications", () => {
       "selectedTaxaIdentified",
       "selectedUsersIdentifiers",
     ]);
-    expectDefaultTaxaRecordIdentification(store);
+    expectDefaultTaxaRecordIdentification(
+      store,
+      allTaxaIdentification.identifications_count * 0.55,
+    );
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams2 = {
       per_page: perPage,
-      user_id: `${user1.id},${user2.id}`,
+      user_id: `${user2.id}`,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?user_id=${user1.id},${user2.id}&per_page=${perPage}`,
+      `?user_id=${user2.id}&per_page=${perPage}`,
     );
     expect(store.selectedUsersIdentifiers).toStrictEqual([user1, user2]);
 
-    await removeUserIdentifier(user1.id, store);
+    await removeUserIdentifier(user2.id, store);
 
     expectEmptyResources(store, [
       "selectedTaxaIdentified",
@@ -2969,24 +2972,24 @@ describe("removeUserIdentifier with identifications", () => {
     ]);
     expectDefaultTaxaRecordIdentification(
       store,
-      allTaxaIdentification.identifications_count * 0.55,
+      allTaxaIdentification.identifications_count * 0.45,
     );
     expect(store.observationsApiParams).toStrictEqual({
       ...defaultParams,
     });
     let expectedParams3 = {
       per_page: perPage,
-      user_id: `${user2.id}`,
+      user_id: `${user1.id}`,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams3);
     expect(window.location.search).toBe(
-      `?user_id=${user2.id}&per_page=${perPage}`,
+      `?user_id=${user1.id}&per_page=${perPage}`,
     );
-    expect(store.selectedUsersIdentifiers).toStrictEqual([user2]);
+    expect(store.selectedUsersIdentifiers).toStrictEqual([user1]);
 
-    await removeUserIdentifier(user2.id, store);
+    await removeUserIdentifier(user1.id, store);
 
     expectEmptyResources(store, ["selectedTaxaIdentified"]);
     expectDefaultTaxaRecordIdentification(store);

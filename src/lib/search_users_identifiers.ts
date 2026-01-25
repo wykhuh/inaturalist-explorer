@@ -43,13 +43,11 @@ export async function userIdentifierSelectedHandler(
       ),
     };
   } else {
-    // NOTE: multiple identifiers result in zero identifications
+    // NOTE: only allow one user id because iNat identifications api returns
+    // zero records if there are multiple user ids
     appStore.identificationsApiParams = {
       ...appStore.identificationsApiParams,
-      user_id: addValueToCommaSeparatedString(
-        selection.id,
-        appStore.identificationsApiParams.user_id,
-      ),
+      user_id: `${selection.id}`,
     };
   }
 

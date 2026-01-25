@@ -315,9 +315,7 @@ describe("updateSelectedResourcesId", () => {
     expect(store.identificationsApiParams.observation_taxon_id).toBe(
       `${lifeBasic.id},${redOakBasic.id}`,
     );
-    expect(store.identificationsApiParams.user_id).toBe(
-      `${user2.id},${user1.id}`,
-    );
+    expect(store.identificationsApiParams.user_id).toBe(`${user1.id}`);
   });
 
   test("passed-in record type overrides store record type ", () => {

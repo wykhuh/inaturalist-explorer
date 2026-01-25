@@ -411,11 +411,14 @@ function removeResourceId(
   appStore: AppStoreType,
   resource: AppStoreSelectedResourcesKeysType,
   property: ObservationsApiParamsKeysType | IdentificationsApiParamsKeysType,
-  value: any,
+  targetId: any,
 ) {
   let isObservations = isObservationsCheck(appStore);
 
-  if (appStore[resource].length === 0) {
+  // do nothing if existing resource has corresponding  target id
+  if (appStore[resource].map((p) => p.id).includes(targetId)) {
+    // if no selected resource, delete property
+  } else if (appStore[resource].length === 0) {
     if (isObservations) {
       delete appStore.observationsApiParams[
         property as ObservationsApiParamsKeysType
@@ -425,22 +428,25 @@ function removeResourceId(
         property as IdentificationsApiParamsKeysType
       ];
     }
+    // NOTE: only allow one user id because iNat identifications api returns
+    // zero records if there are multiple user ids
+  } else if (resource === "selectedUsersIdentifiers" && !isObservations) {
+    // set user id to last user id
+    let ids = appStore.selectedUsersIdentifiers
+      .map((r) => r.id)
+      .filter((id) => id !== targetId);
+    appStore.identificationsApiParams.user_id = ids[ids.length - 1].toString();
   } else {
-    if (appStore[resource].map((p) => p.id).includes(value)) {
-    } else {
-      if (isObservations) {
-        setObservationsApiParams(
-          appStore,
-          property as ObservationsApiParamsKeysType,
-          value,
-        );
-      } else {
-        setIdentificationsApiParams(
-          appStore,
-          property as IdentificationsApiParamsKeysType,
-          value,
-        );
-      }
+    // remove target id from comma separated string
+    let resourceParams = getResourceApiParams(isObservations);
+    let ids = removeValueFromCommaSeparatedString(
+      targetId,
+      // @ts-ignore
+      appStore[resourceParams][property],
+    );
+    if (ids) {
+      // @ts-ignore
+      appStore[resourceParams][property] = ids;
     }
   }
 }
@@ -515,34 +521,6 @@ export function removeIdfromInatApiParams(
     throw new Error(
       `removeIdfromInatApiParams not implemented for ${resource}`,
     );
-  }
-}
-
-function setObservationsApiParams(
-  appStore: AppStoreType,
-  property: ObservationsApiParamsKeysType,
-  value: any,
-) {
-  let ids = removeValueFromCommaSeparatedString(
-    value,
-    appStore.observationsApiParams[property],
-  );
-  if (ids) {
-    appStore.observationsApiParams[property] = ids;
-  }
-}
-
-function setIdentificationsApiParams(
-  appStore: AppStoreType,
-  property: IdentificationsApiParamsKeysType,
-  value: any,
-) {
-  let ids = removeValueFromCommaSeparatedString(
-    value,
-    appStore.identificationsApiParams[property],
-  );
-  if (ids) {
-    appStore.identificationsApiParams[property] = ids;
   }
 }
 

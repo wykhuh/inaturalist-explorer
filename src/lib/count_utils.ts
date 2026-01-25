@@ -332,7 +332,10 @@ export function updateSelectedResourcesId(
         without_taxon_identified_id.join(",");
     }
     if (user_identifier_id.length > 0) {
-      appStore.identificationsApiParams.user_id = user_identifier_id.join(",");
+      // NOTE: only allow one user id because iNat identifications api returns
+      // zero records if there are multiple user ids
+      appStore.identificationsApiParams.user_id =
+        user_identifier_id[user_identifier_id.length - 1].toString();
     }
   }
 }

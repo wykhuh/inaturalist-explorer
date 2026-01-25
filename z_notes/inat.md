@@ -281,3 +281,89 @@ http://localhost:5173/?taxon_id=47367&colors=%2366ccee&verifiable=true&spam=fals
 
 Observed Species: Harvestmen
 Identified Species: Spiders
+
+==
+22 identications for gopher snake observations made by ki6h at griffith park
+http://localhost:5173/identifications/?observation_taxon_id=29044&place_id=52141&user_id=44715&colors=%234477aa&per_page=100&view=identifications_observers
+
+5 identications for gopher snake observations and identifications made by ki6h at griffith park
+http://localhost:5173/identifications/?observation_taxon_id=29044&place_id=52141&colors=%234477aa&per_page=100&view=identifications_observers
+
+ki6h not listed on observation identifiers for gopher snake observations  at griffith park
+http://localhost:5173/?taxon_id=29044&place_id=52141&colors=%234477aa&verifiable=true&spam=false&per_page=100&page=1&view=observations_identifiers
+
+==
+
+ chickeroni has 137 identifications for gopher snake observations  at griffith park
+ 
+https://www.inaturalist.org/observations?place_id=52141&taxon_id=29044&view=identifiers
+
+http://localhost:5173/?taxon_id=29044&place_id=52141&colors=%234477aa&verifiable=true&spam=false&per_page=100&view=observations_identifiers
+
+http://localhost:5173/?taxon_id=29044&place_id=52141&ident_user_id=6191605&colors=%234477aa&verifiable=true&spam=false&per_page=100&view=observations_identifiers
+
+http://localhost:5173/identifications/?observation_taxon_id=29044&place_id=52141&colors=%234477aa&per_page=100&view=identifications_identifiers
+
+==
+
+Observed Species
+Lizards
+(Suborder Sauria)
+90,513 observations
+
+Places
+California
+90,513 observations
+
+Exclude Species
+Western Fence Lizard (Sceloporus occidentalis)
+
+Exclude Places
+San Francisco Bay Area
+
+Exclude Projects
+Los Angeles City Nature Challenge Cumulative Observations 2016-2025
+
+Exclude Observers
+mgruen (Matt Gruen)
+
+Exclude Identifiers
+petezani (Pete Zani (born @ 325 ppm))
+
+
+http://localhost:5173/?taxon_id=85552&place_id=14&colors=%234477aa&verifiable=true&spam=false&per_page=24&not_in_place=54321&without_taxon_id=36204&without_ident_user_id=3960107&not_user_id=252388&not_in_project=65248
+
+==
+
+Observed Species
+Lizards
+(Suborder Sauria)
+1 observation
+×
+Identified Species
+Phrynosomatid Lizards
+(Family Phrynosomatidae)
+1 observation
+×
+Places
+California
+1 observation
+×
+Projects
+Los Angeles City Nature Challenge Cumulative Observations 2016-2025
+1 observation
+×
+Observers
+scubabruin (LSchare (she/her))
+1 observation
+×
+Identifiers
+gregpauly (Greg Pauly)
+1 identification
+×
+Annotators
+joesjoes20 (joesjoes20) 1 observation
+×
+
+
+http://localhost:5173/?taxon_id=85552&place_id=14&project_id=65248&user_id=81779&ident_user_id=17630&colors=%234477aa&verifiable=true&spam=false&per_page=24&ident_taxon_id=36074&annotation_user_id=5983024&view=observations_observations&subview=grid
