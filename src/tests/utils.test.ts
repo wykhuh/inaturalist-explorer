@@ -38,6 +38,7 @@ import {
   observationsApiNonFilterableNames,
   selectedResourcesIdIdentifications,
   selectedResourcesIdObservations,
+  validIdentificationsSubviews,
   validIdentificationsViews,
 } from "../data/app_data.ts";
 import { validObservationsSubviews, validViews } from "../data/app_data.ts";
@@ -1470,54 +1471,115 @@ describe("decodeAppUrl options if identifications", () => {
 });
 
 describe("removeDefaultParams", () => {
-  test("return empty string if default observationsApiParams and view", () => {
-    let params =
-      `${defaultQuery}` + `&view=observations_observations&subview=map`;
+  test("return empty object if default params ", () => {
+    let params = {
+      ...defaultParams,
+    };
 
-    let result = removeDefaultParams(params);
+    removeDefaultParams(params);
 
-    expect(result).toBe("");
+    expect(params).toStrictEqual({});
   });
 
-  test("return view and subview if view observation and subview is table", () => {
-    let params =
-      `${defaultQuery}` + `&view=observations_observations&subview=table`;
+  test("return empty object if default params, view, and subview", () => {
+    let params = {
+      ...defaultParams,
+      view: "observations_observations",
+      subview: "map",
+    };
 
-    let result = removeDefaultParams(params);
+    removeDefaultParams(params);
 
-    expect(result).toBe(
-      `${defaultQuery}&view=observations_observations&subview=table`,
-    );
+    expect(params).toStrictEqual({});
   });
 
   test.each(validViews.filter((v) => v !== "observations_observations"))(
     "return view if view is not observations_observations",
     (view) => {
-      let params = `${defaultQuery}&view=${view}`;
+      let params = {
+        ...defaultParams,
+        view: view,
+      };
 
-      let result = removeDefaultParams(params);
+      removeDefaultParams(params);
 
-      expect(result).toBe(`${defaultQuery}&view=${view}`);
+      expect(params).toStrictEqual({
+        spam: false,
+        verifiable: true,
+        view: view,
+      });
+    },
+  );
+
+  test.each(validObservationsSubviews.filter((v) => v !== "map"))(
+    "return subview if view is observations_observations and subview is not map",
+    (subview) => {
+      let params = {
+        ...defaultParams,
+        view: "observations_observations",
+        subview: subview,
+      };
+
+      removeDefaultParams(params);
+
+      expect(params).toStrictEqual({
+        spam: false,
+        verifiable: true,
+        view: "observations_observations",
+        subview: subview,
+      });
+    },
+  );
+
+  test.each(validIdentificationsSubviews.filter((v) => v !== "map"))(
+    "return subview if view is identifications_identifications and subview is not map",
+    (subview) => {
+      let params = {
+        ...defaultParams,
+        view: "identifications_identifications",
+        subview: subview,
+      };
+
+      removeDefaultParams(params);
+
+      expect(params).toStrictEqual({
+        spam: false,
+        verifiable: true,
+        view: "identifications_identifications",
+        subview: subview,
+      });
     },
   );
 
   test("removes locale=en", () => {
-    let params = `${defaultQuery}&locale=en`;
+    let params = {
+      ...defaultParams,
+      locale: "en",
+    };
 
-    let result = removeDefaultParams(params);
+    removeDefaultParams(params);
 
-    expect(result).toBe("");
+    expect(params).toStrictEqual({});
   });
 
   test("return params if not default values", () => {
-    let params =
-      "verifiable=false&spam=true&locale=es&view=observations_observations&subview=grid";
+    let params = {
+      verifiable: false,
+      spam: true,
+      locale: "es",
+      view: "observations_observations",
+      subview: "grid",
+    };
 
-    let result = removeDefaultParams(params);
+    removeDefaultParams(params);
 
-    expect(result).toBe(
-      "verifiable=false&spam=true&locale=es&view=observations_observations&subview=grid",
-    );
+    expect(params).toStrictEqual({
+      verifiable: false,
+      spam: true,
+      locale: "es",
+      view: "observations_observations",
+      subview: "grid",
+    });
   });
 });
 

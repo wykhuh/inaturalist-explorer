@@ -83,6 +83,7 @@ export function pluralize(
 export function formatAppUrl(
   appStore: AppStoreType,
   recordType = appStore.record_type,
+  format = "string",
 ) {
   let isIdentifications = recordType === "identifications";
   let isObservations = recordType === "observations";
@@ -205,61 +206,61 @@ export function formatAppUrl(
     }
   }
 
-  let searchParams = new URLSearchParams(params as any)
-    .toString()
-    .replaceAll("%2C", ",");
+  removeDefaultParams(params);
+  let searchParams = new URLSearchParams(params as any);
 
-  searchParams = removeDefaultParams(searchParams);
-
-  return searchParams;
+  if (format === "string") {
+    return searchParams.toString().replaceAll("%2C", ",");
+  } else {
+    return searchParams;
+  }
 }
 
-export function removeDefaultParams(searchParams: string) {
-  let parts = searchParams.split("&");
+export function removeDefaultParams(
+  params: ObservationsApiParamsType & IdentificationsApiParamsType,
+) {
+  let defaultiNatAPiParams =
+    params.verifiable === true && params.spam === false;
+  let defaultObservationsView =
+    params.view === "observations_observations" && params.subview === "map";
+  let defaultIdentificationsView =
+    params.view === "identifications_identifications" &&
+    params.subview === "map";
+  // @ts-ignore
+  let defaultNameOrder = params.name_order === "cs";
+  let defaultLocale = params.locale === "en";
 
-  let defaultiNatAPiParamas =
-    parts.includes("verifiable=true") && parts.includes("spam=false");
-  let defaultView =
-    parts.includes("view=observations_observations") &&
-    parts.includes("subview=map");
-  let defaultNameOrder = parts.includes("name_order=cs");
-  let defaultLocale = parts.includes("locale=en");
-
-  if (defaultiNatAPiParamas && defaultView) {
-    parts = removeValueFromArray("verifiable=true", parts);
-    parts = removeValueFromArray("spam=false", parts);
-    parts = removeValueFromArray("locale=en", parts);
-    parts = removeValueFromArray("view=observations_observations", parts);
-    parts = removeValueFromArray("subview=map", parts);
+  if (defaultiNatAPiParams && defaultObservationsView) {
+    delete params.verifiable;
+    delete params.spam;
+    delete params.locale;
+    delete params.view;
+    delete params.subview;
   }
 
-  if (defaultView) {
-    parts = removeValueFromArray("view=observations_observations", parts);
-    parts = removeValueFromArray("subview=map", parts);
+  if (defaultObservationsView) {
+    delete params.view;
+    delete params.subview;
+  }
+
+  if (defaultIdentificationsView) {
+    delete params.view;
+    delete params.subview;
   }
 
   if (defaultNameOrder) {
-    parts = removeValueFromArray("name_order=cs", parts);
+    // @ts-ignore
+    delete params.name_order;
   }
 
   if (defaultLocale) {
-    parts = removeValueFromArray("locale=en", parts);
+    delete params.locale;
   }
 
-  if (defaultiNatAPiParamas && parts.length === 2) {
-    parts = removeValueFromArray("verifiable=true", parts);
-    parts = removeValueFromArray("spam=false", parts);
+  if (defaultiNatAPiParams && Object.keys(params).length === 2) {
+    delete params.verifiable;
+    delete params.spam;
   }
-
-  return parts.join("&");
-}
-
-function removeValueFromArray(value: any, array: any[]) {
-  const index = array.indexOf(value);
-  if (index > -1) {
-    array.splice(index, 1);
-  }
-  return array;
 }
 
 export function updateAppUrl(url_location: Location, appStore: AppStoreType) {
