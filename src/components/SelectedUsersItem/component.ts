@@ -60,6 +60,8 @@ class SelectedUsersItem extends HTMLElement {
             await removeUserAnnotator(user.id, window.app.store);
           } else if (userType === "withoutObserver") {
             await removeWithoutUser(user.id, window.app.store);
+          } else if (userType === "withoutIdentifier") {
+            await removeWithoutUserIdentifier(user.id, window.app.store);
           } else {
             throw Error("need to add remove function for " + userType);
           }
