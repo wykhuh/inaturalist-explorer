@@ -64,6 +64,16 @@ export function initFilters(appStore: AppStoreType) {
 
   populateFields(observationsFieldName_InputType, appStore);
 
+  if (observationsApiParams.term_id !== undefined) {
+    let id = observationsApiParams.term_id;
+    let select = document.querySelector<HTMLSelectElement>(
+      `select[data-related-term-id="${id}"]`,
+    );
+    if (select) {
+      select.disabled = false;
+    }
+  }
+
   // NOTE: update when adding selectedResource; filters form autocomplete search
   if (observationsApiParams.unobserved_by_user_id !== undefined) {
     let inputEl = document.querySelector(
