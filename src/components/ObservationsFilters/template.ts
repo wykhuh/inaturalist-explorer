@@ -946,7 +946,6 @@ const withoutAnnotationPane = html` <div
         name="without_term_value_id"
         data-related-without-term-id="9"
         multiple
-        disabled
       >
         <option value="">Any</option>
         <option value="10">Female</option>
@@ -971,7 +970,6 @@ const withoutAnnotationPane = html` <div
         data-related-without-term-id="17"
         name="without_term_value_id"
         multiple
-        disabled
       >
         <option value="">Any</option>
         <option value="18">Alive</option>
@@ -996,7 +994,6 @@ const withoutAnnotationPane = html` <div
         data-related-without-term-id="33"
         name="without_term_value_id"
         multiple
-        disabled
       >
         <option value="">Any</option>
         <option value="34">Not Established</option>
@@ -1024,7 +1021,6 @@ const withoutAnnotationPane = html` <div
         data-related-without-term-id="12"
         name="without_term_value_id"
         multiple
-        disabled
       >
         <option value="">Any</option>
         <option value="13">Flowers</option>
@@ -1051,7 +1047,6 @@ const withoutAnnotationPane = html` <div
         data-related-without-term-id="36"
         name="without_term_value_id"
         multiple
-        disabled
       >
         <option value="">Any</option>
         <option value="37">Breaking Leaf Buds</option>
@@ -1081,7 +1076,6 @@ const withoutAnnotationPane = html` <div
         data-related-without-term-id="1"
         name="without_term_value_id"
         multiple
-        disabled
       >
         <option value="">Any</option>
         <option value="2">Adult</option>
@@ -1112,7 +1106,6 @@ const withoutAnnotationPane = html` <div
         data-related-without-term-id="22"
         name="without_term_value_id"
         multiple
-        disabled
       >
         <option value="">Any</option>
         <option value="23">Feather</option>
