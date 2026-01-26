@@ -30,7 +30,15 @@ export async function deleteFilter(
   let field = fieldTemp as keyof typeof resourceFieldName_InputType;
   let inputType = resourceFieldName_InputType[field];
 
-  if (inputType === "select") {
+  if (["term_id"].includes(field)) {
+    unsetAnnotationTermId(field, value);
+  } else if (["term_value_id", "without_term_value_id"].includes(field)) {
+    value.split(",").forEach((v) => {
+      unsetSelectedOption(
+        `#filters-form select[name='${field}'] option[value='${v}']`,
+      );
+    });
+  } else if (inputType === "select") {
     unsetSelectedOption(
       `#filters-form select#${field} option[value='${value}']`,
     );
@@ -51,14 +59,6 @@ export async function deleteFilter(
     setInputValue(`#filters-form input#${field}`, "");
   } else if (inputType === "search") {
     setInputValue(`#filters-form [name='${field}']`, "");
-  } else if (["term_id", "without_term_id"].includes(field)) {
-    unsetAnnotationTermId(field, value);
-  } else if (["term_value_id", "without_term_value_id"].includes(field)) {
-    value.split(",").forEach((v) => {
-      unsetSelectedOption(
-        `#filters-form select[name='${field}'] option[value='${v}']`,
-      );
-    });
   } else {
     throw new Error(
       `need to add another option for SelectedFiltersItem: ${field} ${inputType}`,

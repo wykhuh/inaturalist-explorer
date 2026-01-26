@@ -435,8 +435,8 @@ export const observationsFieldName_InputType = {
   user_before: "select",
   verifiable: "select",
   viewer_id: "search",
-  without_term_id: "skip",
-  without_term_value_id: "skip",
+  without_term_id: "checkbox",
+  without_term_value_id: "multiselect",
   year: "multiselect",
 };
 

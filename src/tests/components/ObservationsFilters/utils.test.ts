@@ -295,7 +295,10 @@ describe("initFilters", () => {
     (field) => {
       let el = document.querySelector<HTMLSelectElement>(`#${field}`);
       if (!el) {
-        throw new Error(`multiselect ${field} error`);
+        el = document.querySelector<HTMLSelectElement>(`[name='${field}']`);
+        if (!el) {
+          throw new Error(`multiselect ${field} error`);
+        }
       }
       let optionEl = el.querySelectorAll("option");
       let optionEl1 = optionEl[1];
