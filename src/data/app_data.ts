@@ -466,6 +466,8 @@ export const identificationsApiNonFilterableNames: IdentificationsApiParamsKeysT
     "without_observation_taxon_id", // array string
     "without_taxon_id", // array string
     "not_in_place", // array string
+    "order",
+    "order_by", // created_at,
   ];
 
 export const identificationsFilterableImplemented: IdentificationsApiParamsKeysType[] =
@@ -496,8 +498,6 @@ export const identificationsFilterableImplementedArrays: IdentificationsApiParam
 export const identificationsFilterableTodo: IdentificationsApiParamsKeysType[] =
   [
     // maybe
-    "order",
-    "order_by", // created_at,
 
     // no
     "observation_created_d1",
