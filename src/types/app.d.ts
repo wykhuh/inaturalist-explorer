@@ -76,6 +76,7 @@ export interface AppStoreType {
     identifications_observers: ViewOptions;
     identifications_identifications: ViewOptions;
     name_order: NameOrderType;
+    side_menu: "show" | "hide";
   };
   record_type: RecordTypes;
 }

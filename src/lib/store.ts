@@ -48,6 +48,7 @@ export const mapStore: AppStoreType = {
     identifications_identifiers: { perPage: 100 },
     identifications_observers: { perPage: 100 },
     name_order: "cs",
+    side_menu: "show",
   },
   record_type: "observations",
 };

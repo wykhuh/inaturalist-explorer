@@ -1,15 +1,48 @@
-export function toggleSidebar(componentCtx: HTMLElement) {
-  let siteLayoutEl =
-    componentCtx.querySelector<HTMLButtonElement>("#site-layout");
-  let siteControlsEl =
-    componentCtx.querySelector<HTMLButtonElement>("#site-controls");
+import type { AppStoreType } from "../../types/app";
 
-  if (siteLayoutEl?.classList.contains("sidebar-open")) {
-    siteLayoutEl?.classList.replace("sidebar-open", "sidebar-close");
-    siteControlsEl?.classList.replace("sidebar-open", "sidebar-close");
+export function toggleSidebar(appStore: AppStoreType, componentCtx: any) {
+  if (appStore.viewMetadata.side_menu === "show") {
+    appStore.viewMetadata.side_menu = "hide";
+    componentCtx.siteLayoutEl?.classList.replace(
+      "sidebar-open",
+      "sidebar-close",
+    );
+    componentCtx.siteControlsEl?.classList.replace(
+      "sidebar-open",
+      "sidebar-close",
+    );
   } else {
-    siteLayoutEl?.classList.replace("sidebar-close", "sidebar-open");
-    siteControlsEl?.classList.replace("sidebar-close", "sidebar-open");
+    appStore.viewMetadata.side_menu = "show";
+    componentCtx.siteLayoutEl?.classList.replace(
+      "sidebar-close",
+      "sidebar-open",
+    );
+    componentCtx.siteControlsEl?.classList.replace(
+      "sidebar-close",
+      "sidebar-open",
+    );
+  }
+}
+
+export function initSidebarState(appStore: AppStoreType, componentCtx: any) {
+  if (appStore.viewMetadata.side_menu === "show") {
+    componentCtx.siteLayoutEl?.classList.replace(
+      "sidebar-close",
+      "sidebar-open",
+    );
+    componentCtx.siteControlsEl?.classList.replace(
+      "sidebar-close",
+      "sidebar-open",
+    );
+  } else {
+    componentCtx.siteLayoutEl?.classList.replace(
+      "sidebar-open",
+      "sidebar-close",
+    );
+    componentCtx.siteControlsEl?.classList.replace(
+      "sidebar-open",
+      "sidebar-close",
+    );
   }
 }
 

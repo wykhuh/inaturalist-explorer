@@ -1,6 +1,7 @@
 import { setupComponent } from "../../lib/component_utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import {
+  initSidebarState,
   toggleIdentificationsHandler,
   toggleSettingsHandler,
   toggleSidebar,
@@ -15,6 +16,8 @@ export class PageIdentifications extends HTMLElement {
   toggleSidebarEl: HTMLButtonElement | null = null;
   searchMenuToggleEl: HTMLButtonElement | null = null;
   settingsMenuToggleEl: HTMLButtonElement | null = null;
+  siteLayoutEl: HTMLDivElement | null = null;
+  siteControlsEl: HTMLDivElement | null = null;
 
   connectedCallback() {
     loggerRender("++ PageIdentifications connectedCallback");
@@ -29,10 +32,14 @@ export class PageIdentifications extends HTMLElement {
     this.settingsMenuToggleEl = this.querySelector<HTMLButtonElement>(
       "#settings-menu-toggle",
     );
+    this.siteLayoutEl = this.querySelector<HTMLDivElement>("#site-layout");
+    this.siteControlsEl = this.querySelector<HTMLDivElement>("#site-controls");
 
     this.toggleSidebarEl?.addEventListener("click", this);
     this.searchMenuToggleEl?.addEventListener("click", this);
     this.settingsMenuToggleEl?.addEventListener("click", this);
+
+    this.render();
   }
 
   disconnectedCallback() {
@@ -50,7 +57,7 @@ export class PageIdentifications extends HTMLElement {
 
     if (event.type === "click") {
       if (target.id === "sidebar-toggle") {
-        toggleSidebar(this);
+        toggleSidebar(window.app.store, this);
       } else if (
         target.id === "search-menu-toggle" ||
         target.closest("button")?.id === "search-menu-toggle"
@@ -60,6 +67,10 @@ export class PageIdentifications extends HTMLElement {
         toggleSettingsHandler(this);
       }
     }
+  }
+
+  render() {
+    initSidebarState(window.app.store, this);
   }
 }
 
