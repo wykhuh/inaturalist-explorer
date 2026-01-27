@@ -503,8 +503,9 @@
 
   .nav-tabs {
     display: flex;
+    flex-wrap: wrap;
     list-style: none;
-    gap: 1rem;
+    column-gap: 1rem;
     border-bottom: var(--border-grey);
 
     .active {
@@ -539,12 +540,14 @@
   }
 
   #site-controls.sidebar-close {
+    border: 0;
+    width: var(--side-menu-closed-width);
+
+    #download-menu-toggle,
     #search-menu-toggle,
     #settings-menu-toggle {
       display: none;
     }
-
-    border: 0;
   }
 
   #settings-menu {
@@ -627,6 +630,10 @@
 
     @media (max-width: 450px) {
       display: block;
+
+      #order-form {
+        margin-top: 1rem;
+      }
     }
 
     #subview-menu {
@@ -1362,19 +1369,7 @@
     }
   }
 
-  ul#selected-species-list,
-  ul#selected-places-list,
-  ul#selected-projects-list,
-  ul#selected-users-list,
-  ul#selected-users-identifiers-list,
-  ul#selected-users-annotators-list,
-  ul#selected-species-identified-list,
-  ul#selected-without-taxa-list,
-  ul#selected-without-taxa-identified-list,
-  ul#selected-without-places-list,
-  ul#selected-without-projects-list,
-  ul#selected-without-users-list,
-  ul#selected-without-users-identifiers-list {
+  .selected-resource-list {
     padding: 0;
     list-style: none;
 
@@ -1382,14 +1377,30 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     }
+  }
 
-    li {
+  .place-list-item,
+  .project-list-item,
+  .user-list-item,
+  .taxon-list-item,
+  .taxon-basic-list-item {
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: 1fr auto;
+    padding: 0.25rem 0.5rem;
+    align-items: center;
+    border: var(--border-grey);
+
+    .data {
       display: grid;
-      gap: 0.5rem;
-      grid-template-columns: 1fr auto;
-      padding: 0.25rem 0.5rem;
-      align-items: center;
-      border: var(--border-grey);
+    }
+
+    .name {
+      line-height: 1.2;
+    }
+
+    .count {
+      font-size: var(--font-size-sm);
     }
 
     .close-button {
@@ -1403,34 +1414,12 @@
     }
   }
 
-  ul#selected-species-list,
-  ul#selected-species-identified-list {
-    padding: 0;
-    list-style: none;
-
-    @media (max-width: 900px) {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    }
-
-    li {
-      grid-template-columns: auto 1fr auto;
-    }
-
-    .swatch {
-      display: block;
-      width: 1rem;
-      height: 1rem;
-    }
-
+  .taxon-list-item,
+  .taxon-basic-list-item {
     .details {
       display: grid;
       align-content: center;
       line-height: 1.3;
-    }
-
-    .observations-count {
-      font-size: var(--font-size-sm);
     }
 
     .title {
@@ -1449,21 +1438,13 @@
     }
   }
 
-  ul#selected-projects-list,
-  ul#selected-places-list,
-  ul#selected-users-list,
-  ul#selected-users-identifiers-list,
-  ul#selected-species-identified-list {
-    .data {
-      display: grid;
-    }
+  .taxon-list-item {
+    grid-template-columns: auto 1fr auto;
 
-    .name {
-      line-height: 1.2;
-    }
-
-    .count {
-      font-size: var(--font-size-sm);
+    .swatch {
+      display: block;
+      width: 1rem;
+      height: 1rem;
     }
   }
 
@@ -1498,7 +1479,7 @@
     ul.observations-stats,
     ul.identifications-stats {
       display: flex;
-      gap: 1rem;
+      column-gap: 1rem;
       flex-wrap: wrap;
       list-style: none;
       padding: 1rem;
