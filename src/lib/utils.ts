@@ -188,15 +188,20 @@ export function formatAppUrl(
   }
 
   if (appStore.currentView === "observations_observations") {
-    let subview = appStore.viewMetadata.observations_observations?.subview;
-    if (subview && ["table", "media", "grid"].includes(subview)) {
+    let subview = appStore.viewMetadata.observations_observations
+      .subview as ObservationSubviewsType;
+    let validSubview: ObservationSubviewsType[] =
+      validObservationsSubviews.filter((sv) => sv !== "map");
+    if (subview && validSubview.includes(subview)) {
       params.view = appStore.currentView;
       params.subview = subview;
     }
   } else if (appStore.currentView === "identifications_identifications") {
-    let subview =
-      appStore.viewMetadata.identifications_identifications?.subview;
-    if (subview && ["grid", "history"].includes(subview)) {
+    let subview = appStore.viewMetadata.identifications_identifications
+      .subview as IdentificationSubviewsType;
+    let validSubview: IdentificationSubviewsType[] =
+      validIdentificationsSubviews.filter((sv) => sv !== "map");
+    if (subview && validSubview.includes(subview)) {
       params.view = appStore.currentView;
       params.subview = subview;
     }

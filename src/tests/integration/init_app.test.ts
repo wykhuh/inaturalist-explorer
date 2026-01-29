@@ -1553,7 +1553,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
       gridLabel_life_identified_places_usersIdentifiers,
     ]);
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
-    let expectedParams: ObservationsApiParamsType = {
+    let expectedParams: IdentificationsApiParamsType = {
       observation_taxon_id: `${life.id}`,
       taxon_id: `${oak.id}`,
       place_id: `${losangeles.id},${sandiego.id}`,

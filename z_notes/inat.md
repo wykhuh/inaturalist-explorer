@@ -338,32 +338,25 @@ http://localhost:5173/?taxon_id=85552&place_id=14&colors=%234477aa&verifiable=tr
 Observed Species
 Lizards
 (Suborder Sauria)
-1 observation
-×
+
 Identified Species
 Phrynosomatid Lizards
 (Family Phrynosomatidae)
-1 observation
-×
+
 Places
 California
-1 observation
-×
+
 Projects
 Los Angeles City Nature Challenge Cumulative Observations 2016-2025
-1 observation
-×
+
 Observers
 scubabruin (LSchare (she/her))
-1 observation
-×
+
 Identifiers
 gregpauly (Greg Pauly)
-1 identification
-×
+
 Annotators
-joesjoes20 (joesjoes20) 1 observation
-×
+joesjoes20 (joesjoes20) 
 
 
 http://localhost:5173/?taxon_id=85552&place_id=14&project_id=65248&user_id=81779&ident_user_id=17630&colors=%234477aa&verifiable=true&spam=false&per_page=24&ident_taxon_id=36074&annotation_user_id=5983024&view=observations_observations&subview=grid
@@ -418,3 +411,16 @@ https://forum.inaturalist.org/t/search-for-observations-with-comments/1594/21
 
 Apply_project_rules_for filter doesn’t apply annotation rules
 https://forum.inaturalist.org/t/apply-project-rules-for-filter-doesnt-apply-annotation-rules/59558
+5 Physalia species
+
+https://inat-explorer.dataexplorers.info/?taxon_id=117302,1631517,1631519,1631518,1651898&colors=%234477aa,%2366ccee,%23228833,%23ccbb44,%23ee6677&verifiable=true&spam=false&per_page=24&view=observations_observations&subview=media
+
+==
+
+inat western honey bee seasonality
+
+https://api.inaturalist.org/v2/observations/histogram?verifiable=true&taxon_id=47219&date_field=observed&interval=month_of_year&quality_grade=research
+
+inat western honey bee history
+
+https://api.inaturalist.org/v2/observations/histogram?verifiable=true&taxon_id=47219&date_field=observed&interval=month

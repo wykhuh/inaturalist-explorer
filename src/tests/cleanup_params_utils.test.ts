@@ -101,7 +101,7 @@ describe("cleanupObervationsParams", () => {
     store.observationsApiParams.colors = "red";
     store.selectedTaxa = [{ id: 1, color: "red" }];
     store.currentView = "observations_observations";
-    store.viewMetadata.observations_observations.subview = "table";
+    store.viewMetadata.observations_observations.subview = "grid";
 
     let results = cleanupObervationsParams(store);
 
@@ -352,7 +352,6 @@ describe("cleanupObservationsMapParams", () => {
     store.observationsApiParams = {
       taxon_id: "0",
       place_id: "0",
-      observation_taxon_id: "0",
     };
 
     let results = cleanupObservationsMapParams(store.observationsApiParams);

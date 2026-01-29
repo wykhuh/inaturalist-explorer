@@ -1,0 +1,103 @@
+Parameter,Description,Parameter Type,Data Type
+acc,Whether or not positional accuracy / coordinate uncertainty has been specified,query,boolean
+captive,Captive or cultivated observations,query,boolean
+endemic,Observations whose taxa are endemic to their location,query,boolean
+geo,Observations that are georeferenced,query,boolean
+id_please,"Observations with the deprecated ID, Please! flag. Note that this will return observations, but that this attribute is no longer used.",query,boolean
+identified,Observations that have community identifications,query,boolean
+introduced,Observations whose taxa are introduced in their location,query,boolean
+mappable,Observations that show on map tiles,query,boolean
+native,Observations whose taxa are native to their location,query,boolean
+out_of_range,Observations whose taxa are outside their known ranges,query,boolean
+pcid,"Observations identified by the curator of a project. If the project_id parameter is also specified, this will only consider observations identified by curators of the specified project(s)",query,boolean
+photos,Observations with photos,query,boolean
+popular,Observations that have been favorited by at least one user,query,boolean
+sounds,Observations with sounds,query,boolean
+taxon_is_active,Observations of active taxon concepts,query,boolean
+threatened,Observations whose taxa are threatened in their location,query,boolean
+verifiable,"Observations with a quality_grade of either needs_id or research. Equivalent to quality_grade=needs_id,research",query,boolean
+licensed,License attribute of an observation must not be null,query,boolean
+photo_licensed,License attribute of at least one photo of an observation must not be null,query,boolean
+expected_nearby,Observation taxon is expected nearby,query,boolean
+id,Must have this ID,query,Array[string]
+not_id,Must not have this ID,query,Array[string]
+license,Observation must have this license,query,Array[string]
+ofv_datatype,Must have an observation field value with this datatype,query,Array[string]
+photo_license,Must have at least one photo with this license,query,Array[string]
+place_id,Must be observed within the place with this ID,query,Array[integer]
+project_id,Must be added to the project this ID or slug,query,Array[string]
+rank,Taxon must have this rank,query,Array[string]
+site_id,Must be affiliated with the iNaturalist network website with this ID,query,Array[string]
+sound_license,Must have at least one sound with this license,query,Array[string]
+taxon_id,Only show observations of these taxa and their descendants,query,Array[string]
+without_taxon_id,Exclude observations of these taxa and their descendants,query,Array[string]
+taxon_name,Taxon must have a scientific or common name matching this string,query,Array[string]
+user_id,User must have this ID or login,query,Array[string]
+user_login,User must have this login,query,Array[string]
+ident_user_id,Observations identified by a particular user,query,integer
+hour,Must be observed within this hour of the day,query,Array[string]
+day,Must be observed within this day of the month,query,Array[string]
+month,Must be observed within this month,query,Array[string]
+year,Must be observed within this year,query,Array[string]
+created_day,Must be created within this day of the month,query,Array[string]
+created_month,Must be created within this month,query,Array[string]
+created_year,Must be created within this year,query,Array[string]
+term_id,Must have an annotation using this controlled term ID,query,Array[integer]
+term_value_id,Must have an annotation using this controlled value ID. Must be combined with the term_id parameter,query,Array[integer]
+without_term_id,Exclude observations with annotations using this controlled value ID.,query,integer
+without_term_value_id,Exclude observations with annotations using this controlled value ID. Must be combined with the term_id parameter,query,Array[integer]
+term_id_or_unknown,Must be combined with the term_value_id or the without_term_value_id parameter. Must have an annotation using this controlled term ID and associated term value IDs or be missing this annotation.,query,Array[integer]
+annotation_user_id,Must have an annotation created by this user,query,Array[string]
+acc_above,Must have a positional accuracy above this value (meters),query,string
+acc_below,Must have a positional accuracy below this value (meters),query,string
+acc_below_or_unknown,Positional accuracy must be below this value (in meters) or be unknown,query,string
+d1,Must be observed on or after this date,query,date
+d2,Must be observed on or before this date,query,date
+created_d1,Must be created at or after this time,query,date-time
+created_d2,Must be created at or before this time,query,date-time
+created_on,Must be created on this date,query,date
+observed_on,Must be observed on this date,query,date
+unobserved_by_user_id,Must not be of a taxon previously observed by this user,query,integer
+apply_project_rules_for,Must match the rules of the project with this ID or slug,query,string
+cs,"Taxon must have this conservation status code. If the place_id parameter is also specified, this will only consider statuses specific to that place",query,string
+csa,"Taxon must have a conservation status from this authority. If the place_id parameter is also specified, this will only consider statuses specific to that place",query,string
+csi,"Taxon must have this IUCN conservation status. If the place_id parameter is also specified, this will only consider statuses specific to that place",query,Array[string]
+geoprivacy,Must have this geoprivacy setting,query,Array[string]
+taxon_geoprivacy,Filter observations by the most conservative geoprivacy applied by a conservation status associated with one of the taxa proposed in the current identifications.,query,Array[string]
+obscuration,Must have geoprivacy or taxon_geoprivacy fields matching these values,query,Array[string]
+hrank,Taxon must have this rank or lower,query,string
+lrank,Taxon must have this rank or higher,query,string
+iconic_taxa,Taxon must by within this iconic taxon,query,Array[string]
+id_above,Must have an ID above this value,query,string
+id_below,Must have an ID below this value,query,string
+identifications,Identifications must meet these criteria,query,string
+lat,"Must be within a {radius} kilometer circle around this lat/lng (lat, lng, radius)",query,double
+lng,"Must be within a {radius} kilometer circle around this lat/lng (lat, lng, radius)",query,double
+radius,"Must be within a {radius} kilometer circle around this lat/lng (lat, lng, radius)",query,string
+nelat,"Must be within this bounding box (nelat, nelng, swlat, swlng)",query,double
+nelng,"Must be within this bounding box (nelat, nelng, swlat, swlng)",query,double
+swlat,"Must be within this bounding box (nelat, nelng, swlat, swlng)",query,double
+swlng,"Must be within this bounding box (nelat, nelng, swlat, swlng)",query,double
+list_id,Taxon must be in the list with this ID,query,integer
+not_in_project,Must not be in the project with this ID or slug,query,string
+not_matching_project_rules_for,Must not match the rules of the project with this ID or slug,query,string
+observation_accuracy_experiment_id,Must included in this observation accuracy experiment,query,Array[integer]
+fails_dqa_accurate,Must be voted as not accurately depicting an organism or scene,query,boolean
+fails_dqa_date,Must be voted as not having an accurate date,query,boolean
+fails_dqa_evidence,Must be voted as not evidence of an organism,query,boolean
+fails_dqa_location,Must be voted as not having an accurate location,query,boolean
+fails_dqa_needs_id,Must be voted as the community ID cannot be improved,query,boolean
+fails_dqa_recent,Must be voted as not recent evidence of an organism,query,boolean
+fails_dqa_subject,Must be voted as not having evidence related to a single subject,query,boolean
+fails_dqa_wild,Must be voted as not wild,query,boolean
+q,Search observation properties. Can be combined with search_on,query,string
+search_on,"Properties to search on, when combined with q. Searches across all properties by default",query,string
+quality_grade,Must have this quality grade,query,string
+updated_since,Must be updated since this time,query,string
+viewer_id,See reviewed,query,string
+reviewed,Observations have been reviewed by the user with ID equal to the value of the viewer_id parameter,query,boolean
+locale,Locale preference for taxon common names,query,string
+preferred_place_id,Place preference for regional taxon common names,query,integer
+ttl,"Set the Cache-Control HTTP header with this value as max-age, in seconds. This means subsequent identical requests will be cached on iNaturalist servers, and commonly within web browsers",query,string
+date_field,Histogram basis: when the observation was created or observed,query,string
+interval,"Time interval for histogram, with groups starting on or contained within the group value. The year, month, week, day, and hour options will set default values for d1 or created_d1 depending on the value of date_field, to limit the number of groups returned. You can override those values if you want data from a longer or shorter time span. The hour interval only works with date_field=created, and this you should filter dates with created_d[1,2]",query,string

@@ -38,6 +38,7 @@
     "@tarekraafat/autocomplete.js": "^10.2.9",
     "leaflet": "^1.9.4",
     "terra-draw": "^1.23.0",
-    "terra-draw-leaflet-adapter": "^1.1.0"
+    "terra-draw-leaflet-adapter": "^1.1.0",
+    "vega-embed": "^7.1.0"
   }
 }

@@ -37,6 +37,7 @@ export const mapStore: AppStoreType = {
     headerCountsIndex: [],
   },
   observationsSubviewData: [],
+  observationsGraphSubviewData: {},
   currentView: "observations_observations",
   viewMetadata: {
     observations_observations: {

@@ -1,22 +1,9 @@
-import { iNatObservationUrl } from "../../data/inat_data";
 import { cleanupObervationsParams } from "../../lib/cleanup_params_utils";
-import {
-  formatDateLong,
-  renderMedia,
-  renderObservationMetadataCounts,
-  renderPlace,
-  renderQualityGrade,
-  renderTaxonNames,
-  renderUser,
-} from "../../lib/render_utils";
-import { getObservations } from "../../lib/inat_api";
+import { getHistogram, getObservations } from "../../lib/inat_api";
 import { loggerTime } from "../../lib/logger";
 import { createSpinner } from "../../lib/spinner";
 import { updateAppUrl } from "../../lib/utils";
-import type {
-  iNatObservationsAPI,
-  ObservationsResult,
-} from "../../types/inat_api";
+import type { iNatObservationsAPI } from "../../types/inat_api";
 import type {
   DataComponentType,
   AppStoreType,
@@ -32,6 +19,12 @@ import {
 } from "../../lib/data_utils";
 import { initRenderMap } from "../../lib/init_app";
 import { removeMap } from "../../lib/map_utils";
+import {
+  createGraph,
+  createGrid,
+  createMap,
+  createMediaGrid,
+} from "./subviews";
 
 export let defaultPerPage = 24;
 
@@ -46,36 +39,51 @@ export async function fetchAndRenderData(
   let subcontainerEl = document.querySelector(".subview-container");
   if (!subcontainerEl) return;
 
-  let spinner = createSpinner();
-  spinner.start();
+  //  handle observations
+  if (appStore.viewMetadata.observations_observations.subview !== "graph") {
+    let spinner = createSpinner();
+    spinner.start();
+    const t1 = performance.now();
 
-  const t1 = performance.now();
-  // fetch data from api
-  let data = await getAPIData(appStore);
-  const t10 = performance.now();
-  loggerTime(`api ${t10 - t1} milliseconds`);
-  spinner.stop();
+    // fetch data
+    let data = await getAPIData(appStore);
+    if (!data) return;
 
-  if (!data) return;
+    const t10 = performance.now();
+    loggerTime(`api ${t10 - t1} milliseconds`);
+    spinner.stop();
 
-  let view =
-    appStore.viewMetadata[appStore.currentView || "observations_observations"];
-  if (view.subview !== "map" && data.results.length == 0) {
-    subcontainerEl.innerHTML = "No records found";
-    appStore.observationsSubviewData = [];
-    return;
+    // display message if no records
+    let view =
+      appStore.viewMetadata[
+        appStore.currentView || "observations_observations"
+      ];
+    if (view.subview !== "map" && data.results.length == 0) {
+      subcontainerEl.innerHTML = "No records found";
+      appStore.observationsSubviewData = [];
+      return;
+    }
+
+    // store results in store for switching subview
+    appStore.observationsSubviewData = data;
+
+    // render data
+    if (appStore.viewMetadata.observations_observations.subview === "map") {
+      renderMap(appStore);
+    } else {
+      renderGrid(data, paginationCallback, appStore);
+    }
+
+    // handle graphs
+  } else {
+    renderGraphs(appStore);
   }
-
-  // store results in store for switching subview
-  appStore.observationsSubviewData = data;
-
-  render(data, paginationCallback, appStore);
 }
 
 // re-render grids, tables, pagination everytime we fetch new data. only render
 // map if it does not exist since we have another function to add/delete map
 // layers when data changes.
-function render(
+function renderGrid(
   data: iNatObservationsAPI,
   paginationCallback: any,
   appStore: AppStoreType,
@@ -86,65 +94,105 @@ function render(
   if (!formEl) return;
 
   let view = appStore.viewMetadata.observations_observations;
-  if (view.subview === "map") {
-    if (!appStore.map.map) {
-      containerEl.innerHTML = "";
-    }
-    formEl.className = "hide";
-  } else {
-    containerEl.innerHTML = "";
-    formEl.className = "";
-  }
 
-  if (view.subview !== "map") {
-    let pagination1 = document.createElement(
-      "app-pagination",
-    ) as unknown as DataComponentType;
-    pagination1.data = {
-      perPage: data.per_page,
-      currentPage: data.page,
-      totalRecords: data.total_results,
-      paginationCallback,
-    };
-    containerEl.appendChild(pagination1);
-  }
+  containerEl.innerHTML = "";
+  formEl.className = "";
 
-  // switch between table and grid subview
+  let pagination1 = document.createElement(
+    "app-pagination",
+  ) as unknown as DataComponentType;
+  pagination1.data = {
+    perPage: data.per_page,
+    currentPage: data.page,
+    totalRecords: data.total_results,
+    paginationCallback,
+  };
+  containerEl.appendChild(pagination1);
+
   let subviewEl = document.createElement("div");
   subviewEl.className = "observations-subview";
 
-  if (view.subview === "table") {
-    subviewEl.appendChild(createTable(data.results, appStore));
-  } else if (view.subview === "media") {
+  if (view.subview === "media") {
     subviewEl.appendChild(createMediaGrid(data.results));
-  } else if (view.subview === "map") {
-    if (!appStore.map.map) {
-      subviewEl.appendChild(createMap());
-
-      // HACK: use setTimeout to ensure initRenderMap is called after createMap
-      // adds div#map
-      setTimeout(() => {
-        initRenderMap(appStore);
-      }, 0);
-    }
   } else {
     subviewEl.appendChild(createGrid(data.results));
   }
   containerEl.append(subviewEl);
 
-  if (view.subview !== "map") {
-    let pagination2 = document.createElement(
-      "app-pagination",
-    ) as unknown as DataComponentType;
-    pagination2.data = {
-      perPage: data.per_page,
-      currentPage: data.page,
-      totalRecords: data.total_results,
-      paginationCallback,
-      scrollToSelector: "#observations-list-controls",
-    };
-    containerEl.appendChild(pagination2);
+  let pagination2 = document.createElement(
+    "app-pagination",
+  ) as unknown as DataComponentType;
+  pagination2.data = {
+    perPage: data.per_page,
+    currentPage: data.page,
+    totalRecords: data.total_results,
+    paginationCallback,
+    scrollToSelector: "#observations-list-controls",
+  };
+  containerEl.appendChild(pagination2);
+}
+
+function renderMap(appStore: AppStoreType) {
+  let containerEl = document.querySelector(".subview-container");
+  let formEl = document.querySelector("#order-form");
+  if (!containerEl) return;
+  if (!formEl) return;
+
+  if (!appStore.map.map) {
+    containerEl.innerHTML = "";
   }
+  formEl.className = "hide";
+
+  let subviewEl = document.createElement("div");
+  subviewEl.className = "observations-subview";
+
+  if (!appStore.map.map) {
+    subviewEl.appendChild(createMap());
+
+    // HACK: use setTimeout to ensure initRenderMap is called after createMap
+    // adds div#map
+    setTimeout(() => {
+      initRenderMap(appStore);
+    }, 0);
+  }
+
+  containerEl.append(subviewEl);
+}
+
+async function renderGraphs(appStore: AppStoreType) {
+  let containerEl =
+    document.querySelector<HTMLDivElement>(".subview-container");
+  let formEl = document.querySelector("#order-form");
+  if (!containerEl) return;
+  if (!formEl) return;
+
+  containerEl.innerHTML = "";
+  formEl.className = "hide";
+
+  let subviewEl = document.createElement("div");
+  subviewEl.className = "observations-subview";
+
+  let data2 = await getAPIGraphData("month_of_year", appStore);
+  if (data2) {
+    await createGraph(data2.results, containerEl);
+  }
+
+  let data3 = await getAPIGraphData("year", appStore);
+  if (data3) {
+    await createGraph(data3.results, containerEl);
+  }
+
+  let data4 = await getAPIGraphData("month", appStore);
+  if (data4) {
+    await createGraph(data4.results, containerEl);
+  }
+  containerEl.append(subviewEl);
+}
+
+export function displayJSON(data: any, element: HTMLDivElement) {
+  let div = document.createElement("div");
+  div.innerText = JSON.stringify(data);
+  element.appendChild(div);
 }
 
 async function getAPIData(appStore: AppStoreType) {
@@ -154,13 +202,9 @@ async function getAPIData(appStore: AppStoreType) {
     return { ...observations, page: page || 1 };
   }
 
-  // NOTE: set record type to observations since parmas are for getObservations
   // TODO: check if this is needed
   updateSelectedResourcesId(appStore, "observations");
-  let params = "";
-  if (isObservationsCheck(appStore)) {
-    params = cleanupObervationsParams(appStore, "observations");
-  }
+  let params = cleanupObervationsParams(appStore, "observations");
 
   try {
     let data = await getObservations(params);
@@ -172,159 +216,19 @@ async function getAPIData(appStore: AppStoreType) {
   }
 }
 
-export function createTable(
-  results: ObservationsResult[],
-  appStore: AppStoreType,
-) {
-  let tableEl = document.createElement("table") as HTMLElement;
-  tableEl.className = "observations-table table";
+async function getAPIGraphData(interval: string, appStore: AppStoreType) {
+  // TODO: check if this is needed
+  updateSelectedResourcesId(appStore, "observations");
+  let params = cleanupObervationsParams(appStore, "observations");
 
-  let rowEl = document.createElement("tr");
+  try {
+    let data = await getHistogram(`${params}&interval=${interval}`);
+    if (!data) return;
 
-  let tdEl = document.createElement("th");
-  tdEl.textContent = "Media";
-  rowEl.appendChild(tdEl);
-
-  tdEl = document.createElement("th");
-  tdEl.textContent = "Name";
-  rowEl.appendChild(tdEl);
-
-  tdEl = document.createElement("th");
-  tdEl.textContent = "User";
-  rowEl.appendChild(tdEl);
-
-  tdEl = document.createElement("th");
-  tdEl.textContent = "Place";
-  rowEl.appendChild(tdEl);
-
-  tdEl = document.createElement("th");
-  tdEl.textContent = "Observed";
-  rowEl.appendChild(tdEl);
-
-  tdEl = document.createElement("th");
-  tdEl.textContent = "Added";
-  rowEl.appendChild(tdEl);
-
-  tableEl.appendChild(rowEl);
-
-  results.forEach((row) => {
-    let rowEl = document.createElement("tr");
-
-    // media
-    let tdEl = document.createElement("td");
-    tdEl.className = "media-cell";
-    let url = `${iNatObservationUrl}/${row.id}`;
-    tdEl.innerHTML = renderMedia(
-      url,
-      row.taxon,
-      row.photos,
-      row.sounds,
-      appStore,
-      true,
-      "square",
-    );
-    rowEl.appendChild(tdEl);
-
-    // taxon name, observation metadata
-    tdEl = document.createElement("td");
-    tdEl.className = "name";
-    let observationContent = ``;
-
-    if (row.taxon) {
-      observationContent += renderTaxonNames(
-        row.taxon,
-        appStore,
-        `${iNatObservationUrl}/${row.id}`,
-      );
-
-      // some obsevations only have sound and no tax info
-    } else {
-      observationContent += `<span class="title">`;
-      observationContent += `<a href="${iNatObservationUrl}/${row.id}">Unknown</a>`;
-      observationContent += "</span>";
-    }
-
-    observationContent += renderQualityGrade(row.quality_grade);
-    observationContent += renderObservationMetadataCounts(row);
-
-    tdEl.innerHTML = observationContent;
-    rowEl.appendChild(tdEl);
-
-    // user
-    tdEl = document.createElement("td");
-    tdEl.className = "user";
-    tdEl.innerHTML = renderUser(row.user);
-    rowEl.appendChild(tdEl);
-
-    // place
-    tdEl = document.createElement("td");
-    tdEl.className = "place";
-    let placeContent = renderPlace(row.place_guess, row.obscured);
-    tdEl.innerHTML = placeContent;
-    rowEl.appendChild(tdEl);
-
-    // observed on
-    tdEl = document.createElement("td");
-    tdEl.className = "observed";
-    if (row.time_observed_at) {
-      tdEl.innerText = ` ${formatDateLong(row.time_observed_at, row.observed_time_zone)}`;
-    }
-    rowEl.appendChild(tdEl);
-
-    // created
-    tdEl = document.createElement("td");
-    tdEl.className = "created";
-    tdEl.innerText = ` ${formatDateLong(row.created_at, row.created_time_zone)}`;
-
-    rowEl.appendChild(tdEl);
-
-    tableEl.appendChild(rowEl);
-  });
-
-  return tableEl;
-}
-
-export function createGrid(results: ObservationsResult[]) {
-  let containerEl = document.createElement("div");
-  containerEl.className = "observations-grid grid-auto-fill";
-
-  results.forEach((row) => {
-    let cardEl = document.createElement(
-      "card-observation",
-    ) as unknown as DataComponentType;
-    cardEl.data = row;
-    containerEl.appendChild(cardEl);
-  });
-
-  return containerEl;
-}
-
-function createMediaGrid(results: ObservationsResult[]) {
-  let containerEl = document.createElement("div");
-  containerEl.className = "observations-media-grid grid-auto-fill";
-  results.forEach((record) => {
-    let media = record.photos.concat(record.sounds);
-    media.forEach((medium, j) => {
-      let cardEl = document.createElement(
-        "card-media",
-      ) as unknown as DataComponentType;
-      cardEl.data = {
-        observation: record,
-        media: medium,
-        mediaIndex: j,
-        type: medium.url ? "photo" : "sound",
-      };
-      containerEl.appendChild(cardEl);
-    });
-  });
-
-  return containerEl;
-}
-
-function createMap() {
-  let divEl = document.createElement("div");
-  divEl.id = "map";
-  return divEl;
+    return data;
+  } catch (error) {
+    console.error("ViewObservations getAPIGraphData ERROR:", error);
+  }
 }
 
 export async function paginationCallback(num: number, appStore: AppStoreType) {
@@ -346,7 +250,7 @@ export async function paginationCallback(num: number, appStore: AppStoreType) {
   updateAppUrl(window.location, appStore);
 }
 
-export function updateSubviewState(
+export async function updateSubviewState(
   subview: ObservationSubviewsType,
   componentContext: any,
   appStore: AppStoreType,
@@ -366,33 +270,46 @@ export function updateSubviewState(
   // HACK: force triggering store proxy
   appStore.viewMetadata = appStore.viewMetadata;
 
-  if (subview === "table") {
-    componentContext.tableLinkEl.classList.add("current-subview");
+  if (subview === "graph") {
+    componentContext.graphLinkEl.classList.add("current-subview");
     componentContext.gridLinkEl.classList.remove("current-subview");
     componentContext.mediaLinkEl.classList.remove("current-subview");
     componentContext.mapLinkEl.classList.remove("current-subview");
   } else if (subview === "grid") {
-    componentContext.tableLinkEl.classList.remove("current-subview");
+    componentContext.graphLinkEl.classList.remove("current-subview");
     componentContext.gridLinkEl.classList.add("current-subview");
     componentContext.mediaLinkEl.classList.remove("current-subview");
     componentContext.mapLinkEl.classList.remove("current-subview");
   } else if (subview === "media") {
-    componentContext.tableLinkEl.classList.remove("current-subview");
+    componentContext.graphLinkEl.classList.remove("current-subview");
     componentContext.gridLinkEl.classList.remove("current-subview");
     componentContext.mediaLinkEl.classList.add("current-subview");
     componentContext.mapLinkEl.classList.remove("current-subview");
   } else {
-    componentContext.tableLinkEl.classList.remove("current-subview");
+    componentContext.graphLinkEl.classList.remove("current-subview");
     componentContext.gridLinkEl.classList.remove("current-subview");
     componentContext.mediaLinkEl.classList.remove("current-subview");
     componentContext.mapLinkEl.classList.add("current-subview");
   }
 
-  if (appStore.observationsSubviewData.length === 0) {
-    return;
+  // if observationsGraphSubviewData is empty, fetch data
+  if (
+    subview === "graph" &&
+    appStore.observationsGraphSubviewData.length === 0
+  ) {
+    // if observationsSubviewData is empty, fetch data
+  } else if (appStore.observationsSubviewData.length === 0) {
+    let data = await getAPIData(appStore);
+    appStore.observationsSubviewData = data;
   }
 
-  render(appStore.observationsSubviewData, paginationCallback, appStore);
+  if (subview === "map") {
+    renderMap(appStore);
+  } else if (subview === "graph") {
+    renderGraphs(appStore);
+  } else {
+    renderGrid(appStore.observationsSubviewData, paginationCallback, appStore);
+  }
 
   // add subview to url
   updateAppUrl(window.location, appStore);
@@ -404,8 +321,8 @@ export function initFilters(appStore: AppStoreType, componentContext: any) {
 
   // set initial current-subview class
   let subview = appStore.viewMetadata.observations_observations?.subview;
-  if (subview === "table") {
-    componentContext.tableLinkEl?.classList.add("current-subview");
+  if (subview === "graph") {
+    componentContext.graphLinkEl?.classList.add("current-subview");
   } else if (subview === "media") {
     componentContext.mediaLinkEl?.classList.add("current-subview");
   } else if (subview === "map") {

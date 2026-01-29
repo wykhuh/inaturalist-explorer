@@ -9,6 +9,8 @@ import type {
 import type {
   IdentificationsObserversResult,
   IdentificationsResult,
+  iNatObservationsAPI,
+  iNatObservationsHistogramAPI,
   ObservationsObserversResult,
   ObservationsResult,
   ResourceIdentifiersResult,
@@ -69,4 +71,10 @@ export function isObservationsApiFields(
   appStore: AppStoreType,
 ): _records is ObservationsApiParamsKeysType[] {
   return isObservationsCheck(appStore);
+}
+
+export function isObservationsData(
+  apiData: iNatObservationsHistogramAPI | iNatObservationsAPI,
+): apiData is iNatObservationsAPI {
+  return Array.isArray(apiData.results);
 }

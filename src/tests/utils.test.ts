@@ -348,39 +348,43 @@ describe("formatAppUrl", () => {
     },
   );
 
-  test.each(["observations_observations"] as ObservationViewsType[])(
-    "return view & subview if subview is table ",
-    (view) => {
+  test.each(validObservationsSubviews.filter((sv) => sv !== "map"))(
+    "return view & subview if observations_observations and subview is not map",
+    (subview) => {
       let appStore: AppStoreType = {
         ...mapStore,
-        currentView: view as ObservationViewsType,
+        currentView: "observations_observations",
         viewMetadata: {
           ...mapStore.viewMetadata,
-          [view]: { subview: "table" },
+          observations_observations: { subview: subview },
         },
       };
 
       let result = formatAppUrl(appStore);
 
-      expect(result).toBe(`${defaultQuery}&view=${view}&subview=table`);
+      expect(result).toBe(
+        `${defaultQuery}&view=observations_observations&subview=${subview}`,
+      );
     },
   );
 
-  test.each(["observations_observations"] as ObservationViewsType[])(
-    "return view & subview if subview is photos ",
-    (view) => {
+  test.each(validIdentificationsSubviews.filter((sv) => sv !== "map"))(
+    "return view & subview if identifications_identifications and subview is not map",
+    (subview) => {
       let appStore: AppStoreType = {
         ...mapStore,
-        currentView: view as ObservationViewsType,
+        currentView: "identifications_identifications",
         viewMetadata: {
           ...mapStore.viewMetadata,
-          [view]: { subview: "media" },
+          identifications_identifications: { subview: subview },
         },
       };
 
       let result = formatAppUrl(appStore);
 
-      expect(result).toBe(`${defaultQuery}&view=${view}&subview=media`);
+      expect(result).toBe(
+        `${defaultQuery}&view=identifications_identifications&subview=${subview}`,
+      );
     },
   );
 

@@ -1,106 +1,122 @@
-Parameter,Value,Description,Parameter Type,Data Type
-acc,,Whether or not positional accuracy / coordinate uncertainty has been specified,query,boolean
-captive,,Captive or cultivated observations,query,boolean
-endemic,,Observations whose taxa are endemic to their location,query,boolean
-geo,,Observations that are georeferenced,query,boolean
-id_please,,"Observations with the deprecated ID, Please! flag. Note that this will return observations, but that this attribute is no longer used.",query,boolean
-identified,,Observations that have community identifications,query,boolean
-introduced,,Observations whose taxa are introduced in their location,query,boolean
-mappable,,Observations that show on map tiles,query,boolean
-native,,Observations whose taxa are native to their location,query,boolean
-out_of_range,,Observations whose taxa are outside their known ranges,query,boolean
-pcid,,"Observations identified by the curator of a project. If the project_id parameter is also specified, this will only consider observations identified by curators of the specified project(s)",query,boolean
-photos,,Observations with photos,query,boolean
-popular,,Observations that have been favorited by at least one user,query,boolean
-sounds,,Observations with sounds,query,boolean
-taxon_is_active,,Observations of active taxon concepts,query,boolean
-threatened,,Observations whose taxa are threatened in their location,query,boolean
-verifiable,,"Observations with a quality_grade of either needs_id or research. Equivalent to quality_grade=needs_id,research",query,boolean
-licensed,,License attribute of an observation must not be null,query,boolean
-photo_licensed,,License attribute of at least one photo of an observation must not be null,query,boolean
-expected_nearby,,Observation taxon is expected nearby,query,boolean
-id,,Must have this ID,query,Array[string]
-not_id,,Must not have this ID,query,Array[string]
-license,,Observation must have this license,query,Array[string]
-ofv_datatype,,Must have an observation field value with this datatype,query,Array[string]
-photo_license,,Must have at least one photo with this license,query,Array[string]
-place_id,,Must be observed within the place with this ID,query,Array[integer]
-project_id,,Must be added to the project this ID or slug,query,Array[string]
-rank,,Taxon must have this rank,query,Array[string]
-site_id,,Must be affiliated with the iNaturalist network website with this ID,query,Array[string]
-sound_license,,Must have at least one sound with this license,query,Array[string]
-taxon_id,,Only show observations of these taxa and their descendants,query,Array[string]
-without_taxon_id,,Exclude observations of these taxa and their descendants,query,Array[string]
-taxon_name,,Taxon must have a scientific or common name matching this string,query,Array[string]
-user_id,,User must have this ID or login,query,Array[string]
-user_login,,User must have this login,query,Array[string]
-ident_user_id,,Observations identified by a particular user,query,integer
-hour,,Must be observed within this hour of the day,query,Array[string]
-day,,Must be observed within this day of the month,query,Array[string]
-month,,Must be observed within this month,query,Array[string]
-year,,Must be observed within this year,query,Array[string]
-created_day,,Must be created within this day of the month,query,Array[string]
-created_month,,Must be created within this month,query,Array[string]
-created_year,,Must be created within this year,query,Array[string]
-term_id,,Must have an annotation using this controlled term ID,query,Array[integer]
-term_value_id,,Must have an annotation using this controlled value ID. Must be combined with the term_id parameter,query,Array[integer]
-without_term_id,,Exclude observations with annotations using this controlled value ID.,query,integer
-without_term_value_id,,Exclude observations with annotations using this controlled value ID. Must be combined with the term_id parameter,query,Array[integer]
-term_id_or_unknown,,Must be combined with the term_value_id or the without_term_value_id parameter. Must have an annotation using this controlled term ID and associated term value IDs or be missing this annotation.,query,Array[integer]
-annotation_user_id,,Must have an annotation created by this user,query,Array[string]
-acc_above,,Must have a positional accuracy above this value (meters),query,string
-acc_below,,Must have a positional accuracy below this value (meters),query,string
-acc_below_or_unknown,,Positional accuracy must be below this value (in meters) or be unknown,query,string
-d1,,Must be observed on or after this date,query,date
-d2,,Must be observed on or before this date,query,date
-created_d1,,Must be created at or after this time,query,date-time
-created_d2,,Must be created at or before this time,query,date-time
-created_on,,Must be created on this date,query,date
-observed_on,,Must be observed on this date,query,date
-unobserved_by_user_id,,Must not be of a taxon previously observed by this user,query,integer
-apply_project_rules_for,,Must match the rules of the project with this ID or slug,query,string
-cs,,"Taxon must have this conservation status code. If the place_id parameter is also specified, this will only consider statuses specific to that place",query,string
-csa,,"Taxon must have a conservation status from this authority. If the place_id parameter is also specified, this will only consider statuses specific to that place",query,string
-csi,,"Taxon must have this IUCN conservation status. If the place_id parameter is also specified, this will only consider statuses specific to that place",query,Array[string]
-geoprivacy,,Must have this geoprivacy setting,query,Array[string]
-taxon_geoprivacy,,Filter observations by the most conservative geoprivacy applied by a conservation status associated with one of the taxa proposed in the current identifications.,query,Array[string]
-obscuration,,Must have geoprivacy or taxon_geoprivacy fields matching these values,query,Array[string]
-hrank,,Taxon must have this rank or lower,query,string
-lrank,,Taxon must have this rank or higher,query,string
-iconic_taxa,,Taxon must by within this iconic taxon,query,Array[string]
-id_above,,Must have an ID above this value,query,string
-id_below,,Must have an ID below this value,query,string
-identifications,,Identifications must meet these criteria,query,string
-lat,,"Must be within a {radius} kilometer circle around this lat/lng (lat, lng, radius)",query,double
-lng,,"Must be within a {radius} kilometer circle around this lat/lng (lat, lng, radius)",query,double
-radius,,"Must be within a {radius} kilometer circle around this lat/lng (lat, lng, radius)",query,string
-nelat,,"Must be within this bounding box (nelat, nelng, swlat, swlng)",query,double
-nelng,,"Must be within this bounding box (nelat, nelng, swlat, swlng)",query,double
-swlat,,"Must be within this bounding box (nelat, nelng, swlat, swlng)",query,double
-swlng,,"Must be within this bounding box (nelat, nelng, swlat, swlng)",query,double
-list_id,,Taxon must be in the list with this ID,query,integer
-not_in_project,,Must not be in the project with this ID or slug,query,string
-not_matching_project_rules_for,,Must not match the rules of the project with this ID or slug,query,string
-observation_accuracy_experiment_id,,Must included in this observation accuracy experiment,query,Array[integer]
-fails_dqa_accurate,,Must be voted as not accurately depicting an organism or scene,query,boolean
-fails_dqa_date,,Must be voted as not having an accurate date,query,boolean
-fails_dqa_evidence,,Must be voted as not evidence of an organism,query,boolean
-fails_dqa_location,,Must be voted as not having an accurate location,query,boolean
-fails_dqa_needs_id,,Must be voted as the community ID cannot be improved,query,boolean
-fails_dqa_recent,,Must be voted as not recent evidence of an organism,query,boolean
-fails_dqa_subject,,Must be voted as not having evidence related to a single subject,query,boolean
-fails_dqa_wild,,Must be voted as not wild,query,boolean
-q,,Search observation properties. Can be combined with search_on,query,string
-search_on,,"Properties to search on, when combined with q. Searches across all properties by default",query,string
-quality_grade,,Must have this quality grade,query,string
-updated_since,,Must be updated since this time,query,string
-viewer_id,,See reviewed,query,string
-reviewed,,Observations have been reviewed by the user with ID equal to the value of the viewer_id parameter,query,boolean
-locale,,Locale preference for taxon common names,query,string
-preferred_place_id,,Place preference for regional taxon common names,query,integer
-ttl,,"Set the Cache-Control HTTP header with this value as max-age, in seconds. This means subsequent identical requests will be cached on iNaturalist servers, and commonly within web browsers",query,string
-page,,Pagination page number,query,string
-per_page,,Number of results to return in a page. The maximum value is generally 200 unless otherwise noted,query,string
-order,,Sort order,query,string
-order_by,,Sort field,query,string
-only_id,,Return only the record IDs,query,boolean
+Parameter,v2,order,notes,Description,Parameter Type,Data Type
+acc,acc,1,,Whether or not positional accuracy / coordinate uncertainty has been specified,query,boolean
+captive,captive,2,,Captive or cultivated observations,query,boolean
+endemic,disagreements,3,,Observations whose taxa are endemic to their location,query,boolean
+geo,geo,4,,Observations that are georeferenced,query,boolean
+id_please,id_please,5,,"Observations with the deprecated ID, Please! flag. Note that this will return observations, but that this attribute is no longer used.",query,boolean
+identified,identified,6,,Observations that have community identifications,query,boolean
+introduced,introduced,7,,Observations whose taxa are introduced in their location,query,boolean
+mappable,mappable,8,,Observations that show on map tiles,query,boolean
+native,native,9,,Observations whose taxa are native to their location,query,boolean
+out_of_range,out_of_range,10,,Observations whose taxa are outside their known ranges,query,boolean
+pcid,pcid,11,deprecated,"Observations identified by the curator of a project. If the project_id parameter is also specified, this will only consider observations identified by curators of the specified project(s)",query,boolean
+photos,photos,12,,Observations with photos,query,boolean
+popular,popular,13,,Observations that have been favorited by at least one user,query,boolean
+sounds,sounds,14,,Observations with sounds,query,boolean
+taxon_is_active,taxon_is_active,15,,Observations of active taxon concepts,query,boolean
+threatened,threatened,16,,Observations whose taxa are threatened in their location,query,boolean
+verifiable,verifiable,17,,"Observations with a quality_grade of either needs_id or research. Equivalent to quality_grade=needs_id,research",query,boolean
+id,id,18,,Must have this ID,query,Array[string]
+not_id,not_id,19,,Must not have this ID,query,Array[string]
+license,license,20,,Observation must have this license,query,Array[string]
+photo_license,photo_license,21,,Must have at least one photo with this license,query,Array[string]
+licensed,licensed,22,,License attribute of an observation must not be null,query,boolean
+photo_licensed,photo_licensed,23,,License attribute of at least one photo of an observation must not be null,query,boolean
+place_id,place_id,24,,Must be observed within the place with this ID,query,Array[integer]
+project_id,project_id,25,,Must be added to the project this ID or slug,query,Array[string]
+coords_viewable_for_proj,coords_viewable_for_proj,26,,,,
+rank,rank,27,,Taxon must have this rank,query,Array[string]
+site_id,site_id,28,,Must be affiliated with the iNaturalist network website with this ID,query,Array[string]
+sound_license,sound_license,29,,Must have at least one sound with this license,query,Array[string]
+taxon_id,taxon_id,30,,Only show observations of these taxa and their descendants,query,Array[string]
+without_taxon_id,without_taxon_id,31,,Exclude observations of these taxa and their descendants,query,Array[string]
+taxon_name,taxon_name,32,,Taxon must have a scientific or common name matching this string,query,Array[string]
+user_id,user_id,33,,User must have this ID or login,query,Array[string]
+user_login,user_login,34,,User must have this login,query,Array[string]
+hour,hour,35,,Must be observed within this hour of the day,query,Array[string]
+day,day,36,,Must be observed within this day of the month,query,Array[string]
+month,month,37,,Must be observed within this month,query,Array[string]
+year,year,38,,Must be observed within this year,query,Array[string]
+created_day,created_day,39,,Must be created within this day of the month,query,Array[string]
+created_month,created_month,40,,Must be created within this month,query,Array[string]
+created_year,created_year,41,,Must be created within this year,query,Array[string]
+term_id,term_id,42,,Must have an annotation using this controlled term ID,query,Array[integer]
+term_value_id,term_value_id,43,,Must have an annotation using this controlled value ID. Must be combined with the term_id parameter,query,Array[integer]
+without_term_value_id,without_term_value_id,44,,Exclude observations with annotations using this controlled value ID. Must be combined with the term_id parameter,query,Array[integer]
+term_id_or_unknown,term_id_or_unknown,45,,Must be combined with the term_value_id or the without_term_value_id parameter. Must have an annotation using this controlled term ID and associated term value IDs or be missing this annotation.,query,Array[integer]
+annotation_user_id,annotation_user_id,46,,Must have an annotation created by this user,query,Array[string]
+acc_above,acc_above,47,,Must have a positional accuracy above this value (meters),query,string
+acc_below,acc_below,48,,Must have a positional accuracy below this value (meters),query,string
+acc_below_or_unknown,acc_below_or_unknown,49,,Positional accuracy must be below this value (in meters) or be unknown,query,string
+d1,d1,50,,Must be observed on or after this date,query,date
+d2,d2,51,,Must be observed on or before this date,query,date
+created_d1,created_d1,52,,Must be created at or after this time,query,date-time
+created_d2,created_d2,53,,Must be created at or before this time,query,date-time
+created_on,created_on,54,,Must be created on this date,query,date
+observed_on,observed_on,55,,Must be observed on this date,query,date
+unobserved_by_user_id,unobserved_by_user_id,56,,Must not be of a taxon previously observed by this user,query,integer
+apply_project_rules_for,apply_project_rules_for,57,,Must match the rules of the project with this ID or slug,query,string
+observation_accuracy_experiment_id,observation_accuracy_experiment_id,58,,Must included in this observation accuracy experiment,query,Array[integer]
+cs,cs,59,,"Taxon must have this conservation status code. If the place_id parameter is also specified, this will only consider statuses specific to that place",query,string
+csa,csa,60,,"Taxon must have a conservation status from this authority. If the place_id parameter is also specified, this will only consider statuses specific to that place",query,string
+csi,csi,61,,"Taxon must have this IUCN conservation status. If the place_id parameter is also specified, this will only consider statuses specific to that place",query,Array[string]
+geoprivacy,geoprivacy,62,,Must have this geoprivacy setting,query,Array[string]
+taxon_geoprivacy,taxon_geoprivacy,63,,Filter observations by the most conservative geoprivacy applied by a conservation status associated with one of the taxa proposed in the current identifications.,query,Array[string]
+obscuration,obscuration,64,,Must have geoprivacy or taxon_geoprivacy fields matching these values,query,Array[string]
+hrank,hrank,65,,Taxon must have this rank or lower,query,string
+lrank,lrank,66,,Taxon must have this rank or higher,query,string
+iconic_taxa,iconic_taxa,67,,Taxon must by within this iconic taxon,query,Array[string]
+id_above,id_above,68,,Must have an ID above this value,query,string
+id_below,id_below,69,,Must have an ID below this value,query,string
+identifications,identifications,70,,Identifications must meet these criteria,query,string
+disagreements,deprecated,71,,,,
+lat,lat,72,,"Must be within a {radius} kilometer circle around this lat/lng (lat, lng, radius)",query,double
+lng,lng,73,,"Must be within a {radius} kilometer circle around this lat/lng (lat, lng, radius)",query,double
+radius,radius,74,,"Must be within a {radius} kilometer circle around this lat/lng (lat, lng, radius)",query,string
+nelat,nelat,75,,"Must be within this bounding box (nelat, nelng, swlat, swlng)",query,double
+nelng,nelng,76,,"Must be within this bounding box (nelat, nelng, swlat, swlng)",query,double
+swlat,swlat,77,,"Must be within this bounding box (nelat, nelng, swlat, swlng)",query,double
+swlng,swlng,78,,"Must be within this bounding box (nelat, nelng, swlat, swlng)",query,double
+list_id,list_id,79,,Taxon must be in the list with this ID,query,integer
+not_in_project,not_in_project,80,,Must not be in the project with this ID or slug,query,string
+not_matching_project_rules_for,not_matching_project_rules_for,81,,Must not match the rules of the project with this ID or slug,query,string
+q,q,82,,Search observation properties. Can be combined with search_on,query,string
+search_on,search_on,83,,"Properties to search on, when combined with q. Searches across all properties by default",query,string
+quality_grade,quality_grade,84,,Must have this quality grade,query,string
+without_field,without_field,85,,,,
+outlink_source,outlink_source,86,,,,
+updated_since,updated_since,87,,Must be updated since this time,query,string
+viewer_id,viewer_id,88,,See reviewed,query,string
+reviewed,reviewed,89,,Observations have been reviewed by the user with ID equal to the value of the viewer_id parameter,query,boolean
+expected_nearby,expected_nearby,90,,Observation taxon is expected nearby,query,boolean
+fails_dqa_accurate,fails_dqa_accurate,91,,Must be voted as not accurately depicting an organism or scene,query,boolean
+fails_dqa_date,fails_dqa_date,92,,Must be voted as not having an accurate date,query,boolean
+fails_dqa_evidence,fails_dqa_evidence,93,,Must be voted as not evidence of an organism,query,boolean
+fails_dqa_location,fails_dqa_location,94,,Must be voted as not having an accurate location,query,boolean
+fails_dqa_needs_id,fails_dqa_needs_id,95,,Must be voted as the community ID cannot be improved,query,boolean
+fails_dqa_recent,fails_dqa_recent,96,,Must be voted as not recent evidence of an organism,query,boolean
+fails_dqa_subject,fails_dqa_subject,97,,Must be voted as not having evidence related to a single subject,query,boolean
+fails_dqa_wild,fails_dqa_wild,98,,Must be voted as not wild,query,boolean
+user_after,user_after,99,,,,
+user_before,user_before,100,,,,
+locale,locale,101,,Locale preference for taxon common names,query,string
+preferred_place_id,preferred_place_id,102,,Place preference for regional taxon common names,query,integer
+ttl,ttl,103,,"Set the Cache-Control HTTP header with this value as max-age, in seconds. This means subsequent identical requests will be cached on iNaturalist servers, and commonly within web browsers",query,string
+page,page,104,,Pagination page number,query,string
+per_page,per_page,105,,Number of results to return in a page. The maximum value is generally 200 unless otherwise noted,query,string
+order,order,106,,Sort order,query,string
+order_by,order_by,107,,Sort field,query,string
+only_id,only_id,108,,Return only the record IDs,query,boolean
+fields,fields,109,,,,
+exact_taxon_id,,,,,,
+ident_taxon_id,,,,,,
+ident_taxon_id_exclusive,,,,,,
+ident_user_id,,,,Observations identified by a particular user,query,integer
+not_in_place,,,,,,
+not_user_id,,,,,,
+ofv_datatype,,,,Must have an observation field value with this datatype,query,Array[string]
+on,,,,,,
+spam,,,,,,
+without_direct_taxon_id,,,,,,
+without_ident_user_id,,,,,,
+without_term_id,,,,Exclude observations with annotations using this controlled value ID.,query,integer

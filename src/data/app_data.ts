@@ -74,8 +74,8 @@ export const validViews: ObservationViewsType[] = validObservationsViews.concat(
 export const validObservationsSubviews: ObservationSubviewsType[] = [
   "map",
   "grid",
-  "table",
   "media",
+  "graph",
 ];
 export const validIdentificationsSubviews: IdentificationSubviewsType[] = [
   "map",
@@ -367,10 +367,19 @@ const observationsFilterableTodo: ObservationsApiParamsKeysType[] = [
 
   // no
   "apply_project_rules_for",
+  "coords_viewable_for_proj",
   "cs",
   "csa",
   "csi",
   "expected_nearby",
+  "fails_dqa_accurate",
+  "fails_dqa_date",
+  "fails_dqa_evidence",
+  "fails_dqa_location",
+  "fails_dqa_needs_id",
+  "fails_dqa_recent",
+  "fails_dqa_subject",
+  "fails_dqa_wild",
   "id",
   "id_above",
   "id_below",
@@ -383,6 +392,8 @@ const observationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   "not_matching_project_rules_for",
   "observation_accuracy_experiment_id",
   "observed_on",
+  "ofv_datatype",
+  "only_id",
   "pcid",
   "photo_licensed",
   "radius",
@@ -393,6 +404,8 @@ const observationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   "taxon_name",
   "updated_since",
   "user_login",
+  "fields",
+  "without_field",
 ];
 
 // used to populate form on app init and delete a filter

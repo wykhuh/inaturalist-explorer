@@ -19,6 +19,7 @@ import type {
   IdentificationsObserversAPI,
   IdentificationsSpeciesCountAPI,
   iNatTaxonomyApi,
+  iNatObservationsHistogramAPI,
 } from "../types/inat_api.d.ts";
 import { loggerUrl } from "./logger.ts";
 
@@ -416,5 +417,17 @@ export async function getObservationsTaxonomy(appParams: string) {
   if (data) {
     loggerUrl(url, data.size);
     return data;
+  }
+}
+
+export async function getHistogram(appParams: string) {
+  let url = `${observations_api}/histogram?${appParams}&ttl=3600`;
+  try {
+    let resp = await fetch(url);
+    let data = (await resp.json()) as iNatObservationsHistogramAPI;
+    loggerUrl(`${url} ${data.total_results}`);
+    return data;
+  } catch (error) {
+    console.error("getHistogram ERROR:", error);
   }
 }
