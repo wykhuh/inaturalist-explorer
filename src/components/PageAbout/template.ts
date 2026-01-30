@@ -9,6 +9,8 @@ import history_ident from "../../assets/images/identifications_history.jpg";
 import settings from "../../assets/images/settings.jpg";
 import custom_boundaries from "../../assets/images/custom_boundaries.jpg";
 import download from "../../assets/images/download.jpg";
+import subspecies_results from "../../assets/images/subspecies_results.jpg";
+import subspecies_filters from "../../assets/images/subspecies_filters.jpg";
 
 import annotations from "../../assets/images/annotations.jpg";
 import filters from "../../assets/images/filters.jpg";
@@ -139,6 +141,24 @@ export const template = html`
       <li>
         Draw a rectangle to select observations within the rectangle
         <img src="${custom_boundaries}" alt="" />
+      </li>
+      <li>
+        Display list of subspecies if tank rank lower than species is selected.
+        In this example, we search for
+        <a
+          href="/?taxon_id=55412&colors=%234477aa&verifiable=true&spam=false&rank=infrahybrid,subspecies,variety&per_page=24&view=observations_species"
+        >
+          infrahybrid,subspecies, and variety</a
+        >
+        for Radishes (Genus Raphanus).
+        <img
+          src="${subspecies_filters}"
+          alt="Select subspecies ranks using the filters"
+        />
+        <img
+          src="${subspecies_results}"
+          alt="Supspecies shown in species tab"
+        />
       </li>
 
       <li>Mobile friendly layout</li>
