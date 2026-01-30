@@ -986,6 +986,12 @@
         }
       }
 
+      .no-photo {
+        padding: 20px;
+        width: 100%;
+        height: 200px;
+      }
+
       .licensing {
         background-color: var(--clr-overlay-dark-400);
         color: var(--clr-white);

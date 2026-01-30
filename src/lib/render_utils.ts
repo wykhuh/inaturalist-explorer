@@ -364,7 +364,7 @@ export function renderTaxonDefaultPhoto(
   appStore: AppStoreType,
   size = "default",
 ) {
-  if (!taxon.default_photo) return;
+  if (!taxon.default_photo) return noPhoto;
 
   let url = "";
   if (size === "square") {
