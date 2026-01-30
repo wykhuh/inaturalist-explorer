@@ -19,6 +19,7 @@ import type {
   IdentificationsObserversAPI,
   IdentificationsSpeciesCountAPI,
   UserResult,
+  iNatTaxonomyApi,
 } from "../types/inat_api.d.ts";
 import { loggerUrl } from "./logger.ts";
 
@@ -30,6 +31,7 @@ export const autocomplete_users_api = `https://api.inaturalist.org/v1/users/auto
 export const autocomplete_taxa_api =
   "https://api.inaturalist.org/v1/taxa/autocomplete?";
 
+const observations_api_v1 = "https://api.inaturalist.org/v1/observations";
 const observations_api = "https://api.inaturalist.org/v2/observations";
 const identifications_api = "https://api.inaturalist.org/v1/identifications";
 const taxa_api = "https://api.inaturalist.org/v1/taxa/";
@@ -390,5 +392,18 @@ export async function getIdentificationsIdentifiers(appParams: string) {
     return data;
   } catch (error) {
     console.error("getIdentificationsIdentifiers ERROR:", error);
+  }
+}
+
+// taxonomy endpoint ignores per_page and page
+export async function getObservationsTaxonomy(appParams: string) {
+  let url = `${observations_api_v1}/taxonomy?${appParams}&ttl=3600`;
+  try {
+    let resp = await fetch(url);
+    let data = (await resp.json()) as iNatTaxonomyApi;
+    loggerUrl(url, data.size);
+    return data;
+  } catch (error) {
+    console.error("getObservationsTaxonomy ERROR:", error);
   }
 }

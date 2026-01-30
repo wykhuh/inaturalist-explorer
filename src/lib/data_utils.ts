@@ -20,7 +20,7 @@ import type {
 } from "../types/app";
 import { addOverlayToMap } from "./map_utils.ts";
 import { getiNatMapTiles } from "./inat_api.ts";
-import { allTaxaRecord } from "../data/inat_data.ts";
+import { allTaxaRecord, subspeciesRanks } from "../data/inat_data.ts";
 import {
   identificationsApiNonFilterableNames,
   observationsApiNonFilterableNames,
@@ -768,6 +768,14 @@ export function isObservationsCheck(appStore: AppStoreType) {
 
 export function isOtherCheck(appStore: AppStoreType) {
   return appStore.record_type === "about";
+}
+
+export function isSubpeciesCheck(appStore: AppStoreType) {
+  if (appStore.observationsApiParams.rank === undefined) return false;
+
+  return appStore.observationsApiParams.rank.split(",").some((rank) => {
+    return subspeciesRanks.includes(rank);
+  });
 }
 
 export function getResourceApiParams(isObservations: boolean) {

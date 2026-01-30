@@ -1,9 +1,15 @@
-import { threatenedSpecies } from "../../data/inat_api_cache";
+import {
+  buckwheatTaxonomy,
+  threatenedSpecies,
+} from "../../data/inat_api_cache";
+import { subspeciesRanks } from "../../data/inat_data";
 import {
   cleanupIdentificationParams,
   cleanupObervationsParams,
+  cleanupObervationsTaxonomyParams,
 } from "../../lib/cleanup_params_utils";
 import {
+  isSubpeciesCheck,
   isIdentificationsCheck,
   isObservationsCheck,
   replaceWithCacheImages,
@@ -11,6 +17,8 @@ import {
 import {
   getIdentificationsSpecies,
   getObservationsSpecies,
+  getObservationsTaxonomy,
+  getTaxa,
 } from "../../lib/inat_api";
 import { loggerTime } from "../../lib/logger";
 import { createSpinner } from "../../lib/spinner";
@@ -20,6 +28,7 @@ import type {
   IdentificationsResult,
   ObservationsResult,
   ResourceSpeciesCountResult,
+  TaxonomyResult,
 } from "../../types/inat_api";
 
 export async function fetchAndRenderData(
@@ -36,15 +45,23 @@ export async function fetchAndRenderData(
   spinner.start();
 
   const t1 = performance.now();
-  let data = await getAPIData(appStore);
+
+  let data;
+  // use /observations/taxonomy and /taxa to get subspecies taxa and counts
+  if (isObservationsCheck(appStore) && isSubpeciesCheck(appStore)) {
+    data = await getSubspeciesData(appStore);
+    // use /observations/species_counts or /identifications/species_counts
+    // to get taxa and counts
+  } else {
+    data = await getAPIData(appStore);
+  }
 
   const t10 = performance.now();
   loggerTime(`api ${t10 - t1} milliseconds`);
 
   spinner.stop();
 
-  if (!data) return;
-  if (data.results.length == 0) {
+  if (!data || data.results.length === 0) {
     containerEl.innerHTML = "No records found";
     return;
   }
@@ -100,6 +117,111 @@ async function getAPIData(appStore: AppStoreType) {
     return data;
   } catch (error) {
     console.error("ViewSpecies getAPIData ERROR:", error);
+  }
+}
+
+export function getSubspeciesIds(taxonomyResults: TaxonomyResult[]) {
+  // store count and id for taxa with subspecies ranks
+  let countId: { [k: string]: number } = {};
+  taxonomyResults
+    .filter((taxon) => subspeciesRanks.includes(taxon.rank))
+    .forEach((taxon) => {
+      countId[taxon.direct_obs_count] = taxon.id;
+    });
+
+  // sort counts from high to low
+  let sortedCounts = Object.keys(countId)
+    .map((c) => Number(c))
+    .sort(function (a, b) {
+      return a - b;
+    })
+    .reverse();
+
+  // store id and count
+  // using map instead of objects because objects do not maintain order when
+  // keys are numbers
+  let taxaIdCount = new Map();
+  sortedCounts.forEach((count) => taxaIdCount.set(countId[count], count));
+
+  return { taxaIdCount, subspeciesIds: [...taxaIdCount.keys()] };
+}
+
+async function getSubspeciesData(appStore: AppStoreType) {
+  // get taxonomy data
+  let taxonomyData = await getTaxonomyAPIData(appStore);
+  if (!taxonomyData) return;
+  let { taxaIdCount, subspeciesIds } = getSubspeciesIds(taxonomyData.results);
+  if (subspeciesIds.length > 0) {
+    // calculate the subspecies ids pased on per_page and page
+    let perPage = appStore.viewMetadata.observations_species.perPage || 24;
+    let page = appStore.observationsApiParams.page || 1;
+    let start = perPage * (page - 1);
+    let end = start + perPage;
+    let ids = subspeciesIds.slice(start, end);
+
+    // get taxa data
+    let taxaData = await getTaxaAPIData(ids, perPage);
+    if (taxaData) {
+      // normalized the taxa data so it has same format as species count data
+      let normalizedTaxa: ResourceSpeciesCountResult[] = [];
+      taxaData.forEach((taxon) => {
+        normalizedTaxa.push({
+          count: taxaIdCount.get(taxon.id),
+          taxon: {
+            default_photo: taxon.default_photo || undefined,
+            iconic_taxon_name: taxon.iconic_taxon_name,
+            id: taxon.id,
+            name: taxon.name,
+            preferred_common_name: taxon.preferred_common_name,
+            rank: taxon.rank,
+          },
+        });
+      });
+
+      return {
+        results: normalizedTaxa,
+        per_page: perPage,
+        page: page,
+        total_results: subspeciesIds.length,
+      };
+    }
+  }
+}
+
+// get taxonomy data
+async function getTaxonomyAPIData(appStore: AppStoreType) {
+  let isObservations = isObservationsCheck(appStore);
+  if (!isObservations) return;
+
+  let isSubpecies = isSubpeciesCheck(appStore);
+  if (!isSubpecies) return;
+
+  if (import.meta.env?.VITE_CACHE === "true") {
+    let page = appStore.observationsApiParams.page || 1;
+    replaceWithCacheImages(threatenedSpecies.results);
+    return { ...buckwheatTaxonomy, page: page };
+  }
+
+  try {
+    let params = cleanupObervationsTaxonomyParams(
+      appStore.observationsApiParams,
+    );
+    let data = await getObservationsTaxonomy(params);
+
+    return data;
+  } catch (error) {
+    console.error("ViewSpecies getTaxonomyAPIData ERROR:", error);
+  }
+}
+
+// get taxa data for an array of subspecies ids
+async function getTaxaAPIData(ids: number[], perPage: number) {
+  try {
+    let data = await getTaxa(`id=${ids.join(",")}&per_page=${perPage}`);
+
+    return data;
+  } catch (error) {
+    console.error("ViewSpecies getTaxaAPIData ERROR:", error);
   }
 }
 

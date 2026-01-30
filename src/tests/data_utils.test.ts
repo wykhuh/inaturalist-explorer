@@ -7,6 +7,7 @@ import {
   addValueToCommaSeparatedString,
   removeValueFromCommaSeparatedString,
   removeIdfromInatApiParams,
+  isSubpeciesCheck,
 } from "../lib/data_utils.ts";
 import { renderTaxonNames } from "../lib/render_utils";
 import type { NormalizediNatTaxonType } from "../types/app.d.ts";
@@ -17,7 +18,11 @@ import {
   coastOakAutocompleteResults,
   redTaxaAutocompleteResults,
 } from "./fixtures/inatApi.ts";
-import { allTaxaRecord } from "../data/inat_data.ts";
+import {
+  allTaxaRecord,
+  subspeciesRanks,
+  taxonRanks,
+} from "../data/inat_data.ts";
 
 describe("formatTaxonName", () => {
   let store = structuredClone(mapStore);
@@ -932,4 +937,51 @@ describe("removeIdfromInatApiParams", () => {
       `${losangeles.id},${sandiego.id}`,
     );
   });
+});
+
+describe("isSubpeciesCheck", () => {
+  test.each(taxonRanks.filter((t) => !subspeciesRanks.includes(t)))(
+    "returns false if rank is not subspecies",
+    (rank) => {
+      let store = structuredClone(mapStore);
+      store.observationsApiParams.rank = rank;
+
+      let result = isSubpeciesCheck(store);
+
+      expect(result).toBe(false);
+    },
+  );
+
+  test.each(subspeciesRanks)("returns true if rank is subspecies", (rank) => {
+    let store = structuredClone(mapStore);
+    store.observationsApiParams.rank = rank;
+
+    let result = isSubpeciesCheck(store);
+
+    expect(result).toBe(true);
+  });
+
+  test.each(subspeciesRanks)(
+    "returns true if some of the ranks are subspecies",
+    () => {
+      let store = structuredClone(mapStore);
+      store.observationsApiParams.rank = "genus,subspecies,order,variety";
+
+      let result = isSubpeciesCheck(store);
+
+      expect(result).toBe(true);
+    },
+  );
+
+  test.each(subspeciesRanks)(
+    "returns all if none of the ranks are subspecies",
+    () => {
+      let store = structuredClone(mapStore);
+      store.observationsApiParams.rank = "genus,order,species";
+
+      let result = isSubpeciesCheck(store);
+
+      expect(result).toBe(false);
+    },
+  );
 });

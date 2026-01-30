@@ -10,6 +10,7 @@ import {
   decodeAppUrl,
   removeDefaultParams,
   createHashString,
+  sortObjectByValue,
 } from "../lib/utils.ts";
 import { mapStore } from "../lib/store.ts";
 import {
@@ -1614,5 +1615,39 @@ describe("createHashString", () => {
     let results2 = await createHashString(value2);
 
     expect(results1).not.toEqual(results2);
+  });
+});
+
+describe("sortObjectByValue", () => {
+  test("sort object with numeric values from low to high", () => {
+    let obj = { a: 10, b: 15, c: 5 };
+
+    let result = sortObjectByValue(obj);
+
+    expect(result).toStrictEqual({ c: 5, a: 10, b: 15 });
+  });
+
+  test("sort object with alphabetical values from low to high", () => {
+    let obj = { foo: "b", bar: "a", zoo: "c" };
+
+    let result = sortObjectByValue(obj);
+
+    expect(result).toStrictEqual({ bar: "a", foo: "b", zoo: "c" });
+  });
+
+  test("sort object with numeric values from high to low", () => {
+    let obj = { a: 10, b: 15, c: 5 };
+
+    let result = sortObjectByValue(obj, false);
+
+    expect(result).toStrictEqual({ b: 15, a: 10, c: 5 });
+  });
+
+  test("sort object with alphabetical values from high to low", () => {
+    let obj = { foo: "b", bar: "a", zoo: "c" };
+
+    let result = sortObjectByValue(obj, false);
+
+    expect(result).toStrictEqual({ zoo: "c", foo: "b", bar: "a" });
   });
 });

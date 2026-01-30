@@ -102,6 +102,24 @@ export function cleanupIdentificationsObservationsParams(
   return params.toString();
 }
 
+export function cleanupObervationsTaxonomyParams(
+  inatParams: ObservationsApiParamsType,
+) {
+  let params = new URLSearchParams(inatParams as any);
+  cleanupParams(params);
+
+  params.delete("order");
+  params.delete("order_by");
+  params.delete("page");
+  params.delete("per_page");
+  params.delete("locale");
+  params.delete("verifiable");
+  params.delete("spam");
+  params.delete("rank");
+
+  return params.toString();
+}
+
 // =============
 // identifications API
 // =============

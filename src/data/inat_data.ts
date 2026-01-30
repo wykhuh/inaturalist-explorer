@@ -31,6 +31,7 @@ export const taxonRanks = [
   "tribe",
   "subtribe",
   "genus",
+  "subgenus",
   "genushybrid",
   "subgenus",
   "section",
@@ -51,6 +52,8 @@ export const speciesRanks = [
   "variety",
   "form",
 ];
+
+export const subspeciesRanks = ["hybrid", "subspecies", "variety", "form"];
 
 export const CCLicenses = [
   "cc0",

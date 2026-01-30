@@ -617,6 +617,7 @@ type TaxonRanks =
   | "tribe"
   | "subtribe"
   | "genus"
+  | "subgenus"
   | "genushybrid"
   | "species"
   | "hybrid"
@@ -682,6 +683,29 @@ export type iNatHistogramApi = {
     };
   };
 };
+
+// ==================
+// taxonomy api
+// ==================
+
+export interface iNatTaxonomyApi {
+  count_without_taxon: number;
+  size: number;
+  results: TaxonomyResult[];
+}
+
+export interface TaxonomyResult {
+  count?: number;
+  id: number;
+  name: string;
+  rank: TaxonRanks | "stateofmatter";
+  rank_level: number;
+  is_active: boolean;
+  iconic_taxon_name: string | null;
+  parent_id?: number;
+  descendant_obs_count: number;
+  direct_obs_count: number;
+}
 
 // ==================
 //  user api

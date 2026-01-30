@@ -777,6 +777,19 @@ export function objectFlip(obj: { [key: string]: any }) {
   return newObj;
 }
 
+// https://stackoverflow.com/a/1069840
+export function sortObjectByValue(obj: { [k: string]: any }, ascending = true) {
+  if (ascending) {
+    return Object.fromEntries(
+      Object.entries(obj).sort(([, a], [, b]) => a - b),
+    );
+  } else {
+    return Object.fromEntries(
+      Object.entries(obj).sort(([, a], [, b]) => b - a),
+    );
+  }
+}
+
 export function range(start = 0, stop: number) {
   return [...Array(stop - start + 1).keys()].map((i) => i + start);
 }
