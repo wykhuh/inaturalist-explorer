@@ -22,7 +22,7 @@ import {
 } from "../../lib/inat_api";
 import { loggerTime } from "../../lib/logger";
 import { createSpinner } from "../../lib/spinner";
-import { updateAppUrl } from "../../lib/utils";
+import { sortObjectByValue, updateAppUrl } from "../../lib/utils";
 import type { DataComponentType, AppStoreType } from "../../types/app";
 import type {
   IdentificationsResult,
@@ -125,28 +125,24 @@ export function getSubspeciesIds(
   validRanks: string[],
 ) {
   // store count and id for taxa with subspecies ranks
-  let countId: { [k: string]: number } = {};
+  let idCount: { [k: string]: number } = {};
   taxonomyResults
     .filter((taxon) => validRanks.includes(taxon.rank))
     .forEach((taxon) => {
-      countId[taxon.direct_obs_count] = taxon.id;
+      // HACK: add space to id because sorting objects does not work with number
+      // keys or number string keys
+      idCount[taxon.id + " "] = taxon.direct_obs_count;
     });
 
-  // sort counts from high to low
-  let sortedCounts = Object.keys(countId)
-    .map((c) => Number(c))
-    .sort(function (a, b) {
-      return a - b;
-    })
-    .reverse();
+  // sort by count from high to low
+  let sortedIdCount = sortObjectByValue(idCount, false);
+  let sortedIds = Object.keys(sortedIdCount).map((id) => Number(id.trim()));
 
-  // store id and count
-  // using map instead of objects because objects do not maintain order when
-  // keys are numbers
+  // using map instead of objects to maintain order of numeric keys
   let taxaIdCount = new Map();
-  sortedCounts.forEach((count) => taxaIdCount.set(countId[count], count));
+  sortedIds.forEach((id) => taxaIdCount.set(id, idCount[id + " "]));
 
-  return { taxaIdCount, subspeciesIds: [...taxaIdCount.keys()] };
+  return { taxaIdCount, subspeciesIds: sortedIds };
 }
 
 export function validSubspeciesForStore(appStore: AppStoreType) {

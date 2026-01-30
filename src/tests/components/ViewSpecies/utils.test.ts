@@ -49,7 +49,7 @@ describe("getSubspeciesIds", () => {
     let expected = new Map();
     expected.set(995125, 24935);
     expected.set(339381, 1173);
-    expected.set(413788, 167);
+    expected.set(413788, 1173);
 
     let results = getSubspeciesIds(data, ["subspecies"]);
 
@@ -62,7 +62,7 @@ describe("getSubspeciesIds", () => {
     let expected = new Map();
     expected.set(995125, 24935);
     expected.set(339381, 1173);
-    expected.set(413788, 167);
+    expected.set(413788, 1173);
     expected.set(1566671, 63);
 
     let results = getSubspeciesIds(data, subspeciesRanks);

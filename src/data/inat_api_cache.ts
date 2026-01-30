@@ -27659,15 +27659,15 @@ export let observationsTaxonomy: iNatTaxonomyApi = {
     },
     {
       id: 413788,
-      count: 167,
+      count: 1173,
       name: "Raphanus raphanistrum raphanistrum",
       rank: "subspecies",
       rank_level: 5,
       is_active: true,
       iconic_taxon_name: "Plantae",
       parent_id: 55411,
-      descendant_obs_count: 167,
-      direct_obs_count: 167,
+      descendant_obs_count: 1173,
+      direct_obs_count: 1173,
     },
     {
       id: 492976,
