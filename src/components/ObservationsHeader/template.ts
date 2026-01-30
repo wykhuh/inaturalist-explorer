@@ -9,7 +9,8 @@ export const observationsHeaderLinks = html`
       <span class="header-count">&nbsp;</span><span>Observations</span>
     </li>
     <li id="observations_species" data-count-label="observations_species">
-      <span class="header-count">&nbsp;</span><span>Species</span>
+      <span class="header-count">&nbsp;</span
+      ><span id="observations_species_label">Species</span>
     </li>
     <li
       id="observations_identifiers"

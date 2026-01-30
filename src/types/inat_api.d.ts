@@ -621,6 +621,7 @@ type TaxonRanks =
   | "genushybrid"
   | "species"
   | "hybrid"
+  | "infrahybrid"
   | "subspecies"
   | "variety"
   | "form";

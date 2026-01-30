@@ -1,5 +1,5 @@
 import {
-  buckwheatTaxonomy,
+  observationsTaxonomy,
   threatenedSpecies,
 } from "../../data/inat_api_cache";
 import { subspeciesRanks } from "../../data/inat_data";
@@ -120,11 +120,14 @@ async function getAPIData(appStore: AppStoreType) {
   }
 }
 
-export function getSubspeciesIds(taxonomyResults: TaxonomyResult[]) {
+export function getSubspeciesIds(
+  taxonomyResults: TaxonomyResult[],
+  validRanks: string[],
+) {
   // store count and id for taxa with subspecies ranks
   let countId: { [k: string]: number } = {};
   taxonomyResults
-    .filter((taxon) => subspeciesRanks.includes(taxon.rank))
+    .filter((taxon) => validRanks.includes(taxon.rank))
     .forEach((taxon) => {
       countId[taxon.direct_obs_count] = taxon.id;
     });
@@ -146,11 +149,25 @@ export function getSubspeciesIds(taxonomyResults: TaxonomyResult[]) {
   return { taxaIdCount, subspeciesIds: [...taxaIdCount.keys()] };
 }
 
+export function validSubspeciesForStore(appStore: AppStoreType) {
+  let ranks = appStore.observationsApiParams.rank;
+  if (!ranks) return;
+
+  return ranks.split(",").filter((r) => subspeciesRanks.includes(r));
+}
+
 async function getSubspeciesData(appStore: AppStoreType) {
   // get taxonomy data
   let taxonomyData = await getTaxonomyAPIData(appStore);
   if (!taxonomyData) return;
-  let { taxaIdCount, subspeciesIds } = getSubspeciesIds(taxonomyData.results);
+
+  let validRanks = validSubspeciesForStore(appStore);
+  if (!validRanks) return;
+
+  let { taxaIdCount, subspeciesIds } = getSubspeciesIds(
+    taxonomyData.results,
+    validRanks,
+  );
   if (subspeciesIds.length > 0) {
     // calculate the subspecies ids pased on per_page and page
     let perPage = appStore.viewMetadata.observations_species.perPage || 24;
@@ -189,7 +206,7 @@ async function getSubspeciesData(appStore: AppStoreType) {
 }
 
 // get taxonomy data
-async function getTaxonomyAPIData(appStore: AppStoreType) {
+export async function getTaxonomyAPIData(appStore: AppStoreType) {
   let isObservations = isObservationsCheck(appStore);
   if (!isObservations) return;
 
@@ -199,7 +216,7 @@ async function getTaxonomyAPIData(appStore: AppStoreType) {
   if (import.meta.env?.VITE_CACHE === "true") {
     let page = appStore.observationsApiParams.page || 1;
     replaceWithCacheImages(threatenedSpecies.results);
-    return { ...buckwheatTaxonomy, page: page };
+    return { ...observationsTaxonomy, page: page };
   }
 
   try {

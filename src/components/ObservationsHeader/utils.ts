@@ -2,6 +2,7 @@ import {
   cleanupObervationsObserversParams,
   cleanupObervationsParams,
 } from "../../lib/cleanup_params_utils";
+import { isObservationsCheck, isSubpeciesCheck } from "../../lib/data_utils";
 import {
   getObservations,
   getObservationsIdentifiers,
@@ -9,7 +10,7 @@ import {
   getObservationsSpecies,
 } from "../../lib/inat_api";
 import type { AppStoreType } from "../../types/app";
-import { updateHeaderCount } from "./shared_utils";
+import { updateHeaderCount, updateHeaderSubSpeciesCount } from "./shared_utils";
 
 export function updateCountsHeader(appStore: AppStoreType) {
   let params = cleanupObervationsParams(appStore);
@@ -19,12 +20,27 @@ export function updateCountsHeader(appStore: AppStoreType) {
     params,
     appStore,
   );
-  updateHeaderCount(
-    "observations_species",
-    getObservationsSpecies,
-    params,
-    appStore,
-  );
+
+  if (isObservationsCheck(appStore) && isSubpeciesCheck(appStore)) {
+    updateHeaderSubSpeciesCount("observations_species", params, appStore);
+    document
+      .querySelectorAll("#observations_species_label")
+      .forEach((label) => {
+        label.textContent = "Subspecies";
+      });
+  } else {
+    updateHeaderCount(
+      "observations_species",
+      getObservationsSpecies,
+      params,
+      appStore,
+    );
+    document
+      .querySelectorAll("#observations_species_label")
+      .forEach((label) => {
+        label.textContent = "Species";
+      });
+  }
   updateHeaderCount(
     "observations_identifiers",
     getObservationsIdentifiers,

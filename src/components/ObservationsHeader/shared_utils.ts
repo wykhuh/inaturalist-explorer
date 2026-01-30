@@ -1,14 +1,20 @@
 import { viewAndTemplateObject } from "../../data/app_data";
+import { cleanupObervationsTaxonomyParams } from "../../lib/cleanup_params_utils";
 import {
   getResourceApiParams,
   isObservationsCheck,
 } from "../../lib/data_utils";
+import { getObservationsTaxonomy } from "../../lib/inat_api";
 import { createHashString, updateAppUrl } from "../../lib/utils";
 import type {
   AppStoreType,
   ObservationViewsType,
   TooltipSettings,
 } from "../../types/app";
+import {
+  getSubspeciesIds,
+  validSubspeciesForStore,
+} from "../ViewSpecies/utils";
 
 export function viewChangeHandler(
   eventTarget: HTMLElement,
@@ -122,6 +128,53 @@ export async function updateHeaderCount(
   if (!cacheCount) {
     await saveHeaderCount(count, hash, appStore, maxCacheSize);
   }
+}
+
+export async function updateHeaderSubSpeciesCount(
+  countLabel: ObservationViewsType,
+  searchParams: string,
+  appStore: AppStoreType,
+  tooltipSettings: TooltipSettings | null = null,
+  maxCacheSize = 1000,
+) {
+  let count = 0;
+
+  // get count from cache or API
+  let hash = await createHeaderCountHash(countLabel, searchParams);
+  let cacheCount = appStore.iNatStats.headerCounts.get(hash);
+  if (cacheCount) {
+    count = cacheCount;
+  } else {
+    let taxonomyParams = cleanupObervationsTaxonomyParams(
+      appStore.observationsApiParams,
+    );
+    count = await getSubspeciesCount(taxonomyParams, appStore);
+  }
+
+  renderHeaderCounts(countLabel, count, tooltipSettings);
+
+  if (!cacheCount) {
+    await saveHeaderCount(count, hash, appStore, maxCacheSize);
+  }
+}
+
+async function getSubspeciesCount(
+  searchParams: string,
+  appStore: AppStoreType,
+) {
+  let taxonomyData = await getObservationsTaxonomy(searchParams);
+  if (taxonomyData) {
+    let validRanks = validSubspeciesForStore(appStore);
+    if (validRanks) {
+      let { subspeciesIds } = getSubspeciesIds(
+        taxonomyData.results,
+        validRanks,
+      );
+      return subspeciesIds.length;
+    }
+  }
+
+  return 0;
 }
 
 async function fetchHeaderCounts(dataFn: any, searchParams: string) {

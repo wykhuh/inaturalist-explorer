@@ -39,21 +39,22 @@ export const taxonRanks = [
   "complex",
   "species",
   "hybrid",
+  "infrahybrid",
   "subspecies",
   "variety",
   "form",
-  "infrahybrid",
 ];
 
 export const speciesRanks = [
   "species",
   "hybrid",
+  "infrahybrid",
   "subspecies",
   "variety",
   "form",
 ];
 
-export const subspeciesRanks = ["hybrid", "subspecies", "variety", "form"];
+export const subspeciesRanks = speciesRanks.filter((r) => r !== "species");
 
 export const CCLicenses = [
   "cc0",
