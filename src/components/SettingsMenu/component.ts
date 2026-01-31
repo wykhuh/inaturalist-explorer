@@ -34,29 +34,32 @@ class SettingsMenu extends HTMLElement {
   async handleEvent(event: Event) {
     let target = event.target as HTMLInputElement;
     if (!target) return;
-    let view = window.app.store.currentView;
-    if (!view) return;
+    let currentView = window.app.store.currentView;
+    if (!currentView) return;
 
     loggerEvent(`[SettingsMenu Event] ${target.id}`);
 
     if (event.type === "change") {
-      this.changeHandler(target, view);
+      this.changeHandler(target, currentView);
     } else if (event.type === "storePopulated") {
       initSettings(window.app.store, this);
     }
   }
 
-  async changeHandler(target: HTMLInputElement, view: ObservationViewsType) {
+  async changeHandler(
+    target: HTMLInputElement,
+    currentView: ObservationViewsType,
+  ) {
     if (target.id === "language-select") {
       languageHandler(target, window.app.store);
     } else if (target.id === "name-order-select") {
       nameOrderHandler(target, window.app.store);
     } else if (target.id === "per-page-observations") {
-      perPageHandler(target, view, window.app.store, "observations");
+      perPageHandler(target, currentView, window.app.store, "observations");
     } else if (target.id === "per-page-species") {
-      perPageHandler(target, view, window.app.store, "species");
+      perPageHandler(target, currentView, window.app.store, "species");
     } else if (target.id === "per-page-identifications") {
-      perPageHandler(target, view, window.app.store, "identifications");
+      perPageHandler(target, currentView, window.app.store, "identifications");
     }
   }
 

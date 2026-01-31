@@ -1,4 +1,8 @@
-import { viewAndPerPageDbKeyObject } from "../../data/app_data";
+import {
+  validIdentificationsViews,
+  validObservationsViews,
+  viewAndPerPageDbKeyObject,
+} from "../../data/app_data";
 import { formatTaxonName } from "../../lib/data_utils";
 import { getTaxa } from "../../lib/inat_api";
 import { dbKeys, saveItem } from "../../lib/localStorage";
@@ -70,35 +74,62 @@ export function initSettings(
       optionEl.selected = true;
     }
   }
+
+  let perPageSpecies = appStore.viewMetadata.observations_species.perPage;
+  if (perPageSpecies) {
+    let optionEl = componentCtx.querySelector<HTMLOptionElement>(
+      `#per-page-species [value='${perPageSpecies}']`,
+    );
+
+    if (optionEl) {
+      optionEl.selected = true;
+    }
+  }
+
+  let perPageIdentifications =
+    appStore.viewMetadata.identifications_identifications.perPage;
+  if (perPageSpecies) {
+    let optionEl = componentCtx.querySelector<HTMLOptionElement>(
+      `#per-page-identifications [value='${perPageIdentifications}']`,
+    );
+
+    if (optionEl) {
+      optionEl.selected = true;
+    }
+  }
 }
 
 export function perPageHandler(
   target: HTMLInputElement,
-  view: ObservationViewsType,
+  currentView: ObservationViewsType,
   appStore: AppStoreType,
-  type: string,
+  type: "observations" | "identifications" | "species",
 ) {
-  let observationView = `observations_${type}` as ObservationViewsType;
+  let targetObservationView = `observations_${type}` as ObservationViewsType;
+  let targetIdentificationView =
+    `identifications_${type}` as ObservationViewsType;
 
-  let identificationView = `identifications_${type}` as ObservationViewsType;
-
-  if (type !== "identifications") {
-    appStore.viewMetadata[observationView] = {
-      ...appStore.viewMetadata[observationView],
+  // update viewMetadata
+  if (validObservationsViews.includes(targetObservationView)) {
+    appStore.viewMetadata[targetObservationView] = {
+      ...appStore.viewMetadata[targetObservationView],
       perPage: Number(target.value),
     };
   }
-  appStore.viewMetadata[identificationView] = {
-    ...appStore.viewMetadata[identificationView],
-    perPage: Number(target.value),
-  };
+  if (validIdentificationsViews.includes(targetIdentificationView)) {
+    appStore.viewMetadata[targetIdentificationView] = {
+      ...appStore.viewMetadata[targetIdentificationView],
+      perPage: Number(target.value),
+    };
+  }
 
-  if (view === observationView && type !== "identifications") {
+  // update resourceApiParams to change api call for currentView
+  if (currentView === targetObservationView) {
     appStore.observationsApiParams = {
       ...appStore.observationsApiParams,
       per_page: Number(target.value),
     };
-  } else if (view === identificationView) {
+  } else if (currentView === targetIdentificationView) {
     appStore.identificationsApiParams = {
       ...appStore.identificationsApiParams,
       per_page: Number(target.value),
@@ -108,10 +139,19 @@ export function perPageHandler(
   // HACK: force proxy store to update
   appStore.viewMetadata = appStore.viewMetadata;
 
-  saveItem(viewAndPerPageDbKeyObject(identificationView), target.value);
+  // save page settings to database
+  if (validObservationsViews.includes(targetObservationView)) {
+    saveItem(viewAndPerPageDbKeyObject(targetObservationView), target.value);
+  } else if (validIdentificationsViews.includes(targetIdentificationView)) {
+    saveItem(viewAndPerPageDbKeyObject(targetIdentificationView), target.value);
+  }
+
   updateAppUrl(window.location, appStore);
 
-  if (view === observationView || view === identificationView) {
+  if (
+    currentView === targetObservationView ||
+    currentView === targetIdentificationView
+  ) {
     loggerEvent("[SettingsMenu dispatchEvent] perPageChanged");
     window.dispatchEvent(new Event("perPageChanged"));
   }
