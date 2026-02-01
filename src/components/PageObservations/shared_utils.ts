@@ -47,39 +47,26 @@ export function initSidebarState(appStore: AppStoreType, componentCtx: any) {
 }
 
 export function toggleObservationsHandler(componentCtx: HTMLElement) {
-  showMenu("#observations-menu", componentCtx);
-  hideMenu("#settings-menu", componentCtx);
-  hideMenu("#download-menu", componentCtx);
+  createMenuComponent("observations-menu", componentCtx);
 }
 
 export function toggleIdentificationsHandler(componentCtx: HTMLElement) {
-  showMenu("#identifications-menu", componentCtx);
-  hideMenu("#settings-menu", componentCtx);
+  createMenuComponent("identifications-menu", componentCtx);
 }
 
 export function toggleSettingsHandler(componentCtx: HTMLElement) {
-  hideMenu("#observations-menu", componentCtx);
-  hideMenu("#identifications-menu", componentCtx);
-  showMenu("#settings-menu", componentCtx);
-  hideMenu("#download-menu", componentCtx);
+  createMenuComponent("settings-menu", componentCtx);
 }
 
 export function toggleDownloadHandler(componentCtx: HTMLElement) {
-  hideMenu("#observations-menu", componentCtx);
-  hideMenu("#settings-menu", componentCtx);
-  showMenu("#download-menu", componentCtx);
+  createMenuComponent("download-menu", componentCtx);
 }
 
-function hideMenu(selector: string, componentCtx: HTMLElement) {
-  let menuEl = componentCtx.querySelector(selector) as HTMLElement;
-  if (!menuEl) return;
+function createMenuComponent(elementTag: string, componentCtx: HTMLElement) {
+  let parentEl = componentCtx.querySelector("#sidebar-menu");
+  if (!parentEl) return;
 
-  menuEl.style.display = "none";
-}
-
-function showMenu(selector: string, componentCtx: HTMLElement) {
-  let menuEl = componentCtx.querySelector(selector) as HTMLElement;
-  if (!menuEl) return;
-
-  menuEl.style.display = "block";
+  let menu = document.createElement(elementTag);
+  parentEl.innerHTML = "";
+  parentEl.append(menu);
 }

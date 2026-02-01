@@ -2,6 +2,7 @@ import type { AppStoreType } from "../../types/app";
 import { setupComponent } from "../../lib/component_utils";
 import { template } from "./template";
 import { formatInatDownloadUrl } from "../../lib/utils";
+import { loggerEvent, loggerRender } from "../../lib/logger";
 
 class DownloadMenu extends HTMLElement {
   constructor() {
@@ -9,25 +10,26 @@ class DownloadMenu extends HTMLElement {
   }
 
   connectedCallback() {
-    setupComponent(template, this);
+    loggerRender("++ DownloadMenu connectedCallback");
 
-    window.addEventListener("storePopulated", this);
+    setupComponent(template, this);
+    this.renderLink(window.app.store);
+
     window.addEventListener("observationsChange", this);
   }
 
   disconnectedCallback() {
-    window.removeEventListener("storePopulated", this);
+    loggerRender("++ DownloadMenu disconnectedCallback");
+
     window.removeEventListener("observationsChange", this);
   }
 
   handleEvent(event: Event) {
     let target = event.target as HTMLElement;
     if (!target) return;
+    loggerEvent(`[DownloadMenu Event] ${target.id}`);
 
-    if (
-      event.type === "storePopulated" ||
-      event.type === "observationsChange"
-    ) {
+    if (event.type === "observationsChange") {
       this.renderLink(window.app.store);
     }
   }

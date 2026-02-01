@@ -17,18 +17,17 @@ class SettingsMenu extends HTMLElement {
 
   connectedCallback() {
     loggerRender("++ SettingsMenu connectedCallback");
+    setupComponent(template, this);
 
     this.render();
 
     window.addEventListener("change", this);
-    window.addEventListener("storePopulated", this);
   }
 
-  disconnectCallback() {
+  disconnectedCallback() {
     loggerRender("++ SettingsMenu disconnectCallback");
 
     window.removeEventListener("change", this);
-    window.removeEventListener("storePopulated", this);
   }
 
   async handleEvent(event: Event) {
@@ -41,8 +40,6 @@ class SettingsMenu extends HTMLElement {
 
     if (event.type === "change") {
       this.changeHandler(target, currentView);
-    } else if (event.type === "storePopulated") {
-      initSettings(window.app.store, this);
     }
   }
 
@@ -66,10 +63,8 @@ class SettingsMenu extends HTMLElement {
   async render() {
     loggerRender("++ SettingsMenu render");
 
-    setupComponent(template, this);
-
     this.renderLanguageSelect();
-    this.renderNameOrderSelect();
+    initSettings(window.app.store, this);
   }
 
   renderLanguageSelect() {
@@ -80,23 +75,8 @@ class SettingsMenu extends HTMLElement {
       let optionEl = document.createElement("option");
       optionEl.value = lang.code;
       optionEl.textContent = lang.name;
-      if (lang.code === window.app.store.observationsApiParams.locale) {
-        optionEl.selected = true;
-      }
 
       selectEl.appendChild(optionEl);
-    });
-  }
-
-  renderNameOrderSelect() {
-    let selectEl = this.querySelector("#name-order-select");
-    if (!selectEl) return;
-
-    let optionsEl = selectEl.querySelectorAll("option");
-    optionsEl.forEach((optionEl) => {
-      if (optionEl.value === window.app.store.viewMetadata.name_order) {
-        optionEl.selected = true;
-      }
     });
   }
 }

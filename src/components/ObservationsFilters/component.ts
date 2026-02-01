@@ -55,6 +55,7 @@ class ObservationFilters extends HTMLElement {
     window.addEventListener("storePopulated", this);
     window.addEventListener("navResourceChange", this);
     window.addEventListener("popstateAfter", this);
+    window.addEventListener("switchMenu", this);
   }
 
   disconnectedCallback() {
@@ -79,6 +80,7 @@ class ObservationFilters extends HTMLElement {
     window.removeEventListener("storePopulated", this);
     window.removeEventListener("navResourceChange", this);
     window.removeEventListener("popstateAfter", this);
+    window.removeEventListener("switchMenu", this);
   }
 
   handleEvent(event: Event) {
@@ -96,6 +98,7 @@ class ObservationFilters extends HTMLElement {
       "navResourceChange",
       "storePopulated",
       "popstateAfter",
+      "switchMenu",
     ];
     if (events.includes(event.type)) {
       this.render();

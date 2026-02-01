@@ -35,6 +35,7 @@ class IdentificationsFilters extends HTMLElement {
     window.addEventListener("storePopulated", this);
     window.addEventListener("navResourceChange", this);
     window.addEventListener("popstateAfter", this);
+    window.addEventListener("switchMenu", this);
   }
 
   disconnectedCallback() {
@@ -49,6 +50,7 @@ class IdentificationsFilters extends HTMLElement {
     window.removeEventListener("storePopulated", this);
     window.removeEventListener("navResourceChange", this);
     window.removeEventListener("popstateAfter", this);
+    window.removeEventListener("switchMenu", this);
   }
 
   handleEvent(event: Event) {
@@ -61,7 +63,12 @@ class IdentificationsFilters extends HTMLElement {
 
     // wait for storePopulated event to render filters because there are some
     // fields that need info from iNat API
-    let events = ["navResourceChange", "storePopulated", "popstateAfter"];
+    let events = [
+      "navResourceChange",
+      "storePopulated",
+      "popstateAfter",
+      "switchMenu",
+    ];
     if (events.includes(event.type)) {
       this.render();
     }

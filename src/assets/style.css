@@ -550,14 +550,6 @@
     }
   }
 
-  #settings-menu {
-    display: none;
-  }
-
-  #download-menu {
-    display: none;
-  }
-
   #observations-header,
   #identifications-header {
     padding: 0 1rem;

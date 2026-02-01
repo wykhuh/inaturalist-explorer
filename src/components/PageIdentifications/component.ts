@@ -63,6 +63,7 @@ export class PageIdentifications extends HTMLElement {
         target.closest("button")?.id === "search-menu-toggle"
       ) {
         toggleIdentificationsHandler(this);
+        window.dispatchEvent(new Event("switchMenu"));
       } else if (target.id === "settings-menu-toggle") {
         toggleSettingsHandler(this);
       }
