@@ -23,59 +23,80 @@ class ObservationFilters extends HTMLElement {
   }
 
   formEl: null | HTMLFormElement = null;
+  dialogEl: null | HTMLDialogElement = null;
+  showModalButtonEl: null | HTMLButtonElement = null;
+  closeModalButtonEl: null | HTMLButtonElement = null;
 
   connectedCallback() {
     loggerRender("++ ObservationFilters connectedCallback");
     setupComponent(template, this);
-    this.formEl = this.querySelector("#filters-form") as HTMLFormElement;
 
-    window.addEventListener("popstateAfter", this);
+    this.formEl = this.querySelector("#filters-form") as HTMLFormElement;
+    this.dialogEl = this.querySelector<HTMLDialogElement>(".filters-modal");
+    this.showModalButtonEl = this.querySelector("#filters-btn");
+    this.closeModalButtonEl = this.querySelector("dialog .close-btn");
+
     this.formEl?.addEventListener("input", this);
     this.formEl?.addEventListener("reset", this);
-    window.addEventListener("navResourceChange", this);
-    window.addEventListener("storePopulated", this);
+    this.dialogEl?.addEventListener("click", this);
+    this.closeModalButtonEl?.addEventListener("click", this);
+    this.showModalButtonEl?.addEventListener("click", this);
+
     this.querySelectorAll(".nav-link").forEach((el) => {
       el.addEventListener("click", this);
     });
-
     this.querySelectorAll('[name="term_id"]').forEach((el) => {
       el.addEventListener("click", this);
     });
     this.querySelectorAll('[name="without_term_id"]').forEach((el) => {
       el.addEventListener("click", this);
     });
+
+    window.addEventListener("storePopulated", this);
+    window.addEventListener("navResourceChange", this);
+    window.addEventListener("popstateAfter", this);
   }
 
   disconnectedCallback() {
     loggerRender("++ ObservationFilters disconnectedCallback");
 
-    window.removeEventListener("popstateAfter", this);
     this.formEl?.removeEventListener("input", this);
     this.formEl?.removeEventListener("reset", this);
-    window.removeEventListener("navResourceChange", this);
-    window.removeEventListener("storePopulated", this);
+    this.dialogEl?.removeEventListener("click", this);
+    this.closeModalButtonEl?.removeEventListener("click", this);
+    this.showModalButtonEl?.removeEventListener("click", this);
+
     this.querySelectorAll(".nav-link").forEach((el) => {
       el.removeEventListener("click", this);
     });
-
     this.querySelectorAll('[name="term_id"]').forEach((el) => {
       el.removeEventListener("click", this);
     });
     this.querySelectorAll('[name="without_term_id"]').forEach((el) => {
       el.removeEventListener("click", this);
     });
+
+    window.removeEventListener("storePopulated", this);
+    window.removeEventListener("navResourceChange", this);
+    window.removeEventListener("popstateAfter", this);
   }
 
   handleEvent(event: Event) {
     let target = event.target as HTMLInputElement;
     if (!target) return;
     if (!this.formEl) return;
+    if (!this.dialogEl) return;
 
     loggerEvent(`[ObservationFilters event] ${event.type}`);
 
-    // wait for storePopulated event to render filters because there are some
-    // fields that need info from iNat API
-    let events = ["navResourceChange", "storePopulated", "popstateAfter"];
+    // this component is loaded before the store is populated when app is
+    // initialized. The app waits for storePopulated before calling render
+    // because the form needs data from the store to set the fields values.
+    let events = [
+      "navResourceChange",
+      "storePopulated",
+      "popstateAfter",
+    ];
     if (events.includes(event.type)) {
       this.render();
     }
@@ -145,12 +166,27 @@ class ObservationFilters extends HTMLElement {
     if (event.type === "reset") {
       this.resetFormHandler(this.formEl);
     }
+
+    if (event.type === "click" && target === this.showModalButtonEl) {
+      this.dialogEl.showModal();
+    }
+
+    if (event.type === "click" && target === this.closeModalButtonEl) {
+      this.dialogEl.close();
+    }
+
+    // close dialog if click ouside of dialog
+    // https://stackoverflow.com/a/73988585
+    if (
+      event.type === "click" &&
+      (target as unknown as HTMLDialogElement) === this.dialogEl
+    ) {
+      this.dialogEl.close();
+    }
   }
 
   async render() {
     loggerRender("++ ObservationFilters render");
-
-    this.renderModal();
 
     setupUnobservedByUserSearch("#unobserved-by-user-search");
     searchSetup("#unobserved-by-user-search", unobservedByUserSelectedHandler);
@@ -168,17 +204,6 @@ class ObservationFilters extends HTMLElement {
       let results = processFiltersForm(data);
       renderSelectedFiltersList(results.params);
     }
-
-    // close dialog if click ouside of dialog
-    // https://stackoverflow.com/a/73988585
-    let dialogEl = this.querySelector(".filters-modal") as HTMLDialogElement;
-    if (dialogEl) {
-      dialogEl.addEventListener("click", (event) => {
-        if (event.target === dialogEl) {
-          dialogEl.close();
-        }
-      });
-    }
   }
 
   async formChangeHandler(event: Event, form: HTMLFormElement) {
@@ -194,23 +219,6 @@ class ObservationFilters extends HTMLElement {
       let data = new FormData(form);
       await updateAppWithFilters(data, window.app.store);
     }, 0);
-  }
-
-  renderModal() {
-    const dialog = document.querySelector("dialog");
-    const showButton = document.querySelector("#filters-btn");
-    const closeButton = document.querySelector("dialog .close-btn");
-    if (!dialog) return;
-    if (!showButton) return;
-    if (!closeButton) return;
-
-    showButton.addEventListener("click", () => {
-      dialog.showModal();
-    });
-
-    closeButton.addEventListener("click", () => {
-      dialog.close();
-    });
   }
 }
 

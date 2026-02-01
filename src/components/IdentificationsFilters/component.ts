@@ -13,14 +13,25 @@ class IdentificationsFilters extends HTMLElement {
   }
 
   formEl: null | HTMLFormElement = null;
+  dialogEl: null | HTMLDialogElement = null;
+  showModalButtonEl: null | HTMLButtonElement = null;
+  closeModalButtonEl: null | HTMLButtonElement = null;
 
   connectedCallback() {
     loggerRender("++ IdentificationsFilters connectedCallback");
     setupComponent(template, this);
+
     this.formEl = this.querySelector("#filters-form") as HTMLFormElement;
+    this.dialogEl = this.querySelector<HTMLDialogElement>(".filters-modal");
+    this.showModalButtonEl = this.querySelector("#filters-btn");
+    this.closeModalButtonEl = this.querySelector("dialog .close-btn");
 
     this.formEl?.addEventListener("input", this);
     this.formEl?.addEventListener("reset", this);
+    this.dialogEl?.addEventListener("click", this);
+    this.closeModalButtonEl?.addEventListener("click", this);
+    this.showModalButtonEl?.addEventListener("click", this);
+
     window.addEventListener("storePopulated", this);
     window.addEventListener("navResourceChange", this);
     window.addEventListener("popstateAfter", this);
@@ -31,6 +42,10 @@ class IdentificationsFilters extends HTMLElement {
 
     this.formEl?.removeEventListener("input", this);
     this.formEl?.removeEventListener("reset", this);
+    this.dialogEl?.removeEventListener("click", this);
+    this.closeModalButtonEl?.removeEventListener("click", this);
+    this.showModalButtonEl?.removeEventListener("click", this);
+
     window.removeEventListener("storePopulated", this);
     window.removeEventListener("navResourceChange", this);
     window.removeEventListener("popstateAfter", this);
@@ -39,6 +54,9 @@ class IdentificationsFilters extends HTMLElement {
   handleEvent(event: Event) {
     let target = event.target as HTMLInputElement;
     if (target === null) return;
+    if (!this.formEl) return;
+    if (!this.dialogEl) return;
+
     loggerEvent(`[IdentificationsFilters event] ${event.type}`);
 
     // wait for storePopulated event to render filters because there are some
@@ -48,14 +66,27 @@ class IdentificationsFilters extends HTMLElement {
       this.render();
     }
 
-    if (this.formEl) {
-      if (event.type === "input") {
-        this.formChangeHandler(event, this.formEl);
-      }
+    if (event.type === "input") {
+      this.formChangeHandler(event, this.formEl);
+    }
 
-      if (event.type === "reset") {
-        this.resetFormHandler(this.formEl);
-      }
+    if (event.type === "reset") {
+      this.resetFormHandler(this.formEl);
+    }
+
+    if (event.type === "click" && target === this.showModalButtonEl) {
+      this.dialogEl.showModal();
+    }
+
+    if (event.type === "click" && target === this.closeModalButtonEl) {
+      this.dialogEl.close();
+    }
+
+    // close dialog if click ouside of dialog
+    // https://stackoverflow.com/a/73988585
+    let tempTarget = target as unknown as HTMLDialogElement;
+    if (event.type === "click" && tempTarget === this.dialogEl) {
+      this.dialogEl.close();
     }
   }
 
@@ -77,8 +108,6 @@ class IdentificationsFilters extends HTMLElement {
   async render() {
     loggerRender("++ IdentificationsFilters render");
 
-    this.renderModal();
-
     // use store to set values the form on page load
     initFilters(window.app.store);
 
@@ -89,58 +118,6 @@ class IdentificationsFilters extends HTMLElement {
       let results = processFiltersForm(data);
       renderSelectedFiltersList(results.params);
     }
-
-    // close dialog if click ouside of dialog
-    // https://stackoverflow.com/a/73988585
-    let dialogEl = this.querySelector(".filters-modal") as HTMLDialogElement;
-    if (dialogEl) {
-      dialogEl.addEventListener("click", (event) => {
-        if (event.target === dialogEl) {
-          dialogEl.close();
-        }
-      });
-    }
-  }
-
-  formEventHandler() {
-    const form = document.querySelector("#filters-form") as HTMLFormElement;
-
-    if (form) {
-      form.addEventListener("input", async (event) => {
-        let target = event.target as HTMLInputElement;
-        if (target === null) return;
-
-        event.preventDefault();
-
-        const data = new FormData(form);
-        await updateAppWithFilters(data, window.app.store);
-      });
-
-      form.addEventListener("reset", () => {
-        // HACK: use setTimeout to add new event that has access to resetted form
-        setTimeout(async () => {
-          let data = new FormData(form);
-          await updateAppWithFilters(data, window.app.store);
-        }, 0);
-      });
-    }
-  }
-
-  renderModal() {
-    const dialog = document.querySelector("dialog");
-    const showButton = document.querySelector("#filters-btn");
-    const closeButton = document.querySelector("dialog .close-btn");
-    if (!dialog) return;
-    if (!showButton) return;
-    if (!closeButton) return;
-
-    showButton.addEventListener("click", () => {
-      dialog.showModal();
-    });
-
-    closeButton.addEventListener("click", () => {
-      dialog.close();
-    });
   }
 }
 
