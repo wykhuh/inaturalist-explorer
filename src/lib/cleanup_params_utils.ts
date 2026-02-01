@@ -56,6 +56,14 @@ function cleanupParams(params: URLSearchParams) {
   }
 }
 
+function deleteParams(deleteParams: string[], params: URLSearchParams) {
+  deleteParams.forEach((param) => {
+    if (params.get(param)) {
+      params.delete(param);
+    }
+  });
+}
+
 // =============
 // observations API
 // =============
@@ -293,4 +301,90 @@ export function cleanupObservationsMapParams(
     params.color = iNatOrange;
   }
   return params;
+}
+
+// =============
+// iNaturalist site
+// =============
+
+let ignoreThisAppParams = [
+  "per_page",
+  "page",
+  "colors",
+  "name_order",
+  "locale",
+];
+
+function cleaniNatSiteParams(params: URLSearchParams) {
+  deleteParams(ignoreThisAppParams, params);
+
+  let taxon_id = params.get("taxon_id");
+  if (taxon_id) {
+    params.append("taxon_ids", taxon_id);
+    params.delete("taxon_id");
+  }
+}
+
+export function formatInatExportParams(appStore: AppStoreType) {
+  let params = formatAppUrl(
+    appStore,
+    "observations",
+    "object",
+    false,
+  ) as URLSearchParams;
+
+  cleaniNatSiteParams(params);
+  deleteParams(["view", "subview"], params);
+
+  if (!params.get("spam")) {
+    params.append("spam", "false");
+  }
+
+  return params.toString();
+}
+
+export function formatInatExploreParams(appStore: AppStoreType) {
+  let params = formatAppUrl(
+    appStore,
+    "observations",
+    "object",
+  ) as URLSearchParams;
+
+  cleaniNatSiteParams(params);
+  deleteParams(["spam"], params);
+
+  if (params.get("verifiable") === "true") {
+    params.delete("verifiable");
+  }
+
+  let view = appStore.currentView;
+  let subview = appStore.viewMetadata.observations_observations.subview;
+  if (view) {
+    if (view === "observations_observations") {
+      if (subview === "map") {
+        params.set("subview", "map");
+      } else if (subview === "grid") {
+      } else if (subview === "table") {
+        params.set("subview", "table");
+      } else {
+      }
+      params.delete("view");
+    } else {
+      params.set("view", view.split("_")[1]);
+    }
+  }
+  return params.toString();
+}
+
+export function formatInatIdentifyParams(appStore: AppStoreType) {
+  let params = formatAppUrl(
+    appStore,
+    "observations",
+    "object",
+  ) as URLSearchParams;
+
+  cleaniNatSiteParams(params);
+  deleteParams(["view", "subview", "spam"], params);
+
+  return params.toString();
 }

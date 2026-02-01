@@ -2,7 +2,7 @@ import { setupComponent } from "../../lib/component_utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import {
   initSidebarState,
-  toggleDownloadHandler,
+  toggleLinksHandler,
   toggleObservationsHandler,
   toggleSettingsHandler,
   toggleSidebar,
@@ -34,9 +34,8 @@ export class PageObservations extends HTMLElement {
     this.settingsMenuToggleEl = this.querySelector<HTMLButtonElement>(
       "#settings-menu-toggle",
     );
-    this.downloadMenuToggleEl = this.querySelector<HTMLButtonElement>(
-      "#download-menu-toggle",
-    );
+    this.downloadMenuToggleEl =
+      this.querySelector<HTMLButtonElement>("#links-menu-toggle");
     this.siteLayoutEl = this.querySelector<HTMLDivElement>("#site-layout");
     this.siteControlsEl = this.querySelector<HTMLDivElement>("#site-controls");
 
@@ -74,10 +73,10 @@ export class PageObservations extends HTMLElement {
       } else if (target.id === "settings-menu-toggle") {
         toggleSettingsHandler(this);
       } else if (
-        target.id === "download-menu-toggle" ||
-        target.closest("button")?.id === "download-menu-toggle"
+        target.id === "links-menu-toggle" ||
+        target.closest("button")?.id === "links-menu-toggle"
       ) {
-        toggleDownloadHandler(this);
+        toggleLinksHandler(this);
       }
     }
   }

@@ -30,7 +30,7 @@ import "./components/Header/component.ts";
 import "./components/Page404/component.ts";
 import "./components/Pagination/component.ts";
 import "./components/Tooltip/component.ts";
-import "./components/DownloadMenu/component.ts";
+import "./components/LinksMenu/component.ts";
 
 import mapStore from "./lib/store.ts";
 import Router from "./lib/router.ts";

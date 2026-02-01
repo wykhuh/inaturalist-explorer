@@ -1,4 +1,4 @@
-import { downArrow, gear, hamburgerMenu, search } from "../../assets/icons";
+import { externalLink, gear, hamburgerMenu, search } from "../../assets/icons";
 import { html } from "../../lib/component_utils";
 
 export const template = html`
@@ -12,8 +12,10 @@ export const template = html`
       <button id="search-menu-toggle" title="Search observations">
         ${search}
       </button>
+      <button id="links-menu-toggle" title="iNaturalist links">
+        ${externalLink}
+      </button>
       <button id="settings-menu-toggle" title="Settings">${gear}</button>
-      <button id="download-menu-toggle" title="Download">${downArrow}</button>
     </div>
 
     <section class="two-columns sidebar-open" id="site-layout">

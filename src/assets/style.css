@@ -27,6 +27,10 @@
     padding-inline-start: 0;
   }
 
+  ol {
+    /*padding-inline-start: 0;*/
+  }
+
   body {
     /* 4. Add accessible line-height */
     line-height: 1.5;
@@ -543,7 +547,7 @@
     border: 0;
     width: var(--side-menu-closed-width);
 
-    #download-menu-toggle,
+    #links-menu-toggle,
     #search-menu-toggle,
     #settings-menu-toggle {
       display: none;
@@ -1573,7 +1577,13 @@
   }
 }
 
-.flipV {
-  color: var(--clr-gray-700);
-  transform: scaleY(-1) translateY(1rem);
+@layer utils {
+  .flipV {
+    color: var(--clr-gray-700);
+    transform: scaleY(-1) translateY(1rem);
+  }
+
+  .liststyle-none {
+    list-style: none;
+  }
 }

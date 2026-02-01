@@ -58,8 +58,8 @@ export function toggleSettingsHandler(componentCtx: HTMLElement) {
   createMenuComponent("settings-menu", componentCtx);
 }
 
-export function toggleDownloadHandler(componentCtx: HTMLElement) {
-  createMenuComponent("download-menu", componentCtx);
+export function toggleLinksHandler(componentCtx: HTMLElement) {
+  createMenuComponent("links-menu", componentCtx);
 }
 
 function createMenuComponent(elementTag: string, componentCtx: HTMLElement) {

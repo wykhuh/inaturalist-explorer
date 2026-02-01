@@ -68,6 +68,7 @@ class ObservationHeader extends HTMLElement {
     // change view
     if (event.type === "click") {
       viewChangeHandler(target, window.app.store, this);
+      window.dispatchEvent(new Event("viewChange"));
     }
   }
 

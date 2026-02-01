@@ -267,43 +267,6 @@ export function removeDefaultParams(
   }
 }
 
-export function formatInatDownloadUrl(appStore: AppStoreType) {
-  let params = formatAppUrl(
-    appStore,
-    "observations",
-    "object",
-    false,
-  ) as URLSearchParams;
-
-  let ignoreParams = [
-    "per_page",
-    "page",
-    "view",
-    "subview",
-    "colors",
-    "name_order",
-  ];
-  ignoreParams.forEach((param) => {
-    if (params.get(param)) {
-      params.delete(param);
-    }
-  });
-
-  if (!params.get("spam")) {
-    params.append("spam", "false");
-  }
-  if (!params.get("verifiable")) {
-    params.append("verifiable", "true");
-  }
-  let taxon_id = params.get("taxon_id");
-  if (taxon_id) {
-    params.append("taxon_ids", taxon_id);
-    params.delete("taxon_id");
-  }
-
-  return params.toString();
-}
-
 export function updateAppUrl(url_location: Location, appStore: AppStoreType) {
   let paramsString = formatAppUrl(appStore);
   let url = `${url_location.origin}${url_location.pathname}`;
