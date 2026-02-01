@@ -1,7 +1,7 @@
 import type { ResourceSpeciesCountResult } from "../../types/inat_api";
 import type { DataComponentType, AppStoreType } from "../../types/app";
 import { pluralize } from "../../lib/utils";
-import { iNatTaxaUrl } from "../../data/inat_data";
+import { iNatObservationUrl, iNatTaxaUrl } from "../../data/inat_data";
 import { setupComponent } from "../../lib/component_utils";
 import {
   renderTaxonDefaultPhoto,
@@ -9,6 +9,10 @@ import {
 } from "../../lib/render_utils";
 import { template } from "./template";
 import { isObservationsCheck } from "../../lib/data_utils";
+import {
+  formatInatExploreParams,
+  formatSpeciesToInatExploreParams,
+} from "../../lib/cleanup_params_utils";
 
 class CardSpecies extends HTMLElement {
   constructor() {
@@ -99,7 +103,10 @@ class CardSpecies extends HTMLElement {
       let type = isObservationsCheck(appStore)
         ? "observation"
         : "identification";
-      content += `<span class="observations-count">${pluralize(data.count, type, true)}</span>`;
+      let params = formatSpeciesToInatExploreParams(data.taxon.id, appStore);
+      content += `<span class="observations-count">
+        <a href=${iNatObservationUrl}?taxon_id=${data.taxon.id}&${params}>${pluralize(data.count, type, true)}</a>
+        </span>`;
 
       detailsEl.innerHTML = content;
     }

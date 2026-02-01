@@ -388,3 +388,27 @@ export function formatInatIdentifyParams(appStore: AppStoreType) {
 
   return params.toString();
 }
+
+export function formatSpeciesToInatExploreParams(
+  taxonId: number,
+  appStore: AppStoreType,
+) {
+  let params = formatAppUrl(
+    appStore,
+    "observations",
+    "object",
+  ) as URLSearchParams;
+
+  cleaniNatSiteParams(params);
+  deleteParams(["spam", "view", "subview"], params);
+
+  if (params.get("verifiable") === "true") {
+    params.delete("verifiable");
+  }
+
+  if (params.get("taxon_ids")) {
+    params.set("taxon_ids", taxonId.toString());
+  }
+
+  return params.toString();
+}
