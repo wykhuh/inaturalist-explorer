@@ -1625,14 +1625,8 @@ describe("sortObjectByValue", () => {
     let result = sortObjectByValue(obj);
 
     expect(result).toStrictEqual({ c: 5, a: 10, b: 15 });
-  });
-
-  test("sort object with alphabetical values from low to high", () => {
-    let obj = { foo: "b", bar: "a", zoo: "c" };
-
-    let result = sortObjectByValue(obj);
-
-    expect(result).toStrictEqual({ bar: "a", foo: "b", zoo: "c" });
+    expect(Object.keys(result)).toStrictEqual(["c", "a", "b"]);
+    expect(Object.values(result)).toStrictEqual([5, 10, 15]);
   });
 
   test("sort object with numeric values from high to low", () => {
@@ -1641,13 +1635,25 @@ describe("sortObjectByValue", () => {
     let result = sortObjectByValue(obj, false);
 
     expect(result).toStrictEqual({ b: 15, a: 10, c: 5 });
+    expect(Object.keys(result)).toStrictEqual(["b", "a", "c"]);
+    expect(Object.values(result)).toStrictEqual([15, 10, 5]);
   });
 
-  test("sort object with alphabetical values from high to low", () => {
-    let obj = { foo: "b", bar: "a", zoo: "c" };
+  test("sort object with spaced number keys  from low to high", () => {
+    let obj = {
+      "25 ": 2,
+      "10 ": 4,
+      "15 ": 3,
+    };
 
-    let result = sortObjectByValue(obj, false);
+    let result = sortObjectByValue(obj);
 
-    expect(result).toStrictEqual({ zoo: "c", foo: "b", bar: "a" });
+    expect(result).toStrictEqual({
+      "25 ": 2,
+      "15 ": 3,
+      "10 ": 4,
+    });
+    expect(Object.keys(result)).toStrictEqual(["25 ", "15 ", "10 "]);
+    expect(Object.values(result)).toStrictEqual([2, 3, 4]);
   });
 });

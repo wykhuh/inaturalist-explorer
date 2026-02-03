@@ -9,10 +9,7 @@ import {
 } from "../../lib/render_utils";
 import { template } from "./template";
 import { isObservationsCheck } from "../../lib/data_utils";
-import {
-  formatInatExploreParams,
-  formatSpeciesToInatExploreParams,
-} from "../../lib/cleanup_params_utils";
+import { formatSpeciesToInatExploreParams } from "../../lib/cleanup_params_utils";
 
 class CardSpecies extends HTMLElement {
   constructor() {

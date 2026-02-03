@@ -132,6 +132,7 @@ export async function updateHeaderCount(
 
 export async function updateHeaderSubSpeciesCount(
   countLabel: ObservationViewsType,
+  dataFn: any,
   searchParams: string,
   appStore: AppStoreType,
   tooltipSettings: TooltipSettings | null = null,
@@ -148,7 +149,9 @@ export async function updateHeaderSubSpeciesCount(
     let taxonomyParams = cleanupObervationsTaxonomyParams(
       appStore.observationsApiParams,
     );
-    count = await getSubspeciesCount(taxonomyParams, appStore);
+    let subspeciesCount = await getSubspeciesCount(taxonomyParams, appStore);
+    let higherCount = (await fetchHeaderCounts(dataFn, searchParams)) || 0;
+    count = subspeciesCount + higherCount;
   }
 
   renderHeaderCounts(countLabel, count, tooltipSettings);

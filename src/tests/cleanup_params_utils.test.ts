@@ -5,6 +5,7 @@ import { expect, test, describe } from "vitest";
 import {
   cleanupIdentificationsMapParams,
   cleanupObervationsParams,
+  cleanupObervationsSpeciesParams,
   cleanupObservationsMapParams,
   convertIdentificationParamsToObservationParams,
   identificationOnlyParams,
@@ -20,6 +21,11 @@ import {
   observationsApiFilterableNames,
 } from "../data/app_data.ts";
 import type { ObservationsApiParamsKeysType } from "../types/app";
+import {
+  speciesRanks,
+  subspeciesRanks,
+  taxonRanks,
+} from "../data/inat_data.ts";
 
 let allowedIdentificationsParams = identificationsApiNames.filter(
   (p) =>
@@ -501,4 +507,32 @@ describe("cleanupIdentificationsObservationsParams", () => {
 
     expect(res).toStrictEqual({});
   });
+});
+
+describe("cleanupObervationsSpeciesParams", () => {
+  test.each(taxonRanks.filter((r) => !speciesRanks.includes(r)))(
+    "does not change rank if rank is species and higher ",
+    (rank) => {
+      let store = structuredClone(mapStore);
+      store.observationsApiParams.rank = rank;
+
+      let res = cleanupObervationsSpeciesParams(store);
+
+      expect(res).toStrictEqual(`verifiable=true&spam=false&rank=${rank}`);
+    },
+  );
+
+  test.each(subspeciesRanks)(
+    "remove ranks lower than species from rank",
+    (rank) => {
+      let store = structuredClone(mapStore);
+      store.observationsApiParams.rank = `class,species,${rank}`;
+
+      let res = cleanupObervationsSpeciesParams(store);
+
+      expect(res).toStrictEqual(
+        "verifiable=true&spam=false&rank=class%2Cspecies",
+      );
+    },
+  );
 });

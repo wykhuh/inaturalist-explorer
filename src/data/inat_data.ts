@@ -31,7 +31,6 @@ export const taxonRanks = [
   "tribe",
   "subtribe",
   "genus",
-  "subgenus",
   "genushybrid",
   "subgenus",
   "section",

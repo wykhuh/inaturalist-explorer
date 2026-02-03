@@ -20,7 +20,11 @@ import type {
 } from "../types/app";
 import { addOverlayToMap } from "./map_utils.ts";
 import { getiNatMapTiles } from "./inat_api.ts";
-import { allTaxaRecord, subspeciesRanks } from "../data/inat_data.ts";
+import {
+  allTaxaRecord,
+  subspeciesRanks,
+  taxonRanks,
+} from "../data/inat_data.ts";
 import {
   identificationsApiNonFilterableNames,
   observationsApiNonFilterableNames,
@@ -36,6 +40,8 @@ import type {
   ResourceSpeciesCountResult,
   SpeciesCountTaxon,
   Taxon,
+  TaxonomyResult,
+  TaxonRanks,
 } from "../types/inat_api";
 import {
   isIdentificationsResult,
@@ -900,4 +906,42 @@ export function setPerPage(appStore: AppStoreType) {
     savedPerPage = getItem("perPageObservations");
   }
   appStore[resourceParams].per_page = savedPerPage || viewPerPage;
+}
+
+export function sortRanks(ranks: TaxonRanks[]) {
+  let ranksAndIndex: TaxonRanks[] = [];
+  ranks.forEach((rank) => {
+    ranksAndIndex[taxonRanks.indexOf(rank)] = rank;
+  });
+  return ranksAndIndex.filter((r) => r);
+}
+
+export function findAncestorForIdAndRank(
+  taxonId: number,
+  targetRank: TaxonRanks,
+  taxonomyResults: TaxonomyResult[],
+) {
+  let ancestor = {} as TaxonomyResult | undefined;
+  let targetTaxon = taxonomyResults.find((taxon) => taxon.id === taxonId);
+  let doLoop = true;
+  let count = 0;
+  while (doLoop) {
+    ancestor = taxonomyResults.find(
+      (taxon) => taxon.id === targetTaxon?.parent_id,
+    );
+    if (ancestor === undefined) {
+      targetTaxon = ancestor;
+    } else if (ancestor && ancestor.rank == targetRank) {
+      doLoop = false;
+    } else if (ancestor.rank === "stateofmatter") {
+      doLoop = false;
+    } else if (count > 50) {
+      doLoop = false;
+    } else {
+      targetTaxon = ancestor;
+    }
+    count += 1;
+  }
+
+  return ancestor;
 }

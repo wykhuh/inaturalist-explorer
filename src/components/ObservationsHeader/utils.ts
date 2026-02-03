@@ -1,6 +1,7 @@
 import {
   cleanupObervationsObserversParams,
   cleanupObervationsParams,
+  cleanupObervationsSpeciesParams,
 } from "../../lib/cleanup_params_utils";
 import { isObservationsCheck, isSubpeciesCheck } from "../../lib/data_utils";
 import {
@@ -22,12 +23,13 @@ export function updateCountsHeader(appStore: AppStoreType) {
   );
 
   if (isObservationsCheck(appStore) && isSubpeciesCheck(appStore)) {
-    updateHeaderSubSpeciesCount("observations_species", params, appStore);
-    document
-      .querySelectorAll("#observations_species_label")
-      .forEach((label) => {
-        label.textContent = "Subspecies";
-      });
+    let speciesParams = cleanupObervationsSpeciesParams(appStore);
+    updateHeaderSubSpeciesCount(
+      "observations_species",
+      getObservationsSpecies,
+      speciesParams,
+      appStore,
+    );
   } else {
     updateHeaderCount(
       "observations_species",

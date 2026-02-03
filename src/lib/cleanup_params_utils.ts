@@ -1,4 +1,4 @@
-import { iconicTaxaIdName } from "../data/inat_data";
+import { iconicTaxaIdName, subspeciesRanks } from "../data/inat_data";
 import {
   fieldsWithAny,
   identificationsApiNames,
@@ -15,6 +15,7 @@ import type {
 } from "../types/app";
 import { iNatOrange } from "./map_colors_utils";
 import { formatAppUrl } from "./utils";
+import { isSubpeciesCheck } from "./data_utils";
 
 function cleanupParamsStore(
   appStore: AppStoreType,
@@ -82,6 +83,31 @@ export function cleanupObervationsParams(
   recordType = appStore.record_type,
 ) {
   let params = cleanupParamsStore(appStore, recordType);
+
+  return params.toString();
+}
+
+export function cleanupObervationsSpeciesParams(
+  appStore: AppStoreType,
+  recordType = appStore.record_type,
+) {
+  let params = cleanupParamsStore(appStore, recordType);
+  // to handle how api/v1/observations/taxomony handles subspecies, if rank
+  // has subspecies, remove subspecies
+  if (isSubpeciesCheck(appStore)) {
+    let rank = params.get("rank");
+    if (rank) {
+      let higherRanks = rank
+        .split(",")
+        .filter((r) => !subspeciesRanks.includes(r))
+        .join(",");
+      if (higherRanks == "") {
+        params.delete("rank");
+      } else {
+        params.set("rank", higherRanks);
+      }
+    }
+  }
 
   return params.toString();
 }

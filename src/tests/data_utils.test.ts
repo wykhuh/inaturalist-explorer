@@ -8,6 +8,8 @@ import {
   removeValueFromCommaSeparatedString,
   removeIdfromInatApiParams,
   isSubpeciesCheck,
+  sortRanks,
+  findAncestorForIdAndRank,
 } from "../lib/data_utils.ts";
 import { renderTaxonNames } from "../lib/render_utils";
 import type { NormalizediNatTaxonType } from "../types/app.d.ts";
@@ -16,6 +18,7 @@ import { life, losangeles, redOak, sandiego } from "./test_helpers.ts";
 import {
   canisTaxaAutocompleteResults,
   coastOakAutocompleteResults,
+  griffithParkBirds,
   redTaxaAutocompleteResults,
 } from "./fixtures/inatApi.ts";
 import {
@@ -23,6 +26,7 @@ import {
   subspeciesRanks,
   taxonRanks,
 } from "../data/inat_data.ts";
+import type { TaxonRanks } from "../types/inat_api";
 
 describe("formatTaxonName", () => {
   let store = structuredClone(mapStore);
@@ -984,4 +988,61 @@ describe("isSubpeciesCheck", () => {
       expect(result).toBe(false);
     },
   );
+});
+
+describe("sortRanks", () => {
+  test("sorts an array of taxon rank based on taxonomy order", () => {
+    let ranks: TaxonRanks[] = ["subspecies", "phylum", "order", "genus"];
+
+    let results = sortRanks(ranks);
+
+    expect(results).toStrictEqual(["phylum", "order", "genus", "subspecies"]);
+  });
+});
+
+describe("findAncestorForIdAndRank", () => {
+  test("find parent taxon for a given taxon id and rank", () => {
+    const taxonomy = griffithParkBirds;
+    let taxonId = 126562;
+    const targetRank = "species";
+
+    let results = findAncestorForIdAndRank(
+      taxonId,
+      targetRank,
+      taxonomy.results,
+    );
+
+    expect(results?.id).toStrictEqual(145245);
+    expect(results?.rank).toStrictEqual("species");
+  });
+
+  test("find ancestor taxon for a given taxon id and rank ", () => {
+    const taxonomy = griffithParkBirds;
+    let taxonId = 126562;
+    const targetRank = "family";
+
+    let results = findAncestorForIdAndRank(
+      taxonId,
+      targetRank,
+      taxonomy.results,
+    );
+
+    expect(results?.id).toStrictEqual(71349);
+    expect(results?.rank).toStrictEqual("family");
+  });
+
+  test("return life stateofmatter if no taxa match  a given taxon id and rank ", () => {
+    const taxonomy = griffithParkBirds;
+    let taxonId = 126562;
+    const targetRank = "subtribe";
+
+    let results = findAncestorForIdAndRank(
+      taxonId,
+      targetRank,
+      taxonomy.results,
+    );
+
+    expect(results?.id).toStrictEqual(48460);
+    expect(results?.rank).toStrictEqual("stateofmatter");
+  });
 });

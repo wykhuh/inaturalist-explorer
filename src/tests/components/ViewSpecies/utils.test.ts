@@ -22,7 +22,7 @@ describe("validSubspeciesForStore", () => {
     },
   );
 
-  test("ignores ranks that are not subspecies", () => {
+  test("ignores higher ranks that are not subspecies", () => {
     const store = structuredClone(mapStore);
     store.observationsApiParams.rank = taxonRanks
       .filter((r) => !subspeciesRanks.includes(r))
@@ -33,7 +33,7 @@ describe("validSubspeciesForStore", () => {
     expect(results).toStrictEqual([]);
   });
 
-  test("correctly handles a mix of higher ranks and subspecies ranks", () => {
+  test("returns subspeices if there is a mix of higher ranks and subspecies ranks", () => {
     const store = structuredClone(mapStore);
     store.observationsApiParams.rank = taxonRanks.join(",");
 
@@ -46,30 +46,30 @@ describe("validSubspeciesForStore", () => {
 describe("getSubspeciesIds", () => {
   test("returns data about subspecies taxa that match rank", () => {
     let data = observationsTaxonomy.results;
-    let expected = new Map();
-    expected.set(995125, 24935);
-    expected.set(339381, 1173);
-    expected.set(413788, 1173);
 
     let results = getSubspeciesIds(data, ["subspecies"]);
 
-    expect(results.taxaIdCount).toStrictEqual(expected);
-    expect(results.subspeciesIds).toStrictEqual([995125, 339381, 413788]);
+    expect(results.taxaIdCount).toStrictEqual({
+      339381: 1173,
+      413788: 1173,
+      995125: 24935,
+    });
+    expect(results.subspeciesIds).toStrictEqual([339381, 413788, 995125]);
   });
 
   test("returns data about subspecies taxa that match multiple ranks", () => {
     let data = observationsTaxonomy.results;
-    let expected = new Map();
-    expected.set(995125, 24935);
-    expected.set(339381, 1173);
-    expected.set(413788, 1173);
-    expected.set(1566671, 63);
 
     let results = getSubspeciesIds(data, subspeciesRanks);
 
-    expect(results.taxaIdCount).toStrictEqual(expected);
+    expect(results.taxaIdCount).toStrictEqual({
+      339381: 1173,
+      413788: 1173,
+      995125: 24935,
+      1566671: 63,
+    });
     expect(results.subspeciesIds).toStrictEqual([
-      995125, 339381, 413788, 1566671,
+      339381, 413788, 995125, 1566671,
     ]);
   });
 });
