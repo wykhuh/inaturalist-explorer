@@ -14,7 +14,6 @@ import {
 } from "../lib/utils.ts";
 import { mapStore } from "../lib/store.ts";
 import {
-  colorsEncoded,
   life,
   losangeles,
   project_cnc1,
@@ -114,9 +113,7 @@ describe("formatAppUrl", () => {
 
     let result = formatAppUrl(appStore);
 
-    expect(result).toBe(
-      `taxon_id=${life().id}&colors=${colorsEncoded[0]}` + `&${defaultQuery}`,
-    );
+    expect(result).toBe(`taxon_id=${life().id}` + `&${defaultQuery}`);
   });
 
   test("format parameters for multiple taxa", () => {
@@ -133,9 +130,7 @@ describe("formatAppUrl", () => {
     let result = formatAppUrl(appStore);
 
     expect(result).toBe(
-      `taxon_id=${life().id},${redOak().id}` +
-        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}` +
-        `&${defaultQuery}`,
+      `taxon_id=${life().id},${redOak().id}` + `&${defaultQuery}`,
     );
   });
 
@@ -513,13 +508,13 @@ describe("formatAppUrl with identifications", () => {
     let result = formatAppUrl(store);
 
     expect(result).toBe(
-      `taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}&page=2&per_page=20`,
+      `taxon_id=${life().id}&${defaultQuery}&page=2&per_page=20`,
     );
 
     let result2 = formatAppUrl(store, "identifications");
 
     expect(result2).toBe(
-      `observation_taxon_id=${life().id}&colors=${colorsEncoded[0]}&page=3&per_page=30`,
+      `observation_taxon_id=${life().id}&page=3&per_page=30`,
     );
   });
 });
@@ -596,12 +591,12 @@ describe("updateAppUrl", () => {
 
     expect(pushSpy).toHaveBeenCalledWith(
       {
-        path: "/?taxon_id=48460&colors=%234477aa&spam=false",
+        path: "/?taxon_id=48460&spam=false",
         recordType: "observations",
         view: "observations_observations",
       },
       "",
-      `/?taxon_id=${life().id}&colors=${colorsEncoded[0]}&spam=false`,
+      `/?taxon_id=${life().id}&spam=false`,
     );
 
     pushSpy.mockRestore();
@@ -626,19 +621,18 @@ let defaultUrlStore = {
 // NOTE: update when adding selectedResource
 describe("decodeAppUrl resources", () => {
   test("returns object with taxa data if taxon_id is present", () => {
-    let searchParams =
-      "?taxon_id=123,456&colors=%23ffffff,%23eeeeee&spam=false&verifiable=true";
+    let searchParams = "?taxon_id=123,456&spam=false&verifiable=true";
     let expected = {
       ...structuredClone(defaultUrlStore),
-      color: "#eeeeee",
+      color: defaultColorScheme[1],
       selectedTaxa: [
         {
           id: 123,
-          color: "#ffffff",
+          color: defaultColorScheme[0],
         },
         {
           id: 456,
-          color: "#eeeeee",
+          color: defaultColorScheme[1],
         },
       ],
       observationsApiParams: {
@@ -899,15 +893,15 @@ describe("decodeAppUrl resources", () => {
     () => {
       let searchParams =
         "?taxon_id=12&place_id=34&project_id=56&user_id=78" +
-        "&colors=%23ffffff&spam=false&verifiable=true";
+        "&spam=false&verifiable=true";
 
       let expected = {
         ...structuredClone(defaultUrlStore),
-        color: "#ffffff",
+        color: defaultColorScheme[0],
         selectedTaxa: [
           {
             id: 12,
-            color: "#ffffff",
+            color: defaultColorScheme[0],
           },
         ],
         selectedPlaces: [{ id: 34 }],
@@ -1225,16 +1219,16 @@ describe("decodeAppUrl  resources if identifications", () => {
     let expected = {
       ...structuredClone(defaultUrlStore),
       selectedTaxaIdentified: [
-        { id: 1, color: defaultColorScheme[0] },
-        { id: 2, color: defaultColorScheme[1] },
+        { id: 1, color: defaultColorScheme[3] },
+        { id: 2, color: defaultColorScheme[4] },
       ],
       selectedTaxa: [
-        { id: 3, color: defaultColorScheme[0] },
-        { id: 4, color: defaultColorScheme[1] },
+        { id: 3, color: defaultColorScheme[1] },
+        { id: 4, color: defaultColorScheme[2] },
       ],
       currentView: "identifications_identifications",
       record_type: "identifications",
-      color: defaultColorScheme[1],
+      color: defaultColorScheme[4],
     };
 
     let result = decodeAppUrl(searchParams, path);

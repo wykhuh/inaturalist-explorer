@@ -45,7 +45,6 @@ import {
   gridLabel_allTaxaRecord_sd,
   expect_LA_SD_Place,
   expectSanDiegoPlace,
-  colorsEncoded,
   expectLifeOakTaxa,
   project_cnc1,
   gridLabel_allTaxaRecord_project1,
@@ -503,7 +502,7 @@ describe("taxonSelectedHandler", () => {
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams1);
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}&per_page=${perPage}`,
+      `?taxon_id=${life().id}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
 
@@ -525,7 +524,7 @@ describe("taxonSelectedHandler", () => {
     expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
       `?taxon_id=${life().id},${redOak().id}` +
-        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&${defaultQuery}&per_page=${perPage}`,
+        `&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
     expect(store.selectedTaxa[1].observations_count).toBe(oakCount);
@@ -1102,7 +1101,7 @@ describe("combos", () => {
     };
     expect(store.observationsApiParams).toStrictEqual(params1);
     expect(window.location.search).toBe(
-      `?taxon_id=${redOak().id}&colors=${colorsEncoded[0]}&${defaultQuery}&per_page=${perPage}`,
+      `?taxon_id=${redOak().id}&${defaultQuery}&per_page=${perPage}`,
     );
 
     await saveBBoxToStore(bbox, store);
@@ -1126,7 +1125,7 @@ describe("combos", () => {
     });
 
     expect(window.location.search).toBe(
-      `?taxon_id=${redOak().id}&colors=${colorsEncoded[0]}&${defaultQuery}&per_page=${perPage}` +
+      `?taxon_id=${redOak().id}&${defaultQuery}&per_page=${perPage}` +
         `&${iNatBboxParams}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(oakCount);
@@ -1519,8 +1518,7 @@ describe("taxonSelectedHandler with identifications", () => {
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams1);
     expect(window.location.search).toBe(
-      `?observation_taxon_id=${life().id}&colors=${colorsEncoded[0]}` +
-        `&per_page=${perPage}`,
+      `?observation_taxon_id=${life().id}` + `&per_page=${perPage}`,
     );
 
     await taxonSelectedHandler(redOakBasic, "red", store);
@@ -1544,7 +1542,6 @@ describe("taxonSelectedHandler with identifications", () => {
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
       `?observation_taxon_id=${life().id},${redOak().id}` +
-        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}` +
         `&per_page=${perPage}`,
     );
   });
@@ -1961,8 +1958,7 @@ describe("removePlace", () => {
       colors: colors[0],
     });
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}` +
-        `&per_page=${perPage}`,
+      `?taxon_id=${life().id}&${defaultQuery}` + `&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
 
@@ -1978,7 +1974,7 @@ describe("removePlace", () => {
     expect(store.observationsApiParams).toStrictEqual(params1);
     expect(window.location.search).toBe(
       `?taxon_id=${life().id}&place_id=${losangeles.id}` +
-        `&colors=${colorsEncoded[0]}&${defaultQuery}` +
+        `&${defaultQuery}` +
         `&per_page=${perPage}`,
     );
     expectLosAngelesPlace(store, lifeCount * 0.6);
@@ -1995,8 +1991,7 @@ describe("removePlace", () => {
     };
     expect(store.observationsApiParams).toStrictEqual(params2);
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}` +
-        `&per_page=${perPage}`,
+      `?taxon_id=${life().id}&${defaultQuery}` + `&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
   });
@@ -2018,8 +2013,7 @@ describe("removePlace", () => {
       colors: colors[0],
     });
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}` +
-        `&per_page=${perPage}`,
+      `?taxon_id=${life().id}&${defaultQuery}` + `&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
 
@@ -2037,7 +2031,7 @@ describe("removePlace", () => {
     };
     expect(store.observationsApiParams).toStrictEqual(params1);
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}` +
+      `?taxon_id=${life().id}` +
         `&${defaultQuery}&per_page=${perPage}&${iNatBboxParams}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
@@ -2053,7 +2047,7 @@ describe("removePlace", () => {
     };
     expect(store.observationsApiParams).toStrictEqual(params2);
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&colors=${colorsEncoded[0]}&${defaultQuery}&per_page=${perPage}`,
+      `?taxon_id=${life().id}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
   });
@@ -2293,7 +2287,7 @@ describe("removeTaxon", () => {
     expect(store.identificationsApiParams).toStrictEqual({});
     expect(window.location.search).toBe(
       `?taxon_id=${Life.id},${RedOak.id}` +
-        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}&${defaultQuery}&per_page=${perPage}`,
+        `&${defaultQuery}&per_page=${perPage}`,
     );
     expectLifeOakTaxa(store);
 
@@ -2308,7 +2302,7 @@ describe("removeTaxon", () => {
     expect(store.observationsApiParams).toStrictEqual(params3);
     expect(store.identificationsApiParams).toStrictEqual({});
     expect(window.location.search).toBe(
-      `?taxon_id=${RedOak.id}&colors=${colorsEncoded[1]}&${defaultQuery}&per_page=${perPage}`,
+      `?taxon_id=${RedOak.id}&${defaultQuery}&per_page=${perPage}`,
     );
     expectOakTaxa(store);
 
@@ -2818,7 +2812,6 @@ describe("taxa combos", () => {
     expect(store.identificationsApiParams).toStrictEqual({});
     expect(window.location.search).toBe(
       `?taxon_id=${Life.id}` +
-        `&colors=${colorsEncoded[0]}` +
         `&${defaultQuery}` +
         `&per_page=${perPage}` +
         `&ident_taxon_id=${RedOak.id}`,
@@ -2865,7 +2858,6 @@ describe("taxa combos", () => {
 
     let Life = life();
     let RedOak = redOak();
-    let oakColorEncode = defaultColorScheme[0].replace("#", "%23");
     let lifeCount = Life.observations_count;
 
     expectEmpytMap(store);
@@ -2892,7 +2884,6 @@ describe("taxa combos", () => {
     expect(store.identificationsApiParams).toStrictEqual({});
     expect(window.location.search).toBe(
       `?taxon_id=${Life.id}` +
-        `&colors=${oakColorEncode}` +
         `&${defaultQuery}` +
         `&per_page=${perPage}` +
         `&ident_taxon_id=${RedOak.id}`,
@@ -2909,10 +2900,7 @@ describe("taxa combos", () => {
       taxon_id: `${Life.id}`,
     });
     expect(window.location.search).toBe(
-      `?taxon_id=${Life.id}` +
-        `&colors=${oakColorEncode}` +
-        `&${defaultQuery}` +
-        `&per_page=${perPage}`,
+      `?taxon_id=${Life.id}` + `&${defaultQuery}` + `&per_page=${perPage}`,
     );
 
     await removeTaxon(Life.id, store);
@@ -3101,9 +3089,7 @@ describe("removeTaxon with identifications", () => {
       taxon_id: allTaxa.id.toString(),
     });
     expect(window.location.search).toBe(
-      `?observation_taxon_id=${Life.id},${RedOak.id}` +
-        `&colors=${colorsEncoded[0]},${colorsEncoded[1]}` +
-        `&per_page=${perPage}`,
+      `?observation_taxon_id=${Life.id},${RedOak.id}` + `&per_page=${perPage}`,
     );
 
     await removeTaxon(Life.id, store);
@@ -3120,9 +3106,7 @@ describe("removeTaxon with identifications", () => {
       taxon_id: allTaxa.id.toString(),
     });
     expect(window.location.search).toBe(
-      `?observation_taxon_id=${RedOak.id}` +
-        `&colors=${colorsEncoded[1]}` +
-        `&per_page=${perPage}`,
+      `?observation_taxon_id=${RedOak.id}` + `&per_page=${perPage}`,
     );
 
     await removeTaxon(RedOak.id, store);
@@ -3375,7 +3359,6 @@ describe("taxa combo with identifications", () => {
     expect(window.location.search).toBe(
       `?observation_taxon_id=${Life.id}` +
         `&taxon_id=${RedOak.id}` +
-        `&colors=${colorsEncoded[0]}` +
         `&per_page=${perPage}`,
     );
 
@@ -3414,7 +3397,6 @@ describe("taxa combo with identifications", () => {
     let Life = lifeIdentification();
     let RedOak = redOakIdentification();
     RedOak.color = defaultColorScheme[0];
-    let oakColorEncode = defaultColorScheme[0].replace("#", "%23");
     let lifeCount = Life.identifications_count;
 
     expectEmpytMap(store);
@@ -3442,7 +3424,6 @@ describe("taxa combo with identifications", () => {
     expect(window.location.search).toBe(
       `?observation_taxon_id=${Life.id}` +
         `&taxon_id=${RedOak.id}` +
-        `&colors=${oakColorEncode}` +
         `&per_page=${perPage}`,
     );
 
@@ -3460,7 +3441,7 @@ describe("taxa combo with identifications", () => {
       observation_taxon_id: `${Life.id}`,
     });
     expect(window.location.search).toBe(
-      `?observation_taxon_id=${Life.id}&colors=${colorsEncoded[0]}&per_page=${perPage}`,
+      `?observation_taxon_id=${Life.id}&per_page=${perPage}`,
     );
 
     await removeTaxon(Life.id, store);
@@ -3483,7 +3464,6 @@ describe("taxa with no map", () => {
 
     let Life = life();
     let RedOak = redOak();
-    let oakColorEncode = defaultColorScheme[0].replace("#", "%23");
     let lifeCount = Life.observations_count;
 
     expectEmpytMap(store);
@@ -3510,7 +3490,6 @@ describe("taxa with no map", () => {
     expect(store.identificationsApiParams).toStrictEqual({});
     expect(window.location.search).toBe(
       `?taxon_id=${Life.id}` +
-        `&colors=${oakColorEncode}` +
         `&${defaultQuery}` +
         `&per_page=${perPage}` +
         `&ident_taxon_id=${RedOak.id}`,
@@ -3528,10 +3507,7 @@ describe("taxa with no map", () => {
       taxon_id: `${Life.id}`,
     });
     expect(window.location.search).toBe(
-      `?taxon_id=${Life.id}` +
-        `&colors=${oakColorEncode}` +
-        `&${defaultQuery}` +
-        `&per_page=${perPage}`,
+      `?taxon_id=${Life.id}` + `&${defaultQuery}` + `&per_page=${perPage}`,
     );
 
     await removeTaxon(Life.id, store);

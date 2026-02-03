@@ -23,7 +23,11 @@ import {
   recordTypeToPathObj,
   validIdentificationsSubviews,
 } from "../data/app_data";
-import { defaultColorScheme, getColor } from "./map_colors_utils";
+import {
+  defaultColorScheme,
+  getColor,
+  getColorByIndex,
+} from "./map_colors_utils";
 import { convertiNatBBoxToLngLat } from "./map_utils";
 import { validObservationsSubviews, validViews } from "../data/app_data";
 import { getResourceApiParams } from "./data_utils";
@@ -110,10 +114,6 @@ export function formatAppUrl(
   let usersIdentifiersIds = appStore.selectedUsersIdentifiers
     .map((r) => r.id)
     .join(",");
-  let colors = appStore.selectedTaxa
-    .filter((r) => r.id !== 0)
-    .map((r) => r.color)
-    .join(",");
 
   let params: ObservationsApiParamsType & IdentificationsApiParamsType = {};
 
@@ -151,9 +151,6 @@ export function formatAppUrl(
       let ids = usersIdentifiersIds.split(",");
       params.user_id = ids[ids.length - 1];
     }
-  }
-  if (colors.length > 0) {
-    params.colors = colors;
   }
 
   let processedKeys = [
@@ -210,7 +207,6 @@ export function formatAppUrl(
   if (processRemovedDefaultParams) {
     removeDefaultParams(params);
   }
-
   let searchParams = new URLSearchParams(params as any);
 
   if (format === "string") {
@@ -297,15 +293,9 @@ function formatBasicRecords(stringIds: string) {
     .filter((p) => p);
 }
 
-function formatBasicTaxaRecords(
-  urlIds: string,
-  urlColors: string | undefined,
-  appStore: AppStoreType,
-) {
-  let colors = urlColors ? urlColors.split(",") : defaultColorScheme;
-
-  return urlIds.split(",").map((id, i) => {
-    let color = colors[i] || getColor(appStore, defaultColorScheme);
+function formatBasicTaxaRecords(urlIds: string, appStore: AppStoreType) {
+  return urlIds.split(",").map((id) => {
+    let color = getColor(appStore, defaultColorScheme);
     appStore.color = color;
     return { id: Number(id), color: color };
   });
@@ -354,16 +344,16 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     if (!isObservations) {
       let taxa: NormalizediNatTaxonType[] = [];
       let ids = urlParams.observation_taxon_id.split(",");
-      let colors = urlParams.colors
-        ? urlParams.colors.split(",")
-        : defaultColorScheme;
+
+      let color = defaultColorScheme[0];
       ids.forEach((id, i) => {
+        color = getColorByIndex(i, defaultColorScheme);
         taxa.push({
           id: Number(id),
-          color: colors[i],
+          color: color,
         });
       });
-      store.color = colors[ids.length - 1];
+      store.color = color;
 
       store.selectedTaxa = taxa;
     }
@@ -372,29 +362,17 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   // convert taxon_id into basic selectedTaxa or selectedTaxaIdentified id
   if ("taxon_id" in urlParams && urlParams.taxon_id !== "any") {
     if (isObservations) {
-      let taxa = formatBasicTaxaRecords(
-        urlParams.taxon_id,
-        urlParams.colors,
-        store,
-      );
+      let taxa = formatBasicTaxaRecords(urlParams.taxon_id, store);
       store.selectedTaxa = taxa;
     } else {
-      let taxa = formatBasicTaxaRecords(
-        urlParams.taxon_id,
-        urlParams.colors,
-        store,
-      );
+      let taxa = formatBasicTaxaRecords(urlParams.taxon_id, store);
       store.selectedTaxaIdentified = taxa;
     }
   }
 
   if ("ident_taxon_id" in urlParams && urlParams.ident_taxon_id !== "any") {
     if (isObservations) {
-      let taxa = formatBasicTaxaRecords(
-        urlParams.ident_taxon_id,
-        urlParams.colors,
-        store,
-      );
+      let taxa = formatBasicTaxaRecords(urlParams.ident_taxon_id, store);
       store.selectedTaxaIdentified = taxa;
     }
   }

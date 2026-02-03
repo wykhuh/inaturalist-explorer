@@ -339,12 +339,12 @@ export async function initPopulateStore(
   );
 
   await updateCountForAll("all", appStore);
-
   renderSelectedResources(appStore, false);
 
   loggerStore("++ initPopulateStore end");
 
   loggerEvent("[initPopulateStored dispatchEvent] storePopulated");
+
   window.dispatchEvent(new Event("storePopulated"));
 }
 

@@ -1172,7 +1172,9 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     store.record_type == "identifications";
 
     let life = lifeIdentification();
+    life.color = defaultColorScheme[1];
     let oak = redOakIdentification();
+    oak.color = defaultColorScheme[2];
 
     expectEmpytMap(store);
 
@@ -1512,6 +1514,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     let store = structuredClone(mapStore);
 
     let life = lifeIdentification();
+    life.color = defaultColorScheme[1];
     let count = life.identifications_count as number;
     let oak = redOakIdentification();
 
@@ -1535,7 +1538,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     ]);
     expect(store.taxaIdentifiedMapLayers[oak.id].length).toBe(4);
     expect(store.selectedTaxaIdentified).toStrictEqual([
-      { ...oak, identifications_count: count, color: defaultColorScheme[0] },
+      { ...oak, identifications_count: count, color: defaultColorScheme[2] },
     ]);
     expectUserIdentifiersIdentifications(store, [
       Math.round(count * 0.45),

@@ -193,6 +193,10 @@ export function getColor(appStore: AppStoreType, colorArray: string[]) {
   return color;
 }
 
+export function getColorByIndex(index: number, colorArray: string[]) {
+  return colorArray[(index + 1) % colorArray.length];
+}
+
 export function getRandomColor(colorArray: string[]) {
   let index = getRandomInt(colorArray.length);
 
