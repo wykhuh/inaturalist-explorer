@@ -58,7 +58,9 @@ export async function fetchAndRenderData(
 
   if (!data) return;
 
-  if (data.results.length == 0) {
+  let view =
+    appStore.viewMetadata[appStore.currentView || "observations_observations"];
+  if (view.subview !== "map" && data.results.length == 0) {
     subcontainerEl.innerHTML = "No records found";
     appStore.observationsSubviewData = [];
     return;
