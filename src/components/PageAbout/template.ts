@@ -173,38 +173,10 @@ export const template = html`
         />
       </li>
       <li>
-        Download the observations as a CSV by clicking a link to the iNaturalist
-        "Export Observations" page.
-        <img
-          src="${download}"
-          alt="Download menu to download the observations"
-        />
-      </li>
-      <li>
-        <p>
-          This site gets data from the iNaturalist API. As a result, the urls
-          for the site are compatible with iNaturalist API. You can copy and
-          paste the query params (stuff after the ?) from the site, and use them
-          for the iNaturalist API. The only properties not compatible are
-          colors, view, and subview.
-        </p>
-
-        <p>
-          For instance, this is the URL query params for all monarchs and narrow
-          leaf milkweed in Los Angeles and San Diego.
-        </p>
-        <p>
-          <code
-            >taxon_id=48662,56851&place_id=962,829&colors=%234477aa,%2366ccee&verifiable=true&spam=false</code
-          >
-        </p>
-        <p>
-          You can copy the query params and use them for the
-          <a
-            href="https://api.inaturalist.org/v1/observations?taxon_id=48662,56851&place_id=962,829&colors=%234477aa,%2366ccee&verifiable=true&spam=false"
-            >iNaturalist "observations" API</a
-          >
-        </p>
+        Users can use the search queries created on this site for the iNaturlist
+        Explore, Identify, and Export pages by clicking on the links in the
+        iNaturalist Links menu.
+        <img src="${download}" alt="Links in the iNaturalist Links menu" />
       </li>
     </ol>
 
