@@ -734,3 +734,16 @@ export function sortObjectByValue(obj: { [k: string]: any }, ascending = true) {
 export function range(start = 0, stop: number) {
   return [...Array(stop - start + 1).keys()].map((i) => i + start);
 }
+
+// https://www.freecodecamp.org/news/javascript-debounce-example/
+// https://stackoverflow.com/questions/42361485/how-long-should-you-debounce-text-input
+export function debounce(func: any, timeout = 520) {
+  let timer: ReturnType<typeof setTimeout>;
+  return (...args: any[]) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      // @ts-ignore
+      func.apply(this, args);
+    }, timeout);
+  };
+}

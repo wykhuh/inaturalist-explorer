@@ -16,6 +16,7 @@ import {
   reviewerSelectedHandler,
   setupReviewerSearch,
 } from "../../lib/search_reviewer";
+import { debounce } from "../../lib/utils";
 
 class ObservationFilters extends HTMLElement {
   constructor() {
@@ -158,11 +159,11 @@ class ObservationFilters extends HTMLElement {
       let searches = ["unobserved-by-user-search", "reviewer-search"];
       if (searches.includes(target.id)) {
         if (target.value === "") {
-          this.formChangeHandler(event, this.formEl);
+          this.formChangeHandlerDebounced(event, this.formEl);
         }
         // use formChangeHandler to add and clear other fields
       } else {
-        this.formChangeHandler(event, this.formEl);
+        this.formChangeHandlerDebounced(event, this.formEl);
       }
     }
 
@@ -215,6 +216,8 @@ class ObservationFilters extends HTMLElement {
     const data = new FormData(form);
     await updateAppWithFilters(data, window.app.store);
   }
+
+  formChangeHandlerDebounced = debounce(this.formChangeHandler);
 
   resetFormHandler(form: HTMLFormElement) {
     // HACK: use setTimeout to add new event that has access to resetted form

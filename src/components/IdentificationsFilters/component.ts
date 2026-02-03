@@ -6,6 +6,7 @@ import {
   renderSelectedFiltersList,
   updateAppWithFilters,
 } from "../ObservationsFilters/shared_utils";
+import { debounce } from "../../lib/utils";
 
 class IdentificationsFilters extends HTMLElement {
   constructor() {
@@ -74,7 +75,7 @@ class IdentificationsFilters extends HTMLElement {
     }
 
     if (event.type === "input") {
-      this.formChangeHandler(event, this.formEl);
+      this.formChangeHandlerDebounced(event, this.formEl);
     }
 
     if (event.type === "reset") {
@@ -103,6 +104,8 @@ class IdentificationsFilters extends HTMLElement {
     const data = new FormData(form);
     await updateAppWithFilters(data, window.app.store);
   }
+
+  formChangeHandlerDebounced = debounce(this.formChangeHandler);
 
   resetFormHandler(form: HTMLFormElement) {
     // HACK: use setTimeout to add new event that has access to resetted form
