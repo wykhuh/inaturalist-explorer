@@ -13,6 +13,7 @@ import {
   isIdentificationsCheck,
   isObservationsCheck,
   replaceWithCacheImages,
+  isSpeciesOrHigerCheck,
 } from "../../lib/data_utils";
 import {
   getIdentificationsSpecies,
@@ -22,14 +23,102 @@ import {
 } from "../../lib/inat_api";
 import { loggerTime } from "../../lib/logger";
 import { createSpinner } from "../../lib/spinner";
-import { updateAppUrl } from "../../lib/utils";
+import { sortObjectByValue, updateAppUrl } from "../../lib/utils";
 import type { DataComponentType, AppStoreType } from "../../types/app";
 import type {
   IdentificationsResult,
+  iNatObservationsSpeciesCountAPI,
   ObservationsResult,
   ResourceSpeciesCountResult,
   TaxonomyResult,
 } from "../../types/inat_api";
+
+export function calculateSubspeciesIdsOffset(
+  speciesData: iNatObservationsSpeciesCountAPI,
+  subspeciesIds: number[],
+) {
+  let lastSpeciesPage = Math.ceil(
+    speciesData.total_results / speciesData.per_page,
+  );
+  let speciesOffset =
+    lastSpeciesPage * speciesData.per_page - speciesData.total_results;
+
+  // handle pages that just have subspecies data
+  if (speciesData.page > lastSpeciesPage) {
+    let subspeciesOffset =
+      (speciesData.page - lastSpeciesPage - 1) * speciesData.per_page +
+      speciesOffset;
+
+    return subspeciesIds.slice(
+      subspeciesOffset,
+      subspeciesOffset + speciesData.per_page,
+    );
+    // handle pages that have species and subspecies data
+  } else if (speciesData.page === lastSpeciesPage) {
+    return subspeciesIds.slice(0, speciesOffset);
+  }
+}
+
+export async function fetchData(
+  appStore: AppStoreType,
+): Promise<iNatObservationsSpeciesCountAPI | undefined> {
+  let data;
+
+  // get species and subspecies data for observations
+  if (isObservationsCheck(appStore)) {
+    // get species and subspecies
+    if (isSubpeciesCheck(appStore)) {
+      let speciesData;
+      if (isSpeciesOrHigerCheck(appStore)) {
+        // get species data
+        speciesData = await getAPIData(appStore);
+      }
+
+      if (!speciesData) {
+        speciesData = {
+          per_page:
+            appStore.observationsApiParams.per_page ||
+            appStore.viewMetadata.observations_species.perPage,
+          page: appStore.observationsApiParams.page || 1,
+          total_results: 0,
+          results: [],
+        } as iNatObservationsSpeciesCountAPI;
+      }
+
+      // get subspecies data
+      let subspeciesData = await getSubspeciesData(appStore, speciesData);
+      // have both species and subspecies data
+      if (speciesData && subspeciesData) {
+        let subspeciesResults = subspeciesData.results.sort(
+          (a, b) => b.count - a.count,
+        );
+        data = {
+          per_page: speciesData.per_page,
+          page: speciesData.page,
+          total_results:
+            speciesData.total_results + subspeciesData.total_results,
+          results: speciesData.results.concat(subspeciesResults),
+        };
+        // only have species data
+      } else if (speciesData) {
+        data = speciesData;
+        // only have subspecies data
+      } else if (subspeciesData) {
+        data = {
+          ...subspeciesData,
+          results: subspeciesData.results.sort((a, b) => b.count - a.count),
+        };
+      }
+      // get species data
+    } else {
+      data = await getAPIData(appStore);
+    }
+    // get species data for identifications
+  } else {
+    data = await getAPIData(appStore);
+  }
+  return data;
+}
 
 export async function fetchAndRenderData(
   paginationCallback: (
@@ -46,30 +135,14 @@ export async function fetchAndRenderData(
 
   const t1 = performance.now();
 
-  // use /observations/species_counts or /identifications/species_counts
-  // to get taxa and counts
-  let data = await getAPIData(appStore);
-  let combinedResults: ResourceSpeciesCountResult[] = [];
-  if (data && data.total_results > 0) {
-    combinedResults = combinedResults.concat(data.results);
-  }
-
-  // use /observations/taxonomy and /taxa to get subspecies taxa and counts
-  if (isObservationsCheck(appStore) && isSubpeciesCheck(appStore)) {
-    let subspeciesData = await getSubspeciesData(appStore);
-    if (subspeciesData && subspeciesData.total_results > 0) {
-      combinedResults = combinedResults
-        .concat(subspeciesData.results)
-        .sort((a, b) => b.count - a.count);
-    }
-  }
+  let data = await fetchData(appStore);
 
   const t10 = performance.now();
   loggerTime(`api ${t10 - t1} milliseconds`);
 
   spinner.stop();
 
-  if (!data || combinedResults.length === 0) {
+  if (!data || data.results.length === 0) {
     containerEl.innerHTML = "No records found";
     return;
   }
@@ -82,12 +155,13 @@ export async function fetchAndRenderData(
   pagination1.data = {
     perPage: data.per_page,
     currentPage: data.page,
-    totalRecords: combinedResults.length,
+    totalRecords: data.total_results,
     paginationCallback,
   };
+
   containerEl.appendChild(pagination1);
 
-  let tableEl = createGrid(combinedResults);
+  let tableEl = createGrid(data.results);
   containerEl.appendChild(tableEl);
 
   let pagination2 = document.createElement(
@@ -96,13 +170,15 @@ export async function fetchAndRenderData(
   pagination2.data = {
     perPage: data.per_page,
     currentPage: data.page,
-    totalRecords: combinedResults.length,
+    totalRecords: data.total_results,
     paginationCallback,
     scrollToSelector: ".species-list-container",
   };
   containerEl.appendChild(pagination2);
 }
 
+// use /observations/species_counts or /identifications/species_counts
+// to get taxa and counts
 async function getAPIData(appStore: AppStoreType) {
   if (import.meta.env?.VITE_CACHE === "true") {
     let page = isObservationsCheck(appStore)
@@ -133,16 +209,25 @@ export function getSubspeciesIds(
   validRanks: string[],
 ) {
   // store count and id for taxa with subspecies ranks
+  let idCountSorted: { [k: string]: number } = {};
   let idCount: { [k: string]: number } = {};
+
   taxonomyResults
     .filter((taxon) => validRanks.includes(taxon.rank))
     .forEach((taxon) => {
+      // HACK: add space to number id because javascript does not properly sort
+      // objects that have numeric keys
+      idCountSorted[taxon.id + " "] = taxon.direct_obs_count;
       idCount[taxon.id] = taxon.direct_obs_count;
     });
 
+  idCountSorted = sortObjectByValue(idCountSorted, false);
+
   return {
+    // idCount is unsorted object
     taxaIdCount: idCount,
-    subspeciesIds: Object.keys(idCount).map((id) => Number(id)),
+    // subspeciesIds are sorted by on direct_obs_count
+    subspeciesIds: Object.keys(idCountSorted).map((id) => Number(id)),
   };
 }
 
@@ -153,7 +238,11 @@ export function validSubspeciesForStore(appStore: AppStoreType) {
   return ranks.split(",").filter((r) => subspeciesRanks.includes(r));
 }
 
-async function getSubspeciesData(appStore: AppStoreType) {
+// use /observations/taxonomy and /taxa to get subspecies taxa and counts
+async function getSubspeciesData(
+  appStore: AppStoreType,
+  speciesData: iNatObservationsSpeciesCountAPI,
+) {
   // get taxonomy data in order to get the subspecies taxa ids, names, and counts
   let taxonomyData = await getTaxonomyAPIData(appStore);
   if (!taxonomyData) return;
@@ -167,17 +256,16 @@ async function getSubspeciesData(appStore: AppStoreType) {
     taxonomyData.results,
     validRanks,
   );
+
   if (subspeciesIds.length > 0) {
     // use subset of subspecies ids to limit the number of subspecies displayed.
     // get a subset of ids based on per_page and page.
-    let perPage = appStore.viewMetadata.observations_species.perPage || 24;
-    let page = appStore.observationsApiParams.page || 1;
-    let start = perPage * (page - 1);
-    let end = start + perPage;
-    let ids = subspeciesIds.slice(start, end);
+
+    let ids = calculateSubspeciesIdsOffset(speciesData, subspeciesIds);
+    if (!ids || ids.length === 0) return;
 
     // get taxa data using subset of ids. taxa data provides photo that
-    let taxaData = await getTaxaAPIData(ids, perPage);
+    let taxaData = await getTaxaAPIData(ids, speciesData.per_page);
     if (taxaData) {
       // normalized the taxa data so it has same format as species count data
       let normalizedTaxa: ResourceSpeciesCountResult[] = [];
@@ -198,8 +286,8 @@ async function getSubspeciesData(appStore: AppStoreType) {
 
       return {
         results: normalizedTaxa,
-        per_page: perPage,
-        page: page,
+        per_page: speciesData.per_page,
+        page: speciesData.page,
         total_results: subspeciesIds.length,
       };
     }
@@ -224,9 +312,7 @@ export async function getTaxonomyAPIData(appStore: AppStoreType) {
     let params = cleanupObervationsTaxonomyParams(
       appStore.observationsApiParams,
     );
-    let data = await getObservationsTaxonomy(params);
-
-    return data;
+    return await getObservationsTaxonomy(params);
   } catch (error) {
     console.error("ViewSpecies getTaxonomyAPIData ERROR:", error);
   }

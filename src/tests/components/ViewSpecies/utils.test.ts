@@ -3,6 +3,7 @@
 import { describe, expect, test } from "vitest";
 import { observationsTaxonomy } from "../../../data/inat_api_cache";
 import {
+  calculateSubspeciesIdsOffset,
   getSubspeciesIds,
   validSubspeciesForStore,
 } from "../../../components/ViewSpecies/utils";
@@ -54,7 +55,7 @@ describe("getSubspeciesIds", () => {
       413788: 1173,
       995125: 24935,
     });
-    expect(results.subspeciesIds).toStrictEqual([339381, 413788, 995125]);
+    expect(results.subspeciesIds).toStrictEqual([995125, 339381, 413788]);
   });
 
   test("returns data about subspecies taxa that match multiple ranks", () => {
@@ -69,7 +70,70 @@ describe("getSubspeciesIds", () => {
       1566671: 63,
     });
     expect(results.subspeciesIds).toStrictEqual([
-      339381, 413788, 995125, 1566671,
+      995125, 339381, 413788, 1566671,
     ]);
+  });
+});
+
+describe("calculateSubspeciesIdsOffset", () => {
+  test("returns undefined if all records on current page are species records", () => {
+    let speciesData = { page: 1, per_page: 10, total_results: 15, results: [] };
+    let subspeciesIds = [1, 2, 3, 4, 5];
+
+    let result = calculateSubspeciesIdsOffset(speciesData, subspeciesIds);
+
+    expect(result).toStrictEqual(undefined);
+  });
+
+  test("returns all subspeciesIds if number of species records and number of subspeciesIds is below per_page", () => {
+    let speciesData = { page: 2, per_page: 10, total_results: 15, results: [] };
+    let subspeciesIds = [1, 2, 3];
+
+    let result = calculateSubspeciesIdsOffset(speciesData, subspeciesIds);
+
+    expect(result).toStrictEqual([1, 2, 3]);
+  });
+
+  test("returns all subspeciesIds if number of species records and number of subspeciesIds equal per_page", () => {
+    let speciesData = { page: 2, per_page: 10, total_results: 15, results: [] };
+    let subspeciesIds = [1, 2, 3, 4, 5];
+
+    let result = calculateSubspeciesIdsOffset(speciesData, subspeciesIds);
+
+    expect(result).toStrictEqual([1, 2, 3, 4, 5]);
+  });
+
+  test("returns partial subspeciesIds if number of species records and number of subspeciesIds excedes per_page", () => {
+    let speciesData = { page: 2, per_page: 10, total_results: 15, results: [] };
+    let subspeciesIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+    let result = calculateSubspeciesIdsOffset(speciesData, subspeciesIds);
+
+    expect(result).toStrictEqual([1, 2, 3, 4, 5]);
+  });
+
+  test("returns subspeciesIds if no species records on current page and number of subspeciesIds is below per_page", () => {
+    let speciesData = { page: 3, per_page: 10, total_results: 15, results: [] };
+    let subspeciesIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    let result = calculateSubspeciesIdsOffset(speciesData, subspeciesIds);
+    expect(result).toStrictEqual([6, 7, 8, 9, 10]);
+  });
+
+  test("returns subspeciesIds if no species records on current page and number of subspeciesIds excedes per_page", () => {
+    let speciesData = { page: 3, per_page: 10, total_results: 15, results: [] };
+    let subspeciesIds = [
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+    ];
+    let result = calculateSubspeciesIdsOffset(speciesData, subspeciesIds);
+    expect(result).toStrictEqual([6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+  });
+
+  test("returns subspeciesIds if no species records on current page and number of subspeciesIds is below per_page", () => {
+    let speciesData = { page: 4, per_page: 10, total_results: 15, results: [] };
+    let subspeciesIds = [
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+    ];
+    let result = calculateSubspeciesIdsOffset(speciesData, subspeciesIds);
+    expect(result).toStrictEqual([16, 17, 18, 19, 20]);
   });
 });

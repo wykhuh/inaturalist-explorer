@@ -53,6 +53,11 @@ export const speciesRanks = [
   "form",
 ];
 
+export const speciesOrHigherRanks = taxonRanks.slice(
+  0,
+  taxonRanks.indexOf("species") + 1,
+);
+
 export const subspeciesRanks = speciesRanks.filter((r) => r !== "species");
 
 export const CCLicenses = [

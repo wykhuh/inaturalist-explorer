@@ -22,6 +22,7 @@ import { addOverlayToMap } from "./map_utils.ts";
 import { getiNatMapTiles } from "./inat_api.ts";
 import {
   allTaxaRecord,
+  speciesOrHigherRanks,
   subspeciesRanks,
   taxonRanks,
 } from "../data/inat_data.ts";
@@ -781,6 +782,14 @@ export function isSubpeciesCheck(appStore: AppStoreType) {
 
   return appStore.observationsApiParams.rank.split(",").some((rank) => {
     return subspeciesRanks.includes(rank);
+  });
+}
+
+export function isSpeciesOrHigerCheck(appStore: AppStoreType) {
+  if (appStore.observationsApiParams.rank === undefined) return false;
+
+  return appStore.observationsApiParams.rank.split(",").some((rank) => {
+    return speciesOrHigherRanks.includes(rank);
   });
 }
 

@@ -3,6 +3,7 @@ import { cleanupObervationsTaxonomyParams } from "../../lib/cleanup_params_utils
 import {
   getResourceApiParams,
   isObservationsCheck,
+  isSpeciesOrHigerCheck,
 } from "../../lib/data_utils";
 import { getObservationsTaxonomy } from "../../lib/inat_api";
 import { createHashString, updateAppUrl } from "../../lib/utils";
@@ -150,7 +151,10 @@ export async function updateHeaderSubSpeciesCount(
       appStore.observationsApiParams,
     );
     let subspeciesCount = await getSubspeciesCount(taxonomyParams, appStore);
-    let higherCount = (await fetchHeaderCounts(dataFn, searchParams)) || 0;
+    let higherCount = 0;
+    if (isSpeciesOrHigerCheck(appStore)) {
+      higherCount = (await fetchHeaderCounts(dataFn, searchParams)) || 0;
+    }
     count = subspeciesCount + higherCount;
   }
 
