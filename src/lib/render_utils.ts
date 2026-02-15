@@ -4,7 +4,6 @@ import {
   annotationsValues,
   iNatTaxaUrl,
   iNatUserUrl,
-  speciesRanks,
 } from "../data/inat_data.ts";
 import type {
   Annotation,
@@ -121,7 +120,7 @@ function renderTaxonName(
     content += `(`;
   }
   if (type === "scientific-name") {
-    if (rank && !speciesRanks.includes(rank)) {
+    if (rank && rank !== "species") {
       content += `<span class="rank" aria-label="taxon rank">${capitalizeFirstLetter(rank)}</span> `;
     }
   }
