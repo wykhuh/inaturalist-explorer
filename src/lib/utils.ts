@@ -166,8 +166,10 @@ export function formatAppUrl(
   if (isObservations) {
     Object.entries(appStore.observationsApiParams).forEach(([key, value]) => {
       if (processedKeys.includes(key)) {
-      } else {
-        if (params && observationsApiNames.includes(key)) {
+      } else if (params) {
+        if (observationsApiNames.includes(key)) {
+          (params as any)[key] = value as any;
+        } else if (key.startsWith("field:")) {
           (params as any)[key] = value as any;
         }
       }
@@ -648,6 +650,9 @@ function setUrlStoreValuesObservations(
     }
     appStore.observationsApiParams[key as ObservationsApiParamsKeysType] =
       cleanedValue;
+  } else if (key.startsWith("field:")) {
+    appStore.observationsApiParams[key as ObservationsApiParamsKeysType] =
+      value;
   }
 }
 

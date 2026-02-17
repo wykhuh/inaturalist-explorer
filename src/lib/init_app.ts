@@ -355,7 +355,9 @@ function populateObservationsApiParams(
   // use url store to populate appStore.observationsApiParams
   for (const [k, value] of Object.entries(urlStore.observationsApiParams)) {
     let key = k as ObservationsApiParamsKeysType;
-    if (!observationsApiNames.includes(key)) continue;
+    if (!key.startsWith("field:") && !observationsApiNames.includes(key)) {
+      continue;
+    }
 
     // delete default values
     delete appStore.observationsApiParams[key];

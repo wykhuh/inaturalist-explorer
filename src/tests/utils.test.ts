@@ -486,6 +486,20 @@ describe("formatAppUrl", () => {
 
     expect(result).toBe("verifiable=true&spam=false&locale=" + lang);
   });
+
+  test("return params observation fields", () => {
+    let appStore: AppStoreType = {
+      ...mapStore,
+      observationsApiParams: {
+        // @ts-ignore
+        "field:Habitat": "tree",
+      },
+    };
+
+    let result = formatAppUrl(appStore);
+
+    expect(result).toBe("field%3AHabitat=tree");
+  });
 });
 
 describe("formatAppUrl with identifications", () => {
@@ -1203,6 +1217,22 @@ describe("decodeAppUrl options", () => {
       viewMetadata: {
         ...structuredClone(defaultUrlStore.viewMetadata),
         name_order: "sc",
+      },
+    };
+
+    let result = decodeAppUrl(searchParams, "/");
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("adds observation fields to observationsApiParams", () => {
+    let searchParams = "?field:Habitat=tree";
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      currentView: "observations_observations",
+      record_type: "observations",
+      observationsApiParams: {
+        "field:Habitat": "tree",
       },
     };
 
