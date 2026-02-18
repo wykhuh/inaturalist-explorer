@@ -1,4 +1,5 @@
 import type { AppStoreType } from "../../types/app";
+import { displayAppstoreData } from "../AppstoreViewer/utils";
 
 export function toggleSidebar(appStore: AppStoreType, componentCtx: any) {
   if (appStore.viewMetadata.side_menu === "show") {
@@ -47,11 +48,11 @@ export function initSidebarState(appStore: AppStoreType, componentCtx: any) {
 }
 
 export function toggleObservationsHandler(componentCtx: HTMLElement) {
-  createMenuComponent("observations-menu", componentCtx);
+  createMenuComponent("observations-menu", componentCtx, true);
 }
 
 export function toggleIdentificationsHandler(componentCtx: HTMLElement) {
-  createMenuComponent("identifications-menu", componentCtx);
+  createMenuComponent("identifications-menu", componentCtx, true);
 }
 
 export function toggleSettingsHandler(componentCtx: HTMLElement) {
@@ -62,11 +63,21 @@ export function toggleLinksHandler(componentCtx: HTMLElement) {
   createMenuComponent("links-menu", componentCtx);
 }
 
-function createMenuComponent(elementTag: string, componentCtx: HTMLElement) {
+function createMenuComponent(
+  elementTag: string,
+  componentCtx: HTMLElement,
+  createAppViewer = false,
+) {
   let parentEl = componentCtx.querySelector("#sidebar-menu");
   if (!parentEl) return;
 
   let menu = document.createElement(elementTag);
   parentEl.innerHTML = "";
   parentEl.append(menu);
+
+  if (createAppViewer) {
+    let el = document.createElement("appstore-viewer");
+    parentEl.append(el);
+    displayAppstoreData(window.app.store, "createMenuComponent");
+  }
 }
