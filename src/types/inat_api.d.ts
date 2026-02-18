@@ -335,7 +335,7 @@ export type iNatObservationsAPI = {
 
 export interface ObservationsResult {
   comments_count: number;
-  created_at_details: CreatedAtDetails;
+  created_at_details?: CreatedAtDetails;
   created_at: string;
   created_time_zone: string;
   faves_count: number;
@@ -346,9 +346,10 @@ export interface ObservationsResult {
   location?: string;
   mappable?: boolean;
   obscured: boolean;
-  observed_on_details: ObservedOnDetails;
+  observed_on_details?: ObservedOnDetails;
   observed_on: string;
   observed_time_zone: string;
+  ofvs?: ObservationField[];
   photos: ObservationPhoto[];
   place_guess: string;
   quality_grade: string;
@@ -362,6 +363,18 @@ export interface ObservationsResult {
   updated_at?: string;
 }
 
+export interface ObservationField {
+  datatype: "date" | "datetime" | "dna" | "numeric" | "time" | "taxon" | "text";
+  id: number;
+  name: string;
+  value: string;
+  taxon?: {
+    id: number;
+    name: string;
+    preferred_common_name: string;
+    rank: string;
+  };
+}
 export interface CreatedAtDetails {
   date: string;
   day: number;

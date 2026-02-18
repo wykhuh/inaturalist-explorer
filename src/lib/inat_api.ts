@@ -265,6 +265,7 @@ export async function getObservations(appParams: string) {
     "observed_on:!t," +
     // "observed_on_details:all," +
     "observed_time_zone:!t," +
+    "ofvs:(id:!t,name:!t,value:!t,datatype:!t,taxon:(id:!t,name:!t,preferred_common_name:!t,rank:!t))," +
     "time_observed_at:!t," +
     "updated_at:!t," +
     "photos:(id:!t,url:!t)," +

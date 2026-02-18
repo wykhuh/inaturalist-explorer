@@ -9,6 +9,7 @@ import {
   renderAnnotations,
   renderDates,
   renderMedia,
+  renderObservationFields,
   renderObservationMetadataCounts,
   renderQualityGrade,
   renderTaxonNames,
@@ -70,7 +71,12 @@ export function renderCard(appStore: AppStoreType, componentCtx: any) {
     detailsContent += renderDates(observation);
 
     if (observation.annotations && observation.annotations.length > 0) {
+      detailsContent += "<h3>Annotations</h3>";
       detailsContent += renderAnnotations(observation.annotations);
+    }
+    if (observation.ofvs && observation.ofvs.length > 0) {
+      detailsContent += "<h3>Observation Fields</h3>";
+      detailsContent += renderObservationFields(observation.ofvs, appStore);
     }
   }
   detailsEl.innerHTML = detailsContent;

@@ -6,6 +6,7 @@ import {
   renderDates,
   renderMedia,
   renderMediaCounts,
+  renderObservationFields,
   renderObservationMetadataCounts,
   renderQualityGrade,
   renderTaxonNames,
@@ -73,7 +74,12 @@ class CardObservation extends HTMLElement {
     detailsContent += renderDates(data);
 
     if (data.annotations && data.annotations.length > 0) {
+      detailsContent += "<h3>Annotations</h3>";
       detailsContent += renderAnnotations(data.annotations);
+    }
+    if (data.ofvs && data.ofvs.length > 0) {
+      detailsContent += "<h3>Observation Fields</h3>";
+      detailsContent += renderObservationFields(data.ofvs, appStore);
     }
 
     detailsEl.innerHTML = detailsContent;

@@ -22,7 +22,7 @@ import type {
   AppStoreType,
   ObservationSubviewsType,
 } from "../../types/app";
-import { observations } from "../../data/inat_api_cache";
+import { observations_fields_annotations as observations } from "../../data/inat_api_cache";
 import { setSelectedOption } from "../../lib/form_utils";
 import { updateSelectedResourcesId } from "../../lib/count_utils";
 import {

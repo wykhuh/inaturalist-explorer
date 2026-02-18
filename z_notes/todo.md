@@ -228,6 +228,22 @@ https://forum.inaturalist.org/t/issues-keeping-me-from-switching-from-mushroom-o
 
 use DNA info for observation fields
 
+~~
+obsevation with many observation fields
+
+https://www.inaturalist.org/observations/96244133
+
+~~
+
+interaction using taxa
+
+http://localhost:5173/?place_id=63038&taxon_id=52775&field:Interaction-%3EVisited%20flower%20of=47544
+
+https://www.inaturalist.org/observations?place_id=63038&field:Interaction-%3EVisited%20flower%20of=47544&taxon_ids=52775&subview=map
+
+
+http://localhost:5173/?place_id=63038&verifiable=true&spam=false&term_id=9&field%3AInteraction-%3EVisited+flower+of=47544&per_page=48&view=observations_observations&subview=grid
+
 ==
 
 account creation

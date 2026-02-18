@@ -9,6 +9,7 @@ import type {
   Annotation,
   DefaultPhoto,
   Observation,
+  ObservationField,
   ObservationPhoto,
   ObservationSound,
   ObservationsResult,
@@ -227,6 +228,25 @@ export function renderAnnotations(annotations: Annotation[]) {
     content += `<div>`;
     content += `<dt>${annotationsTerms[annotation.controlled_attribute_id as keyof typeof annotationsTerms]}</dt>`;
     content += `<dd>${annotationsValues[annotation.controlled_value_id as keyof typeof annotationsValues]}</dd>`;
+    content += `</div>`;
+  });
+  content += `</dl>`;
+  return content;
+}
+
+export function renderObservationFields(
+  observationFields: ObservationField[],
+  appStore: AppStoreType,
+) {
+  let content = '<dl class="observation-fields-list">';
+  observationFields.forEach((field) => {
+    content += `<div>`;
+    content += `<dt>${field.name}</dt>`;
+    if (field.datatype === "taxon" && field.taxon) {
+      content += `<dd>${renderTaxonNames(field.taxon, appStore)}</dd>`;
+    } else {
+      content += `<dd>${field.value}</dd>`;
+    }
     content += `</div>`;
   });
   content += `</dl>`;
