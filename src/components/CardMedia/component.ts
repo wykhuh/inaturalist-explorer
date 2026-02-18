@@ -9,6 +9,15 @@ class CardMedia extends HTMLElement {
 
   connectedCallback() {
     this.render();
+    window.addEventListener("observationsDisplayFieldsChanged", this);
+  }
+
+  disconnectedCallback() {
+    window.removeEventListener("observationsDisplayFieldsChanged", this);
+  }
+
+  handleEvent() {
+    renderCard(window.app.store, this);
   }
 
   async render() {

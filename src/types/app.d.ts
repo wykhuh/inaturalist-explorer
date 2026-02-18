@@ -89,6 +89,7 @@ type ViewOptions = {
   order_by?: string;
   subview?: ObservationSubviewsType | IdentificationSubviewsType;
   perPage?: number;
+  displayFields?: { [k: string]: boolean };
 };
 
 export type AppStoreKeysType = keyof AppStoreType;

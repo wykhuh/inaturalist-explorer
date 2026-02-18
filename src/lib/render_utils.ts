@@ -306,21 +306,24 @@ export function renderObservationMetadataCounts(
   return detailsContent;
 }
 
-export function renderDates(data: ObservationsResult | Observation) {
+export function renderDates(
+  data: ObservationsResult | Observation,
+  displayFields: { [k: string]: boolean },
+) {
   let detailsContent = `<div class="dates">`;
 
-  if (data.time_observed_at) {
+  if (data.time_observed_at && displayFields.time_observed_at !== false) {
     let date = formatDate(data.time_observed_at);
     detailsContent += `<div class="observed">Observed: ${date}</div>`;
-  } else if (data.observed_on) {
+  } else if (data.observed_on && displayFields.time_observed_at !== false) {
     let date = formatDate(data.observed_on, data.observed_time_zone);
     detailsContent += `<div class="observed">Observed: ${date}</div>`;
   }
-  if (data.created_at) {
+  if (data.created_at && displayFields.created_at !== false) {
     let date = formatDate(data.created_at);
     detailsContent += `<div class="created">Added: ${date}</div>`;
   }
-  if (data.updated_at) {
+  if (data.updated_at && displayFields.updated_at !== false) {
     let date = formatDate(data.updated_at);
     detailsContent += `<div class="updated">Updated: ${date}</div>`;
   }

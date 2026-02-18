@@ -26,6 +26,12 @@ export const dbKeys = {
   per_page_identifications: "per_page_identifications",
   per_page_species: "per_page_species",
   per_page_users: "per_page_users",
+  display_place_guess: "display_place_guess",
+  display_time_observed_at: "display_time_observed_at",
+  display_created_at: "display_created_at",
+  display_updated_at: "display_updated_at",
+  display_annotations: "display_annotations",
+  display_ofvs: "display_ofvs",
 };
 
 export function populateStoreWithLocaleStorage(appStore: AppStoreType) {
@@ -59,6 +65,34 @@ export function populateStoreWithLocaleStorage(appStore: AppStoreType) {
     appStore.viewMetadata.identifications_identifications.perPage = Number(
       perPageIdentifications,
     );
+  }
+
+  let displayFields =
+    appStore.viewMetadata.observations_observations.displayFields || {};
+
+  let display_place_guess = getItem(dbKeys.display_place_guess);
+  if (display_place_guess !== undefined) {
+    displayFields.place_guess = display_place_guess;
+  }
+  let display_time_observed_at = getItem(dbKeys.display_time_observed_at);
+  if (display_time_observed_at !== undefined) {
+    displayFields.time_observed_at = display_time_observed_at;
+  }
+  let display_created_at = getItem(dbKeys.display_created_at);
+  if (display_created_at !== undefined) {
+    displayFields.created_at = display_created_at;
+  }
+  let display_updated_at = getItem(dbKeys.display_updated_at);
+  if (display_updated_at !== undefined) {
+    displayFields.updated_at = display_updated_at;
+  }
+  let display_annotations = getItem(dbKeys.display_annotations);
+  if (display_annotations !== undefined) {
+    displayFields.annotations = display_annotations;
+  }
+  let display_ofvs = getItem(dbKeys.display_ofvs);
+  if (display_ofvs !== undefined) {
+    displayFields.ofvs = display_ofvs;
   }
 
   // HACK: force proxy store to update

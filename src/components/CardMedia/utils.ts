@@ -11,6 +11,7 @@ import {
   renderMedia,
   renderObservationFields,
   renderObservationMetadataCounts,
+  renderPlace,
   renderQualityGrade,
   renderTaxonNames,
 } from "../../lib/render_utils";
@@ -30,6 +31,8 @@ export function renderCard(appStore: AppStoreType, componentCtx: any) {
   let { observation, media, type, mediaIndex } = (
     componentCtx as unknown as DataComponentType
   ).data as DataProps;
+  let displayFields =
+    appStore.viewMetadata.observations_observations.displayFields || {};
 
   let obsUrl = `${iNatObservationUrl}/${observation.id}`;
 
@@ -68,13 +71,24 @@ export function renderCard(appStore: AppStoreType, componentCtx: any) {
   if (mediaIndex === 0) {
     detailsContent += renderQualityGrade(observation.quality_grade);
     detailsContent += renderObservationMetadataCounts(observation);
-    detailsContent += renderDates(observation);
-
-    if (observation.annotations && observation.annotations.length > 0) {
+    detailsContent += renderDates(observation, displayFields);
+    if (observation.place_guess && displayFields.place_guess !== false) {
+      detailsContent +=
+        "Place: " + renderPlace(observation.place_guess, observation.obscured);
+    }
+    if (
+      observation.annotations &&
+      observation.annotations.length > 0 &&
+      displayFields.annotations !== false
+    ) {
       detailsContent += "<h3>Annotations</h3>";
       detailsContent += renderAnnotations(observation.annotations);
     }
-    if (observation.ofvs && observation.ofvs.length > 0) {
+    if (
+      observation.ofvs &&
+      observation.ofvs.length > 0 &&
+      displayFields.ofvs !== false
+    ) {
       detailsContent += "<h3>Observation Fields</h3>";
       detailsContent += renderObservationFields(observation.ofvs, appStore);
     }

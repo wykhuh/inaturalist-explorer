@@ -2,6 +2,7 @@ import { setupComponent } from "../../lib/component_utils";
 import { languageCodes } from "../../data/locale";
 import type { ObservationViewsType } from "../../types/app";
 import {
+  displayFieldsHandler,
   initSettings,
   languageHandler,
   nameOrderHandler,
@@ -57,6 +58,8 @@ class SettingsMenu extends HTMLElement {
       perPageHandler(target, currentView, window.app.store, "species");
     } else if (target.id === "per-page-identifications") {
       perPageHandler(target, currentView, window.app.store, "identifications");
+    } else if (target.id.startsWith("display_")) {
+      displayFieldsHandler(target, window.app.store);
     }
   }
 
@@ -64,7 +67,7 @@ class SettingsMenu extends HTMLElement {
     loggerRender("++ SettingsMenu render");
 
     this.renderLanguageSelect();
-    initSettings(window.app.store, this);
+    initSettings(window.app.store);
   }
 
   renderLanguageSelect() {

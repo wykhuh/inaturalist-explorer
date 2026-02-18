@@ -8,6 +8,7 @@ import {
   renderMediaCounts,
   renderObservationFields,
   renderObservationMetadataCounts,
+  renderPlace,
   renderQualityGrade,
   renderTaxonNames,
 } from "../../lib/render_utils";
@@ -22,6 +23,16 @@ class CardObservation extends HTMLElement {
 
   connectedCallback() {
     this.render();
+
+    window.addEventListener("observationsDisplayFieldsChanged", this);
+  }
+
+  disconnectedCallback() {
+    window.removeEventListener("observationsDisplayFieldsChanged", this);
+  }
+
+  handleEvent() {
+    this.renderCard(window.app.store);
   }
 
   async render() {
@@ -36,6 +47,8 @@ class CardObservation extends HTMLElement {
 
     let data = (this as unknown as DataComponentType)
       .data as ObservationsResult;
+    let displayFields =
+      appStore.viewMetadata.observations_observations.displayFields || {};
 
     let url = `${iNatObservationUrl}/${data.id}`;
     cardEl.innerHTML = renderMedia(
@@ -71,13 +84,22 @@ class CardObservation extends HTMLElement {
     detailsContent += renderMediaCounts(data.photos, data.sounds);
     detailsContent += renderQualityGrade(data.quality_grade);
     detailsContent += renderObservationMetadataCounts(data);
-    detailsContent += renderDates(data);
-
-    if (data.annotations && data.annotations.length > 0) {
+    detailsContent += renderDates(data, displayFields);
+    if (data.place_guess && displayFields.place_guess !== false) {
+      detailsContent +=
+        "<div>Place: " +
+        renderPlace(data.place_guess, data.obscured) +
+        "</div>";
+    }
+    if (
+      data.annotations &&
+      data.annotations.length > 0 &&
+      displayFields.annotations !== false
+    ) {
       detailsContent += "<h3>Annotations</h3>";
       detailsContent += renderAnnotations(data.annotations);
     }
-    if (data.ofvs && data.ofvs.length > 0) {
+    if (data.ofvs && data.ofvs.length > 0 && displayFields.ofvs !== false) {
       detailsContent += "<h3>Observation Fields</h3>";
       detailsContent += renderObservationFields(data.ofvs, appStore);
     }

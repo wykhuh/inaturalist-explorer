@@ -58,5 +58,32 @@ export const template = html`
         <option value="192">192</option>
       </select>
     </div>
+
+    <h3>Fields Displayed</h3>
+    <p>Set the fields shown on Observations and Media cards</p>
+    <div class="form-group">
+      <input type="checkbox" id="display_place_guess" checked />
+      <label for="display_place_guess">Place</label>
+    </div>
+    <div class="form-group">
+      <input type="checkbox" id="display_time_observed_at" checked />
+      <label for="display_time_observed_at">Observed Date</label>
+    </div>
+    <div class="form-group">
+      <input type="checkbox" id="display_created_at" checked />
+      <label for="display_created_at">Added Date</label>
+    </div>
+    <div class="form-group">
+      <input type="checkbox" id="display_updated_at" checked />
+      <label for="display_updated_at">Updated Date</label>
+    </div>
+    <div class="form-group">
+      <input type="checkbox" id="display_annotations" checked />
+      <label for="display_annotations">Annotations</label>
+    </div>
+    <div class="form-group">
+      <input type="checkbox" id="display_ofvs" checked />
+      <label for="display_ofvs">Observation Fields</label>
+    </div>
   </div>
 `;

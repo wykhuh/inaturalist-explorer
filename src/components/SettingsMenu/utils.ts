@@ -4,6 +4,7 @@ import {
   viewAndPerPageDbKeyObject,
 } from "../../data/app_data";
 import { formatTaxonName } from "../../lib/data_utils";
+import { setInputChecked, setSelectedOption } from "../../lib/form_utils";
 import { getTaxa } from "../../lib/inat_api";
 import { dbKeys, saveItem } from "../../lib/localStorage";
 import { loggerEvent } from "../../lib/logger";
@@ -40,62 +41,65 @@ export async function updateComonNamesByLanguage(appStore: AppStoreType) {
   appStore.selectedTaxa = appStore.selectedTaxa;
 }
 
-export function initSettings(
-  appStore: AppStoreType,
-  componentCtx: HTMLElement,
-) {
+export function initSettings(appStore: AppStoreType) {
   let locale = appStore.observationsApiParams.locale;
   if (locale) {
-    let optionEl = componentCtx.querySelector<HTMLOptionElement>(
-      `#language-select [value='${locale}']`,
-    );
-    if (optionEl) {
-      optionEl.selected = true;
-    }
+    setSelectedOption(`#language-select [value='${locale}']`);
   }
 
   let nameOrder = appStore.viewMetadata.name_order;
   if (nameOrder) {
-    let optionEl = componentCtx.querySelector<HTMLOptionElement>(
-      `#name-order-select [value='${nameOrder}']`,
-    );
-    if (optionEl) {
-      optionEl.selected = true;
-    }
+    setSelectedOption(`#name-order-select [value='${nameOrder}']`);
   }
 
   let perPageObservations =
     appStore.viewMetadata.observations_observations.perPage;
   if (perPageObservations) {
-    let optionEl = componentCtx.querySelector<HTMLOptionElement>(
+    setSelectedOption(
       `#per-page-observations [value='${perPageObservations}']`,
     );
-    if (optionEl) {
-      optionEl.selected = true;
-    }
   }
 
   let perPageSpecies = appStore.viewMetadata.observations_species.perPage;
   if (perPageSpecies) {
-    let optionEl = componentCtx.querySelector<HTMLOptionElement>(
-      `#per-page-species [value='${perPageSpecies}']`,
-    );
-
-    if (optionEl) {
-      optionEl.selected = true;
-    }
+    setSelectedOption(`#per-page-species [value='${perPageSpecies}']`);
   }
 
   let perPageIdentifications =
     appStore.viewMetadata.identifications_identifications.perPage;
-  if (perPageSpecies) {
-    let optionEl = componentCtx.querySelector<HTMLOptionElement>(
+  if (perPageIdentifications) {
+    setSelectedOption(
       `#per-page-identifications [value='${perPageIdentifications}']`,
     );
+  }
 
-    if (optionEl) {
-      optionEl.selected = true;
-    }
+  let displayFields =
+    appStore.viewMetadata.observations_observations.displayFields;
+  if (!displayFields) return;
+
+  let display_place_guess = displayFields.place_guess;
+  if (display_place_guess !== undefined) {
+    setInputChecked("#display_place_guess", display_place_guess);
+  }
+  let display_time_observed_at = displayFields.time_observed_at;
+  if (display_time_observed_at !== undefined) {
+    setInputChecked("#display_time_observed_at", display_time_observed_at);
+  }
+  let display_created_at = displayFields.created_at;
+  if (display_created_at !== undefined) {
+    setInputChecked("#display_created_at", display_created_at);
+  }
+  let display_updated_at = displayFields.updated_at;
+  if (display_updated_at !== undefined) {
+    setInputChecked("#display_updated_at", display_updated_at);
+  }
+  let display_annotations = displayFields.annotations;
+  if (display_annotations !== undefined) {
+    setInputChecked("#display_annotations", display_annotations);
+  }
+  let display_ofvs = displayFields.ofvs;
+  if (display_ofvs !== undefined) {
+    setInputChecked("#display_ofvs", display_ofvs);
   }
 }
 
@@ -191,4 +195,23 @@ export async function languageHandler(
 
   loggerEvent("[SettingsMenu dispatchEvent] localeChanged");
   window.dispatchEvent(new Event("localeChanged"));
+}
+
+export function displayFieldsHandler(
+  target: HTMLInputElement,
+  appStore: AppStoreType,
+) {
+  let field = target.id.replace("display_", "");
+
+  if (appStore.viewMetadata.observations_observations.displayFields) {
+    appStore.viewMetadata.observations_observations.displayFields[field] =
+      target.checked;
+
+    saveItem(dbKeys[target.id as keyof typeof dbKeys], target.checked);
+
+    loggerEvent(
+      "[SettingsMenu dispatchEvent] observationsDisplayFieldsChanged",
+    );
+    window.dispatchEvent(new Event("observationsDisplayFieldsChanged"));
+  }
 }
