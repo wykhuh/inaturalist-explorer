@@ -133,6 +133,7 @@
     --clr-iNat-pink: #ff1493;
     --clr-iNat-dark-gray: #565656;
     --clr-iNat-yellow: #ffee91;
+    --clr-iNat-blue: #458ef7;
 
     --clr-overlay-dark-200: rgba(0, 0, 0, 0.2);
     --clr-overlay-dark-300: rgba(0, 0, 0, 0.3);
@@ -1036,6 +1037,9 @@
       }
       .establishment-means.introduced {
         background-color: var(--clr-iNat-pink);
+      }
+      .establishment-means.endemic {
+        background-color: var(--clr-iNat-blue);
       }
     }
   }

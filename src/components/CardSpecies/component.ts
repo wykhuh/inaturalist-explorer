@@ -59,6 +59,13 @@ class CardSpecies extends HTMLElement {
             id: "tp-introduced",
             class: "establishment-means introduced",
           };
+        } else if (establishmentMeans === "endemic") {
+          options = {
+            content: "E",
+            tooltip: establishmentMeans,
+            id: "tp-endemic",
+            class: "establishment-means endemic",
+          };
         }
         let tooltip = document.createElement("app-tooltip");
         tooltip.className = options.class;
