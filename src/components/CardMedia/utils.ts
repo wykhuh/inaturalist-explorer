@@ -74,7 +74,9 @@ export function renderCard(appStore: AppStoreType, componentCtx: any) {
     detailsContent += renderDates(observation, displayFields);
     if (observation.place_guess && displayFields.place_guess !== false) {
       detailsContent +=
-        "Place: " + renderPlace(observation.place_guess, observation.obscured);
+        "<div>Place: " +
+        renderPlace(observation.place_guess, observation.obscured) +
+        "</div>";
     }
     if (
       observation.annotations &&
