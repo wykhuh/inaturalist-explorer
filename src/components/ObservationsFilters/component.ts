@@ -46,12 +46,6 @@ class ObservationFilters extends HTMLElement {
     this.querySelectorAll(".nav-link").forEach((el) => {
       el.addEventListener("click", this);
     });
-    this.querySelectorAll('[name="term_id"]').forEach((el) => {
-      el.addEventListener("click", this);
-    });
-    this.querySelectorAll('[name="without_term_id"]').forEach((el) => {
-      el.addEventListener("click", this);
-    });
 
     window.addEventListener("storePopulated", this);
     window.addEventListener("navResourceChange", this);
@@ -69,12 +63,6 @@ class ObservationFilters extends HTMLElement {
     this.showModalButtonEl?.removeEventListener("click", this);
 
     this.querySelectorAll(".nav-link").forEach((el) => {
-      el.removeEventListener("click", this);
-    });
-    this.querySelectorAll('[name="term_id"]').forEach((el) => {
-      el.removeEventListener("click", this);
-    });
-    this.querySelectorAll('[name="without_term_id"]').forEach((el) => {
       el.removeEventListener("click", this);
     });
 
