@@ -138,19 +138,7 @@ class ObservationFilters extends HTMLElement {
         );
         if (oldInputEl) {
           oldInputEl.checked = false;
-          // disable previously selected related term values
-          let oldSelectEl = this.querySelector<HTMLSelectElement>(
-            `select[data-related-without-term-id="${oldInputEl.value}"]`,
-          );
-          if (oldSelectEl) {
-            oldSelectEl.disabled = true;
-          }
         }
-        // enable related term values select
-        selectEl.disabled = false;
-      } else {
-        // disable related term values select
-        selectEl.disabled = true;
       }
     }
 
