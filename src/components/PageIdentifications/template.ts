@@ -14,7 +14,7 @@ export const template = html`
     <section class="two-columns sidebar-open" id="site-layout">
       <div id="sidebar-menu">
         <identifications-menu></identifications-menu>
-        <settings-menu></settings-menu>
+
         <appstore-viewer></appstore-viewer>
       </div>
       <div id="view-container"></div>
