@@ -63,6 +63,7 @@
   transition: opacity 0.15s ease-in-out;
   -moz-transition: opacity 0.15s ease-in-out;
   -webkit-transition: opacity 0.15s ease-in-out;
+  z-index: 1001;
 }
 
 .autoComplete_wrapper > ul[hidden],
