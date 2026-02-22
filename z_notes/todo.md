@@ -265,3 +265,8 @@ geoprivacy=open,obscured&taxon_geoprivacy=open,obscured
 
 Not expected nearby
 expected_nearby=false
+
+==
+
+Easiest way to rank areas by biodiversity using iNaturalist data
+https://forum.inaturalist.org/t/easiest-way-to-rank-areas-by-biodiversity-using-inaturalist-data/72706/31
