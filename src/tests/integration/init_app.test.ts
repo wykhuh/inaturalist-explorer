@@ -1603,7 +1603,7 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       let urlData = decodeAppUrl(searchparams, "/");
       let subview =
         view === "observations_observations"
-          ? { subview: "map", perPage: perpage }
+          ? { subview: "map", perPage: perpage, displayFields: {} }
           : { perPage: perpage };
 
       await initPopulateStore(store, urlData);
@@ -1682,6 +1682,7 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       expect(store.color).toBe(iNatOrange);
       expect(store.currentView).toBe("observations_observations");
       expect(store.viewMetadata.observations_observations).toStrictEqual({
+        displayFields: {},
         perPage: 24,
         subview: subview,
       });
