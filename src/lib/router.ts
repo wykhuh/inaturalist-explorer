@@ -11,6 +11,7 @@ const Router: RouterType = {
       Router.go(event.state.recordType);
 
       // create new event to trigger loading a new view
+      loggerEvent("[Router dispatchEvent] popstateAfter");
       window.dispatchEvent(
         new CustomEvent("popstateAfter", {
           detail: {

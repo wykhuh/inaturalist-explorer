@@ -31,7 +31,7 @@ import {
 } from "../assets/icons.ts";
 import { capitalizeFirstLetter, formatTaxonName } from "./data_utils.ts";
 import { logger } from "./logger.ts";
-import { pluralize } from "./utils.ts";
+import { pluralize, truncateText } from "./utils.ts";
 import { html } from "./component_utils.ts";
 import { formatTooltip } from "../components/Tooltip/component.ts";
 
@@ -238,14 +238,33 @@ export function renderObservationFields(
   observationFields: ObservationField[],
   appStore: AppStoreType,
 ) {
+  let maxTextLength = 18;
+
   let content = '<dl class="observation-fields-list">';
   observationFields.forEach((field) => {
     content += `<div>`;
     content += `<dt>${field.name}</dt>`;
     if (field.datatype === "taxon" && field.taxon) {
-      content += `<dd>${renderTaxonNames(field.taxon, appStore)}</dd>`;
+      let url = `${iNatTaxaUrl}/${field.taxon.id}`;
+      content += `<dd>${renderTaxonNames(field.taxon, appStore, url)}</dd>`;
+    } else if (field.datatype === "dna") {
+      let value = truncateText(field.value, maxTextLength);
+      content += `<dd>${value}</dd>`;
+    } else if (field.value.startsWith("https://")) {
+      let url = new URL(field.value);
+      let text = "";
+      if (url.host.endsWith("inaturalist.org")) {
+        text = url.pathname;
+      } else {
+        text = url.host.replace("wwww.", "");
+      }
+      content += `<dd><a href="${url.href}">${text}</a></dd>`;
     } else {
-      content += `<dd>${field.value}</dd>`;
+      let value = field.value;
+      if (value.split(" ")[0].length >= maxTextLength) {
+        value = truncateText(value, maxTextLength);
+      }
+      content += `<dd>${value}</dd>`;
     }
     content += `</div>`;
   });

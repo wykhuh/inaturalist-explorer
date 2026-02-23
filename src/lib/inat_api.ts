@@ -30,6 +30,7 @@ export const autocomplete_projects_api = `https://api.inaturalist.org/v1/project
 export const autocomplete_users_api = `https://api.inaturalist.org/v1/users/autocomplete?order=activity`;
 export const autocomplete_taxa_api =
   "https://api.inaturalist.org/v1/taxa/autocomplete?";
+export const autocomplete_observation_fields_api = `https://api.inaturalist.org/v1/observation_fields/autocomplete?`;
 
 const observations_api_v1 = "https://api.inaturalist.org/v1/observations";
 const observations_api = "https://api.inaturalist.org/v2/observations";

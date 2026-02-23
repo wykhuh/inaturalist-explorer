@@ -68,6 +68,20 @@ export async function deleteFilter(
   await updateForm(appStore);
 }
 
+export async function deleteObservationFieldFilter(
+  fieldTemp: ObservationsApiParamsKeysType | IdentificationsApiParamsKeysType,
+  appStore: AppStoreType,
+) {
+  // HACK: can't use colon in css selectors, which means querySelector('#field:xxx')
+  // is not valid. Use attribute selector [id="field:xxx"] instead.
+  let el = document.querySelector(`[id="${fieldTemp}"]`) as HTMLOptionElement;
+  if (el) {
+    el.remove();
+  }
+
+  await updateForm(appStore);
+}
+
 async function updateForm(appStore: AppStoreType) {
   let form = document.querySelector("#filters-form") as HTMLFormElement;
   const data = new FormData(form);

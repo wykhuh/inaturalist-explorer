@@ -9,7 +9,7 @@ import type {
   IdentificationsApiParamsKeysType,
 } from "../../types/app";
 import { loggerFilters } from "../../lib/logger";
-import { populateFields } from "../../lib/form_utils";
+import { populateFormFields } from "../../lib/form_utils";
 import { concatParamsWithMultivalues } from "../ObservationsFilters/shared_utils";
 
 export function processFiltersForm(data: FormData): {
@@ -70,5 +70,5 @@ export function processFiltersForm(data: FormData): {
 
 // use store to populate the filter form fields on page load
 export function initFilters(appStore: AppStoreType) {
-  populateFields(identificationsFieldName_InputType, appStore);
+  populateFormFields(identificationsFieldName_InputType, appStore);
 }

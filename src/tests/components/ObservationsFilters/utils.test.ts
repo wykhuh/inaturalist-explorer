@@ -219,6 +219,7 @@ describe("initFilters", () => {
   test.each(getValidFields("textInput"))(
     "uses observationsApiParams to set option for text input fields",
     (field) => {
+      let formEl = document.createElement("form");
       let el = document.querySelector<HTMLInputElement>(
         `input#${field}[type='text']`,
       );
@@ -233,7 +234,7 @@ describe("initFilters", () => {
 
       expect(el.value).toBe("");
 
-      initFilters(store);
+      initFilters(store, formEl);
 
       expect(el.value).toBe("abc");
     },
@@ -242,6 +243,7 @@ describe("initFilters", () => {
   test.each(getValidFields("dateInput"))(
     "uses observationsApiParams to set value for input date fields",
     (field) => {
+      let formEl = document.createElement("form");
       let el = document.querySelector<HTMLInputElement>(
         `input[type='date']#${field}`,
       );
@@ -256,7 +258,7 @@ describe("initFilters", () => {
 
       expect(el.value).toBe("");
 
-      initFilters(store);
+      initFilters(store, formEl);
 
       expect(el.value).toBe("2000-01-01");
     },
@@ -265,6 +267,7 @@ describe("initFilters", () => {
   test.each(getValidFields("select"))(
     "uses observationsApiParams to set option for select fields",
     (field) => {
+      let formEl = document.createElement("form");
       let el = document.querySelector<HTMLSelectElement>(`select#${field}`);
       if (!el) {
         throw new Error(`select ${field} error`);
@@ -284,7 +287,7 @@ describe("initFilters", () => {
         expect(optionEl.selected).toBe(false);
       }
 
-      initFilters(store);
+      initFilters(store, formEl);
 
       expect(optionEl.selected).toBe(true);
     },
@@ -293,6 +296,7 @@ describe("initFilters", () => {
   test.each(getValidFields("multiselect"))(
     "uses observationsApiParams to set option to selected for multi select fields",
     (field) => {
+      let formEl = document.createElement("form");
       let el = document.querySelector<HTMLSelectElement>(`#${field}`);
       if (!el) {
         el = document.querySelector<HTMLSelectElement>(`[name='${field}']`);
@@ -312,7 +316,7 @@ describe("initFilters", () => {
       expect(optionEl1.selected).toBe(false);
       expect(optionEl2.selected).toBe(false);
 
-      initFilters(store);
+      initFilters(store, formEl);
 
       expect(optionEl1.selected).toBe(true);
       expect(optionEl2.selected).toBe(true);
@@ -322,6 +326,7 @@ describe("initFilters", () => {
   test.each(getValidFields("checkbox"))(
     "uses observationsApiParams to set option to selected for checkbox fields",
     (field) => {
+      let formEl = document.createElement("form");
       let el = document.querySelector<HTMLInputElement>(
         `input[name='${field}']`,
       );
@@ -336,7 +341,7 @@ describe("initFilters", () => {
 
       expect(el.checked).toBe(false);
 
-      initFilters(store);
+      initFilters(store, formEl);
 
       expect(el.checked).toBe(true);
     },

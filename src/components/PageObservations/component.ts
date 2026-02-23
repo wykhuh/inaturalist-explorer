@@ -69,6 +69,7 @@ export class PageObservations extends HTMLElement {
         target.closest("button")?.id === "search-menu-toggle"
       ) {
         toggleObservationsHandler(this);
+        loggerEvent("[PageObservations dispatchEvent] switchMenu");
         window.dispatchEvent(new Event("switchMenu"));
       } else if (target.id === "settings-menu-toggle") {
         toggleSettingsHandler(this);

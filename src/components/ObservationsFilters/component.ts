@@ -5,7 +5,11 @@ import {
   unobservedByUserSelectedHandler,
 } from "../../lib/search_unobserved";
 import { searchSetup } from "../../lib/search_utils";
-import { initFilters, processFiltersForm } from "./utils";
+import {
+  createOrUpdateObservationFieldInput,
+  initFilters,
+  processFiltersForm,
+} from "./utils";
 import { template } from "./template";
 import {
   renderSelectedFiltersList,
@@ -17,6 +21,14 @@ import {
   setupReviewerSearch,
 } from "../../lib/search_reviewer";
 import { debounce } from "../../lib/utils";
+import {
+  observationFieldSelectedHandler,
+  setupObservationFieldsSearch,
+} from "../../lib/search_observation_fields";
+import {
+  observationFieldsTaxonSelectedHandler,
+  setupObservationFieldsTaxonSearch,
+} from "../../lib/search_observation_fields_taxon";
 
 class ObservationFilters extends HTMLElement {
   constructor() {
@@ -27,6 +39,8 @@ class ObservationFilters extends HTMLElement {
   dialogEl: null | HTMLDialogElement = null;
   showModalButtonEl: null | HTMLButtonElement = null;
   closeModalButtonEl: null | HTMLButtonElement = null;
+  observationFieldValueEl: null | HTMLInputElement = null;
+  observationFieldSearchTaxonEl: null | HTMLInputElement = null;
 
   connectedCallback() {
     loggerRender("++ ObservationFilters connectedCallback");
@@ -36,6 +50,12 @@ class ObservationFilters extends HTMLElement {
     this.dialogEl = this.querySelector<HTMLDialogElement>(".filters-modal");
     this.showModalButtonEl = this.querySelector("#filters-btn");
     this.closeModalButtonEl = this.querySelector("dialog .close-btn");
+    this.observationFieldValueEl = this.querySelector(
+      "#observation-fields-search-value",
+    );
+    this.observationFieldSearchTaxonEl = this.querySelector(
+      "#observation-fields-search-taxon",
+    );
 
     this.formEl?.addEventListener("input", this);
     this.formEl?.addEventListener("reset", this);
@@ -51,6 +71,8 @@ class ObservationFilters extends HTMLElement {
     window.addEventListener("navResourceChange", this);
     window.addEventListener("popstateAfter", this);
     window.addEventListener("switchMenu", this);
+    window.addEventListener("observationFieldSelected", this);
+    window.addEventListener("observationFieldTaxonSelected", this);
   }
 
   disconnectedCallback() {
@@ -70,6 +92,8 @@ class ObservationFilters extends HTMLElement {
     window.removeEventListener("navResourceChange", this);
     window.removeEventListener("popstateAfter", this);
     window.removeEventListener("switchMenu", this);
+    window.removeEventListener("observationFieldSelected", this);
+    window.removeEventListener("observationFieldTaxonSelected", this);
   }
 
   handleEvent(event: Event) {
@@ -77,9 +101,9 @@ class ObservationFilters extends HTMLElement {
     if (!target) return;
     if (!this.formEl) return;
     if (!this.dialogEl) return;
+    if (!this.observationFieldValueEl) return;
 
     loggerEvent(`[ObservationFilters event] ${event.type}`);
-
     // this component is loaded before the store is populated when app is
     // initialized. The app waits for storePopulated before calling render
     // because the form needs data from the store to set the fields values.
@@ -93,53 +117,68 @@ class ObservationFilters extends HTMLElement {
       this.render();
     }
 
-    // change tabs
-    if (
-      event.type === "click" &&
-      target.className.split(" ").includes("nav-link")
-    ) {
-      tabClickHandler(target, this);
-    }
-
-    // disable/enable related term values select when term_id is checled
-    if (event.type === "click" && target.name === "term_id") {
-      let selectEl = this.querySelector<HTMLSelectElement>(
-        `select[data-related-term-id="${target.value}"]`,
-      );
-      if (selectEl) {
-        selectEl.disabled = !selectEl.disabled;
-      }
-    }
-
-    // iNat API only allows one without_term_id
-    if (event.type === "click" && target.name === "without_term_id") {
-      let selectEl = this.querySelector<HTMLSelectElement>(
-        `select[data-related-without-term-id="${target.value}"]`,
-      );
-      if (!selectEl) return;
-
-      if (target.checked) {
-        // uncheck previously checked without_term_id
-        // document.querySelector("[name='without_term_id']:not(#without_sex):checked")
-        let oldInputEl = this.querySelector<HTMLInputElement>(
-          `[name='without_term_id']:not(#${target.id}):checked`,
+    if (event.type === "click") {
+      if (target === this.showModalButtonEl) {
+        // show dialog
+        this.dialogEl.showModal();
+      } else if (target === this.closeModalButtonEl) {
+        // hide dialog
+        this.dialogEl.close();
+      } else if ((target as unknown as HTMLDialogElement) === this.dialogEl) {
+        // hide dialog if click ouside of dialog
+        // https://stackoverflow.com/a/73988585
+        this.dialogEl.close();
+      } else if (target.className.split(" ").includes("nav-link")) {
+        // change tab
+        tabClickHandler(target, this);
+      } else if (target.name === "term_id") {
+        // disable/enable related term values select when term_id is checled
+        let selectEl = this.querySelector<HTMLSelectElement>(
+          `select[data-related-term-id="${target.value}"]`,
         );
-        if (oldInputEl) {
-          oldInputEl.checked = false;
+        if (selectEl) {
+          selectEl.disabled = !selectEl.disabled;
+        }
+      } else if (target.name === "without_term_id") {
+        // iNat API only allows one without_term_id
+        let selectEl = this.querySelector<HTMLSelectElement>(
+          `select[data-related-without-term-id="${target.value}"]`,
+        );
+        if (!selectEl) return;
+
+        if (target.checked) {
+          // uncheck previously checked without_term_id
+          // document.querySelector("[name='without_term_id']:not(#without_sex):checked")
+          let oldInputEl = this.querySelector<HTMLInputElement>(
+            `[name='without_term_id']:not(#${target.id}):checked`,
+          );
+          if (oldInputEl) {
+            oldInputEl.checked = false;
+          }
         }
       }
     }
 
     if (event.type === "input") {
-      // use formChangeHandler to clear input; use autocomplete to select record
-      let searches = ["unobserved-by-user-search", "reviewer-search"];
+      // use formChangeHandler to clear search input; use autocomplete to select record
+      let searches = [
+        "unobserved-by-user-search",
+        "reviewer-search",
+        "observation-fields-search",
+      ];
       if (searches.includes(target.id)) {
         if (target.value === "") {
           this.formChangeHandlerDebounced(event, this.formEl);
         }
-        // use formChangeHandler to add and clear other fields
+        // use formChangeHandler to add and clear non-search fields
       } else {
         this.formChangeHandlerDebounced(event, this.formEl);
+      }
+
+      // disable and clear observation field value when observation field is empty
+      if (target.id === "observation-fields-search" && target.value === "") {
+        this.observationFieldValueEl.disabled = true;
+        this.observationFieldValueEl.value = "";
       }
     }
 
@@ -147,55 +186,108 @@ class ObservationFilters extends HTMLElement {
       this.resetFormHandler(this.formEl);
     }
 
-    if (event.type === "click" && target === this.showModalButtonEl) {
-      this.dialogEl.showModal();
+    if (event.type === "observationFieldSelected") {
+      this.updateObservationFieldValueInput(event as CustomEvent);
     }
 
-    if (event.type === "click" && target === this.closeModalButtonEl) {
-      this.dialogEl.close();
-    }
-
-    // close dialog if click ouside of dialog
-    // https://stackoverflow.com/a/73988585
-    if (
-      event.type === "click" &&
-      (target as unknown as HTMLDialogElement) === this.dialogEl
-    ) {
-      this.dialogEl.close();
+    if (event.type === "observationFieldTaxonSelected") {
+      createOrUpdateObservationFieldInput(
+        (event as CustomEvent).detail.currentObsField,
+        (event as CustomEvent).detail.selection.id,
+        this.formEl,
+      );
     }
   }
 
   async render() {
+    if (!this.formEl) return;
+
     loggerRender("++ ObservationFilters render");
 
+    // autocompltet searches
     setupUnobservedByUserSearch("#unobserved-by-user-search");
     searchSetup("#unobserved-by-user-search", unobservedByUserSelectedHandler);
 
     setupReviewerSearch("#reviewer-search");
     searchSetup("#reviewer-search", reviewerSelectedHandler);
 
+    setupObservationFieldsSearch("#observation-fields-search");
+    searchSetup("#observation-fields-search", observationFieldSelectedHandler);
+
+    setupObservationFieldsTaxonSearch(
+      "#observation-fields-search-taxon",
+      window.app.store,
+    );
+    searchSetup(
+      "#observation-fields-search-taxon",
+      observationFieldsTaxonSelectedHandler,
+    );
+
     // use store to set values the form on page load
-    initFilters(window.app.store);
+    initFilters(window.app.store, this.formEl);
 
     // show list of selected filters
-    let formEl = this.querySelector("#filters-form") as HTMLFormElement;
-    if (formEl) {
-      const data = new FormData(formEl);
-      let results = processFiltersForm(data);
-      renderSelectedFiltersList(results.params);
+    const data = new FormData(this.formEl);
+    let results = processFiltersForm(data);
+    renderSelectedFiltersList(results.params);
+  }
+
+  updateObservationFieldValueInput(event: CustomEvent) {
+    if (!this.formEl) return;
+    if (!this.observationFieldSearchTaxonEl) return;
+    if (!this.observationFieldValueEl) return;
+
+    if (event.detail.selection.datatype === "taxon") {
+      this.observationFieldValueEl.hidden = true;
+      this.observationFieldValueEl.disabled = true;
+
+      this.observationFieldSearchTaxonEl.hidden = false;
+      this.observationFieldSearchTaxonEl.disabled = false;
+    } else {
+      this.observationFieldValueEl.hidden = false;
+      this.observationFieldValueEl.disabled = false;
+
+      this.observationFieldSearchTaxonEl.hidden = true;
+      this.observationFieldSearchTaxonEl.disabled = true;
     }
+
+    this.observationFieldValueEl.value = "";
+    this.observationFieldSearchTaxonEl.value = "";
+
+    this.observationFieldValueEl.dataset.current_obs_field = `field:${event.detail.selection.name}`;
+    this.observationFieldSearchTaxonEl.dataset.current_obs_field = `field:${event.detail.selection.name}`;
+
+    createOrUpdateObservationFieldInput(
+      `field:${event.detail.selection.name}`,
+      "",
+      this.formEl,
+    );
   }
 
   async formChangeHandler(event: Event, form: HTMLFormElement) {
     event.preventDefault();
 
     const data = new FormData(form);
+    let target = event.target as HTMLInputElement;
+    if (target.id === "observation-fields-search-value") {
+      let field = target.dataset.current_obs_field;
+      if (!field) return;
+      let value = target.value;
+      // create input
+      createOrUpdateObservationFieldInput(field, value, form);
+      // manually set form data since input might not be created when
+      // updateAppWithFilters is executed
+      data.set(field, value);
+    }
     await updateAppWithFilters(data, window.app.store);
   }
 
   formChangeHandlerDebounced = debounce(this.formChangeHandler);
 
   resetFormHandler(form: HTMLFormElement) {
+    // remove hidden observation field inputs
+    form.querySelectorAll('[name^="field:"]').forEach((el) => el.remove());
+
     // HACK: use setTimeout to add new event that has access to resetted form
     setTimeout(async () => {
       let data = new FormData(form);

@@ -244,6 +244,7 @@
   a:hover,
   a:focus-visible {
     color: var(--accent-main);
+    text-decoration: none;
   }
 
   .form-group {
@@ -488,7 +489,7 @@
     }
 
     a:hover,
-    a:focus {
+    a:focus-visible {
       text-decoration: underline;
     }
 
@@ -735,6 +736,7 @@
       color: var(--clr-white);
       border-radius: 5px;
       z-index: 2;
+      word-break: break-word;
     }
 
     .tp-trigger:hover + [role="tooltip"],
@@ -800,11 +802,15 @@
   .identifications-grid,
   .identifications-history {
     .details {
-      a {
+      a.title,
+      a.subtitle {
         color: var(--text-main);
         text-decoration: none;
       }
-      a:hover {
+      a:hover.title,
+      a:hover.subtitle,
+      a:focus-visible.title,
+      a:focus-visible.subtitle {
         color: var(--text-main);
         text-decoration: underline;
       }
@@ -1194,7 +1200,7 @@
       }
     }
 
-    .observation-fields-list {
+    .details .observation-fields-list {
       border: var(--border-grey);
 
       .title {
@@ -1203,6 +1209,20 @@
       }
       .subtitle {
         font-size: inherit;
+      }
+
+      a.title,
+      a.subtitle {
+        color: var(--brand-main);
+        text-decoration: underline;
+      }
+
+      a:hover.title,
+      a:hover.subtitle,
+      a:focus-visible.title,
+      a:focus-visible.subtitle {
+        color: var(--accent-main);
+        text-decoration: none;
       }
 
       dt {

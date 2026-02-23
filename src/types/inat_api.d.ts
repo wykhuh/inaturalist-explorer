@@ -364,7 +364,7 @@ export interface ObservationsResult {
 }
 
 export interface ObservationField {
-  datatype: "date" | "datetime" | "dna" | "numeric" | "time" | "taxon" | "text";
+  datatype: ObservationFieldTypes;
   id: number;
   name: string;
   value: string;
@@ -375,6 +375,16 @@ export interface ObservationField {
     rank: string;
   };
 }
+
+export type ObservationFieldTypes =
+  | "date"
+  | "datetime"
+  | "dna"
+  | "numeric"
+  | "time"
+  | "taxon"
+  | "text";
+
 export interface CreatedAtDetails {
   date: string;
   day: number;
@@ -1007,4 +1017,20 @@ export interface ObservationSound {
     moderator_actions: any[];
     hidden: boolean;
   };
+}
+
+interface iNatObservatFieldsAPI {
+  total_results: number;
+  page: number;
+  per_page: number;
+  results: [
+    {
+      id: number;
+      name: string;
+      description: string;
+      datatype: ObservationFieldTypes;
+      allowed_values: string;
+      values_count: number;
+    },
+  ];
 }

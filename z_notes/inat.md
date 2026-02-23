@@ -367,3 +367,31 @@ joesjoes20 (joesjoes20) 1 observation
 
 
 http://localhost:5173/?taxon_id=85552&place_id=14&project_id=65248&user_id=81779&ident_user_id=17630&colors=%234477aa&verifiable=true&spam=false&per_page=24&ident_taxon_id=36074&annotation_user_id=5983024&view=observations_observations&subview=grid
+
+==
+
+I Made Historical-Themed iNat Projects
+https://forum.inaturalist.org/t/i-made-historical-themed-inat-projects/69191
+
+==
+Implement Standard Marine Places for the world’s oceans
+Feature Requests
+
+https://forum.inaturalist.org/t/implement-standard-marine-places-for-the-worlds-oceans/1458/24
+
+==
+
+Identified Species: Painted Turtle (Chrysemys picta)
+Identifier: maxallen (Max Allen)
+
+https://inat-explorer.dataexplorers.info/identifications/?taxon_id=39771&user_id=854537&per_page=24&view=identifications_identifications&subview=grid
+8 identifications
+
+
+https://inat-explorer.dataexplorers.info/?ident_user_id=854537&verifiable=true&spam=false&ident_taxon_id=39771&per_page=24&view=observations_observations&subview=grid
+29 observations
+
+
+==
+
+https://www.inaturalist.org/stats

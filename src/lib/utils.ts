@@ -752,3 +752,7 @@ export function debounce(func: any, timeout = 520) {
     }, timeout);
   };
 }
+
+export function truncateText(text: string, maxLength: number) {
+  return text.slice(0, maxLength) + "...";
+}

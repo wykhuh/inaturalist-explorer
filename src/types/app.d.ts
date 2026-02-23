@@ -155,6 +155,13 @@ export type NormalizediNatUserType = {
   identifications_count?: number;
 };
 
+export type NormalizedObservatFieldType = {
+  name: string;
+  description: string;
+  datatype: ObservationFieldTypes;
+  count: number;
+};
+
 export type AppStoreKeysType = keyof AppStoreType;
 
 // NOTE: update when adding selectedResource
@@ -377,7 +384,8 @@ export interface AutoCompleteEventType {
         | NormalizediNatTaxonType
         | NormalizediNatPlaceType
         | NormalizediNatProjectType
-        | NormalizediNatUserType;
+        | NormalizediNatUserType
+        | NormalizedObservatFieldType;
     };
   };
 }

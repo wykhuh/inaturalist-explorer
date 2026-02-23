@@ -5,7 +5,7 @@ import type {
   IdentificationsApiParamsKeysType,
   ObservationsApiParamsKeysType,
 } from "../../types/app";
-import { deleteFilter } from "./utils";
+import { deleteFilter, deleteObservationFieldFilter } from "./utils";
 
 type PropType = {
   field: ObservationsApiParamsKeysType | IdentificationsApiParamsKeysType;
@@ -42,8 +42,12 @@ class SelectedFiltersItem extends HTMLElement {
   handleEvent(event: Event) {
     loggerEvent("[SelectedFiltersItem event]" + event.type);
 
-    if (event.type === "click" && this.field && this.value) {
-      deleteFilter(this.field as any, this.value, window.app.store);
+    if (event.type === "click") {
+      if (this.field?.startsWith("field:")) {
+        deleteObservationFieldFilter(this.field as any, window.app.store);
+      } else if (this.field && this.value) {
+        deleteFilter(this.field as any, this.value, window.app.store);
+      }
     }
   }
 

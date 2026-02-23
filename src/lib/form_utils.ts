@@ -99,7 +99,7 @@ export function processTrueFalseFields(
   });
 }
 
-export function populateFields(
+export function populateFormFields(
   field_type: { [k: string]: string },
   appStore: AppStoreType,
 ) {

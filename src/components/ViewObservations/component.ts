@@ -98,6 +98,7 @@ class ViewObservations extends HTMLElement {
         this.mapLinkEl
       ) {
         updateSubviewState(subview, this, window.app.store);
+        loggerEvent("[ViewObservations dispatchEvent] subviewChange");
         window.dispatchEvent(new Event("subviewChange"));
       }
     }

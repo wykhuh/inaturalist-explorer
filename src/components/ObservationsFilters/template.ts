@@ -1124,6 +1124,67 @@ const withoutAnnotationPane = html` <div
   </fieldset>
 </div>`;
 
+let observationFieldsPane = html`<div
+  class="tab-pane"
+  id="observation-fields-pane"
+  role="tabpanel"
+  aria-labelledby="observation-fields-tab"
+>
+  <div>
+    <fieldset class="date-observed">
+      <legend>Observation Fields</legend>
+
+      <div class="form-group">
+        <label for="observation-fields-search"
+          >Observation Field
+          <app-tooltip
+            data-id="tp-obfi_id"
+            data-content="?"
+            data-tooltip="field: Observation field"
+          ></app-tooltip>
+        </label>
+        <input
+          name="obfi_id"
+          id="observation-fields-search"
+          type="text"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="observation-fields-search-value"
+          >Observation Field Value
+          <app-tooltip
+            data-id="tp-obfi_value_id"
+            data-content="?"
+            data-tooltip="field=: Value for observation field selected above"
+          ></app-tooltip>
+        </label>
+        <input
+          id="observation-fields-search-value"
+          name="observation-fields-search-value"
+          type="text"
+          autocomplete="off"
+          placeholder="Enter field value"
+          disabled
+        />
+        <label for="observation-fields-search-taxon" class="sr-only"
+          >Observation Field Taxon
+        </label>
+        <input
+          name="obfita_id"
+          id="observation-fields-search-taxon"
+          type="text"
+          autocomplete="off"
+          disabled
+          hidden
+        />
+      </div>
+    </fieldset>
+  </div>
+  <div></div>
+</div>`;
+
 export const template = html`
   <button id="filters-btn" class="btn-primary">Filters</button>
   <span class="filters-count"></span>
@@ -1193,13 +1254,24 @@ export const template = html`
             Without Annotations
           </button>
         </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="observation-fields-tab"
+            role="tab"
+            aria-controls="observation-fields-pane"
+            aria-selected="false"
+          >
+            Observation Fields
+          </button>
+        </li>
       </ul>
 
       <form id="filters-form">
         <div class="fields">
           <div class="tab-content" id="observations-filters-tab-content">
             ${observationPane} ${speciesPane}${datePane}
-            ${annotationPane}${withoutAnnotationPane}
+            ${annotationPane}${withoutAnnotationPane}${observationFieldsPane}
           </div>
         </div>
         <div class="controls">
