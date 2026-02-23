@@ -9,7 +9,7 @@ export const template = html`
       made on this site.
     </p>
 
-    <ul class="liststyle-none">
+    <ul class="liststyle-none" id="external-links">
       <li>
         <a
           href=""

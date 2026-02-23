@@ -245,7 +245,7 @@ export async function getObservationsYears() {
   }
 }
 
-export async function getObservations(appParams: string) {
+export function formatObservationsApiUrl(appParams: string) {
   let fields =
     "(comments_count:!t," +
     // "comments:!t," +
@@ -257,7 +257,8 @@ export async function getObservations(appParams: string) {
     "geoprivacy:!t," +
     "id:!t," +
     "identifications:(current:!t)," +
-    "annotations:(controlled_attribute_id:!t,controlled_value_id:!t,user:(icon_url:!t,icon:!t,id:!t,login:!t))," +
+    "annotations:(controlled_attribute_id:!t,controlled_value_id:!t)," +
+    // "annotations:(controlled_attribute_id:!t,controlled_value_id:!t,user:(icon_url:!t,icon:!t,id:!t,login:!t))," +
     // "identifications_count:!t," +
     // "location:!t," +
     // "mappable:!t," +
@@ -276,7 +277,11 @@ export async function getObservations(appParams: string) {
     "taxon:(iconic_taxon_id:!t,name:!t,preferred_common_name:!t,preferred_common_names:(name:!t),rank:!t,rank_level:!t)," +
     "user:(icon_url:!t,icon:!t,id:!t,login:!t,name:!t))";
 
-  let url = `${observations_api}?${appParams}&ttl=180` + `&fields=${fields}`;
+  return `${observations_api}?${appParams}` + `&fields=${fields}`;
+}
+
+export async function getObservations(appParams: string) {
+  let url = formatObservationsApiUrl(appParams) + "&ttl=180";
 
   try {
     let resp = await fetch(url);

@@ -3,10 +3,13 @@ import { setupComponent } from "../../lib/component_utils";
 import { template } from "./template";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import {
+  cleanupObervationsParams,
   formatInatExploreParams,
   formatInatExportParams,
   formatInatIdentifyParams,
 } from "../../lib/cleanup_params_utils";
+import { isObservationsCheck } from "../../lib/data_utils";
+import { formatObservationsApiUrl } from "../../lib/inat_api";
 
 class LinksMenu extends HTMLElement {
   constructor() {
@@ -60,6 +63,14 @@ class LinksMenu extends HTMLElement {
 
     let identifyParams = formatInatIdentifyParams(appStore);
     identifyLink.href = `https://www.inaturalist.org/observations/identify?${identifyParams}`;
+
+    let listEl = this.querySelector("#external-links");
+    if (listEl && isObservationsCheck(appStore)) {
+      let liEl = document.createElement("li");
+      let params = cleanupObervationsParams(appStore, "observations");
+      liEl.innerHTML = `<a href="${formatObservationsApiUrl(params)}">Observations API</a> - observations API`;
+      listEl.appendChild(liEl);
+    }
   }
 }
 

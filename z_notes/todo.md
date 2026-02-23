@@ -270,3 +270,29 @@ expected_nearby=false
 
 Easiest way to rank areas by biodiversity using iNaturalist data
 https://forum.inaturalist.org/t/easiest-way-to-rank-areas-by-biodiversity-using-inaturalist-data/72706/31
+
+
+==
+How to export annotated observations
+https://forum.inaturalist.org/t/how-to-export-annotated-observations/39708/2
+
+
+I created a website to explore iNaturalist data. https://inat-explorer.dataexplorers.info. The site can be used to download annotated observations.
+
+To download observations for *Vanessa tameamea* with `Life Stage = Adult`. 
+
+1."Search for" should be set to "Observed species" 
+2. Enter  'Vanessa tameamea'  as the search term, and select item from the popup menu.
+
+![Screenshot 2026-02-22 at 5.57.11 PM|690x315, 50%](upload://xVfx3B8x92i0ruP5AIZby5mH9r0.png)
+
+
+3. Click the 'Filters' button. Click 'Annotations' tab. Click 'Life Stage' check box, and select 'Adult'.  
+
+![Screenshot 2026-02-22 at 5.33.07 PM|690x207](upload://63hTNEfIFCoXdaMT6fW58meiqTB.png)
+
+4. To download the observations, click the iNaturalist Links icon.
+
+If you want to download the observations using the iNaturalist Export page, click 'Export page'. If you will use custom code to download the observations with annotations and you want the search params used to query the observations API, click 'Observations API' .
+
+![Screenshot 2026-02-22 at 6.29.08 PM|470x499, 50%](upload://6vwnOlMnziX2UQgypVOshhWSDZn.png)
