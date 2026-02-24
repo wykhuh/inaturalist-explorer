@@ -1642,6 +1642,14 @@
     border: var(--border-grey);
     margin: 1rem 0;
   }
+
+  li {
+    margin: 1rem 0;
+  }
+
+  details {
+    margin: 1rem 0;
+  }
 }
 
 @layer utils {
