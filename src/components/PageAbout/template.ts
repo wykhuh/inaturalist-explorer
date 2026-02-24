@@ -32,7 +32,8 @@ export const template = html`
       <a href="https://www.inaturalist.org/observations"
         >iNaturalist Explore Observations</a
       >
-      page does not have.
+      page does not have. This site gets iNaturalist data from the iNaturalist
+      API.
     </p>
     <h2>Features</h2>
     <ol>
@@ -396,6 +397,11 @@ export const template = html`
     </ol>
 
     <h2>Technical Details</h2>
+    <p>
+      This site grabs data from the iNaturalist API. I used a combination of
+      <a href="https://api.inaturalist.org/v1/docs/">v1</a>
+      and <a href="https://api.inaturalist.org/v2/docs/">v2</a> API endpoints.
+    </p>
     <p>
       This static site is built using JavaScript/TypeScript, custom web
       components, CSS, and HTML. I wanted to use the built-in features of
