@@ -31,6 +31,7 @@ import "./components/Page404/component.ts";
 import "./components/Pagination/component.ts";
 import "./components/Tooltip/component.ts";
 import "./components/LinksMenu/component.ts";
+import "./components/Accordion/component.ts";
 
 import mapStore from "./lib/store.ts";
 import Router from "./lib/router.ts";

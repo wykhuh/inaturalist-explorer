@@ -424,6 +424,29 @@
 }
 
 @layer components {
+  summary {
+    font-weight: bold;
+    margin: -0.5em -0.5em 0;
+    padding: 0.5em;
+    transition: background 0.2s ease;
+  }
+
+  details {
+    border: var(--border-dark-grey);
+    border-radius: 4px;
+    padding: 0.5em 0.5em 0;
+    transition: all 0.3s ease;
+  }
+
+  details[open] {
+    padding: 0.5em;
+  }
+
+  details[open] summary {
+    border-bottom: var(--border-dark-grey);
+    margin-bottom: 0.5em;
+  }
+
   .sr-only {
     position: absolute;
     width: 1px;
