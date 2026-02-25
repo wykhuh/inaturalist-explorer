@@ -289,3 +289,10 @@ If you want to see a list of observation fields that are used on similar observa
 https://forum.inaturalist.org/t/help-with-observation-fields/75931/10
 
 ==
+Phoebe-bombed! Is there a Project for interactions w wild animals?
+https://forum.inaturalist.org/t/phoebe-bombed-is-there-a-project-for-interactions-w-wild-animals/57003
+
+==
+
+Who Eats Whom? A new site for searching iNaturalist feeding interactions
+https://forum.inaturalist.org/t/who-eats-whom-a-new-site-for-searching-inaturalist-feeding-interactions/46218

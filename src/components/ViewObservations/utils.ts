@@ -172,19 +172,22 @@ async function renderGraphs(appStore: AppStoreType) {
   let subviewEl = document.createElement("div");
   subviewEl.className = "observations-subview";
 
-  let data2 = await getAPIGraphData("month_of_year", appStore);
+  let data1 = await getAPIGraphData("month_of_year", appStore);
+  if (data1) {
+    let graph = await createGraph(data1.results);
+    containerEl.appendChild(graph);
+  }
+
+  let data2 = await getAPIGraphData("year", appStore);
   if (data2) {
-    await createGraph(data2.results, containerEl);
+    let graph = await createGraph(data2.results);
+    containerEl.appendChild(graph);
   }
 
-  let data3 = await getAPIGraphData("year", appStore);
+  let data3 = await getAPIGraphData("month", appStore);
   if (data3) {
-    await createGraph(data3.results, containerEl);
-  }
-
-  let data4 = await getAPIGraphData("month", appStore);
-  if (data4) {
-    await createGraph(data4.results, containerEl);
+    let graph = await createGraph(data3.results);
+    containerEl.appendChild(graph);
   }
   containerEl.append(subviewEl);
 }

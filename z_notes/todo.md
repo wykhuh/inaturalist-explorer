@@ -16,9 +16,6 @@ term_id & term_value_id
 Searching for Annotations - Basic to Advanced
 https://forum.inaturalist.org/t/searching-for-annotations-basic-to-advanced/65375
 
-==
-Changes to City Nature Challenge 2026: from the Global Organizing Team
-https://forum.inaturalist.org/t/changes-to-city-nature-challenge-2026-from-the-global-organizing-team/72291/38
 
 ==
 
@@ -40,18 +37,13 @@ https://forum.inaturalist.org/t/is-there-a-way-to-exclude-my-observations-from-a
 
 ==
 
-account creation
-user_after=1w - in the past week
-user_before=1w - more than a week ago
-
+ 
 
 descriptions/tag 
 q=
 
 
-without annotation
-without_term_id=17
-
+ 
 
 Geospatial
 Hide observations with private locations
@@ -67,8 +59,6 @@ https://forum.inaturalist.org/t/easiest-way-to-rank-areas-by-biodiversity-using-
 
 
 ==
-How to export annotated observations
-https://forum.inaturalist.org/t/how-to-export-annotated-observations/39708/2
 
 
 I created a website to explore iNaturalist data. https://inat-explorer.dataexplorers.info. The site can be used to download annotated observations.
@@ -200,3 +190,4 @@ https://api.inaturalist.org/v1/observations/species_counts?unobserved_by_user_id
 https://api.inaturalist.org/v1/observations/taxonomy?user_id=7733167
 
 ==
+https://www.maplibrary.org/1254/exploring-map-projection-alternatives-for-web-use/

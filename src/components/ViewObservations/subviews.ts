@@ -1,4 +1,21 @@
-import vegaEmbed, { type VisualizationSpec } from "vega-embed";
+import {
+  Chart,
+  Colors,
+  LineController,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  LineElement,
+  Legend,
+  Tooltip,
+  Title,
+  type ChartItem,
+  TimeScale,
+  type ChartConfiguration,
+} from "chart.js";
+import "chartjs-adapter-spacetime";
+
+// import Chart from "chart.js/auto";
 
 import type { DataComponentType } from "../../types/app";
 import type {
@@ -7,136 +24,225 @@ import type {
 } from "../../types/inat_api";
 // import { displayJSON } from "./utils";
 
-function monthOfYearSpec(data: { month: string; count: number }[]) {
-  return {
-    $schema: "https://vega.github.io/schema/vega-lite/v6.json",
-    data: { values: data },
-    mark: {
-      type: "line",
-      point: true,
-    },
-    encoding: {
-      x: {
-        timeUnit: "month",
-        field: "month",
-      },
-      y: {
-        field: "count",
-        type: "quantitative",
-      },
-    },
-  } as VisualizationSpec;
-}
-
-function yearSpec(data: { date: string; count: number }[]) {
-  return {
-    $schema: "https://vega.github.io/schema/vega-lite/v6.json",
-    data: { values: data },
-    mark: {
-      type: "line",
-      point: true,
-    },
-    encoding: {
-      x: {
-        field: "date",
-        timeUnit: "year",
-      },
-      y: {
-        field: "count",
-        type: "quantitative",
-      },
-    },
-  } as VisualizationSpec;
-}
-
-function monthSpec(data: { date: string; count: number }[]) {
-  return {
-    $schema: "https://vega.github.io/schema/vega-lite/v6.json",
-    data: { values: data },
-    mark: {
-      type: "line",
-      point: true,
-    },
-    encoding: {
-      x: {
-        field: "date",
-        timeUnit: "yearmonth",
-      },
-      y: {
-        field: "count",
-        type: "quantitative",
-      },
-    },
-  } as VisualizationSpec;
-}
-
-function formatYearData(records: { [k: string]: number }) {
-  let data: { date: string; count: number }[] = [];
-  let dates = Object.keys(records);
-  Object.entries(records).forEach(([k, v]) => {
-    // get data for last ten years
-    let lastYear = new Date(dates[dates.length - 2]).getFullYear();
-    let recordYear = new Date(k).getFullYear();
-
-    if (lastYear - 9 > recordYear || recordYear > lastYear) return;
-    data.push({ date: k, count: v });
-  });
-
-  return data;
-}
+Chart.register(
+  Colors,
+  LineController,
+  PointElement,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  Legend,
+  Tooltip,
+  Title,
+  TimeScale,
+);
 
 function formatMonthOfYearData(records: { [k: string]: number }) {
-  let data: { month: string; count: number }[] = [];
+  let labels: string[] = [];
+  let values: number[] = [];
   Object.entries(records).forEach(([k, v]) => {
-    data.push({ month: k, count: v });
+    labels.push(MONTHS[Number(k) - 1]);
+    values.push(v);
   });
 
-  return data;
+  return { labels, values };
 }
 
-function formatMonthData(records: { [k: string]: number }) {
-  let data: { date: string; count: number }[] = [];
-  let dates = Object.keys(records);
+function formatYearData(records: { [k: string]: number }, lastTenYears = true) {
+  let labels: Date[] = [];
+  let values: number[] = [];
   Object.entries(records).forEach(([k, v]) => {
-    // get data for last ten years
-    let lastYear = new Date(dates[dates.length - 2]).getFullYear();
-    let recordYear = new Date(k).getFullYear();
+    let date = new Date(`${k} 0:05:00`);
 
-    if (lastYear - 9 > recordYear || recordYear > lastYear) return;
-    data.push({ date: k, count: v });
+    labels.push(date);
+    values.push(v);
   });
 
-  return data;
-}
-
-export async function createGraph(
-  results: iNatObservationsHistogramResult,
-  parentEl: HTMLDivElement,
-) {
-  let containerEl = document.createElement("div");
-  let id = `graph-${Math.round(new Date().getTime() * Math.random())}`;
-  containerEl.className = id;
-
-  let spec: VisualizationSpec = {};
-  if (results.month_of_year) {
-    let data = formatMonthOfYearData(results.month_of_year);
-    spec = monthOfYearSpec(data);
-    // displayJSON(data, parentEl);
-  } else if (results.year) {
-    let data = formatYearData(results.year);
-    spec = yearSpec(data);
-    // displayJSON(data, parentEl);
-  } else if (results.month) {
-    let data = formatMonthData(results.month);
-    spec = monthSpec(data);
-    // displayJSON(data, parentEl);
+  // get last full ten years
+  if (lastTenYears) {
+    let length = labels.length;
+    labels = labels.slice(length - 10);
+    values = values.slice(length - 10);
   }
 
-  setTimeout(async () => {
-    parentEl.append(containerEl);
+  return { labels: labels, values: values };
+}
 
-    await vegaEmbed(`.${id}`, spec).then(() => {});
-  }, 0);
+function formatMonthData(
+  records: { [k: string]: number },
+  lastTenYears = true,
+) {
+  let labels: Date[] = [];
+  let values: number[] = [];
+  Object.entries(records).forEach(([k, v]) => {
+    let date = new Date(`${k} 0:05:00`);
+    labels.push(date);
+    values.push(v);
+  });
+
+  // get last ten years
+  if (lastTenYears) {
+    let length = labels.length;
+    labels = labels.slice(length - 12 * 10);
+    values = values.slice(length - 12 * 10);
+  }
+  return { labels: labels, values: values };
+}
+
+export const FULL_MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+export const CHART_COLORS = {
+  red: "rgb(255, 99, 132)",
+  orange: "rgb(255, 159, 64)",
+  yellow: "rgb(255, 205, 86)",
+  green: "rgb(75, 192, 192)",
+  blue: "rgb(54, 162, 235)",
+  purple: "rgb(153, 102, 255)",
+  grey: "rgb(201, 203, 207)",
+};
+
+type TimeUnits = "day" | "week" | "month" | "quarter" | "year";
+
+function createLineGraph(
+  containerEl: HTMLCanvasElement,
+  data: number[],
+  labels: string[] | number[] | Date[],
+  chartTitle = "",
+  timeUnit: TimeUnits | null,
+) {
+  let config: ChartConfiguration = {
+    type: "line",
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        title: {
+          display: true,
+          text: chartTitle,
+        },
+        tooltip: {
+          callbacks: {
+            title: function (context) {
+              let label = context[0].label;
+              // format date string
+              if (new Date(label)) {
+                let matches = label.match(/(\w+) \d+, (\d+)/);
+                if (matches) {
+                  if (timeUnit === "year") {
+                    label = `${matches[2]}`;
+                  } else if (timeUnit === "month") {
+                    label = `${matches[1]} ${matches[2]}`;
+                  }
+                }
+              }
+
+              return label;
+            },
+            // label: function (context) {
+            //   let label = context.formattedValue;
+            //   // if (context.parsed.y !== null) {
+            //   //   label += new Intl.NumberFormat("en-US", {
+            //   //     style: "currency",
+            //   //     currency: "USD",
+            //   //   }).format(context.parsed.y);
+            //   // }
+            //   return label;
+            // },
+          },
+        },
+      },
+      scales: {
+        // y axis always start at zero
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          data: data,
+          cubicInterpolationMode: "monotone",
+        },
+      ],
+    },
+  };
+  if (timeUnit && config.options && config.options.scales) {
+    config.options.scales.x = {
+      type: "time",
+      time: {
+        unit: timeUnit,
+      },
+    };
+  }
+  new Chart(containerEl as ChartItem, config);
+}
+
+export async function createGraph(results: iNatObservationsHistogramResult) {
+  let containerEl = document.createElement("canvas");
+  let id = `graph-${Math.round(new Date().getTime() * Math.random())}`;
+  containerEl.id = id;
+
+  if (results.month_of_year) {
+    let { values, labels } = formatMonthOfYearData(results.month_of_year);
+    createLineGraph(
+      containerEl,
+      values,
+      labels,
+      "Observations by month/year",
+      null,
+    );
+    // displayJSON(results.month_of_year, parentEl);
+  } else if (results.year) {
+    let { labels, values } = formatYearData(results.year);
+    createLineGraph(
+      containerEl,
+      values,
+      labels,
+      "Observations by year",
+      "year",
+    );
+    // displayJSON(results.year, parentEl);
+  } else if (results.month) {
+    let { labels, values } = formatMonthData(results.month);
+    createLineGraph(
+      containerEl,
+      values,
+      labels,
+      "Observations by month",
+      "month",
+    );
+    // displayJSON(results.month, parentEl);
+  }
 
   return containerEl;
 }

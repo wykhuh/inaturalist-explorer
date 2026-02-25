@@ -36,9 +36,11 @@
   "dependencies": {
     "@bramus/pagination-sequence": "^1.2.1",
     "@tarekraafat/autocomplete.js": "^10.2.9",
+    "chart.js": "^4.5.1",
+    "chartjs-adapter-spacetime": "^1.0.1",
     "leaflet": "^1.9.4",
+    "spacetime": "^7.12.0",
     "terra-draw": "^1.23.0",
-    "terra-draw-leaflet-adapter": "^1.1.0",
-    "vega-embed": "^7.1.0"
+    "terra-draw-leaflet-adapter": "^1.1.0"
   }
 }
