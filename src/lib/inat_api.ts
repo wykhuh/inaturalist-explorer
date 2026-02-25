@@ -181,43 +181,61 @@ export const getiNatMapTiles = (
   return tiles;
 };
 
-export async function getTaxonById(id: number) {
+async function inatFetch(url: string, funcName: string) {
   try {
-    let resp = await fetch(taxa_api + id);
-    let data = (await resp.json()) as iNatTaxaAPI;
-    return data.results[0];
+    let resp = await fetch(url);
+    if (resp.status !== 200) {
+      let json = await resp.json();
+      let message = "";
+      if (json.errors) {
+        message = json.errors[0].message;
+      } else {
+        message = json.error;
+      }
+      throw Error(message);
+    }
+
+    let data = await resp.json();
+    return data;
   } catch (error) {
-    console.error("getTaxonById ERROR:", error);
+    console.error(`${funcName} ERROR: ${error}`);
+  }
+}
+
+export async function getTaxonById(id: number) {
+  let data = (await inatFetch(taxa_api + id, "getTaxonById")) as iNatTaxaAPI;
+  if (data) {
+    return data.results[0];
   }
 }
 
 export async function getTaxa(params: string) {
-  try {
-    let resp = await fetch(`${taxa_api}?${params}`);
-    let data = (await resp.json()) as iNatTaxaAPI;
+  let data = (await inatFetch(
+    `${taxa_api}?${params}`,
+    "getTaxa",
+  )) as iNatTaxaAPI;
+  if (data) {
     return data.results;
-  } catch (error) {
-    console.error("getTaxonById ERROR:", error);
   }
 }
 
 export async function getPlaceById(id: number) {
-  try {
-    let resp = await fetch(places_api + id);
-    let data = (await resp.json()) as iNatPlacesAPI;
+  let data = (await inatFetch(
+    places_api + id,
+    "getPlaceById",
+  )) as iNatPlacesAPI;
+  if (data) {
     return data.results[0];
-  } catch (error) {
-    console.error("getPlaceById ERROR:", error);
   }
 }
 
 export async function getProjectById(id: number) {
-  try {
-    let resp = await fetch(projects_api + id);
-    let data = (await resp.json()) as iNatProjectsAPI;
+  let data = (await inatFetch(
+    projects_api + id,
+    "getProjectById",
+  )) as iNatProjectsAPI;
+  if (data) {
     return data.results[0];
-  } catch (error) {
-    console.error("getProjectById ERROR:", error);
   }
 }
 
@@ -226,23 +244,20 @@ export async function getUserById(id: number) {
     return { login: `user${id}`, name: `user ${id}`, id: id } as UserResult;
   }
 
-  try {
-    let resp = await fetch(users_api + id);
-    let data = (await resp.json()) as iNatUsersAPI;
+  let data = (await inatFetch(users_api + id, "getUserById")) as iNatUsersAPI;
+  if (data) {
     return data.results[0];
-  } catch (error) {
-    console.error("getUserById ERROR:", error);
   }
 }
 
 // used to populate the years filter
 export async function getObservationsYears() {
-  try {
-    let resp = await fetch(histogram_year_api);
-    let data = (await resp.json()) as iNatHistogramApi;
+  let data = (await inatFetch(
+    histogram_year_api,
+    "getObservationsYears",
+  )) as iNatHistogramApi;
+  if (data) {
     return data.results;
-  } catch (error) {
-    console.error("getObservationsYears ERROR:", error);
   }
 }
 
@@ -284,13 +299,10 @@ export function formatObservationsApiUrl(appParams: string) {
 export async function getObservations(appParams: string) {
   let url = formatObservationsApiUrl(appParams) + "&ttl=180";
 
-  try {
-    let resp = await fetch(url);
-    let data = (await resp.json()) as iNatObservationsAPI;
+  let data = (await inatFetch(url, "getObservations")) as iNatObservationsAPI;
+  if (data) {
     loggerUrl(url.split("&fields")[0] + "&fields...", data.total_results);
     return data;
-  } catch (error) {
-    console.error("getObservations ERROR:", error);
   }
 }
 
@@ -313,14 +325,13 @@ export async function getObservationsSpecies(appParams: string) {
   let url =
     `${observations_api}/species_counts?${appParams}&ttl=3600` +
     `&fields=${fields}`;
-
-  try {
-    let resp = await fetch(url);
-    let data = (await resp.json()) as iNatObservationsSpeciesCountAPI;
+  let data = (await inatFetch(
+    url,
+    "getObservationsSpecies",
+  )) as iNatObservationsSpeciesCountAPI;
+  if (data) {
     loggerUrl(url.split("&fields")[0] + "&fields...", data.total_results);
     return data;
-  } catch (error) {
-    console.error("getObservationsSpecies ERROR:", error);
   }
 }
 
@@ -330,13 +341,13 @@ export async function getObservationsObservers(appParams: string) {
   let url =
     `${observations_api}/observers?${appParams}&ttl=3600` +
     `&fields=(user:(icon_url:!t,id:!t,login:!t,name:!t))`;
-  try {
-    let resp = await fetch(url);
-    let data = (await resp.json()) as iNatObservationsObserversAPI;
+  let data = (await inatFetch(
+    url,
+    "getObservationsObservers",
+  )) as iNatObservationsObserversAPI;
+  if (data) {
     loggerUrl(url.split("&fields")[0] + "&fields...", data.total_results);
     return data;
-  } catch (error) {
-    console.error("getObservationsObservers ERROR:", error);
   }
 }
 
@@ -344,73 +355,70 @@ export async function getObservationsIdentifiers(appParams: string) {
   let url =
     `${observations_api}/identifiers?${appParams}&ttl=3600` +
     `&fields=(user:(icon_url:!t,id:!t,login:!t,name:!t))`;
-  try {
-    let resp = await fetch(url);
-    let data = (await resp.json()) as iNatObservationsIdentifiersAPI;
+  let data = (await inatFetch(
+    url,
+    "getObservationsIdentifiers",
+  )) as iNatObservationsIdentifiersAPI;
+  if (data) {
     loggerUrl(url.split("&fields")[0] + "&fields...", data.total_results);
     return data;
-  } catch (error) {
-    console.error("getObservationsIdentifiers ERROR:", error);
   }
 }
 
 export async function getIdentifications(appParams: string) {
   let url = `${identifications_api}/?${appParams}&ttl=3600`;
-  try {
-    let resp = await fetch(url);
-    let data = (await resp.json()) as IdentificationsAPI;
+  let data = (await inatFetch(url, "getIdentifications")) as IdentificationsAPI;
+  if (data) {
     loggerUrl(url, data.total_results);
     return data;
-  } catch (error) {
-    console.error("getIdentifications ERROR:", error);
   }
 }
 
 export async function getIdentificationsSpecies(appParams: string) {
   let url = `${identifications_api}/species_counts?${appParams}&ttl=3600`;
-  try {
-    let resp = await fetch(url);
-    let data = (await resp.json()) as IdentificationsSpeciesCountAPI;
+  let data = (await inatFetch(
+    url,
+    "getIdentificationsSpecies",
+  )) as IdentificationsSpeciesCountAPI;
+  if (data) {
     loggerUrl(url, data.total_results);
     return data;
-  } catch (error) {
-    console.error("getIdentificationsSpecies ERROR:", error);
   }
 }
 
 export async function getIdentificationsObservers(appParams: string) {
   let url = `${identifications_api}/observers?${appParams}&ttl=3600`;
-  try {
-    let resp = await fetch(url);
-    let data = (await resp.json()) as IdentificationsObserversAPI;
+  let data = (await inatFetch(
+    url,
+    "getIdentificationsObservers",
+  )) as IdentificationsObserversAPI;
+  if (data) {
     loggerUrl(url, data.total_results);
     return data;
-  } catch (error) {
-    console.error("getIdentificationsObservers ERROR:", error);
   }
 }
 
 export async function getIdentificationsIdentifiers(appParams: string) {
   let url = `${identifications_api}/identifiers?${appParams}&ttl=3600`;
-  try {
-    let resp = await fetch(url);
-    let data = (await resp.json()) as IdentificationsIdentifiersAPI;
+  let data = (await inatFetch(
+    url,
+    "getIdentificationsIdentifiers",
+  )) as IdentificationsIdentifiersAPI;
+  if (data) {
     loggerUrl(url, data.total_results);
     return data;
-  } catch (error) {
-    console.error("getIdentificationsIdentifiers ERROR:", error);
   }
 }
 
 // taxonomy endpoint ignores per_page and page
 export async function getObservationsTaxonomy(appParams: string) {
   let url = `${observations_api_v1}/taxonomy?${appParams}&ttl=3600`;
-  try {
-    let resp = await fetch(url);
-    let data = (await resp.json()) as iNatTaxonomyApi;
+  let data = (await inatFetch(
+    url,
+    "getObservationsTaxonomy",
+  )) as iNatTaxonomyApi;
+  if (data) {
     loggerUrl(url, data.size);
     return data;
-  } catch (error) {
-    console.error("getObservationsTaxonomy ERROR:", error);
   }
 }
