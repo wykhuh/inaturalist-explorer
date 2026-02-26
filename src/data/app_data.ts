@@ -319,7 +319,6 @@ export const observationsFilterableImplemented: ObservationsApiParamsKeysType[] 
     "user_before",
     "verifiable",
     "viewer_id",
-    "without_term_id", // integer
   ];
 
 // used by processFiltersForm to determine if app will combine values into
@@ -343,6 +342,7 @@ export const observationsFilterableImplementedArrays: ObservationsApiParamsKeysT
     "taxon_geoprivacy",
     "term_id",
     "term_value_id",
+    "without_term_id",
     "without_term_value_id",
     "year",
   ];

@@ -139,23 +139,6 @@ class ObservationFilters extends HTMLElement {
         if (selectEl) {
           selectEl.disabled = !selectEl.disabled;
         }
-      } else if (target.name === "without_term_id") {
-        // iNat API only allows one without_term_id
-        let selectEl = this.querySelector<HTMLSelectElement>(
-          `select[data-related-without-term-id="${target.value}"]`,
-        );
-        if (!selectEl) return;
-
-        if (target.checked) {
-          // uncheck previously checked without_term_id
-          // document.querySelector("[name='without_term_id']:not(#without_sex):checked")
-          let oldInputEl = this.querySelector<HTMLInputElement>(
-            `[name='without_term_id']:not(#${target.id}):checked`,
-          );
-          if (oldInputEl) {
-            oldInputEl.checked = false;
-          }
-        }
       }
     }
 
