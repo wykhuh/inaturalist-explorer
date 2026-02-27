@@ -2,21 +2,11 @@
 
 ## About
 
-iNaturalist Explorer is a website that lets people explore iNaturalist data. This site adds some features that is missing from [iNaturalist Explore Observations](https://www.inaturalist.org/observations) page. This site gets data from the iNaturalist API.
+iNaturalist Explorer is a website that lets people explore iNaturalist data. This site adds some features that is missing from [iNaturalist Explore](https://www.inaturalist.org/observations) page. This site gets data from the iNaturalist API.
 
 [Live Demo](https://inat-explorer.dataexplorers.info)
 
-## Features
-
-- Search for multiple species, places, projects, and people
-- Add more filters
-- Group the filters by categories
-- Mobile friendly layout
-- Pagination for observations, species, identifiers, and observers
-- Show iNaturalist maps as grid, points, heatmap and taxon range
-- The urls are compatible with iNaturalist API. You can copy and
-  paste the query params (stuff after the ?) from the site, and use
-  them for the iNaturalist API.
+To get a list of features and instructions on how to use the features, visit the [about page](https://inat-explorer.dataexplorers.info/about/).
 
 ## Tech Stack
 
