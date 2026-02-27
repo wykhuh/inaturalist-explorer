@@ -139,7 +139,7 @@ class ObservationFilters extends HTMLElement {
       } else if (target.name === "term_id_or_unknown") {
         setAnnotationTermIdUknown(target.value, target.checked);
       } else if (target.name === "without_term_id") {
-        setAnnotationWithoutTermId(target.value, target.checked);
+        setAnnotationWithoutTermId(target.value);
       }
     }
 

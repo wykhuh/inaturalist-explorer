@@ -12,7 +12,6 @@ import { loggerFilters } from "../../lib/logger";
 import { concatParamsWithMultivalues } from "./shared_utils";
 import {
   populateFormFields,
-  setInputCheckboxDisabled,
   setInputChecked,
   toggleSelectAndOptions,
 } from "../../lib/form_utils";
@@ -130,7 +129,7 @@ export function initFilters(appStore: AppStoreType, formEl: HTMLFormElement) {
       .toString()
       .split(",")
       .forEach((id) => {
-        setAnnotationWithoutTermId(id, true);
+        setAnnotationWithoutTermId(id);
       });
   }
 
@@ -177,7 +176,7 @@ export function setAnnotationTermId(termId: string, checked: boolean) {
 export function setAnnotationTermIdUknown(termId: string, checked: boolean) {
   toggleSelectAndOptions(
     `#filters-form select[data-related-term-id="${termId}"]`,
-    false,
+    checked,
   );
   toggleSelectAndOptions(
     `#filters-form select[data-related-without-term-id="${termId}"]`,
@@ -193,7 +192,7 @@ export function setAnnotationTermIdUknown(termId: string, checked: boolean) {
   );
 }
 
-export function setAnnotationWithoutTermId(termId: string, checked: boolean) {
+export function setAnnotationWithoutTermId(termId: string) {
   toggleSelectAndOptions(
     `#filters-form select[data-related-term-id="${termId}"]`,
     false,

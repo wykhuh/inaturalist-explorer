@@ -395,3 +395,21 @@ https://inat-explorer.dataexplorers.info/?ident_user_id=854537&verifiable=true&s
 ==
 
 https://www.inaturalist.org/stats
+
+==
+
+==
+Search for observations with comments
+https://forum.inaturalist.org/t/search-for-observations-with-comments/1594/5
+
+API for Comment Search
+https://forum.inaturalist.org/t/api-for-comment-search/37471
+
+https://www.inaturalist.org/comments?q=
+
+
+Excluding specific user ID from comment search
+https://forum.inaturalist.org/t/excluding-specific-user-id-from-comment-search/50465
+
+Search for observations with comments
+https://forum.inaturalist.org/t/search-for-observations-with-comments/1594/21

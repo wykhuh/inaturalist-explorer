@@ -37,7 +37,7 @@ export const template = html`
     </p>
     <h2>Features</h2>
     <ol>
-      <li>
+      <li id="search-options">
         Search observations by Species, iNaturalist places, Projects, Observers
         (people who add observations), Identifiers(people who add
         identifications), and Annotators (people who add annotations). Also
@@ -48,7 +48,7 @@ export const template = html`
         />
       </li>
 
-      <li>
+      <li id="multi-search">
         Search for multiple species, places, projects, and people. Here's a
         search for
         <a
@@ -75,7 +75,7 @@ export const template = html`
         />
       </li>
 
-      <li>
+      <li id="view-identifications">
         View both observations and
         <a
           href="/identifications/?observation_taxon_id=48662,56851&place_id=962,829&colors=%234477aa,%2366ccee&verifiable=true&spam=false"
@@ -94,7 +94,7 @@ export const template = html`
         />
       </li>
 
-      <li>
+      <li id="map-layers">
         Show iNaturalist maps as grid, points, heatmap and taxon range
         <app-accordion
           data-title="Instructions"
@@ -110,7 +110,7 @@ export const template = html`
         />
       </li>
 
-      <li>
+      <li id="observations-subview">
         <a
           href="/?taxon_id=48662&place_id=962&colors=%234477aa&verifiable=true&spam=false&year=2025"
           >View observations</a
@@ -152,7 +152,7 @@ export const template = html`
         </figure>
       </li>
 
-      <li>
+      <li id="identifications-subviews">
         <a
           href="/identifications/?taxon_id=48662&place_id=962&colors=%234477aa&verifiable=true&spam=false&year=2025"
           >View identifications</a
@@ -183,7 +183,7 @@ export const template = html`
         </figure>
       </li>
 
-      <li>
+      <li id="filters">
         Add over 50 options to filter the observations
         <app-accordion
           data-title="Instructions"
@@ -193,7 +193,7 @@ export const template = html`
             'Species', etc to change tabs.</li>
             <li>Click or select the filters you want. Hover over the circled
             question mark to learn about each filter. </li>
-            <li>You can swlect one or more items from  rectanglar menus that
+            <li>You can select one or more items from  rectanglar menus that
             show multiple items such as 'Quality Grade' and 'License'. To select
             multiple items you command click (Mac) or ctrl click (Windows), and
             select one item at a item. You can also click and drag to select
@@ -214,22 +214,54 @@ export const template = html`
         <img src="${filters}" alt="Available filters" />
       </li>
 
-      <li>
+      <li id="annotations-filters">
         Filter by annotations
         <app-accordion
           data-title="Instructions"
           data-content="<ol>
             <li>Click 'Filters' button.</li>
             <li>Click 'Annotations' tab</li>
-            <li>Click one of the checkboxes to enable the corresponding selection menu</li>
-            <li>Select one or more items in the selection menu</li>
+            <li>iNaturalist has seven types of annotations: Sex, Alive or Dead,
+            Established, Flowers and Fruits, Leaves, Life Stage, Evidence of
+            Presence. For each type, there are three ways to filter the annotation.
+            <ol>
+            <li>The first option lets search for observations that match the
+            annotation types and values (term_id + term_value_id, term_id + without_term_value_id).
+            Click on the first checkbox, and the 'include values'
+            and 'exclude values' menus become active. You can look for observations
+            that are adult. Click 'Life Stage', and
+            that will return all observations  that have 'Life State' annotation.
+            Select 'Adult' from 'include values' to return all adult observations.
+            You can also look for observations that are not adult.
+            Click 'Life Stage', and select 'Adult' from  'exclude values'. </li>
+
+            <li>The second option return observations match the annotation types
+            and values and observations that do not have the annotation types
+            filled out (term_id_or_unknown + term_value_id, term_id_or_unknown + without_term_value_id).
+            Click on the 'Observations without...' checkbox, and the 'include values'
+            and 'exclude values' menus become active. You can look
+            for observations don't have 'Life Stage' filled out and observations
+            that are not adult.  Click 'Observations without Life Stage
+            annotations and observations that match', and select 'Adult' from
+            'exclude values'. <p>Note: <a href='https://forum.inaturalist.org/t/term-id-or-unknown-query-parameter-not-working-with-term-value-id/52510/7'>There is a bug</a>
+            with 'Observations without...' and 'includes values'
+            (term_id_or_unknown & term_value_id)</p></li>
+
+            <li>The third option lets you search for observations that do not have
+            annotation types (without_term_id). Click the 'Exclude all...' checkbox.
+            You can look for observations that do not have
+            'Life Stage' annotation by clicking on 'Exclude all
+            Life Stage annotations'</li>
+
+            </ol>
+            </li>
           </ol>"
           data-id="annotations"
         ></app-accordion>
         <img src="${annotations}" alt="Available annotations filters" />
       </li>
 
-      <li>
+      <li id="observation-fields-filters">
         Filter by observation fields
         <app-accordion
           data-title="Instructions"
@@ -266,7 +298,7 @@ export const template = html`
         </figure>
       </li>
 
-      <li>
+      <li id="custom-bounding-box">
         Draw a rectangle to select observations within the rectangle
         <app-accordion
           data-title="Instructions"
@@ -281,7 +313,7 @@ export const template = html`
         <img src="${custom_boundaries}" alt="" />
       </li>
 
-      <li>
+      <li id="subspecies-list">
         Display list of taxa with rank lower than species such as subspecies and
         variety. In this example, we use to 'Rank' filter to select
         <a
@@ -317,7 +349,7 @@ export const template = html`
 
       <li>Pagination for observations, species, identifiers, and observers</li>
 
-      <li>
+      <li id="name-order">
         Set the order for species common names and Latin scientific names
         <app-accordion
           data-title="Instructions"
@@ -334,7 +366,7 @@ export const template = html`
         />
       </li>
 
-      <li>
+      <li id="name-language">
         Set the language for the species common names
         <app-accordion
           data-title="Instructions"
@@ -347,7 +379,7 @@ export const template = html`
         ></app-accordion>
       </li>
 
-      <li>
+      <li id="per-page">
         Set the number of records show per page
         <app-accordion
           data-title="Instructions"
@@ -360,7 +392,7 @@ export const template = html`
         ></app-accordion>
       </li>
 
-      <li>
+      <li id="display-fields">
         Set the fields that are displayed for the observations grid and media.
         <app-accordion
           data-title="Instructions"
@@ -377,7 +409,7 @@ export const template = html`
         />
       </li>
 
-      <li>
+      <li id="inat-links">
         Users can use the search queries created on this site for the iNaturlist
         Explore, Identify, and Export pages by clicking on the links in the
         iNaturalist Links menu.

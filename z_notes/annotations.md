@@ -75,3 +75,46 @@ place_id=201657
 2 - sex, term_id=9; cannot be determined, term_id=20
 12 - Alive or Dead term_id=17; cannot be determined, term_id=20
 13 - sex, Alive or Dead term_id=9,17; cannot be determined, term_id=20,20
+
+==
+
+
+“term_id_or_unknown” query parameter not working with “term_value_id”
+https://forum.inaturalist.org/t/term-id-or-unknown-query-parameter-not-working-with-term-value-id/52510
+
+
+79 term_id=1
+1391 without_term_id=1
+60 adults term_id=1, term_value_id=2
+19 all other, term_id=1, term_value_id=3,4,5,6,7,8,16
+
+1410 term_id_or_unknown=1, without_term_value_id=2 (1470 all - 60 adults)
+
+
+Here's a search query for Mt. San Antonio Wildlife Sanctuary, with 1470 verified observations.
+https://www.inaturalist.org/observations?place_id=201657
+
+Here are the Life stages results. I'm linking to a basic version of api v2 observations to show the bug comes from the api, and not the website. total_results is the number of observations.
+
+[60 Adult](https://api.inaturalist.org/v2/observations?place_id=201657&per_page=0&verifiable=true&term_id=1&term_value_id=2), term_id=1, term_value_id=2
+[0 Teneral](https://api.inaturalist.org/v2/observations?place_id=201657&per_page=0&verifiable=true&term_id=1&term_value_id=3), term_id=1, term_value_id=3
+[0 Pupa](https://api.inaturalist.org/v2/observations?place_id=201657&per_page=0&verifiable=true&term_id=1&term_value_id=4), term_id=1, term_value_id=4
+[1 Nymph](https://api.inaturalist.org/v2/observations?place_id=201657&per_page=0&verifiable=true&term_id=1&term_value_id=5), term_id=1, term_value_id=5
+[11 Larva](https://api.inaturalist.org/v2/observations?place_id=201657&per_page=0&verifiable=true&term_id=1&term_value_id=6), term_id=1, term_value_id=6
+[3 Egg](https://api.inaturalist.org/v2/observations?place_id=201657&per_page=0&verifiable=true&term_id=1&term_value_id=7), term_id=1, term_value_id=7
+[4 Juvenile](https://api.inaturalist.org/v2/observations?place_id=201657&per_page=0&verifiable=true&term_id=1&term_value_id=8), term_id=1, term_value_id=8
+[0 Subimago](https://api.inaturalist.org/v2/observations?place_id=201657&per_page=0&verifiable=true&term_id=1&term_value_id=16), term_id=1, term_value_id=16
+
+[391 Adult](https://api.inaturalist.org/v2/observations?place_id=201657&per_page=0&verifiable=true&term_id_or_unknown=1&term_value_id=2), term_id_or_unknown=1, term_value_id=2
+[383 Teneral](https://api.inaturalist.org/v2/observations?place_id=201657&per_page=0&verifiable=true&term_id_or_unknown=1&term_value_id=3), term_id_or_unknown=1, term_value_id=3
+[383 Pupa](https://api.inaturalist.org/v2/observations?place_id=201657&per_page=0&verifiable=true&term_id_or_unknown=1&term_value_id=4), term_id_or_unknown=1, term_value_id=4
+[383 Nymph](https://api.inaturalist.org/v2/observations?place_id=201657&per_page=0&verifiable=true&term_id_or_unknown=1&term_value_id=5), term_id_or_unknown=1, term_value_id=5
+[394 Larva](https://api.inaturalist.org/v2/observations?place_id=201657&per_page=0&verifiable=true&term_id_or_unknown=1&term_value_id=6), term_id_or_unknown=1, term_value_id=6
+[383 Egg](https://api.inaturalist.org/v2/observations?place_id=201657&per_page=0&verifiable=true&term_id_or_unknown=1&term_value_id=7), term_id_or_unknown=1, term_value_id=7
+[383 Juvenile](https://api.inaturalist.org/v2/observations?place_id=201657&per_page=0&verifiable=true&term_id_or_unknown=1&term_value_id=8), term_id_or_unknown=1, term_value_id=8
+[383 Subimago](https://api.inaturalist.org/v2/observations?place_id=201657&per_page=0&verifiable=true&term_id_or_unknown=1&term_value_id=16), term_id_or_unknown=1, term_value_id=16
+
+==
+
+Identify Filter “Without Annotation” not working properly
+https://forum.inaturalist.org/t/identify-filter-without-annotation-not-working-properly/30148/23
