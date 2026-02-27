@@ -35,49 +35,34 @@ export function setInputValue(selector: string, value: any) {
 }
 
 export function setInputChecked(selector: string, value: any) {
-  try {
-    let el = document.querySelector(selector) as HTMLInputElement;
-    if (el) {
-      el.checked = value;
-      return true;
-    }
-  } catch {
-    return false;
+  let el = document.querySelector(selector) as HTMLInputElement;
+  if (el) {
+    el.checked = value;
   }
 }
 
-export function setInputDisabled(selector: string, value: any) {
-  let el = document.querySelector(selector) as HTMLOptionElement;
+export function setInputCheckboxDisabled(selector: string, value: boolean) {
+  let el = document.querySelector<HTMLInputElement>(selector);
   if (el) {
     el.disabled = value;
   }
 }
 
-export function unsetAnnotationTermId(field: string, value: string) {
-  value.split(",").forEach((v) => {
-    // uncheck term_id input
-    setInputChecked(
-      `#filters-form input[name='${field}'][value='${v}']`,
-      false,
-    );
+export function toggleSelectAndOptions(selector: string, value: boolean) {
+  let selectEl = document.querySelector<HTMLSelectElement>(selector);
+  if (!selectEl) return;
 
-    // get related select for term_id
-    let selector =
-      field === "term_id"
-        ? `select[data-related-term-id="${v}"]`
-        : `select[data-related-without-term-id="${v}"]`;
-    let selectEl = document.querySelector<HTMLSelectElement>(selector);
-    if (selectEl) {
-      // unselect term_value_id option
-      selectEl
-        .querySelectorAll<HTMLOptionElement>("option:checked")
-        .forEach((el) => {
-          el.selected = false;
-        });
-      // disable select
-      selectEl.disabled = !selectEl.disabled;
-    }
-  });
+  // uncheck selected option
+  if (!value) {
+    selectEl
+      .querySelectorAll<HTMLOptionElement>("option:checked")
+      .forEach((option) => {
+        option.selected = value;
+      });
+  }
+
+  // toggle select
+  selectEl.disabled = !value;
 }
 
 export function processTrueFalseFields(

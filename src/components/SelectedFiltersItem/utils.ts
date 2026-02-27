@@ -5,9 +5,10 @@ import {
 import { isObservationsCheck } from "../../lib/data_utils";
 import {
   setInputChecked,
+  setInputCheckboxDisabled,
   setInputValue,
-  unsetAnnotationTermId,
   unsetSelectedOption,
+  toggleSelectAndOptions,
 } from "../../lib/form_utils";
 import type {
   AppStoreType,
@@ -31,7 +32,11 @@ export async function deleteFilter(
   let inputType = resourceFieldName_InputType[field];
 
   if (["term_id"].includes(field)) {
-    unsetAnnotationTermId(field, value);
+    unsetAnnotationTermId(value);
+  } else if (["without_term_id"].includes(field)) {
+    unsetAnnotationWithoutTermId(value);
+  } else if (["term_id_or_unknown"].includes(field)) {
+    unsetAnnotationTermIdUnknown(value);
   } else if (["term_value_id", "without_term_value_id"].includes(field)) {
     value.split(",").forEach((v) => {
       unsetSelectedOption(
@@ -86,4 +91,71 @@ async function updateForm(appStore: AppStoreType) {
   let form = document.querySelector("#filters-form") as HTMLFormElement;
   const data = new FormData(form);
   await updateAppWithFilters(data, appStore);
+}
+
+export function unsetAnnotationTermId(ids: string) {
+  ids.split(",").forEach((id) => {
+    toggleSelectAndOptions(
+      `#filters-form select[data-related-term-id="${id}"]`,
+      false,
+    );
+    toggleSelectAndOptions(
+      `#filters-form select[data-related-without-term-id="${id}"]`,
+      false,
+    );
+
+    setInputChecked(
+      `#filters-form input[name='term_id'][value='${id}']`,
+      false,
+    );
+    setInputCheckboxDisabled(
+      `#filters-form input[name='without_term_id'][value='${id}']`,
+      false,
+    );
+    setInputCheckboxDisabled(
+      `#filters-form input[name='term_id_or_unknown'][value='${id}']`,
+      false,
+    );
+  });
+}
+
+export function unsetAnnotationWithoutTermId(ids: string) {
+  ids.split(",").forEach((id) => {
+    setInputChecked(
+      `#filters-form input[name='without_term_id'][value='${id}']`,
+      false,
+    );
+
+    setInputCheckboxDisabled(
+      `#filters-form input[name="term_id_or_unknown"][value="${id}"]`,
+      false,
+    );
+    setInputCheckboxDisabled(
+      `#filters-form input[name="term_id"][value="${id}"]`,
+      false,
+    );
+  });
+}
+
+export function unsetAnnotationTermIdUnknown(ids: string) {
+  ids.split(",").forEach((id) => {
+    toggleSelectAndOptions(
+      `#filters-form select[data-related-without-term-id="${id}"]`,
+      false,
+    );
+
+    setInputChecked(
+      `#filters-form input[name='term_id_or_unknown'][value='${id}']`,
+      false,
+    );
+
+    setInputCheckboxDisabled(
+      `#filters-form input[name="without_term_id"][value="${id}"]`,
+      false,
+    );
+    setInputCheckboxDisabled(
+      `#filters-form input[name="term_id"][value="${id}"]`,
+      false,
+    );
+  });
 }

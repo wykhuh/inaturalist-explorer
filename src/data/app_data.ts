@@ -341,6 +341,7 @@ export const observationsFilterableImplementedArrays: ObservationsApiParamsKeysT
     "sound_license",
     "taxon_geoprivacy",
     "term_id",
+    "term_id_or_unknown",
     "term_value_id",
     "without_term_id",
     "without_term_value_id",
@@ -349,7 +350,6 @@ export const observationsFilterableImplementedArrays: ObservationsApiParamsKeysT
 
 const observationsFilterableTodo: ObservationsApiParamsKeysType[] = [
   // maybe
-  "term_id_or_unknown",
   "outlink_source",
   // geo
   "out_of_range",

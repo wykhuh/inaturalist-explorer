@@ -281,7 +281,7 @@ interface ObservationsApiParamsType {
   created_year?: string; // comma-seperated string
   term_id?: string; // comma-seperated string
   term_value_id?: string; // comma-seperated string
-  without_term_id?: number;
+  without_term_id?: string;
   without_term_value_id?: string; // comma-seperated string
   term_id_or_unknown?: string; // comma-seperated string
   acc_above?: number;

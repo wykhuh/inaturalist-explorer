@@ -10,7 +10,12 @@ import type {
 } from "../../types/app";
 import { loggerFilters } from "../../lib/logger";
 import { concatParamsWithMultivalues } from "./shared_utils";
-import { populateFormFields } from "../../lib/form_utils";
+import {
+  populateFormFields,
+  setInputCheckboxDisabled,
+  setInputChecked,
+  toggleSelectAndOptions,
+} from "../../lib/form_utils";
 
 export function processFiltersForm(data: FormData): {
   params: ObservationsApiParamsType;
@@ -101,15 +106,32 @@ export function initFilters(appStore: AppStoreType, formEl: HTMLFormElement) {
     );
   });
 
-  // enable annotations multiselect if term_id is set
-  if (observationsApiParams.term_id !== undefined) {
-    let id = observationsApiParams.term_id;
-    let select = document.querySelector<HTMLSelectElement>(
-      `select[data-related-term-id="${id}"]`,
-    );
-    if (select) {
-      select.disabled = false;
-    }
+  // disable/enable annotations multiselect, check options
+  if (observationsApiParams.term_id) {
+    observationsApiParams.term_id
+      .toString()
+      .split(",")
+      .forEach((id) => {
+        setAnnotationTermId(id, true);
+      });
+  } else if (observationsApiParams.term_id_or_unknown) {
+    observationsApiParams.term_id_or_unknown
+      .toString()
+      .split(",")
+      .forEach((id) => {
+        setInputChecked(
+          `#filters-form input[name='term_id_or_unknown'][value='${id}']`,
+          true,
+        );
+        setAnnotationTermIdUknown(id, true);
+      });
+  } else if (observationsApiParams.without_term_id) {
+    observationsApiParams.without_term_id
+      .toString()
+      .split(",")
+      .forEach((id) => {
+        setAnnotationWithoutTermId(id, true);
+      });
   }
 
   // fill input value for autocomplete search
@@ -131,4 +153,49 @@ export function initFilters(appStore: AppStoreType, formEl: HTMLFormElement) {
       inputEl.value = appStore.selectedReviewer.login;
     }
   }
+}
+
+export function setAnnotationTermId(termId: string, checked: boolean) {
+  toggleSelectAndOptions(
+    `#filters-form select[data-related-term-id="${termId}"]`,
+    checked,
+  );
+  toggleSelectAndOptions(
+    `#filters-form select[data-related-without-term-id="${termId}"]`,
+    checked,
+  );
+  setInputCheckboxDisabled(
+    `#filters-form input[name='without_term_id'][value='${termId}']`,
+    checked,
+  );
+  setInputCheckboxDisabled(
+    `#filters-form input[name='term_id_or_unknown'][value='${termId}']`,
+    checked,
+  );
+}
+
+export function setAnnotationTermIdUknown(termId: string, checked: boolean) {
+  toggleSelectAndOptions(
+    `#filters-form select[data-related-without-term-id="${termId}"]`,
+    checked,
+  );
+  setInputCheckboxDisabled(
+    `#filters-form input[name='without_term_id'][value='${termId}']`,
+    checked,
+  );
+  setInputCheckboxDisabled(
+    `#filters-form input[name='term_id'][value='${termId}']`,
+    checked,
+  );
+}
+
+export function setAnnotationWithoutTermId(termId: string, checked: boolean) {
+  setInputCheckboxDisabled(
+    `#filters-form input[name='term_id_or_unknown'][value='${termId}']`,
+    checked,
+  );
+  setInputCheckboxDisabled(
+    `#filters-form input[name='term_id'][value='${termId}']`,
+    checked,
+  );
 }

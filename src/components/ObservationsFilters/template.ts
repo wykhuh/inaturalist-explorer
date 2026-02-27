@@ -499,7 +499,6 @@ let observationPane = html`<div
           ></app-tooltip>
         </label>
         ${renderTrueFalseSelect("photos", "photos")}
-        <option value="cc0,cc-by,cc-by-nc">Accepted by GBIF</option>
       </div>
     </fieldset>
     <fieldset class="licensing">
@@ -939,13 +938,24 @@ const withoutAnnotationPane = html` <div
       />
       <label for="without_sex">without Sex</label>
     </div>
-    <div class="form-group mt-0">
+
+    <div class="form-check mb-0">
+      <input
+        id="sex_unknown"
+        value="9"
+        name="term_id_or_unknown"
+        type="checkbox"
+      />
+      <label for="sex_unknown">Sex or no sex annotation</label>
+    </div>
+    <div class="form-group mt-0 mb-0">
       <label for="without_sex_values" class="sr-only">without Sex values</label>
       <select
         id="without_sex_values"
         name="without_term_value_id"
         data-related-without-term-id="9"
         multiple
+        disabled
       >
         <option value="">Any</option>
         <option value="10">Female</option>
@@ -953,6 +963,7 @@ const withoutAnnotationPane = html` <div
         <option value="20">Cannot Be Determined</option>
       </select>
     </div>
+
     <div class="form-check mb-0">
       <input
         id="without_alive_dead"
@@ -962,7 +973,18 @@ const withoutAnnotationPane = html` <div
       />
       <label for="without_alive_dead">without Alive or Dead</label>
     </div>
-    <div class="form-group mt-0">
+    <div class="form-check mb-0">
+      <input
+        id="alive_dead_unknown"
+        value="17"
+        name="term_id_or_unknown"
+        type="checkbox"
+      />
+      <label for="alive_dead_unknown"
+        >Alive or Dead or no alive/dead annotation</label
+      >
+    </div>
+    <div class="form-group mt-0 mb-0">
       <label for="without_alive_dead_values" class="sr-only"
         >without Alive or Dead values</label
       >
@@ -971,6 +993,7 @@ const withoutAnnotationPane = html` <div
         data-related-without-term-id="17"
         name="without_term_value_id"
         multiple
+        disabled
       >
         <option value="">Any</option>
         <option value="18">Alive</option>
@@ -987,7 +1010,18 @@ const withoutAnnotationPane = html` <div
       />
       <label for="without_established">without Established</label>
     </div>
-    <div class="form-group mt-0">
+    <div class="form-check mb-0">
+      <input
+        id="established_unknown"
+        value="33"
+        name="term_id_or_unknown"
+        type="checkbox"
+      />
+      <label for="established_unknown"
+        >Established or no established annotation</label
+      >
+    </div>
+    <div class="form-group mt-0 mb-0">
       <label for="without_established_values" class="sr-only"
         >without Established Values</label
       >
@@ -996,6 +1030,7 @@ const withoutAnnotationPane = html` <div
         data-related-without-term-id="33"
         name="without_term_value_id"
         multiple
+        disabled
       >
         <option value="">Any</option>
         <option value="34">Not Established</option>
@@ -1014,7 +1049,18 @@ const withoutAnnotationPane = html` <div
       />
       <label for="without_flowers">without Flowers and Fruits</label>
     </div>
-    <div class="form-group mt-0">
+    <div class="form-check mb-0">
+      <input
+        id="flowers_unknown"
+        value="12"
+        name="term_id_or_unknown"
+        type="checkbox"
+      />
+      <label for="flowers_unknown"
+        >Flowers and Fruits or no flowers/fruits annotation</label
+      >
+    </div>
+    <div class="form-group mt-0 mb-0">
       <label for="without_flowers_values" class="sr-only"
         >without Flowers and Fruits values</label
       >
@@ -1023,6 +1069,7 @@ const withoutAnnotationPane = html` <div
         data-related-without-term-id="12"
         name="without_term_value_id"
         multiple
+        disabled
       >
         <option value="">Any</option>
         <option value="13">Flowers</option>
@@ -1040,7 +1087,16 @@ const withoutAnnotationPane = html` <div
       />
       <label for="without_leaves">without Leaves</label>
     </div>
-    <div class="form-group mt-0">
+    <div class="form-check mb-0">
+      <input
+        id="leaves_unknown"
+        value="36"
+        name="term_id_or_unknown"
+        type="checkbox"
+      />
+      <label for="leaves_unknown">Leaves or no leaves annotation</label>
+    </div>
+    <div class="form-group mt-0 mb-0">
       <label for="without_leaves_values" class="sr-only"
         >without Leaves values</label
       >
@@ -1049,6 +1105,7 @@ const withoutAnnotationPane = html` <div
         data-related-without-term-id="36"
         name="without_term_value_id"
         multiple
+        disabled
       >
         <option value="">Any</option>
         <option value="37">Breaking Leaf Buds</option>
@@ -1069,7 +1126,18 @@ const withoutAnnotationPane = html` <div
       />
       <label for="without_life_stage">without Life Stage</label>
     </div>
-    <div class="form-group mt-0">
+    <div class="form-check mb-0">
+      <input
+        id="life_stage_unknown"
+        value="1"
+        name="term_id_or_unknown"
+        type="checkbox"
+      />
+      <label for="life_stage_unknown"
+        >Life Stage or no life stage annotations</label
+      >
+    </div>
+    <div class="form-group mt-0 mb-0">
       <label for="without_life_stage_values" class="sr-only"
         >without Life Stage value</label
       >
@@ -1078,6 +1146,7 @@ const withoutAnnotationPane = html` <div
         data-related-without-term-id="1"
         name="without_term_value_id"
         multiple
+        disabled
       >
         <option value="">Any</option>
         <option value="2">Adult</option>
@@ -1099,7 +1168,18 @@ const withoutAnnotationPane = html` <div
       />
       <label for="without_presence">without Evidence of Presence</label>
     </div>
-    <div class="form-group mt-0">
+    <div class="form-check mb-0">
+      <input
+        id="presence_unknown"
+        value="22"
+        name="term_id_or_unknown"
+        type="checkbox"
+      />
+      <label for="presence_unknown"
+        >Evidence of Presence or no evidence of pressence annotations</label
+      >
+    </div>
+    <div class="form-group mt-0 mb-0">
       <label for="without_presence_values" class="sr-only"
         >without Evidence of Presence values</label
       >
@@ -1108,6 +1188,7 @@ const withoutAnnotationPane = html` <div
         data-related-without-term-id="22"
         name="without_term_value_id"
         multiple
+        disabled
       >
         <option value="">Any</option>
         <option value="23">Feather</option>

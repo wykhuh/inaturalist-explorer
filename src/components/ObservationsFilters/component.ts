@@ -9,6 +9,9 @@ import {
   createOrUpdateObservationFieldInput,
   initFilters,
   processFiltersForm,
+  setAnnotationTermId,
+  setAnnotationTermIdUknown,
+  setAnnotationWithoutTermId,
 } from "./utils";
 import { template } from "./template";
 import {
@@ -132,13 +135,11 @@ class ObservationFilters extends HTMLElement {
         // change tab
         tabClickHandler(target, this);
       } else if (target.name === "term_id") {
-        // disable/enable related term values select when term_id is checled
-        let selectEl = this.querySelector<HTMLSelectElement>(
-          `select[data-related-term-id="${target.value}"]`,
-        );
-        if (selectEl) {
-          selectEl.disabled = !selectEl.disabled;
-        }
+        setAnnotationTermId(target.value, target.checked);
+      } else if (target.name === "term_id_or_unknown") {
+        setAnnotationTermIdUknown(target.value, target.checked);
+      } else if (target.name === "without_term_id") {
+        setAnnotationWithoutTermId(target.value, target.checked);
       }
     }
 
