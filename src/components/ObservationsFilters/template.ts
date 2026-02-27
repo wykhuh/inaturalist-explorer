@@ -349,7 +349,7 @@ let observationPane = html`<div
 
       <div class="form-group">
         <label for="user_after"
-          >Recent accounts created
+          >Accounts newer than
           <app-tooltip
             data-id="tp-user_after"
             data-content="?"
@@ -360,6 +360,7 @@ let observationPane = html`<div
           <option value=""></option>
           <option value="1w">1 week ago</option>
           <option value="4w">4 weeks/1 month ago</option>
+          <option value="26w">26 weeks/6 months ago</option>
           <option value="52w">52 weeks/1 year ago</option>
         </select>
       </div>
@@ -376,6 +377,7 @@ let observationPane = html`<div
           <option value=""></option>
           <option value="1w">1 week</option>
           <option value="4w">4 weeks/1 month</option>
+          <option value="26w">26 weeks/6 months</option>
           <option value="52w">52 weeks/1 year</option>
         </select>
       </div>
@@ -936,7 +938,7 @@ const withoutAnnotationPane = html` <div
         name="without_term_id"
         type="checkbox"
       />
-      <label for="without_sex">without Sex</label>
+      <label for="without_sex">Exclude all "Sex" annotations</label>
     </div>
 
     <div class="form-check mb-0">
@@ -946,7 +948,7 @@ const withoutAnnotationPane = html` <div
         name="term_id_or_unknown"
         type="checkbox"
       />
-      <label for="sex_unknown">"No Sex annotations" or "Sex without"</label>
+      <label for="sex_unknown">Exclude "Sex" annotations that are</label>
     </div>
     <div class="form-group mt-0 mb-0">
       <label for="without_sex_values" class="sr-only">without Sex values</label>
@@ -971,7 +973,9 @@ const withoutAnnotationPane = html` <div
         name="without_term_id"
         type="checkbox"
       />
-      <label for="without_alive_dead">without Alive or Dead</label>
+      <label for="without_alive_dead"
+        >Exclude all "Alive or Dead" annotations</label
+      >
     </div>
     <div class="form-check mb-0">
       <input
@@ -981,7 +985,7 @@ const withoutAnnotationPane = html` <div
         type="checkbox"
       />
       <label for="alive_dead_unknown"
-        >"No Alive or Dead annotations" or "Alive or Dead without"</label
+        >Exclude "Alive or Dead" annotations that are</label
       >
     </div>
     <div class="form-group mt-0 mb-0">
@@ -1008,7 +1012,9 @@ const withoutAnnotationPane = html` <div
         name="without_term_id"
         type="checkbox"
       />
-      <label for="without_established">without Established</label>
+      <label for="without_established"
+        >Exclude all "Established" annotations</label
+      >
     </div>
     <div class="form-check mb-0">
       <input
@@ -1018,7 +1024,7 @@ const withoutAnnotationPane = html` <div
         type="checkbox"
       />
       <label for="established_unknown"
-        >"No Established annotations" or "Established without"</label
+        >Exclude "Established" annotations that are</label
       >
     </div>
     <div class="form-group mt-0 mb-0">
@@ -1047,7 +1053,9 @@ const withoutAnnotationPane = html` <div
         name="without_term_id"
         type="checkbox"
       />
-      <label for="without_flowers">without Flowers and Fruits</label>
+      <label for="without_flowers"
+        >Exclude all "Flowers and Fruits" annotations</label
+      >
     </div>
     <div class="form-check mb-0">
       <input
@@ -1057,8 +1065,7 @@ const withoutAnnotationPane = html` <div
         type="checkbox"
       />
       <label for="flowers_unknown"
-        >"No Flowers and Fruits annotations" or "Flowers and Fruits
-        without"</label
+        >Exclude "Flowers and Fruits" annotations that are</label
       >
     </div>
     <div class="form-group mt-0 mb-0">
@@ -1086,7 +1093,7 @@ const withoutAnnotationPane = html` <div
         name="without_term_id"
         type="checkbox"
       />
-      <label for="without_leaves">without Leaves</label>
+      <label for="without_leaves">Exclude all "Leaves" annotations</label>
     </div>
     <div class="form-check mb-0">
       <input
@@ -1095,9 +1102,7 @@ const withoutAnnotationPane = html` <div
         name="term_id_or_unknown"
         type="checkbox"
       />
-      <label for="leaves_unknown"
-        >"No Leaves annotations" or "Leaves without"</label
-      >
+      <label for="leaves_unknown">Exclude "Leaves" annotations that are</label>
     </div>
     <div class="form-group mt-0 mb-0">
       <label for="without_leaves_values" class="sr-only"
@@ -1127,7 +1132,9 @@ const withoutAnnotationPane = html` <div
         name="without_term_id"
         type="checkbox"
       />
-      <label for="without_life_stage">without Life Stage</label>
+      <label for="without_life_stage"
+        >Exclude all "Life Stage" annotations</label
+      >
     </div>
     <div class="form-check mb-0">
       <input
@@ -1137,7 +1144,7 @@ const withoutAnnotationPane = html` <div
         type="checkbox"
       />
       <label for="life_stage_unknown"
-        >"No Life Stage annotations" or "Life Stage without"</label
+        >Exclude "Life Stage" annotations that are</label
       >
     </div>
     <div class="form-group mt-0 mb-0">
@@ -1169,7 +1176,9 @@ const withoutAnnotationPane = html` <div
         name="without_term_id"
         type="checkbox"
       />
-      <label for="without_presence">without Evidence of Presence</label>
+      <label for="without_presence"
+        >Exclude all "Evidence of Presence" annotations</label
+      >
     </div>
     <div class="form-check mb-0">
       <input
@@ -1179,8 +1188,7 @@ const withoutAnnotationPane = html` <div
         type="checkbox"
       />
       <label for="presence_unknown"
-        >"No Evidence of Presence annotations" or "Evidence of Presence
-        without"</label
+        >Exclude "Evidence of Presence" annotations that are</label
       >
     </div>
     <div class="form-group mt-0 mb-0">
@@ -1338,7 +1346,7 @@ export const template = html`
             aria-controls="without-annotations-pane"
             aria-selected="false"
           >
-            Without Annotations
+            Exclude Annotations
           </button>
         </li>
         <li class="nav-item" role="presentation">
