@@ -758,6 +758,12 @@ const annotationPane = html` <div
   aria-labelledby="annotations-tab"
 >
   <fieldset>
+    <p>
+      <a href="/about/#annotations-filters"
+        >Instructions for annotations filters</a
+      >
+    </p>
+
     <legend>General</legend>
 
     <!--sex-->
@@ -823,7 +829,7 @@ const annotationPane = html` <div
     <hr />
 
     <!--alive or dead-->
-    <div class="form-check mb-1">
+    <div class="form-check">
       <input id="alive_dead" value="17" name="term_id" type="checkbox" />
       <label for="alive_dead">Alive or Dead</label>
     </div>
@@ -887,7 +893,7 @@ const annotationPane = html` <div
     <hr />
 
     <!--Established-->
-    <div class="form-check mb-1">
+    <div class="form-check">
       <input id="established" value="33" name="term_id" type="checkbox" />
       <label for="established">Established</label>
     </div>
@@ -1015,7 +1021,7 @@ const annotationPane = html` <div
     <hr />
 
     <!--Leaves-->
-    <div class="form-check mb-1">
+    <div class="form-check">
       <input id="leaves" value="36" name="term_id" type="checkbox" />
       <label for="leaves">Leaves</label>
     </div>
@@ -1155,7 +1161,7 @@ const annotationPane = html` <div
     <hr />
 
     <!--Evidence of Presence-->
-    <div class="form-check mb-1">
+    <div class="form-check">
       <input id="presence" value="22" name="term_id" type="checkbox" />
       <label for="presence">Evidence of Presence</label>
     </div>

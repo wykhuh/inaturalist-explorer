@@ -413,3 +413,8 @@ https://forum.inaturalist.org/t/excluding-specific-user-id-from-comment-search/5
 
 Search for observations with comments
 https://forum.inaturalist.org/t/search-for-observations-with-comments/1594/21
+
+==
+
+Apply_project_rules_for filter doesn’t apply annotation rules
+https://forum.inaturalist.org/t/apply-project-rules-for-filter-doesnt-apply-annotation-rules/59558
