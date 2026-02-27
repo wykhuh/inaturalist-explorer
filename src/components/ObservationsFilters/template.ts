@@ -946,7 +946,7 @@ const withoutAnnotationPane = html` <div
         name="term_id_or_unknown"
         type="checkbox"
       />
-      <label for="sex_unknown">Sex or no sex annotation</label>
+      <label for="sex_unknown">"No Sex annotations" or "Sex without"</label>
     </div>
     <div class="form-group mt-0 mb-0">
       <label for="without_sex_values" class="sr-only">without Sex values</label>
@@ -981,7 +981,7 @@ const withoutAnnotationPane = html` <div
         type="checkbox"
       />
       <label for="alive_dead_unknown"
-        >Alive or Dead or no alive/dead annotation</label
+        >"No Alive or Dead annotations" or "Alive or Dead without"</label
       >
     </div>
     <div class="form-group mt-0 mb-0">
@@ -1018,7 +1018,7 @@ const withoutAnnotationPane = html` <div
         type="checkbox"
       />
       <label for="established_unknown"
-        >Established or no established annotation</label
+        >"No Established annotations" or "Established without"</label
       >
     </div>
     <div class="form-group mt-0 mb-0">
@@ -1057,7 +1057,8 @@ const withoutAnnotationPane = html` <div
         type="checkbox"
       />
       <label for="flowers_unknown"
-        >Flowers and Fruits or no flowers/fruits annotation</label
+        >"No Flowers and Fruits annotations" or "Flowers and Fruits
+        without"</label
       >
     </div>
     <div class="form-group mt-0 mb-0">
@@ -1094,7 +1095,9 @@ const withoutAnnotationPane = html` <div
         name="term_id_or_unknown"
         type="checkbox"
       />
-      <label for="leaves_unknown">Leaves or no leaves annotation</label>
+      <label for="leaves_unknown"
+        >"No Leaves annotations" or "Leaves without"</label
+      >
     </div>
     <div class="form-group mt-0 mb-0">
       <label for="without_leaves_values" class="sr-only"
@@ -1134,7 +1137,7 @@ const withoutAnnotationPane = html` <div
         type="checkbox"
       />
       <label for="life_stage_unknown"
-        >Life Stage or no life stage annotations</label
+        >"No Life Stage annotations" or "Life Stage without"</label
       >
     </div>
     <div class="form-group mt-0 mb-0">
@@ -1176,7 +1179,8 @@ const withoutAnnotationPane = html` <div
         type="checkbox"
       />
       <label for="presence_unknown"
-        >Evidence of Presence or no evidence of pressence annotations</label
+        >"No Evidence of Presence annotations" or "Evidence of Presence
+        without"</label
       >
     </div>
     <div class="form-group mt-0 mb-0">

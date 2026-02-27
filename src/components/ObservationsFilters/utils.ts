@@ -164,38 +164,50 @@ export function setAnnotationTermId(termId: string, checked: boolean) {
     `#filters-form select[data-related-without-term-id="${termId}"]`,
     checked,
   );
-  setInputCheckboxDisabled(
+  setInputChecked(
     `#filters-form input[name='without_term_id'][value='${termId}']`,
-    checked,
+    false,
   );
-  setInputCheckboxDisabled(
+  setInputChecked(
     `#filters-form input[name='term_id_or_unknown'][value='${termId}']`,
-    checked,
+    false,
   );
 }
 
 export function setAnnotationTermIdUknown(termId: string, checked: boolean) {
   toggleSelectAndOptions(
+    `#filters-form select[data-related-term-id="${termId}"]`,
+    false,
+  );
+  toggleSelectAndOptions(
     `#filters-form select[data-related-without-term-id="${termId}"]`,
     checked,
   );
-  setInputCheckboxDisabled(
+  setInputChecked(
     `#filters-form input[name='without_term_id'][value='${termId}']`,
-    checked,
+    false,
   );
-  setInputCheckboxDisabled(
+  setInputChecked(
     `#filters-form input[name='term_id'][value='${termId}']`,
-    checked,
+    false,
   );
 }
 
 export function setAnnotationWithoutTermId(termId: string, checked: boolean) {
-  setInputCheckboxDisabled(
-    `#filters-form input[name='term_id_or_unknown'][value='${termId}']`,
-    checked,
+  toggleSelectAndOptions(
+    `#filters-form select[data-related-term-id="${termId}"]`,
+    false,
   );
-  setInputCheckboxDisabled(
+  toggleSelectAndOptions(
+    `#filters-form select[data-related-without-term-id="${termId}"]`,
+    false,
+  );
+  setInputChecked(
+    `#filters-form input[name='term_id_or_unknown'][value='${termId}']`,
+    false,
+  );
+  setInputChecked(
     `#filters-form input[name='term_id'][value='${termId}']`,
-    checked,
+    false,
   );
 }
