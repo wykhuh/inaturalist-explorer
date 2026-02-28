@@ -118,3 +118,16 @@ Here are the Life stages results. I'm linking to a basic version of api v2 obser
 
 Identify Filter “Without Annotation” not working properly
 https://forum.inaturalist.org/t/identify-filter-without-annotation-not-working-properly/30148/23
+
+==
+Searching for Annotations - Basic to Advanced
+https://forum.inaturalist.org/t/searching-for-annotations-basic-to-advanced/
+
+ The main benefit of also using projects to search for annotations is the ability to search on multiple different annotations. But the hidden, less obvious perk is to be able to search with AND and OR. Comma separating projects in the url (both for project_id= and for not_in_project=) treats the search like an OR. The same goes for term_value_id=. So you can search for observations with Organisms or Tracks. But when you combine the two as I did in the last example, you can include only observations that meet both the project and annotation filter criteria. Unfortunately, since comma separating the urls treats it like an OR clause, we are still limited to two values that we can include or filter out. If the apply_project_rules_for filter worked as expected for annotation values (see this bug report), we would be able to bump that number up to three.
+
+==
+
+Filter by multiple annotations at a time
+https://forum.inaturalist.org/t/filter-by-multiple-annotations-at-a-time/59288
+
+==
