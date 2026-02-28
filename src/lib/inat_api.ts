@@ -290,6 +290,7 @@ export function formatObservationsApiUrl(appParams: string) {
     // "private_geojson:!t," +
     "quality_grade:!t," +
     "sounds:(id:!t,file_url:!t)," +
+    // "species_guess:!t," +
     "taxon:(iconic_taxon_id:!t,name:!t,preferred_common_name:!t,preferred_common_names:(name:!t),rank:!t,rank_level:!t)," +
     "user:(icon_url:!t,icon:!t,id:!t,login:!t,name:!t))";
 

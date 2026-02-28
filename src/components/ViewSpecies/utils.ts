@@ -14,7 +14,10 @@ import {
   isObservationsCheck,
   replaceWithCacheImages,
   isSpeciesOrHigerCheck,
+  resetPageNumber,
+  getResourceApiParams,
 } from "../../lib/data_utils";
+import { setSelectedOption } from "../../lib/form_utils";
 import {
   getIdentificationsSpecies,
   getObservationsSpecies,
@@ -127,7 +130,7 @@ export async function fetchAndRenderData(
   ) => Promise<void>,
   appStore: AppStoreType,
 ) {
-  let containerEl = document.querySelector(".species-list-container");
+  let containerEl = document.querySelector(".subview-container");
   if (!containerEl) return;
 
   let spinner = createSpinner();
@@ -375,4 +378,44 @@ export async function paginationCallback(num: number, appStore: AppStoreType) {
 
   await fetchAndRenderData(paginationCallback, appStore);
   updateAppUrl(window.location, appStore);
+}
+
+export async function updateOrderForStore(
+  data: FormData,
+  appStore: AppStoreType,
+) {
+  let resourceParams = getResourceApiParams(isObservationsCheck(appStore));
+
+  let order;
+  data.forEach((v, k) => {
+    if (k === "order_combo") {
+      order = v;
+    }
+  });
+
+  if (order) {
+    appStore[resourceParams].order = order;
+    if (appStore.currentView) {
+      appStore.viewMetadata[appStore.currentView].order = order;
+    }
+  } else {
+    delete appStore[resourceParams].order;
+  }
+
+  delete appStore[resourceParams].order_by;
+
+  resetPageNumber(appStore);
+  await fetchAndRenderData(paginationCallback, appStore);
+  updateAppUrl(window.location, appStore);
+}
+
+// use store to populate the filter form fields on page load
+export function initFilters(appStore: AppStoreType) {
+  let resourceParams = getResourceApiParams(isObservationsCheck(appStore));
+
+  if (appStore[resourceParams].order) {
+    setSelectedOption(
+      `#order-form select#order_combo option[value='${appStore.observationsApiParams.order}']`,
+    );
+  }
 }

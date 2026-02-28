@@ -30,6 +30,9 @@ export const template = html`
             <option value="votes:asc">Favorites, Low to High</option>
 
             <option value="random">Random</option>
+
+            <option value="species_guess:asc">Species guess, A to Z</option>
+            <option value="species_guess:desc">Species guess, Z to A</option>
           </select>
         </div>
       </form>

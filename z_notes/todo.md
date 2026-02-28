@@ -135,3 +135,30 @@ annotation codes can be found here: https://forum.inaturalist.org/t/how-to-use-i
 How to print high quality herbarium labels with iNaturalist observation information
 
 https://forum.inaturalist.org/t/how-to-print-high-quality-herbarium-labels-with-inaturalist-observation-information/72302/18
+
+==
+
+
+
+Sort observations alphabetically by species and place
+https://forum.inaturalist.org/t/sort-observations-alphabetically-by-species-and-place/5011/17
+
+
+==
+
+[quote="yerbasanta, post:37, topic:70438"]
+1. This may be somewhat niche, but is/would there be a way to add a search for observations by comments made by a particular user on a particular taxa?
+[/quote]
+
+You're the second person to ask me to add search for comments. Unfortunately, the iNaturalist API does not have provide the ability to search for comments, therefore I can't add that feature. 
+
+There is feature request thread: [Search for observations with comments](/t/search-for-observations-with-comments/1594).
+
+[quote="yerbasanta, post:37, topic:70438"]
+2. Very small tweak, but could you make a bookmark icon for your site? I added it to my toolbar, but the grey just blends into the background, so it’s less likely that I’ll see and use it as often as if it had a recognizable icon.
+[/quote]
+
+[quote="yerbasanta, post:37, topic:70438"]
+3. Another niche one, but important for my uses: can a list be sorted by number of comments or disagreements (and/or number of identifications)?
+[/quote]
+Sorting by comments, disagreements, or number of identifications is not currently available in the API. That request should be posted in the

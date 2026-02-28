@@ -183,3 +183,13 @@ when connecting to API
   </p>
 </div>
 ```
+
+==
+
+favicon
+
+https://realfavicongenerator.net
+
+https://css-tricks.com/svg-favicons-in-action/
+
+==
