@@ -238,13 +238,13 @@ export const template = html`
             <li>The second option return observations match the annotation types
             and values and observations that do not have the annotation types
             filled out (term_id_or_unknown + term_value_id, term_id_or_unknown + without_term_value_id).
-            Click on the 'Observations without...' checkbox, and the 'include values'
+            Click on the 'Observations with...' checkbox, and the 'include values'
             and 'exclude values' menus become active. You can look
-            for observations don't have 'Life Stage' filled out and observations
-            that are not adult.  Click 'Observations without Life Stage
-            annotations and observations that match', and select 'Adult' from
+            for observations that are not adult and observations don't have 'Life Stage'
+            filled out. Click 'Observations with Life Stage annotations, and
+            observations missing this annotation', and select 'Adult' from
             'exclude values'. <p>Note: <a href='https://forum.inaturalist.org/t/term-id-or-unknown-query-parameter-not-working-with-term-value-id/52510/7'>There is a bug</a>
-            with 'Observations without...' and 'includes values'
+            with 'Observations with...' and 'includes values'
             (term_id_or_unknown & term_value_id)</p></li>
 
             <li>The third option lets you search for observations that do not have

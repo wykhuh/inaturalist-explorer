@@ -780,8 +780,8 @@ const annotationPane = html` <div
         type="checkbox"
       />
       <label for="sex_unknown"
-        >Observations without "Sex" annotations and observations that
-        match</label
+        >Observations with "Sex" annotations, and observations missing this
+        annotation</label
       >
     </div>
 
@@ -829,7 +829,7 @@ const annotationPane = html` <div
     <hr />
 
     <!--alive or dead-->
-    <div class="form-check">
+    <div class="form-check mb-0">
       <input id="alive_dead" value="17" name="term_id" type="checkbox" />
       <label for="alive_dead">Alive or Dead</label>
     </div>
@@ -842,8 +842,8 @@ const annotationPane = html` <div
         type="checkbox"
       />
       <label for="alive_dead_unknown"
-        >Observations without "Alive or Dead" annotations and observations that
-        match</label
+        >Observations with "Alive or Dead" annotations, and observations missing
+        this annotation</label
       >
     </div>
 
@@ -893,7 +893,7 @@ const annotationPane = html` <div
     <hr />
 
     <!--Established-->
-    <div class="form-check">
+    <div class="form-check mb-0">
       <input id="established" value="33" name="term_id" type="checkbox" />
       <label for="established">Established</label>
     </div>
@@ -906,8 +906,8 @@ const annotationPane = html` <div
         type="checkbox"
       />
       <label for="established_unknown"
-        >Observations without "Established" annotations and observations that
-        match</label
+        >Observations with "Established" annotations, and observations missing
+        this annotation</label
       >
     </div>
 
@@ -968,8 +968,8 @@ const annotationPane = html` <div
         type="checkbox"
       />
       <label for="flowers_unknown"
-        >Observations without "Flowers and Fruits" annotations and observations
-        that match</label
+        >Observations with "Flowers and Fruits" annotations, and observations
+        missing this annotation</label
       >
     </div>
 
@@ -1021,7 +1021,7 @@ const annotationPane = html` <div
     <hr />
 
     <!--Leaves-->
-    <div class="form-check">
+    <div class="form-check mb-1">
       <input id="leaves" value="36" name="term_id" type="checkbox" />
       <label for="leaves">Leaves</label>
     </div>
@@ -1034,8 +1034,8 @@ const annotationPane = html` <div
         type="checkbox"
       />
       <label for="leaves_unknown"
-        >Observations without "Leaves" annotations and observations that
-        match</label
+        >Observations with "Leaves" annotations, and observations missing this
+        annotation</label
       >
     </div>
 
@@ -1100,8 +1100,8 @@ const annotationPane = html` <div
         type="checkbox"
       />
       <label for="life_stage_unknown"
-        >Observations without "Life Stage" annotations and observations that
-        match</label
+        >Observations with "Life Stage" annotations, and observations missing
+        this annotation</label
       >
     </div>
 
@@ -1161,7 +1161,7 @@ const annotationPane = html` <div
     <hr />
 
     <!--Evidence of Presence-->
-    <div class="form-check">
+    <div class="form-check mb-1">
       <input id="presence" value="22" name="term_id" type="checkbox" />
       <label for="presence">Evidence of Presence</label>
     </div>
@@ -1174,8 +1174,8 @@ const annotationPane = html` <div
         type="checkbox"
       />
       <label for="presence_unknown"
-        >Observations without "Evidence of Presence" annotations and
-        observations that match</label
+        >Observations with "Evidence of Presence" annotations, and observations
+        missing this annotation</label
       >
     </div>
 
