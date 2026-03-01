@@ -18,7 +18,6 @@ import type {
   IdentificationsIdentifiersAPI,
   IdentificationsObserversAPI,
   IdentificationsSpeciesCountAPI,
-  UserResult,
   iNatTaxonomyApi,
 } from "../types/inat_api.d.ts";
 import { loggerUrl } from "./logger.ts";
@@ -32,8 +31,8 @@ export const autocomplete_taxa_api =
   "https://api.inaturalist.org/v1/taxa/autocomplete?";
 export const autocomplete_observation_fields_api = `https://api.inaturalist.org/v1/observation_fields/autocomplete?`;
 
-const observations_api_v1 = "https://api.inaturalist.org/v1/observations";
-const observations_api = "https://api.inaturalist.org/v2/observations";
+const observations_api = "https://api.inaturalist.org/v1/observations";
+const observations_api_v2 = "https://api.inaturalist.org/v2/observations";
 const identifications_api = "https://api.inaturalist.org/v1/identifications";
 const taxa_api = "https://api.inaturalist.org/v1/taxa/";
 const places_api = "https://api.inaturalist.org/v1/places/";
@@ -240,10 +239,6 @@ export async function getProjectById(id: number) {
 }
 
 export async function getUserById(id: number) {
-  if (import.meta.env?.VITE_CACHE === "true") {
-    return { login: `user${id}`, name: `user ${id}`, id: id } as UserResult;
-  }
-
   let data = (await inatFetch(users_api + id, "getUserById")) as iNatUsersAPI;
   if (data) {
     return data.results[0];
@@ -294,7 +289,7 @@ export function formatObservationsApiUrl(appParams: string) {
     "taxon:(iconic_taxon_id:!t,name:!t,preferred_common_name:!t,preferred_common_names:(name:!t),rank:!t,rank_level:!t)," +
     "user:(icon_url:!t,icon:!t,id:!t,login:!t,name:!t))";
 
-  return `${observations_api}?${appParams}` + `&fields=${fields}`;
+  return `${observations_api_v2}?${appParams}` + `&fields=${fields}`;
 }
 
 export async function getObservations(appParams: string) {
@@ -324,7 +319,7 @@ export async function getObservationsSpecies(appParams: string) {
     "preferred_common_names:(name:!t)," +
     "rank:!t))";
   let url =
-    `${observations_api}/species_counts?${appParams}&ttl=3600` +
+    `${observations_api_v2}/species_counts?${appParams}&ttl=3600` +
     `&fields=${fields}`;
   let data = (await inatFetch(
     url,
@@ -340,7 +335,7 @@ export async function getObservationsSpecies(appParams: string) {
 // order_by=observed_on&order=desc
 export async function getObservationsObservers(appParams: string) {
   let url =
-    `${observations_api}/observers?${appParams}&ttl=3600` +
+    `${observations_api_v2}/observers?${appParams}&ttl=3600` +
     `&fields=(user:(icon_url:!t,id:!t,login:!t,name:!t))`;
   let data = (await inatFetch(
     url,
@@ -354,7 +349,7 @@ export async function getObservationsObservers(appParams: string) {
 
 export async function getObservationsIdentifiers(appParams: string) {
   let url =
-    `${observations_api}/identifiers?${appParams}&ttl=3600` +
+    `${observations_api_v2}/identifiers?${appParams}&ttl=3600` +
     `&fields=(user:(icon_url:!t,id:!t,login:!t,name:!t))`;
   let data = (await inatFetch(
     url,
@@ -413,7 +408,7 @@ export async function getIdentificationsIdentifiers(appParams: string) {
 
 // taxonomy endpoint ignores per_page and page
 export async function getObservationsTaxonomy(appParams: string) {
-  let url = `${observations_api_v1}/taxonomy?${appParams}&ttl=3600`;
+  let url = `${observations_api}/taxonomy?${appParams}&ttl=3600`;
   let data = (await inatFetch(
     url,
     "getObservationsTaxonomy",
