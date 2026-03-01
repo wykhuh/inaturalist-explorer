@@ -1299,7 +1299,33 @@ let observationFieldsPane = html`<div
       </div>
     </fieldset>
   </div>
-  <div></div>
+  <div>
+    <fieldset>
+      <legend>Types</legend>
+
+      <div class="form-group">
+        <label for="ofv_datatype"
+          >Observation Field
+          <app-tooltip
+            data-id="tp-ofv_datatype"
+            data-content="?"
+            data-tooltip="ofv_datatype: Observation field type"
+          ></app-tooltip>
+        </label>
+        <select id="ofv_datatype" name="ofv_datatype" multiple>
+          <option value="">Any</option>
+          <option value="date,datetime,dna,numeric,time,taxon,text">All</option>
+          <option value="date">Date</option>
+          <option value="datetime">Datetime</option>
+          <option value="dna">DNA</option>
+          <option value="numeric">Numeric</option>
+          <option value="time">Time</option>
+          <option value="taxon">Taxon</option>
+          <option value="text">Text</option>
+        </select>
+      </div>
+    </fieldset>
+  </div>
 </div>`;
 
 export const template = html`
