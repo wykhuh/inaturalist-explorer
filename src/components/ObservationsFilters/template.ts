@@ -19,7 +19,7 @@ let datePane = html`<div
   aria-labelledby="date-tab"
 >
   <div>
-    <fieldset class="date-observed">
+    <fieldset>
       <legend>Date Observed</legend>
       <div class="form-group">
         <label for="on"
@@ -127,7 +127,7 @@ let datePane = html`<div
     </fieldset>
   </div>
   <div>
-    <fieldset class="date-added">
+    <fieldset>
       <legend>Date Added</legend>
       <div class="form-group">
         <label for="created_on"
@@ -228,7 +228,7 @@ let observationPane = html`<div
 >
   <!--column 1-->
   <div>
-    <fieldset class="observation-status">
+    <fieldset>
       <legend>Observation Status</legend>
       <div class="form-group">
         <label for="verifiable">
@@ -344,7 +344,7 @@ let observationPane = html`<div
   </div>
   <!--column 2-->
   <div>
-    <fieldset class="users">
+    <fieldset>
       <legend>Users</legend>
 
       <div class="form-group">
@@ -478,7 +478,7 @@ let observationPane = html`<div
 
   <!--column 3-->
   <div>
-    <fieldset class="media">
+    <fieldset>
       <legend>Media</legend>
       <div class="form-group">
         <label for="sounds"
@@ -503,7 +503,7 @@ let observationPane = html`<div
         ${renderTrueFalseSelect("photos", "photos")}
       </div>
     </fieldset>
-    <fieldset class="licensing">
+    <fieldset>
       <legend>Licensing</legend>
       <div class="form-group multiselect">
         <label for="license"
@@ -555,7 +555,7 @@ const speciesPane = html`
     role="tabpanel"
     aria-labelledby="species-tab"
   >
-    <fieldset class="species-status">
+    <fieldset>
       <legend>Species Status</legend>
       <div class="form-group">
         <label for="threatened"
@@ -602,7 +602,7 @@ const speciesPane = html`
         ${renderTrueFalseSelect("endemic", "endemic")}
       </div>
     </fieldset>
-    <fieldset class="iconic_taxa">
+    <fieldset>
       <legend>Iconic Taxa</legend>
       <div class="iconic_taxa_list">
         <div class="form-group">
@@ -706,7 +706,7 @@ const speciesPane = html`
         </div>
       </div>
     </fieldset>
-    <fieldset class="rank">
+    <fieldset>
       <legend>Rank</legend>
       <div class="form-group">
         <label for="hrank"
@@ -1248,7 +1248,7 @@ let observationFieldsPane = html`<div
   aria-labelledby="observation-fields-tab"
 >
   <div>
-    <fieldset class="date-observed">
+    <fieldset>
       <legend>Observation Fields</legend>
 
       <div class="form-group">
