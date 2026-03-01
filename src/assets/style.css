@@ -1,4 +1,5 @@
 @layer reset, base, layout, components, views, search-menu, filtersModal;
+/*@import "bootstrap.css";*/
 
 @layer reset {
   /* 1. Use a more-intuitive box-sizing model */
@@ -112,9 +113,12 @@
     --clr-gray-800: hsl(0, 0%, 50%);
     --clr-gray-900: hsl(0, 0%, 40%);
 
+    --clr-orange-100: hsl(25, 45%, 93%);
+    --clr-orange-200: hsl(25, 45%, 85%);
     --clr-orange-300: hsl(25, 45%, 77%);
     --clr-orange-400: hsl(25, 45%, 62%);
     --clr-orange-500: hsl(25, 51%, 43%);
+    --clr-green-100: hsl(143, 19%, 94%);
     --clr-green-200: hsl(143, 19%, 89%);
     --clr-green-300: hsl(143, 19%, 69%);
     --clr-green-400: hsl(143, 19%, 49%);
@@ -436,6 +440,8 @@
   }
 }
 
+/*@import "bootstrap.css";*/
+
 @layer components {
   summary {
     font-weight: bold;
@@ -504,20 +510,86 @@
     }
   }
 
-  #site-header {
-    padding: 1rem;
+  .collapse:not(.show) {
+    display: none;
   }
 
-  #site-nav {
+  .navbar {
+    position: relative;
     display: flex;
-    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
 
-    ul {
-      list-style: none;
+    .navbar-nav {
       display: flex;
-      gap: 10px;
-      margin: 0;
-      padding: 0;
+      flex-direction: column;
+      list-style: none;
+      gap: 0.5rem;
+    }
+
+    .navbar-collapse {
+      top: 0;
+      position: absolute;
+      background-color: var(--background-main);
+    }
+
+    .navbar-toggler {
+      background-color: transparent;
+      border: 0;
+      transition: box-shadow 0.15s ease-in-out;
+    }
+
+    .navbar-toggler:hover,
+    .navbar-toggler:focus-visible {
+      box-shadow: 0 0 0 1px;
+    }
+
+    .navbar-brand {
+      white-space: nowrap;
+      margin-right: 1rem;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .navbar-expand {
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+
+      .navbar-nav {
+        flex-direction: row;
+        gap: 1rem;
+      }
+
+      .navbar-collapse {
+        display: flex;
+        position: inherit;
+      }
+
+      .navbar-toggler {
+        display: none;
+      }
+    }
+  }
+
+  #site-header {
+    padding: 0.5rem 1rem;
+  }
+
+  .navbar {
+    height: 2.5rem;
+
+    .navbar-collapse {
+      z-index: 1;
+      top: 2.5rem;
+      width: calc(100% + 2rem);
+      margin: 0 0 0 -1rem;
+      padding: 0 1rem 1rem 1rem;
+      box-shadow: 0px 10px 10px 0px rgb(0 0 0/ 0.2);
+    }
+
+    .navbar-toggler-icon {
+      line-height: 1;
+      font-size: 1.8rem;
     }
 
     a {
@@ -531,6 +603,18 @@
 
     .current-page {
       text-decoration: underline;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .navbar-expand {
+      .navbar-collapse {
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+      }
     }
   }
 
@@ -776,7 +860,7 @@
     }
 
     .tp-trigger:hover + [role="tooltip"],
-    .tp-trigger:focus + [role="tooltip"] {
+    .tp-trigger:focus-visible + [role="tooltip"] {
       display: block;
     }
   }

@@ -10,6 +10,8 @@ class Header extends HTMLElement {
   }
 
   appStore = window.app.store;
+  navToggleEl: null | HTMLButtonElement = null;
+  navMenuEl: null | HTMLDivElement = null;
 
   connectedCallback() {
     loggerRender("++ Header connectedCallback");
@@ -19,6 +21,12 @@ class Header extends HTMLElement {
     this.querySelectorAll("a.navlink").forEach((a) => {
       a.addEventListener("click", this);
     });
+
+    this.navToggleEl = this.querySelector('[data-toggle="collapse"]');
+    if (this.navToggleEl) {
+      this.navToggleEl.addEventListener("click", this);
+    }
+    this.navMenuEl = this.querySelector(".navbar-collapse");
   }
 
   disconnectedCallback() {
@@ -27,14 +35,23 @@ class Header extends HTMLElement {
     this.querySelectorAll("a.navlink").forEach((a) => {
       a.removeEventListener("click", this);
     });
+    this.navToggleEl?.removeEventListener("click", this);
   }
 
   handleEvent(event: CustomEvent) {
     loggerEvent(`[Header event] ${event.type}`);
+    let target = event.target as HTMLDivElement;
+    if (!target) return;
+    if (!this.navMenuEl) return;
 
     if (event.type === "click") {
       event.preventDefault();
-      pageChangeHandler(event, this.appStore, window.app.router);
+
+      if (target.closest("button")?.className === "navbar-toggler") {
+        this.navMenuEl.classList.toggle("show");
+      } else if (target.className === "navlink") {
+        pageChangeHandler(event, this.appStore, window.app.router);
+      }
     }
   }
 }
