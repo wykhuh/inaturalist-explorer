@@ -162,3 +162,41 @@ There is feature request thread: [Search for observations with comments](/t/sear
 3. Another niche one, but important for my uses: can a list be sorted by number of comments or disagreements (and/or number of identifications)?
 [/quote]
 Sorting by comments, disagreements, or number of identifications is not currently available in the API. That request should be posted in the
+
+==
+
+Create a way for life list to only have RG observations
+https://forum.inaturalist.org/t/create-a-way-for-life-list-to-only-have-rg-observations/76130/6
+
+
+view species
+
+https://www.inaturalist.org/lifelists/quyksilver
+
+
+https://www.inaturalist.org/lifelists/quyksilver?view=tree&tree_mode=full_taxonomy&taxon_id=48222
+
+https://api.inaturalist.org/v1/observations/taxonomy?user_id=7733167
+
+~~
+
+view observations
+
+https://www.inaturalist.org/lifelists/quyksilver?view=tree&details_view=observations&tree_mode=full_taxonomy&taxon_id=48222
+
+
+https://api.inaturalist.org/v1/observations?user_id=7733167&order_by=observed_on&order=desc&locale=en&taxon_id=48222&per_page=50
+
+https://api.inaturalist.org/v1/observations/taxonomy?user_id=7733167
+ 
+~~
+
+view unobserved species
+
+https://www.inaturalist.org/lifelists/quyksilver?details_view=unobservedSpecies&tree_mode=full_taxonomy&taxon_id=48222
+
+https://api.inaturalist.org/v1/observations/species_counts?unobserved_by_user_id=7733167&taxon_id=48222&place_id=&quality_grade=research&locale=en&per_page=50
+
+https://api.inaturalist.org/v1/observations/taxonomy?user_id=7733167
+
+==

@@ -273,3 +273,19 @@ Visiting a flower of: (Interaction) - [23K observations](https://www.inaturalist
 
 
 Question for the people who are adding observation fields. If the only scientists who end up using the observation eating data are the scientists in charge of this project, would you add observation fields for this project?
+
+
+==
+
+Help with Observation Fields
+https://forum.inaturalist.org/t/help-with-observation-fields/
+
+Would someone review a few of my observations and be able to suggestion some observation fields? 
+
+~~
+
+If you want to see a list of observation fields that are used on similar observations, you can use @stockslager 's tool: https://stockslager.github.io/iNat/observation_fields/observation_fields.html
+
+https://forum.inaturalist.org/t/help-with-observation-fields/75931/10
+
+==
