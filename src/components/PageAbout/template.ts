@@ -13,7 +13,7 @@ import subspecies_results from "../../assets/images/subspecies_results.jpg";
 import subspecies_filters from "../../assets/images/subspecies_filters.jpg";
 import annotations from "../../assets/images/annotations.jpg";
 import filters from "../../assets/images/filters.jpg";
-import searchUsers from "../../assets/images/search_types.jpg";
+import searchTypes from "../../assets/images/search_types.jpg";
 import map_layers from "../../assets/images/map_layers.jpg";
 import observation_fields from "../../assets/images/observation_fields.jpg";
 import observation_fields_eating from "../../assets/images/observation_fields_eating.jpg";
@@ -43,7 +43,10 @@ export const template = html`
         identifications), and Annotators (people who add annotations). Also
         exclude items from search.
         <img
-          src="${searchUsers}"
+          width="500"
+          height="650"
+          loading="lazy"
+          src="${searchTypes}"
           alt="dropdown search menu has options to search by species, places, projects, observers, identifiers, and annotators"
         />
       </li>
@@ -70,6 +73,9 @@ export const template = html`
           data-id="multiple-records"
         ></app-accordion>
         <img
+          width="1000"
+          height="600"
+          loading="lazy"
           src="${observations}"
           alt="Monarch and narrowleaf milkweed observations in Los Angeles and San Diego."
         />
@@ -89,6 +95,9 @@ export const template = html`
           data-id="view-identifications"
         ></app-accordion>
         <img
+          width="1000"
+          height="600"
+          loading="lazy"
           src="${identifications}"
           alt="Monarch and narrowleaf milkweed identifications in Los Angeles and San Diego."
         />
@@ -105,6 +114,9 @@ export const template = html`
           data-id="map-layers"
         ></app-accordion>
         <img
+          width="1000"
+          height="650"
+          loading="lazy"
           src="${map_layers}"
           alt="Map of monarch and narrowleaf milkweed observations in Los Angeles and San Diego. Map  allows user to select grid, points, heatmap, and taxon range. "
         />
@@ -132,6 +144,9 @@ export const template = html`
         <figure>
           <figcaption>Grid view</figcaption>
           <img
+            width="1000"
+            height="500"
+            loading="lazy"
             src="${grid}"
             alt="Grid view of monarchs observations in Los Angeles"
           />
@@ -139,6 +154,9 @@ export const template = html`
         <figure>
           <figcaption>Media view</figcaption>
           <img
+            width="1000"
+            height="460"
+            loading="lazy"
             src="${media}"
             alt="Media view of monarchs observations in Los Angeles"
           />
@@ -146,6 +164,9 @@ export const template = html`
         <figure>
           <figcaption>Table view</figcaption>
           <img
+            width="1000"
+            height="480"
+            loading="lazy"
             src="${table}"
             alt="Table view of monarchs observations in Los Angeles"
           />
@@ -170,6 +191,9 @@ export const template = html`
         <figure>
           <figcaption>Grid view</figcaption>
           <img
+            width="1000"
+            height="400"
+            loading="lazy"
             src="${grid_ident}"
             alt="Grid view of monarchs identifications in Los Angeles"
           />
@@ -177,6 +201,9 @@ export const template = html`
         <figure>
           <figcaption>History view</figcaption>
           <img
+            width="1000"
+            height="600"
+            loading="lazy"
             src="${history_ident}"
             alt="History view of monarchs identifications in Los Angeles"
           />
@@ -211,7 +238,13 @@ export const template = html`
 
       <li>
         Group the filters by categories
-        <img src="${filters}" alt="Available filters" />
+        <img
+          width="1000"
+          height="500"
+          loading="lazy"
+          src="${filters}"
+          alt="Available filters"
+        />
       </li>
 
       <li id="annotations-filters">
@@ -258,7 +291,13 @@ export const template = html`
           </ol>"
           data-id="annotations"
         ></app-accordion>
-        <img src="${annotations}" alt="Available annotations filters" />
+        <img
+          width="1000"
+          height="600"
+          loading="lazy"
+          src="${annotations}"
+          alt="Available annotations filters"
+        />
       </li>
 
       <li id="observation-fields-filters">
@@ -276,12 +315,18 @@ export const template = html`
           data-id="observation-fields"
         ></app-accordion>
         <img
+          width="1000"
+          height="400"
+          loading="lazy"
           src="${observation_fields}"
           alt="Available observation fields filters"
         />
         <figure>
           <figcaption>Observation field popup menu for 'eating'</figcaption>
           <img
+            width="900"
+            height="400"
+            loading="lazy"
             src="${observation_fields_eating}"
             alt="pop menu showing a list of observations fields that match the term 'eating'"
           />
@@ -292,6 +337,9 @@ export const template = html`
             species name, and a popup menu will show list of matching species.
           </figcaption>
           <img
+            width="900"
+            height="400"
+            loading="lazy"
             src="${observation_fields_taxon}"
             alt="pop menu showing a list of species that match 'ray'"
           />
@@ -310,7 +358,13 @@ export const template = html`
           </ol>"
           data-id="bounding-box"
         ></app-accordion>
-        <img src="${custom_boundaries}" alt="" />
+        <img
+          width="1000"
+          height="450"
+          loading="lazy"
+          src="${custom_boundaries}"
+          alt=""
+        />
       </li>
 
       <li id="subspecies-list">
@@ -336,10 +390,16 @@ export const template = html`
           data-id="subspecies"
         ></app-accordion>
         <img
+          width="1000"
+          height="500"
+          loading="lazy"
           src="${subspecies_filters}"
           alt="Select subspecies ranks using the filters"
         />
         <img
+          width="1000"
+          height="360"
+          loading="lazy"
           src="${subspecies_results}"
           alt="Supspecies shown in species tab"
         />
@@ -361,6 +421,9 @@ export const template = html`
           data-id="name-order"
         ></app-accordion>
         <img
+          width="500"
+          height="850"
+          loading="lazy"
           src="${settings}"
           alt="Settings menu with common names/scientific names order, common names language, and records per page"
         />
@@ -404,6 +467,9 @@ export const template = html`
           data-id="display-fields"
         ></app-accordion>
         <img
+          width="1000"
+          height="750"
+          loading="lazy"
           src="${fields_displayed}"
           alt="click checkbox to set  which fields are displayed"
         />
@@ -424,7 +490,13 @@ export const template = html`
           </ol>"
           data-id="inat-links"
         ></app-accordion>
-        <img src="${inat_links}" alt="Links in the iNaturalist Links menu" />
+        <img
+          width="500"
+          height="550"
+          loading="lazy"
+          src="${inat_links}"
+          alt="Links in the iNaturalist Links menu"
+        />
       </li>
     </ol>
 
