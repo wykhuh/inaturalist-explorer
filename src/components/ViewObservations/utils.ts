@@ -51,6 +51,12 @@ import {
   histograph_month_monarch,
   histograph_year_milkweed,
   histograph_month_milkweed,
+  histograph_month_year_monarch_us,
+  histograph_month_year_monarch_mexico,
+  histograph_year_monarch_us,
+  histograph_year_monarch_mexico,
+  histograph_month_monarch_mexico,
+  histograph_month_monarch_us,
 } from "../../data/api/histogram";
 import { defaultColorScheme } from "../../lib/map_colors_utils";
 
@@ -75,6 +81,7 @@ export async function fetchAndRenderData(
     obsCache.observations = {} as iNatObservationsAPI;
     obsCache.graphsSpecies = {};
     obsCache.graphs = {};
+    obsCache.graphsPlaces = {};
   }
 
   //  handle graphs
@@ -114,6 +121,9 @@ export async function fetchAndRenderData(
     if (graphsMetadata.groupBy === "species") {
       selectedResource = "selectedTaxa";
       obsCache.graphsSpecies = graphData;
+    } else if (graphsMetadata.groupBy === "places") {
+      selectedResource = "selectedPlaces";
+      obsCache.graphsPlaces = graphData;
     } else {
       obsCache.graphs = graphData;
     }
@@ -196,45 +206,7 @@ async function fetchGraphData(appStore: AppStoreType) {
     .graphs as viewMetadataGraphs;
 
   if (import.meta.env?.VITE_CACHE === "true") {
-    let monarch = {
-      id: 48662,
-      name: "Danaus plexippus",
-      preferred_common_name: "Monarch",
-      color: defaultColorScheme[0],
-    } as NormalizediNatTaxonType;
-    let milkweed = {
-      id: 56851,
-      name: "Asclepias fascicularis",
-      preferred_common_name: "Narrowleaf Milkweed",
-      color: defaultColorScheme[1],
-    } as NormalizediNatTaxonType;
-    appStore.selectedTaxa = [monarch, milkweed];
-
-    if (graphsMetadata.groupBy === "species") {
-      graphData = {
-        month_of_year: [
-          histograph_month_year_monarch.results,
-          histograph_month_year_milkweed.results,
-        ],
-        year: [
-          histograph_year_monarch.results,
-          histograph_year_milkweed.results,
-        ],
-        month: [
-          histograph_month_monarch.results,
-          histograph_month_milkweed.results,
-        ],
-      };
-      appStore.cacheData.observations.graphsSpecies = graphData;
-    } else {
-      graphData = {
-        month_of_year: [histograph_month_year.results],
-        year: [histograph_year.results],
-        month: [histograph_month.results],
-      };
-      appStore.cacheData.observations.graphs = graphData;
-    }
-    return graphData;
+    return devCachedGraphData(appStore, graphsMetadata);
   }
 
   // fetch histogram data for each species
@@ -243,6 +215,28 @@ async function fetchGraphData(appStore: AppStoreType) {
 
     for await (const taxon of appStore.selectedTaxa) {
       paramsTemp.set("taxon_id", taxon.id.toString());
+      let params = paramsTemp.toString();
+
+      let monthYearData = await getAPIGraphData(params, "month_of_year");
+      if (monthYearData) {
+        graphData.month_of_year.push(monthYearData.results);
+      }
+      let yearData = await getAPIGraphData(params, "year");
+      if (yearData) {
+        graphData.year.push(yearData.results);
+      }
+      let monthData = await getAPIGraphData(params, "month");
+      if (monthData) {
+        graphData.month.push(monthData.results);
+      }
+    }
+    appStore.cacheData.observations.graphsSpecies = graphData;
+    // fetch histogram data for places
+  } else if (graphsMetadata.groupBy === "places") {
+    let paramsTemp = cleanupObervationsGraphParams(appStore, "observations");
+
+    for await (const place of appStore.selectedPlaces) {
+      paramsTemp.set("place_id", place.id.toString());
       let params = paramsTemp.toString();
 
       let monthYearData = await getAPIGraphData(params, "month_of_year");
@@ -280,6 +274,88 @@ async function fetchGraphData(appStore: AppStoreType) {
       graphData.month = [monthData.results];
     }
 
+    appStore.cacheData.observations.graphs = graphData;
+  }
+
+  return graphData;
+}
+
+function devCachedGraphData(
+  appStore: AppStoreType,
+  graphsMetadata: viewMetadataGraphs,
+) {
+  let graphData: GraphData = {
+    month_of_year: [],
+    year: [],
+    month: [],
+  };
+
+  let monarch = {
+    id: 48662,
+    name: "Danaus plexippus",
+    preferred_common_name: "Monarch",
+    color: defaultColorScheme[0],
+  } as NormalizediNatTaxonType;
+  let milkweed = {
+    id: 56851,
+    name: "Asclepias fascicularis",
+    preferred_common_name: "Narrowleaf Milkweed",
+    color: defaultColorScheme[1],
+  } as NormalizediNatTaxonType;
+  let unitedStates = {
+    id: 1,
+    name: "United States",
+    display_name: "United States",
+  };
+  let mexico = {
+    id: 6793,
+    name: "Mexico",
+    display_name: "Mexico",
+  };
+
+  if (graphsMetadata.groupBy === "species") {
+    appStore.selectedTaxa = [monarch, milkweed];
+    appStore.observationsApiParams.taxon_id = "48662,56851";
+
+    graphData = {
+      month_of_year: [
+        histograph_month_year_monarch.results,
+        histograph_month_year_milkweed.results,
+      ],
+      year: [histograph_year_monarch.results, histograph_year_milkweed.results],
+      month: [
+        histograph_month_monarch.results,
+        histograph_month_milkweed.results,
+      ],
+    };
+    appStore.cacheData.observations.graphsSpecies = graphData;
+  } else if (graphsMetadata.groupBy === "places") {
+    appStore.selectedTaxa = [monarch];
+    appStore.selectedPlaces = [unitedStates, mexico];
+    appStore.observationsApiParams.taxon_id = "48662";
+    appStore.observationsApiParams.place_id = "1,6793";
+
+    graphData = {
+      month_of_year: [
+        histograph_month_year_monarch_us.results,
+        histograph_month_year_monarch_mexico.results,
+      ],
+      year: [
+        histograph_year_monarch_us.results,
+        histograph_year_monarch_mexico.results,
+      ],
+      month: [
+        histograph_month_monarch_us.results,
+        histograph_month_monarch_mexico.results,
+      ],
+    };
+    appStore.cacheData.observations.graphsPlaces = graphData;
+  } else {
+    graphData = {
+      month_of_year: [histograph_month_year.results],
+      year: [histograph_year.results],
+      month: [histograph_month.results],
+    };
     appStore.cacheData.observations.graphs = graphData;
   }
 
@@ -638,6 +714,8 @@ export async function updateSubviewState(
   } else if (subview === "graph") {
     if (graphsMetadata.groupBy === "species") {
       renderGraphs(obsCache.graphsSpecies, appStore, "selectedTaxa");
+    } else if (graphsMetadata.groupBy === "places") {
+      renderGraphs(obsCache.graphsPlaces, appStore, "selectedPlaces");
     } else {
       renderGraphs(obsCache.graphs, appStore, undefined);
     }
@@ -725,8 +803,10 @@ export async function updateGraphs(formData: FormData, appStore: AppStoreType) {
     .graphs as viewMetadataGraphs;
   let obsCache = appStore.cacheData.observations;
 
-  if (formData.get("group-by-species") === "on") {
+  if (formData.get("graphs-group-by") === "species") {
     graphsMetadata.groupBy = "species";
+  } else if (formData.get("graphs-group-by") === "places") {
+    graphsMetadata.groupBy = "places";
   } else {
     delete graphsMetadata.groupBy;
   }
@@ -745,6 +825,17 @@ export async function updateGraphs(formData: FormData, appStore: AppStoreType) {
 
     let data = await fetchGraphData(appStore);
     obsCache.graphsSpecies = data;
+    // fetch places graph data
+  } else if (
+    graphsMetadata.groupBy === "places" &&
+    obsCache.graphsPlaces.month === undefined
+  ) {
+    if (await graphMaxObservationMessage(appStore, spinner)) {
+      return;
+    }
+
+    let data = await fetchGraphData(appStore);
+    obsCache.graphsPlaces = data;
 
     // fetch graph data
   } else if (obsCache.graphs.month === undefined) {
@@ -760,6 +851,8 @@ export async function updateGraphs(formData: FormData, appStore: AppStoreType) {
 
   if (graphsMetadata.groupBy === "species") {
     renderGraphs(obsCache.graphsSpecies, appStore, "selectedTaxa");
+  } else if (graphsMetadata.groupBy === "places") {
+    renderGraphs(obsCache.graphsPlaces, appStore, "selectedPlaces");
   } else {
     renderGraphs(obsCache.graphs, appStore, undefined);
   }

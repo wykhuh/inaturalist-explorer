@@ -75,6 +75,7 @@ export interface AppStoreType {
       observations: iNatObservationsAPI;
       graphs: GraphData;
       graphsSpecies: GraphData;
+      graphsPlaces: GraphData;
     };
     identifications: {
       identifications: IdentificationsAPI;

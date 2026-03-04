@@ -126,7 +126,7 @@ class ViewObservations extends HTMLElement {
       updateOrderForStore(data, window.app.store);
     }
 
-    if (this.graphForm && target.id === "group-by-species") {
+    if (this.graphForm && target.id === "graphs-group-by") {
       const data = new FormData(this.graphForm);
       updateGraphs(data, window.app.store);
     }

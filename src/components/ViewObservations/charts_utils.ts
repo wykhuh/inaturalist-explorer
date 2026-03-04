@@ -148,6 +148,12 @@ function createLineGraph(
       config.label = name;
       config.borderColor = taxon.color;
       config.backgroundColor = taxon.color;
+    } else if (
+      selectedResource === "selectedPlaces" &&
+      appStore.selectedPlaces.length > 0
+    ) {
+      let place = appStore.selectedPlaces[i];
+      config.label = place.name;
     }
     return config;
   });
@@ -157,7 +163,7 @@ function createLineGraph(
     options: {
       responsive: true,
       plugins: {
-        legend: { display: selectedResource === "selectedTaxa" },
+        legend: { display: selectedResource !== undefined },
         title: {
           display: true,
           text: chartTitle,

@@ -40,12 +40,12 @@ export const template = html`
 
       <form id="graph-form">
         <div class="form-group">
-          <input
-            type="checkbox"
-            name="group-by-species"
-            id="group-by-species"
-          />
-          <label for="group-by-species">Group by species</label>
+          <label for="graphs-group-by">Group by</label>
+          <select id="graphs-group-by" name="graphs-group-by">
+            <option>None</option>
+            <option value="species">Observed Species</option>
+            <option value="places">Places</option>
+          </select>
         </div>
       </form>
     </div>

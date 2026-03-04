@@ -46,6 +46,7 @@ export const mapStore: AppStoreType = {
       observations: {} as iNatObservationsAPI,
       graphs: {} as GraphData,
       graphsSpecies: {} as GraphData,
+      graphsPlaces: {} as GraphData,
     },
     identifications: { identifications: {} as IdentificationsAPI },
   },
