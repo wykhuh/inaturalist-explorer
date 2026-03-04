@@ -91,9 +91,19 @@ export function displayAppstoreData(appStore: AppStoreType, _source: string) {
       data.mapLayerDescriptions = leafletVisibleLayers(appStore);
     } else if (key === "selectedPlaces") {
       data.selectedPlaces = formatSelectedPlaces(appStore);
-    } else if (key === "observationsSubviewData") {
-      data.observationsSubviewData =
-        appStore.observationsSubviewData?.length || 0;
+    } else if (key === "cacheData") {
+      let obsData = appStore.cacheData.observations;
+      data.cacheData = {
+        observations: {
+          observations: obsData.observations.total_results,
+          graphs: obsData.graphs,
+          graphsSpecies: obsData.graphsSpecies,
+        },
+        identifications: {
+          identifications:
+            appStore.cacheData.identifications.identifications.total_results,
+        },
+      };
     } else if (key === "iNatStats") {
       // convert Map to object https://gist.github.com/lukehorvat/133e2293ba6ae96a35ba
       let obj = Object.fromEntries(appStore.iNatStats.headerCounts.entries());

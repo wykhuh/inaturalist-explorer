@@ -701,16 +701,18 @@ export type iNatHistogramApi = {
   total_results: number;
   page: number;
   per_page: number;
-  results: {
-    year?: {
-      [key: string]: number;
-    };
-    month?: {
-      [key: string]: number;
-    };
-    month_of_year?: {
-      [key: string]: number;
-    };
+  results: HistogramResult;
+};
+
+type HistogramResult = {
+  year?: {
+    [key: string]: number;
+  };
+  month?: {
+    [key: string]: number;
+  };
+  month_of_year?: {
+    [key: string]: number;
   };
 };
 

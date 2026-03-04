@@ -4,7 +4,12 @@ import type {
   AppStoreType,
   AppStoreKeysType,
   NormalizediNatUserType,
+  GraphData,
 } from "../types/app.d.ts";
+import type {
+  IdentificationsAPI,
+  iNatObservationsAPI,
+} from "../types/inat_api";
 import { loggerEvent, loggerStore } from "./logger.ts";
 
 // NOTE: update when adding selectedResource; default mapStore
@@ -36,9 +41,14 @@ export const mapStore: AppStoreType = {
     headerCounts: new Map() as unknown as Record<string, number>,
     headerCountsIndex: [],
   },
-  observationsSubviewData: {},
-  observationsGraphSubviewData: {},
-  observationsGraphSpeciesSubviewData: {},
+  cacheData: {
+    observations: {
+      observations: {} as iNatObservationsAPI,
+      graphs: {} as GraphData,
+      graphsSpecies: {} as GraphData,
+    },
+    identifications: { identifications: {} as IdentificationsAPI },
+  },
   currentView: "observations_observations",
   viewMetadata: {
     observations_observations: {

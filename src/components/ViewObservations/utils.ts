@@ -18,6 +18,7 @@ import type {
   viewMetadataGraphs,
   Spinner,
   NormalizediNatTaxonType,
+  GraphData,
 } from "../../types/app";
 import { observations_fields_annotations as observations } from "../../data/inat_api_cache";
 import { setInputChecked, setSelectedOption } from "../../lib/form_utils";
@@ -40,7 +41,6 @@ import {
   renderTaxonNames,
   renderUser,
 } from "../../lib/render_utils";
-import type { GraphData } from "../../data/app_data";
 import {
   histograph_year,
   histograph_month,
@@ -68,12 +68,13 @@ export async function fetchAndRenderData(
   let subcontainerEl =
     document.querySelector<HTMLDivElement>(".subview-container");
   if (!subcontainerEl) return;
+  let obsCache = appStore.cacheData.observations;
 
   // clear cache
   if (useCache === false) {
-    appStore.observationsGraphSubviewData = {};
-    appStore.observationsGraphSpeciesSubviewData = {};
-    appStore.observationsSubviewData = {};
+    obsCache.observations = {} as iNatObservationsAPI;
+    obsCache.graphsSpecies = {};
+    obsCache.graphs = {};
   }
 
   //  handle graphs
@@ -87,12 +88,12 @@ export async function fetchAndRenderData(
     if (
       useCache &&
       graphsMetadata.groupBy === "species" &&
-      appStore.observationsGraphSpeciesSubviewData.month
+      obsCache.graphsSpecies.month
     ) {
-      graphData = appStore.observationsGraphSpeciesSubviewData;
+      graphData = obsCache.graphsSpecies;
       // use cache data
-    } else if (useCache && appStore.observationsGraphSubviewData.month) {
-      graphData = appStore.observationsGraphSubviewData;
+    } else if (useCache && obsCache.graphs.month) {
+      graphData = obsCache.graphs;
       // fetch new data
     } else {
       let spinner = createSpinner();
@@ -112,9 +113,9 @@ export async function fetchAndRenderData(
       undefined;
     if (graphsMetadata.groupBy === "species") {
       selectedResource = "selectedTaxa";
-      appStore.observationsGraphSpeciesSubviewData = graphData;
+      obsCache.graphsSpecies = graphData;
     } else {
-      appStore.observationsGraphSubviewData = graphData;
+      obsCache.graphs = graphData;
     }
 
     // render data
@@ -125,8 +126,8 @@ export async function fetchAndRenderData(
     // get data
     let data;
     // use cache data
-    if (useCache && appStore.observationsSubviewData.results) {
-      data = appStore.observationsSubviewData;
+    if (useCache && obsCache.observations.results) {
+      data = obsCache.observations;
       // fetch new data
     } else {
       let spinner = createSpinner();
@@ -146,12 +147,12 @@ export async function fetchAndRenderData(
       ];
     if (view.subview !== "map" && data.results.length == 0) {
       subcontainerEl.innerHTML = "No records found";
-      appStore.observationsSubviewData = {};
+      obsCache.observations = {} as iNatObservationsAPI;
       return;
     }
 
     // store results in store
-    appStore.observationsSubviewData = data;
+    obsCache.observations = data;
 
     // render data
     if (appStore.viewMetadata.observations_observations.subview === "map") {
@@ -224,12 +225,14 @@ async function fetchGraphData(appStore: AppStoreType) {
           histograph_month_milkweed.results,
         ],
       };
+      appStore.cacheData.observations.graphsSpecies = graphData;
     } else {
       graphData = {
         month_of_year: [histograph_month_year.results],
         year: [histograph_year.results],
         month: [histograph_month.results],
       };
+      appStore.cacheData.observations.graphs = graphData;
     }
     return graphData;
   }
@@ -255,7 +258,7 @@ async function fetchGraphData(appStore: AppStoreType) {
         graphData.month.push(monthData.results);
       }
     }
-    appStore.observationsGraphSpeciesSubviewData = graphData;
+    appStore.cacheData.observations.graphsSpecies = graphData;
 
     // fetch histogram data
   } else {
@@ -277,7 +280,7 @@ async function fetchGraphData(appStore: AppStoreType) {
       graphData.month = [monthData.results];
     }
 
-    appStore.observationsGraphSubviewData = graphData;
+    appStore.cacheData.observations.graphs = graphData;
   }
 
   return graphData;
@@ -555,6 +558,7 @@ export async function updateSubviewState(
   // early return if this is current subview
   let view = appStore.viewMetadata.observations_observations;
   if (subview === view.subview) return;
+  let obsCache = appStore.cacheData.observations;
 
   // remove map when change from map to other subview
   if (view.subview === "map") {
@@ -587,7 +591,7 @@ export async function updateSubviewState(
     // fetch graph species data
     if (
       graphsMetadata.groupBy === "species" &&
-      appStore.observationsGraphSpeciesSubviewData.month === undefined
+      obsCache.graphsSpecies.month === undefined
     ) {
       let spinner = createSpinner();
       spinner.start();
@@ -598,11 +602,11 @@ export async function updateSubviewState(
       }
 
       let data = await fetchGraphData(appStore);
-      appStore.observationsGraphSpeciesSubviewData = data;
+      obsCache.graphsSpecies = data;
 
       spinner.stop();
       // fetch graph data
-    } else if (appStore.observationsGraphSubviewData.month === undefined) {
+    } else if (obsCache.graphs.month === undefined) {
       let spinner = createSpinner();
       spinner.start();
 
@@ -612,17 +616,19 @@ export async function updateSubviewState(
       }
 
       let data = await fetchGraphData(appStore);
-      appStore.observationsGraphSubviewData = data;
+      obsCache.graphs = data;
 
       spinner.stop();
     }
     // if no cache data, fetch data
-  } else if (appStore.observationsSubviewData.results === undefined) {
+  } else if (obsCache.observations.results === undefined) {
     let spinner = createSpinner();
     spinner.start();
 
     let data = await getAPIData(appStore);
-    appStore.observationsSubviewData = data;
+    if (data) {
+      obsCache.observations = data;
+    }
 
     spinner.stop();
   }
@@ -631,18 +637,14 @@ export async function updateSubviewState(
     renderMap(appStore);
   } else if (subview === "graph") {
     if (graphsMetadata.groupBy === "species") {
-      renderGraphs(
-        appStore.observationsGraphSpeciesSubviewData,
-        appStore,
-        "selectedTaxa",
-      );
+      renderGraphs(obsCache.graphsSpecies, appStore, "selectedTaxa");
     } else {
-      renderGraphs(appStore.observationsGraphSubviewData, appStore, undefined);
+      renderGraphs(obsCache.graphs, appStore, undefined);
     }
   } else if (subview === "table") {
-    renderTable(appStore.observationsSubviewData, paginationCallback, appStore);
+    renderTable(obsCache.observations, paginationCallback, appStore);
   } else {
-    renderGrid(appStore.observationsSubviewData, paginationCallback, appStore);
+    renderGrid(obsCache.observations, paginationCallback, appStore);
   }
 
   // add subview to url
@@ -721,6 +723,7 @@ export async function updateOrderForStore(
 export async function updateGraphs(formData: FormData, appStore: AppStoreType) {
   let graphsMetadata = appStore.viewMetadata.observations_observations
     .graphs as viewMetadataGraphs;
+  let obsCache = appStore.cacheData.observations;
 
   if (formData.get("group-by-species") === "on") {
     graphsMetadata.groupBy = "species";
@@ -728,45 +731,37 @@ export async function updateGraphs(formData: FormData, appStore: AppStoreType) {
     delete graphsMetadata.groupBy;
   }
 
+  let spinner = createSpinner();
+  spinner.start();
+
   // fetch species graph data
   if (
     graphsMetadata.groupBy === "species" &&
-    appStore.observationsGraphSpeciesSubviewData.month === undefined
+    obsCache.graphsSpecies.month === undefined
   ) {
-    let spinner = createSpinner();
-    spinner.start();
-
     if (await graphMaxObservationMessage(appStore, spinner)) {
       return;
     }
 
     let data = await fetchGraphData(appStore);
-    appStore.observationsGraphSpeciesSubviewData = data;
+    obsCache.graphsSpecies = data;
 
-    spinner.stop();
     // fetch graph data
-  } else if (appStore.observationsGraphSubviewData.month === undefined) {
-    let spinner = createSpinner();
-    spinner.start();
-
+  } else if (obsCache.graphs.month === undefined) {
     if (await graphMaxObservationMessage(appStore, spinner)) {
       return;
     }
 
     let data = await fetchGraphData(appStore);
-    appStore.observationsGraphSubviewData = data;
-
-    spinner.stop();
+    obsCache.graphs = data;
   }
 
+  spinner.stop();
+
   if (graphsMetadata.groupBy === "species") {
-    renderGraphs(
-      appStore.observationsGraphSpeciesSubviewData,
-      appStore,
-      "selectedTaxa",
-    );
+    renderGraphs(obsCache.graphsSpecies, appStore, "selectedTaxa");
   } else {
-    renderGraphs(appStore.observationsGraphSubviewData, appStore, undefined);
+    renderGraphs(obsCache.graphs, appStore, undefined);
   }
 }
 

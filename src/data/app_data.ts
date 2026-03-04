@@ -52,7 +52,6 @@ import type {
   ObservationSubviewsType,
   ObservationViewsType,
 } from "../types/app";
-import type { iNatObservationsHistogramResult } from "../types/inat_api";
 
 export const validObservationsViews: ObservationViewsType[] = [
   "observations_observations",
@@ -570,10 +569,4 @@ export let recordTypeToPathObj = {
 
 export let pathToRecordType = {
   ...objectFlip(recordTypeToPathObj),
-};
-
-export type GraphData = {
-  month_of_year: iNatObservationsHistogramResult[];
-  year: iNatObservationsHistogramResult[];
-  month: iNatObservationsHistogramResult[];
 };

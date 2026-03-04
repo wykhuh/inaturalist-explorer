@@ -44,12 +44,13 @@ export async function fetchAndRenderData(
   if (!data) return;
   if (data.results.length == 0) {
     subcontainerEl.innerHTML = "No records found";
-    appStore.observationsSubviewData = [];
+    appStore.cacheData.identifications.identifications =
+      {} as IdentificationsAPI;
     return;
   }
 
   // store results in store for switching subview
-  appStore.observationsSubviewData = data;
+  appStore.cacheData.identifications.identifications = data;
 
   render(data, paginationCallback, appStore);
 }
@@ -247,11 +248,15 @@ export function updateSubviewState(
     componentContext.historyLinkEl.classList.remove("current-subview");
   }
 
-  if (appStore.observationsSubviewData.length === 0) {
+  if (appStore.cacheData.identifications.identifications.length === 0) {
     return;
   }
 
-  render(appStore.observationsSubviewData, paginationCallback, appStore);
+  render(
+    appStore.cacheData.identifications.identifications,
+    paginationCallback,
+    appStore,
+  );
 
   // add subview to url
   updateAppUrl(window.location, appStore);

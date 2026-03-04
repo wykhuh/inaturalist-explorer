@@ -8,8 +8,13 @@ import type {
   GeoJSON,
   Polygon,
 } from "leaflet";
-import type { PolygonJson, MultiPolygonJson } from "./inat_api";
+import type {
+  PolygonJson,
+  MultiPolygonJson,
+  iNatObservationsAPI,
+} from "./inat_api";
 import type { TerraDraw } from "terra-draw";
+import type { GraphData } from "../data/app_data";
 
 declare global {
   interface Window {
@@ -65,9 +70,16 @@ export interface AppStoreType {
     headerCountsIndex: string[];
   };
   currentView?: ObservationViewsType;
-  observationsSubviewData: iNatObservationsAPI;
-  observationsGraphSubviewData: iNatObservationsHistogramAPI;
-  observationsGraphSpeciesSubviewData: iNatObservationsHistogramAPI;
+  cacheData: {
+    observations: {
+      observations: iNatObservationsAPI;
+      graphs: GraphData;
+      graphsSpecies: GraphData;
+    };
+    identifications: {
+      identifications: IdentificationsAPI;
+    };
+  };
   viewMetadata: {
     observations_observations: ViewOptions;
     observations_species: ViewOptions;
@@ -82,6 +94,12 @@ export interface AppStoreType {
   };
   record_type: RecordTypes;
 }
+
+export type GraphData = {
+  month_of_year: iNatObservationsHistogramResult[];
+  year: iNatObservationsHistogramResult[];
+  month: iNatObservationsHistogramResult[];
+};
 
 type RecordTypes = "observations" | "identifications" | "about";
 
