@@ -9,6 +9,7 @@ export const template = html`
           <button class="subview-map" data-subview="map">Map</button>
           <button class="subview-grid" data-subview="grid">Grid</button>
           <button class="subview-media" data-subview="media">Media</button>
+          <button class="subview-table" data-subview="table">Table</button>
           <button class="subview-graph" data-subview="graph">Graphs</button>
         </div>
       </div>

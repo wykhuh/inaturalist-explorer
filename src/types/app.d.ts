@@ -109,7 +109,12 @@ export type ObservationViewsType =
   | "identifications_observers"
   | "identifications_identifications";
 
-export type ObservationSubviewsType = "graph" | "grid" | "media" | "map";
+export type ObservationSubviewsType =
+  | "graph"
+  | "grid"
+  | "media"
+  | "map"
+  | "table";
 
 export type IdentificationSubviewsType = "grid" | "map" | "history";
 

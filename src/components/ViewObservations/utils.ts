@@ -338,6 +338,51 @@ function renderGrid(
   containerEl.appendChild(pagination2);
 }
 
+function renderTable(
+  data: iNatObservationsAPI,
+  paginationCallback: any,
+  appStore: AppStoreType,
+) {
+  let containerEl = document.querySelector(".subview-container");
+  let orderFormEl = document.querySelector("#order-form");
+  let graphGroupByFormEl = document.querySelector("#graph-form");
+  if (!containerEl) return;
+  if (!orderFormEl) return;
+  if (!graphGroupByFormEl) return;
+
+  containerEl.innerHTML = "";
+  orderFormEl.className = "";
+  graphGroupByFormEl.className = "hide";
+
+  let pagination1 = document.createElement(
+    "app-pagination",
+  ) as unknown as DataComponentType;
+  pagination1.data = {
+    perPage: data.per_page,
+    currentPage: data.page,
+    totalRecords: data.total_results,
+    paginationCallback,
+  };
+  containerEl.appendChild(pagination1);
+
+  let subviewEl = document.createElement("div");
+  subviewEl.className = "observations-subview";
+
+  subviewEl.appendChild(createTable(data.results, appStore));
+  containerEl.append(subviewEl);
+
+  let pagination2 = document.createElement(
+    "app-pagination",
+  ) as unknown as DataComponentType;
+  pagination2.data = {
+    perPage: data.per_page,
+    currentPage: data.page,
+    totalRecords: data.total_results,
+    paginationCallback,
+    scrollToSelector: "#observations-list-controls",
+  };
+  containerEl.appendChild(pagination2);
+}
 
 function renderMap(appStore: AppStoreType) {
   let containerEl = document.querySelector(".subview-container");
@@ -593,6 +638,8 @@ export async function updateSubviewState(
       );
     } else {
       renderGraphs(appStore.observationsGraphSubviewData, appStore, undefined);
+    }
+  } else if (subview === "table") {
     renderTable(appStore.observationsSubviewData, paginationCallback, appStore);
   } else {
     renderGrid(appStore.observationsSubviewData, paginationCallback, appStore);
@@ -614,6 +661,7 @@ export function initFilters(appStore: AppStoreType, componentContext: any) {
     componentContext.mediaLinkEl?.classList.add("current-subview");
   } else if (subview === "map") {
     componentContext.mapLinkEl?.classList.add("current-subview");
+  } else if (subview === "table") {
     componentContext.tableLinkEl?.classList.add("current-subview");
   } else {
     componentContext.gridLinkEl?.classList.add("current-subview");
@@ -720,6 +768,118 @@ export async function updateGraphs(formData: FormData, appStore: AppStoreType) {
   } else {
     renderGraphs(appStore.observationsGraphSubviewData, appStore, undefined);
   }
+}
+
+export function createTable(
+  results: ObservationsResult[],
+  appStore: AppStoreType,
+) {
+  let tableEl = document.createElement("table") as HTMLElement;
+  tableEl.className = "observations-table table";
+
+  let rowEl = document.createElement("tr");
+
+  let tdEl = document.createElement("th");
+  tdEl.textContent = "Media";
+  rowEl.appendChild(tdEl);
+
+  tdEl = document.createElement("th");
+  tdEl.textContent = "Name";
+  rowEl.appendChild(tdEl);
+
+  tdEl = document.createElement("th");
+  tdEl.textContent = "User";
+  rowEl.appendChild(tdEl);
+
+  tdEl = document.createElement("th");
+  tdEl.textContent = "Place";
+  rowEl.appendChild(tdEl);
+
+  tdEl = document.createElement("th");
+  tdEl.textContent = "Observed";
+  rowEl.appendChild(tdEl);
+
+  tdEl = document.createElement("th");
+  tdEl.textContent = "Added";
+  rowEl.appendChild(tdEl);
+
+  tableEl.appendChild(rowEl);
+
+  results.forEach((row) => {
+    let rowEl = document.createElement("tr");
+
+    // media
+    let tdEl = document.createElement("td");
+    tdEl.className = "media-cell";
+    let url = `${iNatObservationUrl}/${row.id}`;
+    tdEl.innerHTML = renderMedia(
+      url,
+      row.taxon,
+      row.photos,
+      row.sounds,
+      appStore,
+      true,
+      "square",
+    );
+    rowEl.appendChild(tdEl);
+
+    // taxon name, observation metadata
+    tdEl = document.createElement("td");
+    tdEl.className = "name";
+    let observationContent = ``;
+
+    if (row.taxon) {
+      observationContent += renderTaxonNames(
+        row.taxon,
+        appStore,
+        `${iNatObservationUrl}/${row.id}`,
+      );
+
+      // some obsevations only have sound and no tax info
+    } else {
+      observationContent += `<span class="title">`;
+      observationContent += `<a href="${iNatObservationUrl}/${row.id}">Unknown</a>`;
+      observationContent += "</span>";
+    }
+
+    observationContent += renderQualityGrade(row.quality_grade);
+    observationContent += renderObservationMetadataCounts(row);
+
+    tdEl.innerHTML = observationContent;
+    rowEl.appendChild(tdEl);
+
+    // user
+    tdEl = document.createElement("td");
+    tdEl.className = "user";
+    tdEl.innerHTML = renderUser(row.user);
+    rowEl.appendChild(tdEl);
+
+    // place
+    tdEl = document.createElement("td");
+    tdEl.className = "place";
+    let placeContent = renderPlace(row.place_guess, row.obscured);
+    tdEl.innerHTML = placeContent;
+    rowEl.appendChild(tdEl);
+
+    // observed on
+    tdEl = document.createElement("td");
+    tdEl.className = "observed";
+    if (row.time_observed_at) {
+      tdEl.innerText = ` ${formatDateLong(row.time_observed_at, row.observed_time_zone)}`;
+    }
+    rowEl.appendChild(tdEl);
+
+    // created
+    tdEl = document.createElement("td");
+    tdEl.className = "created";
+    tdEl.innerText = ` ${formatDateLong(row.created_at, row.created_time_zone)}`;
+
+    rowEl.appendChild(tdEl);
+
+    tableEl.appendChild(rowEl);
+  });
+
+  return tableEl;
 }
 
 export function createGrid(results: ObservationsResult[]) {

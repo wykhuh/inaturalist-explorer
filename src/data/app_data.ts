@@ -77,6 +77,7 @@ export const validObservationsSubviews: ObservationSubviewsType[] = [
   "grid",
   "media",
   "graph",
+  "table",
 ];
 export const validIdentificationsSubviews: IdentificationSubviewsType[] = [
   "map",

@@ -22,6 +22,7 @@ class ViewObservations extends HTMLElement {
   }
 
   mapLinkEl: null | HTMLElement = null;
+  tableLinkEl: null | HTMLElement = null;
   graphLinkEl: null | HTMLElement = null;
   gridLinkEl: null | HTMLElement = null;
   mediaLinkEl: null | HTMLElement = null;
@@ -33,6 +34,7 @@ class ViewObservations extends HTMLElement {
     setupComponent(template, this);
 
     this.mapLinkEl = document.querySelector<HTMLElement>(".subview-map");
+    this.tableLinkEl = document.querySelector<HTMLElement>(".subview-table");
     this.graphLinkEl = document.querySelector<HTMLElement>(".subview-graph");
     this.gridLinkEl = document.querySelector<HTMLElement>(".subview-grid");
     this.mediaLinkEl = document.querySelector<HTMLElement>(".subview-media");
@@ -40,6 +42,7 @@ class ViewObservations extends HTMLElement {
     this.graphForm = this.querySelector<HTMLFormElement>("#graph-form");
 
     if (!this.mapLinkEl) return;
+    if (!this.tableLinkEl) return;
     if (!this.graphLinkEl) return;
     if (!this.gridLinkEl) return;
     if (!this.mediaLinkEl) return;
@@ -55,6 +58,7 @@ class ViewObservations extends HTMLElement {
     window.addEventListener("perPageChanged", this);
 
     this.mapLinkEl.addEventListener("click", this);
+    this.tableLinkEl.addEventListener("click", this);
     this.graphLinkEl.addEventListener("click", this);
     this.gridLinkEl.addEventListener("click", this);
     this.mediaLinkEl.addEventListener("click", this);
@@ -73,6 +77,7 @@ class ViewObservations extends HTMLElement {
     window.removeEventListener("identificationsChange", this);
     window.removeEventListener("perPageChanged", this);
     this.mapLinkEl?.removeEventListener("click", this);
+    this.tableLinkEl?.removeEventListener("click", this);
     this.graphLinkEl?.removeEventListener("click", this);
     this.gridLinkEl?.removeEventListener("click", this);
     this.mediaLinkEl?.removeEventListener("click", this);
@@ -104,6 +109,7 @@ class ViewObservations extends HTMLElement {
     if (event.type === "click") {
       if (
         subview &&
+        this.tableLinkEl &&
         this.graphLinkEl &&
         this.gridLinkEl &&
         this.mediaLinkEl &&
