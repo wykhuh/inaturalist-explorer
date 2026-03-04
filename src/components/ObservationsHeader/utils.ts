@@ -37,11 +37,6 @@ export function updateCountsHeader(appStore: AppStoreType) {
       params,
       appStore,
     );
-    document
-      .querySelectorAll("#observations_species_label")
-      .forEach((label) => {
-        label.textContent = "Species";
-      });
   }
   updateHeaderCount(
     "observations_identifiers",

@@ -129,6 +129,7 @@ export async function updateHeaderCount(
   if (!cacheCount) {
     await saveHeaderCount(count, hash, appStore, maxCacheSize);
   }
+  return count;
 }
 
 export async function updateHeaderSubSpeciesCount(
@@ -163,6 +164,7 @@ export async function updateHeaderSubSpeciesCount(
   if (!cacheCount) {
     await saveHeaderCount(count, hash, appStore, maxCacheSize);
   }
+  return count;
 }
 
 async function getSubspeciesCount(
