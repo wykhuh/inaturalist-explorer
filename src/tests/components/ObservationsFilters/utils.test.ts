@@ -305,8 +305,8 @@ describe("initFilters", () => {
         }
       }
       let optionEl = el.querySelectorAll("option");
-      let optionEl1 = optionEl[1];
-      let optionEl2 = optionEl[2];
+      let optionEl1 = optionEl[2];
+      let optionEl2 = optionEl[3];
 
       let store = structuredClone(mapStore);
       store.observationsApiParams = {

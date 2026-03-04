@@ -255,6 +255,7 @@ test("add page when user changes view and page for each view", async () => {
   });
   expect(store.viewMetadata.observations_observations).toStrictEqual({
     displayFields: {},
+    graphs: {},
     subview: "map",
     perPage: perPage,
   });
@@ -264,6 +265,7 @@ test("add page when user changes view and page for each view", async () => {
 
   expect(store.viewMetadata.observations_observations).toStrictEqual({
     displayFields: {},
+    graphs: {},
     subview: "map",
     perPage: perPage,
     page: 5,

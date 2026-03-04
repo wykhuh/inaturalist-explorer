@@ -15,14 +15,13 @@ import {
 } from "chart.js";
 import "chartjs-adapter-spacetime";
 
-// import Chart from "chart.js/auto";
-
-import type { DataComponentType } from "../../types/app";
 import type {
-  iNatObservationsHistogramResult,
-  ObservationsResult,
-} from "../../types/inat_api";
-// import { displayJSON } from "./utils";
+  AppStoreSelectedResourcesKeysType,
+  AppStoreType,
+} from "../../types/app";
+import type { iNatObservationsHistogramResult } from "../../types/inat_api";
+
+import { formatTaxonName } from "../../lib/data_utils";
 
 Chart.register(
   Colors,
@@ -48,44 +47,27 @@ function formatMonthOfYearData(records: { [k: string]: number }) {
   return { labels, values };
 }
 
-function formatYearData(records: { [k: string]: number }, lastTenYears = true) {
+function formatYearData(records: { [k: string]: number }) {
   let labels: Date[] = [];
   let values: number[] = [];
   Object.entries(records).forEach(([k, v]) => {
-    let date = new Date(`${k} 0:05:00`);
-
+    let date = new Date(`${k} 00:05:00`);
     labels.push(date);
     values.push(v);
   });
-
-  // get last full ten years
-  if (lastTenYears) {
-    let length = labels.length;
-    labels = labels.slice(length - 10);
-    values = values.slice(length - 10);
-  }
 
   return { labels: labels, values: values };
 }
 
-function formatMonthData(
-  records: { [k: string]: number },
-  lastTenYears = true,
-) {
+function formatMonthData(records: { [k: string]: number }) {
   let labels: Date[] = [];
   let values: number[] = [];
   Object.entries(records).forEach(([k, v]) => {
-    let date = new Date(`${k} 0:05:00`);
+    let date = new Date(`${k} 00:05:00`);
     labels.push(date);
     values.push(v);
   });
 
-  // get last ten years
-  if (lastTenYears) {
-    let length = labels.length;
-    labels = labels.slice(length - 12 * 10);
-    values = values.slice(length - 12 * 10);
-  }
   return { labels: labels, values: values };
 }
 
@@ -131,19 +113,51 @@ export const CHART_COLORS = {
 
 type TimeUnits = "day" | "week" | "month" | "quarter" | "year";
 
+type ChartDataConfig = {
+  label?: string;
+  data: any[];
+  borderColor?: string;
+  fill?: boolean;
+  cubicInterpolationMode?: "monotone";
+  tension?: number;
+  backgroundColor?: string;
+};
+
 function createLineGraph(
   containerEl: HTMLCanvasElement,
-  data: number[],
+  data: number[][],
   labels: string[] | number[] | Date[],
+  appStore: AppStoreType,
+  selectedResource: AppStoreSelectedResourcesKeysType | undefined,
   chartTitle = "",
   timeUnit: TimeUnits | null,
 ) {
+  let dataSets = data.map((datum, i) => {
+    let config: ChartDataConfig = {
+      data: datum,
+      cubicInterpolationMode: "monotone",
+    };
+
+    if (
+      selectedResource === "selectedTaxa" &&
+      appStore.selectedTaxa.length > 0
+    ) {
+      let taxon = appStore.selectedTaxa[i];
+      let { title, subtitle } = formatTaxonName(taxon, appStore);
+      let name = subtitle ? `${title} (${subtitle})` : title;
+      config.label = name;
+      config.borderColor = taxon.color;
+      config.backgroundColor = taxon.color;
+    }
+    return config;
+  });
+
   let config: ChartConfiguration = {
     type: "line",
     options: {
       responsive: true,
       plugins: {
-        legend: { display: false },
+        legend: { display: selectedResource === "selectedTaxa" },
         title: {
           display: true,
           text: chartTitle,
@@ -166,21 +180,14 @@ function createLineGraph(
 
               return label;
             },
-            // label: function (context) {
-            //   let label = context.formattedValue;
-            //   // if (context.parsed.y !== null) {
-            //   //   label += new Intl.NumberFormat("en-US", {
-            //   //     style: "currency",
-            //   //     currency: "USD",
-            //   //   }).format(context.parsed.y);
-            //   // }
-            //   return label;
-            // },
           },
         },
       },
+      interaction: {
+        mode: "index",
+        intersect: false,
+      },
       scales: {
-        // y axis always start at zero
         y: {
           beginAtZero: true,
         },
@@ -188,14 +195,10 @@ function createLineGraph(
     },
     data: {
       labels: labels,
-      datasets: [
-        {
-          data: data,
-          cubicInterpolationMode: "monotone",
-        },
-      ],
+      datasets: dataSets,
     },
   };
+
   if (timeUnit && config.options && config.options.scales) {
     config.options.scales.x = {
       type: "time",
@@ -204,88 +207,80 @@ function createLineGraph(
       },
     };
   }
+
   new Chart(containerEl as ChartItem, config);
 }
 
-export async function createGraph(results: iNatObservationsHistogramResult) {
+export function createGraphs(
+  results: iNatObservationsHistogramResult[],
+  appStore: AppStoreType,
+  selectedResource?: AppStoreSelectedResourcesKeysType,
+) {
+  if (results.length === 0) return;
+
   let containerEl = document.createElement("canvas");
   let id = `graph-${Math.round(new Date().getTime() * Math.random())}`;
   containerEl.id = id;
+  if (results[0].month_of_year) {
+    let combinedValues = [] as number[][];
+    let combinedLabels = [] as string[];
+    results.forEach((result) => {
+      if (result.month_of_year) {
+        let { values, labels } = formatMonthOfYearData(result.month_of_year);
+        combinedValues.push(values);
+        combinedLabels = labels;
+      }
+    });
 
-  if (results.month_of_year) {
-    let { values, labels } = formatMonthOfYearData(results.month_of_year);
     createLineGraph(
       containerEl,
-      values,
-      labels,
+      combinedValues,
+      combinedLabels,
+      appStore,
+      selectedResource,
       "Observations by month/year",
       null,
     );
-    // displayJSON(results.month_of_year, parentEl);
-  } else if (results.year) {
-    let { labels, values } = formatYearData(results.year);
+  } else if (results[0].year) {
+    let combinedValues = [] as number[][];
+    let combinedLabels = [] as Date[];
+    results.forEach((result) => {
+      if (result.year) {
+        let { values, labels } = formatYearData(result.year);
+        combinedValues.push(values);
+        combinedLabels = labels;
+      }
+    });
+
     createLineGraph(
       containerEl,
-      values,
-      labels,
+      combinedValues,
+      combinedLabels,
+      appStore,
+      selectedResource,
       "Observations by year",
       "year",
     );
-    // displayJSON(results.year, parentEl);
-  } else if (results.month) {
-    let { labels, values } = formatMonthData(results.month);
+  } else if (results[0].month) {
+    let combinedValues = [] as number[][];
+    let combinedLabels = [] as Date[];
+    results.forEach((result) => {
+      if (result.month) {
+        let { values, labels } = formatMonthData(result.month);
+        combinedValues.push(values);
+        combinedLabels = labels;
+      }
+    });
+
     createLineGraph(
       containerEl,
-      values,
-      labels,
+      combinedValues,
+      combinedLabels,
+      appStore,
+      selectedResource,
       "Observations by month",
       "month",
     );
-    // displayJSON(results.month, parentEl);
   }
-
   return containerEl;
-}
-
-export function createGrid(results: ObservationsResult[]) {
-  let containerEl = document.createElement("div");
-  containerEl.className = "observations-grid grid-auto-fill";
-
-  results.forEach((row) => {
-    let cardEl = document.createElement(
-      "card-observation",
-    ) as unknown as DataComponentType;
-    cardEl.data = row;
-    containerEl.appendChild(cardEl);
-  });
-
-  return containerEl;
-}
-
-export function createMediaGrid(results: ObservationsResult[]) {
-  let containerEl = document.createElement("div");
-  containerEl.className = "observations-media-grid grid-auto-fill";
-  results.forEach((record) => {
-    let media = record.photos.concat(record.sounds);
-    media.forEach((medium, j) => {
-      let cardEl = document.createElement(
-        "card-media",
-      ) as unknown as DataComponentType;
-      cardEl.data = {
-        observation: record,
-        media: medium,
-        mediaIndex: j,
-        type: medium.url ? "photo" : "sound",
-      };
-      containerEl.appendChild(cardEl);
-    });
-  });
-
-  return containerEl;
-}
-
-export function createMap() {
-  let divEl = document.createElement("div");
-  divEl.id = "map";
-  return divEl;
 }

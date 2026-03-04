@@ -9,6 +9,7 @@ import {
   paginationCallback,
   updateSubviewState,
   updateOrderForStore,
+  updateGraphs,
 } from "./utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import { setupComponent } from "../../lib/component_utils";
@@ -25,6 +26,7 @@ class ViewObservations extends HTMLElement {
   gridLinkEl: null | HTMLElement = null;
   mediaLinkEl: null | HTMLElement = null;
   orderForm: null | HTMLFormElement = null;
+  graphForm: null | HTMLFormElement = null;
 
   connectedCallback() {
     loggerRender("++ ViewObservations connectedCallback");
@@ -35,11 +37,14 @@ class ViewObservations extends HTMLElement {
     this.gridLinkEl = document.querySelector<HTMLElement>(".subview-grid");
     this.mediaLinkEl = document.querySelector<HTMLElement>(".subview-media");
     this.orderForm = this.querySelector<HTMLFormElement>("#order-form");
+    this.graphForm = this.querySelector<HTMLFormElement>("#graph-form");
+
     if (!this.mapLinkEl) return;
     if (!this.graphLinkEl) return;
     if (!this.gridLinkEl) return;
     if (!this.mediaLinkEl) return;
     if (!this.orderForm) return;
+    if (!this.graphForm) return;
 
     this.render(window.app.store);
 
@@ -54,6 +59,7 @@ class ViewObservations extends HTMLElement {
     this.gridLinkEl.addEventListener("click", this);
     this.mediaLinkEl.addEventListener("click", this);
     this.orderForm.addEventListener("change", this);
+    this.graphForm.addEventListener("change", this);
   }
 
   disconnectedCallback() {
@@ -71,21 +77,27 @@ class ViewObservations extends HTMLElement {
     this.gridLinkEl?.removeEventListener("click", this);
     this.mediaLinkEl?.removeEventListener("click", this);
     this.orderForm?.removeEventListener("change", this);
+    this.graphForm?.removeEventListener("change", this);
   }
 
   handleEvent(event: Event) {
     let target = event.target as HTMLElement;
     if (!target) return;
+
     loggerEvent(`[ViewObservations event] ${event.type}`);
     let resourceChanges = [
       "observationsChange",
       "identificationsChange",
       "localeChanged",
-      "nameOrderChanged",
       "perPageChanged",
     ];
     if (resourceChanges.includes(event.type)) {
-      fetchAndRenderData(paginationCallback, window.app.store);
+      fetchAndRenderData(paginationCallback, window.app.store, false);
+    }
+
+    let resourceChangesUseCache = ["nameOrderChanged"];
+    if (resourceChangesUseCache.includes(event.type)) {
+      fetchAndRenderData(paginationCallback, window.app.store, true);
     }
 
     let subview = target.dataset?.subview as ObservationSubviewsType;
@@ -107,6 +119,11 @@ class ViewObservations extends HTMLElement {
       const data = new FormData(this.orderForm);
       updateOrderForStore(data, window.app.store);
     }
+
+    if (this.graphForm && target.id === "group-by-species") {
+      const data = new FormData(this.graphForm);
+      updateGraphs(data, window.app.store);
+    }
   }
 
   async render(appStore: AppStoreType) {
@@ -116,7 +133,7 @@ class ViewObservations extends HTMLElement {
     initFilters(appStore, this);
 
     // load observation data for grid/table
-    await fetchAndRenderData(paginationCallback, appStore);
+    await fetchAndRenderData(paginationCallback, appStore, true);
   }
 }
 

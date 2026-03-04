@@ -36,14 +36,16 @@ export const mapStore: AppStoreType = {
     headerCounts: new Map() as unknown as Record<string, number>,
     headerCountsIndex: [],
   },
-  observationsSubviewData: [],
+  observationsSubviewData: {},
   observationsGraphSubviewData: {},
+  observationsGraphSpeciesSubviewData: {},
   currentView: "observations_observations",
   viewMetadata: {
     observations_observations: {
       subview: "map",
       perPage: 24,
       displayFields: {},
+      graphs: {},
     },
     observations_species: { perPage: 24 },
     observations_identifiers: { perPage: 100 },

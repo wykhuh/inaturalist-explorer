@@ -36,6 +36,17 @@ export const template = html`
           </select>
         </div>
       </form>
+
+      <form id="graph-form">
+        <div class="form-group">
+          <input
+            type="checkbox"
+            name="group-by-species"
+            id="group-by-species"
+          />
+          <label for="group-by-species">Group by species</label>
+        </div>
+      </form>
     </div>
     <div class="subview-container"></div>
   </div>

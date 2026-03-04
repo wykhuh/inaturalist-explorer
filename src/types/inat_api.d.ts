@@ -702,7 +702,13 @@ export type iNatHistogramApi = {
   page: number;
   per_page: number;
   results: {
-    year: {
+    year?: {
+      [key: string]: number;
+    };
+    month?: {
+      [key: string]: number;
+    };
+    month_of_year?: {
       [key: string]: number;
     };
   };
@@ -1065,3 +1071,12 @@ export interface iNatObservationsHistogramResult {
     [k: string]: number;
   };
 }
+
+type iNatObservationsHistogramResultKey =
+  | "year"
+  | "month"
+  | "week"
+  | "day"
+  | "hour"
+  | "month_of_year"
+  | "week_of_year";

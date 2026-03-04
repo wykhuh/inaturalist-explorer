@@ -784,6 +784,10 @@
     }
   }
 
+  #graph-form.hide {
+    display: none;
+  }
+
   #display-json {
     margin-top: 1rem;
 

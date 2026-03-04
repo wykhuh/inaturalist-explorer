@@ -67,6 +67,7 @@ export interface AppStoreType {
   currentView?: ObservationViewsType;
   observationsSubviewData: iNatObservationsAPI;
   observationsGraphSubviewData: iNatObservationsHistogramAPI;
+  observationsGraphSpeciesSubviewData: iNatObservationsHistogramAPI;
   viewMetadata: {
     observations_observations: ViewOptions;
     observations_species: ViewOptions;
@@ -91,7 +92,10 @@ type ViewOptions = {
   subview?: ObservationSubviewsType | IdentificationSubviewsType;
   perPage?: number;
   displayFields?: { [k: string]: boolean };
+  graphs?: viewMetadataGraphs;
 };
+
+export type viewMetadataGraphs = { groupBy?: string };
 
 export type AppStoreKeysType = keyof AppStoreType;
 

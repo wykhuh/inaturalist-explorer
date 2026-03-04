@@ -78,13 +78,36 @@ export function cleanupObervationsParamsForRecord(
   return params.toString();
 }
 
-export function cleanupObervationsParams(
+export function cleanupObervationsParamsObject(
   appStore: AppStoreType,
   recordType = appStore.record_type,
 ) {
   let params = cleanupParamsStore(appStore, recordType);
+  return params;
+}
+
+export function cleanupObervationsParams(
+  appStore: AppStoreType,
+  recordType = appStore.record_type,
+) {
+  let params = cleanupObervationsParamsObject(appStore, recordType);
 
   return params.toString();
+}
+
+export function cleanupObervationsGraphParams(
+  appStore: AppStoreType,
+  recordType = appStore.record_type,
+) {
+  let params = cleanupObervationsParamsObject(appStore, recordType);
+
+  // set start date to 10 years ago  if d1 not set
+  if (params.get("d1") === null) {
+    let year = new Date().getFullYear() - 10;
+    params.set("d1", `${year}-01-01`);
+  }
+
+  return params;
 }
 
 export function cleanupObervationsSpeciesParams(
