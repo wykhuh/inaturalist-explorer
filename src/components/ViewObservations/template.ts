@@ -37,8 +37,17 @@ export const template = html`
           </select>
         </div>
       </form>
-
+    </div>
+    <div id="graph-controls">
       <form id="graph-form">
+        <div class="form-group">
+          <label for="graphs-category">Category</label>
+          <select id="graphs-category" name="graphs-category">
+            <option value="month_of_year">Month/Year</option>
+            <option value="year">Year</option>
+            <option value="month">Month</option>
+          </select>
+        </div>
         <div class="form-group">
           <label for="graphs-group-by">Group by</label>
           <select id="graphs-group-by" name="graphs-group-by">
@@ -49,6 +58,7 @@ export const template = html`
         </div>
       </form>
     </div>
+
     <div class="subview-container"></div>
   </div>
 `;

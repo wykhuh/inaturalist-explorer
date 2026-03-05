@@ -19,6 +19,7 @@ import type {
   Spinner,
   NormalizediNatTaxonType,
   GraphData,
+  GraphCategory,
 } from "../../types/app";
 import { observations_fields_annotations as observations } from "../../data/inat_api_cache";
 import { setInputChecked, setSelectedOption } from "../../lib/form_utils";
@@ -79,9 +80,9 @@ export async function fetchAndRenderData(
   // clear cache
   if (useCache === false) {
     obsCache.observations = {} as iNatObservationsAPI;
-    obsCache.graphsSpecies = {};
-    obsCache.graphs = {};
-    obsCache.graphsPlaces = {};
+    obsCache.graphsSpecies = { month_of_year: [], year: [], month: [] };
+    obsCache.graphs = { month_of_year: [], year: [], month: [] };
+    obsCache.graphsPlaces = { month_of_year: [], year: [], month: [] };
   }
 
   //  handle graphs
@@ -89,47 +90,32 @@ export async function fetchAndRenderData(
     let graphsMetadata = appStore.viewMetadata.observations_observations
       .graphs as viewMetadataGraphs;
 
-    // get data
-    let graphData;
-    // use species cache data
-    if (
-      useCache &&
-      graphsMetadata.groupBy === "species" &&
-      obsCache.graphsSpecies.month
-    ) {
-      graphData = obsCache.graphsSpecies;
-      // use cache data
-    } else if (useCache && obsCache.graphs.month) {
-      graphData = obsCache.graphs;
-      // fetch new data
-    } else {
-      let spinner = createSpinner();
-      spinner.start();
+    let spinner = createSpinner();
+    spinner.start();
 
-      if (await graphMaxObservationMessage(appStore, spinner)) {
-        return;
-      }
-
-      graphData = await fetchGraphData(appStore);
-
-      spinner.stop();
+    if (await graphMaxObservationMessage(appStore, spinner)) {
+      return;
     }
 
-    // store data in store
+    // check if cache data exists
+    let graphData = hasGraphCache(appStore, graphsMetadata);
+    // fetch data if no cache
+    if (!graphData) {
+      await fetchGraphData(appStore);
+    }
+
+    spinner.stop();
+
     let selectedResource: AppStoreSelectedResourcesKeysType | undefined =
       undefined;
     if (graphsMetadata.groupBy === "species") {
       selectedResource = "selectedTaxa";
-      obsCache.graphsSpecies = graphData;
     } else if (graphsMetadata.groupBy === "places") {
       selectedResource = "selectedPlaces";
-      obsCache.graphsPlaces = graphData;
-    } else {
-      obsCache.graphs = graphData;
     }
 
     // render data
-    renderGraphs(graphData, appStore, selectedResource);
+    renderGraphs(appStore, selectedResource);
 
     // handle map, grid, media, table
   } else {
@@ -173,6 +159,26 @@ export async function fetchAndRenderData(
   }
 }
 
+function hasGraphCache(
+  appStore: AppStoreType,
+  graphsMetadata: viewMetadataGraphs,
+) {
+  let graphData;
+  if (graphsMetadata.groupBy === "species") {
+    graphData =
+      appStore.cacheData.observations.graphsSpecies[graphsMetadata.category];
+  } else if (graphsMetadata.groupBy === "places") {
+    graphData =
+      appStore.cacheData.observations.graphsPlaces[graphsMetadata.category];
+  } else {
+    graphData = appStore.cacheData.observations.graphs[graphsMetadata.category];
+  }
+
+  console.log(graphData.length > 0, "graphData.length > 0");
+
+  return graphData.length > 0;
+}
+
 // display message if too many observations
 async function graphMaxObservationMessage(
   appStore: AppStoreType,
@@ -196,17 +202,14 @@ async function graphMaxObservationMessage(
 }
 
 async function fetchGraphData(appStore: AppStoreType) {
-  let graphData: GraphData = {
-    month_of_year: [],
-    year: [],
-    month: [],
-  };
+  let cacheData = appStore.cacheData.observations;
 
   let graphsMetadata = appStore.viewMetadata.observations_observations
     .graphs as viewMetadataGraphs;
 
   if (import.meta.env?.VITE_CACHE === "true") {
-    return devCachedGraphData(appStore, graphsMetadata);
+    devCachedGraphData(appStore, graphsMetadata);
+    return;
   }
 
   // fetch histogram data for each species
@@ -217,20 +220,23 @@ async function fetchGraphData(appStore: AppStoreType) {
       paramsTemp.set("taxon_id", taxon.id.toString());
       let params = paramsTemp.toString();
 
-      let monthYearData = await getAPIGraphData(params, "month_of_year");
-      if (monthYearData) {
-        graphData.month_of_year.push(monthYearData.results);
-      }
-      let yearData = await getAPIGraphData(params, "year");
-      if (yearData) {
-        graphData.year.push(yearData.results);
-      }
-      let monthData = await getAPIGraphData(params, "month");
-      if (monthData) {
-        graphData.month.push(monthData.results);
+      if (graphsMetadata.category === "month_of_year") {
+        let monthYearData = await getAPIGraphData(params, "month_of_year");
+        if (monthYearData) {
+          cacheData.graphsSpecies.month_of_year.push(monthYearData.results);
+        }
+      } else if (graphsMetadata.category === "year") {
+        let yearData = await getAPIGraphData(params, "year");
+        if (yearData) {
+          cacheData.graphsSpecies.year.push(yearData.results);
+        }
+      } else if (graphsMetadata.category === "month") {
+        let monthData = await getAPIGraphData(params, "month");
+        if (monthData) {
+          cacheData.graphsSpecies.month.push(monthData.results);
+        }
       }
     }
-    appStore.cacheData.observations.graphsSpecies = graphData;
     // fetch histogram data for places
   } else if (graphsMetadata.groupBy === "places") {
     let paramsTemp = cleanupObervationsGraphParams(appStore, "observations");
@@ -239,20 +245,23 @@ async function fetchGraphData(appStore: AppStoreType) {
       paramsTemp.set("place_id", place.id.toString());
       let params = paramsTemp.toString();
 
-      let monthYearData = await getAPIGraphData(params, "month_of_year");
-      if (monthYearData) {
-        graphData.month_of_year.push(monthYearData.results);
-      }
-      let yearData = await getAPIGraphData(params, "year");
-      if (yearData) {
-        graphData.year.push(yearData.results);
-      }
-      let monthData = await getAPIGraphData(params, "month");
-      if (monthData) {
-        graphData.month.push(monthData.results);
+      if (graphsMetadata.category === "month_of_year") {
+        let monthYearData = await getAPIGraphData(params, "month_of_year");
+        if (monthYearData) {
+          cacheData.graphsPlaces.month_of_year.push(monthYearData.results);
+        }
+      } else if (graphsMetadata.category === "year") {
+        let yearData = await getAPIGraphData(params, "year");
+        if (yearData) {
+          cacheData.graphsPlaces.year.push(yearData.results);
+        }
+      } else if (graphsMetadata.category === "month") {
+        let monthData = await getAPIGraphData(params, "month");
+        if (monthData) {
+          cacheData.graphsPlaces.month.push(monthData.results);
+        }
       }
     }
-    appStore.cacheData.observations.graphsSpecies = graphData;
 
     // fetch histogram data
   } else {
@@ -261,34 +270,30 @@ async function fetchGraphData(appStore: AppStoreType) {
       "observations",
     ).toString();
 
-    let monthYearData = await getAPIGraphData(params, "month_of_year");
-    if (monthYearData) {
-      graphData.month_of_year = [monthYearData.results];
+    if (graphsMetadata.category === "month_of_year") {
+      let monthYearData = await getAPIGraphData(params, "month_of_year");
+      if (monthYearData) {
+        cacheData.graphs.month_of_year = [monthYearData.results];
+      }
+    } else if (graphsMetadata.category === "year") {
+      let yearData = await getAPIGraphData(params, "year");
+      if (yearData) {
+        cacheData.graphs.year = [yearData.results];
+      }
+    } else if (graphsMetadata.category === "month") {
+      let monthData = await getAPIGraphData(params, "month");
+      if (monthData) {
+        cacheData.graphs.month = [monthData.results];
+      }
     }
-    let yearData = await getAPIGraphData(params, "year");
-    if (yearData) {
-      graphData.year = [yearData.results];
-    }
-    let monthData = await getAPIGraphData(params, "month");
-    if (monthData) {
-      graphData.month = [monthData.results];
-    }
-
-    appStore.cacheData.observations.graphs = graphData;
   }
-
-  return graphData;
 }
 
 function devCachedGraphData(
   appStore: AppStoreType,
   graphsMetadata: viewMetadataGraphs,
 ) {
-  let graphData: GraphData = {
-    month_of_year: [],
-    year: [],
-    month: [],
-  };
+  let cacheData = appStore.cacheData.observations;
 
   let monarch = {
     id: 48662,
@@ -317,180 +322,53 @@ function devCachedGraphData(
     appStore.selectedTaxa = [monarch, milkweed];
     appStore.observationsApiParams.taxon_id = "48662,56851";
 
-    graphData = {
-      month_of_year: [
+    if (graphsMetadata.category === "month_of_year") {
+      cacheData.graphsSpecies.month_of_year = [
         histograph_month_year_monarch.results,
         histograph_month_year_milkweed.results,
-      ],
-      year: [histograph_year_monarch.results, histograph_year_milkweed.results],
-      month: [
+      ];
+    } else if (graphsMetadata.category === "year") {
+      cacheData.graphsSpecies.year = [
+        histograph_year_monarch.results,
+        histograph_year_milkweed.results,
+      ];
+    } else if (graphsMetadata.category === "month") {
+      cacheData.graphsSpecies.month = [
         histograph_month_monarch.results,
         histograph_month_milkweed.results,
-      ],
-    };
-    appStore.cacheData.observations.graphsSpecies = graphData;
+      ];
+    }
   } else if (graphsMetadata.groupBy === "places") {
     appStore.selectedTaxa = [monarch];
     appStore.selectedPlaces = [unitedStates, mexico];
     appStore.observationsApiParams.taxon_id = "48662";
     appStore.observationsApiParams.place_id = "1,6793";
 
-    graphData = {
-      month_of_year: [
+    if (graphsMetadata.category === "month_of_year") {
+      cacheData.graphsPlaces.month_of_year = [
         histograph_month_year_monarch_us.results,
         histograph_month_year_monarch_mexico.results,
-      ],
-      year: [
+      ];
+    } else if (graphsMetadata.category === "year") {
+      cacheData.graphsPlaces.year = [
         histograph_year_monarch_us.results,
         histograph_year_monarch_mexico.results,
-      ],
-      month: [
+      ];
+    } else if (graphsMetadata.category === "month") {
+      cacheData.graphsPlaces.month = [
         histograph_month_monarch_us.results,
         histograph_month_monarch_mexico.results,
-      ],
-    };
-    appStore.cacheData.observations.graphsPlaces = graphData;
+      ];
+    }
   } else {
-    graphData = {
-      month_of_year: [histograph_month_year.results],
-      year: [histograph_year.results],
-      month: [histograph_month.results],
-    };
-    appStore.cacheData.observations.graphs = graphData;
+    if (graphsMetadata.category === "month_of_year") {
+      cacheData.graphs.month_of_year = [histograph_month_year.results];
+    } else if (graphsMetadata.category === "year") {
+      cacheData.graphs.year = [histograph_year.results];
+    } else if (graphsMetadata.category === "month") {
+      cacheData.graphs.month = [histograph_month.results];
+    }
   }
-
-  return graphData;
-}
-
-// re-render grids, tables, pagination everytime we fetch new data. only render
-// map if it does not exist since we have another function to add/delete map
-// layers when data changes.
-function renderGrid(
-  data: iNatObservationsAPI,
-  paginationCallback: any,
-  appStore: AppStoreType,
-) {
-  let containerEl = document.querySelector(".subview-container");
-  let orderFormEl = document.querySelector("#order-form");
-  let graphGroupByFormEl = document.querySelector("#graph-form");
-  if (!containerEl) return;
-  if (!orderFormEl) return;
-  if (!graphGroupByFormEl) return;
-
-  let view = appStore.viewMetadata.observations_observations;
-
-  containerEl.innerHTML = "";
-  orderFormEl.className = "";
-  graphGroupByFormEl.className = "hide";
-
-  let pagination1 = document.createElement(
-    "app-pagination",
-  ) as unknown as DataComponentType;
-  pagination1.data = {
-    perPage: data.per_page,
-    currentPage: data.page,
-    totalRecords: data.total_results,
-    paginationCallback,
-  };
-  containerEl.appendChild(pagination1);
-
-  let subviewEl = document.createElement("div");
-  subviewEl.className = "observations-subview";
-
-  if (view.subview === "media") {
-    subviewEl.appendChild(createMediaGrid(data.results));
-  } else {
-    subviewEl.appendChild(createGrid(data.results));
-  }
-  containerEl.append(subviewEl);
-
-  let pagination2 = document.createElement(
-    "app-pagination",
-  ) as unknown as DataComponentType;
-  pagination2.data = {
-    perPage: data.per_page,
-    currentPage: data.page,
-    totalRecords: data.total_results,
-    paginationCallback,
-    scrollToSelector: "#observations-list-controls",
-  };
-  containerEl.appendChild(pagination2);
-}
-
-function renderTable(
-  data: iNatObservationsAPI,
-  paginationCallback: any,
-  appStore: AppStoreType,
-) {
-  let containerEl = document.querySelector(".subview-container");
-  let orderFormEl = document.querySelector("#order-form");
-  let graphGroupByFormEl = document.querySelector("#graph-form");
-  if (!containerEl) return;
-  if (!orderFormEl) return;
-  if (!graphGroupByFormEl) return;
-
-  containerEl.innerHTML = "";
-  orderFormEl.className = "";
-  graphGroupByFormEl.className = "hide";
-
-  let pagination1 = document.createElement(
-    "app-pagination",
-  ) as unknown as DataComponentType;
-  pagination1.data = {
-    perPage: data.per_page,
-    currentPage: data.page,
-    totalRecords: data.total_results,
-    paginationCallback,
-  };
-  containerEl.appendChild(pagination1);
-
-  let subviewEl = document.createElement("div");
-  subviewEl.className = "observations-subview";
-
-  subviewEl.appendChild(createTable(data.results, appStore));
-  containerEl.append(subviewEl);
-
-  let pagination2 = document.createElement(
-    "app-pagination",
-  ) as unknown as DataComponentType;
-  pagination2.data = {
-    perPage: data.per_page,
-    currentPage: data.page,
-    totalRecords: data.total_results,
-    paginationCallback,
-    scrollToSelector: "#observations-list-controls",
-  };
-  containerEl.appendChild(pagination2);
-}
-
-function renderMap(appStore: AppStoreType) {
-  let containerEl = document.querySelector(".subview-container");
-  let orderFormEl = document.querySelector("#order-form");
-  let graphGroupByFormEl = document.querySelector("#graph-form");
-  if (!containerEl) return;
-  if (!orderFormEl) return;
-  if (!graphGroupByFormEl) return;
-
-  if (!appStore.map.map) {
-    containerEl.innerHTML = "";
-  }
-  orderFormEl.className = "hide";
-  graphGroupByFormEl.className = "hide";
-
-  let subviewEl = document.createElement("div");
-  subviewEl.className = "observations-subview";
-
-  if (!appStore.map.map) {
-    subviewEl.appendChild(createMap());
-
-    // HACK: use setTimeout to ensure initRenderMap is called after createMap
-    // adds div#map
-    setTimeout(() => {
-      initRenderMap(appStore);
-    }, 0);
-  }
-
-  containerEl.append(subviewEl);
 }
 
 async function getObservationCount(appStore: AppStoreType) {
@@ -502,52 +380,6 @@ async function getObservationCount(appStore: AppStoreType) {
   let countParams = countParamsTemp.toString();
   let data = await getObservations(countParams.toString());
   return data?.total_results;
-}
-
-export async function renderGraphs(
-  graphData: GraphData,
-  appStore: AppStoreType,
-  selectedResource?: AppStoreSelectedResourcesKeysType,
-) {
-  let containerEl =
-    document.querySelector<HTMLDivElement>(".subview-container");
-  let orderFormEl = document.querySelector("#order-form");
-  let graphGroupByFormEl = document.querySelector("#graph-form");
-  if (!containerEl) return;
-  if (!orderFormEl) return;
-  if (!graphGroupByFormEl) return;
-
-  containerEl.innerHTML = "";
-  orderFormEl.className = "hide";
-  graphGroupByFormEl.className = "";
-
-  let subviewEl = document.createElement("div");
-  subviewEl.className = "observations-subview";
-
-  if (graphData.month_of_year) {
-    let graph = createGraphs(
-      graphData.month_of_year,
-      appStore,
-      selectedResource,
-    );
-    if (graph) {
-      subviewEl.appendChild(graph);
-    }
-  }
-  if (graphData.year) {
-    let graph = createGraphs(graphData.year, appStore, selectedResource);
-    if (graph) {
-      subviewEl.appendChild(graph);
-    }
-  }
-  if (graphData.month) {
-    let graph = createGraphs(graphData.month, appStore, selectedResource);
-    if (graph) {
-      subviewEl.appendChild(graph);
-    }
-  }
-
-  containerEl.append(subviewEl);
 }
 
 export function displayJSON(data: any, element: HTMLDivElement) {
@@ -607,128 +439,6 @@ export async function paginationCallback(num: number, appStore: AppStoreType) {
   updateAppUrl(window.location, appStore);
 }
 
-function updateSubviewLinkClass(componentContext: any, ignoreLink: any) {
-  let links = [
-    componentContext.graphLinkEl,
-    componentContext.gridLinkEl,
-    componentContext.mediaLinkEl,
-    componentContext.mapLinkEl,
-    componentContext.tableLinkEl,
-  ];
-
-  links
-    .filter((link) => link !== ignoreLink)
-    .forEach((link) => {
-      console.log(link);
-      link.classList.remove("current-subview");
-    });
-
-  ignoreLink.classList.add("current-subview");
-}
-
-export async function updateSubviewState(
-  subview: ObservationSubviewsType,
-  componentContext: any,
-  appStore: AppStoreType,
-) {
-  // early return if this is current subview
-  let view = appStore.viewMetadata.observations_observations;
-  if (subview === view.subview) return;
-  let obsCache = appStore.cacheData.observations;
-
-  // remove map when change from map to other subview
-  if (view.subview === "map") {
-    removeMap(appStore);
-  }
-
-  // update store
-  view.subview = subview;
-
-  // HACK: force triggering store proxy
-  appStore.viewMetadata = appStore.viewMetadata;
-
-  if (subview === "graph") {
-    updateSubviewLinkClass(componentContext, componentContext.graphLinkEl);
-  } else if (subview === "grid") {
-    updateSubviewLinkClass(componentContext, componentContext.gridLinkEl);
-  } else if (subview === "media") {
-    updateSubviewLinkClass(componentContext, componentContext.mediaLinkEl);
-  } else if (subview === "table") {
-    updateSubviewLinkClass(componentContext, componentContext.tableLinkEl);
-  } else {
-    updateSubviewLinkClass(componentContext, componentContext.mapLinkEl);
-  }
-
-  let graphsMetadata = appStore.viewMetadata.observations_observations
-    .graphs as viewMetadataGraphs;
-
-  // if no cached graph data, fetch data
-  if (subview === "graph") {
-    // fetch graph species data
-    if (
-      graphsMetadata.groupBy === "species" &&
-      obsCache.graphsSpecies.month === undefined
-    ) {
-      let spinner = createSpinner();
-      spinner.start();
-
-      // show max observation message
-      if (await graphMaxObservationMessage(appStore, spinner)) {
-        return;
-      }
-
-      let data = await fetchGraphData(appStore);
-      obsCache.graphsSpecies = data;
-
-      spinner.stop();
-      // fetch graph data
-    } else if (obsCache.graphs.month === undefined) {
-      let spinner = createSpinner();
-      spinner.start();
-
-      // show max observation message
-      if (await graphMaxObservationMessage(appStore, spinner)) {
-        return;
-      }
-
-      let data = await fetchGraphData(appStore);
-      obsCache.graphs = data;
-
-      spinner.stop();
-    }
-    // if no cache data, fetch data
-  } else if (obsCache.observations.results === undefined) {
-    let spinner = createSpinner();
-    spinner.start();
-
-    let data = await getAPIData(appStore);
-    if (data) {
-      obsCache.observations = data;
-    }
-
-    spinner.stop();
-  }
-
-  if (subview === "map") {
-    renderMap(appStore);
-  } else if (subview === "graph") {
-    if (graphsMetadata.groupBy === "species") {
-      renderGraphs(obsCache.graphsSpecies, appStore, "selectedTaxa");
-    } else if (graphsMetadata.groupBy === "places") {
-      renderGraphs(obsCache.graphsPlaces, appStore, "selectedPlaces");
-    } else {
-      renderGraphs(obsCache.graphs, appStore, undefined);
-    }
-  } else if (subview === "table") {
-    renderTable(obsCache.observations, paginationCallback, appStore);
-  } else {
-    renderGrid(obsCache.observations, paginationCallback, appStore);
-  }
-
-  // add subview to url
-  updateAppUrl(window.location, appStore);
-}
-
 // use store to populate the filter form fields on page load
 export function initFilters(appStore: AppStoreType, componentContext: any) {
   let { observationsApiParams } = appStore;
@@ -764,6 +474,121 @@ export function initFilters(appStore: AppStoreType, componentContext: any) {
   }
 }
 
+// ===============
+// event handlers
+// ===============
+
+function updateSubviewLinkClass(componentContext: any, ignoreLink: any) {
+  let links = [
+    componentContext.graphLinkEl,
+    componentContext.gridLinkEl,
+    componentContext.mediaLinkEl,
+    componentContext.mapLinkEl,
+    componentContext.tableLinkEl,
+  ];
+
+  links
+    .filter((link) => link !== ignoreLink)
+    .forEach((link) => {
+      console.log(link);
+      link.classList.remove("current-subview");
+    });
+
+  ignoreLink.classList.add("current-subview");
+}
+
+// called when user changes subview
+export async function updateSubviewState(
+  subview: ObservationSubviewsType,
+  componentContext: any,
+  appStore: AppStoreType,
+) {
+  // early return if this is current subview
+  let view = appStore.viewMetadata.observations_observations;
+  if (subview === view.subview) return;
+  let obsCache = appStore.cacheData.observations;
+
+  // remove map when change from map to other subview
+  if (view.subview === "map") {
+    removeMap(appStore);
+  }
+
+  // update store
+  view.subview = subview;
+
+  // HACK: force triggering store proxy
+  appStore.viewMetadata = appStore.viewMetadata;
+
+  // make menu link active
+  if (subview === "graph") {
+    updateSubviewLinkClass(componentContext, componentContext.graphLinkEl);
+  } else if (subview === "grid") {
+    updateSubviewLinkClass(componentContext, componentContext.gridLinkEl);
+  } else if (subview === "media") {
+    updateSubviewLinkClass(componentContext, componentContext.mediaLinkEl);
+  } else if (subview === "table") {
+    updateSubviewLinkClass(componentContext, componentContext.tableLinkEl);
+  } else {
+    updateSubviewLinkClass(componentContext, componentContext.mapLinkEl);
+  }
+
+  let graphsMetadata = appStore.viewMetadata.observations_observations
+    .graphs as viewMetadataGraphs;
+
+  // if no cached graph data, fetch data
+  if (subview === "graph") {
+    let spinner = createSpinner();
+    spinner.start();
+
+    // show max observation message
+    if (await graphMaxObservationMessage(appStore, spinner)) {
+      return;
+    }
+
+    // check if cache data exists
+    let graphData = hasGraphCache(appStore, graphsMetadata);
+    // fetch data if no cache
+    if (!graphData) {
+      await fetchGraphData(appStore);
+    }
+
+    spinner.stop();
+
+    // if no cache data, fetch data
+  } else if (obsCache.observations.results === undefined) {
+    let spinner = createSpinner();
+    spinner.start();
+
+    let data = await getAPIData(appStore);
+    if (data) {
+      obsCache.observations = data;
+    }
+
+    spinner.stop();
+  }
+
+  // render subview
+  if (subview === "map") {
+    renderMap(appStore);
+  } else if (subview === "graph") {
+    if (graphsMetadata.groupBy === "species") {
+      renderGraphs(appStore, "selectedTaxa");
+    } else if (graphsMetadata.groupBy === "places") {
+      renderGraphs(appStore, "selectedPlaces");
+    } else {
+      renderGraphs(appStore, undefined);
+    }
+  } else if (subview === "table") {
+    renderTable(obsCache.observations, paginationCallback, appStore);
+  } else {
+    renderGrid(obsCache.observations, paginationCallback, appStore);
+  }
+
+  // add subview to url
+  updateAppUrl(window.location, appStore);
+}
+
+// called when order menu is changed
 export async function updateOrderForStore(
   data: FormData,
   appStore: AppStoreType,
@@ -798,10 +623,10 @@ export async function updateOrderForStore(
   updateAppUrl(window.location, appStore);
 }
 
+// called when graph category or group by is changed
 export async function updateGraphs(formData: FormData, appStore: AppStoreType) {
   let graphsMetadata = appStore.viewMetadata.observations_observations
     .graphs as viewMetadataGraphs;
-  let obsCache = appStore.cacheData.observations;
 
   if (formData.get("graphs-group-by") === "species") {
     graphsMetadata.groupBy = "species";
@@ -811,52 +636,175 @@ export async function updateGraphs(formData: FormData, appStore: AppStoreType) {
     delete graphsMetadata.groupBy;
   }
 
+  let category = formData.get("graphs-category");
+  if (category) {
+    graphsMetadata.category = category as GraphCategory;
+  }
+
   let spinner = createSpinner();
   spinner.start();
 
-  // fetch species graph data
-  if (
-    graphsMetadata.groupBy === "species" &&
-    obsCache.graphsSpecies.month === undefined
-  ) {
-    if (await graphMaxObservationMessage(appStore, spinner)) {
-      return;
-    }
-
-    let data = await fetchGraphData(appStore);
-    obsCache.graphsSpecies = data;
-    // fetch places graph data
-  } else if (
-    graphsMetadata.groupBy === "places" &&
-    obsCache.graphsPlaces.month === undefined
-  ) {
-    if (await graphMaxObservationMessage(appStore, spinner)) {
-      return;
-    }
-
-    let data = await fetchGraphData(appStore);
-    obsCache.graphsPlaces = data;
-
-    // fetch graph data
-  } else if (obsCache.graphs.month === undefined) {
-    if (await graphMaxObservationMessage(appStore, spinner)) {
-      return;
-    }
-
-    let data = await fetchGraphData(appStore);
-    obsCache.graphs = data;
+  // check if cache data exists
+  let graphData = hasGraphCache(appStore, graphsMetadata);
+  // fetch data if no cache
+  if (!graphData) {
+    await fetchGraphData(appStore);
   }
 
   spinner.stop();
 
   if (graphsMetadata.groupBy === "species") {
-    renderGraphs(obsCache.graphsSpecies, appStore, "selectedTaxa");
+    renderGraphs(appStore, "selectedTaxa");
   } else if (graphsMetadata.groupBy === "places") {
-    renderGraphs(obsCache.graphsPlaces, appStore, "selectedPlaces");
+    renderGraphs(appStore, "selectedPlaces");
   } else {
-    renderGraphs(obsCache.graphs, appStore, undefined);
+    renderGraphs(appStore, undefined);
   }
 }
+
+// ===============
+// map subview
+// ===============
+
+export function createMap() {
+  let divEl = document.createElement("div");
+  divEl.id = "map";
+  return divEl;
+}
+
+function renderMap(appStore: AppStoreType) {
+  let containerEl = document.querySelector(".subview-container");
+  let orderFormEl = document.querySelector("#order-form");
+  let graphGroupByFormEl = document.querySelector("#graph-form");
+  if (!containerEl) return;
+  if (!orderFormEl) return;
+  if (!graphGroupByFormEl) return;
+
+  if (!appStore.map.map) {
+    containerEl.innerHTML = "";
+  }
+  orderFormEl.className = "hide";
+  graphGroupByFormEl.className = "hide";
+
+  let subviewEl = document.createElement("div");
+  subviewEl.className = "observations-subview";
+
+  if (!appStore.map.map) {
+    subviewEl.appendChild(createMap());
+
+    // HACK: use setTimeout to ensure initRenderMap is called after createMap
+    // adds div#map
+    setTimeout(() => {
+      initRenderMap(appStore);
+    }, 0);
+  }
+
+  containerEl.append(subviewEl);
+}
+
+// ===============
+// grid subview
+// ===============
+
+export function createGrid(results: ObservationsResult[]) {
+  let containerEl = document.createElement("div");
+  containerEl.className = "observations-grid grid-auto-fill";
+
+  results.forEach((row) => {
+    let cardEl = document.createElement(
+      "card-observation",
+    ) as unknown as DataComponentType;
+    cardEl.data = row;
+    containerEl.appendChild(cardEl);
+  });
+
+  return containerEl;
+}
+
+// re-render grids, tables, pagination everytime we fetch new data. only render
+// map if it does not exist since we have another function to add/delete map
+// layers when data changes.
+function renderGrid(
+  data: iNatObservationsAPI,
+  paginationCallback: any,
+  appStore: AppStoreType,
+) {
+  let containerEl = document.querySelector(".subview-container");
+  let orderFormEl = document.querySelector("#order-form");
+  let graphGroupByFormEl = document.querySelector("#graph-form");
+  if (!containerEl) return;
+  if (!orderFormEl) return;
+  if (!graphGroupByFormEl) return;
+
+  let view = appStore.viewMetadata.observations_observations;
+
+  containerEl.innerHTML = "";
+  orderFormEl.className = "";
+  graphGroupByFormEl.className = "hide";
+
+  let pagination1 = document.createElement(
+    "app-pagination",
+  ) as unknown as DataComponentType;
+  pagination1.data = {
+    perPage: data.per_page,
+    currentPage: data.page,
+    totalRecords: data.total_results,
+    paginationCallback,
+  };
+  containerEl.appendChild(pagination1);
+
+  let subviewEl = document.createElement("div");
+  subviewEl.className = "observations-subview";
+
+  if (view.subview === "media") {
+    subviewEl.appendChild(createMediaGrid(data.results));
+  } else {
+    subviewEl.appendChild(createGrid(data.results));
+  }
+  containerEl.append(subviewEl);
+
+  let pagination2 = document.createElement(
+    "app-pagination",
+  ) as unknown as DataComponentType;
+  pagination2.data = {
+    perPage: data.per_page,
+    currentPage: data.page,
+    totalRecords: data.total_results,
+    paginationCallback,
+    scrollToSelector: "#observations-list-controls",
+  };
+  containerEl.appendChild(pagination2);
+}
+
+// ===============
+// media subview
+// ===============
+
+export function createMediaGrid(results: ObservationsResult[]) {
+  let containerEl = document.createElement("div");
+  containerEl.className = "observations-media-grid grid-auto-fill";
+  results.forEach((record) => {
+    let media = record.photos.concat(record.sounds);
+    media.forEach((medium, j) => {
+      let cardEl = document.createElement(
+        "card-media",
+      ) as unknown as DataComponentType;
+      cardEl.data = {
+        observation: record,
+        media: medium,
+        mediaIndex: j,
+        type: medium.url ? "photo" : "sound",
+      };
+      containerEl.appendChild(cardEl);
+    });
+  });
+
+  return containerEl;
+}
+
+// ===============
+// table subview
+// ===============
 
 export function createTable(
   results: ObservationsResult[],
@@ -970,45 +918,94 @@ export function createTable(
   return tableEl;
 }
 
-export function createGrid(results: ObservationsResult[]) {
-  let containerEl = document.createElement("div");
-  containerEl.className = "observations-grid grid-auto-fill";
+function renderTable(
+  data: iNatObservationsAPI,
+  paginationCallback: any,
+  appStore: AppStoreType,
+) {
+  let containerEl = document.querySelector(".subview-container");
+  let orderFormEl = document.querySelector("#order-form");
+  let graphGroupByFormEl = document.querySelector("#graph-form");
+  if (!containerEl) return;
+  if (!orderFormEl) return;
+  if (!graphGroupByFormEl) return;
 
-  results.forEach((row) => {
-    let cardEl = document.createElement(
-      "card-observation",
-    ) as unknown as DataComponentType;
-    cardEl.data = row;
-    containerEl.appendChild(cardEl);
-  });
+  containerEl.innerHTML = "";
+  orderFormEl.className = "";
+  graphGroupByFormEl.className = "hide";
 
-  return containerEl;
+  let pagination1 = document.createElement(
+    "app-pagination",
+  ) as unknown as DataComponentType;
+  pagination1.data = {
+    perPage: data.per_page,
+    currentPage: data.page,
+    totalRecords: data.total_results,
+    paginationCallback,
+  };
+  containerEl.appendChild(pagination1);
+
+  let subviewEl = document.createElement("div");
+  subviewEl.className = "observations-subview";
+
+  subviewEl.appendChild(createTable(data.results, appStore));
+  containerEl.append(subviewEl);
+
+  let pagination2 = document.createElement(
+    "app-pagination",
+  ) as unknown as DataComponentType;
+  pagination2.data = {
+    perPage: data.per_page,
+    currentPage: data.page,
+    totalRecords: data.total_results,
+    paginationCallback,
+    scrollToSelector: "#observations-list-controls",
+  };
+  containerEl.appendChild(pagination2);
 }
 
-export function createMediaGrid(results: ObservationsResult[]) {
-  let containerEl = document.createElement("div");
-  containerEl.className = "observations-media-grid grid-auto-fill";
-  results.forEach((record) => {
-    let media = record.photos.concat(record.sounds);
-    media.forEach((medium, j) => {
-      let cardEl = document.createElement(
-        "card-media",
-      ) as unknown as DataComponentType;
-      cardEl.data = {
-        observation: record,
-        media: medium,
-        mediaIndex: j,
-        type: medium.url ? "photo" : "sound",
-      };
-      containerEl.appendChild(cardEl);
-    });
-  });
+// ===============
+// graph subview
+// ===============
 
-  return containerEl;
-}
+export async function renderGraphs(
+  appStore: AppStoreType,
+  selectedResource?: AppStoreSelectedResourcesKeysType,
+) {
+  let containerEl =
+    document.querySelector<HTMLDivElement>(".subview-container");
+  let orderFormEl = document.querySelector("#order-form");
+  let graphGroupByFormEl = document.querySelector("#graph-form");
+  if (!containerEl) return;
+  if (!orderFormEl) return;
+  if (!graphGroupByFormEl) return;
 
-export function createMap() {
-  let divEl = document.createElement("div");
-  divEl.id = "map";
-  return divEl;
+  let graphsMetadata = appStore.viewMetadata.observations_observations
+    .graphs as viewMetadataGraphs;
+
+  containerEl.innerHTML = "";
+  orderFormEl.className = "hide";
+  graphGroupByFormEl.className = "";
+
+  let subviewEl = document.createElement("div");
+  subviewEl.className = "observations-subview";
+
+  let cacheData = appStore.cacheData.observations;
+  let data;
+  if (graphsMetadata.groupBy === "species") {
+    data = cacheData.graphsSpecies[graphsMetadata.category];
+  } else if (graphsMetadata.groupBy === "places") {
+    data = cacheData.graphsPlaces[graphsMetadata.category];
+  } else {
+    data = cacheData.graphs[graphsMetadata.category];
+  }
+
+  if (data.length > 0) {
+    let graph = createGraphs(data, appStore, selectedResource);
+    if (graph) {
+      subviewEl.appendChild(graph);
+    }
+  }
+
+  containerEl.append(subviewEl);
 }

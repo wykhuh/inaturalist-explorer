@@ -14,7 +14,6 @@ import type {
   iNatObservationsAPI,
 } from "./inat_api";
 import type { TerraDraw } from "terra-draw";
-import type { GraphData } from "../data/app_data";
 
 declare global {
   interface Window {
@@ -114,7 +113,12 @@ type ViewOptions = {
   graphs?: viewMetadataGraphs;
 };
 
-export type viewMetadataGraphs = { groupBy?: string };
+export type viewMetadataGraphs = {
+  groupBy?: "species" | "places";
+  category: GraphCategory;
+};
+
+export type GraphCategory = "month_of_year" | "month" | "year";
 
 export type AppStoreKeysType = keyof AppStoreType;
 

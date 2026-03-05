@@ -44,9 +44,9 @@ export const mapStore: AppStoreType = {
   cacheData: {
     observations: {
       observations: {} as iNatObservationsAPI,
-      graphs: {} as GraphData,
-      graphsSpecies: {} as GraphData,
-      graphsPlaces: {} as GraphData,
+      graphs: { month_of_year: [], year: [], month: [] },
+      graphsSpecies: { month_of_year: [], year: [], month: [] },
+      graphsPlaces: { month_of_year: [], year: [], month: [] },
     },
     identifications: { identifications: {} as IdentificationsAPI },
   },
@@ -56,7 +56,7 @@ export const mapStore: AppStoreType = {
       subview: "map",
       perPage: 24,
       displayFields: {},
-      graphs: {},
+      graphs: { category: "month_of_year" },
     },
     observations_species: { perPage: 24 },
     observations_identifiers: { perPage: 100 },

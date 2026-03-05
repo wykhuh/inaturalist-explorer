@@ -88,6 +88,8 @@ class ViewObservations extends HTMLElement {
   handleEvent(event: Event) {
     let target = event.target as HTMLElement;
     if (!target) return;
+    if (!this.orderForm) return;
+    if (!this.graphForm) return;
 
     loggerEvent(`[ViewObservations event] ${event.type}`);
     let resourceChanges = [
@@ -121,12 +123,16 @@ class ViewObservations extends HTMLElement {
       }
     }
 
-    if (this.orderForm && target.id === "order_combo") {
+    if (target.id === "order_combo") {
       const data = new FormData(this.orderForm);
       updateOrderForStore(data, window.app.store);
     }
 
-    if (this.graphForm && target.id === "graphs-group-by") {
+    if (target.id === "graphs-group-by") {
+      const data = new FormData(this.graphForm);
+      updateGraphs(data, window.app.store);
+    }
+    if (target.id === "graphs-category") {
       const data = new FormData(this.graphForm);
       updateGraphs(data, window.app.store);
     }
