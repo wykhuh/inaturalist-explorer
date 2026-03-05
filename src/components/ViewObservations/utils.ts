@@ -159,24 +159,44 @@ export async function fetchAndRenderData(
   }
 }
 
-function hasGraphCache(
-  appStore: AppStoreType,
-  graphsMetadata: viewMetadataGraphs,
-) {
-  let graphData;
-  if (graphsMetadata.groupBy === "species") {
-    graphData =
-      appStore.cacheData.observations.graphsSpecies[graphsMetadata.category];
-  } else if (graphsMetadata.groupBy === "places") {
-    graphData =
-      appStore.cacheData.observations.graphsPlaces[graphsMetadata.category];
-  } else {
-    graphData = appStore.cacheData.observations.graphs[graphsMetadata.category];
+// ===============
+// observations data
+// ===============
+
+async function getAPIData(appStore: AppStoreType) {
+  if (import.meta.env?.VITE_CACHE === "true") {
+    let page = appStore.observationsApiParams.page;
+    replaceWithCacheImages(observations.results);
+    return { ...observations, page: page || 1 };
   }
 
-  console.log(graphData.length > 0, "graphData.length > 0");
+  // TODO: check if this is needed
+  updateSelectedResourcesId(appStore, "observations");
+  let params = cleanupObervationsParams(appStore, "observations");
 
-  return graphData.length > 0;
+  try {
+    let data = await getObservations(params);
+    if (!data) return;
+
+    return data;
+  } catch (error) {
+    console.error("ViewObservations getAPIData ERROR:", error);
+  }
+}
+
+// ===============
+// graphs data
+// ===============
+
+async function getAPIGraphData(params: string, interval: string) {
+  try {
+    let data = await getHistogram(`${params}&interval=${interval}`);
+    if (!data) return;
+
+    return data;
+  } catch (error) {
+    console.error("ViewObservations getAPIGraphData ERROR:", error);
+  }
 }
 
 // display message if too many observations
@@ -199,6 +219,17 @@ async function graphMaxObservationMessage(
       number of observations to be less than 100,000,000.</p>`;
     return true;
   }
+}
+
+async function getObservationCount(appStore: AppStoreType) {
+  let countParamsTemp = cleanupObervationsParamsObject(
+    appStore,
+    "observations",
+  ) as URLSearchParams;
+  countParamsTemp.set("per_page", "0");
+  let countParams = countParamsTemp.toString();
+  let data = await getObservations(countParams.toString());
+  return data?.total_results;
 }
 
 async function fetchGraphData(appStore: AppStoreType) {
@@ -371,53 +402,34 @@ function devCachedGraphData(
   }
 }
 
-async function getObservationCount(appStore: AppStoreType) {
-  let countParamsTemp = cleanupObervationsParamsObject(
-    appStore,
-    "observations",
-  ) as URLSearchParams;
-  countParamsTemp.set("per_page", "0");
-  let countParams = countParamsTemp.toString();
-  let data = await getObservations(countParams.toString());
-  return data?.total_results;
+function hasGraphCache(
+  appStore: AppStoreType,
+  graphsMetadata: viewMetadataGraphs,
+) {
+  let graphData;
+  if (graphsMetadata.groupBy === "species") {
+    graphData =
+      appStore.cacheData.observations.graphsSpecies[graphsMetadata.category];
+  } else if (graphsMetadata.groupBy === "places") {
+    graphData =
+      appStore.cacheData.observations.graphsPlaces[graphsMetadata.category];
+  } else {
+    graphData = appStore.cacheData.observations.graphs[graphsMetadata.category];
+  }
+
+  console.log(graphData.length > 0, "graphData.length > 0");
+
+  return graphData.length > 0;
 }
+
+// ===============
+// misc
+// ===============
 
 export function displayJSON(data: any, element: HTMLDivElement) {
   let div = document.createElement("div");
   div.innerText = JSON.stringify(data);
   element.appendChild(div);
-}
-
-async function getAPIData(appStore: AppStoreType) {
-  if (import.meta.env?.VITE_CACHE === "true") {
-    let page = appStore.observationsApiParams.page;
-    replaceWithCacheImages(observations.results);
-    return { ...observations, page: page || 1 };
-  }
-
-  // TODO: check if this is needed
-  updateSelectedResourcesId(appStore, "observations");
-  let params = cleanupObervationsParams(appStore, "observations");
-
-  try {
-    let data = await getObservations(params);
-    if (!data) return;
-
-    return data;
-  } catch (error) {
-    console.error("ViewObservations getAPIData ERROR:", error);
-  }
-}
-
-async function getAPIGraphData(params: string, interval: string) {
-  try {
-    let data = await getHistogram(`${params}&interval=${interval}`);
-    if (!data) return;
-
-    return data;
-  } catch (error) {
-    console.error("ViewObservations getAPIGraphData ERROR:", error);
-  }
 }
 
 export async function paginationCallback(num: number, appStore: AppStoreType) {
