@@ -349,10 +349,12 @@ function devCachedGraphData(
     display_name: "Mexico",
   };
 
-  if (graphsMetadata.groupBy === "species") {
-    appStore.selectedTaxa = [monarch, milkweed];
-    appStore.observationsApiParams.taxon_id = "48662,56851";
+  appStore.selectedTaxa = [monarch, milkweed];
+  appStore.observationsApiParams.taxon_id = "48662,56851";
+  appStore.selectedPlaces = [unitedStates, mexico];
+  appStore.observationsApiParams.place_id = "1,6793";
 
+  if (graphsMetadata.groupBy === "species") {
     if (graphsMetadata.category === "month_of_year") {
       cacheData.graphsSpecies.month_of_year = [
         histograph_month_year_monarch.results,
@@ -370,11 +372,6 @@ function devCachedGraphData(
       ];
     }
   } else if (graphsMetadata.groupBy === "places") {
-    appStore.selectedTaxa = [monarch];
-    appStore.selectedPlaces = [unitedStates, mexico];
-    appStore.observationsApiParams.taxon_id = "48662";
-    appStore.observationsApiParams.place_id = "1,6793";
-
     if (graphsMetadata.category === "month_of_year") {
       cacheData.graphsPlaces.month_of_year = [
         histograph_month_year_monarch_us.results,
