@@ -52,12 +52,15 @@ export async function deleteFilter(
       unsetSelectedOption(`#filters-form select#${field} option[value='${v}']`);
     });
   } else if (inputType === "checkbox") {
-    value.split(",").forEach((v) => {
-      setInputChecked(
-        `#filters-form input[name='${field}'][value='${v}']`,
-        false,
-      );
-    });
+    value
+      .toString()
+      .split(",")
+      .forEach((v) => {
+        setInputChecked(
+          `#filters-form input[name='${field}'][value='${v}']`,
+          false,
+        );
+      });
   } else if (inputType === "textInput") {
     setInputValue(`#filters-form input#${field}`, "");
   } else if (inputType === "dateInput") {

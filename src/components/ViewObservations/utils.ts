@@ -113,10 +113,31 @@ function render(
   let subviewEl = document.createElement("div");
   subviewEl.className = "observations-subview";
 
+  let filteredResults = data.results;
+
+  if (appStore.observationsApiParams.obs_without_annotations) {
+    filteredResults = filteredResults.filter((obs) => {
+      if (obs.annotations && obs.annotations.length === 0) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
+  if (appStore.observationsApiParams.obs_without_ofvs) {
+    filteredResults = filteredResults.filter((obs) => {
+      if (obs.ofvs && obs.ofvs.length === 0) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
+
   if (view.subview === "table") {
-    subviewEl.appendChild(createTable(data.results, appStore));
+    subviewEl.appendChild(createTable(filteredResults, appStore));
   } else if (view.subview === "media") {
-    subviewEl.appendChild(createMediaGrid(data.results));
+    subviewEl.appendChild(createMediaGrid(filteredResults));
   } else if (view.subview === "map") {
     if (!appStore.map.map) {
       subviewEl.appendChild(createMap());
@@ -128,7 +149,7 @@ function render(
       }, 0);
     }
   } else {
-    subviewEl.appendChild(createGrid(data.results));
+    subviewEl.appendChild(createGrid(filteredResults));
   }
   containerEl.append(subviewEl);
 
