@@ -10,6 +10,7 @@ import {
   updateSubviewState,
   updateOrderForStore,
   updateGraphs,
+  toggleGraphOptions,
 } from "./utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import { setupComponent } from "../../lib/component_utils";
@@ -100,6 +101,7 @@ class ViewObservations extends HTMLElement {
     ];
     if (resourceChanges.includes(event.type)) {
       fetchAndRenderData(paginationCallback, window.app.store, false);
+      toggleGraphOptions(window.app.store, this);
     }
 
     let resourceChangesUseCache = ["nameOrderChanged"];
@@ -143,6 +145,7 @@ class ViewObservations extends HTMLElement {
 
     // use store to set values the form on page load
     initFilters(appStore, this);
+    toggleGraphOptions(appStore, this);
 
     // load observation data for grid/table
     await fetchAndRenderData(paginationCallback, appStore, true);

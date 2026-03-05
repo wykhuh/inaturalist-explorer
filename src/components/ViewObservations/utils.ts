@@ -662,6 +662,35 @@ export async function updateGraphs(formData: FormData, appStore: AppStoreType) {
   }
 }
 
+export function toggleGraphOptions(
+  appStore: AppStoreType,
+  componentContext: any,
+) {
+  let speciesOption = componentContext.querySelector(
+    "#graphs-group-by option[value='species']",
+  );
+  if (!speciesOption) return;
+  let placesOption = componentContext.querySelector(
+    "#graphs-group-by option[value='places']",
+  );
+  if (!placesOption) return;
+
+  if (appStore.selectedTaxa.length === 0 || appStore.selectedTaxa[0].id === 0) {
+    speciesOption.disabled = true;
+  } else {
+    speciesOption.disabled = false;
+  }
+
+  if (
+    appStore.selectedPlaces.length === 0 ||
+    appStore.selectedPlaces[0].id === 0
+  ) {
+    placesOption.disabled = true;
+  } else {
+    placesOption.disabled = false;
+  }
+}
+
 // ===============
 // map subview
 // ===============
