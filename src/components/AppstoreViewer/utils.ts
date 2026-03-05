@@ -1,4 +1,8 @@
-import type { AppStoreType, AppStoreKeysType } from "../../types/app";
+import type {
+  AppStoreType,
+  AppStoreKeysType,
+  GraphData,
+} from "../../types/app";
 import type { PolygonJson } from "../../types/inat_api";
 import { leafletVisibleLayers } from "../../lib/data_utils";
 import { displayJson } from "../../lib/utils";
@@ -66,6 +70,16 @@ function formatPlacesMapLayers(appStore: AppStoreType) {
   });
   return temp;
 }
+function formatGraphsCache(graphData: GraphData) {
+  return {
+    month_of_year: graphData.month_of_year.map(
+      (datum) => Object.keys(datum.month_of_year).length,
+    ),
+    year: graphData.year.map((datum) => Object.keys(datum.year).length),
+    month: graphData.month.map((datum) => Object.keys(datum.month).length),
+    // all: graphData,
+  };
+}
 
 export function displayAppstoreData(appStore: AppStoreType, _source: string) {
   const debug = import.meta.env?.VITE_DEBUG;
@@ -96,8 +110,9 @@ export function displayAppstoreData(appStore: AppStoreType, _source: string) {
       data.cacheData = {
         observations: {
           observations: obsData.observations.total_results,
-          graphs: obsData.graphs,
-          graphsSpecies: obsData.graphsSpecies,
+          graphs: formatGraphsCache(obsData.graphs),
+          graphsSpecies: formatGraphsCache(obsData.graphsSpecies),
+          graphsPlaces: formatGraphsCache(obsData.graphsPlaces),
         },
         identifications: {
           identifications:
