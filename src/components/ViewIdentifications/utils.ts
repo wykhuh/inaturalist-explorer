@@ -12,7 +12,7 @@ import type {
   AppStoreType,
   IdentificationSubviewsType,
 } from "../../types/app";
-import { identifications } from "../../data/inat_api_cache";
+import { identifications } from "../../data/api/identifications";
 import {
   isObservationsCheck,
   replaceWithCacheImages,

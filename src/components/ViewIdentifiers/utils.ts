@@ -12,7 +12,7 @@ import { createSpinner } from "../../lib/spinner";
 import type { ResourceIdentifiersResult } from "../../types/inat_api";
 import { updateAppUrl } from "../../lib/utils";
 import type { DataComponentType, AppStoreType } from "../../types/app";
-import { identifiers } from "../../data/inat_api_cache";
+import { identifiers } from "../../data/api/observations";
 import {
   isIdentificationsCheck,
   isObservationsCheck,

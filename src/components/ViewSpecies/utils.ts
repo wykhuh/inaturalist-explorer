@@ -1,7 +1,5 @@
-import {
-  observationsTaxonomy,
-  threatenedSpecies,
-} from "../../data/inat_api_cache";
+import { threatenedSpecies } from "../../data/api/observations";
+import { observationsTaxonomy } from "../../data/api/taxonomy";
 import { subspeciesRanks } from "../../data/inat_data";
 import {
   cleanupIdentificationParams,

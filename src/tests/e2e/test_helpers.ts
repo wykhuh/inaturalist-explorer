@@ -2,12 +2,12 @@ import type { Page } from "@playwright/test";
 
 import { redTaxaAutocompleteResults } from "../fixtures/inatApi";
 import {
-  identifications,
   observations,
   threatenedSpecies,
   observers,
   identifiers,
-} from "../../data/inat_api_cache";
+} from "../../data/api/observations";
+import { identifications } from "../../data/api/identifications";
 
 export async function countsObservationsApi(page: Page) {
   await iNatPhotos(page);

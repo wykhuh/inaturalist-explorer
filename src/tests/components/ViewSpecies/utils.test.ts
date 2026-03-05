@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { describe, expect, test } from "vitest";
-import { observationsTaxonomy } from "../../../data/inat_api_cache";
+import { observationsTaxonomy } from "../../../data/api/taxonomy";
 import {
   calculateSubspeciesIdsOffset,
   getSubspeciesIds,

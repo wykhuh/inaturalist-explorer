@@ -15,7 +15,7 @@ import type {
 } from "../../types/inat_api";
 import { updateAppUrl } from "../../lib/utils";
 import type { DataComponentType, AppStoreType } from "../../types/app";
-import { observers } from "../../data/inat_api_cache";
+import { observers } from "../../data/api/observations";
 import { isIdentificationsObserversResult } from "../../types/utils";
 import {
   isIdentificationsCheck,

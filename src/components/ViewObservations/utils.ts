@@ -21,7 +21,7 @@ import type {
   GraphData,
   GraphCategory,
 } from "../../types/app";
-import { observations_fields_annotations as observations } from "../../data/inat_api_cache";
+import { observations_fields_annotations as observations } from "../../data/api/observations";
 import { setInputChecked, setSelectedOption } from "../../lib/form_utils";
 import { updateSelectedResourcesId } from "../../lib/count_utils";
 import {
