@@ -694,6 +694,35 @@ export function initFilters(appStore: AppStoreType, componentContext: any) {
   }
 }
 
+// filter observations using methods not supported by iNat API
+function filterObservationsBeta(
+  data: iNatObservationsAPI,
+  appStore: AppStoreType,
+) {
+  let filteredResults = data.results;
+
+  if (appStore.observationsApiParams.obs_without_annotations) {
+    filteredResults = filteredResults.filter((obs) => {
+      if (obs.annotations && obs.annotations.length === 0) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
+  if (appStore.observationsApiParams.obs_without_ofvs) {
+    filteredResults = filteredResults.filter((obs) => {
+      if (obs.ofvs && obs.ofvs.length === 0) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
+
+  return filteredResults;
+}
+
 // ===============
 // event handlers
 // ===============
@@ -1044,10 +1073,12 @@ function renderGrid(
   let subviewEl = document.createElement("div");
   subviewEl.className = "observations-subview";
 
+  let filteredObservations = filterObservationsBeta(data, appStore);
+
   if (view.subview === "media") {
-    subviewEl.appendChild(createMediaGrid(data.results));
+    subviewEl.appendChild(createMediaGrid(filteredObservations));
   } else {
-    subviewEl.appendChild(createGrid(data.results));
+    subviewEl.appendChild(createGrid(filteredObservations));
   }
   containerEl.append(subviewEl);
 
@@ -1236,7 +1267,9 @@ function renderTable(
   let subviewEl = document.createElement("div");
   subviewEl.className = "observations-subview";
 
-  subviewEl.appendChild(createTable(data.results, appStore));
+  let filteredObservations = filterObservationsBeta(data, appStore);
+
+  subviewEl.appendChild(createTable(filteredObservations, appStore));
   containerEl.append(subviewEl);
 
   let pagination2 = document.createElement(

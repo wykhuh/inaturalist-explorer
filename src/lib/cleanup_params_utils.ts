@@ -1,5 +1,6 @@
 import { iconicTaxaIdName, subspeciesRanks } from "../data/inat_data";
 import {
+  betaHacks,
   fieldsWithAny,
   identificationsApiNames,
   observationsApiNames,
@@ -45,6 +46,12 @@ function cleanupParams(params: URLSearchParams) {
   if (params.get("place_id") === "0") {
     params.delete("place_id");
   }
+
+  betaHacks.forEach((field) => {
+    if (params.get(field)) {
+      params.delete(field);
+    }
+  });
 
   fieldsWithAny.forEach((field) => {
     if (params.get(field) === "any") {

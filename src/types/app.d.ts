@@ -379,6 +379,10 @@ interface ObservationsApiBase {
   without_term_id?: number;
   without_term_value_id?: string; // comma-seperated string
   year?: string; // comma-seperated string
+
+  // beta hacky features
+  obs_without_ofvs?: boolean;
+  obs_without_annotations?: boolean;
 }
 
 interface ObservationsApiParamsType extends ObservationsApiBase {
