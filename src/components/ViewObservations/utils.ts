@@ -172,8 +172,11 @@ export async function fetchAndRenderData(
     obsCache.observations = data;
 
     // render data
-    if (appStore.viewMetadata.observations_observations.subview === "map") {
+    let subview = appStore.viewMetadata.observations_observations.subview;
+    if (subview === "map") {
       renderMap(appStore);
+    } else if (subview === "table") {
+      renderTable(obsCache.observations, paginationCallback, appStore);
     } else {
       renderGrid(data, paginationCallback, appStore);
     }
@@ -739,7 +742,6 @@ function updateSubviewLinkClass(componentContext: any, ignoreLink: any) {
   links
     .filter((link) => link !== ignoreLink)
     .forEach((link) => {
-      console.log(link);
       link.classList.remove("current-subview");
     });
 
