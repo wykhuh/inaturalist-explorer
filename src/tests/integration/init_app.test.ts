@@ -1603,7 +1603,12 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       let urlData = decodeAppUrl(searchparams, "/");
       let subview =
         view === "observations_observations"
-          ? { subview: "map", perPage: perpage, displayFields: {}, graphs: {} }
+          ? {
+              subview: "map",
+              perPage: perpage,
+              displayFields: {},
+              graphs: { category: "month_of_year" },
+            }
           : { perPage: perpage };
 
       await initPopulateStore(store, urlData);
@@ -1683,7 +1688,7 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       expect(store.currentView).toBe("observations_observations");
       expect(store.viewMetadata.observations_observations).toStrictEqual({
         displayFields: {},
-        graphs: {},
+        graphs: { category: "month_of_year" },
         perPage: 24,
         subview: subview,
       });

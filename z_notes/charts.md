@@ -141,8 +141,7 @@ https://www.inaturalist.org/taxa/64122-Malosma-laurina
 
 seasonality - 3 api calls
 
-https://api.inaturalist.org/v2/observations/popular_field_values?taxon_id=64122&per_page=50&place_id=981d9cf2-e161-4c66-af02-493dc335be47&no_histograms=true
-&fields=(controlled_attribute%3A(excepted_taxon_ids%3A!t%2Cid%3A!t%2Clabel%3A!t%2Ctaxon_ids%3A!t)%2Ccontrolled_value%3A(excepted_taxon_ids%3A!t%2Cid%3A!t%2Clabel%3A!t%2Ctaxon_ids%3A!t)%2Ccount%3A!t%2Cmonth_of_year%3Aall%2Cunannotated%3Aall)
+https://api.inaturalist.org/v2/observations/popular_field_values?taxon_id=64122&per_page=50&place_id=981d9cf2-e161-4c66-af02-493dc335be47&no_histograms=true&fields=(controlled_attribute%3A(excepted_taxon_ids%3A!t%2Cid%3A!t%2Clabel%3A!t%2Ctaxon_ids%3A!t)%2Ccontrolled_value%3A(excepted_taxon_ids%3A!t%2Cid%3A!t%2Clabel%3A!t%2Ctaxon_ids%3A!t)%2Ccount%3A!t%2Cmonth_of_year%3Aall%2Cunannotated%3Aall)
 
 https://api.inaturalist.org/v2/observations/histogram?verifiable=true&taxon_id=64122&place_id=981d9cf2-e161-4c66-af02-493dc335be47&preferred_place_id=1&date_field=observed&interval=month_of_year
 
@@ -162,8 +161,7 @@ flowers and fruits
 leaves
 - all use same api call
 
-https://api.inaturalist.org/v2/observations/popular_field_values?taxon_id=64122&per_page=50&place_id=981d9cf2-e161-4c66-af02-493dc335be47&unannotated=true
-&fields=(controlled_attribute%3A(excepted_taxon_ids%3A!t%2Cid%3A!t%2Clabel%3A!t%2Ctaxon_ids%3A!t)%2Ccontrolled_value%3A(excepted_taxon_ids%3A!t%2Cid%3A!t%2Clabel%3A!t%2Ctaxon_ids%3A!t)%2Ccount%3A!t%2Cmonth_of_year%3Aall%2Cunannotated%3Aall)
+https://api.inaturalist.org/v2/observations/popular_field_values?taxon_id=64122&per_page=50&place_id=981d9cf2-e161-4c66-af02-493dc335be47&unannotated=true&fields=(controlled_attribute%3A(excepted_taxon_ids%3A!t%2Cid%3A!t%2Clabel%3A!t%2Ctaxon_ids%3A!t)%2Ccontrolled_value%3A(excepted_taxon_ids%3A!t%2Cid%3A!t%2Clabel%3A!t%2Ctaxon_ids%3A!t)%2Ccount%3A!t%2Cmonth_of_year%3Aall%2Cunannotated%3Aall)
 
 ==
 

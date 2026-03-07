@@ -4,7 +4,6 @@ import type {
   AppStoreType,
   AppStoreKeysType,
   NormalizediNatUserType,
-  GraphData,
 } from "../types/app.d.ts";
 import type {
   IdentificationsAPI,
@@ -47,6 +46,8 @@ export const mapStore: AppStoreType = {
       graphs: { month_of_year: [], year: [], month: [] },
       graphsSpecies: { month_of_year: [], year: [], month: [] },
       graphsPlaces: { month_of_year: [], year: [], month: [] },
+      popularFieldsOptions: [],
+      popularFields: {},
     },
     identifications: { identifications: {} as IdentificationsAPI },
   },

@@ -1,13 +1,21 @@
 import {
-  cleanupObervationsGraphParams,
+  cleanupObervationsHistogramParams,
   cleanupObervationsParams,
   cleanupObervationsParamsObject,
+  cleanupObervationsPopularFieldsBasicParams,
+  cleanupObervationsPopularFieldsParams,
 } from "../../lib/cleanup_params_utils";
-import { getHistogram, getObservations } from "../../lib/inat_api";
+import {
+  getHistogram,
+  getObservations,
+  getPopularFields,
+  getPopularFieldsBasic,
+} from "../../lib/inat_api";
 import { createSpinner } from "../../lib/spinner";
 import { updateAppUrl } from "../../lib/utils";
 import type {
   iNatObservationsAPI,
+  iNatPopularFieldsBasicAPI,
   ObservationsResult,
 } from "../../types/inat_api";
 import type {
@@ -18,20 +26,24 @@ import type {
   viewMetadataGraphs,
   Spinner,
   NormalizediNatTaxonType,
-  GraphData,
   GraphCategory,
+  NormalizedPopularFields,
+  PopularFieldsByTermId,
+  PopularFieldAnnotation,
+  ControlledAttributeBasic,
 } from "../../types/app";
 import { observations_fields_annotations as observations } from "../../data/api/observations";
 import { setInputChecked, setSelectedOption } from "../../lib/form_utils";
 import { updateSelectedResourcesId } from "../../lib/count_utils";
 import {
+  formatTaxonName,
   isObservationsCheck,
   replaceWithCacheImages,
   resetPageNumber,
 } from "../../lib/data_utils";
 import { initRenderMap } from "../../lib/init_app";
 import { removeMap } from "../../lib/map_utils";
-import { createGraphs } from "./charts_utils";
+import { createGraphs, createPopularFieldsGraphs } from "./charts_utils";
 import { iNatObservationUrl } from "../../data/inat_data";
 import {
   formatDateLong,
@@ -60,6 +72,11 @@ import {
   histograph_month_monarch_us,
 } from "../../data/api/histogram";
 import { defaultColorScheme } from "../../lib/map_colors_utils";
+import {
+  popular_fields_basic_milkweed,
+  popular_fields_basic_monarch,
+  processedPopularFields,
+} from "../../data/api/popular_fields";
 
 export let defaultPerPage = 24;
 
@@ -83,7 +100,11 @@ export async function fetchAndRenderData(
     obsCache.graphsSpecies = { month_of_year: [], year: [], month: [] };
     obsCache.graphs = { month_of_year: [], year: [], month: [] };
     obsCache.graphsPlaces = { month_of_year: [], year: [], month: [] };
+    obsCache.popularFieldsOptions = [];
+    obsCache.popularFields = {};
   }
+
+  fetchDataForGraphCategories(appStore);
 
   //  handle graphs
   if (appStore.viewMetadata.observations_observations.subview === "graph") {
@@ -188,14 +209,14 @@ async function getAPIData(appStore: AppStoreType) {
 // graphs data
 // ===============
 
-async function getAPIGraphData(params: string, interval: string) {
+async function getAPIHistogramData(params: string, interval: string) {
   try {
     let data = await getHistogram(`${params}&interval=${interval}`);
     if (!data) return;
 
     return data;
   } catch (error) {
-    console.error("ViewObservations getAPIGraphData ERROR:", error);
+    console.error("ViewObservations getAPIHistogramData ERROR:", error);
   }
 }
 
@@ -243,26 +264,57 @@ async function fetchGraphData(appStore: AppStoreType) {
     return;
   }
 
-  // fetch histogram data for each species
-  if (graphsMetadata.groupBy === "species") {
-    let paramsTemp = cleanupObervationsGraphParams(appStore, "observations");
+  // fetch popular fields data for each species
+  if (/\d+/.test(graphsMetadata.category)) {
+    let data = [];
+    let paramsTemp = cleanupObervationsPopularFieldsParams(
+      appStore,
+      "observations",
+    );
+    for await (const taxon of appStore.selectedTaxa) {
+      paramsTemp.set("taxon_id", taxon.id.toString());
+      let params = paramsTemp.toString();
+
+      let fieldsData = (await getAPIPopularFieldsData(
+        params,
+      )) as NormalizedPopularFields;
+      if (fieldsData) {
+        // add taxon data
+        let { title, subtitle } = formatTaxonName(taxon, appStore);
+        fieldsData.taxon_id = taxon.id;
+        if (title) {
+          fieldsData.taxon_name = subtitle ? `${title} (${subtitle})` : title;
+        }
+
+        data.push(fieldsData);
+      }
+    }
+
+    let popularFields = formatPopularFields(data);
+    cacheData.popularFields = popularFields;
+    // fetch histogram data for each species
+  } else if (graphsMetadata.groupBy === "species") {
+    let paramsTemp = cleanupObervationsHistogramParams(
+      appStore,
+      "observations",
+    );
 
     for await (const taxon of appStore.selectedTaxa) {
       paramsTemp.set("taxon_id", taxon.id.toString());
       let params = paramsTemp.toString();
 
       if (graphsMetadata.category === "month_of_year") {
-        let monthYearData = await getAPIGraphData(params, "month_of_year");
+        let monthYearData = await getAPIHistogramData(params, "month_of_year");
         if (monthYearData) {
           cacheData.graphsSpecies.month_of_year.push(monthYearData.results);
         }
       } else if (graphsMetadata.category === "year") {
-        let yearData = await getAPIGraphData(params, "year");
+        let yearData = await getAPIHistogramData(params, "year");
         if (yearData) {
           cacheData.graphsSpecies.year.push(yearData.results);
         }
       } else if (graphsMetadata.category === "month") {
-        let monthData = await getAPIGraphData(params, "month");
+        let monthData = await getAPIHistogramData(params, "month");
         if (monthData) {
           cacheData.graphsSpecies.month.push(monthData.results);
         }
@@ -270,24 +322,27 @@ async function fetchGraphData(appStore: AppStoreType) {
     }
     // fetch histogram data for places
   } else if (graphsMetadata.groupBy === "places") {
-    let paramsTemp = cleanupObervationsGraphParams(appStore, "observations");
+    let paramsTemp = cleanupObervationsHistogramParams(
+      appStore,
+      "observations",
+    );
 
     for await (const place of appStore.selectedPlaces) {
       paramsTemp.set("place_id", place.id.toString());
       let params = paramsTemp.toString();
 
       if (graphsMetadata.category === "month_of_year") {
-        let monthYearData = await getAPIGraphData(params, "month_of_year");
+        let monthYearData = await getAPIHistogramData(params, "month_of_year");
         if (monthYearData) {
           cacheData.graphsPlaces.month_of_year.push(monthYearData.results);
         }
       } else if (graphsMetadata.category === "year") {
-        let yearData = await getAPIGraphData(params, "year");
+        let yearData = await getAPIHistogramData(params, "year");
         if (yearData) {
           cacheData.graphsPlaces.year.push(yearData.results);
         }
       } else if (graphsMetadata.category === "month") {
-        let monthData = await getAPIGraphData(params, "month");
+        let monthData = await getAPIHistogramData(params, "month");
         if (monthData) {
           cacheData.graphsPlaces.month.push(monthData.results);
         }
@@ -296,23 +351,23 @@ async function fetchGraphData(appStore: AppStoreType) {
 
     // fetch histogram data
   } else {
-    let params = cleanupObervationsGraphParams(
+    let params = cleanupObervationsHistogramParams(
       appStore,
       "observations",
     ).toString();
 
     if (graphsMetadata.category === "month_of_year") {
-      let monthYearData = await getAPIGraphData(params, "month_of_year");
+      let monthYearData = await getAPIHistogramData(params, "month_of_year");
       if (monthYearData) {
         cacheData.graphs.month_of_year = [monthYearData.results];
       }
     } else if (graphsMetadata.category === "year") {
-      let yearData = await getAPIGraphData(params, "year");
+      let yearData = await getAPIHistogramData(params, "year");
       if (yearData) {
         cacheData.graphs.year = [yearData.results];
       }
     } else if (graphsMetadata.category === "month") {
-      let monthData = await getAPIGraphData(params, "month");
+      let monthData = await getAPIHistogramData(params, "month");
       if (monthData) {
         cacheData.graphs.month = [monthData.results];
       }
@@ -348,6 +403,12 @@ function devCachedGraphData(
     name: "Mexico",
     display_name: "Mexico",
   };
+
+  let popularFieldsOptions = formatPopularFieldsOptions([
+    popular_fields_basic_milkweed,
+    popular_fields_basic_monarch,
+  ]);
+  appStore.cacheData.observations.popularFieldsOptions = popularFieldsOptions;
 
   appStore.selectedTaxa = [monarch, milkweed];
   appStore.observationsApiParams.taxon_id = "48662,56851";
@@ -397,6 +458,7 @@ function devCachedGraphData(
       cacheData.graphs.month = [histograph_month.results];
     }
   }
+  cacheData.popularFields = processedPopularFields;
 }
 
 function hasGraphCache(
@@ -404,19 +466,168 @@ function hasGraphCache(
   graphsMetadata: viewMetadataGraphs,
 ) {
   let graphData;
+  let category = graphsMetadata.category;
   if (graphsMetadata.groupBy === "species") {
-    graphData =
-      appStore.cacheData.observations.graphsSpecies[graphsMetadata.category];
+    if (
+      category === "month_of_year" ||
+      category === "year" ||
+      category === "month"
+    ) {
+      graphData = appStore.cacheData.observations.graphsSpecies[category];
+    } else {
+      graphData = appStore.cacheData.observations.popularFields[category];
+    }
   } else if (graphsMetadata.groupBy === "places") {
-    graphData =
-      appStore.cacheData.observations.graphsPlaces[graphsMetadata.category];
+    if (
+      category === "month_of_year" ||
+      category === "year" ||
+      category === "month"
+    ) {
+      graphData = appStore.cacheData.observations.graphsPlaces[category];
+    } else {
+      graphData = appStore.cacheData.observations.popularFields[category];
+    }
   } else {
-    graphData = appStore.cacheData.observations.graphs[graphsMetadata.category];
+    if (
+      category === "month_of_year" ||
+      category === "year" ||
+      category === "month"
+    ) {
+      graphData = appStore.cacheData.observations.graphs[category];
+    } else {
+      graphData = appStore.cacheData.observations.popularFields[category];
+    }
   }
 
-  console.log(graphData.length > 0, "graphData.length > 0");
+  return graphData && graphData.length > 0;
+}
 
-  return graphData.length > 0;
+export function renderGraphCategorySelect(
+  appStore: AppStoreType,
+  componentContext: any,
+) {
+  let selectEl = componentContext.querySelector("select#graphs-category");
+  if (!selectEl) return;
+
+  selectEl.innerHTML = `
+    <option value="month_of_year">Month/Year</option>
+    <option value="year">Year</option>
+    <option value="month">Month</option>
+  `;
+
+  appStore.cacheData.observations.popularFieldsOptions.forEach((field) => {
+    let optionEl = document.createElement("option");
+    optionEl.value = field.id.toString();
+    optionEl.textContent = field.label;
+    optionEl.dataset.graphType = "popular-fields";
+
+    selectEl.appendChild(optionEl);
+  });
+}
+
+// ===============
+// popular fields data
+// ===============
+
+async function getAPIPopularFieldsData(params: string) {
+  try {
+    let data = await getPopularFields(`${params}`);
+    if (!data) return;
+
+    return data;
+  } catch (error) {
+    console.error("ViewObservations getAPIPopularFieldsData ERROR:", error);
+  }
+}
+
+async function getAPIPopularFieldsBasicData(params: string) {
+  try {
+    let data = await getPopularFieldsBasic(params);
+    if (!data) return;
+
+    return data;
+  } catch (error) {
+    console.error(
+      "ViewObservations getAPIPopularFieldsBasicData ERROR:",
+      error,
+    );
+  }
+}
+
+// fetch basic popular fields data for each species to create select menu
+async function fetchDataForGraphCategories(appStore: AppStoreType) {
+  let data = [];
+  let paramsTemp = cleanupObervationsPopularFieldsBasicParams(
+    appStore,
+    "observations",
+  );
+  for await (const taxon of appStore.selectedTaxa) {
+    paramsTemp.set("taxon_id", taxon.id.toString());
+    let params = paramsTemp.toString();
+    let res = await getAPIPopularFieldsBasicData(params);
+    if (res) {
+      data.push(res);
+    }
+  }
+
+  let popularFieldsOptions = formatPopularFieldsOptions(data);
+  appStore.cacheData.observations.popularFieldsOptions = popularFieldsOptions;
+  window.dispatchEvent(new Event("popularFieldsOptionsChanged"));
+}
+
+export function formatPopularFieldsOptions(data: iNatPopularFieldsBasicAPI[]) {
+  let fieldIds = new Set();
+  let fields: ControlledAttributeBasic[] = [];
+  data.forEach((datum) => {
+    datum.results.forEach((field) => {
+      if (!fieldIds.has(field.controlled_attribute.id)) {
+        fieldIds.add(field.controlled_attribute.id);
+        fields.push({
+          id: field.controlled_attribute.id,
+          label: field.controlled_attribute.label,
+        });
+      }
+    });
+  });
+
+  return fields;
+}
+
+export function formatPopularFields(data: NormalizedPopularFields[]) {
+  let popularFields = {} as PopularFieldsByTermId;
+  data.forEach((datum) => {
+    datum.results.forEach((result) => {
+      let term_id = result.controlled_attribute.id;
+      if (popularFields[term_id] === undefined) {
+        popularFields[term_id] = [];
+      }
+    });
+    Object.keys(popularFields).forEach((term_id) => {
+      let annotations: PopularFieldAnnotation[] = [];
+      let controlled_attribute = {} as ControlledAttributeBasic;
+      datum.results.forEach((result) => {
+        if (result.controlled_attribute.id === Number(term_id)) {
+          annotations.push({
+            controlled_value: result.controlled_value,
+            month_of_year: result.month_of_year,
+            count: result.count,
+          });
+          controlled_attribute = result.controlled_attribute;
+        }
+      });
+      if (annotations.length > 0) {
+        popularFields[Number(term_id)].push({
+          annotations: annotations,
+          unannotated: datum.unannotated[term_id],
+          controlled_attribute: controlled_attribute,
+          taxon_id: datum.taxon_id,
+          taxon_name: datum.taxon_name,
+        });
+      }
+    });
+  });
+
+  return popularFields;
 }
 
 // ===============
@@ -637,9 +848,10 @@ export async function updateGraphs(formData: FormData, appStore: AppStoreType) {
   let graphsMetadata = appStore.viewMetadata.observations_observations
     .graphs as viewMetadataGraphs;
 
-  if (formData.get("graphs-group-by") === "species") {
+  let groupBy = formData.get("graphs-group-by");
+  if (groupBy === "species") {
     graphsMetadata.groupBy = "species";
-  } else if (formData.get("graphs-group-by") === "places") {
+  } else if (groupBy === "places") {
     graphsMetadata.groupBy = "places";
   } else {
     delete graphsMetadata.groupBy;
@@ -655,6 +867,7 @@ export async function updateGraphs(formData: FormData, appStore: AppStoreType) {
 
   // check if cache data exists
   let graphData = hasGraphCache(appStore, graphsMetadata);
+
   // fetch data if no cache
   if (!graphData) {
     await fetchGraphData(appStore);
@@ -671,7 +884,7 @@ export async function updateGraphs(formData: FormData, appStore: AppStoreType) {
   }
 }
 
-export function toggleGraphOptions(
+export function disableGroupByForSelectedResources(
   appStore: AppStoreType,
   componentContext: any,
 ) {
@@ -684,12 +897,14 @@ export function toggleGraphOptions(
   );
   if (!placesOption) return;
 
+  // enable species option if there are selected taxa
   if (appStore.selectedTaxa.length === 0 || appStore.selectedTaxa[0].id === 0) {
     speciesOption.disabled = true;
   } else {
     speciesOption.disabled = false;
   }
 
+  // enable places option if there are selected places
   if (
     appStore.selectedPlaces.length === 0 ||
     appStore.selectedPlaces[0].id === 0
@@ -697,6 +912,41 @@ export function toggleGraphOptions(
     placesOption.disabled = true;
   } else {
     placesOption.disabled = false;
+  }
+}
+
+export function disablePopularFieldsOptions(
+  target: HTMLSelectElement,
+  appStore: AppStoreType,
+  componentContext: any,
+) {
+  let graphMetadata = appStore.viewMetadata.observations_observations.graphs;
+  if (!graphMetadata) return;
+
+  // disable popular fields options if group by places or species
+  if (target.value === "places" || target.value === "species") {
+    // deselect current option if it is popular field
+    let currentPopularFieldOption = componentContext.querySelector(
+      "#graphs-category option:checked[data-graph-type='popular-fields']",
+    );
+    if (currentPopularFieldOption) {
+      currentPopularFieldOption.selected = false;
+      graphMetadata.category = "month_of_year";
+    }
+
+    // disable popular fields
+    componentContext
+      .querySelectorAll('[data-graph-type="popular-fields"]')
+      .forEach((option: HTMLOptionElement) => {
+        option.disabled = true;
+      });
+  } else {
+    // enable popular  fields
+    componentContext
+      .querySelectorAll('[data-graph-type="popular-fields"]')
+      .forEach((option: HTMLOptionElement) => {
+        option.disabled = false;
+      });
   }
 }
 
@@ -1029,20 +1279,36 @@ export async function renderGraphs(
   subviewEl.className = "observations-subview";
 
   let cacheData = appStore.cacheData.observations;
+  let category = graphsMetadata.category;
   let data;
-  if (graphsMetadata.groupBy === "species") {
-    data = cacheData.graphsSpecies[graphsMetadata.category];
-  } else if (graphsMetadata.groupBy === "places") {
-    data = cacheData.graphsPlaces[graphsMetadata.category];
-  } else {
-    data = cacheData.graphs[graphsMetadata.category];
-  }
 
-  if (data.length > 0) {
-    let graph = createGraphs(data, appStore, selectedResource);
-    if (graph) {
-      subviewEl.appendChild(graph);
+  if (
+    category === "month_of_year" ||
+    category === "year" ||
+    category === "month"
+  ) {
+    if (graphsMetadata.groupBy === "species") {
+      data = cacheData.graphsSpecies[category];
+    } else if (graphsMetadata.groupBy === "places") {
+      data = cacheData.graphsPlaces[category];
+    } else {
+      data = cacheData.graphs[category];
     }
+
+    if (data.length > 0) {
+      let graph = createGraphs(data, appStore, selectedResource);
+      if (graph) {
+        subviewEl.appendChild(graph);
+      }
+    }
+  } else {
+    data = cacheData.popularFields[category];
+    data.forEach((datum) => {
+      let graph = createPopularFieldsGraphs(datum, appStore);
+      if (graph) {
+        subviewEl.appendChild(graph);
+      }
+    });
   }
 
   containerEl.append(subviewEl);

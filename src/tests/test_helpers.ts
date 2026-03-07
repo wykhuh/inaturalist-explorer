@@ -481,6 +481,15 @@ export function monarch(color = colors[2]) {
   };
 }
 
+export let milkweedBasic: NormalizediNatTaxonType = {
+  name: "Asclepias fascicularis",
+  default_photo: "https://inat.com/photos/61756746/square.jpg",
+  preferred_common_name: "Narrowleaf Milkweed",
+  matched_term: "nar",
+  rank: "species",
+  id: 56851,
+};
+
 export const allTaxa = {
   ...allTaxaRecord,
   observations_count: 100000,

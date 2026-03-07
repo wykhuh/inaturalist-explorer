@@ -717,6 +717,57 @@ type HistogramResult = {
 };
 
 // ==================
+// popular api
+// ==================
+
+type iNatPopularFieldsAPI = {
+  total_results: number;
+  page: number;
+  per_page: number;
+  results: PopularFieldsResult[];
+  unannotated: UnannotatedFields;
+};
+
+type PopularFieldsResult = {
+  count: number;
+  controlled_attribute: {
+    id: number;
+    label: string;
+  };
+  controlled_value: {
+    id: number;
+    label: string;
+  };
+  month_of_year: {
+    [key: string]: number;
+  };
+};
+
+type UnannotatedFields = {
+  [key: string]: {
+    count: number;
+    month_of_year: {
+      [key: string]: number;
+    };
+  };
+};
+
+type iNatPopularFieldsBasicAPI = {
+  total_results: number;
+  page: number;
+  per_page: number;
+  results: PopularFieldsBasicResult[];
+};
+
+type PopularFieldsBasicResult = {
+  count: number;
+  controlled_attribute: {
+    id: number;
+    label: string;
+  };
+};
+
+// ==================
 // taxonomy api
 // ==================
 

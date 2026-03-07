@@ -95,17 +95,61 @@ export function cleanupObervationsParams(
   return params.toString();
 }
 
-export function cleanupObervationsGraphParams(
+export function cleanupGraphs(
   appStore: AppStoreType,
   recordType = appStore.record_type,
 ) {
   let params = cleanupObervationsParamsObject(appStore, recordType);
+
+  // set place to US if place not set
+  if (params.get("place_id") === null) {
+    params.set("place_id", `1`);
+  }
 
   // set start date to 10 years ago  if d1 not set
   if (params.get("d1") === null) {
     let year = new Date().getFullYear() - 10;
     params.set("d1", `${year}-01-01`);
   }
+
+  return params;
+}
+
+export function cleanupObervationsHistogramParams(
+  appStore: AppStoreType,
+  recordType = appStore.record_type,
+) {
+  let params = cleanupGraphs(appStore, recordType);
+
+  if (params.get("per_page")) {
+    params.delete("per_page");
+  }
+
+  params.set("date_field", `observed`);
+
+  return params;
+}
+
+export function cleanupObervationsPopularFieldsBasicParams(
+  appStore: AppStoreType,
+  recordType = appStore.record_type,
+) {
+  let params = cleanupGraphs(appStore, recordType);
+
+  params.set("per_page", `50`);
+  params.set("no_histograms", `true`);
+
+  return params;
+}
+
+export function cleanupObervationsPopularFieldsParams(
+  appStore: AppStoreType,
+  recordType = appStore.record_type,
+) {
+  let params = cleanupGraphs(appStore, recordType);
+
+  params.set("per_page", `50`);
+  params.set("unannotated", `true`);
 
   return params;
 }

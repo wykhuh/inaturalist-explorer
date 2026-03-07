@@ -12,6 +12,7 @@ import type {
   PolygonJson,
   MultiPolygonJson,
   iNatObservationsAPI,
+  iNatPopularFieldsAPI,
 } from "./inat_api";
 import type { TerraDraw } from "terra-draw";
 
@@ -75,6 +76,8 @@ export interface AppStoreType {
       graphs: GraphData;
       graphsSpecies: GraphData;
       graphsPlaces: GraphData;
+      popularFieldsOptions: PopularFieldOption[];
+      popularFields: PopularFieldsByTermId;
     };
     identifications: {
       identifications: IdentificationsAPI;
@@ -93,6 +96,31 @@ export interface AppStoreType {
     side_menu: "show" | "hide";
   };
   record_type: RecordTypes;
+}
+
+export type PopularFieldsByTermId = {
+  [term_id: number]: PopularFieldForGraph[];
+};
+
+export type PopularFieldForGraph = {
+  taxon_id: number;
+  taxon_name: string;
+  controlled_attribute: ControlledAttributeBasic;
+  annotations: PopularFieldAnnotation[];
+  unannotated: { count: number; month_of_year: { [k: string]: number } };
+};
+
+export type PopularFieldAnnotation = {
+  count: number;
+  controlled_value: ControlledAttributeBasic;
+  month_of_year: { [k: string]: number };
+};
+
+export type ControlledAttributeBasic = { id: number; label: string };
+
+interface NormalizedPopularFields extends iNatPopularFieldsAPI {
+  taxon_id: number;
+  taxon_name: string;
 }
 
 export type GraphData = {
@@ -118,7 +146,17 @@ export type viewMetadataGraphs = {
   category: GraphCategory;
 };
 
-export type GraphCategory = "month_of_year" | "month" | "year";
+export type GraphCategory =
+  | "month_of_year"
+  | "month"
+  | "year"
+  | "1"
+  | "9"
+  | "12"
+  | "17"
+  | "22"
+  | "33"
+  | "36";
 
 export type AppStoreKeysType = keyof AppStoreType;
 

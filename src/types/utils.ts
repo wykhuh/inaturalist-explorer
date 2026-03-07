@@ -5,6 +5,7 @@ import type {
   NormalizediNatUserType,
   ObservationsApiParamsKeysType,
   ObservationsApiParamsType,
+  PopularFieldAnnotation,
 } from "./app";
 import type {
   IdentificationsObserversResult,
@@ -77,4 +78,10 @@ export function isObservationsData(
   apiData: iNatObservationsHistogramAPI | iNatObservationsAPI,
 ): apiData is iNatObservationsAPI {
   return Array.isArray(apiData.results);
+}
+
+export function isPopularFieldGraph(
+  records: any[],
+): records is PopularFieldAnnotation[] {
+  return "controlled_attribute" in records[0];
 }

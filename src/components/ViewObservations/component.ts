@@ -10,7 +10,9 @@ import {
   updateSubviewState,
   updateOrderForStore,
   updateGraphs,
-  toggleGraphOptions,
+  renderGraphCategorySelect,
+  disablePopularFieldsOptions,
+  disableGroupByForSelectedResources,
 } from "./utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import { setupComponent } from "../../lib/component_utils";
@@ -57,6 +59,7 @@ class ViewObservations extends HTMLElement {
     window.addEventListener("nameOrderChanged", this);
     window.addEventListener("identificationsChange", this);
     window.addEventListener("perPageChanged", this);
+    window.addEventListener("popularFieldsOptionsChanged", this);
 
     this.mapLinkEl.addEventListener("click", this);
     this.tableLinkEl.addEventListener("click", this);
@@ -77,6 +80,8 @@ class ViewObservations extends HTMLElement {
     window.removeEventListener("nameOrderChanged", this);
     window.removeEventListener("identificationsChange", this);
     window.removeEventListener("perPageChanged", this);
+    window.removeEventListener("popularFieldsOptionsChanged", this);
+
     this.mapLinkEl?.removeEventListener("click", this);
     this.tableLinkEl?.removeEventListener("click", this);
     this.graphLinkEl?.removeEventListener("click", this);
@@ -93,15 +98,23 @@ class ViewObservations extends HTMLElement {
     if (!this.graphForm) return;
 
     loggerEvent(`[ViewObservations event] ${event.type}`);
+
+    if (
+      ["selectedTaxaChanged", "popularFieldsOptionsChanged"].includes(
+        event.type,
+      )
+    ) {
+      renderGraphCategorySelect(window.app.store, this);
+    }
+
     let resourceChanges = [
       "observationsChange",
-      "identificationsChange",
       "localeChanged",
       "perPageChanged",
     ];
     if (resourceChanges.includes(event.type)) {
       fetchAndRenderData(paginationCallback, window.app.store, false);
-      toggleGraphOptions(window.app.store, this);
+      disableGroupByForSelectedResources(window.app.store, this);
     }
 
     let resourceChangesUseCache = ["nameOrderChanged"];
@@ -131,13 +144,19 @@ class ViewObservations extends HTMLElement {
     }
 
     if (target.id === "graphs-group-by") {
+      let targetSelect = target as HTMLSelectElement;
+      disablePopularFieldsOptions(targetSelect, window.app.store, this);
+
       const data = new FormData(this.graphForm);
       updateGraphs(data, window.app.store);
     }
+
     if (target.id === "graphs-category") {
       const data = new FormData(this.graphForm);
       updateGraphs(data, window.app.store);
     }
+
+    // displayGraphStatus();
   }
 
   async render(appStore: AppStoreType) {
@@ -145,7 +164,7 @@ class ViewObservations extends HTMLElement {
 
     // use store to set values the form on page load
     initFilters(appStore, this);
-    toggleGraphOptions(appStore, this);
+    disableGroupByForSelectedResources(appStore, this);
 
     // load observation data for grid/table
     await fetchAndRenderData(paginationCallback, appStore, true);

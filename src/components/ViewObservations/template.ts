@@ -44,8 +44,6 @@ export const template = html`
           <label for="graphs-category">Category</label>
           <select id="graphs-category" name="graphs-category">
             <option value="month_of_year">Month/Year</option>
-            <option value="year">Year</option>
-            <option value="month">Month</option>
           </select>
         </div>
         <div class="form-group">

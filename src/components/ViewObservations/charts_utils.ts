@@ -18,6 +18,7 @@ import "chartjs-adapter-spacetime";
 import type {
   AppStoreSelectedResourcesKeysType,
   AppStoreType,
+  PopularFieldForGraph,
 } from "../../types/app";
 import type { iNatObservationsHistogramResult } from "../../types/inat_api";
 
@@ -128,7 +129,7 @@ function createLineGraph(
   data: number[][],
   labels: string[] | number[] | Date[],
   appStore: AppStoreType,
-  selectedResource: AppStoreSelectedResourcesKeysType | undefined,
+  selectedResource: AppStoreSelectedResourcesKeysType | undefined | string[],
   chartTitle = "",
   timeUnit: TimeUnits | null,
 ) {
@@ -154,6 +155,8 @@ function createLineGraph(
     ) {
       let place = appStore.selectedPlaces[i];
       config.label = place.name;
+    } else if (Array.isArray(selectedResource)) {
+      config.label = selectedResource[i];
     }
     return config;
   });
@@ -227,6 +230,7 @@ export function createGraphs(
   let containerEl = document.createElement("canvas");
   let id = `graph-${Math.round(new Date().getTime() * Math.random())}`;
   containerEl.id = id;
+
   if (results[0].month_of_year) {
     let combinedValues = [] as number[][];
     let combinedLabels = [] as string[];
@@ -288,5 +292,38 @@ export function createGraphs(
       "month",
     );
   }
+
+  return containerEl;
+}
+
+export function createPopularFieldsGraphs(
+  result: PopularFieldForGraph,
+  appStore: AppStoreType,
+) {
+  let containerEl = document.createElement("canvas");
+  let id = `graph-${Math.round(new Date().getTime() * Math.random())}`;
+  containerEl.id = id;
+  let combinedValues = [] as number[][];
+  let combinedLabels = [] as string[];
+  result.annotations.forEach((annotation) => {
+    let { values, labels } = formatMonthOfYearData(annotation.month_of_year);
+    combinedValues.push(values);
+    combinedLabels = labels;
+  });
+  let { values } = formatMonthOfYearData(result.unannotated.month_of_year);
+  combinedValues.push(values);
+
+  createLineGraph(
+    containerEl,
+    combinedValues,
+    combinedLabels,
+    appStore,
+    result.annotations
+      .map((a) => a.controlled_value.label)
+      .concat(["Unannotated"]),
+    `${result.taxon_name} - ${result.controlled_attribute.label}`,
+    null,
+  );
+
   return containerEl;
 }

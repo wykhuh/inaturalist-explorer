@@ -20,6 +20,7 @@ import type {
   IdentificationsSpeciesCountAPI,
   iNatTaxonomyApi,
   iNatObservationsHistogramAPI,
+  iNatPopularFieldsAPI,
 } from "../types/inat_api.d.ts";
 import { loggerUrl } from "./logger.ts";
 
@@ -421,7 +422,7 @@ export async function getObservationsTaxonomy(appParams: string) {
 }
 
 export async function getHistogram(appParams: string) {
-  let url = `${observations_api}/histogram?${appParams}&ttl=3600`;
+  let url = `${observations_api_v2}/histogram?${appParams}&ttl=3600`;
   try {
     let resp = await fetch(url);
     let data = (await resp.json()) as iNatObservationsHistogramAPI;
@@ -429,5 +430,41 @@ export async function getHistogram(appParams: string) {
     return data;
   } catch (error) {
     console.error("getHistogram ERROR:", error);
+  }
+}
+
+export async function getPopularFields(appParams: string) {
+  let fields =
+    `(controlled_attribute:(excepted_taxon_ids:!t,id:!t,label:!t,taxon_ids:!t),` +
+    `controlled_value:(excepted_taxon_ids:!t,id:!t,label:!t,taxon_ids:!t),` +
+    `count:!t,month_of_year:all,unannotated:all)`;
+
+  let url =
+    `${observations_api_v2}/popular_field_values?${appParams}&fields=${fields}` +
+    `&ttl=3600`;
+
+  try {
+    let resp = await fetch(url);
+    let data = (await resp.json()) as iNatObservationsHistogramAPI;
+    loggerUrl(`${url} ${data.total_results}`);
+    return data;
+  } catch (error) {
+    console.error("getPopularFields ERROR:", error);
+  }
+}
+
+// used to determine which annotation term id to show in menu
+export async function getPopularFieldsBasic(appParams: string) {
+  let fields = `(controlled_attribute:(id:!t,label:!t))`;
+  let url =
+    `${observations_api_v2}/popular_field_values?${appParams}&fields=${fields}` +
+    `&ttl=3600`;
+  try {
+    let resp = await fetch(url);
+    let data = (await resp.json()) as iNatPopularFieldsAPI;
+    loggerUrl(`${url} ${data.total_results}`);
+    return data;
+  } catch (error) {
+    console.error("getPopularFields ERROR:", error);
   }
 }
