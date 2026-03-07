@@ -315,10 +315,6 @@ interface ObservationsApiParamsType {
   not_user_id?: string; // array of number
   without_ident_user_id?: string; // array of number
   outlink_source?: string;
-
-  // beta hacky features
-  obs_without_ofvs?: boolean;
-  obs_without_annotations?: boolean;
 }
 
 export type ObservationsApiParamsKeysType = keyof ObservationsApiParamsType;

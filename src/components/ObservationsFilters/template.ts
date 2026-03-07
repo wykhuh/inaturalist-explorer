@@ -1328,57 +1328,6 @@ let observationFieldsPane = html`<div
   </div>
 </div>`;
 
-let betaPane = html`<div
-  class="tab-pane"
-  id="beta-pane"
-  role="tabpanel"
-  aria-labelledby="beta-tab"
->
-  <div>
-    <fieldset>
-      <legend>Note</legend>
-      <p>
-        There are some features that I wanted, but are not available in
-        iNaturalist API, so I had to hack something together. Because the
-        features not supported by the API, using these filters will break other
-        things.
-      </p>
-    </fieldset>
-    <fieldset>
-      <legend>Observations displayed</legend>
-      <p>
-        Notes: The Observations, Species, Identifiers, Observers counts are
-        inaccurate. The number of observations shown on each page for grid,
-        media, and table can vary from zero to limit set in the settings menu.
-        Observations on the map are inaccurate.
-      </p>
-      <div class="form-check">
-        <input
-          name="obs_without_annotations"
-          id="obs_without_annotations"
-          type="checkbox"
-          value="true"
-        />
-        <label for="obs_without_annotations"
-          >Hide observations with annotations
-        </label>
-      </div>
-      <div class="form-check">
-        <input
-          name="obs_without_ofvs"
-          id="obs_without_ofvs"
-          type="checkbox"
-          value="true"
-        />
-        <label for="obs_without_ofvs"
-          >Hide observations with observation fields
-        </label>
-      </div>
-    </fieldset>
-  </div>
-  <div></div>
-</div>`;
-
 export const template = html`
   <button id="filters-btn" class="btn-primary">Filters</button>
   <span class="filters-count"></span>
@@ -1448,24 +1397,13 @@ export const template = html`
             Observation Fields
           </button>
         </li>
-        <li class="nav-item" role="presentation">
-          <button
-            class="nav-link"
-            id="beta-tab"
-            role="tab"
-            aria-controls="beta-pane"
-            aria-selected="false"
-          >
-            Beta Features
-          </button>
-        </li>
       </ul>
 
       <form id="filters-form">
         <div class="fields">
           <div class="tab-content" id="observations-filters-tab-content">
             ${observationPane} ${speciesPane}${datePane}
-            ${annotationPane}${observationFieldsPane}${betaPane}
+            ${annotationPane}${observationFieldsPane}
           </div>
         </div>
         <div class="controls">

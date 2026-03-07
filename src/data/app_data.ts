@@ -321,11 +321,6 @@ export const observationsFilterableImplemented: ObservationsApiParamsKeysType[] 
     "viewer_id",
   ];
 
-export const betaHacks: ObservationsApiParamsKeysType[] = [
-  "obs_without_annotations",
-  "obs_without_ofvs",
-];
-
 // used by processFiltersForm to determine if app will combine values into
 // comma separated string
 export const observationsFilterableImplementedArrays: ObservationsApiParamsKeysType[] =
@@ -421,8 +416,6 @@ export const observationsFieldName_InputType = {
   month: "multiselect",
   native: "select",
   obscuration: "multiselect",
-  obs_without_annotations: "checkbox",
-  obs_without_ofvs: "checkbox",
   ofv_datatype: "multiselect",
   on: "dateInput",
   photo_license: "multiselect",
@@ -454,8 +447,7 @@ export const fieldsWithAny = ["verifiable"];
 
 export const observationsApiFilterableNames = observationsFilterableImplemented
   .concat(observationsFilterableImplementedArrays)
-  .concat(observationsFilterableTodo)
-  .concat(betaHacks);
+  .concat(observationsFilterableTodo);
 
 export const observationsApiNames: string[] =
   observationsApiNonFilterableNames.concat(observationsApiFilterableNames);
