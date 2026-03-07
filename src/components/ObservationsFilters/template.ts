@@ -1346,7 +1346,12 @@ let betaPane = html`<div
     </fieldset>
     <fieldset>
       <legend>Observations displayed</legend>
-
+      <p>
+        Notes: The Observations, Species, Identifiers, Observers counts are
+        inaccurate. The number of observations shown on each page for grid,
+        media, and table can vary from zero to limit set in the settings menu.
+        Observations on the map are inaccurate.
+      </p>
       <div class="form-check">
         <input
           name="obs_without_annotations"
@@ -1369,12 +1374,6 @@ let betaPane = html`<div
           >Hide observations with observation fields
         </label>
       </div>
-      <p>
-        Notes: These filters are kinda buggy. The Observations, Species,
-        Identifiers, Observers counts are inaccurate. The number of observations
-        shown on each page for grid, media, and table can vary from zero to
-        limit set in the settings menu. Observations on the map are inaccurate.
-      </p>
     </fieldset>
   </div>
   <div></div>
