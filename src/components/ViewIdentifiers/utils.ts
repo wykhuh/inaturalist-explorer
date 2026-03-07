@@ -11,7 +11,11 @@ import { loggerTime } from "../../lib/logger";
 import { createSpinner } from "../../lib/spinner";
 import type { ResourceIdentifiersResult } from "../../types/inat_api";
 import { updateAppUrl } from "../../lib/utils";
-import type { DataComponentType, AppStoreType } from "../../types/app";
+import type {
+  DataComponentType,
+  AppStoreType,
+  PaginationCallback,
+} from "../../types/app";
 import { identifiers } from "../../data/api/observations";
 import {
   isIdentificationsCheck,
@@ -20,10 +24,7 @@ import {
 } from "../../lib/data_utils";
 
 export async function fetchAndRenderData(
-  paginationCallback: (
-    currentPage: number,
-    appStore: AppStoreType,
-  ) => Promise<void>,
+  paginationCallback: PaginationCallback,
   appStore: AppStoreType,
 ) {
   let containerEl = document.querySelector(".identifiers-table-container");

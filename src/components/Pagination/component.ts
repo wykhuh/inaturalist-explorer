@@ -1,5 +1,9 @@
 import { loggerEvent, loggerRender } from "../../lib/logger";
-import type { DataComponentType, AppStoreType } from "../../types/app";
+import type {
+  DataComponentType,
+  AppStoreType,
+  PaginationCallback,
+} from "../../types/app";
 import { createSequence } from "./utils";
 
 type PaginationProps = {
@@ -7,10 +11,7 @@ type PaginationProps = {
   currentPage: number;
   totalRecords: number;
   appStore: AppStoreType;
-  paginationCallback: (
-    pageNumber: number,
-    appStore: AppStoreType,
-  ) => Promise<void>;
+  paginationCallback: PaginationCallback;
   scrollToSelector?: string;
 };
 

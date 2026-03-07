@@ -596,3 +596,8 @@ export type TooltipSettings = {
   content: string;
   tooltip: string;
 };
+
+export type PaginationCallback = (
+  currentPage: number,
+  appStore: AppStoreType,
+) => Promise<void>;

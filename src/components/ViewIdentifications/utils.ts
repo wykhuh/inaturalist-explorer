@@ -11,6 +11,7 @@ import type {
   DataComponentType,
   AppStoreType,
   IdentificationSubviewsType,
+  PaginationCallback,
 } from "../../types/app";
 import { identifications } from "../../data/api/identifications";
 import {
@@ -23,10 +24,7 @@ import { initRenderMap } from "../../lib/init_app";
 import { setSelectedOption } from "../../lib/form_utils";
 
 export async function fetchAndRenderData(
-  paginationCallback: (
-    currentPage: number,
-    appStore: AppStoreType,
-  ) => Promise<void>,
+  paginationCallback: PaginationCallback,
   appStore: AppStoreType,
 ) {
   let subcontainerEl = document.querySelector(".subview-container");

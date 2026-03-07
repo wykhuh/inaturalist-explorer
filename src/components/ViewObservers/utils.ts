@@ -14,7 +14,11 @@ import type {
   ObservationsObserversResult,
 } from "../../types/inat_api";
 import { updateAppUrl } from "../../lib/utils";
-import type { DataComponentType, AppStoreType } from "../../types/app";
+import type {
+  DataComponentType,
+  AppStoreType,
+  PaginationCallback,
+} from "../../types/app";
 import { observers } from "../../data/api/observations";
 import { isIdentificationsObserversResult } from "../../types/utils";
 import {
@@ -29,10 +33,7 @@ import {
 // https://api.inaturalist.org/v1/identifications/observers?page=2&per_page=25
 
 export async function fetchAndRenderData(
-  paginationCallback: (
-    currentPage: number,
-    appStore: AppStoreType,
-  ) => Promise<void>,
+  paginationCallback: PaginationCallback,
   appStore: AppStoreType,
 ) {
   let containerEl = document.querySelector(".observers-table-container");

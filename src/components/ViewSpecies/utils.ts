@@ -25,7 +25,11 @@ import {
 import { loggerTime } from "../../lib/logger";
 import { createSpinner } from "../../lib/spinner";
 import { sortObjectByValue, updateAppUrl } from "../../lib/utils";
-import type { DataComponentType, AppStoreType } from "../../types/app";
+import type {
+  DataComponentType,
+  AppStoreType,
+  PaginationCallback,
+} from "../../types/app";
 import type {
   IdentificationsResult,
   iNatObservationsSpeciesCountAPI,
@@ -122,10 +126,7 @@ export async function fetchData(
 }
 
 export async function fetchAndRenderData(
-  paginationCallback: (
-    currentPage: number,
-    appStore: AppStoreType,
-  ) => Promise<void>,
+  paginationCallback: PaginationCallback,
   appStore: AppStoreType,
 ) {
   let containerEl = document.querySelector(".subview-container");
