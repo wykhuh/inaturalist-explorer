@@ -57,7 +57,7 @@ class ViewSpecies extends HTMLElement {
       "perPageChanged",
     ];
     if (resourceChanges.includes(event.type)) {
-      fetchAndRenderData(paginationCallback, window.app.store);
+      fetchAndRenderData(paginationCallback, window.app.store, false);
     }
 
     if (this.orderForm && target.id === "order_combo") {
@@ -72,7 +72,7 @@ class ViewSpecies extends HTMLElement {
     // use store to set values the form on page load
     initFilters(appStore);
 
-    await fetchAndRenderData(paginationCallback, window.app.store);
+    await fetchAndRenderData(paginationCallback, window.app.store, true);
   }
 }
 

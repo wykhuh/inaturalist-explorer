@@ -78,9 +78,11 @@ export interface AppStoreType {
       graphsPlaces: GraphData;
       popularFieldsOptions: PopularFieldOption[];
       popularFields: PopularFieldsByTermId;
+      species: iNatObservationsSpeciesCountAPI;
     };
     identifications: {
       identifications: IdentificationsAPI;
+      species: IdentificationsSpeciesCountAPI;
     };
   };
   viewMetadata: {
