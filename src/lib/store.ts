@@ -80,6 +80,8 @@ const proxiedStore = new Proxy(structuredClone(mapStore), {
 
     displayAppstoreData(proxiedStore, `proxiedStore ${property}`);
 
+    // NOTE: selectedResource changes multiple times one one resource
+    // is added or removed.
     selectedResources.forEach((resource) => {
       if (property === resource) {
         loggerEvent(`[proxiedStore dispatchEvent] ${property}Change`);

@@ -6,7 +6,7 @@ import { mapStore } from "../../../lib/store";
 import {
   formatPopularFields,
   formatPopularFieldsOptions,
-} from "../../../components/ViewObservations/utils";
+} from "../../../components/SubviewGraphs/utils";
 import {
   popular_fields_basic_milkweed,
   popular_fields_basic_monarch,

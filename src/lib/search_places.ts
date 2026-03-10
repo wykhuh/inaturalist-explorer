@@ -183,6 +183,7 @@ export async function placeSelectedHandler(
     fitBoundsPlaces(appStore);
   }
   renderSelectedResources(appStore, true);
+  window.dispatchEvent(new Event("selectedPlacesUpdate"));
 }
 
 export function showHidePlacesHeader() {
@@ -227,6 +228,7 @@ export async function removePlace(placeId: number, appStore: AppStoreType) {
   await updateCountForAll("selectedPlaces", appStore);
 
   renderSelectedResources(appStore, true);
+  window.dispatchEvent(new Event("selectedPlacesUpdate"));
 }
 
 export async function removeOnePlaceFromStore(

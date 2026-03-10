@@ -227,9 +227,9 @@ export function createGraphs(
 ) {
   if (results.length === 0) return;
 
-  let containerEl = document.createElement("canvas");
+  let canvasEl = document.createElement("canvas");
   let id = `graph-${Math.round(new Date().getTime() * Math.random())}`;
-  containerEl.id = id;
+  canvasEl.id = id;
 
   if (results[0].month_of_year) {
     let combinedValues = [] as number[][];
@@ -241,9 +241,9 @@ export function createGraphs(
         combinedLabels = labels;
       }
     });
-
+    // canvasEl = document.getElementById("myChart");
     createLineGraph(
-      containerEl,
+      canvasEl,
       combinedValues,
       combinedLabels,
       appStore,
@@ -263,7 +263,7 @@ export function createGraphs(
     });
 
     createLineGraph(
-      containerEl,
+      canvasEl,
       combinedValues,
       combinedLabels,
       appStore,
@@ -283,7 +283,7 @@ export function createGraphs(
     });
 
     createLineGraph(
-      containerEl,
+      canvasEl,
       combinedValues,
       combinedLabels,
       appStore,
@@ -293,7 +293,7 @@ export function createGraphs(
     );
   }
 
-  return containerEl;
+  return canvasEl;
 }
 
 export function createPopularFieldsGraphs(

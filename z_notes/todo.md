@@ -191,3 +191,15 @@ https://api.inaturalist.org/v1/observations/taxonomy?user_id=7733167
 
 ==
 https://www.maplibrary.org/1254/exploring-map-projection-alternatives-for-web-use/
+
+==
+
+change taxa -> update popular field options
+
+store observation count in store so we dont need to check observation count for charts
+
+==
+
+language, per page changes on species, identifiers, obsevers view -> update observations
+
+window.dispatchEvent(new Event("subviewChange")); - do we need this

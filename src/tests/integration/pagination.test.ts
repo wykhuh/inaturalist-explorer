@@ -41,7 +41,7 @@ import {
 
 import { paginationCallback as paginationCallbackIdentifications } from "../../components/ViewIdentifications/utils.ts";
 import { paginationCallback as paginationCallbackIdentifiers } from "../../components/ViewIdentifiers/utils.ts";
-import { paginationCallback as paginationCallbackObservations } from "../../components/ViewObservations/utils.ts";
+import { paginationCallback as paginationCallbackObservations } from "../../components/SubviewGrid/shared_utils.ts";
 import { paginationCallback as paginationCallbackObservers } from "../../components/ViewObservers/utils.ts";
 import { paginationCallback as paginationCallbackSpecies } from "../../components/ViewSpecies/utils.ts";
 import { viewChangeHandler } from "../../components/ObservationsHeader/shared_utils.ts";

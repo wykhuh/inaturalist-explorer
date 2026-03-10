@@ -32,6 +32,11 @@ import "./components/Pagination/component.ts";
 import "./components/Tooltip/component.ts";
 import "./components/LinksMenu/component.ts";
 import "./components/Accordion/component.ts";
+import "./components/SubviewTable/component.ts";
+import "./components/SubviewMap/component.ts";
+import "./components/SubviewGrid/component.ts";
+import "./components/SubviewMedia/component.ts";
+import "./components/SubviewGraphs/component.ts";
 
 import mapStore from "./lib/store.ts";
 import Router from "./lib/router.ts";

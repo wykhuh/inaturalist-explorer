@@ -56,7 +56,10 @@ import {
   updateTilesForSelectedTaxaIdentified,
 } from "./search_utils.ts";
 import { decodeAppUrl } from "./utils.ts";
-import { updateCountForAll } from "./count_utils.ts";
+import {
+  calculateObservationsCount,
+  updateCountForAll,
+} from "./count_utils.ts";
 import { viewAndTemplateObject } from "../data/app_data.ts";
 import { addCurrentPageClass } from "../components/Header/utils.ts";
 import { populateStoreWithLocaleStorage } from "./localStorage.ts";
@@ -344,7 +347,7 @@ export async function initPopulateStore(
   loggerStore("++ initPopulateStore end");
 
   loggerEvent("[initPopulateStored dispatchEvent] storePopulated");
-
+  calculateObservationsCount(appStore);
   window.dispatchEvent(new Event("storePopulated"));
 }
 

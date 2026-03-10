@@ -588,7 +588,7 @@ type Spinner = {
 
 export interface DataComponentType extends HTMLElement {
   data?: any;
-  type: string;
+  type?: string;
 }
 
 export type TooltipSettings = {

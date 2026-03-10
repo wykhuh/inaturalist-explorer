@@ -192,6 +192,7 @@ export async function taxonSelectedHandler(
   await updateTilesForSelectedTaxa(appStore);
   await updateCountForAll("selectedTaxa", appStore);
   renderSelectedResources(appStore, true);
+  window.dispatchEvent(new Event("selectedTaxaUpdate"));
 }
 
 export function showHideTaxaHeader() {
@@ -227,6 +228,7 @@ export async function removeTaxon(taxonId: number, appStore: AppStoreType) {
 
   await updateCountForAll("all", appStore);
   renderSelectedResources(appStore, true);
+  window.dispatchEvent(new Event("selectedTaxaUpdate"));
 }
 
 export function removeOneTaxonFromStore(

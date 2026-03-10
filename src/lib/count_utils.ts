@@ -339,3 +339,10 @@ export function updateSelectedResourcesId(
     }
   }
 }
+
+export function calculateObservationsCount(appStore: AppStoreType) {
+  let total = appStore.selectedTaxa
+    .map((t) => t.observations_count || 0)
+    .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+  return total;
+}
