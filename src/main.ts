@@ -30,7 +30,7 @@ import "./components/Header/component.ts";
 import "./components/Page404/component.ts";
 import "./components/Pagination/component.ts";
 import "./components/Tooltip/component.ts";
-import "./components/LinksMenu/component.ts";
+import "./components/LinksObservationsMenu/component.ts";
 import "./components/Accordion/component.ts";
 import "./components/SubviewTable/component.ts";
 import "./components/SubviewMap/component.ts";
