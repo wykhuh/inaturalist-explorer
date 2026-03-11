@@ -17,7 +17,7 @@ export class PageObservations extends HTMLElement {
   toggleSidebarEl: HTMLButtonElement | null = null;
   searchMenuToggleEl: HTMLButtonElement | null = null;
   settingsMenuToggleEl: HTMLButtonElement | null = null;
-  downloadMenuToggleEl: HTMLButtonElement | null = null;
+  linksMenuToggleEl: HTMLButtonElement | null = null;
   siteLayoutEl: HTMLDivElement | null = null;
   siteControlsEl: HTMLDivElement | null = null;
 
@@ -34,7 +34,7 @@ export class PageObservations extends HTMLElement {
     this.settingsMenuToggleEl = this.querySelector<HTMLButtonElement>(
       "#settings-menu-toggle",
     );
-    this.downloadMenuToggleEl =
+    this.linksMenuToggleEl =
       this.querySelector<HTMLButtonElement>("#links-menu-toggle");
     this.siteLayoutEl = this.querySelector<HTMLDivElement>("#site-layout");
     this.siteControlsEl = this.querySelector<HTMLDivElement>("#site-controls");
@@ -42,7 +42,7 @@ export class PageObservations extends HTMLElement {
     this.toggleSidebarEl?.addEventListener("click", this);
     this.searchMenuToggleEl?.addEventListener("click", this);
     this.settingsMenuToggleEl?.addEventListener("click", this);
-    this.downloadMenuToggleEl?.addEventListener("click", this);
+    this.linksMenuToggleEl?.addEventListener("click", this);
 
     this.render();
   }
@@ -53,7 +53,7 @@ export class PageObservations extends HTMLElement {
     this.toggleSidebarEl?.removeEventListener("click", this);
     this.searchMenuToggleEl?.removeEventListener("click", this);
     this.settingsMenuToggleEl?.removeEventListener("click", this);
-    this.downloadMenuToggleEl?.removeEventListener("click", this);
+    this.linksMenuToggleEl?.removeEventListener("click", this);
   }
 
   handleEvent(event: Event) {

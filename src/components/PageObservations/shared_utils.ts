@@ -63,6 +63,10 @@ export function toggleLinksHandler(componentCtx: HTMLElement) {
   createMenuComponent("links-menu", componentCtx);
 }
 
+export function toggleLinksIdentificationsHandler(componentCtx: HTMLElement) {
+  createMenuComponent("links-identifications-menu", componentCtx);
+}
+
 function createMenuComponent(
   elementTag: string,
   componentCtx: HTMLElement,

@@ -363,8 +363,12 @@ export async function getObservationsIdentifiers(appParams: string) {
   }
 }
 
+export function formatIdentificationsApiUrl(appParams: string) {
+  return `${identifications_api}/?${appParams}`;
+}
+
 export async function getIdentifications(appParams: string) {
-  let url = `${identifications_api}/?${appParams}&ttl=3600`;
+  let url = `${formatIdentificationsApiUrl(appParams)}&ttl=3600`;
   let data = (await inatFetch(url, "getIdentifications")) as IdentificationsAPI;
   if (data) {
     loggerUrl(url, data.total_results);

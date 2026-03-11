@@ -37,6 +37,7 @@ import "./components/SubviewMap/component.ts";
 import "./components/SubviewGrid/component.ts";
 import "./components/SubviewMedia/component.ts";
 import "./components/SubviewGraphs/component.ts";
+import "./components/LinksIdentificationsMenu/component.ts";
 
 import mapStore from "./lib/store.ts";
 import Router from "./lib/router.ts";

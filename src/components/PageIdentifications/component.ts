@@ -3,6 +3,8 @@ import { loggerEvent, loggerRender } from "../../lib/logger";
 import {
   initSidebarState,
   toggleIdentificationsHandler,
+  toggleLinksHandler,
+  toggleLinksIdentificationsHandler,
   toggleSettingsHandler,
   toggleSidebar,
 } from "../PageObservations/shared_utils";
@@ -15,6 +17,7 @@ export class PageIdentifications extends HTMLElement {
 
   toggleSidebarEl: HTMLButtonElement | null = null;
   searchMenuToggleEl: HTMLButtonElement | null = null;
+  linksMenuToggleEl: HTMLButtonElement | null = null;
   settingsMenuToggleEl: HTMLButtonElement | null = null;
   siteLayoutEl: HTMLDivElement | null = null;
   siteControlsEl: HTMLDivElement | null = null;
@@ -29,6 +32,8 @@ export class PageIdentifications extends HTMLElement {
     this.searchMenuToggleEl = this.querySelector<HTMLButtonElement>(
       "#search-menu-toggle",
     );
+    this.linksMenuToggleEl =
+      this.querySelector<HTMLButtonElement>("#links-menu-toggle");
     this.settingsMenuToggleEl = this.querySelector<HTMLButtonElement>(
       "#settings-menu-toggle",
     );
@@ -37,6 +42,7 @@ export class PageIdentifications extends HTMLElement {
 
     this.toggleSidebarEl?.addEventListener("click", this);
     this.searchMenuToggleEl?.addEventListener("click", this);
+    this.linksMenuToggleEl?.addEventListener("click", this);
     this.settingsMenuToggleEl?.addEventListener("click", this);
 
     this.render();
@@ -47,6 +53,7 @@ export class PageIdentifications extends HTMLElement {
 
     this.toggleSidebarEl?.removeEventListener("click", this);
     this.searchMenuToggleEl?.removeEventListener("click", this);
+    this.linksMenuToggleEl?.removeEventListener("click", this);
     this.settingsMenuToggleEl?.removeEventListener("click", this);
   }
 
@@ -67,6 +74,11 @@ export class PageIdentifications extends HTMLElement {
         window.dispatchEvent(new Event("switchMenu"));
       } else if (target.id === "settings-menu-toggle") {
         toggleSettingsHandler(this);
+      } else if (
+        target.id === "links-menu-toggle" ||
+        target.closest("button")?.id === "links-menu-toggle"
+      ) {
+        toggleLinksIdentificationsHandler(this);
       }
     }
   }
