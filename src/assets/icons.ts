@@ -175,3 +175,7 @@ export const externalLink = `
   <path d="M10 4H6C4.89543 4 4 4.89543 4 6V18C4 19.1046 4.89543 20 6 20H18C19.1046 20 20 19.1046 20 18V14M11 13L20 4M20 4V9M20 4H15" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>
   `;
+
+// https://commons.wikimedia.org/wiki/File:Copy_-_The_Noun_Project.svg
+export const copy =
+  '<svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" x="0px" y="0px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve"><g><path d="M18,8v12H9V8H18 M18,6H9C7.9,6,7,6.9,7,8v12c0,1.1,0.9,2,2,2h9c1.1,0,2-0.9,2-2V8C20,6.9,19.1,6,18,6L18,6z"></path></g><path d="M5,17V4h10V2H5C3.9,2,3,2.9,3,4v13H5z"></path></svg>';

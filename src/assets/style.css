@@ -849,6 +849,15 @@
     }
   }
 
+  .copy-icon {
+    height: 1rem;
+    display: inline-block;
+  }
+
+  button.copy-to-clipboard {
+    border: 0;
+  }
+
   .no-photo {
     --no-photo-color: var(--clr-gray-800);
 
@@ -873,6 +882,12 @@
       border-radius: 5px;
       z-index: 2;
       word-break: break-word;
+    }
+
+    .tp-trigger:hover + [role="tooltip"].hide,
+    .tp-trigger:focus-visible + [role="tooltip"].hide,
+    [role="tooltip"].hide {
+      display: none;
     }
 
     .tp-trigger:hover + [role="tooltip"],
