@@ -489,6 +489,19 @@ export function formatInatIdentifyParams(appStore: AppStoreType) {
   return params.toString();
 }
 
+export function formatInatApiParams(appStore: AppStoreType) {
+  let params = formatAppUrl(
+    appStore,
+    "observations",
+    "object",
+  ) as URLSearchParams;
+
+  deleteParams(ignoreThisAppParams, params);
+  deleteParams(["view", "subview", "spam"], params);
+
+  return params.toString();
+}
+
 export function formatSpeciesToInatExploreParams(
   taxonId: number,
   appStore: AppStoreType,

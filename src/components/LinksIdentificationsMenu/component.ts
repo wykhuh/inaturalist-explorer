@@ -2,32 +2,24 @@ import type { AppStoreType } from "../../types/app";
 import { setupComponent } from "../../lib/component_utils";
 import { template } from "./template";
 import { loggerEvent, loggerRender } from "../../lib/logger";
-import {
-  cleanupIdentificationParams,
-  cleanupObervationsParams,
-  formatInatExploreParams,
-  formatInatExportParams,
-  formatInatIdentifyParams,
-} from "../../lib/cleanup_params_utils";
-import {
-  isIdentificationsCheck,
-  isObservationsCheck,
-} from "../../lib/data_utils";
-import {
-  formatIdentificationsApiUrl,
-  formatObservationsApiUrl,
-} from "../../lib/inat_api";
+import { formatInatApiParams } from "../../lib/cleanup_params_utils";
+import { formatIdentificationsApiUrl } from "../../lib/inat_api";
 
 class LinksMenu extends HTMLElement {
   constructor() {
     super();
   }
 
+  copyToClipboardEl: null | HTMLElement = null;
+
   connectedCallback() {
     loggerRender("++ LinksMenu connectedCallback");
 
     setupComponent(template, this);
-    this.renderLinks(window.app.store);
+
+    this.copyToClipboardEl = this.querySelector("copy-to-clipboard");
+
+    this.render(window.app.store);
 
     window.addEventListener("observationsChange", this);
     window.addEventListener("viewChange", this);
@@ -48,20 +40,22 @@ class LinksMenu extends HTMLElement {
     loggerEvent(`[LinksMenu Event] ${target.id}`);
 
     if (
-      ["viewChange", "observationsChange", "subviewChange"].includes(event.type)
+      ["viewChange", "identificationsChange", "subviewChange"].includes(
+        event.type,
+      )
     ) {
-      this.renderLinks(window.app.store);
+      this.render(window.app.store);
     }
   }
 
-  async renderLinks(appStore: AppStoreType) {
-    let listEl = this.querySelector("#external-links");
-    if (!listEl) return;
-
-    let liEl = document.createElement("li");
-    let params = cleanupIdentificationParams(appStore, "identifications");
-    liEl.innerHTML = `<a href="${formatIdentificationsApiUrl(params)}">Identifications API</a> - iNaturalist identifications API`;
-    listEl.appendChild(liEl);
+  async render(appStore: AppStoreType) {
+    if (this.copyToClipboardEl) {
+      let params = formatInatApiParams(appStore);
+      this.copyToClipboardEl.setAttribute(
+        "content",
+        formatIdentificationsApiUrl(params),
+      );
+    }
   }
 }
 

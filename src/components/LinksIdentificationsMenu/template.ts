@@ -5,10 +5,27 @@ export const template = html`
     <h2>iNaturalist Links</h2>
 
     <p>
-      Click on the links below to go the iNaturalist API with the queries made
-      on this site.
+      Click the copy icon to copy a link with the queries made on this site.
     </p>
 
-    <ul class="liststyle-none" id="external-links"></ul>
+    <ul class="liststyle-none" id="external-api-links">
+      <li>
+        iNaturalist Identifications API
+        <copy-to-clipboard id="copy-identifications-api-tp"></copy-to-clipboard>
+      </li>
+    </ul>
+
+    <h2>Code Notebooks</h2>
+    <p>
+      To accompany this site, we have some code that offers additional
+      functionality. The code is written in R using JupyterLite notebooks.
+    </p>
+
+    <ul class="liststyle-none" id="external-links">
+      <li>
+        <a href="">Download Identifications</a> - download identifications as a
+        CSV
+      </li>
+    </ul>
   </div>
 `;
