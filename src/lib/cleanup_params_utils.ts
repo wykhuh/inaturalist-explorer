@@ -16,7 +16,7 @@ import type {
 } from "../types/app";
 import { iNatOrange } from "./map_colors_utils";
 import { formatAppUrl } from "./utils";
-import { isSubpeciesCheck } from "./data_utils";
+import { isObservationsCheck, isSubpeciesCheck } from "./data_utils";
 
 function cleanupParamsStore(
   appStore: AppStoreType,
@@ -407,7 +407,7 @@ export function cleanupObservationsMapParams(
 // iNaturalist site
 // =============
 
-let ignoreThisAppParams = [
+let ignoreWebsiteSpecificParams = [
   "per_page",
   "page",
   "colors",
@@ -416,7 +416,7 @@ let ignoreThisAppParams = [
 ];
 
 function cleaniNatSiteParams(params: URLSearchParams) {
-  deleteParams(ignoreThisAppParams, params);
+  deleteParams(ignoreWebsiteSpecificParams, params);
 
   let taxon_id = params.get("taxon_id");
   if (taxon_id) {
@@ -490,13 +490,22 @@ export function formatInatIdentifyParams(appStore: AppStoreType) {
 }
 
 export function formatInatApiParams(appStore: AppStoreType) {
-  let params = formatAppUrl(
-    appStore,
-    "observations",
-    "object",
-  ) as URLSearchParams;
+  let params;
+  if (isObservationsCheck(appStore)) {
+    params = formatAppUrl(
+      appStore,
+      "observations",
+      "object",
+    ) as URLSearchParams;
+  } else {
+    params = formatAppUrl(
+      appStore,
+      "identifications",
+      "object",
+    ) as URLSearchParams;
+  }
 
-  deleteParams(ignoreThisAppParams, params);
+  deleteParams(ignoreWebsiteSpecificParams, params);
   deleteParams(["view", "subview", "spam"], params);
 
   return params.toString();
