@@ -11,6 +11,7 @@ import {
   removeDefaultParams,
   createHashString,
   sortObjectByValue,
+  convertObjectArrayToCSVString,
   addCommastoNumbers,
   truncateText,
   range,
@@ -1686,6 +1687,29 @@ describe("sortObjectByValue", () => {
     });
     expect(Object.keys(result)).toStrictEqual(["25 ", "15 ", "10 "]);
     expect(Object.values(result)).toStrictEqual([2, 3, 4]);
+  });
+});
+
+describe("convertObjectArrayToCSVString", () => {
+  test("convert object to csv string", () => {
+    let data = [
+      { id: 1, value: 123, field: 4.5 },
+      { id: 2, value: true, field: false },
+      { id: 3, value: null, field: undefined },
+      { id: 4, value: "can't", field: "ab cd" },
+      { id: 5, value: '"hi"', field: 'a "hi" b' },
+      { id: 6, value: "ab, cd", field: "ef\ngh" },
+    ];
+
+    let result = convertObjectArrayToCSVString(data);
+    expect(result).toBe(`id,value,field
+1,123,4.5
+2,true,false
+3,,
+4,"can't","ab cd"
+5,"""hi""","a ""hi"" b"
+6,"ab, cd","ef
+gh"`);
   });
 });
 

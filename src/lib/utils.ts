@@ -769,3 +769,27 @@ export function addCommastoNumbers(number: number) {
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Identifier_after_number
   return number.toLocaleString();
 }
+
+// https://stackoverflow.com/a/68146412
+export function convertObjectArrayToCSVString(records: { [k: string]: any }[]) {
+  let result = Object.keys(records[0]).join(",") + "\n";
+  result += records
+    .map((record) => {
+      return Object.values(record)
+        .map((value) => {
+          if (value === undefined) {
+            return "";
+          } else if (value === null) {
+            return "";
+          } else if (typeof value === "string") {
+            return `"${value.toString().replaceAll('"', '""')}"`;
+          } else {
+            return value.toString();
+          }
+        })
+        .join(",");
+    })
+    .join("\n");
+
+  return result;
+}
