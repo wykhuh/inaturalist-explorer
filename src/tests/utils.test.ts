@@ -11,6 +11,7 @@ import {
   removeDefaultParams,
   createHashString,
   sortObjectByValue,
+  truncateText,
   range,
 } from "../lib/utils.ts";
 import { mapStore } from "../lib/store.ts";
@@ -1684,6 +1685,29 @@ describe("sortObjectByValue", () => {
     });
     expect(Object.keys(result)).toStrictEqual(["25 ", "15 ", "10 "]);
     expect(Object.values(result)).toStrictEqual([2, 3, 4]);
+  });
+});
+
+
+describe("truncateText", () => {
+  test("truncate text to a given length", () => {
+    let result = truncateText("abcdef", 3);
+    expect(result).toBe("abc...");
+  });
+
+  test("it uses spaces when calculating length", () => {
+    let result = truncateText("a bcdef", 3);
+    expect(result).toBe("a b...");
+  });
+
+  test("does nothing if string length matches given length", () => {
+    let result = truncateText("abcdef", 6);
+    expect(result).toBe("abcdef");
+  });
+
+  test("does nothing if string length is smaller than given length", () => {
+    let result = truncateText("abcdef", 10);
+    expect(result).toBe("abcdef");
   });
 });
 
