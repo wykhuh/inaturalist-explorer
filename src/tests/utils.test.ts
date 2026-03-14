@@ -11,6 +11,7 @@ import {
   removeDefaultParams,
   createHashString,
   sortObjectByValue,
+  addCommastoNumbers,
   truncateText,
   range,
 } from "../lib/utils.ts";
@@ -1688,6 +1689,30 @@ describe("sortObjectByValue", () => {
   });
 });
 
+describe("addCommastoNumbers", () => {
+  test("add commas to integer", () => {
+    let result = addCommastoNumbers(1234567);
+    expect(result).toBe("1,234,567");
+  });
+
+  test("add commas to float", () => {
+    let result = addCommastoNumbers(12345.67);
+    expect(result).toBe("12,345.67");
+  });
+
+  test("add commas to negative numbers", () => {
+    let result = addCommastoNumbers(-12345.67);
+    expect(result).toBe("-12,345.67");
+  });
+
+  test.each([1, 12, 123])(
+    "convert number to string without commas if number is 3 or less digits",
+    (num) => {
+      let result = addCommastoNumbers(num);
+      expect(result).toBe(`${num}`);
+    },
+  );
+});
 
 describe("truncateText", () => {
   test("truncate text to a given length", () => {

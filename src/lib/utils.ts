@@ -763,3 +763,9 @@ export function truncateText(text: string, maxLength: number) {
 
   return text.slice(0, maxLength) + "...";
 }
+
+export function addCommastoNumbers(number: number) {
+  // NOTE: must wrap number in parathesis before calling method.
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Identifier_after_number
+  return number.toLocaleString();
+}
