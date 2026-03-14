@@ -11,6 +11,7 @@ import {
   removeDefaultParams,
   createHashString,
   sortObjectByValue,
+  range,
 } from "../lib/utils.ts";
 import { mapStore } from "../lib/store.ts";
 import {
@@ -1683,5 +1684,12 @@ describe("sortObjectByValue", () => {
     });
     expect(Object.keys(result)).toStrictEqual(["25 ", "15 ", "10 "]);
     expect(Object.values(result)).toStrictEqual([2, 3, 4]);
+  });
+});
+
+describe("range", () => {
+  test("it returns an array of numbers from start value to end value", () => {
+    let result = range(2, 5);
+    expect(result).toStrictEqual([2, 3, 4, 5]);
   });
 });

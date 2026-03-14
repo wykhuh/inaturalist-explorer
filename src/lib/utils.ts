@@ -741,7 +741,7 @@ export function sortObjectByValue(obj: { [k: string]: any }, ascending = true) {
   }
 }
 
-export function range(start = 0, stop: number) {
+export function range(start: number, stop: number) {
   return [...Array(stop - start + 1).keys()].map((i) => i + start);
 }
 
