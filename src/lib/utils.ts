@@ -277,7 +277,11 @@ export function updateAppUrl(url_location: Location, appStore: AppStoreType) {
     url += `?${paramsString}`;
   }
 
-  let path = `${recordTypeToPathObj[appStore.record_type]}`;
+  let path = recordTypeToPathObj[appStore.record_type];
+  if (!path) {
+    throw Error(`add "${appStore.record_type}" to recordTypeToPathObj`);
+  }
+
   if (paramsString) {
     path += `?${paramsString}`;
   }
@@ -337,7 +341,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     store.record_type = "about";
     isObservations = false;
   } else {
-    throw Error("invalid record_type");
+    throw Error(`invalid record_type: ${store.record_type}`);
   }
   let resourceApiParams = getResourceApiParams(isObservations);
 
@@ -768,6 +772,32 @@ export function addCommastoNumbers(number: number) {
   // NOTE: must wrap number in parathesis before calling method.
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Identifier_after_number
   return number.toLocaleString();
+}
+
+// https://stackoverflow.com/a/39914235
+export function sleep(seconds: number) {
+  return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+}
+
+// https://stackoverflow.com/a/68146412
+export function downloadBlob(
+  content: any,
+  filename: string,
+  contentType: string,
+) {
+  // Create a blob
+  var blob = new Blob([content], { type: contentType });
+  var url = URL.createObjectURL(blob);
+
+  // Create a link to download file
+  var link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", filename);
+  link.click();
+
+  // clean DOM
+  link.remove();
+  URL.revokeObjectURL(url);
 }
 
 // https://stackoverflow.com/a/68146412

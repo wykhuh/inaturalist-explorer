@@ -603,3 +603,43 @@ export type PaginationCallback = (
   currentPage: number,
   appStore: AppStoreType,
 ) => Promise<void>;
+
+export type IdentificationsCSVRow = {
+  body: string;
+  category?: string | null;
+  created_at: string;
+  current: boolean;
+  current_taxon: boolean;
+  disagreement?: boolean | null;
+  hidden: boolean;
+  identification_id: number;
+  identification_taxon_id: number;
+  identification_taxon_name?: string;
+  identification_taxon_preferred_common_name?: string;
+  identification_taxon_rank: string;
+  identification_uuid: string;
+  identifier_id: number;
+  identifier_login: string;
+  observation_created_at: string;
+  observation_id: number;
+  observation_observed_on: string;
+  observation_photo_attribution?: string;
+  observation_photo_license_code?: string | null;
+  observation_photo_url?: string;
+  observation_photos_count: number;
+  observation_sound_attribution?: string;
+  observation_sound_license_code?: string | null;
+  observation_sound_url?: string;
+  observation_sound_type?: string;
+  observation_sounds_count: number;
+  observation_quality_grade: string;
+  observation_taxon_id: number;
+  observation_taxon_name?: string;
+  observation_taxon_preferred_common_name?: string;
+  observation_uuid: string;
+  observer_id: number;
+  observer_login: string;
+  own_observation: boolean;
+  spam: boolean;
+  vision: boolean;
+};

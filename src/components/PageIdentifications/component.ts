@@ -2,8 +2,8 @@ import { setupComponent } from "../../lib/component_utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import {
   initSidebarState,
+  toggleDownloadIdentificationsHandler,
   toggleIdentificationsHandler,
-  toggleLinksHandler,
   toggleLinksIdentificationsHandler,
   toggleSettingsHandler,
   toggleSidebar,
@@ -18,6 +18,7 @@ export class PageIdentifications extends HTMLElement {
   toggleSidebarEl: HTMLButtonElement | null = null;
   searchMenuToggleEl: HTMLButtonElement | null = null;
   linksMenuToggleEl: HTMLButtonElement | null = null;
+  downloadMenuToggleEl: HTMLButtonElement | null = null;
   settingsMenuToggleEl: HTMLButtonElement | null = null;
   siteLayoutEl: HTMLDivElement | null = null;
   siteControlsEl: HTMLDivElement | null = null;
@@ -34,6 +35,9 @@ export class PageIdentifications extends HTMLElement {
     );
     this.linksMenuToggleEl =
       this.querySelector<HTMLButtonElement>("#links-menu-toggle");
+    this.downloadMenuToggleEl = this.querySelector<HTMLButtonElement>(
+      "#download-menu-toggle",
+    );
     this.settingsMenuToggleEl = this.querySelector<HTMLButtonElement>(
       "#settings-menu-toggle",
     );
@@ -43,6 +47,7 @@ export class PageIdentifications extends HTMLElement {
     this.toggleSidebarEl?.addEventListener("click", this);
     this.searchMenuToggleEl?.addEventListener("click", this);
     this.linksMenuToggleEl?.addEventListener("click", this);
+    this.downloadMenuToggleEl?.addEventListener("click", this);
     this.settingsMenuToggleEl?.addEventListener("click", this);
 
     this.render();
@@ -54,6 +59,7 @@ export class PageIdentifications extends HTMLElement {
     this.toggleSidebarEl?.removeEventListener("click", this);
     this.searchMenuToggleEl?.removeEventListener("click", this);
     this.linksMenuToggleEl?.removeEventListener("click", this);
+    this.downloadMenuToggleEl?.removeEventListener("click", this);
     this.settingsMenuToggleEl?.removeEventListener("click", this);
   }
 
@@ -79,6 +85,11 @@ export class PageIdentifications extends HTMLElement {
         target.closest("button")?.id === "links-menu-toggle"
       ) {
         toggleLinksIdentificationsHandler(this);
+      } else if (
+        target.id === "download-menu-toggle" ||
+        target.closest("button")?.id === "download-menu-toggle"
+      ) {
+        toggleDownloadIdentificationsHandler(this);
       }
     }
   }

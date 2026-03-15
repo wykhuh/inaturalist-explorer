@@ -241,7 +241,7 @@ export function cleanupIdentificationsParamsForRecord(
   return params.toString();
 }
 
-export function cleanupIdentificationParams(
+export function cleanupIdentificationParamsObject(
   appStore: AppStoreType,
   recordType = appStore.record_type,
 ) {
@@ -253,6 +253,15 @@ export function cleanupIdentificationParams(
     let ids = identifierId.split(",");
     params.set("user_id", ids[ids.length - 1]);
   }
+
+  return params;
+}
+
+export function cleanupIdentificationParams(
+  appStore: AppStoreType,
+  recordType = appStore.record_type,
+) {
+  let params = cleanupIdentificationParamsObject(appStore, recordType);
 
   return params.toString();
 }

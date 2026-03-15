@@ -67,6 +67,12 @@ export function toggleLinksIdentificationsHandler(componentCtx: HTMLElement) {
   createMenuComponent("links-identifications-menu", componentCtx);
 }
 
+export function toggleDownloadIdentificationsHandler(
+  componentCtx: HTMLElement,
+) {
+  createMenuComponent("download-identifications-menu", componentCtx);
+}
+
 function createMenuComponent(
   elementTag: string,
   componentCtx: HTMLElement,

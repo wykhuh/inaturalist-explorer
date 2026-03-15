@@ -14,18 +14,5 @@ export const template = html`
         <copy-to-clipboard id="copy-identifications-api-tp"></copy-to-clipboard>
       </li>
     </ul>
-
-    <h2>Code Notebooks</h2>
-    <p>
-      To accompany this site, we have some code that offers additional
-      functionality. The code is written in R using JupyterLite notebooks.
-    </p>
-
-    <ul class="liststyle-none" id="external-links">
-      <li>
-        <a href="">Download Identifications</a> - download identifications as a
-        CSV
-      </li>
-    </ul>
   </div>
 `;

@@ -1017,7 +1017,7 @@ export interface Observation {
   quality_metrics: any[];
   reviewed_by: number[];
   site_id: number;
-  sounds: any[];
+  sounds: Sound[];
   spam: boolean;
   species_guess: string | null;
   tags: any[];
@@ -1062,20 +1062,22 @@ export interface Annotation {
 export interface ObservationSound {
   id: number;
   uuid?: string;
-  sound?: {
-    id: number;
-    license_code: CCLicense;
-    attribution: string;
-    native_sound_id: number | null;
-    secret_token: string | null;
-    file_url: string;
-    file_content_type: string;
-    play_local: boolean;
-    subtype: string | null;
-    flags: any[];
-    moderator_actions: any[];
-    hidden: boolean;
-  };
+  sound?: Sound;
+}
+
+interface Sound {
+  id: number;
+  license_code: CCLicense;
+  attribution: string;
+  native_sound_id: number | null;
+  secret_token: string | null;
+  file_url: string;
+  file_content_type: string;
+  play_local: boolean;
+  subtype: string | null;
+  flags: any[];
+  moderator_actions: any[];
+  hidden: boolean;
 }
 
 interface iNatObservatFieldsAPI {
