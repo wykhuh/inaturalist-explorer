@@ -8,7 +8,7 @@ import {
 import type {
   Annotation,
   DefaultPhoto,
-  Observation,
+  IdentificationObservation,
   ObservationField,
   ObservationPhoto,
   ObservationSound,
@@ -169,9 +169,6 @@ export function renderMedia(
     }
 
     let url = photos[0].url?.replace("/square.", `/${size}`);
-    if (!url) {
-      url = photos[0].photo?.url?.replace("/square.", `/${size}`);
-    }
     if (url) {
       let altText = formatTaxonPhotoAltText(taxon, appStore);
       mediaContent += `<a href="${inatUrl}">`;
@@ -297,7 +294,7 @@ function renderDisagreementsCount(count: number) {
 }
 
 export function renderObservationMetadataCounts(
-  data: ObservationsResult | Observation,
+  data: ObservationsResult | IdentificationObservation,
 ) {
   let detailsContent = `<div class="metadata-counts">`;
   if (data.identifications.length > 0) {
@@ -326,7 +323,7 @@ export function renderObservationMetadataCounts(
 }
 
 export function renderDates(
-  data: ObservationsResult | Observation,
+  data: ObservationsResult | IdentificationObservation,
   displayFields: { [k: string]: boolean },
 ) {
   let detailsContent = `<div class="dates">`;

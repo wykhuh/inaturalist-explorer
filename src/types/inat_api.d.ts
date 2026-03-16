@@ -43,7 +43,7 @@ export interface DefaultPhoto {
   attribution: string;
   flags?: any[];
   id: number;
-  license_code?: string | null;
+  license_code?: CCLicense | "pd" | null;
   medium_url: string;
   original_dimensions?: OriginalDimensions;
   square_url: string;
@@ -168,37 +168,11 @@ export interface TaxaResult {
   rank_level: number;
   rank: string;
   taxon_changes_count: number;
-  taxon_photos?: TaxonPhoto[];
+  taxon_photos?: TaxonPhotoSummary[];
   taxon_schemes_count: number;
   vision?: boolean;
   wikipedia_summary?: string;
   wikipedia_url: string | null;
-}
-
-export interface TaxonPhoto {
-  photo: Photo;
-  taxon_id: number;
-  taxon: Taxon;
-}
-
-export interface Photo {
-  attribution_name?: string;
-  attribution: string;
-  flags: any[];
-  hidden?: boolean;
-  id: number;
-  large_url?: string;
-  license_code?: string | null;
-  medium_url?: string;
-  moderator_actions?: any[];
-  native_page_url?: string | null;
-  native_photo_id?: string | null;
-  original_dimensions: OriginalDimensions;
-  original_url?: string;
-  small_url?: string;
-  square_url?: string;
-  type?: string;
-  url: string;
 }
 
 export interface Taxon {
@@ -322,6 +296,30 @@ export interface List {
   title: string;
 }
 
+export interface TaxonPhotoSummary {
+  taxon_id: number;
+  photo: {
+    attribution_name?: string;
+    attribution: string;
+    flags: any[];
+    hidden?: boolean;
+    id: number;
+    large_url?: string;
+    license_code?: CCLicense | null;
+    medium_url?: string;
+    moderator_actions?: any[];
+    native_page_url?: string | null;
+    native_photo_id?: string | null;
+    original_dimensions: OriginalDimensions;
+    original_url?: string;
+    small_url?: string;
+    square_url?: string;
+    type?: string;
+    url: string;
+  };
+  taxon: Taxon;
+}
+
 // ==================
 // observations  api
 // ==================
@@ -334,33 +332,74 @@ export type iNatObservationsAPI = {
 };
 
 export interface ObservationsResult {
+  annotations?: Annotation[];
+  cached_votes_total?: number;
+  captive?: boolean;
+  comments?: any[];
   comments_count: number;
-  created_at_details?: CreatedAtDetails;
+  community_taxon_id?: number;
   created_at: string;
+  created_at_details?: CreatedAtDetails;
   created_time_zone: string;
+  description?: string;
+  faves?: any[];
   faves_count: number;
-  geoprivacy: any;
+  flags?: string[];
+  geojson?: Point;
+  geoprivacy?: string | null;
   id: number;
-  identifications_count?: number;
+  ident_taxon_ids?: number[];
+  identification_disagreements_count?: number;
   identifications: Identification[];
+  identifications_count?: number;
+  identifications_most_agree?: boolean;
+  identifications_most_disagree?: boolean;
+  identifications_some_agree?: boolean;
+  license_code?: CCLicense;
   location?: string;
+  map_scale?: null | string;
   mappable?: boolean;
+  non_owner_ids?: Identification[];
+  num_identification_agreements?: number;
+  num_identification_disagreements?: number;
+  oauth_application_id?: number | null;
   obscured: boolean;
-  observed_on_details?: ObservedOnDetails;
+  observation_photos?: ObservationPhotoSummary[];
+  observation_sounds?: ObservationSoundSummary[];
   observed_on: string;
+  observed_on_details?: ObservedOnDetails;
+  observed_on_string?: string;
   observed_time_zone: string;
   ofvs?: ObservationField[];
+  outlinks?: any[];
+  owners_identification_from_vision?: boolean;
   photos: ObservationPhoto[];
   place_guess: string;
+  place_ids?: number[];
+  positional_accuracy?: number | null;
+  preferences?: any;
+  project_ids?: number[];
+  project_ids_with_curator_id?: number[];
+  project_ids_without_curator_id?: number[];
+  project_observations?: any[];
+  public_positional_accuracy?: number | null;
   quality_grade: string;
+  quality_metrics?: string[];
+  reviewed_by?: number[];
+  site_id?: number | null;
   sounds: ObservationSound[];
+  spam?: boolean;
+  species_guess?: string;
+  tags?: string[];
   taxon: ObservationTaxon;
+  taxon_geoprivacy?: string;
   time_observed_at: string | null;
+  time_zone_offset?: string;
+  updated_at?: string;
+  uri?: string;
   user: ObservationUser;
   uuid: string;
-  annotations?: Annotation[];
-  num_identification_disagreements?: number;
-  updated_at?: string;
+  votes?: any[];
 }
 
 export interface ObservationField {
@@ -426,35 +465,109 @@ export interface ObservedOnDetails {
   year: number;
 }
 
-export interface ObservationPhoto {
+export interface ObservationPhotoSummary {
   id: number;
+  photo?: ObservationPhoto;
   photo_id?: number;
-  photo?: Photo;
   position?: number;
-  url?: string;
   uuid?: string;
 }
 
-export interface ObservationTaxon {
-  iconic_taxon_id: number | null;
+export interface ObservationPhoto {
+  attribution?: string;
+  flags?: any[];
+  hidden?: boolean;
   id: number;
+  license_code?: CCLicense | null;
+  moderator_actions?: any[];
+  original_dimensions?: OriginalDimensions;
+  url?: string;
+}
+
+export interface ObservationTaxon {
+  ancestor_ids?: number[];
+  ancestry?: string;
+  atlas_id?: number | null;
+  complete_rank?: string;
+  complete_species_count?: number | null;
+  created_at?: string;
+  current_synonymous_taxon_ids?: number | null;
+  default_photo?: DefaultPhoto;
+  endemic?: boolean;
+  extinct?: boolean;
+  flag_counts?: FlagCount;
+  iconic_taxon_id?: number | null;
+  iconic_taxon_name?: string;
+  id: number;
+  introduced?: boolean;
+  is_active?: boolean;
+  min_species_ancestry?: string;
+  min_species_taxon_id?: number;
   name: string;
+  native?: boolean;
+  observations_count?: number;
+  parent_id?: number;
+  photos_locked?: boolean;
   preferred_common_name?: string;
-  rank_level: number;
+  provisional?: boolean;
   rank: string;
+  rank_level: number;
+  taxon_changes_count?: number;
+  taxon_schemes_count?: number;
+  threatened?: boolean;
+  universal_search_rank?: number;
+  wikipedia_url?: string;
+}
+
+interface FlagCount {
+  resolved: number;
+  unresolved: number;
 }
 
 export interface ObservationUser {
-  icon_url?: string | null;
+  activity_count?: number;
+  annotated_observations_count?: number;
+  created_at?: string;
   icon?: string | null;
+  icon_url?: string | null;
   id: number;
+  identifications_count?: number;
+  journal_posts_count?: number;
   login: string;
+  login_autocomplete?: string;
+  login_exact?: string;
   name?: string | null;
+  name_autocomplete?: string | null;
+  observations_count?: number;
+  orcid?: string | null;
+  preferences?: {};
+  roles?: any[];
+  site_id?: number | null;
+  spam?: boolean;
+  species_count?: number;
+  suspended?: boolean;
+  universal_search_rank?: number;
+}
+
+interface ObservationSoundSummary {
+  id: number;
+  uuid: string;
+  sound: ObservationSound;
 }
 
 export interface ObservationSound {
-  id: number;
+  attribution?: string;
+  file_content_type?: string;
   file_url?: string;
+  flags?: any[];
+  hidden?: boolean;
+  id: number;
+  license_code?: CCLicense | null;
+  moderator_actions?: any[];
+  native_sound_id?: number | null;
+  play_local?: boolean;
+  secret_token?: string | null;
+  subtype?: string | null;
 }
 
 export interface iNatObservationsObserversAPI {
@@ -516,7 +629,7 @@ export interface SpeciesCountTaxon {
 // ==================
 
 // https://api.inaturalist.org/v1/docs/#!/Observation_Tiles/get_grid_zoom_x_y_png
-type iNatObservationTilesAPI = {
+interface iNatObservationTilesAPI {
   acc_above?: number;
   acc_below_or_unknown?: number | "unknown";
   acc_below?: number;
@@ -584,7 +697,7 @@ type iNatObservationTilesAPI = {
   rank?: string; // comma-seperated string, type TaxonRanks
   reviewed?: boolean;
   search_on?: "names" | "tags" | "description" | "place";
-  site_id?: string; // comma-seperated string, type CCLicense
+  site_id?: number | null; // comma-seperated string
   sound_license?: string; // comma-seperated string, type CCLicense
   sounds?: boolean;
   swlat?: number;
@@ -610,7 +723,7 @@ type iNatObservationTilesAPI = {
   y: number;
   year?: string; // comma-seperated string
   zoom: number;
-};
+}
 
 type CCLicense =
   | "cc-by"
@@ -697,14 +810,14 @@ export interface PlacesResult {
 // histogram api
 // ==================
 
-export type iNatHistogramApi = {
+export interface iNatHistogramApi {
   total_results: number;
   page: number;
   per_page: number;
   results: HistogramResult;
-};
+}
 
-type HistogramResult = {
+interface HistogramResult {
   year?: {
     [key: string]: number;
   };
@@ -714,21 +827,21 @@ type HistogramResult = {
   month_of_year?: {
     [key: string]: number;
   };
-};
+}
 
 // ==================
 // popular api
 // ==================
 
-type iNatPopularFieldsAPI = {
+interface iNatPopularFieldsAPI {
   total_results: number;
   page: number;
   per_page: number;
   results: PopularFieldsResult[];
   unannotated: UnannotatedFields;
-};
+}
 
-type PopularFieldsResult = {
+interface PopularFieldsResult {
   count: number;
   controlled_attribute: {
     id: number;
@@ -741,31 +854,31 @@ type PopularFieldsResult = {
   month_of_year: {
     [key: string]: number;
   };
-};
+}
 
-type UnannotatedFields = {
+interface UnannotatedFields {
   [key: string]: {
     count: number;
     month_of_year: {
       [key: string]: number;
     };
   };
-};
+}
 
-type iNatPopularFieldsBasicAPI = {
+interface iNatPopularFieldsBasicAPI {
   total_results: number;
   page: number;
   per_page: number;
   results: PopularFieldsBasicResult[];
-};
+}
 
-type PopularFieldsBasicResult = {
+interface PopularFieldsBasicResult {
   count: number;
   controlled_attribute: {
     id: number;
     label: string;
   };
-};
+}
 
 // ==================
 // taxonomy api
@@ -805,8 +918,8 @@ export interface UserResult {
   activity_count?: number;
   annotated_observations_count?: number;
   created_at?: string;
-  icon_url: string | null;
-  icon: string | null;
+  icon_url?: string | null;
+  icon?: string | null;
   id: number;
   identifications_count?: number;
   journal_posts_count?: number;
@@ -922,7 +1035,7 @@ export type IdentificationsResult = {
   hidden: boolean;
   id: number;
   moderator_actions: any[];
-  observation: Observation;
+  observation: IdentificationObservation;
   own_observation: boolean;
   previous_observation_taxon_id: number;
   spam: boolean;
@@ -960,7 +1073,7 @@ export interface IdentificationsIdentifiersAPI {
   results: ResourceIdentifiersResult[];
 }
 
-export interface Observation {
+export interface IdentificationObservation {
   annotations: Annotation[];
   cached_votes_total: number;
   captive: boolean;
@@ -994,8 +1107,8 @@ export interface Observation {
   num_identification_disagreements: number;
   oauth_application_id?: number | null;
   obscured: boolean;
-  observation_photos: ObservationPhoto[];
-  observation_sounds?: ObservationSound[];
+  observation_photos?: ObservationPhotoSummary[];
+  observation_sounds?: ObservationSoundSummary[];
   observed_on_details: ObservedOnDetails;
   observed_on_string: string;
   observed_on: string;
@@ -1003,7 +1116,7 @@ export interface Observation {
   ofvs: any[];
   outlinks: any[];
   owners_identification_from_vision: boolean;
-  photos: Photo[];
+  photos: ObservationPhoto[];
   place_guess: string;
   place_ids: number[];
   positional_accuracy: number | null;
@@ -1016,8 +1129,8 @@ export interface Observation {
   quality_grade: string;
   quality_metrics: any[];
   reviewed_by: number[];
-  site_id: number;
-  sounds: Sound[];
+  site_id?: number | null;
+  sounds: ObservationSound[];
   spam: boolean;
   species_guess: string | null;
   tags: any[];
@@ -1056,28 +1169,15 @@ export interface Annotation {
   user: UserResult;
   uuid: string;
   vote_score?: number;
-  votes?: any[];
+  votes?: AnnotationVote[];
 }
 
-export interface ObservationSound {
+interface AnnotationVote {
   id: number;
-  uuid?: string;
-  sound?: Sound;
-}
-
-interface Sound {
-  id: number;
-  license_code: CCLicense;
-  attribution: string;
-  native_sound_id: number | null;
-  secret_token: string | null;
-  file_url: string;
-  file_content_type: string;
-  play_local: boolean;
-  subtype: string | null;
-  flags: any[];
-  moderator_actions: any[];
-  hidden: boolean;
+  vote_flag: boolean;
+  vote_scope: string | null;
+  user_id: number;
+  user: UserResult;
 }
 
 interface iNatObservatFieldsAPI {

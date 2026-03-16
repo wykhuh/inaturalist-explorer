@@ -10,7 +10,7 @@ import {
 } from "../../lib/render_utils";
 import { pluralize } from "../../lib/utils";
 import type { DataComponentType, AppStoreType } from "../../types/app";
-import type { Observation } from "../../types/inat_api";
+import type { IdentificationObservation } from "../../types/inat_api";
 import { template } from "./template";
 
 class CardIdentificationObservation extends HTMLElement {
@@ -27,7 +27,7 @@ class CardIdentificationObservation extends HTMLElement {
     let cardEl = this.querySelector(".card");
     if (!cardEl) return;
     let observation = (this as unknown as DataComponentType)
-      .data as Observation;
+      .data as IdentificationObservation;
 
     let content = "";
     content += `<div class="user-action">`;
@@ -42,7 +42,7 @@ class CardIdentificationObservation extends HTMLElement {
     content += renderMedia(
       `${iNatObservationUrl}/${observation.id}`,
       observation.taxon,
-      observation.observation_photos,
+      observation.photos,
       observation.sounds,
       appStore,
     );

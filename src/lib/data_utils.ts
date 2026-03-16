@@ -876,7 +876,7 @@ function replaceWithCacheImagesIdentifications(
     }
 
     if (result.observation.observation_photos) {
-      result.observation.observation_photos.forEach((photo) => {
+      result.observation.photos.forEach((photo) => {
         photo.url = mediumImg;
       });
     }
