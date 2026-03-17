@@ -12,12 +12,9 @@ import { createGrid } from "./utils";
 // re-render grids, tables, pagination everytime we fetch new data. only render
 // map if it does not exist since we have another function to add/delete map
 // layers when data changes.
-export function renderObservations(
-  appStore: AppStoreType,
-  componentContext: HTMLElement,
-) {
+export function renderObservations(appStore: AppStoreType) {
   loggerRender("++ SubviewObservationsGrid render");
-  let dataContainer = componentContext.querySelector("#subview-data-container");
+  let dataContainer = document.querySelector("#subview-data-container");
   if (!dataContainer) return;
 
   dataContainer.innerHTML = "";
@@ -179,8 +176,10 @@ export async function paginationCallback(num: number, appStore: AppStoreType) {
   appStore.viewMetadata = appStore.viewMetadata;
 
   await fetchAndCacheData(appStore, false);
+  renderObservations(appStore);
   updateAppUrl(window.location, appStore);
 }
+
 // filter observations using methods not supported by iNat API
 export function filterObservationsBeta(
   data: iNatObservationsAPI,

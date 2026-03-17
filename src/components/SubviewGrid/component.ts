@@ -43,7 +43,7 @@ class SubviewObservationsGrid extends HTMLElement {
 
   render(appStore: AppStoreType) {
     loggerRender("++ SubviewObservationsGrid render");
-    renderObservations(appStore, this);
+    renderObservations(appStore);
     initFilters(appStore);
   }
 }
