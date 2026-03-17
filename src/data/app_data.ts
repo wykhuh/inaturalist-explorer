@@ -495,6 +495,8 @@ export const identificationsApiNonFilterableNames: IdentificationsApiParamsKeysT
 
 export const identificationsFilterableImplemented: IdentificationsApiParamsKeysType[] =
   [
+    "current_taxon",
+    "current",
     "d1",
     "d2",
     "lrank",
@@ -525,14 +527,12 @@ export const identificationsFilterableTodo: IdentificationsApiParamsKeysType[] =
     // no
     "observation_created_d1",
     "observation_created_d2",
-    "current_taxon",
     "own_observation",
     "is_change",
     "taxon_active",
     "observation_taxon_active",
     "id",
     "user_login", // array string
-    "current",
     "taxon_change_id", // array string
 
     "id_above",
@@ -543,6 +543,8 @@ export const identificationsFilterableTodo: IdentificationsApiParamsKeysType[] =
 
 // used to populate form on app init and delete a filter
 export const identificationsFieldName_InputType = {
+  current: "select",
+  current_taxon: "select",
   d1: "dateInput",
   d2: "dateInput",
   observed_d1: "dateInput",

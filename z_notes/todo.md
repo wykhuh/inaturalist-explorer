@@ -203,3 +203,8 @@ store observation count in store so we dont need to check observation count for 
 language, per page changes on species, identifiers, obsevers view -> update observations
 
 window.dispatchEvent(new Event("subviewChange")); - do we need this
+
+==
+
+Implement Photo Blur on observations annotated as “Dead”
+https://forum.inaturalist.org/t/implement-photo-blur-on-observations-annotated-as-dead/

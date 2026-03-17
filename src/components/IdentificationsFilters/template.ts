@@ -1,7 +1,10 @@
 import { circleX } from "../../assets/icons";
 import { html } from "../../lib/component_utils";
 import { identificationsHeaderLinks } from "../IdentificationsHeader/template";
-import { renderRankOptions } from "../ObservationsFilters/shared_utils";
+import {
+  renderRankOptions,
+  renderTrueFalseSelect,
+} from "../ObservationsFilters/shared_utils";
 
 export const template = html`
   <button id="filters-btn" class="btn-primary">Filters</button>
@@ -420,6 +423,30 @@ export const template = html`
                   <option value="leading">Leading</option>
                   <option value="maverick">Maverick</option>
                 </select>
+              </div>
+
+              <div class="form-group">
+                <label for="curret"
+                  >Curret Identification
+                  <app-tooltip
+                    data-id="tp-curret"
+                    data-content="?"
+                    data-tooltip="Most recent ID on a observation by a user"
+                  ></app-tooltip>
+                </label>
+                ${renderTrueFalseSelect("current", "current")}
+              </div>
+
+              <div class="form-group">
+                <label for="current_taxon"
+                  >Curret Taxon
+                  <app-tooltip
+                    data-id="tp-current_taxon"
+                    data-content="?"
+                    data-tooltip="Identification's taxon is the same it's observation's taxon"
+                  ></app-tooltip>
+                </label>
+                ${renderTrueFalseSelect("current_taxon", "current_taxon")}
               </div>
             </fieldset>
           </div>
