@@ -192,17 +192,14 @@ export function disableGroupByForSelectedResources(
   if (!placesOption) return;
 
   // enable species option if there are selected taxa
-  if (appStore.selectedTaxa.length === 0 || appStore.selectedTaxa[0].id === 0) {
+  if (appStore.selectedTaxa.length < 2 || appStore.selectedTaxa[0].id < 2) {
     speciesOption.disabled = true;
   } else {
     speciesOption.disabled = false;
   }
 
   // enable places option if there are selected places
-  if (
-    appStore.selectedPlaces.length === 0 ||
-    appStore.selectedPlaces[0].id === 0
-  ) {
+  if (appStore.selectedPlaces.length < 2 || appStore.selectedPlaces[0].id < 2) {
     placesOption.disabled = true;
   } else {
     placesOption.disabled = false;
