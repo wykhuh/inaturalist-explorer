@@ -604,14 +604,48 @@ export type PaginationCallback = (
   appStore: AppStoreType,
 ) => Promise<void>;
 
+export type ObservationsCSVRow = {
+  observation_created_at: string;
+  observation_id: number;
+  observation_observed_on: string;
+  observation_photo_attribution?: string;
+  observation_photo_license_code?: string | null;
+  observation_photo_url?: string;
+  observation_photos_count: number;
+  observation_sound_attribution?: string;
+  observation_sound_license_code?: string | null;
+  observation_sound_url?: string;
+  observation_sound_type?: string;
+  observation_sounds_count: number;
+  observation_quality_grade: string;
+  observation_taxon_id: number;
+  observation_taxon_name?: string;
+  observation_taxon_preferred_common_name?: string;
+  observation_uuid: string;
+  observer_id: number;
+  observer_login: string;
+
+  annotations_count: number;
+  annotations_score?: number;
+  annotation_controlled_attribute_id: number;
+  annotation_controlled_value_id: number;
+  annotator_id: number;
+  annotator_login: string;
+  annotation_uuid: string;
+  annotation_vote_score?: number;
+};
+
 export type IdentificationsCSVRow = {
-  body: string;
-  category?: string | null;
-  created_at: string;
-  current: boolean;
-  current_taxon: boolean;
-  disagreement?: boolean | null;
-  hidden: boolean;
+  identification_body: string;
+  identification_category?: string | null;
+  identification_created_at: string;
+  identification_current: boolean;
+  identification_current_taxon: boolean;
+  identification_disagreement?: boolean | null;
+  identification_hidden: boolean;
+  identification_own_observation: boolean;
+  identification_spam: boolean;
+  identification_vision: boolean;
   identification_id: number;
   identification_taxon_id: number;
   identification_taxon_name?: string;
@@ -639,7 +673,4 @@ export type IdentificationsCSVRow = {
   observation_uuid: string;
   observer_id: number;
   observer_login: string;
-  own_observation: boolean;
-  spam: boolean;
-  vision: boolean;
 };

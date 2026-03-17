@@ -1,14 +1,17 @@
 import { html } from "../../lib/component_utils";
 import { addCommastoNumbers } from "../../lib/utils";
-import { MAX_DOWNLOADS } from "../MenuDownloadObservations/shared_utils";
+import { MAX_DOWNLOADS } from "./utils";
 
 const instructions = html`<ol>
   <li>
     Use the searches and filters to create a search query with less than
-    ${addCommastoNumbers(MAX_DOWNLOADS)} identifications.
+    ${addCommastoNumbers(MAX_DOWNLOADS)} observations. Your search query must
+    contain annotations (term_id, term_value_id). If an observation contains
+    multiple annotations, only the annotations set in the filters will be
+    included in the download.
   </li>
   <li>Enter a filename</li>
-  <li>click "Download identifications" button</li>
+  <li>click "Download annotations" button</li>
   <li>NOTE: Do not go to another page while download is in progress.</li>
   <li>A CSV is saved to your browser's download folder.</li>
 </ol> `.replaceAll('"', "'");
@@ -16,19 +19,19 @@ const instructions = html`<ol>
 export const template = html`
   <div id="settings-menu">
     <h2>Download</h2>
-    <h2>Download Identifications (Work in Progress)</h2>
+    <h2>Download Annotations (Work in Progress)</h2>
     <p>
-      This site offers the ability to download identifications that matches your
-      search query. There is a limit of downloading ${MAX_DOWNLOADS}
-      identification while I'm testing out this feature.
+      This site offers the ability to download annotations for observations that
+      matches your search query. There is a limit of downloading 200 observations
+      while I'm testing out this feature.</p>
+      <app-accordion
+        data-title="Instructions"
+        data-content="${instructions}"
+        data-id="multiple-records"
+      ></app-accordion>
     </p>
-    <app-accordion
-      data-title="Instructions"
-      data-content="${instructions}"
-      data-id="multiple-records"
-    ></app-accordion>
 
-    <form id="download-identifications">
+    <form id="download-annotations">
       <div class="form-group">
         <label for="filename">Filename</label>
         <input
@@ -42,7 +45,7 @@ export const template = html`
       </div>
       <div class="form-group">
         <button class="btn-primary btn" type="submit">
-          Download identifications
+          Download annotations
         </button>
       </div>
     </form>

@@ -2,12 +2,15 @@ import { setupComponent } from "../../lib/component_utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import {
   initSidebarState,
-  toggleLinksHandler,
-  toggleObservationsHandler,
   toggleSettingsHandler,
   toggleSidebar,
 } from "./shared_utils";
 import { template } from "./template";
+import {
+  toggleDownloadObservationsHandler,
+  toggleLinksHandler,
+  toggleObservationsHandler,
+} from "./utils";
 
 export class PageObservations extends HTMLElement {
   constructor() {
@@ -18,6 +21,7 @@ export class PageObservations extends HTMLElement {
   searchMenuToggleEl: HTMLButtonElement | null = null;
   settingsMenuToggleEl: HTMLButtonElement | null = null;
   linksMenuToggleEl: HTMLButtonElement | null = null;
+  downloadMenuToggleEl: HTMLButtonElement | null = null;
   siteLayoutEl: HTMLDivElement | null = null;
   siteControlsEl: HTMLDivElement | null = null;
 
@@ -36,6 +40,9 @@ export class PageObservations extends HTMLElement {
     );
     this.linksMenuToggleEl =
       this.querySelector<HTMLButtonElement>("#links-menu-toggle");
+    this.downloadMenuToggleEl = this.querySelector<HTMLButtonElement>(
+      "#download-menu-toggle",
+    );
     this.siteLayoutEl = this.querySelector<HTMLDivElement>("#site-layout");
     this.siteControlsEl = this.querySelector<HTMLDivElement>("#site-controls");
 
@@ -43,6 +50,7 @@ export class PageObservations extends HTMLElement {
     this.searchMenuToggleEl?.addEventListener("click", this);
     this.settingsMenuToggleEl?.addEventListener("click", this);
     this.linksMenuToggleEl?.addEventListener("click", this);
+    this.downloadMenuToggleEl?.addEventListener("click", this);
 
     this.render();
   }
@@ -54,6 +62,7 @@ export class PageObservations extends HTMLElement {
     this.searchMenuToggleEl?.removeEventListener("click", this);
     this.settingsMenuToggleEl?.removeEventListener("click", this);
     this.linksMenuToggleEl?.removeEventListener("click", this);
+    this.downloadMenuToggleEl?.removeEventListener("click", this);
   }
 
   handleEvent(event: Event) {
@@ -78,6 +87,11 @@ export class PageObservations extends HTMLElement {
         target.closest("button")?.id === "links-menu-toggle"
       ) {
         toggleLinksHandler(this);
+      } else if (
+        target.id === "download-menu-toggle" ||
+        target.closest("button")?.id === "download-menu-toggle"
+      ) {
+        toggleDownloadObservationsHandler(this);
       }
     }
   }

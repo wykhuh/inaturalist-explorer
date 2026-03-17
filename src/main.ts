@@ -25,6 +25,7 @@ import "./components/MenuSettings/component.ts";
 import "./components/MenuLinksObservations/component.ts";
 import "./components/MenuLinksIdentifications/component.ts";
 import "./components/MenuDownloadIdentifications/component.ts";
+import "./components/MenuDownloadObservations/component.ts";
 import "./components/PageAbout/component.ts";
 import "./components/PageIdentifications/component.ts";
 import "./components/PageObservations/component.ts";

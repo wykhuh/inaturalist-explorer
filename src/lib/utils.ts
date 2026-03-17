@@ -802,6 +802,8 @@ export function downloadBlob(
 
 // https://stackoverflow.com/a/68146412
 export function convertObjectArrayToCSVString(records: { [k: string]: any }[]) {
+  if (records.length === 0) return "";
+
   let result = Object.keys(records[0]).join(",") + "\n";
   result += records
     .map((record) => {

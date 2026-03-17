@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { expect, test, describe } from "vitest";
-import { formatAPIUrl } from "../../../components/MenuDownloadIdentifications/utils";
+import { formatAPIUrl } from "../../../components/MenuDownloadObservations/shared_utils";
 
 describe("formatAPIUrl", () => {
   test("replaces per_page with perPage parameter", () => {

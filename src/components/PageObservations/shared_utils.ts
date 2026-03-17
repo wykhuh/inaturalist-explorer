@@ -47,33 +47,11 @@ export function initSidebarState(appStore: AppStoreType, componentCtx: any) {
   }
 }
 
-export function toggleObservationsHandler(componentCtx: HTMLElement) {
-  createMenuComponent("observations-menu", componentCtx, true);
-}
-
-export function toggleIdentificationsHandler(componentCtx: HTMLElement) {
-  createMenuComponent("identifications-menu", componentCtx, true);
-}
-
 export function toggleSettingsHandler(componentCtx: HTMLElement) {
   createMenuComponent("settings-menu", componentCtx);
 }
 
-export function toggleLinksHandler(componentCtx: HTMLElement) {
-  createMenuComponent("links-menu", componentCtx);
-}
-
-export function toggleLinksIdentificationsHandler(componentCtx: HTMLElement) {
-  createMenuComponent("links-identifications-menu", componentCtx);
-}
-
-export function toggleDownloadIdentificationsHandler(
-  componentCtx: HTMLElement,
-) {
-  createMenuComponent("download-identifications-menu", componentCtx);
-}
-
-function createMenuComponent(
+export function createMenuComponent(
   elementTag: string,
   componentCtx: HTMLElement,
   createAppViewer = false,

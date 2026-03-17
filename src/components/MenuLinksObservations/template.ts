@@ -51,18 +51,6 @@ export const template = html`
       </li>
     </ul>
 
-    <h2>Code Notebooks</h2>
-    <p>
-      To accompany this site, we have some code that offers additional
-      functionality. The code is written in R using JupyterLite notebooks.
-    </p>
-
-    <ul class="liststyle-none" id="external-links">
-      <li>
-        <a href="">Download Annotations</a> - download annotations as a CSV
-      </li>
-    </ul>
-
     <h2>Notes</h2>
     <ol>
       <li>

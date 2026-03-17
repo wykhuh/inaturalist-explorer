@@ -2,13 +2,15 @@ import { setupComponent } from "../../lib/component_utils";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import {
   initSidebarState,
-  toggleDownloadIdentificationsHandler,
-  toggleIdentificationsHandler,
-  toggleLinksIdentificationsHandler,
   toggleSettingsHandler,
   toggleSidebar,
 } from "../PageObservations/shared_utils";
 import { template } from "./template";
+import {
+  toggleDownloadIdentificationsHandler,
+  toggleIdentificationsHandler,
+  toggleLinksIdentificationsHandler,
+} from "./utils";
 
 export class PageIdentifications extends HTMLElement {
   constructor() {

@@ -1,4 +1,3 @@
-import { identifications as identificationsDemo } from "../../data/api/identifications";
 import { formatInatApiParams } from "../../lib/cleanup_params_utils";
 import { formatIdentificationsApiUrl } from "../../lib/inat_api";
 import {
@@ -8,12 +7,15 @@ import {
   sleep,
 } from "../../lib/utils";
 import type { AppStoreType, IdentificationsCSVRow } from "../../types/app";
-import type {
-  IdentificationsAPI,
-  IdentificationsResult,
-} from "../../types/inat_api";
-
-export const MAX_DOWNLOADS = 200;
+import type { IdentificationsResult } from "../../types/inat_api";
+import {
+  fetchAllData,
+  formatAPIUrl,
+  formatFilename,
+  getCountForQuery,
+  MAX_DOWNLOADS,
+  renderInvalidFormData,
+} from "../MenuDownloadObservations/shared_utils";
 
 export async function downloadIdentificationsHandler(
   formData: FormData,
@@ -25,7 +27,7 @@ export async function downloadIdentificationsHandler(
   if (!containerEl) return;
 
   // form validation
-  if (renderInvalidFormData(formData, componentContext)) {
+  if (renderInvalidFormData(formData, componentContext, validateFormData)) {
     return;
   }
 
@@ -51,7 +53,7 @@ export async function downloadIdentificationsHandler(
     }
     containerEl.append(itemEl);
   };
-  let records = await fetchAllData(url, callback);
+  let records = (await fetchAllData(url, callback)) as IdentificationsResult[];
   if (!records) return;
 
   let normalizeData = processIdentificationResults(records);
@@ -70,82 +72,24 @@ export async function downloadIdentificationsHandler(
   divEl.innerHTML = "";
 }
 
-// ==============
-// get data
-// ==============
-
-async function fetchAllData(
-  url: string,
-  callback: (totalResults: number | null) => void,
-) {
-  let perPage = 50;
-  let lastId = null;
-  let looping = true;
-
-  let records: IdentificationsResult[] = [];
-  let count = 0;
-
-  while (looping) {
-    let updatedUrl = formatAPIUrl(url, perPage, lastId);
-    let data = await fetchData(updatedUrl);
-    // NOTE: This second check for MAX_DOWNLOADS might be redunant.
-    if (data.total_results > MAX_DOWNLOADS) {
-      callback(null);
-      return;
-    }
-
-    if (import.meta.env?.VITE_CACHE === "true") {
-      data.total_results = perPage * 2.1 - count * perPage;
-    }
-    callback(data.total_results);
-
-    records = records.concat(data.results);
-    lastId = getIdForLastRow(data.results);
-
-    if (data.total_results <= perPage) {
-      looping = false;
-    }
-    count += 1;
-    await sleep(2);
-  }
-  return records;
-}
-
-async function fetchData(url: string) {
-  if (import.meta.env?.VITE_CACHE === "true") {
-    return {
-      results: identificationsDemo.results,
-      total_results: 1,
-    };
-  }
-
-  let response = await fetch(url);
-  let data = (await response.json()) as IdentificationsAPI;
-  return { results: data.results, total_results: data.total_results };
-}
-
-function getIdForLastRow(results: IdentificationsResult[]) {
-  return results[results.length - 1].id;
-}
-
 export function processIdentificationResults(results: IdentificationsResult[]) {
   let records: IdentificationsCSVRow[] = [];
   results.forEach((result) => {
     let record = {
       identification_id: result.id,
       identification_uuid: result.uuid,
-      created_at: result.created_at,
+      identification_created_at: result.created_at,
       identifier_login: result.user.login,
       identifier_id: result.user.id,
-      body: result.body,
-      category: result.category,
-      current: result.current,
-      own_observation: result.own_observation,
-      vision: result.vision,
-      disagreement: result.disagreement,
-      spam: result.spam,
-      hidden: result.hidden,
-      current_taxon: result.current_taxon,
+      identification_body: result.body,
+      identification_category: result.category,
+      identification_current: result.current,
+      identification_current_taxon: result.current_taxon,
+      identification_disagreement: result.disagreement,
+      identification_hidden: result.hidden,
+      identification_own_observation: result.own_observation,
+      identification_spam: result.spam,
+      identification_vision: result.vision,
     } as IdentificationsCSVRow;
 
     let identification = result.observation.identifications.find(
@@ -178,7 +122,7 @@ export function processIdentificationResults(results: IdentificationsResult[]) {
 
     record.observation_photos_count = result.observation.photos.length;
     if (result.observation.photos.length > 0) {
-      record.observation_photo_url = result.observation.photos[0].url.replace(
+      record.observation_photo_url = result.observation.photos[0].url?.replace(
         "square",
         "large",
       );
@@ -214,26 +158,6 @@ export function processIdentificationResults(results: IdentificationsResult[]) {
 }
 
 // ==============
-// misc
-// ==============
-
-export function formatAPIUrl(
-  url: string,
-  perPage: number,
-  lastId: number | null,
-) {
-  let urlData = new URL(url);
-  urlData.searchParams.delete("order");
-  urlData.searchParams.delete("order_by");
-  urlData.searchParams.set("per_page", perPage.toString());
-  if (lastId !== null) {
-    urlData.searchParams.set("id_below", lastId.toString());
-  }
-
-  return urlData.toString();
-}
-
-// ==============
 // user input validation
 // ==============
 
@@ -248,22 +172,6 @@ function validateFormData(formData: FormData) {
   return errors;
 }
 
-function renderInvalidFormData(
-  formData: FormData,
-  componentContext: HTMLElement,
-) {
-  let errors = validateFormData(formData);
-  if (errors.length > 0) {
-    let statusEl =
-      componentContext.querySelector<HTMLDivElement>("#status-container");
-    if (statusEl) {
-      statusEl.innerText = errors.join("<br>");
-    }
-  }
-
-  return errors.length > 0;
-}
-
 export async function identificationMaxObservationMessage(
   url: string,
   componentContext: HTMLElement,
@@ -272,7 +180,7 @@ export async function identificationMaxObservationMessage(
   let lastId = null;
   let updatedUrl = formatAPIUrl(url as string, perPage, lastId);
 
-  let count = await getIdentificationsCount(updatedUrl);
+  let count = await getCountForQuery(updatedUrl);
   if (count > MAX_DOWNLOADS) {
     let container =
       componentContext.querySelector<HTMLDivElement>("#status-container");
@@ -286,26 +194,4 @@ export async function identificationMaxObservationMessage(
 
     return true;
   }
-}
-
-export async function getIdentificationsCount(url: string) {
-  if (import.meta.env?.VITE_CACHE === "true") {
-    return MAX_DOWNLOADS - 1;
-  }
-
-  let response = await fetch(url);
-  let json = (await response.json()) as IdentificationsAPI;
-  return json.total_results;
-}
-
-function formatFilename(formData: FormData) {
-  let filename = formData.get("filename");
-  if (!filename) return;
-
-  filename = filename.toString();
-  if (!filename.endsWith("csv")) {
-    filename = `${filename}.csv`;
-  }
-
-  return filename;
 }

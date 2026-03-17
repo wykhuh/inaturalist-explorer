@@ -282,11 +282,11 @@ export function formatObservationsApiUrl(appParams: string) {
     "ofvs:(id:!t,name:!t,value:!t,datatype:!t,taxon:(id:!t,name:!t,preferred_common_name:!t,rank:!t))," +
     "time_observed_at:!t," +
     "updated_at:!t," +
-    "photos:(id:!t,url:!t)," +
+    "photos:(id:!t,url:!t,attribution:!t,license_code:!t)," +
     "place_guess:!t," +
     // "private_geojson:!t," +
     "quality_grade:!t," +
-    "sounds:(id:!t,file_url:!t)," +
+    "sounds:(id:!t,file_url:!t,attribution:!t,license_code:!t)," +
     // "species_guess:!t," +
     "taxon:(iconic_taxon_id:!t,name:!t,preferred_common_name:!t,preferred_common_names:(name:!t),rank:!t,rank_level:!t)," +
     "user:(icon_url:!t,icon:!t,id:!t,login:!t,name:!t))";

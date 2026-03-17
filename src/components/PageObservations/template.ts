@@ -15,6 +15,9 @@ export const template = html`
       <button id="links-menu-toggle" title="iNaturalist links">
         ${externalLink}
       </button>
+      <button id="download-menu-toggle" title="Download">
+        <span style="display:block;transform:rotate(90deg);">⇥</span>
+      </button>
       <button id="settings-menu-toggle" title="Settings">${gear}</button>
     </div>
 
