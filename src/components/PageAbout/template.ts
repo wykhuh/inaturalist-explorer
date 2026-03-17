@@ -4,21 +4,36 @@ import identifications from "../../assets/images/identifications.jpg";
 import grid from "../../assets/images/observations_grid.jpg";
 import table from "../../assets/images/observations_table.jpg";
 import media from "../../assets/images/observations_media.jpg";
+import graphs from "../../assets/images/observations_graphs.jpg";
+import graphs_year from "../../assets/images/graphs_year.jpg";
+import graphs_categories_annotations from "../../assets/images/graphs_categories_annotations.jpg";
+import graphs_categories from "../../assets/images/graphs_categories.jpg";
+import graphs_deselect_option from "../../assets/images/graphs_deselect_option.jpg";
+import graphs_fruits_or_flowers from "../../assets/images/graphs_fruits_or_flowers.jpg";
+import graphs_group_by_places from "../../assets/images/graphs_group_by_places.jpg";
+import graphs_group_by_species from "../../assets/images/graphs_group_by_species.jpg";
+import graphs_life_stage from "../../assets/images/graphs_life_stage.jpg";
+import graphs_month_year from "../../assets/images/graphs_month_year.jpg";
+import graphs_months from "../../assets/images/graphs_months.jpg";
 import grid_ident from "../../assets/images/identifications_grid.jpg";
 import history_ident from "../../assets/images/identifications_history.jpg";
 import settings from "../../assets/images/settings.jpg";
 import custom_boundaries from "../../assets/images/custom_boundaries.jpg";
-import inat_links from "../../assets/images/inat_links.jpg";
+import inat_links_observations from "../../assets/images/inat_links_observations.jpg";
+import inat_links_identifications from "../../assets/images/inat_links_identifications.jpg";
 import subspecies_results from "../../assets/images/subspecies_results.jpg";
 import subspecies_filters from "../../assets/images/subspecies_filters.jpg";
-import annotations from "../../assets/images/annotations.jpg";
+import filters_annotations from "../../assets/images/filters_annotations.jpg";
 import filters from "../../assets/images/filters.jpg";
+import filters_beta from "../../assets/images/filters-beta.jpg";
 import searchTypes from "../../assets/images/search_types.jpg";
 import map_layers from "../../assets/images/map_layers.jpg";
 import observation_fields from "../../assets/images/observation_fields.jpg";
 import observation_fields_eating from "../../assets/images/observation_fields_eating.jpg";
 import observation_fields_taxon from "../../assets/images/observation_fields_taxon.jpg";
 import fields_displayed from "../../assets/images/fields_displayed.jpg";
+import download_identifications from "../../assets/images/download-identifications.jpg";
+import download_annotations from "../../assets/images/download-annotations.jpg";
 
 export const template = html`
   <site-header></site-header>
@@ -96,7 +111,7 @@ export const template = html`
         ></app-accordion>
         <img
           width="1000"
-          height="600"
+          height="619"
           loading="lazy"
           src="${identifications}"
           alt="Monarch and narrowleaf milkweed identifications in Los Angeles and San Diego."
@@ -124,15 +139,15 @@ export const template = html`
 
       <li id="observations-subview">
         <a
-          href="/?taxon_id=48662&place_id=962&colors=%234477aa&verifiable=true&spam=false&year=2025"
+          href="/?taxon_id=48662&place_id=962&verifiable=true&spam=false&year=2025&order_by=votes&order=desc&view=observations_observations&subview=grid"
           >View observations</a
         >
         as map, grid (one photo is displayed), media (all photos and audio are
-        displayed), or table
+        displayed), table, or graphs.
         <app-accordion
           data-title="Instructions"
           data-content="<ol>
-            <li>Click on 'Map', 'Grid', 'Media', or 'Table' button.</li>
+            <li>Click on 'Map', 'Grid', 'Media', 'Table', or 'Graphs' button.</li>
           </ol>"
           data-id="change-subview"
         ></app-accordion>
@@ -145,7 +160,7 @@ export const template = html`
           <figcaption>Grid view</figcaption>
           <img
             width="1000"
-            height="500"
+            height="920"
             loading="lazy"
             src="${grid}"
             alt="Grid view of monarchs observations in Los Angeles"
@@ -155,7 +170,7 @@ export const template = html`
           <figcaption>Media view</figcaption>
           <img
             width="1000"
-            height="460"
+            height="830"
             loading="lazy"
             src="${media}"
             alt="Media view of monarchs observations in Los Angeles"
@@ -165,10 +180,143 @@ export const template = html`
           <figcaption>Table view</figcaption>
           <img
             width="1000"
-            height="480"
+            height="700"
             loading="lazy"
             src="${table}"
             alt="Table view of monarchs observations in Los Angeles"
+          />
+        </figure>
+        <figure>
+          <figcaption>Graphs view</figcaption>
+          <img
+            width="1000"
+            height="700"
+            loading="lazy"
+            src="${graphs}"
+            alt="Graphs view of monarchs observations in Los Angeles"
+          />
+        </figure>
+      </li>
+      <li id="graphs-details">
+        The interactive graphs have many options
+        <figure>
+          <figcaption>Graphs have different categories - Month/Year, Year, Month.</figcaption>
+          <img
+            width="1000"
+            height="495"
+            loading="lazy"
+            src="${graphs_categories}"
+            alt="Graph view showing the graphs categories menu options. "
+          />
+        </figure>
+
+        <figure>
+          <figcaption> Default category option is Month/Year. This graphs shows the number of oberservations for the 12 months. </figcaption>
+          <img
+            width="1000"
+            height="480"
+            loading="lazy"
+            src="${graphs_month_year}"
+            alt="Graph of monarchs and narrowleaf milkweed in Los Angeles and San Diego grouped by the 12 months. "
+          />
+        </figure>
+
+        <figure>
+          <figcaption>Graph category Year. This graphs shows the number of oberservations by year. By default, the graph shows the last
+            ten years. You can use the "Date Observed" > "Start Date", "End Date"
+            filters to adjust the dates. </figcaption>
+          <img
+            width="1000"
+            height="490"
+            loading="lazy"
+            src="${graphs_year}"
+            alt="Graph of monarchs and narrowleaf milkweed in Los Angeles and San Diego grouped by the last ten years. "
+          />
+        </figure>
+
+        <figure>
+          <figcaption>Graph category Month. This graphs shows the number of oberservations by month and year.  By default, the graph shows the
+            every month for the  last ten years. You can use the
+            "Date Observed" > "Start Date", "End Date"  filters to adjust the dates. </figcaption>
+          <img
+            width="1000"
+            height="480"
+            loading="lazy"
+            src="${graphs_months}"
+            alt="Graph of monarchs and narrowleaf milkweed in Los Angeles and San Diego grouped by every month for the last ten years. "
+          />
+        </figure>
+
+        <figure>
+          <figcaption>If you searched for two or more places, you have the
+            option to group the graphs by places.</figcaption>
+          <img
+            width="1000"
+            height="480"
+            loading="lazy"
+            src="${graphs_group_by_places}"
+            alt="Graph of monarchs and narrowleaf milkweed in Los Angeles and San Diego grouped by places. One line represents Los Angeles, one line represents San Diego."
+          />
+        </figure>
+
+        <figure>
+          <figcaption>If you click on the labels for the legend, the line for
+            option will be hidden or shown. This graph has hidden the Los Angeles line.</figcaption>
+          <img
+            width="1000"
+            height="475"
+            loading="lazy"
+            src="${graphs_deselect_option}"
+            alt="Graph of monarchs and narrowleaf milkweed in Los Angeles and San Diego grouped by places.  One line represents San Diego. Line for Los Angeles is hidden."
+          />
+        </figure>
+
+        <figure>
+          <figcaption>If you searched for two or more species, you have the
+            option to group the graphs by species.</figcaption>
+          <img
+            width="1000"
+            height="480"
+            loading="lazy"
+            src="${graphs_group_by_species}"
+            alt="Graph of monarchs and narrowleaf milkweed in Los Angeles and San Diego grouped by species. One line represents monarchs, one line represents milkweed."
+          />
+        </figure>
+
+        <figure>
+          <figcaption>When you search by species, selected annotations will appear
+            in graph category menu. Animals have 'Life Stage',
+            'Evidence of Presence', 'Alive or Dead', and 'Sex'. Plants
+            have 'Sex', 'Leaves', and 'Flowers and Fruits'. Group by must be
+            set to 'None' to see the annotations. </figcaption>
+          <img
+            width="1000"
+            height="480"
+            loading="lazy"
+            src="${graphs_categories_annotations}"
+            alt="Graph of monarchs and narrowleaf milkweed in Los Angeles and San Diego  showing the annotations categories."
+          />
+        </figure>
+
+        <figure>
+          <figcaption>Graph annotation category Life Stage.</figcaption>
+          <img
+            width="1000"
+            height="475"
+            loading="lazy"
+            src="${graphs_life_stage}"
+            alt="Graph of monarchs in Los Angeles and San Diego that is grouped by life stage. There are separate lines for adult, larva, pupa, egg, and unannotated "
+          />
+        </figure>
+
+        <figure>
+          <figcaption>Graph annotation category Fruits and Flowers.</figcaption>
+          <img
+            width="1000"
+            height="490"
+            loading="lazy"
+            src="${graphs_fruits_or_flowers}"
+            alt="Graph of narrowleaf milkweed in Los Angeles and San Diego that is grouped by Fruits and Flowers. There are separate lines for flowers, flower buds, fruits or seeds, no fruits or flowes, and unannotated "
           />
         </figure>
       </li>
@@ -295,7 +443,7 @@ export const template = html`
           width="1000"
           height="600"
           loading="lazy"
-          src="${annotations}"
+          src="${filters_annotations}"
           alt="Available annotations filters"
         />
       </li>
@@ -316,7 +464,7 @@ export const template = html`
         ></app-accordion>
         <img
           width="1000"
-          height="400"
+          height="310"
           loading="lazy"
           src="${observation_fields}"
           alt="Available observation fields filters"
@@ -346,6 +494,28 @@ export const template = html`
         </figure>
       </li>
 
+      <li id="beta-filters">
+        <p>Beta Features for features not supported by the iNaturalist API.</p>
+        <p>Hide obervations with annotations or observation fields</p>
+          <app-accordion
+            data-title="Instructions"
+            data-content="<ol>
+            <li>Click on 'Hide observations with annotations' to hide observations with annotations</li>
+            <li>Click on 'Hide observations with observation fields' to hide observations with observation fields.</li>
+            <li>Click both to hide observations with annotations or observation fields</li>
+          </ol>"
+            data-id="bounding-box"
+          ></app-accordion>
+          <img
+            width="1000"
+            height="480"
+            loading="lazy"
+            src="${filters_beta}"
+            alt=""
+          />
+        </p>
+      </li>
+
       <li id="custom-bounding-box">
         Draw a rectangle to select observations within the rectangle
         <app-accordion
@@ -360,7 +530,7 @@ export const template = html`
         ></app-accordion>
         <img
           width="1000"
-          height="450"
+          height="550"
           loading="lazy"
           src="${custom_boundaries}"
           alt=""
@@ -391,14 +561,14 @@ export const template = html`
         ></app-accordion>
         <img
           width="1000"
-          height="500"
+          height="440"
           loading="lazy"
           src="${subspecies_filters}"
           alt="Select subspecies ranks using the filters"
         />
         <img
           width="1000"
-          height="360"
+          height="420"
           loading="lazy"
           src="${subspecies_results}"
           alt="Supspecies shown in species tab"
@@ -475,27 +645,88 @@ export const template = html`
         />
       </li>
 
-      <li id="inat-links">
+      <li id="inat-links-observations">
         Users can use the search queries created on this site for the iNaturlist
         Explore, Identify, and Export pages by clicking on the links in the
-        iNaturalist Links menu.
+        iNaturalist Links menu. Users can also get the link for the iNaturalist Observations API.
         <app-accordion
           data-title="Instructions"
           data-content="<ol>
             <li>Use search and filters to select the observations you want</li>
             <li>Click on the box with arrow icon to show the 'iNaturalist links' menu</li>
             <li>Click 'Explore page', 'Identify page', or 'Export page' to go to
-           corresponding page on the iNaturalist site. Click 'Observations API' to view
-           the data retrieved from the iNaturalist observation API.</li>
+           corresponding page on the iNaturalist site.</li>
+           <li>Click  copy icon for 'iNaturalist Observations API' to copy the link for  the
+            iNaturalist observation API.</li>
           </ol>"
           data-id="inat-links"
         ></app-accordion>
         <img
           width="500"
-          height="550"
+          height="660"
           loading="lazy"
-          src="${inat_links}"
-          alt="Links in the iNaturalist Links menu"
+          src="${inat_links_observations}"
+          alt="Links in the observations iNaturalist Links menu"
+        />
+      </li>
+      <li id="inat-links-identifications">
+        Users can get the link for the iNaturalist Identifications API.
+        <app-accordion
+          data-title="Instructions"
+          data-content="<ol>
+            <li>Use search and filters to select the observations you want</li>
+            <li>Click on the box with arrow icon to show the 'iNaturalist links' menu</li>
+            <li>Click copy icon for 'iNaturalist Identifications API' to copy the link for  the
+             iNaturalist identifications API.</li>
+          </ol>"
+          data-id="inat-links"
+        ></app-accordion>
+        <img
+          width="500"
+          height="380"
+          loading="lazy"
+          src="${inat_links_identifications}"
+          alt="Links in the identifications iNaturalist Links menu"
+        />
+      </li>
+      <li id="download-annotations">
+        Users can download annotations. This is a work in progress.
+        <app-accordion
+          data-title="Instructions"
+          data-content="<ol>
+            <li>Use search and filters to select the observations annotations you want</li>
+            <li>Click on the down arrow icon to show the 'Download' menu</li>
+            <li>Enter filename.</li>
+            <li>Click on 'Download annotations' button
+          </ol>"
+          data-id="inat-links"
+        ></app-accordion>
+        <img
+          width="500"
+          height="880"
+          loading="lazy"
+          src="${download_annotations}"
+          alt="Download  annotations menu"
+        />
+      </li>
+      <li id="download-identifications">
+        Users can download identifications. This is a work in progress.
+        <app-accordion
+          data-title="Instructions"
+          data-content="<ol>
+            <li>Use search and filters to select the identifications you want</li>
+            <li>Click on the down arrow icon to show the 'Download' menu</li>
+            <li>Enter filename.</li>
+            <li>Click on 'Download identifications' button
+          </ol>"
+          data-id="inat-links"
+        ></app-accordion>
+        <img
+          width="500"
+          height="830"
+          loading="lazy"
+          src="${download_identifications}"
+          alt="Download identifications menu"
         />
       </li>
     </ol>
