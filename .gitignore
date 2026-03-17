@@ -32,3 +32,4 @@ dist-ssr
 /src/tests/e2e/*-snapshots
 .env
 .env.production
+.vite
