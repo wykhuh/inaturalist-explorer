@@ -44,7 +44,7 @@ class SubviewObservationsMedia extends HTMLElement {
   render(appStore: AppStoreType) {
     loggerEvent(`++ [SubviewObservationsMedia render]`);
 
-    renderObservations(appStore, this);
+    renderObservations(appStore);
     initFilters(appStore);
   }
 }

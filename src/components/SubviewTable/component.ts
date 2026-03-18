@@ -43,7 +43,7 @@ class SubviewObservationsTable extends HTMLElement {
 
   render(appStore: AppStoreType) {
     loggerRender("++ SubviewObservationsTable render");
-    renderObservations(appStore, this);
+    renderObservations(appStore);
     initFilters(appStore);
   }
 }
