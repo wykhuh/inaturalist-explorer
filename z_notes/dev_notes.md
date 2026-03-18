@@ -193,3 +193,11 @@ https://realfavicongenerator.net
 https://css-tricks.com/svg-favicons-in-action/
 
 ==
+
+Local Data: Sqlite, LocalStorage, Session, Cookies and IndexDB
+https://www.youtube.com/watch?v=VzUHeLsJOrs
+dexie to interact with indexeddb
+
+
+IndexedDB - Progressive Web App Training
+https://www.youtube.com/watch?v=VNFDoawcmNc

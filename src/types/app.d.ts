@@ -144,9 +144,11 @@ type ViewOptions = {
 };
 
 export type viewMetadataGraphs = {
-  groupBy?: "species" | "places";
+  groupBy?: GraphGroupBy;
   category: GraphCategory;
 };
+
+export type GraphGroupBy = "species" | "places";
 
 export type GraphCategory =
   | "month_of_year"
@@ -457,6 +459,17 @@ interface IdentificationsApiParamsType {
 
 export type IdentificationsApiParamsKeysType =
   keyof IdentificationsApiParamsType;
+
+type AppCustomParamsType = {
+  graphs_category?: GraphCategory;
+  graphs_group_by?: GraphGroupBy;
+  name_order?: NameOrderType;
+  locale?: string;
+};
+
+export type AppParamsType = ObservationsApiParamsType &
+  IdentificationsApiParamsType &
+  AppCustomParamsType;
 
 export interface AutoCompleteEventType {
   detail: {

@@ -14,6 +14,7 @@ import {
   fetchDataForGraphCategories,
   fetchGraphData,
   graphMaxObservationMessage,
+  initGraphFilters,
   renderGraphCategorySelect,
   renderGraphs,
   updateGraphs,
@@ -106,6 +107,7 @@ class SubviewObservationsGraphs extends HTMLElement {
 
     renderGraphCategorySelect(appStore, this);
     disableGroupByForSelectedResources(appStore, this);
+    initGraphFilters(appStore);
 
     renderGraphs(appStore, this, selectedResource);
   }

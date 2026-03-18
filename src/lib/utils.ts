@@ -1,14 +1,15 @@
 import type {
   AppStoreType,
-  ObservationsApiParamsType,
   ObservationsApiParamsKeysType,
   NormalizediNatTaxonType,
   ObservationViewsType,
   NameOrderType,
   IdentificationsApiParamsKeysType,
-  IdentificationsApiParamsType,
   ObservationSubviewsType,
   IdentificationSubviewsType,
+  AppParamsType,
+  GraphCategory,
+  GraphGroupBy,
 } from "../types/app";
 import {
   bboxPlaceRecord,
@@ -115,7 +116,7 @@ export function formatAppUrl(
     .map((r) => r.id)
     .join(",");
 
-  let params: ObservationsApiParamsType & IdentificationsApiParamsType = {};
+  let params: AppParamsType = {};
 
   if (taxaIds.length > 0) {
     if (isIdentifications) {
@@ -211,6 +212,14 @@ export function formatAppUrl(
     }
   }
 
+  let graphsMetadata = appStore.viewMetadata.observations_observations.graphs;
+  if (graphsMetadata) {
+    params.graphs_category = graphsMetadata.category;
+    if (graphsMetadata.groupBy) {
+      params.graphs_group_by = graphsMetadata.groupBy;
+    }
+  }
+
   if (processRemovedDefaultParams) {
     removeDefaultParams(params);
   }
@@ -223,9 +232,7 @@ export function formatAppUrl(
   }
 }
 
-export function removeDefaultParams(
-  params: ObservationsApiParamsType & IdentificationsApiParamsType,
-) {
+export function removeDefaultParams(params: AppParamsType) {
   let defaultiNatAPiParams =
     params.verifiable === true && params.spam === false;
   let defaultObservationsView =
@@ -233,9 +240,9 @@ export function removeDefaultParams(
   let defaultIdentificationsView =
     params.view === "identifications_identifications" &&
     params.subview === "map";
-  // @ts-ignore
   let defaultNameOrder = params.name_order === "cs";
   let defaultLocale = params.locale === "en";
+  let defaultGraphCatgory = params.graphs_category === "month_of_year";
 
   if (defaultiNatAPiParams && defaultObservationsView) {
     delete params.verifiable;
@@ -256,12 +263,15 @@ export function removeDefaultParams(
   }
 
   if (defaultNameOrder) {
-    // @ts-ignore
     delete params.name_order;
   }
 
   if (defaultLocale) {
     delete params.locale;
+  }
+
+  if (defaultGraphCatgory && params.graphs_group_by === undefined) {
+    delete params.graphs_category;
   }
 
   if (defaultiNatAPiParams && Object.keys(params).length === 2) {
@@ -622,6 +632,19 @@ export function decodeAppUrl(searchParams: string, path = "/") {
   }
   if (urlParams.name_order && urlParams.name_order !== "any") {
     store.viewMetadata.name_order = urlParams.name_order as NameOrderType;
+  }
+
+  if (urlParams.graphs_category) {
+    store.viewMetadata.observations_observations.graphs = {
+      category: urlParams.graphs_category as GraphCategory,
+    };
+  }
+
+  if (urlParams.graphs_group_by) {
+    store.viewMetadata.observations_observations.graphs = {
+      groupBy: urlParams.graphs_group_by as GraphGroupBy,
+      category: (urlParams.graphs_category as GraphCategory) || "month_of_year",
+    };
   }
 
   for (let [key, value] of new URLSearchParams(searchParams)) {

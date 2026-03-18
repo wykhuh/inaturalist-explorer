@@ -48,11 +48,13 @@ import {
 } from "../../data/api/popular_fields";
 import { createGraphs, createPopularFieldsGraphs } from "./charts_utils";
 import { calculateObservationsCount } from "../../lib/count_utils";
+import { setSelectedOption } from "../../lib/form_utils";
+import { updateAppUrl } from "../../lib/utils";
 
 // ===============
 // UI
 // ===============
-//
+
 export async function renderGraphs(
   appStore: AppStoreType,
   componentContext: HTMLElement,
@@ -176,6 +178,7 @@ export async function updateGraphs(
   } else {
     renderGraphs(appStore, componentContext, undefined);
   }
+  updateAppUrl(window.location, appStore);
 }
 
 export function disableGroupByForSelectedResources(
@@ -245,6 +248,22 @@ export function renderGraphCategorySelect(
 
     selectEl.appendChild(optionEl);
   });
+}
+
+export function initGraphFilters(appStore: AppStoreType) {
+  let graphMetadata = appStore.viewMetadata.observations_observations.graphs;
+  if (graphMetadata) {
+    if (graphMetadata.category) {
+      setSelectedOption(
+        `#graph-form select#graphs-category option[value='${graphMetadata.category}']`,
+      );
+    }
+    if (graphMetadata.groupBy) {
+      setSelectedOption(
+        `#graph-form select#graphs-group-by option[value='${graphMetadata.groupBy}']`,
+      );
+    }
+  }
 }
 
 // ===============

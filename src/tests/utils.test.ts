@@ -435,9 +435,7 @@ describe("formatAppUrl", () => {
 
     let result = formatAppUrl(appStore);
 
-    expect(result).toBe(
-      "verifiable=true&spam=false&page=1&order=desc&order_by=id",
-    );
+    expect(result).toBe(`${defaultQuery}&page=1&order=desc&order_by=id`);
   });
 
   test.each(
@@ -476,7 +474,7 @@ describe("formatAppUrl", () => {
     let result = formatAppUrl(appStore);
 
     expect(result).toBe(
-      `verifiable=true&spam=false&page=1&order=desc&order_by=id&view=${name}`,
+      `${defaultQuery}&page=1&order=desc&order_by=id&view=${name}`,
     );
   });
 
@@ -492,7 +490,7 @@ describe("formatAppUrl", () => {
 
     let result = formatAppUrl(appStore);
 
-    expect(result).toBe("verifiable=true&spam=false&locale=" + lang);
+    expect(result).toBe(`${defaultQuery}&locale=${lang}`);
   });
 
   test("return params observation fields", () => {
@@ -507,6 +505,42 @@ describe("formatAppUrl", () => {
     let result = formatAppUrl(appStore);
 
     expect(result).toBe("field%3AHabitat=tree");
+  });
+
+  test("return params with graphs category", () => {
+    let store = structuredClone(mapStore);
+    if (store.viewMetadata.observations_observations.graphs) {
+      store.viewMetadata.observations_observations.graphs.category = "month";
+    }
+
+    let result = formatAppUrl(store);
+
+    expect(result).toBe(`${defaultQuery}&graphs_category=month`);
+  });
+
+  test("ignore graphs category if it is month_of_year an no group by", () => {
+    let store = structuredClone(mapStore);
+    if (store.viewMetadata.observations_observations.graphs) {
+      store.viewMetadata.observations_observations.graphs.category =
+        "month_of_year";
+    }
+
+    let result = formatAppUrl(store);
+
+    expect(result).toBe(``);
+  });
+
+  test("return params with graphs group by", () => {
+    let store = structuredClone(mapStore);
+    if (store.viewMetadata.observations_observations.graphs) {
+      store.viewMetadata.observations_observations.graphs.groupBy = "places";
+    }
+
+    let result = formatAppUrl(store);
+
+    expect(result).toBe(
+      `${defaultQuery}&graphs_category=month_of_year&graphs_group_by=places`,
+    );
   });
 });
 
@@ -1241,6 +1275,42 @@ describe("decodeAppUrl options", () => {
       record_type: "observations",
       observationsApiParams: {
         "field:Habitat": "tree",
+      },
+    };
+
+    let result = decodeAppUrl(searchParams, "/");
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("adds graph category to observation graphs metadata", () => {
+    let searchParams = "?graphs_category=month";
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      currentView: "observations_observations",
+      record_type: "observations",
+      viewMetadata: {
+        ...structuredClone(defaultUrlStore.viewMetadata),
+        observations_observations: { graphs: { category: "month" } },
+      },
+    };
+
+    let result = decodeAppUrl(searchParams, "/");
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test("adds graph group by to observation graphs metadata", () => {
+    let searchParams = "?graphs_group_by=places";
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      currentView: "observations_observations",
+      record_type: "observations",
+      viewMetadata: {
+        ...structuredClone(defaultUrlStore.viewMetadata),
+        observations_observations: {
+          graphs: { category: "month_of_year", groupBy: "places" },
+        },
       },
     };
 
