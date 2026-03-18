@@ -67,7 +67,7 @@ export function processFiltersForm(data: FormData): {
   };
 }
 
-// create fiiden input to store observation fields values
+// create hidden input to store observation fields values
 export function createOrUpdateObservationFieldInput(
   field: string,
   value: string,
@@ -94,6 +94,7 @@ export function initFilters(appStore: AppStoreType, formEl: HTMLFormElement) {
 
   populateFormFields(observationsFieldName_InputType, appStore);
 
+  // create hidden input for observation fields
   let observationFields = Object.keys(appStore.observationsApiParams).filter(
     (k) => k.startsWith("field:"),
   ) as ObservationsApiParamsKeysType[];

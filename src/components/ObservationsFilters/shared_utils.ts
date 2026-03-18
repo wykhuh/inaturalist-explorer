@@ -198,3 +198,18 @@ export async function updateAppWithFilters(
   renderSelectedFiltersList(results.params);
   renderSelectedResources(appStore, true);
 }
+
+// set the form data value for autocomplete fields to use the number id from
+// app store instead of the string name that is displayed on the form UI
+export function setAutocompleteValuesToId(data: FormData) {
+  let apiParams = window.app.store.observationsApiParams;
+  if (data.get("unobserved_by_user_id") && apiParams.unobserved_by_user_id) {
+    data.set(
+      "unobserved_by_user_id",
+      apiParams.unobserved_by_user_id.toString(),
+    );
+  }
+  if (data.get("viewer_id") && apiParams.viewer_id) {
+    data.set("viewer_id", apiParams.viewer_id.toString());
+  }
+}

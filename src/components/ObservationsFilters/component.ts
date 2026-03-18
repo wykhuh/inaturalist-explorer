@@ -18,6 +18,7 @@ import {
   renderSelectedFiltersList,
   tabClickHandler,
   updateAppWithFilters,
+  setAutocompleteValuesToId,
 } from "./shared_utils";
 import {
   reviewerSelectedHandler,
@@ -253,6 +254,12 @@ class ObservationFilters extends HTMLElement {
 
     const data = new FormData(form);
     let target = event.target as HTMLInputElement;
+
+    // set autocomplete input values to id instead of string name
+    setAutocompleteValuesToId(data);
+
+    // create hidden input for observation fields so that form can access the
+    // data of selected fields
     if (target.id === "observation-fields-search-value") {
       let field = target.dataset.current_obs_field;
       if (!field) return;

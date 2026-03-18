@@ -6,7 +6,10 @@ import {
 import { setupUserSearch } from "./search_users.ts";
 import { isObservationsCheck, resetPageNumber } from "./data_utils.ts";
 import { updateCountForAll } from "./count_utils.ts";
-import { renderSelectedFiltersList } from "../components/ObservationsFilters/shared_utils.ts";
+import {
+  renderSelectedFiltersList,
+  setAutocompleteValuesToId,
+} from "../components/ObservationsFilters/shared_utils.ts";
 import { processFiltersForm } from "../components/ObservationsFilters/utils.ts";
 
 export function setupUnobservedByUserSearch(selector: string) {
@@ -40,7 +43,9 @@ export async function unobservedByUserSelectedHandler(
   const form = document.querySelector("#filters-form") as HTMLFormElement;
   if (form) {
     const data = new FormData(form);
+
     if (isObservationsCheck(appStore)) {
+      setAutocompleteValuesToId(data);
       let results = processFiltersForm(data);
       renderSelectedFiltersList(results.params);
     }
