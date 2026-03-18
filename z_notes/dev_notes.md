@@ -201,3 +201,10 @@ dexie to interact with indexeddb
 
 IndexedDB - Progressive Web App Training
 https://www.youtube.com/watch?v=VNFDoawcmNc
+
+==
+External links best practices
+https://blog.cogitactive.com/website/external-links-best-practices/
+
+External links best practices—cont’d
+https://blog.cogitactive.com/website/external-links-best-practices-contd/

@@ -11,29 +11,15 @@ export const template = html`
 
     <ul class="liststyle-none" id="external-links">
       <li>
-        <a
-          href=""
-          target="_blank"
-          rel="noopener noreferrer"
-          class="explore-link"
-          >Explore page</a
-        >
+        <a href="" class="explore-link">Explore page</a>
         - browse observations
       </li>
       <li>
-        <a
-          href=""
-          target="_blank"
-          rel="noopener noreferrer"
-          class="identify-link"
-          >Identify page</a
-        >
+        <a href="" class="identify-link">Identify page</a>
         - identify observations
       </li>
       <li>
-        <a href="" target="_blank" rel="noopener noreferrer" class="export-link"
-          >Export page</a
-        >
+        <a href="" class="export-link">Export page</a>
         - download observations
       </li>
     </ul>
