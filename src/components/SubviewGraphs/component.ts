@@ -39,7 +39,7 @@ class SubviewObservationsGraphs extends HTMLElement {
     this.graphForm = this.querySelector<HTMLFormElement>("#graph-form");
     if (!this.graphForm) return;
 
-    let data: PropType = (this as unknown as DataComponentType).data;
+    let data: PropType = (this as DataComponentType).data;
     this.render(data.selectedResource, window.app.store);
 
     window.addEventListener("selectedTaxaUpdate", this);

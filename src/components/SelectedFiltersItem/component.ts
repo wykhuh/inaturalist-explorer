@@ -24,7 +24,7 @@ class SelectedFiltersItem extends HTMLElement {
 
   connectedCallback() {
     loggerRender("++ SelectedFiltersItem connectedCallback");
-    let data = (this as unknown as DataComponentType).data as PropType;
+    let data = (this as DataComponentType).data as PropType;
     this.field = data.field;
     this.value = data.value;
     this.render();

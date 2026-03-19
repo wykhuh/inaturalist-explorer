@@ -7,9 +7,7 @@ export function createMediaGrid(results: ObservationsResult[]) {
   results.forEach((record) => {
     let media = record.photos.concat(record.sounds);
     media.forEach((medium, j) => {
-      let cardEl = document.createElement(
-        "card-media",
-      ) as unknown as DataComponentType;
+      let cardEl = document.createElement("card-media") as DataComponentType;
       cardEl.data = {
         observation: record,
         media: medium,

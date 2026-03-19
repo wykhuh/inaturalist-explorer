@@ -202,6 +202,23 @@ dexie to interact with indexeddb
 IndexedDB - Progressive Web App Training
 https://www.youtube.com/watch?v=VNFDoawcmNc
 
+
+Local First from Scratch - How to make a web app with local data
+https://www.youtube.com/watch?v=Qoqh9Mdmk80
+
+
+SQLite as frontend storage - Delete localStorage and IndexedDB?
+https://www.youtube.com/watch?v=faSxK3hK2KI
+
+IndexedDB Part 1 - Creating and Versioning
+https://www.youtube.com/watch?v=gb5ovg7YCig
+
+How to use IndexedDB to store data for your web application in the browser
+https://www.youtube.com/watch?v=yZ26CXny3iI
+
+How I power my React app with IndexedDB
+https://www.youtube.com/watch?v=kImH1afFRNk
+
 ==
 External links best practices
 https://blog.cogitactive.com/website/external-links-best-practices/

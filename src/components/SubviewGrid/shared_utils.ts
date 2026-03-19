@@ -29,7 +29,7 @@ export function renderObservations(appStore: AppStoreType) {
 
   let pagination1 = document.createElement(
     "app-pagination",
-  ) as unknown as DataComponentType;
+  ) as DataComponentType;
   pagination1.data = {
     perPage: cacheData.per_page,
     currentPage: cacheData.page,
@@ -51,7 +51,7 @@ export function renderObservations(appStore: AppStoreType) {
 
   let pagination2 = document.createElement(
     "app-pagination",
-  ) as unknown as DataComponentType;
+  ) as DataComponentType;
   pagination2.data = {
     perPage: cacheData.per_page,
     currentPage: cacheData.page,

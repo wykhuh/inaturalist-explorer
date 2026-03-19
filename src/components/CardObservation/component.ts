@@ -45,8 +45,7 @@ class CardObservation extends HTMLElement {
     let cardEl = this.querySelector(".card");
     if (!cardEl) return;
 
-    let data = (this as unknown as DataComponentType)
-      .data as ObservationsResult;
+    let data = (this as DataComponentType).data as ObservationsResult;
     let displayFields =
       appStore.viewMetadata.observations_observations.displayFields || {};
 

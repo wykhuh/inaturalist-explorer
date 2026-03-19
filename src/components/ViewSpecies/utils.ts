@@ -189,7 +189,7 @@ function renderGrid(
 
   let pagination1 = document.createElement(
     "app-pagination",
-  ) as unknown as DataComponentType;
+  ) as DataComponentType;
   pagination1.data = {
     perPage: cache.per_page,
     currentPage: cache.page,
@@ -204,7 +204,7 @@ function renderGrid(
 
   let pagination2 = document.createElement(
     "app-pagination",
-  ) as unknown as DataComponentType;
+  ) as DataComponentType;
   pagination2.data = {
     perPage: cache.per_page,
     currentPage: cache.page,
@@ -377,9 +377,7 @@ function createGrid(
   containerEl.className = "species-grid grid-auto-fill";
 
   results.forEach((row) => {
-    let cardEl = document.createElement(
-      "card-species",
-    ) as unknown as DataComponentType;
+    let cardEl = document.createElement("card-species") as DataComponentType;
     cardEl.data = row;
     containerEl.appendChild(cardEl);
   });

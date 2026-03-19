@@ -29,7 +29,7 @@ export function renderCard(appStore: AppStoreType, componentCtx: any) {
   if (!cardEl) return;
 
   let { observation, media, type, mediaIndex } = (
-    componentCtx as unknown as DataComponentType
+    componentCtx as DataComponentType
   ).data as DataProps;
   let displayFields =
     appStore.viewMetadata.observations_observations.displayFields || {};

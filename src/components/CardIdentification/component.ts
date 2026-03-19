@@ -27,13 +27,12 @@ class CardIdentification extends HTMLElement {
   render() {
     let cardEl = this.querySelector(".card");
     if (!cardEl) return;
-    let data = (this as unknown as DataComponentType)
-      .data as IdentificationsResult;
-    let type = (this as unknown as DataComponentType).type;
+    let data = (this as DataComponentType).data as IdentificationsResult;
+    let type = (this as DataComponentType).type;
 
     let observationEl = document.createElement(
       "card-identification-observation",
-    ) as unknown as DataComponentType;
+    ) as DataComponentType;
     observationEl.data = data.observation;
     cardEl.append(observationEl);
 
@@ -47,7 +46,7 @@ class CardIdentification extends HTMLElement {
 
       let identificationEl = document.createElement(
         "card-identification-identification",
-      ) as unknown as DataComponentType;
+      ) as DataComponentType;
       identificationEl.data = identification;
       cardEl.append(identificationEl);
     } else {
@@ -58,7 +57,7 @@ class CardIdentification extends HTMLElement {
       identifications.forEach((ident) => {
         let identificationEl = document.createElement(
           "card-identification-identification",
-        ) as unknown as DataComponentType;
+        ) as DataComponentType;
         identificationEl.data = ident;
         cardEl.append(identificationEl);
       });

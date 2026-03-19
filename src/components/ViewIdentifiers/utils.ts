@@ -53,7 +53,7 @@ export async function fetchAndRenderData(
 
   let pagination1 = document.createElement(
     "app-pagination",
-  ) as unknown as DataComponentType;
+  ) as DataComponentType;
   pagination1.data = {
     perPage: data.per_page,
     currentPage: data.page,
@@ -74,7 +74,7 @@ export async function fetchAndRenderData(
 
   let pagination2 = document.createElement(
     "app-pagination",
-  ) as unknown as DataComponentType;
+  ) as DataComponentType;
   pagination2.data = {
     perPage: data.per_page,
     currentPage: data.page,

@@ -26,7 +26,7 @@ class CardIdentificationObservation extends HTMLElement {
   render(appStore: AppStoreType) {
     let cardEl = this.querySelector(".card");
     if (!cardEl) return;
-    let observation = (this as unknown as DataComponentType)
+    let observation = (this as DataComponentType)
       .data as IdentificationObservation;
 
     let content = "";

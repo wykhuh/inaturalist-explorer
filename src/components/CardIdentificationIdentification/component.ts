@@ -37,7 +37,7 @@ class CardIdentificationIdentification extends HTMLElement {
   render(appStore: AppStoreType) {
     let cardEl = this.querySelector(".card") as HTMLDivElement;
     if (!cardEl) return;
-    let data = (this as unknown as DataComponentType).data as Identification;
+    let data = (this as DataComponentType).data as Identification;
 
     if (!data.current) {
       cardEl.classList.add("withdrawn");

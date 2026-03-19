@@ -8,7 +8,7 @@ export function createGrid(results: ObservationsResult[]) {
   results.forEach((row) => {
     let cardEl = document.createElement(
       "card-observation",
-    ) as unknown as DataComponentType;
+    ) as DataComponentType;
     cardEl.data = row;
     containerEl.appendChild(cardEl);
   });

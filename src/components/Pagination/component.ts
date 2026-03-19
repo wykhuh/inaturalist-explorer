@@ -29,7 +29,7 @@ export class Pagination extends HTMLElement {
   connectedCallback() {
     loggerRender("++ Pagination connectedCallback");
 
-    let data = (this as unknown as DataComponentType).data as PaginationProps;
+    let data = (this as DataComponentType).data as PaginationProps;
     this.perPage = data.perPage;
     this.currentPage = data.currentPage;
     this.totalRecords = data.totalRecords;

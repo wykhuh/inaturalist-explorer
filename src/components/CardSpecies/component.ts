@@ -27,8 +27,7 @@ class CardSpecies extends HTMLElement {
   }
 
   renderCard(appStore: AppStoreType) {
-    let data = (this as unknown as DataComponentType)
-      .data as ResourceSpeciesCountResult;
+    let data = (this as DataComponentType).data as ResourceSpeciesCountResult;
 
     let photoEl = this.querySelector(".photo") as HTMLLinkElement;
     if (photoEl) {

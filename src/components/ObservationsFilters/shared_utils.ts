@@ -69,7 +69,7 @@ export function renderSelectedFiltersList(
   for (let [key, value] of Object.entries(params)) {
     let itemEl = document.createElement(
       "selected-filters-item",
-    ) as unknown as DataComponentType;
+    ) as DataComponentType;
     itemEl.data = { field: key, value: value };
 
     listEl.appendChild(itemEl);

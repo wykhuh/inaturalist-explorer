@@ -80,7 +80,7 @@ function render(
   if (view.subview !== "map") {
     let pagination1 = document.createElement(
       "app-pagination",
-    ) as unknown as DataComponentType;
+    ) as DataComponentType;
     pagination1.data = {
       perPage: data.per_page,
       currentPage: data.page,
@@ -113,7 +113,7 @@ function render(
   if (view.subview !== "map") {
     let pagination2 = document.createElement(
       "app-pagination",
-    ) as unknown as DataComponentType;
+    ) as DataComponentType;
     pagination2.data = {
       perPage: data.per_page,
       currentPage: data.page,
@@ -155,7 +155,7 @@ function createGrid(results: IdentificationsResult[]) {
   results.forEach((row) => {
     let recordEl = document.createElement(
       "card-identification",
-    ) as unknown as DataComponentType;
+    ) as DataComponentType;
     recordEl.data = row;
     recordEl.type = "grid";
     containerEl.append(recordEl);
@@ -177,7 +177,7 @@ function createHistory(results: IdentificationsResult[]) {
     observationIds.add(row.observation.id);
     let recordEl = document.createElement(
       "card-identification",
-    ) as unknown as DataComponentType;
+    ) as DataComponentType;
     recordEl.data = row;
     recordEl.type = "history";
     containerEl.append(recordEl);
