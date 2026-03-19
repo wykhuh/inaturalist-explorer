@@ -235,7 +235,6 @@ export function processAnnotationsResults(results: ObservationsResult[]) {
       records.push(record);
     }
   });
-  console.log(records);
 
   return records;
 }

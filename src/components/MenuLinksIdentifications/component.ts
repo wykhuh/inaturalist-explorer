@@ -21,7 +21,7 @@ class LinksMenu extends HTMLElement {
 
     this.render(window.app.store);
 
-    window.addEventListener("observationsChange", this);
+    window.addEventListener("identificationsChange", this);
     window.addEventListener("viewChange", this);
     window.addEventListener("subviewChange", this);
   }
@@ -29,7 +29,7 @@ class LinksMenu extends HTMLElement {
   disconnectedCallback() {
     loggerRender("++ LinksMenu disconnectedCallback");
 
-    window.removeEventListener("observationsChange", this);
+    window.removeEventListener("identificationsChange", this);
     window.removeEventListener("viewChange", this);
     window.removeEventListener("subviewChange", this);
   }
