@@ -28,14 +28,18 @@ import {
   user2,
   defaultQuery,
   defaultParams,
+  monarchBasic,
+  createPopularFieldCache,
 } from "./test_helpers.ts";
 import type {
   AppStoreType,
+  GraphCategory,
   NameOrderType,
   ObservationViewsType,
 } from "../types/app";
 import {
   filtersModalAutocompleteFields,
+  histogramGraphCategory,
   identificationsApiFilterableNames,
   identificationsApiNonFilterableNames,
   observationsApiFilterableNames,
@@ -47,6 +51,7 @@ import {
 } from "../data/app_data.ts";
 import { validObservationsSubviews, validViews } from "../data/app_data.ts";
 import { defaultColorScheme } from "../lib/map_colors_utils.ts";
+import { allTaxaRecord } from "../data/inat_data.ts";
 
 describe("hexToRgb", () => {
   test("converts 6 character hex to rgb", () => {
@@ -507,18 +512,22 @@ describe("formatAppUrl", () => {
     expect(result).toBe("field%3AHabitat=tree");
   });
 
-  test("return params with graphs category", () => {
-    let store = structuredClone(mapStore);
-    if (store.viewMetadata.observations_observations.graphs) {
-      store.viewMetadata.observations_observations.graphs.category = "month";
-    }
+  test.each(["month", "year"])(
+    "return params with graphs category",
+    (category) => {
+      let store = structuredClone(mapStore);
+      if (store.viewMetadata.observations_observations.graphs) {
+        store.viewMetadata.observations_observations.graphs.category =
+          category as GraphCategory;
+      }
 
-    let result = formatAppUrl(store);
+      let result = formatAppUrl(store);
 
-    expect(result).toBe(`${defaultQuery}&graphs_category=month`);
-  });
+      expect(result).toBe(`${defaultQuery}&graphs_category=${category}`);
+    },
+  );
 
-  test("ignore graphs category if it is month_of_year an no group by", () => {
+  test("ignore graphs category if category is month_of_year and no group by", () => {
     let store = structuredClone(mapStore);
     if (store.viewMetadata.observations_observations.graphs) {
       store.viewMetadata.observations_observations.graphs.category =
@@ -530,16 +539,70 @@ describe("formatAppUrl", () => {
     expect(result).toBe(``);
   });
 
-  test("return params with graphs group by", () => {
+  test.each(histogramGraphCategory)(
+    "return params with graphs category and group by",
+    (category) => {
+      let store = structuredClone(mapStore);
+      if (store.viewMetadata.observations_observations.graphs) {
+        store.viewMetadata.observations_observations.graphs.category = category;
+        store.viewMetadata.observations_observations.graphs.groupBy = "places";
+      }
+
+      let result = formatAppUrl(store);
+
+      expect(result).toBe(
+        `${defaultQuery}&graphs_category=${category}&graphs_group_by=places`,
+      );
+    },
+  );
+
+  test("do not add graph category to url if category is popular field id and selected taxa is default taxa", () => {
     let store = structuredClone(mapStore);
-    if (store.viewMetadata.observations_observations.graphs) {
-      store.viewMetadata.observations_observations.graphs.groupBy = "places";
-    }
+    store.viewMetadata.observations_observations.graphs = { category: "1" };
+    store.selectedTaxa = [allTaxaRecord];
+
+    let result = formatAppUrl(store);
+
+    expect(result).toBe(``);
+  });
+
+  test("do not add graph category to url if selected taxa does not have popular field cache for selected category", () => {
+    let store = structuredClone(mapStore);
+    store.viewMetadata.observations_observations.graphs = { category: "1" };
+    store.selectedTaxa = [monarchBasic];
+    store.cacheData.observations.popularFields = {
+      10: [createPopularFieldCache(monarchBasic, 10)],
+    };
+
+    let result = formatAppUrl(store);
+
+    expect(result).toBe(`taxon_id=${monarchBasic.id}&${defaultQuery}`);
+  });
+
+  test("add popular field id graph category to url if selected taxa does have popular field cache for selected category", () => {
+    let store = structuredClone(mapStore);
+    store.viewMetadata.observations_observations.graphs = { category: "1" };
+    store.selectedTaxa = [monarchBasic];
+    store.cacheData.observations.popularFields = {
+      1: [createPopularFieldCache(monarchBasic, 1)],
+    };
 
     let result = formatAppUrl(store);
 
     expect(result).toBe(
-      `${defaultQuery}&graphs_category=month_of_year&graphs_group_by=places`,
+      `taxon_id=${monarchBasic.id}&${defaultQuery}&graphs_category=1`,
+    );
+  });
+
+  test("add popular field id graph category to url  if no popular field cache", () => {
+    let store = structuredClone(mapStore);
+    store.viewMetadata.observations_observations.graphs = { category: "1" };
+    store.selectedTaxa = [monarchBasic];
+
+    let result = formatAppUrl(store);
+
+    expect(result).toBe(
+      `taxon_id=${monarchBasic.id}&${defaultQuery}&graphs_category=1`,
     );
   });
 });

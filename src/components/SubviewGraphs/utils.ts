@@ -21,7 +21,7 @@ import type {
   ControlledAttributeBasic,
   AppStoreSelectedResourcesKeysType,
 } from "../../types/app";
-import { formatTaxonName } from "../../lib/data_utils";
+import { formatTaxonName, isPopularFieldCategory } from "../../lib/data_utils";
 
 import {
   histograph_year,
@@ -91,12 +91,14 @@ export async function renderGraphs(
     }
   } else {
     data = cacheData.popularFields[category];
-    data.forEach((datum) => {
-      let graph = createPopularFieldsGraphs(datum, appStore);
-      if (graph) {
-        dataContainer.appendChild(graph);
-      }
-    });
+    if (data) {
+      data.forEach((datum) => {
+        let graph = createPopularFieldsGraphs(datum, appStore);
+        if (graph) {
+          dataContainer.appendChild(graph);
+        }
+      });
+    }
   }
 }
 
@@ -303,23 +305,22 @@ export async function fetchGraphData(appStore: AppStoreType) {
     devCachedGraphData(appStore, graphsMetadata);
     return;
   }
+
   // fetch popular fields data for each species
-  if (/^\d+$/.test(graphsMetadata.category)) {
+  if (isPopularFieldCategory(appStore) && appStore.selectedTaxa[0].id !== 0) {
     let data = [];
     let paramsTemp = cleanupObervationsPopularFieldsParams(
       appStore,
       "observations",
     );
     for await (const taxon of appStore.selectedTaxa) {
-      if (taxon.id === 0) {
-        continue;
-      }
       paramsTemp.set("taxon_id", taxon.id.toString());
       let params = paramsTemp.toString();
 
       let fieldsData = (await getAPIPopularFieldsData(
         params,
       )) as NormalizedPopularFields;
+
       if (fieldsData) {
         // add taxon data
         let { title, subtitle } = formatTaxonName(taxon, appStore);
@@ -334,6 +335,7 @@ export async function fetchGraphData(appStore: AppStoreType) {
 
     let popularFields = formatPopularFields(data);
     cacheData.popularFields = popularFields;
+
     // fetch histogram data for each species
   } else if (graphsMetadata.groupBy === "species") {
     let paramsTemp = cleanupObervationsHistogramParams(
@@ -654,4 +656,30 @@ export function formatPopularFields(data: NormalizedPopularFields[]) {
   });
 
   return popularFields;
+}
+
+export function updateInvalidGraphCategory(
+  appStore: AppStoreType,
+  graphsMetadata?: viewMetadataGraphs,
+) {
+  if (!graphsMetadata) return;
+
+  // manually set graphs_category for cases when graphs_category is set to
+  // popular fields id but there are no selected taxa, such as when user
+  // is viewing a popular field graph and deletes selected taxa
+  if (isPopularFieldCategory(appStore) && appStore.selectedTaxa[0].id === 0) {
+    graphsMetadata.category = "month_of_year";
+
+    // manually set graphs_category for cases when graphs_category is set to
+    // popular fields id but that field does not apply to selected taxa,
+    // such as when user is viewing a popular field graph with multiple taxa with
+    // different fields and deletes one of the taxa
+  } else if (
+    isPopularFieldCategory(appStore) &&
+    appStore.cacheData.observations.popularFields[
+      graphsMetadata.category as unknown as number
+    ] === undefined
+  ) {
+    graphsMetadata.category = "month_of_year";
+  }
 }

@@ -31,7 +31,7 @@ import {
 } from "./map_colors_utils";
 import { convertiNatBBoxToLngLat } from "./map_utils";
 import { validObservationsSubviews, validViews } from "../data/app_data";
-import { getResourceApiParams } from "./data_utils";
+import { getResourceApiParams, isPopularFieldCategory } from "./data_utils";
 import { loggerEvent } from "./logger";
 
 export function displayJson(json: any, el: HTMLElement | null) {
@@ -214,7 +214,23 @@ export function formatAppUrl(
 
   let graphsMetadata = appStore.viewMetadata.observations_observations.graphs;
   if (graphsMetadata) {
-    params.graphs_category = graphsMetadata.category;
+    // manually set graphs_category for cases when graphs_category is set to
+    // popular fields id but there are no selected taxa, such as when user
+    // is viewing a popular field graph and deletes selected taxa
+    if (isPopularFieldCategory(appStore) && appStore.selectedTaxa[0].id === 0) {
+      params.graphs_category = "month_of_year";
+    } else if (
+      isPopularFieldCategory(appStore) &&
+      Object.keys(appStore.cacheData.observations.popularFields).length > 0 &&
+      appStore.cacheData.observations.popularFields[
+        graphsMetadata.category as unknown as number
+      ] === undefined
+    ) {
+      params.graphs_category = "month_of_year";
+    } else {
+      params.graphs_category = graphsMetadata.category;
+    }
+
     if (graphsMetadata.groupBy) {
       params.graphs_group_by = graphsMetadata.groupBy;
     }

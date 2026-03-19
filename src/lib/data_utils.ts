@@ -793,6 +793,14 @@ export function isSpeciesOrHigerCheck(appStore: AppStoreType) {
   });
 }
 
+export function isPopularFieldCategory(appStore: AppStoreType) {
+  let graphsMetadata = appStore.viewMetadata.observations_observations.graphs;
+  if (graphsMetadata) {
+    return /\d+/.test(graphsMetadata.category);
+  }
+  return false;
+}
+
 export function getResourceApiParams(isObservations: boolean) {
   return (
     isObservations ? "observationsApiParams" : "identificationsApiParams"

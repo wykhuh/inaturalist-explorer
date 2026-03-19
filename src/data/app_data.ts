@@ -46,6 +46,7 @@ import { objectFlip } from "../lib/utils";
 import type {
   AppStoreSelectedResourceKeysType,
   AppStoreSelectedResourcesKeysType,
+  GraphCategory,
   IdentificationsApiParamsKeysType,
   IdentificationSubviewsType,
   ObservationsApiParamsKeysType,
@@ -580,3 +581,9 @@ export let recordTypeToPathObj = {
 export let pathToRecordType = {
   ...objectFlip(recordTypeToPathObj),
 };
+
+export const histogramGraphCategory: GraphCategory[] = [
+  "month",
+  "year",
+  "month_of_year",
+];

@@ -18,6 +18,7 @@ import {
   renderGraphCategorySelect,
   renderGraphs,
   updateGraphs,
+  updateInvalidGraphCategory,
 } from "./utils";
 import { resetGraphCache } from "../SubviewGrid/shared_utils";
 
@@ -117,11 +118,13 @@ class SubviewObservationsGraphs extends HTMLElement {
       return;
     }
 
+    let graphsMetadata = appStore.viewMetadata.observations_observations
+      .graphs as viewMetadataGraphs;
+
+    updateInvalidGraphCategory(appStore, graphsMetadata);
     resetGraphCache(appStore);
     await fetchGraphData(appStore);
 
-    let graphsMetadata = appStore.viewMetadata.observations_observations
-      .graphs as viewMetadataGraphs;
     let selectedResource: AppStoreSelectedResourcesKeysType | undefined =
       undefined;
     if (graphsMetadata.groupBy === "species") {
