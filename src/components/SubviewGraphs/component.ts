@@ -125,6 +125,10 @@ class SubviewObservationsGraphs extends HTMLElement {
     resetGraphCache(appStore);
     await fetchGraphData(appStore);
 
+    if (appStore.cacheData.observations.popularFieldsOptions.length == 0) {
+      await fetchDataForGraphCategories(appStore);
+    }
+
     let selectedResource: AppStoreSelectedResourcesKeysType | undefined =
       undefined;
     if (graphsMetadata.groupBy === "species") {
