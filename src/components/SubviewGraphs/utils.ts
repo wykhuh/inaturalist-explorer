@@ -353,30 +353,31 @@ export async function fetchGraphData(appStore: AppStoreType) {
 
     // fetch histogram data for each species
   } else if (graphsMetadata.groupBy === "species") {
-    let paramsTemp = cleanupObervationsHistogramParams(
-      appStore,
-      "observations",
-    );
+    let params = cleanupObervationsHistogramParams(appStore, "observations");
 
     for await (const taxon of appStore.selectedTaxa) {
       if (taxon.id === 0) {
         continue;
       }
-      paramsTemp.set("taxon_id", taxon.id.toString());
-      let params = paramsTemp.toString();
+      params.set("taxon_id", taxon.id.toString());
 
       if (graphsMetadata.category === "month_of_year") {
-        let monthYearData = await getAPIHistogramData(params, "month_of_year");
+        let monthYearData = await getAPIHistogramData(
+          params.toString(),
+          "month_of_year",
+        );
         if (monthYearData) {
           cacheData.graphsSpecies.month_of_year.push(monthYearData.results);
         }
       } else if (graphsMetadata.category === "year") {
-        let yearData = await getAPIHistogramData(params, "year");
+        setLastTenYears(params);
+        let yearData = await getAPIHistogramData(params.toString(), "year");
         if (yearData) {
           cacheData.graphsSpecies.year.push(yearData.results);
         }
       } else if (graphsMetadata.category === "month") {
-        let monthData = await getAPIHistogramData(params, "month");
+        setLastTenYears(params);
+        let monthData = await getAPIHistogramData(params.toString(), "month");
         if (monthData) {
           cacheData.graphsSpecies.month.push(monthData.results);
         }
@@ -384,27 +385,28 @@ export async function fetchGraphData(appStore: AppStoreType) {
     }
     // fetch histogram data for places
   } else if (graphsMetadata.groupBy === "places") {
-    let paramsTemp = cleanupObervationsHistogramParams(
-      appStore,
-      "observations",
-    );
+    let params = cleanupObervationsHistogramParams(appStore, "observations");
 
     for await (const place of appStore.selectedPlaces) {
-      paramsTemp.set("place_id", place.id.toString());
-      let params = paramsTemp.toString();
+      params.set("place_id", place.id.toString());
 
       if (graphsMetadata.category === "month_of_year") {
-        let monthYearData = await getAPIHistogramData(params, "month_of_year");
+        let monthYearData = await getAPIHistogramData(
+          params.toString(),
+          "month_of_year",
+        );
         if (monthYearData) {
           cacheData.graphsPlaces.month_of_year.push(monthYearData.results);
         }
       } else if (graphsMetadata.category === "year") {
-        let yearData = await getAPIHistogramData(params, "year");
+        setLastTenYears(params);
+        let yearData = await getAPIHistogramData(params.toString(), "year");
         if (yearData) {
           cacheData.graphsPlaces.year.push(yearData.results);
         }
       } else if (graphsMetadata.category === "month") {
-        let monthData = await getAPIHistogramData(params, "month");
+        setLastTenYears(params);
+        let monthData = await getAPIHistogramData(params.toString(), "month");
         if (monthData) {
           cacheData.graphsPlaces.month.push(monthData.results);
         }
@@ -413,27 +415,36 @@ export async function fetchGraphData(appStore: AppStoreType) {
 
     // fetch histogram data
   } else {
-    let params = cleanupObervationsHistogramParams(
-      appStore,
-      "observations",
-    ).toString();
+    let params = cleanupObervationsHistogramParams(appStore, "observations");
 
     if (graphsMetadata.category === "month_of_year") {
-      let monthYearData = await getAPIHistogramData(params, "month_of_year");
+      let monthYearData = await getAPIHistogramData(
+        params.toString(),
+        "month_of_year",
+      );
       if (monthYearData) {
         cacheData.graphs.month_of_year = [monthYearData.results];
       }
     } else if (graphsMetadata.category === "year") {
-      let yearData = await getAPIHistogramData(params, "year");
+      setLastTenYears(params);
+      let yearData = await getAPIHistogramData(params.toString(), "year");
       if (yearData) {
         cacheData.graphs.year = [yearData.results];
       }
     } else if (graphsMetadata.category === "month") {
-      let monthData = await getAPIHistogramData(params, "month");
+      setLastTenYears(params);
+      let monthData = await getAPIHistogramData(params.toString(), "month");
       if (monthData) {
         cacheData.graphs.month = [monthData.results];
       }
     }
+  }
+}
+
+function setLastTenYears(params: URLSearchParams) {
+  if (params.get("d1") === null) {
+    let year = new Date().getFullYear() - 10;
+    params.set("d1", `${year}-01-01`);
   }
 }
 

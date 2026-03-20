@@ -113,12 +113,6 @@ export function cleanupGraphs(
     params.set("place_id", `1`);
   }
 
-  // set start date to 10 years ago  if d1 not set
-  if (params.get("d1") === null) {
-    let year = new Date().getFullYear() - 10;
-    params.set("d1", `${year}-01-01`);
-  }
-
   return params;
 }
 
