@@ -2,6 +2,7 @@ import autoComplete from "@tarekraafat/autocomplete.js";
 
 import type {
   AutoCompleteEventType,
+  DataComponentType,
   NormalizediNatUserType,
 } from "../types/app.d.ts";
 import { autocomplete_users_api } from "../lib/inat_api.ts";
@@ -133,9 +134,11 @@ export function renderUsersList(appStore: AppStoreType) {
 
   listEl.innerHTML = "";
   appStore.selectedUsers.forEach((user) => {
-    let templateEl = document.createElement("users-list-item");
-    templateEl.dataset.user = JSON.stringify(user);
-    templateEl.dataset.type = "observer";
+    let templateEl = document.createElement(
+      "users-list-item",
+    ) as DataComponentType;
+    templateEl.data = user;
+    templateEl.type = "observer";
     listEl.appendChild(templateEl);
   });
 }

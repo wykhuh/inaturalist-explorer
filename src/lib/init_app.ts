@@ -489,6 +489,7 @@ export function processPlaceData(
       display_name: placeData.display_name,
       bounding_box: bbox,
       geometry: placeData.geometry_geojson,
+      slug: placeData.slug,
     },
   ];
 
@@ -513,6 +514,7 @@ export function processWithoutPlaceData(
       id: placeData.id,
       name: placeData.name,
       display_name: placeData.display_name,
+      slug: placeData.slug,
     },
   ];
 

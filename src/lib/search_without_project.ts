@@ -1,6 +1,7 @@
 import type {
   NormalizediNatProjectType,
   AppStoreType,
+  DataComponentType,
 } from "../types/app.d.ts";
 import {
   addValueToCommaSeparatedString,
@@ -66,9 +67,11 @@ export function renderWithoutProjectsList(appStore: AppStoreType) {
 
   listEl.innerHTML = "";
   appStore.selectedWithoutProjects.forEach((project) => {
-    let templateEl = document.createElement("projects-list-item");
-    templateEl.dataset.project = JSON.stringify(project);
-    templateEl.dataset.type = "withoutProject";
+    let templateEl = document.createElement(
+      "projects-list-item",
+    ) as DataComponentType;
+    templateEl.data = project;
+    templateEl.type = "withoutProject";
     listEl.appendChild(templateEl);
   });
 }

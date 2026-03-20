@@ -6,9 +6,14 @@ import { renderTaxonNames } from "../../lib/render_utils";
 import { isObservationsCheck } from "../../lib/data_utils.ts";
 import { removeTaxon } from "../../lib/search_taxa.ts";
 import { pluralize } from "../../lib/utils.ts";
-import type { AppStoreType, NormalizediNatTaxonType } from "../../types/app";
+import type {
+  AppStoreType,
+  DataComponentType,
+  NormalizediNatTaxonType,
+} from "../../types/app";
 import { template } from "./template";
 import { removeTaxonIdentified } from "../../lib/search_taxa_identified.ts";
+import { iNatTaxaUrl } from "../../data/inat_data.ts";
 
 class SelectedTaxaItem extends HTMLElement {
   constructor() {
@@ -16,18 +21,20 @@ class SelectedTaxaItem extends HTMLElement {
   }
 
   connectedCallback() {
+    loggerRender("++ SelectedTaxaItem connectedCallback");
+
+    setupComponent(template, this);
+
     this.render(window.app.store);
   }
 
   async render(appStore: AppStoreType) {
-    if (!this.dataset.taxon) return;
-    let taxonType = this.dataset.type;
-    if (!taxonType) return;
+    let taxon = (this as DataComponentType).data as NormalizediNatTaxonType;
+    let type = (this as DataComponentType).type;
+    if (!taxon) return;
+    if (!type) return;
 
     loggerRender("++ SelectedTaxaItem render");
-    setupComponent(template, this);
-
-    let taxon = JSON.parse(this.dataset.taxon) as NormalizediNatTaxonType;
 
     let swatchEl = this.querySelector(".swatch") as HTMLElement;
     if (swatchEl) {
@@ -36,7 +43,8 @@ class SelectedTaxaItem extends HTMLElement {
 
     let detailsEl = this.querySelector(".details");
     if (detailsEl) {
-      let content = renderTaxonNames(taxon, appStore);
+      let url = taxon.id === 0 ? undefined : `${iNatTaxaUrl}/${taxon.id}`;
+      let content = renderTaxonNames(taxon, appStore, url);
       if (isObservationsCheck(appStore)) {
         content += `<span class="count">${pluralize(taxon.observations_count, "observation", true)}</span>`;
       } else {
@@ -54,9 +62,9 @@ class SelectedTaxaItem extends HTMLElement {
     // don't add event listener for allTaxaRecord with id = 0
     if (butttonEl && taxon.id !== 0) {
       butttonEl.addEventListener("click", async function () {
-        if (taxonType === "taxonIdentified") {
+        if (type === "taxonIdentified") {
           await removeTaxonIdentified(taxon.id, window.app.store);
-        } else if (taxonType === "taxon") {
+        } else if (type === "taxon") {
           await removeTaxon(taxon.id, window.app.store);
         }
       });

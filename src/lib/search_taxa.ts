@@ -4,6 +4,7 @@ import type {
   NormalizediNatTaxonType,
   AutoCompleteEventType,
   AppStoreType,
+  DataComponentType,
 } from "../types/app.d.ts";
 import { autocomplete_taxa_api } from "../lib/inat_api.ts";
 import type { iNatAutocompleteTaxaAPI } from "../types/inat_api";
@@ -209,9 +210,9 @@ export function renderTaxaList(appStore: AppStoreType) {
 
   listEl.innerHTML = "";
   appStore.selectedTaxa.forEach((taxon) => {
-    let templateEl = document.createElement(element);
-    templateEl.dataset.taxon = JSON.stringify(taxon);
-    templateEl.dataset.type = "taxon";
+    let templateEl = document.createElement(element) as DataComponentType;
+    templateEl.data = taxon;
+    templateEl.type = "taxon";
     listEl.appendChild(templateEl);
   });
 }

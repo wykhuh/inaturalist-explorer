@@ -1,4 +1,8 @@
-import type { NormalizediNatTaxonType, AppStoreType } from "../types/app.d.ts";
+import type {
+  NormalizediNatTaxonType,
+  AppStoreType,
+  DataComponentType,
+} from "../types/app.d.ts";
 import {
   addDefaultTaxonToStoreAndMap,
   addValueToCommaSeparatedString,
@@ -119,10 +123,9 @@ export function renderTaxaIdentifiedList(appStore: AppStoreType) {
       ? "species-basic-list-item"
       : "species-list-item";
 
-    let templateEl = document.createElement(element);
-    templateEl.dataset.taxon = JSON.stringify(taxon);
-    templateEl.dataset.type = "taxonIdentified";
-
+    let templateEl = document.createElement(element) as DataComponentType;
+    templateEl.data = taxon;
+    templateEl.type = "taxonIdentified";
     listEl.appendChild(templateEl);
   });
 }

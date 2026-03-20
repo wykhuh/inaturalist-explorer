@@ -158,8 +158,11 @@ export function bboxPlaceRecord(bbox: LngLatType[]): NormalizediNatPlaceType {
 }
 
 export const iNatObservationUrl = "https://www.inaturalist.org/observations";
-export const iNatUserUrl = "https://www.inaturalist.org/people";
+export const iNatUsersUrl = "https://www.inaturalist.org/people";
 export const iNatTaxaUrl = "https://www.inaturalist.org/taxa";
+export const iNatPlacesUrl = "https://www.inaturalist.org/places";
+export const iNatProjectsUrl = "https://www.inaturalist.org/projects";
+export const iNatPeopleUrl = "https://www.inaturalist.org/people";
 
 export const iNatObservationsYears = [
   ...range(1860, new Date().getFullYear()).reverse(),

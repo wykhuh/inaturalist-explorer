@@ -1,3 +1,4 @@
+import { iNatUsersUrl } from "../../data/inat_data";
 import { setupComponent } from "../../lib/component_utils";
 import { loggerRender } from "../../lib/logger";
 import { removeUser } from "../../lib/search_users";
@@ -6,7 +7,11 @@ import { removeUserIdentifier } from "../../lib/search_users_identifiers";
 import { removeWithoutUser } from "../../lib/search_without_users";
 import { removeWithoutUserIdentifier } from "../../lib/search_without_users_identifiers";
 import { renderSelectedCounts } from "../../lib/selected_items_utils";
-import type { AppStoreType, NormalizediNatUserType } from "../../types/app";
+import type {
+  AppStoreType,
+  DataComponentType,
+  NormalizediNatUserType,
+} from "../../types/app";
 import { template } from "./template";
 
 class SelectedUsersItem extends HTMLElement {
@@ -15,35 +20,35 @@ class SelectedUsersItem extends HTMLElement {
   }
 
   connectedCallback() {
+    loggerRender("++ SelectedUsersItem connectedCallback");
+    setupComponent(template, this);
+
     this.render(window.app.store);
   }
 
   async render(appStore: AppStoreType) {
-    if (!this.dataset.user) return;
-    let userType = this.dataset.type;
-    if (!userType) return;
+    let user = (this as DataComponentType).data as NormalizediNatUserType;
+    let type = (this as DataComponentType).type;
+    if (!user) return;
+    if (!type) return;
 
     loggerRender("++ SelectedUsersItem render");
 
-    setupComponent(template, this);
-
-    let user = JSON.parse(this.dataset.user) as NormalizediNatUserType;
     let nameEl = this.querySelector(".name");
     if (nameEl && user.login) {
-      let text = user.login;
-      if (user.name) {
-        text += ` (${user.name})`;
-      }
-      nameEl.textContent = text;
+      let linkEl = document.createElement("a");
+      linkEl.href = `${iNatUsersUrl}/${user.login}`;
+      linkEl.textContent = user.login;
+      nameEl.appendChild(linkEl);
     }
 
-    if (userType === "observer") {
+    if (type === "observer") {
       renderSelectedCounts(user, appStore, this, "observation");
     }
-    if (userType === "identifier") {
+    if (type === "identifier") {
       renderSelectedCounts(user, appStore, this, "identification");
     }
-    if (userType === "annotator") {
+    if (type === "annotator") {
       renderSelectedCounts(user, appStore, this, "observation");
     }
 
@@ -52,18 +57,18 @@ class SelectedUsersItem extends HTMLElement {
       butttonEl.addEventListener("click", async function () {
         if (user.id !== undefined) {
           // NOTE: update when adding selectedResource; remove user
-          if (userType === "observer") {
+          if (type === "observer") {
             await removeUser(user.id, window.app.store);
-          } else if (userType === "identifier") {
+          } else if (type === "identifier") {
             await removeUserIdentifier(user.id, window.app.store);
-          } else if (userType === "annotator") {
+          } else if (type === "annotator") {
             await removeUserAnnotator(user.id, window.app.store);
-          } else if (userType === "withoutObserver") {
+          } else if (type === "withoutObserver") {
             await removeWithoutUser(user.id, window.app.store);
-          } else if (userType === "withoutIdentifier") {
+          } else if (type === "withoutIdentifier") {
             await removeWithoutUserIdentifier(user.id, window.app.store);
           } else {
-            throw Error("need to add remove function for " + userType);
+            throw Error("need to add remove function for " + type);
           }
         }
       });

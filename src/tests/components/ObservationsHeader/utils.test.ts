@@ -33,7 +33,7 @@ beforeAll(() => {
 });
 afterEach(() => {
   server.resetHandlers();
-  window.location.search = "xxx";
+  // window.location.search = "xxx";
 });
 afterAll(() => {
   server.close();

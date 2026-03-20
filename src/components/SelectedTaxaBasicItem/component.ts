@@ -1,3 +1,4 @@
+import { iNatTaxaUrl } from "../../data/inat_data.ts";
 import { setupComponent } from "../../lib/component_utils.ts";
 import { isObservationsCheck } from "../../lib/data_utils.ts";
 import { loggerRender } from "../../lib/logger.ts";
@@ -9,7 +10,11 @@ import { removeTaxonIdentified } from "../../lib/search_taxa_identified.ts";
 import { removeWithoutTaxon } from "../../lib/search_without_taxa.ts";
 import { removeWithoutTaxonIdentified } from "../../lib/search_without_taxa_identified.ts";
 import { pluralize } from "../../lib/utils.ts";
-import type { AppStoreType, NormalizediNatTaxonType } from "../../types/app";
+import type {
+  AppStoreType,
+  DataComponentType,
+  NormalizediNatTaxonType,
+} from "../../types/app";
 import { template } from "./template";
 
 class SelectedTaxaBasicItem extends HTMLElement {
@@ -18,23 +23,26 @@ class SelectedTaxaBasicItem extends HTMLElement {
   }
 
   connectedCallback() {
+    loggerRender(`++ SelectedTaxaItem connectedCallback`);
+
+    setupComponent(template, this);
+
     this.render(window.app.store);
   }
 
   async render(appStore: AppStoreType) {
-    if (!this.dataset.taxon) return;
-    let taxonType = this.dataset.type;
-    if (!taxonType) return;
-    loggerRender(`++ SelectedTaxaItem ${taxonType} render`);
+    let taxon = (this as DataComponentType).data as NormalizediNatTaxonType;
+    let type = (this as DataComponentType).type;
+    if (!taxon) return;
+    if (!type) return;
 
-    setupComponent(template, this);
-
-    let taxon = JSON.parse(this.dataset.taxon) as NormalizediNatTaxonType;
+    loggerRender(`++ SelectedTaxaItem ${type} render`);
 
     let dataEl = this.querySelector(".data");
     if (dataEl) {
-      let content = renderTaxonNames(taxon, appStore);
-      if (["taxonIdentified", "taxon"].includes(taxonType)) {
+      let url = taxon.id === 0 ? undefined : `${iNatTaxaUrl}/${taxon.id}`;
+      let content = renderTaxonNames(taxon, appStore, url);
+      if (["taxonIdentified", "taxon"].includes(type)) {
         if (isObservationsCheck(appStore)) {
           content += `<span class="count">${pluralize(taxon.observations_count, "observation", true)}</span>`;
         } else {
@@ -54,13 +62,13 @@ class SelectedTaxaBasicItem extends HTMLElement {
     if (butttonEl && taxon.id !== 0) {
       butttonEl.addEventListener("click", async function () {
         // NOTE: update when adding selectedResource; remove taxon
-        if (taxonType === "taxonIdentified") {
+        if (type === "taxonIdentified") {
           await removeTaxonIdentified(taxon.id, window.app.store);
-        } else if (taxonType === "taxon") {
+        } else if (type === "taxon") {
           await removeTaxon(taxon.id, window.app.store);
-        } else if (taxonType === "withoutTaxon") {
+        } else if (type === "withoutTaxon") {
           await removeWithoutTaxon(taxon.id, window.app.store);
-        } else if (taxonType === "withoutTaxonIdentified") {
+        } else if (type === "withoutTaxonIdentified") {
           await removeWithoutTaxonIdentified(taxon.id, window.app.store);
         }
       });

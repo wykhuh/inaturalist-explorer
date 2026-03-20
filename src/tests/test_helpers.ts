@@ -509,6 +509,7 @@ export let losangeles: NormalizediNatPlaceType = {
   name: "Los Angeles",
   geometry: losAngelesSearchApi.results[0].record.geometry_geojson,
   bounding_box: losAngelesSearchApi.results[0].record.bounding_box_geojson,
+  slug: "los-angeles-county",
 };
 
 export let sandiego: NormalizediNatPlaceType = {
@@ -517,6 +518,7 @@ export let sandiego: NormalizediNatPlaceType = {
   display_name: "San Diego County, CA, US",
   bounding_box: sandiegoSearchApi.results[0].record.bounding_box_geojson,
   geometry: sandiegoSearchApi.results[0].record.geometry_geojson,
+  slug: "san-diego-county",
 };
 
 export let bbox = [

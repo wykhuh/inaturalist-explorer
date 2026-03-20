@@ -209,6 +209,7 @@ export type NormalizediNatPlaceType = {
   place_type_name?: string;
   observations_count?: number;
   identifications_count?: number;
+  slug?: string;
 };
 
 export type NormalizediNatProjectType = {

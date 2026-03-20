@@ -5,6 +5,7 @@ import type {
   NormalizediNatProjectType,
   AppStoreType,
   CustomGeoJSONType,
+  DataComponentType,
 } from "../types/app.d.ts";
 import { autocomplete_projects_api, getPlaceById } from "../lib/inat_api.ts";
 import type { iNatProjectsAPI } from "../types/inat_api";
@@ -176,9 +177,11 @@ export function renderProjectsList(appStore: AppStoreType) {
   listEl.innerHTML = "";
 
   appStore.selectedProjects.forEach((project) => {
-    let templateEl = document.createElement("projects-list-item");
-    templateEl.dataset.project = JSON.stringify(project);
-    templateEl.dataset.type = "project";
+    let templateEl = document.createElement(
+      "projects-list-item",
+    ) as DataComponentType;
+    templateEl.data = project;
+    templateEl.type = "project";
     listEl.appendChild(templateEl);
   });
 }

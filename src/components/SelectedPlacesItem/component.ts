@@ -1,9 +1,14 @@
+import { iNatPlacesUrl } from "../../data/inat_data.ts";
 import { setupComponent } from "../../lib/component_utils.ts";
 import { loggerRender } from "../../lib/logger.ts";
 import { removePlace } from "../../lib/search_places.ts";
 import { removeWithoutPlace } from "../../lib/search_without_places.ts";
 import { renderSelectedCounts } from "../../lib/selected_items_utils.ts";
-import type { AppStoreType, NormalizediNatPlaceType } from "../../types/app";
+import type {
+  AppStoreType,
+  DataComponentType,
+  NormalizediNatPlaceType,
+} from "../../types/app";
 import { template } from "./template";
 
 class SelectedPlacesItem extends HTMLElement {
@@ -12,23 +17,32 @@ class SelectedPlacesItem extends HTMLElement {
   }
 
   connectedCallback() {
+    loggerRender("++ SelectedPlacesItem connectedCallback");
+
+    setupComponent(template, this);
+
     this.render(window.app.store);
   }
 
   async render(appStore: AppStoreType) {
-    if (!this.dataset.place) return;
-    if (!this.dataset.type) return;
-    let type = this.dataset.type;
+    let place = (this as DataComponentType).data as NormalizediNatPlaceType;
+    let type = (this as DataComponentType).type;
+    if (!place) return;
+    if (!type) return;
 
     loggerRender("++ SelectedPlacesItem render");
 
-    setupComponent(template, this);
-
-    let place = JSON.parse(this.dataset.place) as NormalizediNatPlaceType;
-
     let titleEl = this.querySelector(".title");
+
     if (titleEl && place.name) {
-      titleEl.textContent = place.name;
+      if (place.id === 0) {
+        titleEl.textContent = place.name;
+      } else {
+        let linkEl = document.createElement("a");
+        linkEl.href = `${iNatPlacesUrl}/${place.slug}`;
+        linkEl.textContent = place.name;
+        titleEl.append(linkEl);
+      }
     }
 
     if (type === "place") {

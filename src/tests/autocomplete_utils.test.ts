@@ -402,6 +402,7 @@ describe("processAutocompletePlaces", () => {
         bounding_box:
           losAngelesSearchApi.results[0].record.bounding_box_geojson,
         place_type_name: "County",
+        slug: "los-angeles-county",
       },
       {
         display_name: "Los Angeles Area (custom), CA, US",
@@ -411,6 +412,7 @@ describe("processAutocompletePlaces", () => {
         bounding_box:
           losAngelesSearchApi.results[1].record.bounding_box_geojson,
         place_type_name: undefined,
+        slug: "greater-los-angeles-area--3",
       },
       {
         display_name: "Los Angeles & Ventura Metropolitan Areas",
@@ -420,6 +422,7 @@ describe("processAutocompletePlaces", () => {
         bounding_box:
           losAngelesSearchApi.results[2].record.bounding_box_geojson,
         place_type_name: undefined,
+        slug: "los-angeles-ventura-metropolitan-areas",
       },
     ];
     expect(results).toStrictEqual(expected);

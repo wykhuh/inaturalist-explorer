@@ -252,3 +252,8 @@ http://localhost:5173/?taxon_id=1,47126&place_id=962,829&user_id=2902070,81261&c
 ==
 
 https://api.inaturalist.org/v2/docs/
+
+==
+
+What fields must be edited through API to alter coordinates of an observation?
+https://forum.inaturalist.org/t/what-fields-must-be-edited-through-api-to-alter-coordinates-of-an-observation/42958

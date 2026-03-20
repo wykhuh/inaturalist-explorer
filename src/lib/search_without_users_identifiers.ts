@@ -1,4 +1,8 @@
-import type { NormalizediNatUserType, AppStoreType } from "../types/app.d.ts";
+import type {
+  NormalizediNatUserType,
+  AppStoreType,
+  DataComponentType,
+} from "../types/app.d.ts";
 import {
   addValueToCommaSeparatedString,
   isObservationsCheck,
@@ -65,9 +69,11 @@ export function renderWithoutUsersIdentifiersList(appStore: AppStoreType) {
 
   listEl.innerHTML = "";
   appStore.selectedWithoutUsersIdentifiers.forEach((user) => {
-    let templateEl = document.createElement("users-list-item");
-    templateEl.dataset.user = JSON.stringify(user);
-    templateEl.dataset.type = "withoutIdentifier";
+    let templateEl = document.createElement(
+      "users-list-item",
+    ) as DataComponentType;
+    templateEl.data = user;
+    templateEl.type = "withoutIdentifier";
     listEl.appendChild(templateEl);
   });
 }

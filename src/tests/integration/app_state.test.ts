@@ -168,12 +168,14 @@ afterAll(() => {
 describe("placeSelectedHandler", () => {
   test(`add los angeles; add san diego`, async () => {
     let store = structuredClone(mapStore);
+    let LosAngeles = structuredClone(losangeles);
+    let SanDiego = structuredClone(sandiego);
 
     expectEmpytMap(store);
 
     await initPopulateStore(store, decodeAppUrl("", "/"));
     await initRenderMap(store);
-    await placeSelectedHandler(losangeles, "los", store);
+    await placeSelectedHandler(LosAngeles, "los", store);
 
     let allTaxaCount = allTaxa.observations_count;
     expect(leafletVisibleLayers(store)).toStrictEqual([
@@ -188,18 +190,18 @@ describe("placeSelectedHandler", () => {
     let expectedParams1 = {
       ...defaultParams,
       colors: iNatOrange,
-      place_id: losangeles.id.toString(),
+      place_id: LosAngeles.id.toString(),
       taxon_id: allTaxa.id.toString(),
       per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams1);
     expect(window.location.search).toBe(
-      `?place_id=${losangeles.id}&${defaultQuery}&per_page=${perPage}`,
+      `?place_id=${LosAngeles.id}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount * 0.6);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaCount * 0.6);
 
-    await placeSelectedHandler(sandiego, "san", store);
+    await placeSelectedHandler(SanDiego, "san", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -215,13 +217,13 @@ describe("placeSelectedHandler", () => {
     let expectedParams2 = {
       ...defaultParams,
       colors: iNatOrange,
-      place_id: `${losangeles.id},${sandiego.id}`,
+      place_id: `${LosAngeles.id},${SanDiego.id}`,
       taxon_id: allTaxa.id.toString(),
       per_page: perPage,
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?place_id=${losangeles.id},${sandiego.id}&${defaultQuery}&per_page=${perPage}`,
+      `?place_id=${LosAngeles.id},${SanDiego.id}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaCount * 0.6);
@@ -236,9 +238,11 @@ describe("withoutPlaceSelectedHandler", () => {
     let losangeles1 = structuredClone(losangeles);
     delete losangeles1.bounding_box;
     delete losangeles1.geometry;
+    delete losangeles1.observations_count;
     let sandiego1 = structuredClone(sandiego);
     delete sandiego1.bounding_box;
     delete sandiego1.geometry;
+    delete sandiego1.observations_count;
 
     expectEmpytMap(store);
 
@@ -257,12 +261,12 @@ describe("withoutPlaceSelectedHandler", () => {
       ...defaultParams,
       per_page: perPage,
       colors: iNatOrange,
-      not_in_place: losangeles.id.toString(),
+      not_in_place: losangeles1.id.toString(),
       taxon_id: allTaxa.id.toString(),
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams1);
     expect(window.location.search).toBe(
-      `?${defaultQuery}&per_page=${perPage}&not_in_place=${losangeles.id}`,
+      `?${defaultQuery}&per_page=${perPage}&not_in_place=${losangeles1.id}`,
     );
 
     await withoutPlaceSelectedHandler(sandiego1, "san", store);
@@ -278,12 +282,12 @@ describe("withoutPlaceSelectedHandler", () => {
       ...defaultParams,
       per_page: perPage,
       colors: iNatOrange,
-      not_in_place: `${losangeles.id},${sandiego.id}`,
+      not_in_place: `${losangeles1.id},${sandiego1.id}`,
       taxon_id: allTaxa.id.toString(),
     };
     expect(store.observationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?${defaultQuery}&per_page=${perPage}&not_in_place=${losangeles.id},${sandiego.id}`,
+      `?${defaultQuery}&per_page=${perPage}&not_in_place=${losangeles1.id},${sandiego1.id}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
   });
@@ -1134,12 +1138,13 @@ describe("combos", () => {
 
   test(`add place; add boundong box;`, async () => {
     let store = structuredClone(mapStore);
+    let LosAngeles = structuredClone(losangeles);
 
     expectEmpytMap(store);
 
     await initPopulateStore(store, decodeAppUrl("", "/"));
     await initRenderMap(store);
-    await placeSelectedHandler(losangeles, "los", store);
+    await placeSelectedHandler(LosAngeles, "los", store);
 
     let allTaxaCount = allTaxa.observations_count;
     let allTaxaLACount = allTaxaCount * 0.6;
@@ -1155,12 +1160,12 @@ describe("combos", () => {
       ...defaultParams,
       per_page: perPage,
       colors: iNatOrange,
-      place_id: losangeles.id.toString(),
+      place_id: LosAngeles.id.toString(),
       taxon_id: allTaxa.id.toString(),
     };
     expect(store.observationsApiParams).toStrictEqual(params);
     expect(window.location.search).toBe(
-      `?place_id=${losangeles.id}&${defaultQuery}&per_page=${perPage}`,
+      `?place_id=${LosAngeles.id}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaLACount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaLACount);
@@ -1315,6 +1320,8 @@ describe("combos", () => {
 
   test(`add place; add bounding box; add place`, async () => {
     let store = structuredClone(mapStore);
+    let LosAngeles = structuredClone(losangeles);
+    let SanDiego = structuredClone(sandiego);
 
     expectEmpytMap(store);
 
@@ -1323,7 +1330,7 @@ describe("combos", () => {
     let allTaxaSDCount = allTaxaCount * 0.4;
     await initPopulateStore(store, decodeAppUrl("", "/"));
     await initRenderMap(store);
-    await placeSelectedHandler(losangeles, "los", store);
+    await placeSelectedHandler(LosAngeles, "los", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -1337,12 +1344,12 @@ describe("combos", () => {
       ...defaultParams,
       per_page: perPage,
       colors: iNatOrange,
-      place_id: losangeles.id.toString(),
+      place_id: LosAngeles.id.toString(),
       taxon_id: allTaxa.id.toString(),
     };
     expect(store.observationsApiParams).toStrictEqual(params);
     expect(window.location.search).toBe(
-      `?place_id=${losangeles.id}&${defaultQuery}&per_page=${perPage}`,
+      `?place_id=${LosAngeles.id}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaLACount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaLACount);
@@ -1372,7 +1379,7 @@ describe("combos", () => {
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaCount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaCount);
 
-    await placeSelectedHandler(sandiego, "san", store);
+    await placeSelectedHandler(SanDiego, "san", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -1386,13 +1393,13 @@ describe("combos", () => {
       ...defaultParams,
       per_page: perPage,
       colors: iNatOrange,
-      place_id: sandiego.id.toString(),
+      place_id: SanDiego.id.toString(),
       taxon_id: allTaxa.id.toString(),
     };
     expect(store.observationsApiParams).toStrictEqual(params2);
 
     expect(window.location.search).toBe(
-      `?place_id=${sandiego.id}&${defaultQuery}&per_page=${perPage}`,
+      `?place_id=${SanDiego.id}&${defaultQuery}&per_page=${perPage}`,
     );
     expect(store.selectedTaxa[0].observations_count).toBe(allTaxaSDCount);
     expect(store.selectedPlaces[0].observations_count).toBe(allTaxaSDCount);
@@ -1403,6 +1410,8 @@ describe("placeSelectedHandler with identifications", () => {
   test(`add los angeles; add san diego`, async () => {
     let store = structuredClone(mapStore);
     store.record_type == "identifications";
+    let LosAngeles = structuredClone(losangeles);
+    let SanDiego = structuredClone(sandiego);
 
     let count = allTaxaIdentification.identifications_count;
 
@@ -1411,7 +1420,7 @@ describe("placeSelectedHandler with identifications", () => {
     await initPopulateStore(store, decodeAppUrl("", "/identifications/"));
     await initRenderMap(store);
 
-    await placeSelectedHandler(losangeles, "los", store);
+    await placeSelectedHandler(LosAngeles, "los", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -1425,16 +1434,16 @@ describe("placeSelectedHandler with identifications", () => {
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams1 = {
       per_page: perPage,
-      place_id: losangeles.id.toString(),
+      place_id: LosAngeles.id.toString(),
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams1);
     expect(window.location.search).toBe(
-      `?place_id=${losangeles.id}&per_page=${perPage}`,
+      `?place_id=${LosAngeles.id}&per_page=${perPage}`,
     );
 
-    await placeSelectedHandler(sandiego, "san", store);
+    await placeSelectedHandler(SanDiego, "san", store);
 
     expect(leafletVisibleLayers(store)).toStrictEqual([
       basemapLabel_osm,
@@ -1450,13 +1459,13 @@ describe("placeSelectedHandler with identifications", () => {
     expect(store.observationsApiParams).toStrictEqual({ ...defaultParams });
     let expectedParams2 = {
       per_page: perPage,
-      place_id: `${losangeles.id},${sandiego.id}`,
+      place_id: `${LosAngeles.id},${SanDiego.id}`,
       taxon_id: allTaxa.id.toString(),
       colors: iNatOrange,
     };
     expect(store.identificationsApiParams).toStrictEqual(expectedParams2);
     expect(window.location.search).toBe(
-      `?place_id=${losangeles.id},${sandiego.id}&per_page=${perPage}`,
+      `?place_id=${LosAngeles.id},${SanDiego.id}&per_page=${perPage}`,
     );
   });
 });
@@ -1942,6 +1951,7 @@ describe("removePlace", () => {
 
   test("add taxon; add place; remove place", async () => {
     let store = structuredClone(mapStore);
+    let LosAngeles = structuredClone(losangeles);
 
     expectEmpytMap(store);
 
@@ -1962,18 +1972,18 @@ describe("removePlace", () => {
     );
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount);
 
-    await placeSelectedHandler(losangeles, "los", store);
+    await placeSelectedHandler(LosAngeles, "los", store);
 
     let params1 = {
       ...defaultParams,
       per_page: perPage,
       colors: colors[0],
-      place_id: losangeles.id.toString(),
+      place_id: LosAngeles.id.toString(),
       taxon_id: life().id.toString(),
     };
     expect(store.observationsApiParams).toStrictEqual(params1);
     expect(window.location.search).toBe(
-      `?taxon_id=${life().id}&place_id=${losangeles.id}` +
+      `?taxon_id=${life().id}&place_id=${LosAngeles.id}` +
         `&${defaultQuery}` +
         `&per_page=${perPage}`,
     );
@@ -1981,7 +1991,7 @@ describe("removePlace", () => {
     expect(store.selectedTaxa[0].observations_count).toBe(lifeCount * 0.6);
     expect(store.selectedPlaces[0].observations_count).toBe(lifeCount * 0.6);
 
-    await removePlace(losangeles.id, store);
+    await removePlace(LosAngeles.id, store);
 
     let params2 = {
       ...defaultParams,
@@ -2058,11 +2068,9 @@ describe("removeWithoutPlace", () => {
     let store = structuredClone(mapStore);
 
     let LosAngeles = structuredClone(losangeles);
-    delete LosAngeles.observations_count;
     delete LosAngeles.geometry;
     delete LosAngeles.bounding_box;
     let SanDiego = structuredClone(sandiego);
-    delete SanDiego.observations_count;
     delete SanDiego.geometry;
     delete SanDiego.bounding_box;
 

@@ -3,7 +3,7 @@ import {
   annotationsTerms,
   annotationsValues,
   iNatTaxaUrl,
-  iNatUserUrl,
+  iNatUsersUrl,
 } from "../data/inat_data.ts";
 import type {
   Annotation,
@@ -42,7 +42,7 @@ export function renderUser(user: ObservationUser) {
 }
 
 export function formatUserName(user: ObservationUser) {
-  return html`<a class="user-name" href="${iNatUserUrl}/${user.login}"
+  return html`<a class="user-name" href="${iNatUsersUrl}/${user.login}"
     >${user.login}</a
   >`;
 }
@@ -60,7 +60,7 @@ export function formatAvatar(user: ObservationUser) {
     image = person2;
   }
 
-  let link = `<a class="avatar" href="${iNatUserUrl}/${user.login}">${image}</a>`;
+  let link = `<a class="avatar" href="${iNatUsersUrl}/${user.login}">${image}</a>`;
   let tooltip = formatTooltip("tp-avatar", link, user.login);
   return tooltip;
 }

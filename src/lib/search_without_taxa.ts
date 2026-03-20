@@ -1,4 +1,8 @@
-import type { NormalizediNatTaxonType, AppStoreType } from "../types/app.d.ts";
+import type {
+  NormalizediNatTaxonType,
+  AppStoreType,
+  DataComponentType,
+} from "../types/app.d.ts";
 import {
   addValueToCommaSeparatedString,
   formatTaxonName,
@@ -78,9 +82,11 @@ export function renderWithoutTaxaList(appStore: AppStoreType) {
 
   listEl.innerHTML = "";
   appStore.selectedWithoutTaxa.forEach((taxon) => {
-    let templateEl = document.createElement("species-basic-list-item");
-    templateEl.dataset.taxon = JSON.stringify(taxon);
-    templateEl.dataset.type = "withoutTaxon";
+    let templateEl = document.createElement(
+      "species-basic-list-item",
+    ) as DataComponentType;
+    templateEl.data = taxon;
+    templateEl.type = "withoutTaxon";
     listEl.appendChild(templateEl);
   });
 }

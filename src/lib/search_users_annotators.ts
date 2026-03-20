@@ -1,4 +1,7 @@
-import type { NormalizediNatUserType } from "../types/app.d.ts";
+import type {
+  DataComponentType,
+  NormalizediNatUserType,
+} from "../types/app.d.ts";
 import type { AppStoreType } from "../types/app";
 import {
   addValueToCommaSeparatedString,
@@ -75,9 +78,11 @@ export function renderUsersAnnotatorsList(appStore: AppStoreType) {
 
   listEl.innerHTML = "";
   appStore.selectedUsersAnnotators.forEach((user) => {
-    let templateEl = document.createElement("users-list-item");
-    templateEl.dataset.user = JSON.stringify(user);
-    templateEl.dataset.type = "annotator";
+    let templateEl = document.createElement(
+      "users-list-item",
+    ) as DataComponentType;
+    templateEl.data = user;
+    templateEl.type = "annotator";
     listEl.appendChild(templateEl);
   });
 }

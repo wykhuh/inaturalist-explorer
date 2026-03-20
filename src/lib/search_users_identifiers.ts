@@ -1,4 +1,8 @@
-import type { NormalizediNatUserType, AppStoreType } from "../types/app.d.ts";
+import type {
+  NormalizediNatUserType,
+  AppStoreType,
+  DataComponentType,
+} from "../types/app.d.ts";
 import {
   addValueToCommaSeparatedString,
   isObservationsCheck,
@@ -91,9 +95,11 @@ export function renderUsersIdentifiersList(appStore: AppStoreType) {
   listEl.innerHTML = "";
   if (isObservationsCheck(appStore)) {
     appStore.selectedUsersIdentifiers.forEach((user) => {
-      let templateEl = document.createElement("users-list-item");
-      templateEl.dataset.user = JSON.stringify(user);
-      templateEl.dataset.type = "identifier";
+      let templateEl = document.createElement(
+        "users-list-item",
+      ) as DataComponentType;
+      templateEl.data = user;
+      templateEl.type = "identifier";
       listEl.appendChild(templateEl);
     });
   } else {

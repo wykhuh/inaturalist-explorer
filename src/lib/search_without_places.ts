@@ -1,4 +1,8 @@
-import type { NormalizediNatPlaceType, AppStoreType } from "../types/app.d.ts";
+import type {
+  NormalizediNatPlaceType,
+  AppStoreType,
+  DataComponentType,
+} from "../types/app.d.ts";
 import {
   addValueToCommaSeparatedString,
   getResourceApiParams,
@@ -33,6 +37,7 @@ export async function withoutPlaceSelectedHandler(
     id: selection.id,
     name: selection.name,
     display_name: selection.display_name,
+    slug: selection.slug,
   };
   appStore.selectedWithoutPlaces = [...appStore.selectedWithoutPlaces, place];
   resetPageNumber(appStore);
@@ -64,9 +69,11 @@ export function renderWithoutPlacesList(appStore: AppStoreType) {
 
   listEl.innerHTML = "";
   appStore.selectedWithoutPlaces.forEach((place) => {
-    let templateEl = document.createElement("places-list-item");
-    templateEl.dataset.place = JSON.stringify(place);
-    templateEl.dataset.type = "withoutPlace";
+    let templateEl = document.createElement(
+      "places-list-item",
+    ) as DataComponentType;
+    templateEl.data = place;
+    templateEl.type = "withoutPlace";
 
     listEl.appendChild(templateEl);
   });

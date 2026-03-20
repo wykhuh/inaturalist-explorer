@@ -6,6 +6,7 @@ import type {
   AppStoreType,
   CustomGeoJSONType,
   PlaceTypesKey,
+  DataComponentType,
 } from "../types/app.d.ts";
 import { autocomplete_places_api } from "../lib/inat_api.ts";
 import type { iNatSearchAPI } from "../types/inat_api";
@@ -83,6 +84,7 @@ export function processAutocompletePlaces(
       bounding_box: item.record.bounding_box_geojson,
       id: item.record.id,
       place_type_name: typeName,
+      slug: item.record.slug,
     };
   });
 }
@@ -110,6 +112,7 @@ export async function placeSelectedHandler(
 ) {
   let isObservations = isObservationsCheck(appStore);
 
+  let place = selection;
   let map = appStore.map.map;
   let layer;
   if (map) {
@@ -143,14 +146,6 @@ export async function placeSelectedHandler(
   }
 
   // save place to store
-  let place = {
-    id: selection.id,
-    name: selection.name,
-    display_name: selection.display_name,
-    bounding_box: selection.bounding_box,
-    geometry: selection.geometry,
-  };
-
   let resourceApiParams = getResourceApiParams(isObservations);
   appStore.selectedPlaces = [...appStore.selectedPlaces, place];
   resetPageNumber(appStore);
@@ -201,15 +196,11 @@ export function renderPlacesList(appStore: AppStoreType) {
       return;
     }
 
-    let templateEl = document.createElement("places-list-item");
-    templateEl.dataset.place = JSON.stringify({
-      id: place.id,
-      name: place.name,
-      display_name: place.display_name,
-      observations_count: place.observations_count,
-      identifications_count: place.identifications_count,
-    });
-    templateEl.dataset.type = "place";
+    let templateEl = document.createElement(
+      "places-list-item",
+    ) as DataComponentType;
+    templateEl.data = place;
+    templateEl.type = "place";
 
     listEl.appendChild(templateEl);
   });
