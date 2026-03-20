@@ -187,7 +187,7 @@ export function getColor(appStore: AppStoreType, colorArray: string[]) {
     color = colorArray[0];
   } else {
     let index = colorArray.indexOf(color);
-    color = colorArray[(index + 1) % colorArray.length];
+    color = getColorByIndex(index, colorArray);
   }
 
   return color;
