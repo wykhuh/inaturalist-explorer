@@ -21,8 +21,8 @@ import type {
   PopularFieldForGraph,
 } from "../../types/app";
 import type { iNatObservationsHistogramResult } from "../../types/inat_api";
-
 import { formatTaxonName } from "../../lib/data_utils";
+import { getColorByIndex } from "../../lib/map_colors_utils";
 
 Chart.register(
   Colors,
@@ -103,13 +103,13 @@ const MONTHS = [
 ];
 
 export const CHART_COLORS = {
-  red: "rgb(255, 99, 132)",
-  orange: "rgb(255, 159, 64)",
-  yellow: "rgb(255, 205, 86)",
-  green: "rgb(75, 192, 192)",
-  blue: "rgb(54, 162, 235)",
-  purple: "rgb(153, 102, 255)",
-  grey: "rgb(201, 203, 207)",
+  blue: "rgba(54, 162, 235, 1)",
+  red: "rgba(255, 99, 132, 1)",
+  orange: "rgba(255, 159, 64, 1)",
+  yellow: "rgba(255, 205, 86, 1)",
+  green: "rgba(75, 192, 192, 1)",
+  purple: "rgba(153, 102, 255, 1)",
+  grey: "rgba(201, 203, 207, 1)",
 };
 
 type TimeUnits = "day" | "week" | "month" | "quarter" | "year";
@@ -122,42 +122,28 @@ type ChartDataConfig = {
   cubicInterpolationMode?: "monotone";
   tension?: number;
   backgroundColor?: string;
+  borderDash?: [number, number];
 };
 
 function createLineGraph(
   containerEl: HTMLCanvasElement,
   data: number[][],
-  labels: string[] | number[] | Date[],
-  appStore: AppStoreType,
-  selectedResource: AppStoreSelectedResourcesKeysType | undefined | string[],
+  labels: string[],
+  colors: string[],
+  borderDash: [number, number][],
+  xAxisLabels: string[] | number[] | Date[],
   chartTitle = "",
   timeUnit: TimeUnits | null,
 ) {
   let dataSets = data.map((datum, i) => {
     let config: ChartDataConfig = {
       data: datum,
+      borderColor: colors[i],
+      backgroundColor: colors[i] ? colors[i].replace("1)", ".5)") : undefined,
+      label: labels[i],
+      borderDash: borderDash[i],
       cubicInterpolationMode: "monotone",
     };
-
-    if (
-      selectedResource === "selectedTaxa" &&
-      appStore.selectedTaxa.length > 0
-    ) {
-      let taxon = appStore.selectedTaxa[i];
-      let { title, subtitle } = formatTaxonName(taxon, appStore);
-      let name = subtitle ? `${title} (${subtitle})` : title;
-      config.label = name;
-      config.borderColor = taxon.color;
-      config.backgroundColor = taxon.color;
-    } else if (
-      selectedResource === "selectedPlaces" &&
-      appStore.selectedPlaces.length > 0
-    ) {
-      let place = appStore.selectedPlaces[i];
-      config.label = place.name;
-    } else if (Array.isArray(selectedResource)) {
-      config.label = selectedResource[i];
-    }
     return config;
   });
 
@@ -166,7 +152,7 @@ function createLineGraph(
     options: {
       responsive: true,
       plugins: {
-        legend: { display: selectedResource !== undefined },
+        legend: { display: true },
         title: {
           display: true,
           text: chartTitle,
@@ -203,7 +189,7 @@ function createLineGraph(
       },
     },
     data: {
-      labels: labels,
+      labels: xAxisLabels,
       datasets: dataSets,
     },
   };
@@ -231,63 +217,73 @@ export function createGraphs(
   let id = `graph-${Math.round(new Date().getTime() * Math.random())}`;
   canvasEl.id = id;
 
-  if (results[0].month_of_year) {
-    let combinedValues = [] as number[][];
-    let combinedLabels = [] as string[];
-    results.forEach((result) => {
-      if (result.month_of_year) {
-        let { values, labels } = formatMonthOfYearData(result.month_of_year);
-        combinedValues.push(values);
-        combinedLabels = labels;
-      }
+  let colors: string[] = [];
+  let labels: string[] = [];
+  let borderDash: [number, number][] = [];
+  if (selectedResource === "selectedTaxa") {
+    appStore.selectedTaxa.forEach((taxon) => {
+      colors.push(`${taxon.color}`);
+
+      let { title, subtitle } = formatTaxonName(taxon, appStore);
+      let name = subtitle ? `${title} (${subtitle})` : title;
+      labels.push(`${name}`);
     });
-    // canvasEl = document.getElementById("myChart");
+  } else if (selectedResource === "selectedPlaces") {
+    appStore.selectedPlaces.map((place) => {
+      labels.push(`${place.name}`);
+    });
+  }
+
+  if (results[0].month_of_year) {
+    let combinedXAxisLabels = formatMonthOfYearData(
+      results[0].month_of_year,
+    ).labels;
+    let combinedValues = results.map((result) => {
+      // @ts-ignore
+      return formatMonthOfYearData(result.month_of_year).values;
+    });
+
     createLineGraph(
       canvasEl,
       combinedValues,
-      combinedLabels,
-      appStore,
-      selectedResource,
+      labels,
+      colors,
+      borderDash,
+      combinedXAxisLabels,
       "Observations by month/year",
       null,
     );
   } else if (results[0].year) {
-    let combinedValues = [] as number[][];
-    let combinedLabels = [] as Date[];
-    results.forEach((result) => {
-      if (result.year) {
-        let { values, labels } = formatYearData(result.year);
-        combinedValues.push(values);
-        combinedLabels = labels;
-      }
+    let combinedXAxisLabels = formatYearData(results[0].year).labels;
+    let combinedValues = results.map((result) => {
+      // @ts-ignore
+      return formatYearData(result.year).values;
     });
 
     createLineGraph(
       canvasEl,
       combinedValues,
-      combinedLabels,
-      appStore,
-      selectedResource,
+      labels,
+      colors,
+      borderDash,
+      combinedXAxisLabels,
       "Observations by year",
       "year",
     );
   } else if (results[0].month) {
-    let combinedValues = [] as number[][];
-    let combinedLabels = [] as Date[];
-    results.forEach((result) => {
-      if (result.month) {
-        let { values, labels } = formatMonthData(result.month);
-        combinedValues.push(values);
-        combinedLabels = labels;
-      }
+    let combinedXAxisLabels = formatMonthData(results[0].month).labels;
+    let combinedValues = results.map((result) => {
+      // @ts-ignore
+      return formatMonthData(result.month).values;
     });
 
     createLineGraph(
       canvasEl,
       combinedValues,
-      combinedLabels,
-      appStore,
-      selectedResource,
+      labels,
+      colors,
+      borderDash,
+      combinedXAxisLabels,
       "Observations by month",
       "month",
     );
@@ -296,19 +292,28 @@ export function createGraphs(
   return canvasEl;
 }
 
-export function createPopularFieldsGraphs(
+export function createPopularFieldsGraphsForTaxon(
   result: PopularFieldForGraph,
-  appStore: AppStoreType,
 ) {
   let containerEl = document.createElement("canvas");
   let id = `graph-${Math.round(new Date().getTime() * Math.random())}`;
   containerEl.id = id;
+
+  let colors: string[] = [];
+  let borderDash: [number, number][] = [];
+
+  let labels = result.annotations
+    .map((a) => a.controlled_value.label)
+    .concat(["Unannotated"]);
+
+  let combinedXAxisLabels = formatMonthOfYearData(
+    result.annotations[0].month_of_year,
+  ).labels;
+
   let combinedValues = [] as number[][];
-  let combinedLabels = [] as string[];
   result.annotations.forEach((annotation) => {
-    let { values, labels } = formatMonthOfYearData(annotation.month_of_year);
+    let { values } = formatMonthOfYearData(annotation.month_of_year);
     combinedValues.push(values);
-    combinedLabels = labels;
   });
   let { values } = formatMonthOfYearData(result.unannotated.month_of_year);
   combinedValues.push(values);
@@ -316,12 +321,60 @@ export function createPopularFieldsGraphs(
   createLineGraph(
     containerEl,
     combinedValues,
-    combinedLabels,
-    appStore,
-    result.annotations
-      .map((a) => a.controlled_value.label)
-      .concat(["Unannotated"]),
+    labels,
+    colors,
+    borderDash,
+    combinedXAxisLabels,
     `${result.taxon_name} - ${result.controlled_attribute.label}`,
+    null,
+  );
+
+  return containerEl;
+}
+
+export function createPopularFieldsGraphs(results: PopularFieldForGraph[]) {
+  let containerEl = document.createElement("canvas");
+  let id = `graph-${Math.round(new Date().getTime() * Math.random())}`;
+  containerEl.id = id;
+
+  let chartColors = Object.values(CHART_COLORS);
+  let colors: string[] = [];
+  let labels: string[] = [];
+  let borderDash: [number, number][] = [];
+
+  results.forEach((result, i) => {
+    result.annotations.forEach((a, j) => {
+      borderDash.push([i * 2, i * 2]);
+      colors.push(getColorByIndex(j - 1, chartColors));
+      labels.push(`${a.controlled_value.label} - ${result.taxon_name}`);
+    });
+
+    // add not annotated data
+    borderDash.push([i * 2, i * 2]);
+    colors.push(getColorByIndex(result.annotations.length - 1, chartColors));
+    labels.push(`Not annotated - ${result.taxon_name}`);
+  });
+
+  let combinedValues = [] as number[][];
+  let combinedXAxisLabels = [] as string[];
+  results.forEach((result) => {
+    result.annotations.forEach((annotation) => {
+      let { values, labels } = formatMonthOfYearData(annotation.month_of_year);
+      combinedValues.push(values);
+      combinedXAxisLabels = labels;
+    });
+    let { values } = formatMonthOfYearData(result.unannotated.month_of_year);
+    combinedValues.push(values);
+  });
+
+  createLineGraph(
+    containerEl,
+    combinedValues,
+    labels,
+    colors,
+    borderDash,
+    combinedXAxisLabels,
+    ` ${results[0].controlled_attribute.label}`,
     null,
   );
 

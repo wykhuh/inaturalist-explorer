@@ -42,25 +42,24 @@ import {
 } from "../../data/api/histogram";
 import { defaultColorScheme } from "../../lib/map_colors_utils";
 import {
+  // popular_fields_basic_milkweed,
+  // popular_fields_basic_monarch,
+  // popular_fields_milkweed,
+  // popular_fields_monarch,
   popular_fields_basic_canyon_gooseberry,
   popular_fields_basic_hillside_gooseberry,
-  popular_fields_basic_milkweed,
-  popular_fields_basic_monarch,
   popular_fields_canyon_gooseberry,
   popular_fields_hillside_gooseberry,
-  popular_fields_milkweed,
-  popular_fields_monarch,
-  processedPopularFields,
 } from "../../data/api/popular_fields";
-import { createGraphs, createPopularFieldsGraphs } from "./charts_utils";
+import {
+  createGraphs,
+  createPopularFieldsGraphs,
+  createPopularFieldsGraphsForTaxon,
+} from "./charts_utils";
 import { calculateObservationsCount } from "../../lib/count_utils";
 import { setSelectedOption } from "../../lib/form_utils";
 import { updateAppUrl } from "../../lib/utils";
-import {
-  annotationsTerms,
-  annotationsTermsAndValues,
-  annotationsValues,
-} from "../../data/inat_data";
+import { annotationsValues } from "../../data/inat_data";
 
 // ===============
 // UI
@@ -103,12 +102,19 @@ export async function renderGraphs(
   } else {
     data = cacheData.popularFields[category];
     if (data) {
-      data.forEach((datum) => {
-        let graph = createPopularFieldsGraphs(datum, appStore);
+      if (graphsMetadata.groupBy === "species") {
+        let graph = createPopularFieldsGraphs(data);
         if (graph) {
           dataContainer.appendChild(graph);
         }
-      });
+      } else {
+        data.forEach((datum) => {
+          let graph = createPopularFieldsGraphsForTaxon(datum);
+          if (graph) {
+            dataContainer.appendChild(graph);
+          }
+        });
+      }
     }
   }
 }
@@ -121,8 +127,8 @@ export function disablePopularFieldsOptions(
   let graphMetadata = appStore.viewMetadata.observations_observations.graphs;
   if (!graphMetadata) return;
 
-  // disable popular fields options if group by places or species
-  if (target.value === "places" || target.value === "species") {
+  // disable popular fields options if group by places
+  if (target.value === "places") {
     // deselect current option if it is popular field
     let currentPopularFieldOption =
       componentContext.querySelector<HTMLOptionElement>(
@@ -208,14 +214,14 @@ export function disableGroupByForSelectedResources(
   if (!placesOption) return;
 
   // enable species option if there are selected taxa
-  if (appStore.selectedTaxa.length < 2 || appStore.selectedTaxa[0].id < 2) {
+  if (appStore.selectedTaxa.length < 2) {
     speciesOption.disabled = true;
   } else {
     speciesOption.disabled = false;
   }
 
   // enable places option if there are selected places
-  if (appStore.selectedPlaces.length < 2 || appStore.selectedPlaces[0].id < 2) {
+  if (appStore.selectedPlaces.length < 2 || isPopularFieldCategory(appStore)) {
     placesOption.disabled = true;
   } else {
     placesOption.disabled = false;
@@ -336,9 +342,7 @@ export async function fetchGraphData(appStore: AppStoreType) {
         // add taxon data
         let { title, subtitle } = formatTaxonName(taxon, appStore);
         fieldsData.taxon_id = taxon.id;
-        if (title) {
-          fieldsData.taxon_name = subtitle ? `${title} (${subtitle})` : title;
-        }
+        fieldsData.taxon_name = title || subtitle || "Unknown";
 
         data.push(fieldsData);
       }

@@ -83,16 +83,18 @@ class SubviewObservationsGraphs extends HTMLElement {
     }
 
     if (target.id === "graphs-group-by") {
-      let targetSelect = target as HTMLSelectElement;
-      disablePopularFieldsOptions(targetSelect, window.app.store, this);
-
       const data = new FormData(this.graphForm);
       updateGraphs(data, window.app.store, this);
+
+      let targetSelect = target as HTMLSelectElement;
+      disablePopularFieldsOptions(targetSelect, window.app.store, this);
     }
 
     if (target.id === "graphs-category") {
       const data = new FormData(this.graphForm);
       updateGraphs(data, window.app.store, this);
+
+      disableGroupByForSelectedResources(window.app.store, this);
     }
   }
 
