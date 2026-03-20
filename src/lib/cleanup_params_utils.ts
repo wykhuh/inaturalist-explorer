@@ -108,11 +108,6 @@ export function cleanupGraphs(
 ) {
   let params = cleanupObervationsParamsObject(appStore, recordType);
 
-  // set place to US if place not set
-  if (params.get("place_id") === null) {
-    params.set("place_id", `1`);
-  }
-
   return params;
 }
 
