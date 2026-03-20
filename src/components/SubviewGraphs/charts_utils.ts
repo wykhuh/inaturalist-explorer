@@ -152,7 +152,7 @@ function createLineGraph(
     options: {
       responsive: true,
       plugins: {
-        legend: { display: true },
+        legend: { display: labels.length > 0 },
         title: {
           display: true,
           text: chartTitle,
