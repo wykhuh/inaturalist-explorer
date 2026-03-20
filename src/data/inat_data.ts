@@ -253,3 +253,52 @@ export const geoprivacyValues = [
   "private",
 ];
 export const obscurationValues = ["obscured", "private", "none"];
+
+export const annotationsTermsAndValues = {
+  1: {
+    2: "Adult",
+    3: "Teneral",
+    4: "Pupa",
+    5: "Nymph",
+    6: "Larva",
+    7: "Egg",
+    8: "Juvenile",
+    16: "Subimago",
+  },
+  9: {
+    10: "Female",
+    11: "Male",
+    20: "Cannot Be Determined",
+  },
+  12: {
+    13: "Flowers",
+    14: "Fruits or Seeds",
+    15: "Flower Buds",
+    21: "No Flowers or Fruits",
+  },
+  17: {
+    18: "Alive",
+    19: "Dead",
+    20: "Cannot Be Determined",
+  },
+  22: {
+    23: "Feather",
+    24: "Organism",
+    25: "Scat",
+    26: "Track",
+    27: "Bone",
+    28: "Molt",
+    29: "Gall",
+    30: "Egg",
+    31: "Hair",
+    32: "Leafmine",
+    35: "Construction",
+  },
+  33: { 34: "Not Established" },
+  36: {
+    37: "Breaking Leaf Buds",
+    38: "Green Leaves",
+    39: "Colored Leaves",
+    40: "No Live Leaves",
+  },
+};

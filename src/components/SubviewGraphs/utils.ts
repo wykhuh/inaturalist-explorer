@@ -42,14 +42,25 @@ import {
 } from "../../data/api/histogram";
 import { defaultColorScheme } from "../../lib/map_colors_utils";
 import {
+  popular_fields_basic_canyon_gooseberry,
+  popular_fields_basic_hillside_gooseberry,
   popular_fields_basic_milkweed,
   popular_fields_basic_monarch,
+  popular_fields_canyon_gooseberry,
+  popular_fields_hillside_gooseberry,
+  popular_fields_milkweed,
+  popular_fields_monarch,
   processedPopularFields,
 } from "../../data/api/popular_fields";
 import { createGraphs, createPopularFieldsGraphs } from "./charts_utils";
 import { calculateObservationsCount } from "../../lib/count_utils";
 import { setSelectedOption } from "../../lib/form_utils";
 import { updateAppUrl } from "../../lib/utils";
+import {
+  annotationsTerms,
+  annotationsTermsAndValues,
+  annotationsValues,
+} from "../../data/inat_data";
 
 // ===============
 // UI
@@ -452,8 +463,8 @@ function devCachedGraphData(
   };
 
   let popularFieldsOptions = formatPopularFieldsOptions([
-    popular_fields_basic_milkweed,
-    popular_fields_basic_monarch,
+    popular_fields_basic_canyon_gooseberry,
+    popular_fields_basic_hillside_gooseberry,
   ]);
   appStore.cacheData.observations.popularFieldsOptions = popularFieldsOptions;
 
@@ -505,7 +516,20 @@ function devCachedGraphData(
       cacheData.graphs.month = [histograph_month.results];
     }
   }
-  cacheData.popularFields = processedPopularFields;
+
+  let data1 = structuredClone(
+    popular_fields_canyon_gooseberry,
+  ) as NormalizedPopularFields;
+  data1.taxon_id = 1;
+  data1.taxon_name = "milkweed";
+
+  let data2 = structuredClone(
+    popular_fields_hillside_gooseberry,
+  ) as NormalizedPopularFields;
+  data2.taxon_id = 2;
+  data2.taxon_name = "monarch";
+
+  cacheData.popularFields = formatPopularFields([data1, data2]);
 }
 
 export function hasGraphCache(
@@ -622,6 +646,9 @@ export function formatPopularFieldsOptions(data: iNatPopularFieldsBasicAPI[]) {
 }
 
 export function formatPopularFields(data: NormalizedPopularFields[]) {
+  // keep track of all term value ids for each term id
+  let termIdValueIds = createTermIdValueIds(data);
+
   let popularFields = {} as PopularFieldsByTermId;
   data.forEach((datum) => {
     datum.results.forEach((result) => {
@@ -630,32 +657,94 @@ export function formatPopularFields(data: NormalizedPopularFields[]) {
         popularFields[term_id] = [];
       }
     });
-    Object.keys(popularFields).forEach((term_id) => {
-      let annotations: PopularFieldAnnotation[] = [];
-      let controlled_attribute = {} as ControlledAttributeBasic;
-      datum.results.forEach((result) => {
-        if (result.controlled_attribute.id === Number(term_id)) {
-          annotations.push({
-            controlled_value: result.controlled_value,
-            month_of_year: result.month_of_year,
-            count: result.count,
+
+    Object.keys(popularFields)
+      .map((term_id) => Number(term_id))
+      .forEach((term_id) => {
+        let missingValuesIds = new Set([...termIdValueIds[term_id]]);
+
+        let annotations: PopularFieldAnnotation[] = [];
+        let controlled_attribute = {} as ControlledAttributeBasic;
+        datum.results.forEach((result) => {
+          if (result.controlled_attribute.id === Number(term_id)) {
+            missingValuesIds.delete(result.controlled_value.id);
+
+            annotations.push({
+              controlled_value: result.controlled_value,
+              month_of_year: result.month_of_year,
+              count: result.count,
+            });
+            controlled_attribute = result.controlled_attribute;
+          }
+        });
+
+        // add record with zero values so all charts have the same
+        // term values
+        if (missingValuesIds.size != termIdValueIds[term_id].size) {
+          missingValuesIds.forEach((id) => {
+            annotations.push(createMissingChartData(id));
           });
-          controlled_attribute = result.controlled_attribute;
+        }
+
+        // sort graph data by term value id
+        annotations = annotations.sort(
+          (a, b) => a.controlled_value.id - b.controlled_value.id,
+        );
+
+        if (annotations.length > 0) {
+          popularFields[Number(term_id)].push({
+            annotations: annotations,
+            unannotated: datum.unannotated[term_id],
+            controlled_attribute: controlled_attribute,
+            taxon_id: datum.taxon_id,
+            taxon_name: datum.taxon_name,
+          });
         }
       });
-      if (annotations.length > 0) {
-        popularFields[Number(term_id)].push({
-          annotations: annotations,
-          unannotated: datum.unannotated[term_id],
-          controlled_attribute: controlled_attribute,
-          taxon_id: datum.taxon_id,
-          taxon_name: datum.taxon_name,
-        });
-      }
-    });
   });
 
   return popularFields;
+}
+
+export function createTermIdValueIds(data: NormalizedPopularFields[]) {
+  let termIdValueIds: { [k: number]: Set<number> } = {};
+  data.forEach((datum) => {
+    datum.results.forEach((result) => {
+      let term_id = result.controlled_attribute.id;
+
+      if (termIdValueIds[term_id] === undefined) {
+        termIdValueIds[term_id] = new Set();
+      }
+      termIdValueIds[term_id].add(result.controlled_value.id);
+    });
+  });
+
+  return termIdValueIds;
+}
+
+function createMissingChartData(id: number) {
+  return {
+    controlled_value: {
+      id: id,
+      // @ts-ignore
+      label: annotationsValues[id],
+    },
+    month_of_year: {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "8": 0,
+      "9": 0,
+      "10": 0,
+      "11": 0,
+      "12": 0,
+    },
+    count: 0,
+  };
 }
 
 export function updateInvalidGraphCategory(
