@@ -656,7 +656,7 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     };
   }
 
-  if (urlParams.graphs_group_by) {
+  if (urlParams.graphs_group_by && !("nelat" in urlParams)) {
     store.viewMetadata.observations_observations.graphs = {
       groupBy: urlParams.graphs_group_by as GraphGroupBy,
       category: (urlParams.graphs_category as GraphCategory) || "month_of_year",

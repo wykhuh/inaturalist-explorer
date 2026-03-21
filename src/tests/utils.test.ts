@@ -1381,6 +1381,26 @@ describe("decodeAppUrl options", () => {
 
     expect(result).toStrictEqual(expected);
   });
+
+  test("ignore graph group by if bounding box is in url", () => {
+    let searchParams =
+      "?graphs_group_by=places&nelng=1&nelat=1&swlat=1&swlng=1";
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      currentView: "observations_observations",
+      record_type: "observations",
+      observationsApiParams: {
+        nelat: 1,
+        nelng: 1,
+        swlat: 1,
+        swlng: 1,
+      },
+    };
+
+    let result = decodeAppUrl(searchParams, "/");
+
+    expect(result).toStrictEqual(expected);
+  });
 });
 
 describe("decodeAppUrl  resources if identifications", () => {

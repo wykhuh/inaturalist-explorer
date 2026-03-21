@@ -352,7 +352,10 @@ export async function fetchGraphData(appStore: AppStoreType) {
     cacheData.popularFields = popularFields;
 
     // fetch histogram data for each species
-  } else if (graphsMetadata.groupBy === "species") {
+  } else if (
+    graphsMetadata.groupBy === "species" &&
+    appStore.selectedTaxa[0].id !== 0
+  ) {
     let params = cleanupObervationsHistogramParams(appStore, "observations");
 
     for await (const taxon of appStore.selectedTaxa) {
@@ -384,7 +387,10 @@ export async function fetchGraphData(appStore: AppStoreType) {
       }
     }
     // fetch histogram data for places
-  } else if (graphsMetadata.groupBy === "places") {
+  } else if (
+    graphsMetadata.groupBy === "places" &&
+    appStore.selectedPlaces[0].id !== 0
+  ) {
     let params = cleanupObervationsHistogramParams(appStore, "observations");
 
     for await (const place of appStore.selectedPlaces) {
@@ -422,6 +428,7 @@ export async function fetchGraphData(appStore: AppStoreType) {
         params.toString(),
         "month_of_year",
       );
+
       if (monthYearData) {
         cacheData.graphs.month_of_year = [monthYearData.results];
       }
