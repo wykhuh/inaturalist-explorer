@@ -21,6 +21,12 @@ export async function saveBBoxToStore(
   // remove old places
   removePlacesFromStoreAndMap(appStore);
 
+  // update graph group by
+  let graphMetadata = appStore.viewMetadata.observations_observations.graphs;
+  if (graphMetadata && graphMetadata.groupBy === "places") {
+    delete graphMetadata.groupBy;
+  }
+
   // render leaflet layer
   let layer = renderBoundingBoxLayer(map, coordinates) as any;
 
