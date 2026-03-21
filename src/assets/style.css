@@ -1570,6 +1570,10 @@
     padding: 0;
     list-style: none;
 
+    li a {
+      color: var(--text-main);
+    }
+
     @media (max-width: 900px) {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
