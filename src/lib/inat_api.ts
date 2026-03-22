@@ -9,7 +9,6 @@ import type {
   iNatObservationsAPI,
   iNatTaxaAPI,
   iNatPlacesAPI,
-  iNatHistogramApi,
   iNatProjectsAPI,
   iNatUsersAPI,
   iNatObservationsObserversAPI,
@@ -252,7 +251,7 @@ export async function getObservationsYears() {
   let data = (await inatFetch(
     histogram_year_api,
     "getObservationsYears",
-  )) as iNatHistogramApi;
+  )) as iNatObservationsHistogramAPI;
   if (data) {
     return data.results;
   }
@@ -449,7 +448,7 @@ export async function getPopularFields(appParams: string) {
 
   try {
     let resp = await fetch(url);
-    let data = (await resp.json()) as iNatObservationsHistogramAPI;
+    let data = (await resp.json()) as iNatPopularFieldsAPI;
     loggerUrl(`${url} ${data.total_results}`);
     return data;
   } catch (error) {

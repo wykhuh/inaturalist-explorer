@@ -22,6 +22,7 @@ import { addOverlayToMap } from "./map_utils.ts";
 import { getiNatMapTiles } from "./inat_api.ts";
 import {
   allTaxaRecord,
+  annotationsTerms,
   speciesOrHigherRanks,
   subspeciesRanks,
   taxonRanks,
@@ -796,7 +797,7 @@ export function isSpeciesOrHigerCheck(appStore: AppStoreType) {
 export function isPopularFieldCategory(appStore: AppStoreType) {
   let graphsMetadata = appStore.viewMetadata.observations_observations.graphs;
   if (graphsMetadata) {
-    return /\d+/.test(graphsMetadata.category);
+    return Object.keys(annotationsTerms).includes(graphsMetadata.category);
   }
   return false;
 }

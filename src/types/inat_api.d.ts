@@ -810,24 +810,45 @@ export interface PlacesResult {
 // histogram api
 // ==================
 
-export interface iNatHistogramApi {
+export interface iNatObservationsHistogramAPI {
   total_results: number;
   page: number;
   per_page: number;
-  results: HistogramResult;
+  results: iNatObservationsHistogramResult;
 }
 
-interface HistogramResult {
+export interface iNatObservationsHistogramResult {
   year?: {
-    [key: string]: number;
+    [k: string]: number;
   };
   month?: {
-    [key: string]: number;
+    [k: string]: number;
+  };
+  week?: {
+    [k: string]: number;
+  };
+  day?: {
+    [k: string]: number;
+  };
+  hour?: {
+    [k: string]: number;
   };
   month_of_year?: {
-    [key: string]: number;
+    [k: string]: number;
+  };
+  week_of_year?: {
+    [k: string]: number;
   };
 }
+
+type iNatObservationsHistogramResultKey =
+  | "year"
+  | "month"
+  | "week"
+  | "day"
+  | "hour"
+  | "month_of_year"
+  | "week_of_year";
 
 // ==================
 // popular api
@@ -1195,43 +1216,3 @@ interface iNatObservatFieldsAPI {
     },
   ];
 }
-
-export interface iNatObservationsHistogramAPI {
-  total_results: number;
-  page: number;
-  per_page: number;
-  results: iNatObservationsHistogramResult;
-}
-
-export interface iNatObservationsHistogramResult {
-  year?: {
-    [k: string]: number;
-  };
-  month?: {
-    [k: string]: number;
-  };
-  week?: {
-    [k: string]: number;
-  };
-  day?: {
-    [k: string]: number;
-  };
-  hour?: {
-    [k: string]: number;
-  };
-  month_of_year?: {
-    [k: string]: number;
-  };
-  week_of_year?: {
-    [k: string]: number;
-  };
-}
-
-type iNatObservationsHistogramResultKey =
-  | "year"
-  | "month"
-  | "week"
-  | "day"
-  | "hour"
-  | "month_of_year"
-  | "week_of_year";

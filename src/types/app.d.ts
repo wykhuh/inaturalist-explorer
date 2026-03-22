@@ -150,6 +150,8 @@ export type viewMetadataGraphs = {
 
 export type GraphGroupBy = "species" | "places";
 
+export type HistogramCategory = "month_of_year" | "month" | "year";
+
 export type GraphCategory =
   | "month_of_year"
   | "month"

@@ -107,7 +107,12 @@ export function cleanupGraphs(
   recordType = appStore.record_type,
 ) {
   let params = cleanupObervationsParamsObject(appStore, recordType);
-
+  if (params.get("graphs_category")) {
+    params.delete("graphs_category");
+  }
+  if (params.get("graphs_group_by")) {
+    params.delete("graphs_group_by");
+  }
   return params;
 }
 

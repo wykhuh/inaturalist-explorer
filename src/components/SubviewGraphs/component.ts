@@ -13,6 +13,8 @@ import {
   disablePopularFieldsOptions,
   fetchDataForGraphCategories,
   fetchGraphData,
+  getAPIHistogramData,
+  getAPIPopularFieldsData,
   graphMaxObservationMessage,
   initGraphFilters,
   renderGraphCategorySelect,
@@ -125,7 +127,11 @@ class SubviewObservationsGraphs extends HTMLElement {
 
     updateInvalidGraphCategory(appStore, graphsMetadata);
     resetGraphCache(appStore);
-    await fetchGraphData(appStore);
+    await fetchGraphData(
+      appStore,
+      getAPIHistogramData,
+      getAPIPopularFieldsData,
+    );
 
     if (appStore.cacheData.observations.popularFieldsOptions.length == 0) {
       await fetchDataForGraphCategories(appStore);

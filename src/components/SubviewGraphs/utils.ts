@@ -185,7 +185,11 @@ export async function updateGraphs(
   let graphData = hasGraphCache(appStore, graphsMetadata);
   // fetch data if no cache
   if (!graphData) {
-    await fetchGraphData(appStore);
+    await fetchGraphData(
+      appStore,
+      getAPIHistogramData,
+      getAPIPopularFieldsData,
+    );
   }
 
   spinner.stop();
@@ -289,7 +293,7 @@ export function initGraphFilters(appStore: AppStoreType) {
 // graphs data
 // ===============
 
-async function getAPIHistogramData(params: string, interval: string) {
+export async function getAPIHistogramData(params: string, interval: string) {
   try {
     let data = await getHistogram(`${params}&interval=${interval}`);
     if (!data) return;
@@ -312,7 +316,11 @@ export function graphHasMaxObservation(appStore: AppStoreType) {
   }
 }
 
-export async function fetchGraphData(appStore: AppStoreType) {
+export async function fetchGraphData(
+  appStore: AppStoreType,
+  getAPIHistogramDataFn: any,
+  getAPIPopularFieldsDataFn: any,
+) {
   let cacheData = appStore.cacheData.observations;
 
   let graphsMetadata = appStore.viewMetadata.observations_observations
@@ -326,16 +334,15 @@ export async function fetchGraphData(appStore: AppStoreType) {
   // fetch popular fields data for each species
   if (isPopularFieldCategory(appStore) && appStore.selectedTaxa[0].id !== 0) {
     let data = [];
-    let paramsTemp = cleanupObervationsPopularFieldsParams(
+    let params = cleanupObervationsPopularFieldsParams(
       appStore,
       "observations",
     );
     for await (const taxon of appStore.selectedTaxa) {
-      paramsTemp.set("taxon_id", taxon.id.toString());
-      let params = paramsTemp.toString();
+      params.set("taxon_id", taxon.id.toString());
 
-      let fieldsData = (await getAPIPopularFieldsData(
-        params,
+      let fieldsData = (await getAPIPopularFieldsDataFn(
+        params.toString(),
       )) as NormalizedPopularFields;
 
       if (fieldsData) {
@@ -359,13 +366,10 @@ export async function fetchGraphData(appStore: AppStoreType) {
     let params = cleanupObervationsHistogramParams(appStore, "observations");
 
     for await (const taxon of appStore.selectedTaxa) {
-      if (taxon.id === 0) {
-        continue;
-      }
       params.set("taxon_id", taxon.id.toString());
 
       if (graphsMetadata.category === "month_of_year") {
-        let monthYearData = await getAPIHistogramData(
+        let monthYearData = await getAPIHistogramDataFn(
           params.toString(),
           "month_of_year",
         );
@@ -374,13 +378,13 @@ export async function fetchGraphData(appStore: AppStoreType) {
         }
       } else if (graphsMetadata.category === "year") {
         setLastTenYears(params);
-        let yearData = await getAPIHistogramData(params.toString(), "year");
+        let yearData = await getAPIHistogramDataFn(params.toString(), "year");
         if (yearData) {
           cacheData.graphsSpecies.year.push(yearData.results);
         }
       } else if (graphsMetadata.category === "month") {
         setLastTenYears(params);
-        let monthData = await getAPIHistogramData(params.toString(), "month");
+        let monthData = await getAPIHistogramDataFn(params.toString(), "month");
         if (monthData) {
           cacheData.graphsSpecies.month.push(monthData.results);
         }
@@ -397,7 +401,7 @@ export async function fetchGraphData(appStore: AppStoreType) {
       params.set("place_id", place.id.toString());
 
       if (graphsMetadata.category === "month_of_year") {
-        let monthYearData = await getAPIHistogramData(
+        let monthYearData = await getAPIHistogramDataFn(
           params.toString(),
           "month_of_year",
         );
@@ -406,13 +410,13 @@ export async function fetchGraphData(appStore: AppStoreType) {
         }
       } else if (graphsMetadata.category === "year") {
         setLastTenYears(params);
-        let yearData = await getAPIHistogramData(params.toString(), "year");
+        let yearData = await getAPIHistogramDataFn(params.toString(), "year");
         if (yearData) {
           cacheData.graphsPlaces.year.push(yearData.results);
         }
       } else if (graphsMetadata.category === "month") {
         setLastTenYears(params);
-        let monthData = await getAPIHistogramData(params.toString(), "month");
+        let monthData = await getAPIHistogramDataFn(params.toString(), "month");
         if (monthData) {
           cacheData.graphsPlaces.month.push(monthData.results);
         }
@@ -423,26 +427,26 @@ export async function fetchGraphData(appStore: AppStoreType) {
   } else {
     let params = cleanupObervationsHistogramParams(appStore, "observations");
 
-    if (graphsMetadata.category === "month_of_year") {
-      let monthYearData = await getAPIHistogramData(
+    if (graphsMetadata.category === "year") {
+      setLastTenYears(params);
+      let yearData = await getAPIHistogramDataFn(params.toString(), "year");
+      if (yearData) {
+        cacheData.graphs.year = [yearData.results];
+      }
+    } else if (graphsMetadata.category === "month") {
+      setLastTenYears(params);
+      let monthData = await getAPIHistogramDataFn(params.toString(), "month");
+      if (monthData) {
+        cacheData.graphs.month = [monthData.results];
+      }
+    } else {
+      let monthYearData = await getAPIHistogramDataFn(
         params.toString(),
         "month_of_year",
       );
 
       if (monthYearData) {
         cacheData.graphs.month_of_year = [monthYearData.results];
-      }
-    } else if (graphsMetadata.category === "year") {
-      setLastTenYears(params);
-      let yearData = await getAPIHistogramData(params.toString(), "year");
-      if (yearData) {
-        cacheData.graphs.year = [yearData.results];
-      }
-    } else if (graphsMetadata.category === "month") {
-      setLastTenYears(params);
-      let monthData = await getAPIHistogramData(params.toString(), "month");
-      if (monthData) {
-        cacheData.graphs.month = [monthData.results];
       }
     }
   }
@@ -599,7 +603,7 @@ export function hasGraphCache(
 // popular fields data
 // ===============
 
-async function getAPIPopularFieldsData(params: string) {
+export async function getAPIPopularFieldsData(params: string) {
   try {
     let data = await getPopularFields(`${params}`);
     if (!data) return;

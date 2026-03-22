@@ -1,7 +1,7 @@
-import type { iNatHistogramApi } from "../../types/inat_api";
+import type { iNatObservationsHistogramAPI } from "../../types/inat_api";
 
 // https://api.inaturalist.org/v1/observations/histogram?place_id=962&per_page=192&interval=year&ttl=3600
-export const histograph_year = {
+export const histograph_year: iNatObservationsHistogramAPI = {
   total_results: 98,
   page: 1,
   per_page: 98,
@@ -110,7 +110,140 @@ export const histograph_year = {
 };
 
 // https://api.inaturalist.org/v1/observations/histogram?place_id=962&per_page=192&interval=month&ttl=3600
-export const histograph_month: iNatHistogramApi = {
+export const histograph_month: iNatObservationsHistogramAPI = {
+  total_results: 1156,
+  page: 1,
+  per_page: 1156,
+  results: {
+    month: {
+      "2016-01-01": 2476,
+      "2016-02-01": 2943,
+      "2016-03-01": 4366,
+      "2016-04-01": 14652,
+      "2016-05-01": 6275,
+      "2016-06-01": 5435,
+      "2016-07-01": 3724,
+      "2016-08-01": 3978,
+      "2016-09-01": 4966,
+      "2016-10-01": 4837,
+      "2016-11-01": 6029,
+      "2016-12-01": 3122,
+      "2017-01-01": 4629,
+      "2017-02-01": 5314,
+      "2017-03-01": 9529,
+      "2017-04-01": 22989,
+      "2017-05-01": 9184,
+      "2017-06-01": 9004,
+      "2017-07-01": 6203,
+      "2017-08-01": 5688,
+      "2017-09-01": 9903,
+      "2017-10-01": 8693,
+      "2017-11-01": 7350,
+      "2017-12-01": 6323,
+      "2018-01-01": 6038,
+      "2018-02-01": 6517,
+      "2018-03-01": 19408,
+      "2018-04-01": 31386,
+      "2018-05-01": 20051,
+      "2018-06-01": 16144,
+      "2018-07-01": 7418,
+      "2018-08-01": 7074,
+      "2018-09-01": 16485,
+      "2018-10-01": 11210,
+      "2018-11-01": 10088,
+      "2018-12-01": 7717,
+      "2019-01-01": 9022,
+      "2019-02-01": 8810,
+      "2019-03-01": 25323,
+      "2019-04-01": 49488,
+      "2019-05-01": 25967,
+      "2019-06-01": 22736,
+      "2019-07-01": 15225,
+      "2019-08-01": 12480,
+      "2019-09-01": 15323,
+      "2019-10-01": 12547,
+      "2019-11-01": 10073,
+      "2019-12-01": 8161,
+      "2020-01-01": 11959,
+      "2020-02-01": 14756,
+      "2020-03-01": 28068,
+      "2020-04-01": 36001,
+      "2020-05-01": 32879,
+      "2020-06-01": 24907,
+      "2020-07-01": 18944,
+      "2020-08-01": 17816,
+      "2020-09-01": 17594,
+      "2020-10-01": 17965,
+      "2020-11-01": 15346,
+      "2020-12-01": 14624,
+      "2021-01-01": 16250,
+      "2021-02-01": 19325,
+      "2021-03-01": 25144,
+      "2021-04-01": 35484,
+      "2021-05-01": 43196,
+      "2021-06-01": 21373,
+      "2021-07-01": 18626,
+      "2021-08-01": 18071,
+      "2021-09-01": 19930,
+      "2021-10-01": 18548,
+      "2021-11-01": 17718,
+      "2021-12-01": 13601,
+      "2022-01-01": 21139,
+      "2022-02-01": 23041,
+      "2022-03-01": 31973,
+      "2022-04-01": 47043,
+      "2022-05-01": 45877,
+      "2022-06-01": 25544,
+      "2022-07-01": 21840,
+      "2022-08-01": 15706,
+      "2022-09-01": 20337,
+      "2022-10-01": 19630,
+      "2022-11-01": 17745,
+      "2022-12-01": 18079,
+      "2023-01-01": 26462,
+      "2023-02-01": 22381,
+      "2023-03-01": 31829,
+      "2023-04-01": 58070,
+      "2023-05-01": 46123,
+      "2023-06-01": 33692,
+      "2023-07-01": 24629,
+      "2023-08-01": 22288,
+      "2023-09-01": 27907,
+      "2023-10-01": 26739,
+      "2023-11-01": 22065,
+      "2023-12-01": 20667,
+      "2024-01-01": 24573,
+      "2024-02-01": 27655,
+      "2024-03-01": 33171,
+      "2024-04-01": 54018,
+      "2024-05-01": 43180,
+      "2024-06-01": 35230,
+      "2024-07-01": 27840,
+      "2024-08-01": 25424,
+      "2024-09-01": 24491,
+      "2024-10-01": 29185,
+      "2024-11-01": 20185,
+      "2024-12-01": 19542,
+      "2025-01-01": 15282,
+      "2025-02-01": 24078,
+      "2025-03-01": 32793,
+      "2025-04-01": 63358,
+      "2025-05-01": 48277,
+      "2025-06-01": 35676,
+      "2025-07-01": 31256,
+      "2025-08-01": 25264,
+      "2025-09-01": 29602,
+      "2025-10-01": 32158,
+      "2025-11-01": 27947,
+      "2025-12-01": 28005,
+      "2026-01-01": 33736,
+      "2026-02-01": 32265,
+      "2026-03-01": 764,
+    },
+  },
+};
+
+export const histograph_month_all: iNatObservationsHistogramAPI = {
   total_results: 1156,
   page: 1,
   per_page: 1156,
@@ -1277,7 +1410,7 @@ export const histograph_month: iNatHistogramApi = {
 };
 
 // https://api.inaturalist.org/v1/observations/histogram?place_id=962&per_page=192&interval=month_of_year&ttl=3600
-export const histograph_month_year: iNatHistogramApi = {
+export const histograph_month_year: iNatObservationsHistogramAPI = {
   total_results: 12,
   page: 1,
   per_page: 12,
@@ -1300,7 +1433,7 @@ export const histograph_month_year: iNatHistogramApi = {
 };
 
 // https://api.inaturalist.org/v1/observations/histogram?place_id=962&per_page=192&interval=month_of_year&taxon_id=48662
-export const histograph_month_year_monarch: iNatHistogramApi = {
+export const histograph_month_year_monarch: iNatObservationsHistogramAPI = {
   total_results: 12,
   page: 1,
   per_page: 12,
@@ -1323,7 +1456,7 @@ export const histograph_month_year_monarch: iNatHistogramApi = {
 };
 
 // https://api.inaturalist.org/v1/observations/histogram?place_id=962&per_page=192&interval=year&taxon_id=48662
-export const histograph_year_monarch: iNatHistogramApi = {
+export const histograph_year_monarch: iNatObservationsHistogramAPI = {
   total_results: 24,
   page: 1,
   per_page: 24,
@@ -1358,7 +1491,7 @@ export const histograph_year_monarch: iNatHistogramApi = {
 };
 
 // https://api.inaturalist.org/v1/observations/histogram?place_id=962&per_page=192&interval=month&taxon_id=48662
-export const histograph_month_monarch: iNatHistogramApi = {
+export const histograph_month_monarch: iNatObservationsHistogramAPI = {
   total_results: 271,
   page: 1,
   per_page: 271,
@@ -1640,7 +1773,7 @@ export const histograph_month_monarch: iNatHistogramApi = {
 };
 
 // https://api.inaturalist.org/v1/observations/histogram?place_id=962&per_page=192&interval=month_of_year&taxon_id=56851
-export const histograph_month_year_milkweed: iNatHistogramApi = {
+export const histograph_month_year_milkweed: iNatObservationsHistogramAPI = {
   total_results: 12,
   page: 1,
   per_page: 12,
@@ -1663,7 +1796,7 @@ export const histograph_month_year_milkweed: iNatHistogramApi = {
 };
 
 // https://api.inaturalist.org/v1/observations/histogram?place_id=962&per_page=192&interval=month&taxon_id=56851
-export const histograph_month_milkweed: iNatHistogramApi = {
+export const histograph_month_milkweed: iNatObservationsHistogramAPI = {
   total_results: 271,
   page: 1,
   per_page: 271,
@@ -1945,7 +2078,7 @@ export const histograph_month_milkweed: iNatHistogramApi = {
 };
 
 // https://api.inaturalist.org/v1/observations/histogram?place_id=962&per_page=192&interval=year&taxon_id=56851
-export const histograph_year_milkweed: iNatHistogramApi = {
+export const histograph_year_milkweed: iNatObservationsHistogramAPI = {
   total_results: 24,
   page: 1,
   per_page: 24,
@@ -1980,7 +2113,7 @@ export const histograph_year_milkweed: iNatHistogramApi = {
 };
 
 // https://api.inaturalist.org/v1/observations/histogram?place_id=1&interval=month_of_year&taxon_id=48662&d1=2016-01-01
-export const histograph_month_year_monarch_us: iNatHistogramApi = {
+export const histograph_month_year_monarch_us: iNatObservationsHistogramAPI = {
   total_results: 12,
   page: 1,
   per_page: 12,
@@ -2003,7 +2136,7 @@ export const histograph_month_year_monarch_us: iNatHistogramApi = {
 };
 
 // https://api.inaturalist.org/v1/observations/histogram?place_id=1&interval=year&taxon_id=48662&d1=2016-01-01
-export const histograph_year_monarch_us: iNatHistogramApi = {
+export const histograph_year_monarch_us: iNatObservationsHistogramAPI = {
   total_results: 11,
   page: 1,
   per_page: 11,
@@ -2025,7 +2158,7 @@ export const histograph_year_monarch_us: iNatHistogramApi = {
 };
 
 // https://api.inaturalist.org/v1/observations/histogram?place_id=1&interval=month&taxon_id=48662&d1=2016-01-01
-export const histograph_month_monarch_us: iNatHistogramApi = {
+export const histograph_month_monarch_us: iNatObservationsHistogramAPI = {
   total_results: 123,
   page: 1,
   per_page: 123,
@@ -2159,28 +2292,29 @@ export const histograph_month_monarch_us: iNatHistogramApi = {
 };
 
 // https://api.inaturalist.org/v1/observations/histogram?place_id=6793&interval=month_of_year&taxon_id=48662&d1=2016-01-01
-export const histograph_month_year_monarch_mexico: iNatHistogramApi = {
-  total_results: 12,
-  page: 1,
-  per_page: 12,
-  results: {
-    month_of_year: {
-      "1": 966,
-      "2": 1114,
-      "3": 1585,
-      "4": 998,
-      "5": 690,
-      "6": 678,
-      "7": 1157,
-      "8": 1367,
-      "9": 1255,
-      "10": 3105,
-      "11": 4695,
-      "12": 1651,
+export const histograph_month_year_monarch_mexico: iNatObservationsHistogramAPI =
+  {
+    total_results: 12,
+    page: 1,
+    per_page: 12,
+    results: {
+      month_of_year: {
+        "1": 966,
+        "2": 1114,
+        "3": 1585,
+        "4": 998,
+        "5": 690,
+        "6": 678,
+        "7": 1157,
+        "8": 1367,
+        "9": 1255,
+        "10": 3105,
+        "11": 4695,
+        "12": 1651,
+      },
     },
-  },
-};
-export const histograph_year_monarch_mexico: iNatHistogramApi = {
+  };
+export const histograph_year_monarch_mexico: iNatObservationsHistogramAPI = {
   total_results: 11,
   page: 1,
   per_page: 11,
@@ -2200,7 +2334,7 @@ export const histograph_year_monarch_mexico: iNatHistogramApi = {
     },
   },
 };
-export const histograph_month_monarch_mexico: iNatHistogramApi = {
+export const histograph_month_monarch_mexico: iNatObservationsHistogramAPI = {
   total_results: 123,
   page: 1,
   per_page: 123,

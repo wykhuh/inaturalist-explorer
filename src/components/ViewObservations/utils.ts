@@ -15,6 +15,8 @@ import { replaceWithCacheImages } from "../../lib/data_utils";
 import {
   fetchDataForGraphCategories,
   fetchGraphData,
+  getAPIHistogramData,
+  getAPIPopularFieldsData,
   graphHasMaxObservation,
   hasGraphCache,
 } from "../SubviewGraphs/utils";
@@ -72,7 +74,11 @@ async function fetchAndCacheGraphData(appStore: AppStoreType) {
   let graphData = hasGraphCache(appStore, graphsMetadata);
   // fetch data if no cache
   if (!graphData) {
-    await fetchGraphData(appStore);
+    await fetchGraphData(
+      appStore,
+      getAPIHistogramData,
+      getAPIPopularFieldsData,
+    );
   }
 
   spinner.stop();
