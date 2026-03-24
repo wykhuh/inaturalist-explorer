@@ -121,7 +121,7 @@ export async function updateHeaderCount(
   if (cacheCount) {
     count = cacheCount;
   } else {
-    count = await fetchHeaderCounts(dataFn, searchParams);
+    count = await fetchHeaderCounts(dataFn, searchParams) || '--';
   }
 
   renderHeaderCounts(countLabel, count, tooltipSettings);

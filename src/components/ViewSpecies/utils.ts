@@ -144,7 +144,7 @@ export async function fetchAndRenderData(
       | IdentificationsSpeciesCountAPI;
   }
 
-  if (!cache.total_results) {
+  if (cache === undefined || !cache.total_results) {
     let spinner = createSpinner();
     spinner.start();
 
@@ -180,10 +180,11 @@ function renderGrid(
     cache = appStore.cacheData.identifications.species;
   }
 
-  if (!cache || cache.results.length === 0) {
+  if (cache === undefined || cache.results.length === 0) {
     containerEl.innerHTML = "No records found";
     return;
   }
+
 
   containerEl.innerHTML = "";
 

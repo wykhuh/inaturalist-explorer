@@ -246,7 +246,8 @@ export function updateSubviewState(
     componentContext.historyLinkEl.classList.remove("current-subview");
   }
 
-  if (appStore.cacheData.identifications.identifications.length === 0) {
+
+  if (appStore.cacheData.identifications.identifications.page === undefined) {
     return;
   }
 
