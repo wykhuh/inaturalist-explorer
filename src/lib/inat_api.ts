@@ -426,13 +426,13 @@ export async function getObservationsTaxonomy(appParams: string) {
 
 export async function getHistogram(appParams: string) {
   let url = `${observations_api_v2}/histogram?${appParams}&ttl=3600`;
-  try {
-    let resp = await fetch(url);
-    let data = (await resp.json()) as iNatObservationsHistogramAPI;
-    loggerUrl(`${url} ${data.total_results}`);
+  let data = (await inatFetch(
+    url,
+    "getHistogram",
+  )) as iNatObservationsHistogramAPI;
+  if (data) {
+    loggerUrl(url, data.total_results);
     return data;
-  } catch (error) {
-    console.error("getHistogram ERROR:", error);
   }
 }
 
@@ -446,13 +446,13 @@ export async function getPopularFields(appParams: string) {
     `${observations_api_v2}/popular_field_values?${appParams}&fields=${fields}` +
     `&ttl=3600`;
 
-  try {
-    let resp = await fetch(url);
-    let data = (await resp.json()) as iNatPopularFieldsAPI;
-    loggerUrl(`${url} ${data.total_results}`);
+  let data = (await inatFetch(
+    url,
+    "getPopularFields",
+  )) as iNatPopularFieldsAPI;
+  if (data) {
+    loggerUrl(url, data.total_results);
     return data;
-  } catch (error) {
-    console.error("getPopularFields ERROR:", error);
   }
 }
 
@@ -462,12 +462,13 @@ export async function getPopularFieldsBasic(appParams: string) {
   let url =
     `${observations_api_v2}/popular_field_values?${appParams}&fields=${fields}` +
     `&ttl=3600`;
-  try {
-    let resp = await fetch(url);
-    let data = (await resp.json()) as iNatPopularFieldsAPI;
-    loggerUrl(`${url} ${data.total_results}`);
+
+  let data = (await inatFetch(
+    url,
+    "getPopularFieldsBasic",
+  )) as iNatPopularFieldsAPI;
+  if (data) {
+    loggerUrl(url, data.total_results);
     return data;
-  } catch (error) {
-    console.error("getPopularFields ERROR:", error);
   }
 }
