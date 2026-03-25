@@ -39,7 +39,8 @@ import type {
 } from "../types/app";
 import {
   filtersModalAutocompleteFields,
-  histogramGraphCategory,
+  validGraphCategory,
+  validGraphGroupby,
   identificationsApiFilterableNames,
   identificationsApiNonFilterableNames,
   observationsApiFilterableNames,
@@ -539,10 +540,81 @@ describe("formatAppUrl", () => {
     expect(result).toBe(``);
   });
 
-  test.each(histogramGraphCategory)(
-    "return params with graphs category and group by",
+  test.each(validGraphCategory)(
+    "return params with graphs category and one selected places",
     (category) => {
       let store = structuredClone(mapStore);
+      store.selectedPlaces = [losangeles];
+      if (store.viewMetadata.observations_observations.graphs) {
+        store.viewMetadata.observations_observations.graphs.category = category;
+      }
+
+      let result = formatAppUrl(store);
+
+      let expected = "";
+      if (category === "month_of_year") {
+        expected = `place_id=${losangeles.id}&${defaultQuery}`;
+      } else {
+        expected =
+          `place_id=${losangeles.id}&${defaultQuery}` +
+          `&graphs_category=${category}`;
+      }
+      expect(result).toBe(expected);
+    },
+  );
+
+  test.each(validGraphCategory)(
+    "return params with graphs category and multiple selected places",
+    (category) => {
+      let store = structuredClone(mapStore);
+      store.selectedPlaces = [losangeles, sandiego];
+      if (store.viewMetadata.observations_observations.graphs) {
+        store.viewMetadata.observations_observations.graphs.category = category;
+      }
+
+      let result = formatAppUrl(store);
+
+      let expected = "";
+      if (category === "month_of_year") {
+        expected = `place_id=${losangeles.id},${sandiego.id}&${defaultQuery}`;
+      } else {
+        expected =
+          `place_id=${losangeles.id},${sandiego.id}&${defaultQuery}` +
+          `&graphs_category=${category}`;
+      }
+      expect(result).toBe(expected);
+    },
+  );
+
+  test.each(validGraphCategory)(
+    "ignore group by places if graphs category and one selected places",
+    (category) => {
+      let store = structuredClone(mapStore);
+      store.selectedPlaces = [losangeles];
+      if (store.viewMetadata.observations_observations.graphs) {
+        store.viewMetadata.observations_observations.graphs.category = category;
+        store.viewMetadata.observations_observations.graphs.groupBy = "places";
+      }
+
+      let result = formatAppUrl(store);
+
+      let expected = "";
+      if (category === "month_of_year") {
+        expected = `place_id=${losangeles.id}&${defaultQuery}`;
+      } else {
+        expected =
+          `place_id=${losangeles.id}&${defaultQuery}` +
+          `&graphs_category=${category}`;
+      }
+      expect(result).toBe(expected);
+    },
+  );
+
+  test.each(validGraphCategory)(
+    "return params with graphs category, multiple selected places, and group by places",
+    (category) => {
+      let store = structuredClone(mapStore);
+      store.selectedPlaces = [losangeles, sandiego];
       if (store.viewMetadata.observations_observations.graphs) {
         store.viewMetadata.observations_observations.graphs.category = category;
         store.viewMetadata.observations_observations.graphs.groupBy = "places";
@@ -551,14 +623,108 @@ describe("formatAppUrl", () => {
       let result = formatAppUrl(store);
 
       expect(result).toBe(
-        `${defaultQuery}&graphs_category=${category}&graphs_group_by=places`,
+        `place_id=${losangeles.id},${sandiego.id}&${defaultQuery}` +
+          `&graphs_category=${category}` +
+          `&graphs_group_by=places`,
+      );
+    },
+  );
+
+  test.each(validGraphCategory)(
+    "return params with graphs category and one selected taxa",
+    (category) => {
+      let store = structuredClone(mapStore);
+      store.selectedTaxa = [redOak()];
+      if (store.viewMetadata.observations_observations.graphs) {
+        store.viewMetadata.observations_observations.graphs.category = category;
+      }
+
+      let result = formatAppUrl(store);
+
+      let expected = "";
+      if (category === "month_of_year") {
+        expected = `taxon_id=${redOak().id}&${defaultQuery}`;
+      } else {
+        expected =
+          `taxon_id=${redOak().id}&${defaultQuery}` +
+          `&graphs_category=${category}`;
+      }
+      expect(result).toBe(expected);
+    },
+  );
+
+  test.each(validGraphCategory)(
+    "return params with graphs category and multiple selected taxa",
+    (category) => {
+      let store = structuredClone(mapStore);
+      store.selectedTaxa = [life(), redOak()];
+      if (store.viewMetadata.observations_observations.graphs) {
+        store.viewMetadata.observations_observations.graphs.category = category;
+      }
+
+      let result = formatAppUrl(store);
+
+      let expected = "";
+      if (category === "month_of_year") {
+        expected = `taxon_id=${life().id},${redOak().id}&${defaultQuery}`;
+      } else {
+        expected =
+          `taxon_id=${life().id},${redOak().id}&${defaultQuery}` +
+          `&graphs_category=${category}`;
+      }
+      expect(result).toBe(expected);
+    },
+  );
+
+  test.each(validGraphCategory)(
+    "ignore group by species if graphs category and one selected taxa",
+    (category) => {
+      let store = structuredClone(mapStore);
+      store.selectedTaxa = [life()];
+      if (store.viewMetadata.observations_observations.graphs) {
+        store.viewMetadata.observations_observations.graphs.category = category;
+        store.viewMetadata.observations_observations.graphs.groupBy = "species";
+      }
+
+      let result = formatAppUrl(store);
+
+      let expected = "";
+      if (category === "month_of_year") {
+        expected = `taxon_id=${life().id}&${defaultQuery}`;
+      } else {
+        expected =
+          `taxon_id=${life().id}&${defaultQuery}` +
+          `&graphs_category=${category}`;
+      }
+      expect(result).toBe(expected);
+    },
+  );
+
+  test.each(validGraphCategory)(
+    "return params with graphs category, multiple selected taxa, and group by species",
+    (category) => {
+      let store = structuredClone(mapStore);
+      store.selectedTaxa = [life(), redOak()];
+      if (store.viewMetadata.observations_observations.graphs) {
+        store.viewMetadata.observations_observations.graphs.category = category;
+        store.viewMetadata.observations_observations.graphs.groupBy = "species";
+      }
+
+      let result = formatAppUrl(store);
+
+      expect(result).toBe(
+        `taxon_id=${life().id},${redOak().id}&${defaultQuery}` +
+          `&graphs_category=${category}` +
+          `&graphs_group_by=species`,
       );
     },
   );
 
   test("do not add graph category to url if category is popular field id and selected taxa is default taxa", () => {
     let store = structuredClone(mapStore);
-    store.viewMetadata.observations_observations.graphs = { category: "1" };
+    store.viewMetadata.observations_observations.graphs = {
+      category: "1",
+    };
     store.selectedTaxa = [allTaxaRecord];
 
     let result = formatAppUrl(store);
@@ -568,7 +734,9 @@ describe("formatAppUrl", () => {
 
   test("do not add graph category to url if selected taxa does not have popular field cache for selected category", () => {
     let store = structuredClone(mapStore);
-    store.viewMetadata.observations_observations.graphs = { category: "1" };
+    store.viewMetadata.observations_observations.graphs = {
+      category: "1",
+    };
     store.selectedTaxa = [monarchBasic];
     store.cacheData.observations.popularFields = {
       10: [createPopularFieldCache(monarchBasic, 10)],
@@ -581,7 +749,9 @@ describe("formatAppUrl", () => {
 
   test("add popular field id graph category to url if selected taxa does have popular field cache for selected category", () => {
     let store = structuredClone(mapStore);
-    store.viewMetadata.observations_observations.graphs = { category: "1" };
+    store.viewMetadata.observations_observations.graphs = {
+      category: "1",
+    };
     store.selectedTaxa = [monarchBasic];
     store.cacheData.observations.popularFields = {
       1: [createPopularFieldCache(monarchBasic, 1)],
@@ -596,7 +766,9 @@ describe("formatAppUrl", () => {
 
   test("add popular field id graph category to url  if no popular field cache", () => {
     let store = structuredClone(mapStore);
-    store.viewMetadata.observations_observations.graphs = { category: "1" };
+    store.viewMetadata.observations_observations.graphs = {
+      category: "1",
+    };
     store.selectedTaxa = [monarchBasic];
 
     let result = formatAppUrl(store);
@@ -1346,61 +1518,95 @@ describe("decodeAppUrl options", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  test("adds graph category to observation graphs metadata", () => {
-    let searchParams = "?graphs_category=month";
-    let expected = {
-      ...structuredClone(defaultUrlStore),
-      currentView: "observations_observations",
-      record_type: "observations",
-      viewMetadata: {
-        ...structuredClone(defaultUrlStore.viewMetadata),
-        observations_observations: { graphs: { category: "month" } },
-      },
-    };
-
-    let result = decodeAppUrl(searchParams, "/");
-
-    expect(result).toStrictEqual(expected);
-  });
-
-  test("adds graph group by to observation graphs metadata", () => {
-    let searchParams = "?graphs_group_by=places";
-    let expected = {
-      ...structuredClone(defaultUrlStore),
-      currentView: "observations_observations",
-      record_type: "observations",
-      viewMetadata: {
-        ...structuredClone(defaultUrlStore.viewMetadata),
-        observations_observations: {
-          graphs: { category: "month_of_year", groupBy: "places" },
+  test.each(validGraphCategory)(
+    "adds graph category to observation graphs metadata",
+    (category) => {
+      let searchParams = `?graphs_category=${category}`;
+      let expected = {
+        ...structuredClone(defaultUrlStore),
+        currentView: "observations_observations",
+        record_type: "observations",
+        viewMetadata: {
+          ...structuredClone(defaultUrlStore.viewMetadata),
+          observations_observations: { graphs: { category: category } },
         },
-      },
-    };
+      };
 
-    let result = decodeAppUrl(searchParams, "/");
+      let result = decodeAppUrl(searchParams, "/");
 
-    expect(result).toStrictEqual(expected);
-  });
+      expect(result).toStrictEqual(expected);
+    },
+  );
 
-  test("ignore graph group by if bounding box is in url", () => {
-    let searchParams =
-      "?graphs_group_by=places&nelng=1&nelat=1&swlat=1&swlng=1";
+  test("ignore invalid graph category", () => {
+    let searchParams = `?graphs_category=bad`;
     let expected = {
       ...structuredClone(defaultUrlStore),
       currentView: "observations_observations",
       record_type: "observations",
-      observationsApiParams: {
-        nelat: 1,
-        nelng: 1,
-        swlat: 1,
-        swlng: 1,
-      },
     };
 
     let result = decodeAppUrl(searchParams, "/");
 
     expect(result).toStrictEqual(expected);
   });
+
+  test.each(validGraphGroupby)(
+    "adds graph group by to observation graphs metadata",
+    (groupby) => {
+      let searchParams = `?graphs_group_by=${groupby}`;
+      let expected = {
+        ...structuredClone(defaultUrlStore),
+        currentView: "observations_observations",
+        record_type: "observations",
+        viewMetadata: {
+          ...structuredClone(defaultUrlStore.viewMetadata),
+          observations_observations: {
+            graphs: { category: "month_of_year", groupBy: groupby },
+          },
+        },
+      };
+
+      let result = decodeAppUrl(searchParams, "/");
+
+      expect(result).toStrictEqual(expected);
+    },
+  );
+
+  test("ignore invalid graph group", () => {
+    let searchParams = `?graphs_group_by=bad`;
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      currentView: "observations_observations",
+      record_type: "observations",
+    };
+
+    let result = decodeAppUrl(searchParams, "/");
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test.each(validGraphGroupby)(
+    "ignore graph group by if bounding box is in url",
+    (groupby) => {
+      let searchParams = `?graphs_group_by=${groupby}&nelng=1&nelat=1&swlat=1&swlng=1`;
+      let expected = {
+        ...structuredClone(defaultUrlStore),
+        currentView: "observations_observations",
+        record_type: "observations",
+        observationsApiParams: {
+          nelat: 1,
+          nelng: 1,
+          swlat: 1,
+          swlng: 1,
+        },
+      };
+
+      let result = decodeAppUrl(searchParams, "/");
+
+      expect(result).toStrictEqual(expected);
+    },
+  );
 });
 
 describe("decodeAppUrl  resources if identifications", () => {

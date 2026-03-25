@@ -241,6 +241,17 @@ export async function removeOnePlaceFromStore(
   } else {
     removeIdfromInatApiParams(appStore, "selectedPlaces", placeId);
   }
+
+  updateGraphGroupBy(appStore);
+}
+
+function updateGraphGroupBy(appStore: AppStoreType) {
+  if (appStore.selectedPlaces.length < 2) {
+    let graphMetadata = appStore.viewMetadata.observations_observations.graphs;
+    if (graphMetadata && graphMetadata.groupBy === "places") {
+      delete graphMetadata.groupBy;
+    }
+  }
 }
 
 export function removeOnePlaceFromMap(appStore: AppStoreType, placeId: number) {

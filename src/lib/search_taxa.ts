@@ -239,9 +239,20 @@ export function removeOneTaxonFromStore(
   appStore.selectedTaxa = appStore.selectedTaxa.filter(
     (taxon) => taxon.id !== taxonId,
   );
+
   resetPageNumber(appStore);
   removeIdfromInatApiParams(appStore, "selectedTaxa", taxonId);
   removePopularFieldsForTaxon(appStore, taxonId);
+  updateGraphGroupBy(appStore);
+}
+
+function updateGraphGroupBy(appStore: AppStoreType) {
+  if (appStore.selectedTaxa.length < 2) {
+    let graphMetadata = appStore.viewMetadata.observations_observations.graphs;
+    if (graphMetadata && graphMetadata.groupBy === "species") {
+      delete graphMetadata.groupBy;
+    }
+  }
 }
 
 export function removePopularFieldsForTaxon(

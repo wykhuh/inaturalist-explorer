@@ -56,7 +56,7 @@ afterAll(() => {
 
 // NOTE: update when adding selectedResource
 describe("initPopulateStore resources", () => {
-  test.only("loads and renders taxa data based on url params 2", async () => {
+  test("loads and renders taxa data based on url params 2", async () => {
     let store = structuredClone(mapStore);
     let pageElement = document.createElement("page-observations");
     const mainEl = document.querySelector<HTMLDivElement>("#app");

@@ -220,6 +220,7 @@ export function disableGroupByForSelectedResources(
   // enable species option if there are selected taxa
   if (appStore.selectedTaxa.length < 2) {
     speciesOption.disabled = true;
+    speciesOption.selected = false;
   } else {
     speciesOption.disabled = false;
   }
@@ -227,6 +228,7 @@ export function disableGroupByForSelectedResources(
   // enable places option if there are selected places
   if (appStore.selectedPlaces.length < 2 || isPopularFieldCategory(appStore)) {
     placesOption.disabled = true;
+    placesOption.selected = false;
   } else {
     placesOption.disabled = false;
   }

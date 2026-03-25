@@ -326,7 +326,7 @@ describe("processAnnotationsResults", () => {
     expect(result[1].annotation_controlled_value_id).toBe(10);
   });
 
-  test.only("returns array of multiple flattent observation if multiple annotations", () => {
+  test("returns array of multiple flattent observation if multiple annotations", () => {
     let result = processAnnotationsResults([obs_annotations_1_2_9_10]);
 
     expect(result.length).toBe(2);

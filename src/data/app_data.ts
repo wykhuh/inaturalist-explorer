@@ -46,6 +46,8 @@ import { objectFlip } from "../lib/utils";
 import type {
   AppStoreSelectedResourceKeysType,
   AppStoreSelectedResourcesKeysType,
+  GraphCategory,
+  GraphGroupBy,
   HistogramCategory,
   IdentificationsApiParamsKeysType,
   IdentificationSubviewsType,
@@ -587,3 +589,19 @@ export const histogramGraphCategory: HistogramCategory[] = [
   "year",
   "month_of_year",
 ];
+
+export const validGraphCategory: GraphCategory[] = [
+  "month",
+  "year",
+  "month_of_year",
+  "1",
+  "9",
+  "12",
+  "17",
+  "22",
+  "33",
+  "36",
+];
+
+export const validGraphGroupby: GraphGroupBy[] = ["places", "species"];
+

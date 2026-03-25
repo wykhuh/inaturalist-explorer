@@ -279,7 +279,7 @@ describe("fetchGraphData", () => {
     );
   });
 
-  test.only("call getAPIPopularFieldsData with multiple taxa and popular field category", async () => {
+  test("call getAPIPopularFieldsData with multiple taxa and popular field category", async () => {
     vi.spyOn(exampleObject, "getAPIPopularFieldsData")
       .mockResolvedValueOnce(structuredClone(popular_fields_milkweed))
       .mockResolvedValueOnce(structuredClone(popular_fields_milkweed));
@@ -416,9 +416,10 @@ describe("fetchGraphData", () => {
 
       await fetchGraphData(store, getAPIHistogramData, getAPIPopularFieldsData);
 
-      let expected = `verifiable=true&spam=false&date_field=observed`;
+      let expected = `spam=false&date_field=observed`;
       if (category !== "month_of_year") {
-        expected += "&d1=2015-01-01";
+        expected =
+          "verifiable=true&spam=false&date_field=observed&d1=2015-01-01";
       }
       expect(exampleObject.getAPIHistogramData).toHaveBeenCalledTimes(1);
       expect(exampleObject.getAPIHistogramData).toHaveBeenCalledWith(

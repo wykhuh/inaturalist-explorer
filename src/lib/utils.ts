@@ -17,6 +17,8 @@ import {
   orderValues,
 } from "../data/inat_data";
 import {
+  validGraphCategory,
+  validGraphGroupby,
   identificationsApiFilterableNames,
   identificationsApiNames,
   observationsApiFilterableNames,
@@ -217,7 +219,11 @@ export function formatAppUrl(
     // manually set graphs_category for cases when graphs_category is set to
     // popular fields id but there are no selected taxa, such as when user
     // is viewing a popular field graph and deletes selected taxa
-    if (isPopularFieldCategory(appStore) && appStore.selectedTaxa[0].id === 0) {
+    if (
+      isPopularFieldCategory(appStore) &&
+      appStore.selectedTaxa.length > 0 &&
+      appStore.selectedTaxa[0].id === 0
+    ) {
       params.graphs_category = "month_of_year";
     } else if (
       isPopularFieldCategory(appStore) &&
@@ -227,12 +233,27 @@ export function formatAppUrl(
       ] === undefined
     ) {
       params.graphs_category = "month_of_year";
-    } else {
+    } else if (
+      validGraphCategory.includes(graphsMetadata.category as GraphCategory)
+    ) {
       params.graphs_category = graphsMetadata.category;
     }
 
-    if (graphsMetadata.groupBy) {
-      params.graphs_group_by = graphsMetadata.groupBy;
+    if (
+      graphsMetadata.groupBy &&
+      validGraphGroupby.includes(graphsMetadata.groupBy)
+    ) {
+      if (
+        graphsMetadata.groupBy === "places" &&
+        appStore.selectedPlaces.length > 1
+      ) {
+        params.graphs_group_by = graphsMetadata.groupBy;
+      } else if (
+        graphsMetadata.groupBy === "species" &&
+        appStore.selectedTaxa.length > 1
+      ) {
+        params.graphs_group_by = graphsMetadata.groupBy;
+      }
     }
   }
 
@@ -650,17 +671,31 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     store.viewMetadata.name_order = urlParams.name_order as NameOrderType;
   }
 
-  if (urlParams.graphs_category) {
-    store.viewMetadata.observations_observations.graphs = {
-      category: urlParams.graphs_category as GraphCategory,
-    };
+  if (
+    urlParams.graphs_category &&
+    validGraphCategory.includes(urlParams.graphs_category as GraphCategory) &&
+    isObservations
+  ) {
+    if (store.viewMetadata.observations_observations.graphs === undefined) {
+      store.viewMetadata.observations_observations.graphs = {
+        category: urlParams.graphs_category as GraphCategory,
+      };
+    }
   }
 
-  if (urlParams.graphs_group_by && !("nelat" in urlParams)) {
-    store.viewMetadata.observations_observations.graphs = {
-      groupBy: urlParams.graphs_group_by as GraphGroupBy,
-      category: (urlParams.graphs_category as GraphCategory) || "month_of_year",
-    };
+  if (
+    urlParams.graphs_group_by &&
+    validGraphGroupby.includes(urlParams.graphs_group_by as GraphGroupBy) &&
+    !("nelat" in urlParams) &&
+    isObservations
+  ) {
+    if (store.viewMetadata.observations_observations.graphs === undefined) {
+      store.viewMetadata.observations_observations.graphs = {
+        category: "month_of_year",
+      };
+    }
+    store.viewMetadata.observations_observations.graphs.groupBy =
+      urlParams.graphs_group_by as GraphGroupBy;
   }
 
   for (let [key, value] of new URLSearchParams(searchParams)) {
