@@ -63,7 +63,7 @@ export const mapStore: AppStoreType = {
       subview: "map",
       perPage: 24,
       displayFields: {},
-      graphs: { category: "month_of_year" },
+      graphs: { category: "month_of_year", valueType: "counts" },
     },
     observations_species: { perPage: 24 },
     observations_identifiers: { perPage: 100 },

@@ -114,6 +114,7 @@ describe("initPopulateStore resources", () => {
     expect(store.identificationsApiParams).toStrictEqual({});
     expect(store.viewMetadata.observations_observations.graphs).toStrictEqual({
       category: "month_of_year",
+      valueType: "counts",
     });
     expect(store.cacheData.observations.graphs).toStrictEqual({
       month: [],
@@ -145,6 +146,7 @@ describe("initPopulateStore resources", () => {
     expect(store.identificationsApiParams).toStrictEqual({});
     expect(store.viewMetadata.observations_observations.graphs).toStrictEqual({
       category: "month_of_year",
+      valueType: "counts",
     });
     expect(store.cacheData.observations.graphs).toStrictEqual({
       month: [],

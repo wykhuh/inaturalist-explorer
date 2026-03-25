@@ -20,6 +20,7 @@ import type {
   PopularFieldAnnotation,
   ControlledAttributeBasic,
   AppStoreSelectedResourcesKeysType,
+  GraphValueType,
 } from "../../types/app";
 import { formatTaxonName, isPopularFieldCategory } from "../../lib/data_utils";
 
@@ -99,17 +100,17 @@ export async function renderGraphs(
     if (graph) {
       dataContainer.appendChild(graph);
     }
-  } else {
+  } else if (category) {
     data = cacheData.popularFields[category];
     if (data) {
       if (graphsMetadata.groupBy === "species") {
-        let graph = createPopularFieldsGraphs(data);
+        let graph = createPopularFieldsGraphs(data, appStore);
         if (graph) {
           dataContainer.appendChild(graph);
         }
       } else {
         data.forEach((datum) => {
-          let graph = createPopularFieldsGraphsForTaxon(datum);
+          let graph = createPopularFieldsGraphsForTaxon(datum, appStore);
           if (graph) {
             dataContainer.appendChild(graph);
           }
@@ -176,6 +177,11 @@ export async function updateGraphs(
   let category = formData.get("graphs-category");
   if (category) {
     graphsMetadata.category = category as GraphCategory;
+  }
+
+  let valueType = formData.get("graphs-value-type");
+  if (valueType) {
+    graphsMetadata.valueType = valueType as GraphValueType;
   }
 
   let spinner = createSpinner();
@@ -286,6 +292,11 @@ export function initGraphFilters(appStore: AppStoreType) {
     if (graphMetadata.groupBy) {
       setSelectedOption(
         `#graph-form select#graphs-group-by option[value='${graphMetadata.groupBy}']`,
+      );
+    }
+    if (graphMetadata.valueType) {
+      setSelectedOption(
+        `#graph-form select#graphs-value-type option[value='${graphMetadata.valueType}']`,
       );
     }
   }
@@ -573,7 +584,7 @@ export function hasGraphCache(
       category === "month"
     ) {
       graphData = appStore.cacheData.observations.graphsSpecies[category];
-    } else {
+    } else if (category) {
       graphData = appStore.cacheData.observations.popularFields[category];
     }
   } else if (graphsMetadata.groupBy === "places") {
@@ -583,7 +594,7 @@ export function hasGraphCache(
       category === "month"
     ) {
       graphData = appStore.cacheData.observations.graphsPlaces[category];
-    } else {
+    } else if (category) {
       graphData = appStore.cacheData.observations.popularFields[category];
     }
   } else {
@@ -593,7 +604,7 @@ export function hasGraphCache(
       category === "month"
     ) {
       graphData = appStore.cacheData.observations.graphs[category];
-    } else {
+    } else if (category) {
       graphData = appStore.cacheData.observations.popularFields[category];
     }
   }

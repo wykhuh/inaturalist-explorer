@@ -257,3 +257,9 @@ https://api.inaturalist.org/v2/docs/
 
 What fields must be edited through API to alter coordinates of an observation?
 https://forum.inaturalist.org/t/what-fields-must-be-edited-through-api-to-alter-coordinates-of-an-observation/42958
+
+==
+
+https://forum.inaturalist.org/t/usage-for-api-to-create-observations/4679/4
+
+https://github.com/inaturalist/inaturalistjs#creating-records

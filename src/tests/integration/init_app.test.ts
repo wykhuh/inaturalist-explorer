@@ -1607,7 +1607,7 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
               subview: "map",
               perPage: perpage,
               displayFields: {},
-              graphs: { category: "month_of_year" },
+              graphs: { category: "month_of_year", valueType: "counts" },
             }
           : { perPage: perpage };
 
@@ -1688,7 +1688,7 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       expect(store.currentView).toBe("observations_observations");
       expect(store.viewMetadata.observations_observations).toStrictEqual({
         displayFields: {},
-        graphs: { category: "month_of_year" },
+        graphs: { category: "month_of_year", valueType: "counts" },
         perPage: 24,
         subview: subview,
       });

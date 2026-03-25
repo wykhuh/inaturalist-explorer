@@ -255,7 +255,7 @@ test("add page when user changes view and page for each view", async () => {
   });
   expect(store.viewMetadata.observations_observations).toStrictEqual({
     displayFields: {},
-    graphs: { category: "month_of_year" },
+    graphs: { category: "month_of_year", valueType: "counts" },
     subview: "map",
     perPage: perPage,
   });
@@ -265,7 +265,7 @@ test("add page when user changes view and page for each view", async () => {
 
   expect(store.viewMetadata.observations_observations).toStrictEqual({
     displayFields: {},
-    graphs: { category: "month_of_year" },
+    graphs: { category: "month_of_year", valueType: "counts" },
     subview: "map",
     perPage: perPage,
     page: 5,

@@ -98,6 +98,11 @@ class SubviewObservationsGraphs extends HTMLElement {
 
       disableGroupByForSelectedResources(window.app.store, this);
     }
+
+    if (target.id === "graphs-value-type") {
+      const data = new FormData(this.graphForm);
+      updateGraphs(data, window.app.store, this);
+    }
   }
 
   async render(

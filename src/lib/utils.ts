@@ -10,6 +10,7 @@ import type {
   AppParamsType,
   GraphCategory,
   GraphGroupBy,
+  GraphValueType,
 } from "../types/app";
 import {
   bboxPlaceRecord,
@@ -19,6 +20,7 @@ import {
 import {
   validGraphCategory,
   validGraphGroupby,
+  validGraphValueType,
   identificationsApiFilterableNames,
   identificationsApiNames,
   observationsApiFilterableNames,
@@ -255,6 +257,13 @@ export function formatAppUrl(
         params.graphs_group_by = graphsMetadata.groupBy;
       }
     }
+
+    if (
+      graphsMetadata.valueType &&
+      validGraphValueType.includes(graphsMetadata.valueType)
+    ) {
+      params.graphs_value = graphsMetadata.valueType;
+    }
   }
 
   if (processRemovedDefaultParams) {
@@ -280,6 +289,7 @@ export function removeDefaultParams(params: AppParamsType) {
   let defaultNameOrder = params.name_order === "cs";
   let defaultLocale = params.locale === "en";
   let defaultGraphCatgory = params.graphs_category === "month_of_year";
+  let defaultGraphValueType = params.graphs_value === "counts";
 
   if (defaultiNatAPiParams && defaultObservationsView) {
     delete params.verifiable;
@@ -309,6 +319,11 @@ export function removeDefaultParams(params: AppParamsType) {
 
   if (defaultGraphCatgory && params.graphs_group_by === undefined) {
     delete params.graphs_category;
+    delete params.graphs_value;
+  }
+
+  if (defaultGraphValueType) {
+    delete params.graphs_value;
   }
 
   if (defaultiNatAPiParams && Object.keys(params).length === 2) {
@@ -696,6 +711,18 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     }
     store.viewMetadata.observations_observations.graphs.groupBy =
       urlParams.graphs_group_by as GraphGroupBy;
+  }
+
+  if (
+    urlParams.graphs_value &&
+    validGraphValueType.includes(urlParams.graphs_value as GraphValueType) &&
+    isObservations
+  ) {
+    if (store.viewMetadata.observations_observations.graphs === undefined) {
+      store.viewMetadata.observations_observations.graphs = {};
+    }
+    store.viewMetadata.observations_observations.graphs.valueType =
+      urlParams.graphs_value as GraphValueType;
   }
 
   for (let [key, value] of new URLSearchParams(searchParams)) {

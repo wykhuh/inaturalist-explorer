@@ -48,6 +48,7 @@ import type {
   AppStoreSelectedResourcesKeysType,
   GraphCategory,
   GraphGroupBy,
+  GraphValueType,
   HistogramCategory,
   IdentificationsApiParamsKeysType,
   IdentificationSubviewsType,
@@ -605,3 +606,4 @@ export const validGraphCategory: GraphCategory[] = [
 
 export const validGraphGroupby: GraphGroupBy[] = ["places", "species"];
 
+export const validGraphValueType: GraphValueType[] = ["counts", "percents"];

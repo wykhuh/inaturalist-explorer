@@ -17,6 +17,13 @@ export const graphTemplate = html`
           <option value="places">Places</option>
         </select>
       </div>
+      <div class="form-group">
+        <label for="graphs-value-type">Values</label>
+        <select id="graphs-value-type" name="graphs-value-type">
+          <option value="counts">Observation counts</option>
+          <option value="percents">Percent (count per time/total count)</option>
+        </select>
+      </div>
     </form>
   </div>
 

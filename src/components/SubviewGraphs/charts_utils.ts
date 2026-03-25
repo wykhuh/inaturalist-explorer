@@ -217,6 +217,8 @@ export function createGraphs(
   let id = `graph-${Math.round(new Date().getTime() * Math.random())}`;
   canvasEl.id = id;
 
+  let graphMetadata = appStore.viewMetadata.observations_observations.graphs;
+
   let colors: string[] = [];
   let labels: string[] = [];
   let borderDash: [number, number][] = [];
@@ -240,7 +242,12 @@ export function createGraphs(
     ).labels;
     let combinedValues = results.map((result) => {
       // @ts-ignore
-      return formatMonthOfYearData(result.month_of_year).values;
+      let counts = formatMonthOfYearData(result.month_of_year).values;
+      if (graphMetadata && graphMetadata.valueType === "percents") {
+        return calculatePercents(counts);
+      } else {
+        return counts;
+      }
     });
 
     createLineGraph(
@@ -257,7 +264,12 @@ export function createGraphs(
     let combinedXAxisLabels = formatYearData(results[0].year).labels;
     let combinedValues = results.map((result) => {
       // @ts-ignore
-      return formatYearData(result.year).values;
+      let counts = formatYearData(result.year).values;
+      if (graphMetadata && graphMetadata.valueType === "percents") {
+        return calculatePercents(counts);
+      } else {
+        return counts;
+      }
     });
 
     createLineGraph(
@@ -274,7 +286,12 @@ export function createGraphs(
     let combinedXAxisLabels = formatMonthData(results[0].month).labels;
     let combinedValues = results.map((result) => {
       // @ts-ignore
-      return formatMonthData(result.month).values;
+      let counts = formatMonthData(result.month).values;
+      if (graphMetadata && graphMetadata.valueType === "percents") {
+        return calculatePercents(counts);
+      } else {
+        return counts;
+      }
     });
 
     createLineGraph(
@@ -294,10 +311,13 @@ export function createGraphs(
 
 export function createPopularFieldsGraphsForTaxon(
   result: PopularFieldForGraph,
+  appStore: AppStoreType,
 ) {
   let containerEl = document.createElement("canvas");
   let id = `graph-${Math.round(new Date().getTime() * Math.random())}`;
   containerEl.id = id;
+
+  let graphMetadata = appStore.viewMetadata.observations_observations.graphs;
 
   let colors: string[] = [];
   let borderDash: [number, number][] = [];
@@ -318,6 +338,10 @@ export function createPopularFieldsGraphsForTaxon(
   let { values } = formatMonthOfYearData(result.unannotated.month_of_year);
   combinedValues.push(values);
 
+  if (graphMetadata && graphMetadata.valueType === "percents") {
+    combinedValues = combinedValues.map((values) => calculatePercents(values));
+  }
+
   createLineGraph(
     containerEl,
     combinedValues,
@@ -332,10 +356,15 @@ export function createPopularFieldsGraphsForTaxon(
   return containerEl;
 }
 
-export function createPopularFieldsGraphs(results: PopularFieldForGraph[]) {
+export function createPopularFieldsGraphs(
+  results: PopularFieldForGraph[],
+  appStore: AppStoreType,
+) {
   let containerEl = document.createElement("canvas");
   let id = `graph-${Math.round(new Date().getTime() * Math.random())}`;
   containerEl.id = id;
+
+  let graphMetadata = appStore.viewMetadata.observations_observations.graphs;
 
   let chartColors = Object.values(CHART_COLORS);
   let colors: string[] = [];
@@ -367,6 +396,10 @@ export function createPopularFieldsGraphs(results: PopularFieldForGraph[]) {
     combinedValues.push(values);
   });
 
+  if (graphMetadata && graphMetadata.valueType === "percents") {
+    combinedValues = combinedValues.map((values) => calculatePercents(values));
+  }
+
   createLineGraph(
     containerEl,
     combinedValues,
@@ -379,4 +412,18 @@ export function createPopularFieldsGraphs(results: PopularFieldForGraph[]) {
   );
 
   return containerEl;
+}
+
+function calculatePercents(counts: number[]) {
+  let sum = counts.reduce(
+    (accumulator, currentValue) => accumulator + currentValue,
+    0,
+  );
+  return counts.map((count) => {
+    if (sum === 0) {
+      return 0;
+    } else {
+      return (count / sum) * 100;
+    }
+  });
 }

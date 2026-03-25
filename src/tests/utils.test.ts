@@ -41,6 +41,7 @@ import {
   filtersModalAutocompleteFields,
   validGraphCategory,
   validGraphGroupby,
+  validGraphValueType,
   identificationsApiFilterableNames,
   identificationsApiNonFilterableNames,
   observationsApiFilterableNames,
@@ -776,6 +777,21 @@ describe("formatAppUrl", () => {
     expect(result).toBe(
       `taxon_id=${monarchBasic.id}&${defaultQuery}&graphs_category=1`,
     );
+  });
+
+  test.each(validGraphValueType)("add graph value to url", (valueType) => {
+    let store = structuredClone(mapStore);
+    store.viewMetadata.observations_observations.graphs = {
+      valueType: valueType,
+    };
+
+    let result = formatAppUrl(store);
+
+    let expected = "";
+    if (valueType === "percents") {
+      expected = `${defaultQuery}&graphs_value=${valueType}`;
+    }
+    expect(result).toBe(expected);
   });
 });
 
@@ -1607,6 +1623,41 @@ describe("decodeAppUrl options", () => {
       expect(result).toStrictEqual(expected);
     },
   );
+
+  test.each(validGraphValueType)(
+    "adds graph value type to observation graphs metadata",
+    (valuetype) => {
+      let searchParams = `?graphs_value=${valuetype}`;
+      let expected = {
+        ...structuredClone(defaultUrlStore),
+        currentView: "observations_observations",
+        record_type: "observations",
+        viewMetadata: {
+          ...structuredClone(defaultUrlStore.viewMetadata),
+          observations_observations: {
+            graphs: { valueType: valuetype },
+          },
+        },
+      };
+
+      let result = decodeAppUrl(searchParams, "/");
+
+      expect(result).toStrictEqual(expected);
+    },
+  );
+
+  test("ignores invalid graph value type", () => {
+    let searchParams = `?graphs_value=bad`;
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      currentView: "observations_observations",
+      record_type: "observations",
+    };
+
+    let result = decodeAppUrl(searchParams, "/");
+
+    expect(result).toStrictEqual(expected);
+  });
 });
 
 describe("decodeAppUrl  resources if identifications", () => {

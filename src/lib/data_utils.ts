@@ -796,7 +796,7 @@ export function isSpeciesOrHigerCheck(appStore: AppStoreType) {
 
 export function isPopularFieldCategory(appStore: AppStoreType) {
   let graphsMetadata = appStore.viewMetadata.observations_observations.graphs;
-  if (graphsMetadata) {
+  if (graphsMetadata && graphsMetadata.category) {
     return Object.keys(annotationsTerms).includes(graphsMetadata.category);
   }
   return false;

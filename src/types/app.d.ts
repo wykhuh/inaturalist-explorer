@@ -145,13 +145,12 @@ type ViewOptions = {
 
 export type viewMetadataGraphs = {
   groupBy?: GraphGroupBy;
-  category: GraphCategory;
+  category?: GraphCategory;
+  valueType?: GraphValueType;
 };
 
 export type GraphGroupBy = "species" | "places";
-
-export type HistogramCategory = "month_of_year" | "month" | "year";
-
+export type GraphValueType = "counts" | "percents";
 export type GraphCategory =
   | "month_of_year"
   | "month"
@@ -163,6 +162,8 @@ export type GraphCategory =
   | "22"
   | "33"
   | "36";
+
+export type HistogramCategory = "month_of_year" | "month" | "year";
 
 export type AppStoreKeysType = keyof AppStoreType;
 
@@ -466,6 +467,7 @@ export type IdentificationsApiParamsKeysType =
 type AppCustomParamsType = {
   graphs_category?: GraphCategory;
   graphs_group_by?: GraphGroupBy;
+  graphs_value?: GraphValueType;
   name_order?: NameOrderType;
   locale?: string;
 };
