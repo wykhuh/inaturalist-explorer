@@ -1,4 +1,4 @@
-@layer reset, base, layout, components, views, search-menu, filtersModal;
+@layer reset, base, layout, utilities, components, views, search-menu, filtersModal;
 /*@import "bootstrap.css";*/
 
 @layer reset {
@@ -440,6 +440,15 @@
   .my-1 {
     margin-bottom: 0.25rem;
     margin-top: 0.25rem;
+  }
+
+  .flipV {
+    color: var(--clr-gray-700);
+    transform: scaleY(-1) translateY(1rem);
+  }
+
+  .liststyle-none {
+    list-style: none;
   }
 }
 
@@ -899,6 +908,21 @@
   fieldset legend {
     font-weight: var(--fw-bold);
     font-size: var(--font-size-md);
+  }
+
+  .page-about {
+    img {
+      border: var(--border-grey);
+      margin: 1rem 0;
+    }
+
+    li {
+      margin: 1rem 0;
+    }
+
+    details {
+      margin: 1rem 0;
+    }
   }
 }
 
@@ -1523,6 +1547,47 @@
       }
     }
   }
+
+  #legend-container {
+    margin: 0;
+    padding: 0;
+
+    .title {
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      /*line-height: 1;*/
+
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    ul.graph-custom-legend {
+      line-height: 0.8;
+      font-size: 0.75rem;
+      display: flex;
+      flex-direction: row;
+      gap: 0.6rem;
+      justify-content: center;
+      margin: 0;
+      padding: 0;
+
+      li {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        cursor: pointer;
+        gap: 0.3rem;
+        margin: 0;
+        padding: 0;
+      }
+
+      .swatch {
+        width: 40px;
+        height: 1rem;
+      }
+    }
+  }
 }
 
 @layer search-menu {
@@ -1766,31 +1831,5 @@
         font-size: 0.8rem;
       }
     }
-  }
-}
-
-.page-about {
-  img {
-    border: var(--border-grey);
-    margin: 1rem 0;
-  }
-
-  li {
-    margin: 1rem 0;
-  }
-
-  details {
-    margin: 1rem 0;
-  }
-}
-
-@layer utils {
-  .flipV {
-    color: var(--clr-gray-700);
-    transform: scaleY(-1) translateY(1rem);
-  }
-
-  .liststyle-none {
-    list-style: none;
   }
 }

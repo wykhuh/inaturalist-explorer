@@ -107,6 +107,7 @@ export type PopularFieldsByTermId = {
 export type PopularFieldForGraph = {
   taxon_id: number;
   taxon_name: string;
+  taxon_color: string;
   controlled_attribute: ControlledAttributeBasic;
   annotations: PopularFieldAnnotation[];
   unannotated: { count: number; month_of_year: { [k: string]: number } };
@@ -123,6 +124,7 @@ export type ControlledAttributeBasic = { id: number; label: string };
 interface NormalizedPopularFields extends iNatPopularFieldsAPI {
   taxon_id: number;
   taxon_name: string;
+  taxon_color: string;
 }
 
 export type GraphData = {

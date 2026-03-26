@@ -59,6 +59,7 @@ import {
   histograph_year,
 } from "../../../data/api/histogram";
 import type { iNatObservationsHistogramAPI } from "../../../types/inat_api";
+import { defaultColorScheme } from "../../../lib/map_colors_utils";
 
 const server = createMockServer();
 beforeAll(() => {
@@ -104,6 +105,7 @@ describe("formatPopularFields", () => {
     ) as NormalizedPopularFields;
     milkweed.taxon_id = milkweedBasic.id;
     milkweed.taxon_name = `${names1.title} (${names1.subtitle})`;
+    milkweed.taxon_color = defaultColorScheme[0];
 
     let names2 = formatTaxonName(monarchBasic, store);
     let monarch = structuredClone(
@@ -111,6 +113,7 @@ describe("formatPopularFields", () => {
     ) as NormalizedPopularFields;
     monarch.taxon_id = monarchBasic.id;
     monarch.taxon_name = `${names2.title} (${names2.subtitle})`;
+    monarch.taxon_color = defaultColorScheme[1];
 
     let results = formatPopularFields([milkweed, monarch]);
 
@@ -123,12 +126,14 @@ describe("formatPopularFields", () => {
     ) as NormalizedPopularFields;
     data1.taxon_id = 52687;
     data1.taxon_name = `canyon gooseberry`;
+    data1.taxon_color = defaultColorScheme[0];
 
     let data2 = structuredClone(
       popular_fields_hillside_gooseberry,
     ) as NormalizedPopularFields;
     data2.taxon_id = 47129;
     data2.taxon_name = `hillside gooseberry`;
+    data2.taxon_color = defaultColorScheme[1];
 
     let results = formatPopularFields([data1, data2]);
 
@@ -143,12 +148,14 @@ describe("createTermIdValueIds", () => {
     ) as NormalizedPopularFields;
     data1.taxon_id = 52687;
     data1.taxon_name = `canyon gooseberry`;
+    data1.taxon_color = defaultColorScheme[0];
 
     let data2 = structuredClone(
       popular_fields_hillside_gooseberry,
     ) as NormalizedPopularFields;
     data2.taxon_id = 47129;
     data2.taxon_name = `hillside gooseberry`;
+    data2.taxon_color = defaultColorScheme[1];
 
     let results = createTermIdValueIds([data1, data2]);
 

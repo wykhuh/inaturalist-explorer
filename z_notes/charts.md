@@ -172,3 +172,23 @@ no place. Life Stage, Adult
 
 place = 1. Life Stage, Adult
 "count": 32079869,
+
+==
+
+chart item properties
+
+borderRadius: undefined
+datasetIndex: 0
+fillStyle: "#66ccee"
+fontColor: "#666"
+hidden: false
+lineCap: "butt"
+lineDash: [0, 0] (2)
+lineDashOffset: 0
+lineJoin: "miter"
+lineWidth: 3
+pointStyle: undefined
+rotation: undefined
+strokeStyle: "#66ccee"
+text: "Breaking Leaf Buds - milkweed!"
+textAlign: undefined

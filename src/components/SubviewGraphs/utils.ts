@@ -363,7 +363,7 @@ export async function fetchGraphData(
         let { title, subtitle } = formatTaxonName(taxon, appStore);
         fieldsData.taxon_id = taxon.id;
         fieldsData.taxon_name = title || subtitle || "Unknown";
-
+        fieldsData.taxon_color = taxon.color as string;
         data.push(fieldsData);
       }
     }
@@ -561,12 +561,14 @@ function devCachedGraphData(
   ) as NormalizedPopularFields;
   data1.taxon_id = 1;
   data1.taxon_name = "milkweed";
+  data1.taxon_color = milkweed.color as string;
 
   let data2 = structuredClone(
     popular_fields_hillside_gooseberry,
   ) as NormalizedPopularFields;
   data2.taxon_id = 2;
   data2.taxon_name = "monarch";
+  data2.taxon_color = monarch.color as string;
 
   cacheData.popularFields = formatPopularFields([data1, data2]);
 }
@@ -737,6 +739,7 @@ export function formatPopularFields(data: NormalizedPopularFields[]) {
             controlled_attribute: controlled_attribute,
             taxon_id: datum.taxon_id,
             taxon_name: datum.taxon_name,
+            taxon_color: datum.taxon_color,
           });
         }
       });

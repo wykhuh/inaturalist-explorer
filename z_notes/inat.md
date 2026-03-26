@@ -136,3 +136,10 @@ https://forum.inaturalist.org/t/changes-to-city-nature-challenge-2026-from-the-g
 How to print high quality herbarium labels with iNaturalist observation information
 
 https://forum.inaturalist.org/t/how-to-print-high-quality-herbarium-labels-with-inaturalist-observation-information/72302/18
+
+==
+
+Access to the API denied
+https://forum.inaturalist.org/t/access-to-the-api-denied/
+
+===

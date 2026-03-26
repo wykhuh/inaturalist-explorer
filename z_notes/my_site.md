@@ -336,3 +336,7 @@ joesjoes20 (joesjoes20)
 
 
 http://localhost:5173/?taxon_id=85552&place_id=14&project_id=65248&user_id=81779&ident_user_id=17630&colors=%234477aa&verifiable=true&spam=false&per_page=24&ident_taxon_id=36074&annotation_user_id=5983024&view=observations_observations&subview=grid
+
+==
+
+http://localhost:5173/?taxon_id=52687,47129,53433,55552&place_id=14&verifiable=true&spam=false&per_page=24&view=observations_observations&subview=graph&graphs_category=12&graphs_group_by=species

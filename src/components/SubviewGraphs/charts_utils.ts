@@ -12,6 +12,8 @@ import {
   type ChartItem,
   TimeScale,
   type ChartConfiguration,
+  type ChartTypeRegistry,
+  type TooltipItem,
 } from "chart.js";
 import "chartjs-adapter-spacetime";
 
@@ -22,7 +24,7 @@ import type {
 } from "../../types/app";
 import type { iNatObservationsHistogramResult } from "../../types/inat_api";
 import { formatTaxonName } from "../../lib/data_utils";
-import { getColorByIndex } from "../../lib/map_colors_utils";
+import { hexToRgb } from "../../lib/utils";
 
 Chart.register(
   Colors,
@@ -122,58 +124,218 @@ type ChartDataConfig = {
   cubicInterpolationMode?: "monotone";
   tension?: number;
   backgroundColor?: string;
-  borderDash?: [number, number];
+  borderDash?: number[];
 };
+
+function createLineSvg(
+  x2: number,
+  y: number,
+  strokeColor: string,
+  strokeWidth: number,
+  strokeDasharray: number[],
+) {
+  var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+
+  var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+  line.setAttribute("x1", "0");
+  line.setAttribute("y1", y.toString());
+  line.setAttribute("x2", x2.toString());
+  line.setAttribute("y2", y.toString());
+  line.setAttribute("stroke", strokeColor || "#555");
+  line.setAttribute("stroke-width", strokeWidth.toString());
+  line.setAttribute("stroke-dasharray", strokeDasharray.join(" "));
+
+  svg.appendChild(line);
+
+  return svg;
+}
+
+const htmlLegendPlugin = {
+  id: "htmlLegend",
+  afterUpdate(chart: Chart, _args: any, options: any) {
+    const legendContainer = document.getElementById(options.containerID);
+    if (!legendContainer) return;
+
+    // Remove old legend items
+    while (legendContainer.firstChild) {
+      legendContainer.firstChild.remove();
+    }
+
+    let header = document.createElement("div");
+    header.className = "title";
+    header.innerText = chart.options.plugins?.title?.text?.toString() || "";
+    legendContainer.appendChild(header);
+
+    let listContainer = document.createElement("ul");
+    listContainer.classList.add("graph-custom-legend");
+    legendContainer.appendChild(listContainer);
+
+    // Reuse the built-in legendItems generator
+    let generateLabels = chart.options.plugins?.legend?.labels?.generateLabels;
+    if (!generateLabels) return;
+
+    let annotations = new Set();
+    const items = generateLabels(chart);
+    items.forEach((item) => {
+      let annotationValue = item.text.split("-")[0].trim();
+      if (annotations.has(annotationValue)) return;
+      annotations.add(annotationValue);
+
+      let indexes: number[] = [];
+      items.forEach((item) => {
+        if (
+          item.datasetIndex !== undefined &&
+          annotationValue === item.text.split("-")[0].trim()
+        ) {
+          indexes.push(item.datasetIndex);
+        }
+      });
+
+      const liEl = document.createElement("li");
+      liEl.onclick = () => {
+        indexes.forEach((index) => {
+          chart.setDatasetVisibility(index, !chart.isDatasetVisible(index));
+        });
+        chart.update();
+      };
+
+      // line
+      const swatchEl = document.createElement("span");
+      swatchEl.className = "swatch";
+      swatchEl.appendChild(
+        createLineSvg(
+          200,
+          8,
+          item.strokeStyle as string,
+          item.lineWidth as number,
+          item.lineDash as number[],
+        ),
+      );
+
+      // Text
+      const textContainer = document.createElement("p");
+      textContainer.style.color = item.fontColor as string;
+      textContainer.style.textDecoration = item.hidden ? "line-through" : "";
+      textContainer.innerText = annotationValue;
+
+      liEl.appendChild(swatchEl);
+      liEl.appendChild(textContainer);
+      listContainer.appendChild(liEl);
+    });
+  },
+};
+
+function formatTooltipTitle(
+  context: TooltipItem<keyof ChartTypeRegistry>[],
+  timeUnit: TimeUnits | null,
+) {
+  let label = context[0].label;
+  // format date string
+  if (new Date(label)) {
+    let matches = label.match(/(\w+) \d+, (\d+)/);
+    if (matches) {
+      if (timeUnit === "year") {
+        label = `${matches[2]}`;
+      } else if (timeUnit === "month") {
+        label = `${matches[1]} ${matches[2]}`;
+      }
+    }
+  }
+
+  return label;
+}
 
 function createLineGraph(
   containerEl: HTMLCanvasElement,
   data: number[][],
   labels: string[],
   colors: string[],
-  borderDash: [number, number][],
+  borderDash: number[][],
   xAxisLabels: string[] | number[] | Date[],
   chartTitle = "",
   timeUnit: TimeUnits | null,
+  useDefaultLegend: boolean,
 ) {
-  let dataSets = data.map((datum, i) => {
+  let config = formatConfig(
+    data,
+    labels,
+    colors,
+    borderDash,
+    xAxisLabels,
+    chartTitle,
+    timeUnit,
+    useDefaultLegend,
+  );
+
+  if (config) {
+    new Chart(containerEl as ChartItem, config);
+  }
+}
+
+function formatData(
+  data: number[][],
+  labels: string[],
+  colors: string[],
+  borderDash: number[][],
+) {
+  return data.map((datum, i) => {
+    let colorRGBA;
+    if (colors[i]) {
+      let colorRGBAString = hexToRgb(colors[i], 0.25);
+      colorRGBA = colorRGBAString ? `rgba(${colorRGBAString})` : colors[1];
+    }
+
     let config: ChartDataConfig = {
       data: datum,
       borderColor: colors[i],
-      backgroundColor: colors[i] ? colors[i].replace("1)", ".5)") : undefined,
+      backgroundColor: colorRGBA,
       label: labels[i],
       borderDash: borderDash[i],
       cubicInterpolationMode: "monotone",
     };
     return config;
   });
+}
 
+function formatConfig(
+  data: number[][],
+  labels: string[],
+  colors: string[],
+  borderDash: number[][],
+  xAxisLabels: string[] | number[] | Date[],
+  chartTitle = "",
+  timeUnit: TimeUnits | null,
+  useDefaultLegend: boolean,
+) {
   let config: ChartConfiguration = {
     type: "line",
     options: {
       responsive: true,
       plugins: {
-        legend: { display: labels.length > 0 },
+        htmlLegend: {},
+        legend: {
+          display: useDefaultLegend && labels.length > 0,
+          labels: { boxHeight: 0 },
+        },
         title: {
-          display: true,
+          display: useDefaultLegend,
           text: chartTitle,
         },
         tooltip: {
+          boxWidth: 20,
           callbacks: {
-            title: function (context) {
-              let label = context[0].label;
-              // format date string
-              if (new Date(label)) {
-                let matches = label.match(/(\w+) \d+, (\d+)/);
-                if (matches) {
-                  if (timeUnit === "year") {
-                    label = `${matches[2]}`;
-                  } else if (timeUnit === "month") {
-                    label = `${matches[1]} ${matches[2]}`;
-                  }
-                }
-              }
-
-              return label;
+            title: (context) => {
+              return formatTooltipTitle(context, timeUnit);
+            },
+            // @ts-ignore
+            labelColor: function (context) {
+              return {
+                borderColor: context.dataset.borderColor,
+                backgroundColor: context.dataset.backgroundColor,
+                borderWidth: 2,
+                borderDash: context.dataset.borderDash,
+                borderRadius: 0,
+              };
             },
           },
         },
@@ -190,9 +352,30 @@ function createLineGraph(
     },
     data: {
       labels: xAxisLabels,
-      datasets: dataSets,
+      datasets: formatData(data, labels, colors, borderDash),
     },
+    plugins: [],
   };
+
+  if (!useDefaultLegend) {
+    // @ts-ignore
+    if (config.options?.plugins?.htmlLegend) {
+      // @ts-ignore
+      config.options.plugins.htmlLegend = {
+        // ID of the container to put the legend in
+        containerID: "legend-container",
+      };
+    }
+    config.plugins = [htmlLegendPlugin];
+  } else {
+    const legendContainer = document.getElementById("legend-container");
+    if (!legendContainer) return;
+
+    // Remove old legend items
+    while (legendContainer.firstChild) {
+      legendContainer.firstChild.remove();
+    }
+  }
 
   if (timeUnit && config.options && config.options.scales) {
     config.options.scales.x = {
@@ -203,7 +386,8 @@ function createLineGraph(
     };
   }
 
-  new Chart(containerEl as ChartItem, config);
+
+  return config;
 }
 
 export function createGraphs(
@@ -259,6 +443,7 @@ export function createGraphs(
       combinedXAxisLabels,
       "Observations by month/year",
       null,
+      true,
     );
   } else if (results[0].year) {
     let combinedXAxisLabels = formatYearData(results[0].year).labels;
@@ -281,6 +466,7 @@ export function createGraphs(
       combinedXAxisLabels,
       "Observations by year",
       "year",
+      true,
     );
   } else if (results[0].month) {
     let combinedXAxisLabels = formatMonthData(results[0].month).labels;
@@ -303,6 +489,7 @@ export function createGraphs(
       combinedXAxisLabels,
       "Observations by month",
       "month",
+      true,
     );
   }
 
@@ -324,7 +511,7 @@ export function createPopularFieldsGraphsForTaxon(
 
   let labels = result.annotations
     .map((a) => a.controlled_value.label)
-    .concat(["Unannotated"]);
+    .concat(["Not annotated"]);
 
   let combinedXAxisLabels = formatMonthOfYearData(
     result.annotations[0].month_of_year,
@@ -351,9 +538,32 @@ export function createPopularFieldsGraphsForTaxon(
     combinedXAxisLabels,
     `${result.taxon_name} - ${result.controlled_attribute.label}`,
     null,
+    true,
   );
 
   return containerEl;
+}
+
+export function calculateBorderDash(
+  index: number,
+  lineLength: number,
+  spaceLength: number,
+) {
+  // let results = [index * lineLength, index * spaceLength];
+  if (index === 0) {
+    return [0, 0];
+  } else if (index === 1) {
+    return [lineLength, spaceLength];
+  } else {
+    let results = [lineLength, spaceLength];
+    let count = index - 1;
+    while (count > 0) {
+      results.push(spaceLength);
+      results.push(spaceLength);
+      count -= 1;
+    }
+    return results;
+  }
 }
 
 export function createPopularFieldsGraphs(
@@ -366,21 +576,21 @@ export function createPopularFieldsGraphs(
 
   let graphMetadata = appStore.viewMetadata.observations_observations.graphs;
 
-  let chartColors = Object.values(CHART_COLORS);
   let colors: string[] = [];
   let labels: string[] = [];
-  let borderDash: [number, number][] = [];
+  let borderDash: number[][] = [];
 
-  results.forEach((result, i) => {
+  results.forEach((result) => {
     result.annotations.forEach((a, j) => {
-      borderDash.push([i * 2, i * 2]);
-      colors.push(getColorByIndex(j - 1, chartColors));
+      borderDash.push(calculateBorderDash(j, 10, 2));
+      colors.push(result.taxon_color);
       labels.push(`${a.controlled_value.label} - ${result.taxon_name}`);
     });
 
     // add not annotated data
-    borderDash.push([i * 2, i * 2]);
-    colors.push(getColorByIndex(result.annotations.length - 1, chartColors));
+    let length = result.annotations.length;
+    borderDash.push(calculateBorderDash(length, 10, 2));
+    colors.push(result.taxon_color);
     labels.push(`Not annotated - ${result.taxon_name}`);
   });
 
@@ -409,6 +619,7 @@ export function createPopularFieldsGraphs(
     combinedXAxisLabels,
     ` ${results[0].controlled_attribute.label}`,
     null,
+    false,
   );
 
   return containerEl;

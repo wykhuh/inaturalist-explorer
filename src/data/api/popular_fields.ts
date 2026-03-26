@@ -1,3 +1,4 @@
+import { defaultColorScheme } from "../../lib/map_colors_utils";
 import type { PopularFieldsByTermId } from "../../types/app";
 import type {
   iNatPopularFieldsAPI,
@@ -9,6 +10,7 @@ export const processedPopularFields: PopularFieldsByTermId = {
     {
       taxon_id: 56851,
       taxon_name: "Narrowleaf Milkweed (Asclepias fascicularis)",
+      taxon_color: defaultColorScheme[0],
       controlled_attribute: {
         id: 12,
         label: "Flowers and Fruits",
@@ -122,6 +124,7 @@ export const processedPopularFields: PopularFieldsByTermId = {
     {
       taxon_id: 56851,
       taxon_name: "Narrowleaf Milkweed (Asclepias fascicularis)",
+      taxon_color: defaultColorScheme[0],
       controlled_attribute: {
         id: 36,
         label: "Leaves",
@@ -235,6 +238,7 @@ export const processedPopularFields: PopularFieldsByTermId = {
     {
       taxon_id: 56851,
       taxon_name: "Narrowleaf Milkweed (Asclepias fascicularis)",
+      taxon_color: defaultColorScheme[0],
       controlled_attribute: {
         id: 9,
         label: "Sex",
@@ -326,6 +330,7 @@ export const processedPopularFields: PopularFieldsByTermId = {
     {
       taxon_id: 48662,
       taxon_name: "Monarch (Danaus plexippus)",
+      taxon_color: defaultColorScheme[1],
       controlled_attribute: {
         id: 9,
         label: "Sex",
@@ -418,6 +423,7 @@ export const processedPopularFields: PopularFieldsByTermId = {
     {
       taxon_id: 48662,
       taxon_name: "Monarch (Danaus plexippus)",
+      taxon_color: defaultColorScheme[1],
       controlled_attribute: {
         id: 1,
         label: "Life Stage",
@@ -531,6 +537,7 @@ export const processedPopularFields: PopularFieldsByTermId = {
     {
       taxon_id: 48662,
       taxon_name: "Monarch (Danaus plexippus)",
+      taxon_color: defaultColorScheme[1],
       controlled_attribute: {
         id: 17,
         label: "Alive or Dead",
@@ -623,6 +630,7 @@ export const processedPopularFields: PopularFieldsByTermId = {
     {
       taxon_id: 48662,
       taxon_name: "Monarch (Danaus plexippus)",
+      taxon_color: defaultColorScheme[1],
       controlled_attribute: {
         id: 22,
         label: "Evidence of Presence",
@@ -1912,6 +1920,7 @@ export const processedPopularFieldsGooseberry: PopularFieldsByTermId = {
     {
       taxon_id: 52687,
       taxon_name: "canyon gooseberry",
+      taxon_color: defaultColorScheme[0],
       controlled_attribute: {
         id: 12,
         label: "Flowers and Fruits",
@@ -2023,6 +2032,7 @@ export const processedPopularFieldsGooseberry: PopularFieldsByTermId = {
     {
       taxon_id: 47129,
       taxon_name: "hillside gooseberry",
+      taxon_color: defaultColorScheme[1],
       controlled_attribute: {
         id: 12,
         label: "Flowers and Fruits",
@@ -2136,6 +2146,7 @@ export const processedPopularFieldsGooseberry: PopularFieldsByTermId = {
     {
       taxon_id: 52687,
       taxon_name: "canyon gooseberry",
+      taxon_color: defaultColorScheme[0],
       controlled_attribute: {
         id: 36,
         label: "Leaves",
@@ -2247,6 +2258,7 @@ export const processedPopularFieldsGooseberry: PopularFieldsByTermId = {
     {
       taxon_id: 47129,
       taxon_name: "hillside gooseberry",
+      taxon_color: defaultColorScheme[1],
       controlled_attribute: {
         id: 36,
         label: "Leaves",
@@ -2360,6 +2372,7 @@ export const processedPopularFieldsGooseberry: PopularFieldsByTermId = {
     {
       taxon_id: 47129,
       taxon_name: "hillside gooseberry",
+      taxon_color: defaultColorScheme[1],
       controlled_attribute: {
         id: 9,
         label: "Sex",

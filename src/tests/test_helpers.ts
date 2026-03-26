@@ -1126,6 +1126,7 @@ export function createPopularFieldCache(
   return {
     taxon_name: taxon.name || "",
     taxon_id: taxon.id,
+    taxon_color: taxon.color || "",
     controlled_attribute: { id: termId, label: "foo" },
     annotations: [],
     unannotated: { count: 50, month_of_year: { 1: 50 } },
