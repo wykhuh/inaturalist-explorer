@@ -254,6 +254,7 @@ function createLineGraph(
   xAxisLabels: string[] | number[] | Date[],
   chartTitle = "",
   timeUnit: TimeUnits | null,
+  valueUnit: string | null,
   useDefaultLegend: boolean,
 ) {
   let config = formatConfig(
@@ -264,6 +265,7 @@ function createLineGraph(
     xAxisLabels,
     chartTitle,
     timeUnit,
+    valueUnit,
     useDefaultLegend,
   );
 
@@ -305,6 +307,7 @@ function formatConfig(
   xAxisLabels: string[] | number[] | Date[],
   chartTitle = "",
   timeUnit: TimeUnits | null,
+  valueUnit: string | null,
   useDefaultLegend: boolean,
 ) {
   let config: ChartConfiguration = {
@@ -386,8 +389,32 @@ function formatConfig(
     };
   }
 
+  if (valueUnit) {
+    let labelConfig = config.options?.plugins?.tooltip?.callbacks;
+    if (labelConfig) {
+      labelConfig.label = function (context) {
+        let label = context.dataset.label || "";
+
+        if (context.parsed.y !== null) {
+          if (valueUnit === "%") {
+            label += `: ${context.parsed.y.toFixed(1)}%`;
+          } else {
+            label += `: ${context.parsed.y}`;
+          }
+        }
+        return label;
+      };
+    }
+  }
 
   return config;
+}
+
+function getValueUnits(appStore: AppStoreType) {
+  let graphMetadata = appStore.viewMetadata.observations_observations.graphs;
+  if (!graphMetadata) return null;
+
+  return graphMetadata.valueType === "percents" ? "%" : null;
 }
 
 export function createGraphs(
@@ -443,6 +470,7 @@ export function createGraphs(
       combinedXAxisLabels,
       "Observations by month/year",
       null,
+      getValueUnits(appStore),
       true,
     );
   } else if (results[0].year) {
@@ -466,6 +494,7 @@ export function createGraphs(
       combinedXAxisLabels,
       "Observations by year",
       "year",
+      getValueUnits(appStore),
       true,
     );
   } else if (results[0].month) {
@@ -489,6 +518,7 @@ export function createGraphs(
       combinedXAxisLabels,
       "Observations by month",
       "month",
+      getValueUnits(appStore),
       true,
     );
   }
@@ -538,6 +568,7 @@ export function createPopularFieldsGraphsForTaxon(
     combinedXAxisLabels,
     `${result.taxon_name} - ${result.controlled_attribute.label}`,
     null,
+    getValueUnits(appStore),
     true,
   );
 
@@ -619,6 +650,7 @@ export function createPopularFieldsGraphs(
     combinedXAxisLabels,
     ` ${results[0].controlled_attribute.label}`,
     null,
+    getValueUnits(appStore),
     false,
   );
 
