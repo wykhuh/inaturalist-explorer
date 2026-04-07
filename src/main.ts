@@ -53,3 +53,11 @@ window.app.router.init();
 
 // initApp() load iNaturalist data and populate app.store
 initApp();
+
+function registerServiceWorker() {
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/service_worker.js");
+  }
+}
+
+registerServiceWorker();
