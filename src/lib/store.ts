@@ -7,9 +7,7 @@ import type {
 } from "../types/app.d.ts";
 import type {
   IdentificationsAPI,
-  IdentificationsSpeciesCountAPI,
   iNatObservationsAPI,
-  iNatObservationsSpeciesCountAPI,
 } from "../types/inat_api";
 import { loggerEvent, loggerStore } from "./logger.ts";
 
@@ -50,11 +48,9 @@ export const mapStore: AppStoreType = {
       graphsPlaces: { month_of_year: [], year: [], month: [] },
       popularFieldsOptions: [],
       popularFields: {},
-      species: {} as iNatObservationsSpeciesCountAPI,
     },
     identifications: {
       identifications: {} as IdentificationsAPI,
-      species: {} as IdentificationsSpeciesCountAPI,
     },
   },
   currentView: "observations_observations",

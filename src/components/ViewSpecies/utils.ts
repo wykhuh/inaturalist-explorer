@@ -32,7 +32,6 @@ import type {
 } from "../../types/app";
 import type {
   IdentificationsResult,
-  IdentificationsSpeciesCountAPI,
   iNatObservationsSpeciesCountAPI,
   ObservationsResult,
   ResourceSpeciesCountResult,
@@ -129,62 +128,33 @@ export async function fetchData(
 export async function fetchAndRenderData(
   paginationCallback: PaginationCallback,
   appStore: AppStoreType,
-  useCache: boolean,
 ) {
-  let cache: iNatObservationsSpeciesCountAPI | IdentificationsSpeciesCountAPI;
-  if (isObservationsCheck(appStore)) {
-    cache = appStore.cacheData.observations.species;
-  } else {
-    cache = appStore.cacheData.identifications.species;
-  }
+  let spinner = createSpinner();
+  spinner.start();
 
-  if (useCache === false) {
-    cache = {} as
-      | iNatObservationsSpeciesCountAPI
-      | IdentificationsSpeciesCountAPI;
-  }
+  const t1 = performance.now();
 
-  if (cache === undefined || !cache.total_results) {
-    let spinner = createSpinner();
-    spinner.start();
+  let data = await fetchData(appStore);
 
-    const t1 = performance.now();
+  const t10 = performance.now();
+  loggerTime(`api ${t10 - t1} milliseconds`);
 
-    let data = await fetchData(appStore);
-    if (isObservationsCheck(appStore)) {
-      appStore.cacheData.observations.species = data;
-    } else {
-      appStore.cacheData.identifications.species = data;
-    }
+  spinner.stop();
 
-    const t10 = performance.now();
-    loggerTime(`api ${t10 - t1} milliseconds`);
-
-    spinner.stop();
-  }
-
-  renderGrid(paginationCallback, appStore);
+  renderGrid(data, paginationCallback);
 }
 
 function renderGrid(
+  data: iNatObservationsSpeciesCountAPI | undefined,
   paginationCallback: PaginationCallback,
-  appStore: AppStoreType,
 ) {
   let containerEl = document.querySelector(".subview-container");
   if (!containerEl) return;
 
-  let cache;
-  if (isObservationsCheck(appStore)) {
-    cache = appStore.cacheData.observations.species;
-  } else {
-    cache = appStore.cacheData.identifications.species;
-  }
-
-  if (cache === undefined || cache.results.length === 0) {
+  if (data === undefined || data.results.length === 0) {
     containerEl.innerHTML = "No records found";
     return;
   }
-
 
   containerEl.innerHTML = "";
 
@@ -192,24 +162,24 @@ function renderGrid(
     "app-pagination",
   ) as DataComponentType;
   pagination1.data = {
-    perPage: cache.per_page,
-    currentPage: cache.page,
-    totalRecords: cache.total_results,
+    perPage: data.per_page,
+    currentPage: data.page,
+    totalRecords: data.total_results,
     paginationCallback,
   };
 
   containerEl.appendChild(pagination1);
 
-  let tableEl = createGrid(cache.results);
+  let tableEl = createGrid(data.results);
   containerEl.appendChild(tableEl);
 
   let pagination2 = document.createElement(
     "app-pagination",
   ) as DataComponentType;
   pagination2.data = {
-    perPage: cache.per_page,
-    currentPage: cache.page,
-    totalRecords: cache.total_results,
+    perPage: data.per_page,
+    currentPage: data.page,
+    totalRecords: data.total_results,
     paginationCallback,
     scrollToSelector: ".species-list-container",
   };
@@ -410,7 +380,7 @@ export async function paginationCallback(num: number, appStore: AppStoreType) {
   // HACK: update store
   appStore.viewMetadata = appStore.viewMetadata;
 
-  await fetchAndRenderData(paginationCallback, appStore, false);
+  await fetchAndRenderData(paginationCallback, appStore);
   updateAppUrl(window.location, appStore);
 }
 
@@ -439,7 +409,7 @@ export async function updateOrderForStore(
   delete appStore[resourceParams].order_by;
 
   resetPageNumber(appStore);
-  await fetchAndRenderData(paginationCallback, appStore, false);
+  await fetchAndRenderData(paginationCallback, appStore);
   updateAppUrl(window.location, appStore);
 }
 
