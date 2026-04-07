@@ -501,9 +501,7 @@ export function removeIdfromInatApiParams(
       removeResourceId(appStore, resource, "annotation_user_id", value);
     }
   } else if (resource === "selectedWithoutPlaces") {
-    if (isObservations) {
-      removeResourceId(appStore, resource, "not_in_place", value);
-    }
+    removeResourceId(appStore, resource, "not_in_place", value);
   } else if (resource === "selectedWithoutTaxa") {
     if (isObservations) {
       removeResourceId(appStore, resource, "without_taxon_id", value);
