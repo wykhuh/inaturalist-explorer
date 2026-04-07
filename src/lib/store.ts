@@ -5,10 +5,7 @@ import type {
   AppStoreKeysType,
   NormalizediNatUserType,
 } from "../types/app.d.ts";
-import type {
-  IdentificationsAPI,
-  iNatObservationsAPI,
-} from "../types/inat_api";
+import type { iNatObservationsAPI } from "../types/inat_api";
 import { loggerEvent, loggerStore } from "./logger.ts";
 
 // NOTE: update when adding selectedResource; default mapStore
@@ -48,9 +45,6 @@ export const mapStore: AppStoreType = {
       graphsPlaces: { month_of_year: [], year: [], month: [] },
       popularFieldsOptions: [],
       popularFields: {},
-    },
-    identifications: {
-      identifications: {} as IdentificationsAPI,
     },
   },
   currentView: "observations_observations",

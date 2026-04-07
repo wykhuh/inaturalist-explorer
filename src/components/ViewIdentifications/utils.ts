@@ -42,13 +42,8 @@ export async function fetchAndRenderData(
   if (!data) return;
   if (data.results.length == 0) {
     subcontainerEl.innerHTML = "No records found";
-    appStore.cacheData.identifications.identifications =
-      {} as IdentificationsAPI;
     return;
   }
-
-  // store results in store for switching subview
-  appStore.cacheData.identifications.identifications = data;
 
   render(data, paginationCallback, appStore);
 }
@@ -210,7 +205,7 @@ function createMap() {
   return divEl;
 }
 
-export function updateSubviewState(
+export async function updateSubviewState(
   subview: IdentificationSubviewsType,
   componentContext: any,
   appStore: AppStoreType,
@@ -246,16 +241,7 @@ export function updateSubviewState(
     componentContext.historyLinkEl.classList.remove("current-subview");
   }
 
-
-  if (appStore.cacheData.identifications.identifications.page === undefined) {
-    return;
-  }
-
-  render(
-    appStore.cacheData.identifications.identifications,
-    paginationCallback,
-    appStore,
-  );
+  await fetchAndRenderData(paginationCallback, appStore);
 
   // add subview to url
   updateAppUrl(window.location, appStore);

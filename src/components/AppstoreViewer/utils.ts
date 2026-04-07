@@ -114,10 +114,6 @@ export function displayAppstoreData(appStore: AppStoreType, _source: string) {
           graphsSpecies: formatGraphsCache(obsData.graphsSpecies),
           graphsPlaces: formatGraphsCache(obsData.graphsPlaces),
         },
-        identifications: {
-          identifications:
-            appStore.cacheData.identifications.identifications.total_results,
-        },
       };
     } else if (key === "iNatStats") {
       // convert Map to object https://gist.github.com/lukehorvat/133e2293ba6ae96a35ba

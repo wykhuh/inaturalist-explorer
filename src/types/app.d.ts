@@ -79,9 +79,6 @@ export interface AppStoreType {
       popularFieldsOptions: PopularFieldOption[];
       popularFields: PopularFieldsByTermId;
     };
-    identifications: {
-      identifications: IdentificationsAPI;
-    };
   };
   viewMetadata: {
     observations_observations: ViewOptions;
