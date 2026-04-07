@@ -27,9 +27,6 @@ export async function fetchAndRenderData(
   paginationCallback: PaginationCallback,
   appStore: AppStoreType,
 ) {
-  let subcontainerEl = document.querySelector(".subview-container");
-  if (!subcontainerEl) return;
-
   let spinner = createSpinner();
   spinner.start();
 
@@ -40,10 +37,6 @@ export async function fetchAndRenderData(
   spinner.stop();
 
   if (!data) return;
-  if (data.results.length == 0) {
-    subcontainerEl.innerHTML = "No records found";
-    return;
-  }
 
   render(data, paginationCallback, appStore);
 }
@@ -58,37 +51,19 @@ function render(
   if (!containerEl) return;
   if (!formEl) return;
 
-  let view = isObservationsCheck(appStore)
-    ? appStore.viewMetadata.observations_observations
-    : appStore.viewMetadata.identifications_identifications;
-
-  if (view.subview === "map") {
-    if (!appStore.map.map) {
-      containerEl.innerHTML = "";
-    }
-    formEl.className = "hide";
-  } else {
-    containerEl.innerHTML = "";
-    formEl.className = "";
+  if (data.results.length == 0) {
+    containerEl.innerHTML = "No records found";
+    return;
   }
 
-  if (view.subview !== "map") {
-    let pagination1 = document.createElement(
-      "app-pagination",
-    ) as DataComponentType;
-    pagination1.data = {
-      perPage: data.per_page,
-      currentPage: data.page,
-      totalRecords: data.total_results,
-      paginationCallback,
-    };
-    containerEl.appendChild(pagination1);
-  }
-
+  let subview = appStore.viewMetadata.identifications_identifications.subview;
   let subviewEl = document.createElement("div");
   subviewEl.className = "observations-subview";
+  containerEl.innerHTML = "";
 
-  if (view.subview === "map") {
+  if (subview === "map") {
+    formEl.className = "hide";
+
     if (!appStore.map.map) {
       subviewEl.appendChild(createMap());
 
@@ -98,14 +73,26 @@ function render(
         initRenderMap(appStore);
       }, 0);
     }
-  } else if (view.subview === "grid") {
-    subviewEl.appendChild(createGrid(data.results));
   } else {
-    subviewEl.appendChild(createHistory(data.results));
-  }
-  containerEl.append(subviewEl);
+    formEl.className = "";
 
-  if (view.subview !== "map") {
+    let pagination1 = document.createElement(
+      "app-pagination",
+    ) as DataComponentType;
+    pagination1.data = {
+      perPage: data.per_page,
+      currentPage: data.page,
+      totalRecords: data.total_results,
+      paginationCallback,
+    };
+    subviewEl.appendChild(pagination1);
+
+    if (subview === "grid") {
+      subviewEl.appendChild(createGrid(data.results));
+    } else {
+      subviewEl.appendChild(createHistory(data.results));
+    }
+
     let pagination2 = document.createElement(
       "app-pagination",
     ) as DataComponentType;
@@ -116,8 +103,9 @@ function render(
       paginationCallback,
       scrollToSelector: ".identifications-grid",
     };
-    containerEl.appendChild(pagination2);
+    subviewEl.appendChild(pagination2);
   }
+  containerEl.append(subviewEl);
 }
 
 async function getAPIData(appStore: AppStoreType) {
