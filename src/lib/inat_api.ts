@@ -438,18 +438,15 @@ export async function getHistogram(appParams: string) {
 
 export async function getPopularFields(appParams: string) {
   let fields =
-    `(controlled_attribute:(excepted_taxon_ids:!t,id:!t,label:!t,taxon_ids:!t),` +
-    `controlled_value:(excepted_taxon_ids:!t,id:!t,label:!t,taxon_ids:!t),` +
+    `(controlled_attribute:(id:!t,label:!t),` +
+    `controlled_value:(id:!t,label:!t),` +
     `count:!t,month_of_year:all,unannotated:all)`;
 
   let url =
     `${observations_api_v2}/popular_field_values?${appParams}&fields=${fields}` +
     `&ttl=3600`;
 
-  let data = (await inatFetch(
-    url,
-    "getPopularFields",
-  )) as iNatPopularFieldsAPI;
+  let data = (await inatFetch(url, "getPopularFields")) as iNatPopularFieldsAPI;
   if (data) {
     loggerUrl(url, data.total_results);
     return data;

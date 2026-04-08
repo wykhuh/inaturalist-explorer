@@ -22,18 +22,25 @@ import type {
   GraphValueType,
   ObservationsGraphData,
   PopularFieldsByTaxa,
+  PopularFieldForGraph,
 } from "../../types/app";
 import { formatTaxonName, isPopularFieldCategory } from "../../lib/data_utils";
 
 import {
   createGraphs,
+  createPopularFieldsGraphsGroupSpecies,
   createPopularFieldsGraphs,
-  createPopularFieldsGraphsForTaxon,
+  createPopularFieldsGraphsGroupPlaces,
 } from "./charts_utils";
 import { calculateObservationsCount } from "../../lib/count_utils";
 import { setSelectedOption } from "../../lib/form_utils";
 import { updateAppUrl } from "../../lib/utils";
 import { annotationsValues } from "../../data/inat_data";
+import {
+  getColorByIndex,
+  secondaryColorScheme,
+} from "../../lib/map_colors_utils";
+import { devCachedGraphData } from "../../lib/dev_utils";
 
 // ===============
 // UI
@@ -74,59 +81,73 @@ export async function renderGraphs(
     if (graph) {
       dataContainer.appendChild(graph);
     }
+    // popular fields
   } else if (category) {
     data = graphData.popularFields[category];
     if (data) {
+      // group by species
       if (graphsMetadata.groupBy === "species") {
-        let graph = createPopularFieldsGraphs(data, appStore);
+        let legendEl = document.createElement("div");
+        legendEl.id = "legend-container";
+        legendEl.className = "legend-container";
+        dataContainer.appendChild(legendEl);
+
+        let graph = createPopularFieldsGraphsGroupSpecies(
+          data,
+          "legend-container",
+          appStore,
+        );
         if (graph) {
           dataContainer.appendChild(graph);
         }
+        // group by places
+      } else if (graphsMetadata.groupBy === "places") {
+        appStore.selectedTaxa.forEach((taxon, i) => {
+          let dataForTaxon: PopularFieldForGraph[] = data.filter(
+            (d) => d.taxon_id === taxon.id,
+          );
+          if (dataForTaxon.length === 0) {
+            dataForTaxon = [
+              {
+                taxon_name: taxon.name || "",
+                taxon_id: taxon.id,
+                taxon_color: taxon.color || "",
+                annotations: [],
+                unannotated: { count: 0, month_of_year: {} },
+                controlled_attribute: {
+                  id: 0,
+                  label: data[0].controlled_attribute.label,
+                },
+              },
+            ];
+          }
+
+          let legendEl = document.createElement("div");
+          legendEl.id = `legend-container-${i}`;
+          legendEl.className = "legend-container";
+          dataContainer.appendChild(legendEl);
+
+          let graph = createPopularFieldsGraphsGroupPlaces(
+            dataForTaxon,
+            `legend-container-${i}`,
+            appStore,
+          );
+          if (graph) {
+            dataContainer.appendChild(graph);
+          }
+        });
+
+        console.log(category, data);
+        // no group by
       } else {
         data.forEach((datum) => {
-          let graph = createPopularFieldsGraphsForTaxon(datum, appStore);
+          let graph = createPopularFieldsGraphs(datum, appStore);
           if (graph) {
             dataContainer.appendChild(graph);
           }
         });
       }
     }
-  }
-}
-
-export function disablePopularFieldsOptions(
-  target: HTMLSelectElement,
-  appStore: AppStoreType,
-  componentContext: HTMLElement,
-) {
-  let graphMetadata = appStore.viewMetadata.observations_observations.graphs;
-  if (!graphMetadata) return;
-
-  // disable popular fields options if group by places
-  if (target.value === "places") {
-    // deselect current option if it is popular field
-    let currentPopularFieldOption =
-      componentContext.querySelector<HTMLOptionElement>(
-        "#graphs-category option:checked[data-graph-type='popular-fields']",
-      );
-    if (currentPopularFieldOption) {
-      currentPopularFieldOption.selected = false;
-      graphMetadata.category = "month_of_year";
-    }
-
-    // disable popular fields
-    componentContext
-      .querySelectorAll<HTMLOptionElement>('[data-graph-type="popular-fields"]')
-      .forEach((option) => {
-        option.disabled = true;
-      });
-  } else {
-    // enable popular  fields
-    componentContext
-      .querySelectorAll<HTMLOptionElement>('[data-graph-type="popular-fields"]')
-      .forEach((option) => {
-        option.disabled = false;
-      });
   }
 }
 
@@ -202,7 +223,7 @@ export function disableGroupByForSelectedResources(
   }
 
   // enable places option if there are selected places
-  if (appStore.selectedPlaces.length < 2 || isPopularFieldCategory(appStore)) {
+  if (appStore.selectedPlaces.length < 2) {
     placesOption.disabled = true;
     placesOption.selected = false;
   } else {
@@ -304,6 +325,10 @@ export async function fetchGraphData(
   getAPIHistogramDataFn: any,
   getAPIPopularFieldsDataFn: any,
 ) {
+  if (import.meta.env?.VITE_CACHE === "true") {
+    return devCachedGraphData(appStore);
+  }
+
   let graphData = {
     popularFields: {},
     graphsSpecies: {
@@ -333,28 +358,66 @@ export async function fetchGraphData(
       appStore,
       "observations",
     );
-    for await (const taxon of appStore.selectedTaxa) {
-      params.set("taxon_id", taxon.id.toString());
+    if (graphsMetadata.groupBy === "places") {
+      let count = 0;
+      for await (const place of appStore.selectedPlaces) {
+        params.set("place_id", place.id.toString());
+        for await (const taxon of appStore.selectedTaxa) {
+          params.set("taxon_id", taxon.id.toString());
 
-      let fieldsData = (await getAPIPopularFieldsDataFn(
-        params.toString(),
-      )) as NormalizedPopularFields;
+          let fieldsData = (await getAPIPopularFieldsDataFn(
+            params.toString(),
+          )) as NormalizedPopularFields;
 
-      if (fieldsData) {
-        // add taxon data
-        let { title, subtitle } = formatTaxonName(taxon, appStore);
-        fieldsData.taxon_id = taxon.id;
-        fieldsData.taxon_name = title || subtitle || "Unknown";
-        fieldsData.taxon_color = taxon.color as string;
-        data.push(fieldsData);
+          if (fieldsData) {
+            // add taxon data
+            let { title, subtitle } = formatTaxonName(taxon, appStore);
+            fieldsData.place_id = place.id;
+            fieldsData.place_name = place.name;
+            fieldsData.place_color = getColorByIndex(
+              count,
+              secondaryColorScheme,
+            );
+            fieldsData.taxon_id = taxon.id;
+            fieldsData.taxon_name = title || subtitle || "Unknown";
+            fieldsData.taxon_color = taxon.color as string;
+            data.push(fieldsData);
+          }
+        }
+        count += 1;
       }
+
+      let popularFields = formatPopularFields(data);
+      graphData.popularFields = popularFields;
+      console.log("popularFields places", popularFields);
+
+      appStore.viewMetadata.popularFieldsByTaxa =
+        formatPopularFieldsMenuByTaxa(data);
+    } else {
+      for await (const taxon of appStore.selectedTaxa) {
+        params.set("taxon_id", taxon.id.toString());
+
+        let fieldsData = (await getAPIPopularFieldsDataFn(
+          params.toString(),
+        )) as NormalizedPopularFields;
+
+        if (fieldsData) {
+          // add taxon data
+          let { title, subtitle } = formatTaxonName(taxon, appStore);
+          fieldsData.taxon_id = taxon.id;
+          fieldsData.taxon_name = title || subtitle || "Unknown";
+          fieldsData.taxon_color = taxon.color as string;
+          data.push(fieldsData);
+        }
+      }
+
+      let popularFields = formatPopularFields(data);
+      graphData.popularFields = popularFields;
+      console.log("popularFields", popularFields);
+
+      appStore.viewMetadata.popularFieldsByTaxa =
+        formatPopularFieldsMenuByTaxa(data);
     }
-
-    let popularFields = formatPopularFields(data);
-    graphData.popularFields = popularFields;
-
-    appStore.viewMetadata.popularFieldsByTaxa = formatPopularFieldsByTaxa(data);
-
     // fetch histogram data for each species
   } else if (
     graphsMetadata.groupBy === "species" &&
@@ -393,7 +456,6 @@ export async function fetchGraphData(
     appStore.selectedPlaces[0].id !== 0
   ) {
     let params = cleanupObervationsHistogramParams(appStore, "observations");
-
     for await (const place of appStore.selectedPlaces) {
       params.set("place_id", place.id.toString());
 
@@ -507,12 +569,14 @@ export async function fetchDataForGraphCategories(appStore: AppStoreType) {
     }
   }
 
-  let popularFieldsOptions = formatPopularFieldsOptions(data);
+  let popularFieldsOptions = formatPopularFieldsMenuOptions(data);
   appStore.viewMetadata.popularFieldsOptions = popularFieldsOptions;
   window.dispatchEvent(new Event("popularFieldsOptionsChange"));
 }
 
-export function formatPopularFieldsOptions(data: iNatPopularFieldsBasicAPI[]) {
+export function formatPopularFieldsMenuOptions(
+  data: iNatPopularFieldsBasicAPI[],
+) {
   let fieldIds = new Set();
   let fields: ControlledAttributeBasic[] = [];
   data.forEach((datum) => {
@@ -577,14 +641,21 @@ export function formatPopularFields(data: NormalizedPopularFields[]) {
         );
 
         if (annotations.length > 0) {
-          popularFields[Number(term_id)].push({
+          let record: PopularFieldForGraph = {
             annotations: annotations,
             unannotated: datum.unannotated[term_id],
             controlled_attribute: controlled_attribute,
             taxon_id: datum.taxon_id,
             taxon_name: datum.taxon_name,
             taxon_color: datum.taxon_color,
-          });
+          };
+          if (datum.place_id) {
+            record.place_id = datum.place_id;
+            record.place_name = datum.place_name;
+            record.place_color = datum.place_color;
+          }
+
+          popularFields[Number(term_id)].push(record);
         }
       });
   });
@@ -592,7 +663,7 @@ export function formatPopularFields(data: NormalizedPopularFields[]) {
   return popularFields;
 }
 
-export function formatPopularFieldsByTaxa(data: NormalizedPopularFields[]) {
+export function formatPopularFieldsMenuByTaxa(data: NormalizedPopularFields[]) {
   let popularFields = {} as PopularFieldsByTaxa;
   data.forEach((datum) => {
     datum.results.forEach((result) => {

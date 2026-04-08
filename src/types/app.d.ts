@@ -100,6 +100,9 @@ export type PopularFieldForGraph = {
   taxon_id: number;
   taxon_name: string;
   taxon_color: string;
+  place_id?: number;
+  place_name?: string;
+  place_color?: string;
   controlled_attribute: ControlledAttributeBasic;
   annotations: PopularFieldAnnotation[];
   unannotated: { count: number; month_of_year: { [k: string]: number } };
@@ -117,6 +120,9 @@ interface NormalizedPopularFields extends iNatPopularFieldsAPI {
   taxon_id: number;
   taxon_name: string;
   taxon_color: string;
+  place_id?: number;
+  place_name?: string;
+  place_color?: string;
 }
 
 export type ObservationsGraphData = {

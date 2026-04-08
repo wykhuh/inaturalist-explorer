@@ -170,6 +170,79 @@ export let colorsFourDivergeGroup = [
 ];
 export let colorsFourDiverge = colorsFourDivergeGroup[0];
 
+const sixQualitative = [
+  ["#7fc97f", "#beaed4", "#fdc086", "#ffff99", "#386cb0", "#f0027f"],
+  ["#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02"],
+  ["#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c"],
+  ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33"],
+  ["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f"],
+  ["#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462"],
+];
+
+const viridis = [
+  "#440154",
+  "#482878",
+  "#3E4A89",
+  "#31688E",
+  "#26828E",
+  "#1F9E89",
+  "#35B779",
+  "#6DCD59",
+  "#B4DE2C",
+  "#FDE724",
+];
+
+const viridis2 = [
+  "#440154",
+  "#B4DE2C",
+  "#482878",
+  "#6DCD59",
+  "#3E4A89",
+  "#35B779",
+  "#31688E",
+  "#1F9E89",
+];
+
+// https://developers.arcgis.com/javascript/latest/visualization/symbols-color-ramps/esri-color-ramps/
+// Esri color ramps - Falling Leaves
+const fallingLeaves = [
+  "#3e756d",
+  "#d9d78c",
+  "#b86b53",
+  "#5c98ca",
+  "#86afb3",
+  "#9c5596",
+];
+
+// Esri color ramps - Circling Circus
+const circlingCircus = [
+  "#d92b30",
+  "#0095ba",
+  "#3cccb4",
+  "#ffdf3c",
+  "#c27c30",
+  "#f260a1",
+];
+
+// Esri color ramps - Chamois
+const chamois = [
+  "#7db3ab",
+  "#dbe6d1",
+  "#b5d6f2",
+  "#bf7872",
+  "#9093c7",
+  "#e3a3dd",
+];
+// Esri color ramps - High Light
+const highLight = [
+  "#f22f00",
+  "#26ffff",
+  "#ffdd00",
+  "#ff4dc4",
+  "#5ff500",
+  "#0040ff",
+];
+
 export let coldMonths = [10, 11, 12, 1, 2, 3];
 export let warmMonths = [4, 5, 6, 7, 8, 9];
 
@@ -179,7 +252,7 @@ export let iNatOrange = "#f16f3a";
 export let iNatGreen = "#86a91c";
 
 export let defaultColorScheme = colorsSixTolBright;
-export let secondaryColorScheme = colorsSixDivergeGroup[3];
+export let secondaryColorScheme = fallingLeaves;
 
 export function getColor(appStore: AppStoreType, colorArray: string[]) {
   let color = appStore.color;

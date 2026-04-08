@@ -27,7 +27,5 @@ export const graphTemplate = html`
     </form>
   </div>
 
-  <div id="legend-container"></div>
-
   <div id="subview-data-container"></div>
 `;

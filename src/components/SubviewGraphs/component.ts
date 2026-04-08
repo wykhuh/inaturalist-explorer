@@ -11,7 +11,6 @@ import type {
 } from "../../types/app";
 import {
   disableGroupByForSelectedResources,
-  disablePopularFieldsOptions,
   fetchDataForGraphCategories,
   fetchGraphData,
   getAPIHistogramData,
@@ -89,9 +88,6 @@ class SubviewObservationsGraphs extends HTMLElement {
     if (target.id === "graphs-group-by") {
       const data = new FormData(this.graphForm);
       updateGraphs(data, window.app.store, this);
-
-      let targetSelect = target as HTMLSelectElement;
-      disablePopularFieldsOptions(targetSelect, window.app.store, this);
     }
 
     if (target.id === "graphs-category") {

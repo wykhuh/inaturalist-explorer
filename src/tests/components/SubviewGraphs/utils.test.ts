@@ -14,7 +14,7 @@ import { mapStore } from "../../../lib/store";
 import {
   updateInvalidGraphCategory,
   formatPopularFields,
-  formatPopularFieldsOptions,
+  formatPopularFieldsMenuOptions,
   createTermIdValueIds,
   fetchGraphData,
   getAPIHistogramData,
@@ -49,6 +49,8 @@ import type {
   GraphCategory,
   HistogramCategory,
   NormalizedPopularFields,
+  PopularFieldForGraph,
+  PopularFieldsByTermId,
 } from "../../../types/app";
 
 import * as exampleObject from "../../../components/SubviewGraphs/utils";
@@ -74,9 +76,9 @@ afterAll(() => {
   server.close();
 });
 
-describe("formatPopularFieldsOptions", () => {
+describe("formatPopularFieldsMenuOptions", () => {
   test("takes popular fields api and returns array of label and id", () => {
-    let results = formatPopularFieldsOptions([
+    let results = formatPopularFieldsMenuOptions([
       popular_fields_basic_milkweed,
       popular_fields_basic_monarch,
     ]);
@@ -94,7 +96,42 @@ describe("formatPopularFieldsOptions", () => {
   });
 });
 
+describe("formatPopularFieldsMenuByTaxa", () => {
+  test("takes popular fields api and returns an object with term id and taxon id", () => {
+    let milkweed = structuredClone(
+      popular_fields_milkweed,
+    ) as NormalizedPopularFields;
+    milkweed.taxon_id = milkweedBasic.id;
+
+    let monarch = structuredClone(
+      popular_fields_monarch,
+    ) as NormalizedPopularFields;
+    monarch.taxon_id = monarchBasic.id;
+
+    let results = exampleObject.formatPopularFieldsMenuByTaxa([
+      milkweed,
+      monarch,
+    ]);
+
+    expect(results).toStrictEqual({
+      1: { [monarch.taxon_id]: true },
+      9: { [milkweed.taxon_id]: true, [monarch.taxon_id]: true },
+      12: { [milkweed.taxon_id]: true },
+      17: { [monarch.taxon_id]: true },
+      22: { [monarch.taxon_id]: true },
+      36: { [milkweed.taxon_id]: true },
+    });
+  });
+});
+
 describe("formatPopularFields", () => {
+  function taxaIdForTermId(results: PopularFieldForGraph[]) {
+    return results.map((r) => r.taxon_id);
+  }
+  function termValueIdForTermId(results: PopularFieldForGraph[]) {
+    return results.map((r) => r.annotations.map((a) => a.controlled_value.id));
+  }
+
   test("takes popular fields api and returns object", () => {
     let store = structuredClone(mapStore);
 
@@ -115,6 +152,36 @@ describe("formatPopularFields", () => {
     monarch.taxon_color = defaultColorScheme[1];
 
     let results = formatPopularFields([milkweed, monarch]);
+
+    expect(Object.keys(results)).toStrictEqual([
+      "1",
+      "9",
+      "12",
+      "17",
+      "22",
+      "36",
+    ]);
+    expect(taxaIdForTermId(results[1])).toStrictEqual([monarchBasic.id]);
+    expect(taxaIdForTermId(results[9])).toStrictEqual([
+      milkweedBasic.id,
+      monarchBasic.id,
+    ]);
+    expect(taxaIdForTermId(results[12])).toStrictEqual([milkweedBasic.id]);
+    expect(taxaIdForTermId(results[17])).toStrictEqual([monarchBasic.id]);
+    expect(taxaIdForTermId(results[22])).toStrictEqual([monarchBasic.id]);
+    expect(taxaIdForTermId(results[36])).toStrictEqual([milkweedBasic.id]);
+
+    expect(termValueIdForTermId(results[1])).toStrictEqual([[2, 4, 6, 7]]);
+    expect(termValueIdForTermId(results[9])).toStrictEqual([
+      [10, 11, 20],
+      [10, 11, 20],
+    ]);
+    expect(termValueIdForTermId(results[12])).toStrictEqual([[13, 14, 15, 21]]);
+    expect(termValueIdForTermId(results[17])).toStrictEqual([[18, 19, 20]]);
+    expect(termValueIdForTermId(results[22])).toStrictEqual([
+      [24, 25, 26, 28, 29, 30, 32, 35],
+    ]);
+    expect(termValueIdForTermId(results[36])).toStrictEqual([[37, 38, 39, 40]]);
 
     expect(results).toStrictEqual(processedPopularFields);
   });
@@ -137,31 +204,6 @@ describe("formatPopularFields", () => {
     let results = formatPopularFields([data1, data2]);
 
     expect(results).toStrictEqual(processedPopularFieldsGooseberry);
-  });
-});
-
-describe("formatPopularFieldsByTaxa", () => {
-  test("takes popular fields api and returns object", () => {
-    let milkweed = structuredClone(
-      popular_fields_milkweed,
-    ) as NormalizedPopularFields;
-    milkweed.taxon_id = milkweedBasic.id;
-
-    let monarch = structuredClone(
-      popular_fields_monarch,
-    ) as NormalizedPopularFields;
-    monarch.taxon_id = monarchBasic.id;
-
-    let results = exampleObject.formatPopularFieldsByTaxa([milkweed, monarch]);
-
-    expect(results).toStrictEqual({
-      1: { [monarch.taxon_id]: true },
-      12: { [milkweed.taxon_id]: true },
-      17: { [monarch.taxon_id]: true },
-      22: { [monarch.taxon_id]: true },
-      36: { [milkweed.taxon_id]: true },
-      9: { [milkweed.taxon_id]: true, [monarch.taxon_id]: true },
-    });
   });
 });
 

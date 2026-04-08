@@ -14,6 +14,7 @@ import {
   type ChartConfiguration,
   type ChartTypeRegistry,
   type TooltipItem,
+  type LegendItem,
 } from "chart.js";
 import "chartjs-adapter-spacetime";
 
@@ -25,6 +26,10 @@ import type {
 import type { iNatObservationsHistogramResult } from "../../types/inat_api";
 import { formatTaxonName } from "../../lib/data_utils";
 import { hexToRgb } from "../../lib/utils";
+import {
+  getColorByIndex,
+  secondaryColorScheme,
+} from "../../lib/map_colors_utils";
 
 Chart.register(
   Colors,
@@ -166,64 +171,123 @@ const htmlLegendPlugin = {
     header.innerText = chart.options.plugins?.title?.text?.toString() || "";
     legendContainer.appendChild(header);
 
-    let listContainer = document.createElement("ul");
-    listContainer.classList.add("graph-custom-legend");
-    legendContainer.appendChild(listContainer);
-
     // Reuse the built-in legendItems generator
     let generateLabels = chart.options.plugins?.legend?.labels?.generateLabels;
     if (!generateLabels) return;
 
-    let annotations = new Set();
     const items = generateLabels(chart);
-    items.forEach((item) => {
-      let annotationValue = item.text.split("-")[0].trim();
-      if (annotations.has(annotationValue)) return;
-      annotations.add(annotationValue);
 
-      let indexes: number[] = [];
-      items.forEach((item) => {
-        if (
-          item.datasetIndex !== undefined &&
-          annotationValue === item.text.split("-")[0].trim()
-        ) {
-          indexes.push(item.datasetIndex);
-        }
-      });
+    let list1El = createGroupByLegend(items);
+    legendContainer.appendChild(list1El);
 
-      const liEl = document.createElement("li");
-      liEl.onclick = () => {
-        indexes.forEach((index) => {
-          chart.setDatasetVisibility(index, !chart.isDatasetVisible(index));
-        });
-        chart.update();
-      };
-
-      // line
-      const swatchEl = document.createElement("span");
-      swatchEl.className = "swatch";
-      swatchEl.appendChild(
-        createLineSvg(
-          200,
-          8,
-          item.strokeStyle as string,
-          item.lineWidth as number,
-          item.lineDash as number[],
-        ),
-      );
-
-      // Text
-      const textContainer = document.createElement("p");
-      textContainer.style.color = item.fontColor as string;
-      textContainer.style.textDecoration = item.hidden ? "line-through" : "";
-      textContainer.innerText = annotationValue;
-
-      liEl.appendChild(swatchEl);
-      liEl.appendChild(textContainer);
-      listContainer.appendChild(liEl);
-    });
+    let list2El = createAnnotationLegend(items, chart);
+    legendContainer.appendChild(list2El);
   },
 };
+
+function createGroupByLegend(items: LegendItem[]) {
+  let listContainer = document.createElement("ul");
+  listContainer.classList.add("graph-groupby-legend");
+
+  let groupByLabels = new Set();
+  items.forEach((item) => {
+    let groupByValue = item.text.split("-")[1].trim();
+
+    if (groupByLabels.has(groupByValue)) return;
+    groupByLabels.add(groupByValue);
+
+    let indexes: number[] = [];
+    items.forEach((item) => {
+      if (
+        item.datasetIndex !== undefined &&
+        groupByValue === item.text.split("-")[1].trim()
+      ) {
+        indexes.push(item.datasetIndex);
+      }
+    });
+
+    const liEl = document.createElement("li");
+
+    // line
+    const swatchEl = document.createElement("span");
+    swatchEl.className = "swatch";
+    swatchEl.appendChild(
+      createLineSvg(
+        200,
+        8,
+        item.strokeStyle as string,
+        item.lineWidth as number,
+        item.lineDash as number[],
+      ),
+    );
+
+    // Text
+    const textContainer = document.createElement("p");
+    textContainer.style.color = item.fontColor as string;
+    // textContainer.style.textDecoration = item.hidden ? "line-through" : "";
+    textContainer.innerText = groupByValue;
+
+    liEl.appendChild(swatchEl);
+    liEl.appendChild(textContainer);
+    listContainer.appendChild(liEl);
+  });
+  return listContainer;
+}
+
+function createAnnotationLegend(items: LegendItem[], chart: Chart) {
+  let listContainer = document.createElement("ul");
+  listContainer.classList.add("graph-annotation-legend");
+
+  let annotations = new Set();
+  items.forEach((item) => {
+    let annotationValue = item.text.split("-")[0].trim();
+    if (annotations.has(annotationValue)) return;
+    annotations.add(annotationValue);
+
+    let indexes: number[] = [];
+    items.forEach((item) => {
+      if (
+        item.datasetIndex !== undefined &&
+        annotationValue === item.text.split("-")[0].trim()
+      ) {
+        indexes.push(item.datasetIndex);
+      }
+    });
+
+    const liEl = document.createElement("li");
+    liEl.className = item.hidden ? "" : "active";
+
+    liEl.onclick = () => {
+      indexes.forEach((index) => {
+        chart.setDatasetVisibility(index, !chart.isDatasetVisible(index));
+      });
+      chart.update();
+    };
+
+    // line
+    const swatchEl = document.createElement("span");
+    swatchEl.className = "swatch";
+    swatchEl.appendChild(
+      createLineSvg(
+        200,
+        8,
+        item.fontColor as string,
+        item.lineWidth as number,
+        item.lineDash as number[],
+      ),
+    );
+
+    // Text
+    const textContainer = document.createElement("p");
+    textContainer.innerText = annotationValue;
+
+    liEl.appendChild(swatchEl);
+    liEl.appendChild(textContainer);
+    listContainer.appendChild(liEl);
+  });
+
+  return listContainer;
+}
 
 function formatTooltipTitle(
   context: TooltipItem<keyof ChartTypeRegistry>[],
@@ -256,6 +320,7 @@ function createLineGraph(
   timeUnit: TimeUnits | null,
   valueUnit: string | null,
   useDefaultLegend: boolean,
+  legendSelector: string | null,
 ) {
   let config = formatConfig(
     data,
@@ -267,6 +332,7 @@ function createLineGraph(
     timeUnit,
     valueUnit,
     useDefaultLegend,
+    legendSelector,
   );
 
   if (config) {
@@ -309,6 +375,7 @@ function formatConfig(
   timeUnit: TimeUnits | null,
   valueUnit: string | null,
   useDefaultLegend: boolean,
+  legendSelector: string | null,
 ) {
   let config: ChartConfiguration = {
     type: "line",
@@ -366,12 +433,13 @@ function formatConfig(
       // @ts-ignore
       config.options.plugins.htmlLegend = {
         // ID of the container to put the legend in
-        containerID: "legend-container",
+        containerID: legendSelector,
       };
     }
     config.plugins = [htmlLegendPlugin];
-  } else {
-    const legendContainer = document.getElementById("legend-container");
+  } else if (legendSelector) {
+    const legendContainer = document.getElementById(legendSelector);
+    debugger;
     if (!legendContainer) return;
 
     // Remove old legend items
@@ -442,7 +510,9 @@ export function createGraphs(
       labels.push(`${name}`);
     });
   } else if (selectedResource === "selectedPlaces") {
-    appStore.selectedPlaces.map((place) => {
+    appStore.selectedPlaces.map((place, i) => {
+      colors.push(getColorByIndex(i, secondaryColorScheme));
+
       labels.push(`${place.name}`);
     });
   }
@@ -472,6 +542,7 @@ export function createGraphs(
       null,
       getValueUnits(appStore),
       true,
+      null,
     );
   } else if (results[0].year) {
     let combinedXAxisLabels = formatYearData(results[0].year).labels;
@@ -496,6 +567,7 @@ export function createGraphs(
       "year",
       getValueUnits(appStore),
       true,
+      null,
     );
   } else if (results[0].month) {
     let combinedXAxisLabels = formatMonthData(results[0].month).labels;
@@ -520,13 +592,14 @@ export function createGraphs(
       "month",
       getValueUnits(appStore),
       true,
+      null,
     );
   }
 
   return canvasEl;
 }
 
-export function createPopularFieldsGraphsForTaxon(
+export function createPopularFieldsGraphs(
   result: PopularFieldForGraph,
   appStore: AppStoreType,
 ) {
@@ -570,35 +643,15 @@ export function createPopularFieldsGraphsForTaxon(
     null,
     getValueUnits(appStore),
     true,
+    null,
   );
 
   return containerEl;
 }
 
-export function calculateBorderDash(
-  index: number,
-  lineLength: number,
-  spaceLength: number,
-) {
-  // let results = [index * lineLength, index * spaceLength];
-  if (index === 0) {
-    return [0, 0];
-  } else if (index === 1) {
-    return [lineLength, spaceLength];
-  } else {
-    let results = [lineLength, spaceLength];
-    let count = index - 1;
-    while (count > 0) {
-      results.push(spaceLength);
-      results.push(spaceLength);
-      count -= 1;
-    }
-    return results;
-  }
-}
-
-export function createPopularFieldsGraphs(
+export function createPopularFieldsGraphsGroupSpecies(
   results: PopularFieldForGraph[],
+  legendSelector: string,
   appStore: AppStoreType,
 ) {
   let containerEl = document.createElement("canvas");
@@ -652,9 +705,93 @@ export function createPopularFieldsGraphs(
     null,
     getValueUnits(appStore),
     false,
+    legendSelector,
   );
 
   return containerEl;
+}
+
+export function createPopularFieldsGraphsGroupPlaces(
+  results: PopularFieldForGraph[],
+  legendSelector: string,
+  appStore: AppStoreType,
+) {
+  let containerEl = document.createElement("canvas");
+  let id = `graph-${Math.round(new Date().getTime() * Math.random())}`;
+  containerEl.id = id;
+
+  let graphMetadata = appStore.viewMetadata.observations_observations.graphs;
+
+  let colors: string[] = [];
+  let labels: string[] = [];
+  let borderDash: number[][] = [];
+
+  results.forEach((result) => {
+    result.annotations.forEach((a, j) => {
+      borderDash.push(calculateBorderDash(j, 10, 2));
+      colors.push(result.place_color as string);
+      labels.push(`${a.controlled_value.label} - ${result.place_name}`);
+    });
+
+    // add not annotated data
+    borderDash.push(calculateBorderDash(1, 3, 6));
+    colors.push(result.place_color as string);
+    labels.push(`Not annotated - ${result.place_name}`);
+  });
+
+  let combinedValues = [] as number[][];
+  let combinedXAxisLabels = [] as string[];
+  results.forEach((result) => {
+    result.annotations.forEach((annotation) => {
+      let { values, labels } = formatMonthOfYearData(annotation.month_of_year);
+      combinedValues.push(values);
+      combinedXAxisLabels = labels;
+    });
+    let { values } = formatMonthOfYearData(result.unannotated.month_of_year);
+    combinedValues.push(values);
+  });
+
+  if (graphMetadata && graphMetadata.valueType === "percents") {
+    combinedValues = combinedValues.map((values) => calculatePercents(values));
+  }
+
+  createLineGraph(
+    containerEl,
+    combinedValues,
+    labels,
+    colors,
+    borderDash,
+    combinedXAxisLabels,
+    `${results[0]?.taxon_name} - ${results[0]?.controlled_attribute.label}`,
+    null,
+    getValueUnits(appStore),
+    false,
+    legendSelector,
+  );
+
+  return containerEl;
+}
+
+export function calculateBorderDash(
+  index: number,
+  lineLength: number,
+  spaceLength: number,
+) {
+  // let results = [index * lineLength, index * spaceLength];
+  if (index === 0) {
+    return [0, 0];
+  } else if (index === 1) {
+    return [lineLength, spaceLength];
+  } else {
+    let results = [lineLength, spaceLength];
+    let count = index - 1;
+    while (count > 0) {
+      results.push(spaceLength);
+      results.push(spaceLength);
+      count -= 1;
+    }
+    return results;
+  }
 }
 
 function calculatePercents(counts: number[]) {
