@@ -72,7 +72,6 @@ export interface AppStoreType {
   currentView?: ObservationViewsType;
   cacheData: {
     observations: {
-      observations: iNatObservationsAPI;
       graphs: GraphData;
       graphsSpecies: GraphData;
       graphsPlaces: GraphData;

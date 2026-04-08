@@ -1,7 +1,7 @@
 import { observationsTemplate } from "../SubviewGrid/shared_template";
 import { loggerEvent, loggerRender } from "../../lib/logger";
 import { setupComponent } from "../../lib/component_utils";
-import type { AppStoreType } from "../../types/app";
+import type { AppStoreType, DataComponentType } from "../../types/app";
 import {
   addEventListenersObservations,
   eventHandlersObservations,
@@ -9,6 +9,7 @@ import {
   removeEventListenersObservations,
   renderObservations,
 } from "../SubviewGrid/shared_utils";
+import type { iNatObservationsAPI } from "../../types/inat_api";
 
 class SubviewObservationsTable extends HTMLElement {
   constructor() {
@@ -24,7 +25,8 @@ class SubviewObservationsTable extends HTMLElement {
     this.orderForm = this.querySelector<HTMLFormElement>("#order-form");
     if (!this.orderForm) return;
 
-    this.render(window.app.store);
+    let data = (this as DataComponentType).data as iNatObservationsAPI;
+    this.render(data, window.app.store);
 
     addEventListenersObservations(this);
   }
@@ -41,9 +43,9 @@ class SubviewObservationsTable extends HTMLElement {
     eventHandlersObservations(event, this, window.app.store);
   }
 
-  render(appStore: AppStoreType) {
+  render(data: iNatObservationsAPI, appStore: AppStoreType) {
     loggerRender("++ SubviewObservationsTable render");
-    renderObservations(appStore);
+    renderObservations(data, appStore);
     initFilters(appStore);
   }
 }

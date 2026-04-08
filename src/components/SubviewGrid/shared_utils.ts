@@ -12,16 +12,17 @@ import { createGrid } from "./utils";
 // re-render grids, tables, pagination everytime we fetch new data. only render
 // map if it does not exist since we have another function to add/delete map
 // layers when data changes.
-export function renderObservations(appStore: AppStoreType) {
+export function renderObservations(
+  data: iNatObservationsAPI | undefined,
+  appStore: AppStoreType,
+) {
   loggerRender("++ SubviewObservationsGrid render");
   let dataContainer = document.querySelector("#subview-data-container");
   if (!dataContainer) return;
 
   dataContainer.innerHTML = "";
 
-  let cacheData = appStore.cacheData.observations.observations;
-
-  if (cacheData.total_results === 0) {
+  if (data === undefined || data.total_results === 0) {
     dataContainer.innerHTML = "No records found";
 
     return;
@@ -31,14 +32,14 @@ export function renderObservations(appStore: AppStoreType) {
     "app-pagination",
   ) as DataComponentType;
   pagination1.data = {
-    perPage: cacheData.per_page,
-    currentPage: cacheData.page,
-    totalRecords: cacheData.total_results,
+    perPage: data.per_page,
+    currentPage: data.page,
+    totalRecords: data.total_results,
     paginationCallback,
   };
   dataContainer.appendChild(pagination1);
 
-  let filteredObservations = filterObservationsBeta(cacheData, appStore);
+  let filteredObservations = filterObservationsBeta(data, appStore);
 
   let subview = appStore.viewMetadata.observations_observations.subview;
   if (subview === "grid") {
@@ -53,9 +54,9 @@ export function renderObservations(appStore: AppStoreType) {
     "app-pagination",
   ) as DataComponentType;
   pagination2.data = {
-    perPage: cacheData.per_page,
-    currentPage: cacheData.page,
-    totalRecords: cacheData.total_results,
+    perPage: data.per_page,
+    currentPage: data.page,
+    totalRecords: data.total_results,
     paginationCallback,
     scrollToSelector: "#observations-list-controls",
   };
@@ -175,8 +176,8 @@ export async function paginationCallback(num: number, appStore: AppStoreType) {
   // HACK: update store
   appStore.viewMetadata = appStore.viewMetadata;
 
-  await fetchAndCacheData(appStore, false);
-  renderObservations(appStore);
+  let data = await fetchAndCacheData(appStore, false);
+  renderObservations(data, appStore);
   updateAppUrl(window.location, appStore);
 }
 

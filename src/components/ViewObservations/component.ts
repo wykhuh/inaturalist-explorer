@@ -93,10 +93,10 @@ class ViewObservations extends HTMLElement {
     initFilters(appStore, this);
 
     // load observation data for grid/table
-    await fetchAndCacheData(appStore, true);
+    let data = await fetchAndCacheData(appStore, true);
     spinner.stop();
 
-    renderSubview(appStore);
+    renderSubview(data, appStore);
   }
 }
 

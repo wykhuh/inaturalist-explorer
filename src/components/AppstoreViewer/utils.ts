@@ -109,7 +109,6 @@ export function displayAppstoreData(appStore: AppStoreType, _source: string) {
       let obsData = appStore.cacheData.observations;
       data.cacheData = {
         observations: {
-          observations: obsData.observations.total_results,
           graphs: formatGraphsCache(obsData.graphs),
           graphsSpecies: formatGraphsCache(obsData.graphsSpecies),
           graphsPlaces: formatGraphsCache(obsData.graphsPlaces),

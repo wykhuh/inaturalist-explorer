@@ -30,7 +30,6 @@ export async function fetchAndCacheData(
 
   // clear cache
   if (useCache === false) {
-    obsCache.observations = {} as iNatObservationsAPI;
     obsCache.graphsSpecies = { month_of_year: [], year: [], month: [] };
     obsCache.graphs = { month_of_year: [], year: [], month: [] };
     obsCache.graphsPlaces = { month_of_year: [], year: [], month: [] };
@@ -48,10 +47,8 @@ export async function fetchAndCacheData(
   } else if (subview === "map") {
     // handle grid, media, table
   } else {
-    await fetchAndCacheObservationsData(appStore);
+    return await fetchAndCacheObservationsData(appStore);
   }
-
-  appStore.cacheData = appStore.cacheData;
 }
 
 async function fetchAndCacheGraphData(appStore: AppStoreType) {
@@ -85,21 +82,19 @@ async function fetchAndCacheGraphData(appStore: AppStoreType) {
 }
 
 async function fetchAndCacheObservationsData(appStore: AppStoreType) {
-  let obsCache = appStore.cacheData.observations;
-
   let spinner = createSpinner();
   spinner.start();
-  if (obsCache.observations.results === undefined) {
-    let data = await getAPIData(appStore);
-    if (data) {
-      obsCache.observations = data;
-    }
-  }
+  let data = await getAPIData(appStore);
 
   spinner.stop();
+
+  return data;
 }
 
-export function renderSubview(appStore: AppStoreType) {
+export function renderSubview(
+  data: iNatObservationsAPI | undefined,
+  appStore: AppStoreType,
+) {
   let subcontainerEl =
     document.querySelector<HTMLDivElement>(".subview-container");
   if (!subcontainerEl) return;
@@ -123,10 +118,13 @@ export function renderSubview(appStore: AppStoreType) {
     }
   } else if (subview === "table") {
     component = document.createElement("subview-observations-table");
+    component.data = data;
   } else if (subview === "media") {
     component = document.createElement("subview-observations-media");
+    component.data = data;
   } else {
     component = document.createElement("subview-observations-grid");
+    component.data = data;
   }
   subcontainerEl.appendChild(component);
 }
@@ -233,16 +231,17 @@ export async function updateSubviewState(
 
   // if no cached data, fetch data
   // handle graphs
+  let data;
   if (subview === "graph") {
-    await fetchAndCacheGraphData(appStore);
+    data = await fetchAndCacheGraphData(appStore);
     // handle map
   } else if (subview === "map") {
     // handle grid, media, table
   } else {
-    await fetchAndCacheObservationsData(appStore);
+    data = await fetchAndCacheObservationsData(appStore);
   }
 
-  renderSubview(appStore);
+  renderSubview(data, appStore);
 
   // add subview to url
   updateAppUrl(window.location, appStore);

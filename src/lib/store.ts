@@ -5,7 +5,6 @@ import type {
   AppStoreKeysType,
   NormalizediNatUserType,
 } from "../types/app.d.ts";
-import type { iNatObservationsAPI } from "../types/inat_api";
 import { loggerEvent, loggerStore } from "./logger.ts";
 
 // NOTE: update when adding selectedResource; default mapStore
@@ -39,7 +38,6 @@ export const mapStore: AppStoreType = {
   },
   cacheData: {
     observations: {
-      observations: {} as iNatObservationsAPI,
       graphs: { month_of_year: [], year: [], month: [] },
       graphsSpecies: { month_of_year: [], year: [], month: [] },
       graphsPlaces: { month_of_year: [], year: [], month: [] },
