@@ -44,7 +44,9 @@ import "./components/CopyToClipboard/component.ts";
 
 import mapStore from "./lib/store.ts";
 import Router from "./lib/router.ts";
-import { initApp } from "./lib/init_app.ts";
+import { initApp, registerServiceWorker } from "./lib/init_app.ts";
+
+registerServiceWorker();
 
 window.app = { store: mapStore, router: Router };
 
@@ -53,11 +55,3 @@ window.app.router.init();
 
 // initApp() load iNaturalist data and populate app.store
 initApp();
-
-function registerServiceWorker() {
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/service_worker.js");
-  }
-}
-
-registerServiceWorker();

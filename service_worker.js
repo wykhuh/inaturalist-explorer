@@ -3,11 +3,16 @@ const cacheName = `inat_api_cache_${version}`;
 const cacheTime = 60 * 60 * 1000; // one hour
 
 self.addEventListener("install", (ev) => {
-  console.log("sw installed");
+  console.log("service_worker installed");
 });
 
 self.addEventListener("activate", (ev) => {
-  console.log("sw activated");
+  console.log("service_worker activated");
+
+  clients.claim().then(() => {
+    console.log("service_worker has claimed all pages");
+  });
+
   //delete old versions of the cache
   ev.waitUntil(
     caches.keys().then((keys) => {
@@ -53,7 +58,9 @@ async function cacheInatAPI(ev) {
   // return cache if response timestamp is recent enough
   if (cacheResponse) {
     let timestamp = cacheResponse.headers.get("X-timestamp");
+
     if (timestamp && Date.now() - Number(timestamp) < cacheTime) {
+      // console.log("++ sw cache", ev.request.url);
       return cacheResponse;
     }
   }

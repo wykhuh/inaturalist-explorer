@@ -927,3 +927,9 @@ function initRenderView(appStore: AppStoreType) {
   let view = document.createElement(templateName);
   viewContainerEl.appendChild(view);
 }
+
+export function registerServiceWorker() {
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/service_worker.js");
+  }
+}
