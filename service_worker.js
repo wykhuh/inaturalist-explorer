@@ -60,12 +60,14 @@ async function cacheInatAPI(ev) {
     let timestamp = cacheResponse.headers.get("X-timestamp");
 
     if (timestamp && Date.now() - Number(timestamp) < cacheTime) {
+      console.log("++ sw cache");
       // console.log("++ sw cache", ev.request.url);
       return cacheResponse;
     }
   }
 
   // fetch
+  console.log("++ sw fetch");
   // console.log("++ sw fetch", ev.request.url);
   try {
     let response = await fetch(ev.request);
