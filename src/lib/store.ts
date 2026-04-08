@@ -36,16 +36,9 @@ export const mapStore: AppStoreType = {
     headerCounts: new Map() as unknown as Record<string, number>,
     headerCountsIndex: [],
   },
-  cacheData: {
-    observations: {
-      graphs: { month_of_year: [], year: [], month: [] },
-      graphsSpecies: { month_of_year: [], year: [], month: [] },
-      graphsPlaces: { month_of_year: [], year: [], month: [] },
-      popularFields: {},
-    },
-  },
   currentView: "observations_observations",
   viewMetadata: {
+    popularFieldsByTaxa: {},
     popularFieldsOptions: [],
     observations_observations: {
       subview: "map",

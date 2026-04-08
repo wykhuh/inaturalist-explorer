@@ -25,7 +25,6 @@ import { allTaxaRecord } from "../../../data/inat_data";
 import {
   bBoxPlace,
   createMockServer,
-  createPopularFieldCache,
   iNatBboxParams,
   losangeles,
   monarch,
@@ -141,6 +140,31 @@ describe("formatPopularFields", () => {
   });
 });
 
+describe("formatPopularFieldsByTaxa", () => {
+  test("takes popular fields api and returns object", () => {
+    let milkweed = structuredClone(
+      popular_fields_milkweed,
+    ) as NormalizedPopularFields;
+    milkweed.taxon_id = milkweedBasic.id;
+
+    let monarch = structuredClone(
+      popular_fields_monarch,
+    ) as NormalizedPopularFields;
+    monarch.taxon_id = monarchBasic.id;
+
+    let results = exampleObject.formatPopularFieldsByTaxa([milkweed, monarch]);
+
+    expect(results).toStrictEqual({
+      1: { [monarch.taxon_id]: true },
+      12: { [milkweed.taxon_id]: true },
+      17: { [monarch.taxon_id]: true },
+      22: { [monarch.taxon_id]: true },
+      36: { [milkweed.taxon_id]: true },
+      9: { [milkweed.taxon_id]: true, [monarch.taxon_id]: true },
+    });
+  });
+});
+
 describe("createTermIdValueIds", () => {
   test("create object with all term value ids for each term id", () => {
     let data1 = structuredClone(
@@ -203,8 +227,8 @@ describe("updateInvalidGraphCategory", () => {
     if (!graphMetaData) return;
 
     store.selectedTaxa = [redOakBasic];
-    store.cacheData.observations.popularFields = {
-      1: [createPopularFieldCache(redOakBasic, 1)],
+    store.viewMetadata.popularFieldsByTaxa = {
+      1: { [redOakBasic.id]: true },
     };
     graphMetaData.category = "1";
 
@@ -219,8 +243,8 @@ describe("updateInvalidGraphCategory", () => {
     if (!graphMetaData) return;
 
     store.selectedTaxa = [redOakBasic];
-    store.cacheData.observations.popularFields = {
-      1: [createPopularFieldCache(redOakBasic, 1)],
+    store.viewMetadata.popularFieldsByTaxa = {
+      1: { [redOakBasic.id]: true },
     };
     graphMetaData.category = "9";
 
@@ -245,14 +269,18 @@ describe("fetchGraphData", () => {
     );
     let store = structuredClone(mapStore);
 
-    await fetchGraphData(store, getAPIHistogramData, getAPIPopularFieldsData);
+    let result = await fetchGraphData(
+      store,
+      getAPIHistogramData,
+      getAPIPopularFieldsData,
+    );
 
     expect(exampleObject.getAPIHistogramData).toHaveBeenCalledTimes(1);
     expect(exampleObject.getAPIHistogramData).toHaveBeenCalledWith(
       "spam=false&date_field=observed",
       "month_of_year",
     );
-    expect(store.cacheData.observations.graphs.month_of_year).toStrictEqual([
+    expect(result.graphs.month_of_year).toStrictEqual([
       histograph_month_year.results,
     ]);
   });
@@ -275,15 +303,17 @@ describe("fetchGraphData", () => {
     data.taxon_name = redOak().title || "";
     let expectedData = formatPopularFields([data]);
 
-    await fetchGraphData(store, getAPIHistogramData, getAPIPopularFieldsData);
+    let result = await fetchGraphData(
+      store,
+      getAPIHistogramData,
+      getAPIPopularFieldsData,
+    );
 
     expect(exampleObject.getAPIPopularFieldsData).toHaveBeenCalledTimes(1);
     expect(exampleObject.getAPIPopularFieldsData).toHaveBeenCalledWith(
       `taxon_id=${redOakBasic.id}&verifiable=true&spam=false&per_page=50&unannotated=true`,
     );
-    expect(store.cacheData.observations.popularFields).toStrictEqual(
-      expectedData,
-    );
+    expect(result.popularFields).toStrictEqual(expectedData);
   });
 
   test("call getAPIPopularFieldsData with multiple taxa and popular field category", async () => {
@@ -309,7 +339,11 @@ describe("fetchGraphData", () => {
     monarchData.taxon_name = monarch().title || "";
     let expectedData = formatPopularFields([oakData, monarchData]);
 
-    await fetchGraphData(store, getAPIHistogramData, getAPIPopularFieldsData);
+    let results = await fetchGraphData(
+      store,
+      getAPIHistogramData,
+      getAPIPopularFieldsData,
+    );
 
     expect(exampleObject.getAPIPopularFieldsData).toHaveBeenCalledTimes(2);
     expect(exampleObject.getAPIPopularFieldsData).toHaveBeenCalledWith(
@@ -319,9 +353,7 @@ describe("fetchGraphData", () => {
       `taxon_id=${monarchBasic.id}&verifiable=true&spam=false&per_page=50&unannotated=true`,
     );
 
-    expect(store.cacheData.observations.popularFields).toStrictEqual(
-      expectedData,
-    );
+    expect(results.popularFields).toStrictEqual(expectedData);
   });
 
   test("call getAPIHistogramData with default taxa and popular field category", async () => {
@@ -335,14 +367,18 @@ describe("fetchGraphData", () => {
       graphMetaData.category = "1";
     }
 
-    await fetchGraphData(store, getAPIHistogramData, getAPIPopularFieldsData);
+    let result = await fetchGraphData(
+      store,
+      getAPIHistogramData,
+      getAPIPopularFieldsData,
+    );
 
     expect(exampleObject.getAPIHistogramData).toHaveBeenCalledTimes(1);
     expect(exampleObject.getAPIHistogramData).toHaveBeenCalledWith(
       "spam=false&date_field=observed",
       "month_of_year",
     );
-    expect(store.cacheData.observations.graphs.month_of_year).toStrictEqual([
+    expect(result.graphs.month_of_year).toStrictEqual([
       histograph_month_year.results,
     ]);
   });
@@ -359,14 +395,18 @@ describe("fetchGraphData", () => {
       graphMetaData.category = "1000";
     }
 
-    await fetchGraphData(store, getAPIHistogramData, getAPIPopularFieldsData);
+    let result = await fetchGraphData(
+      store,
+      getAPIHistogramData,
+      getAPIPopularFieldsData,
+    );
 
     expect(exampleObject.getAPIHistogramData).toHaveBeenCalledTimes(1);
     expect(exampleObject.getAPIHistogramData).toHaveBeenCalledWith(
       `taxon_id=${redOakBasic.id}&verifiable=true&spam=false&date_field=observed`,
       "month_of_year",
     );
-    expect(store.cacheData.observations.graphs.month_of_year).toStrictEqual([
+    expect(result.graphs.month_of_year).toStrictEqual([
       histograph_month_year.results,
     ]);
   });
@@ -387,7 +427,11 @@ describe("fetchGraphData", () => {
         graphMetaData.category = category;
       }
 
-      await fetchGraphData(store, getAPIHistogramData, getAPIPopularFieldsData);
+      let result = await fetchGraphData(
+        store,
+        getAPIHistogramData,
+        getAPIPopularFieldsData,
+      );
 
       let expected = `taxon_id=${monarchBasic.id}%2C${redOakBasic.id}&verifiable=true&spam=false&date_field=observed`;
       if (category !== "month_of_year") {
@@ -398,7 +442,7 @@ describe("fetchGraphData", () => {
         expected,
         category,
       );
-      expect(store.cacheData.observations.graphs[category]).toStrictEqual([
+      expect(result.graphs[category]).toStrictEqual([
         categoryApiData[category].results,
       ]);
     },
@@ -421,7 +465,11 @@ describe("fetchGraphData", () => {
         graphMetaData.category = category;
       }
 
-      await fetchGraphData(store, getAPIHistogramData, getAPIPopularFieldsData);
+      let result = await fetchGraphData(
+        store,
+        getAPIHistogramData,
+        getAPIPopularFieldsData,
+      );
 
       let expected = `spam=false&date_field=observed`;
       if (category !== "month_of_year") {
@@ -433,7 +481,7 @@ describe("fetchGraphData", () => {
         expected,
         category,
       );
-      expect(store.cacheData.observations.graphs[category]).toStrictEqual([
+      expect(result.graphs[category]).toStrictEqual([
         categoryApiData[category].results,
       ]);
     },
@@ -456,7 +504,11 @@ describe("fetchGraphData", () => {
         graphMetaData.category = category;
       }
 
-      await fetchGraphData(store, getAPIHistogramData, getAPIPopularFieldsData);
+      let result = await fetchGraphData(
+        store,
+        getAPIHistogramData,
+        getAPIPopularFieldsData,
+      );
 
       let expected = `taxon_id=${redOakBasic.id}&verifiable=true&spam=false&date_field=observed`;
       if (category !== "month_of_year") {
@@ -467,9 +519,9 @@ describe("fetchGraphData", () => {
         expected,
         category,
       );
-      expect(
-        store.cacheData.observations.graphsSpecies[category],
-      ).toStrictEqual([categoryApiData[category].results]);
+      expect(result.graphsSpecies[category]).toStrictEqual([
+        categoryApiData[category].results,
+      ]);
     },
   );
 
@@ -490,7 +542,11 @@ describe("fetchGraphData", () => {
         graphMetaData.category = category;
       }
 
-      await fetchGraphData(store, getAPIHistogramData, getAPIPopularFieldsData);
+      let result = await fetchGraphData(
+        store,
+        getAPIHistogramData,
+        getAPIPopularFieldsData,
+      );
 
       let expected1 = `taxon_id=${redOakBasic.id}&verifiable=true&spam=false&date_field=observed`;
       let expected2 = `taxon_id=${monarchBasic.id}&verifiable=true&spam=false&date_field=observed`;
@@ -507,9 +563,7 @@ describe("fetchGraphData", () => {
         expected2,
         category,
       );
-      expect(
-        store.cacheData.observations.graphsSpecies[category],
-      ).toStrictEqual([
+      expect(result.graphsSpecies[category]).toStrictEqual([
         categoryApiData[category].results,
         categoryApiData[category].results,
       ]);
@@ -532,7 +586,11 @@ describe("fetchGraphData", () => {
         graphMetaData.category = category as GraphCategory;
       }
 
-      await fetchGraphData(store, getAPIHistogramData, getAPIPopularFieldsData);
+      let result = await fetchGraphData(
+        store,
+        getAPIHistogramData,
+        getAPIPopularFieldsData,
+      );
 
       let expected = `place_id=${losangeles.id}%2C${sandiego.id}&verifiable=true&spam=false&date_field=observed`;
       if (category !== "month_of_year") {
@@ -543,7 +601,7 @@ describe("fetchGraphData", () => {
         expected,
         category,
       );
-      expect(store.cacheData.observations.graphs[category]).toStrictEqual([
+      expect(result.graphs[category]).toStrictEqual([
         categoryApiData[category].results,
       ]);
     },
@@ -571,7 +629,11 @@ describe("fetchGraphData", () => {
         graphMetaData.category = category as GraphCategory;
       }
 
-      await fetchGraphData(store, getAPIHistogramData, getAPIPopularFieldsData);
+      let result = await fetchGraphData(
+        store,
+        getAPIHistogramData,
+        getAPIPopularFieldsData,
+      );
 
       let expected = `${iNatBboxParams}&spam=false&date_field=observed`;
       if (category !== "month_of_year") {
@@ -582,7 +644,7 @@ describe("fetchGraphData", () => {
         expected,
         category,
       );
-      expect(store.cacheData.observations.graphs[category]).toStrictEqual([
+      expect(result.graphs[category]).toStrictEqual([
         categoryApiData[category].results,
       ]);
     },
@@ -605,7 +667,11 @@ describe("fetchGraphData", () => {
         graphMetaData.groupBy = "places";
       }
 
-      await fetchGraphData(store, getAPIHistogramData, getAPIPopularFieldsData);
+      let result = await fetchGraphData(
+        store,
+        getAPIHistogramData,
+        getAPIPopularFieldsData,
+      );
 
       let expected = `place_id=${losangeles.id}&verifiable=true&spam=false&date_field=observed`;
       if (category !== "month_of_year") {
@@ -616,9 +682,9 @@ describe("fetchGraphData", () => {
         expected,
         category,
       );
-      expect(store.cacheData.observations.graphsPlaces[category]).toStrictEqual(
-        [categoryApiData[category].results],
-      );
+      expect(result.graphsPlaces[category]).toStrictEqual([
+        categoryApiData[category].results,
+      ]);
     },
   );
 
@@ -639,7 +705,11 @@ describe("fetchGraphData", () => {
         graphMetaData.groupBy = "places";
       }
 
-      await fetchGraphData(store, getAPIHistogramData, getAPIPopularFieldsData);
+      let result = await fetchGraphData(
+        store,
+        getAPIHistogramData,
+        getAPIPopularFieldsData,
+      );
 
       let expected1 = `place_id=${losangeles.id}&verifiable=true&spam=false&date_field=observed`;
       let expected2 = `place_id=${sandiego.id}&verifiable=true&spam=false&date_field=observed`;
@@ -656,9 +726,10 @@ describe("fetchGraphData", () => {
         expected2,
         category,
       );
-      expect(store.cacheData.observations.graphsPlaces[category]).toStrictEqual(
-        [categoryApiData[category].results, categoryApiData[category].results],
-      );
+      expect(result.graphsPlaces[category]).toStrictEqual([
+        categoryApiData[category].results,
+        categoryApiData[category].results,
+      ]);
     },
   );
 
@@ -685,7 +756,11 @@ describe("fetchGraphData", () => {
         graphMetaData.groupBy = "places";
       }
 
-      await fetchGraphData(store, getAPIHistogramData, getAPIPopularFieldsData);
+      let result = await fetchGraphData(
+        store,
+        getAPIHistogramData,
+        getAPIPopularFieldsData,
+      );
 
       let expected = `${iNatBboxParams}&spam=false&date_field=observed`;
       if (category !== "month_of_year") {
@@ -696,7 +771,7 @@ describe("fetchGraphData", () => {
         expected,
         category,
       );
-      expect(store.cacheData.observations.graphs[category]).toStrictEqual([
+      expect(result.graphs[category]).toStrictEqual([
         categoryApiData[category].results,
       ]);
     },

@@ -8,6 +8,7 @@ import type {
   AppStoreType,
   ObservationSubviewsType,
   viewMetadataGraphs,
+  ObservationsGraphData,
 } from "../../types/app";
 import { observations_fields_annotations as observations } from "../../data/api/observations";
 import { updateSelectedResourcesId } from "../../lib/count_utils";
@@ -18,7 +19,6 @@ import {
   getAPIHistogramData,
   getAPIPopularFieldsData,
   graphHasMaxObservation,
-  hasGraphCache,
 } from "../SubviewGraphs/utils";
 
 // fetch new data from api when changing pages, order, filters and view
@@ -26,14 +26,8 @@ export async function fetchAndCacheData(
   appStore: AppStoreType,
   useCache: boolean,
 ) {
-  let obsCache = appStore.cacheData && appStore.cacheData.observations;
-
   // clear cache
   if (useCache === false) {
-    obsCache.graphsSpecies = { month_of_year: [], year: [], month: [] };
-    obsCache.graphs = { month_of_year: [], year: [], month: [] };
-    obsCache.graphsPlaces = { month_of_year: [], year: [], month: [] };
-    obsCache.popularFields = {};
     appStore.viewMetadata.popularFieldsOptions = [];
   }
 
@@ -41,7 +35,7 @@ export async function fetchAndCacheData(
   //  handle graphs
   let subview = appStore.viewMetadata.observations_observations.subview;
   if (subview === "graph") {
-    await fetchAndCacheGraphData(appStore);
+    return await fetchAndCacheGraphData(appStore);
 
     // handle map
   } else if (subview === "map") {
@@ -51,10 +45,7 @@ export async function fetchAndCacheData(
   }
 }
 
-async function fetchAndCacheGraphData(appStore: AppStoreType) {
-  let graphsMetadata = appStore.viewMetadata.observations_observations
-    .graphs as viewMetadataGraphs;
-
+export async function fetchAndCacheGraphData(appStore: AppStoreType) {
   let spinner = createSpinner();
   spinner.start();
 
@@ -67,21 +58,18 @@ async function fetchAndCacheGraphData(appStore: AppStoreType) {
     await fetchDataForGraphCategories(appStore);
   }
 
-  // check if cache data exists
-  let graphData = hasGraphCache(appStore, graphsMetadata);
-  // fetch data if no cache
-  if (!graphData) {
-    await fetchGraphData(
-      appStore,
-      getAPIHistogramData,
-      getAPIPopularFieldsData,
-    );
-  }
+  let data = await fetchGraphData(
+    appStore,
+    getAPIHistogramData,
+    getAPIPopularFieldsData,
+  );
 
   spinner.stop();
+
+  return data;
 }
 
-async function fetchObservationsData(appStore: AppStoreType) {
+export async function fetchObservationsData(appStore: AppStoreType) {
   let spinner = createSpinner();
   spinner.start();
   let data = await getAPIData(appStore);
@@ -92,7 +80,7 @@ async function fetchObservationsData(appStore: AppStoreType) {
 }
 
 export function renderSubview(
-  data: iNatObservationsAPI | undefined,
+  data: iNatObservationsAPI | ObservationsGraphData | undefined,
   appStore: AppStoreType,
 ) {
   let subcontainerEl =
@@ -110,11 +98,11 @@ export function renderSubview(
   } else if (subview === "graph") {
     component = document.createElement("subview-observations-graphs");
     if (graphsMetadata.groupBy === "species") {
-      component.data = { selectedResource: "selectedTaxa" };
+      component.data = { selectedResource: "selectedTaxa", data };
     } else if (graphsMetadata.groupBy === "places") {
-      component.data = { selectedResource: "selectedPlaces" };
+      component.data = { selectedResource: "selectedPlaces", data };
     } else {
-      component.data = { selectedResource: undefined };
+      component.data = { selectedResource: undefined, data };
     }
   } else if (subview === "table") {
     component = document.createElement("subview-observations-table");

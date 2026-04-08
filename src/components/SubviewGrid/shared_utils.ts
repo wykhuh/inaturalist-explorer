@@ -176,7 +176,9 @@ export async function paginationCallback(num: number, appStore: AppStoreType) {
   // HACK: update store
   appStore.viewMetadata = appStore.viewMetadata;
 
-  let data = await fetchAndCacheData(appStore, false);
+  let data = (await fetchAndCacheData(appStore, false)) as
+    | iNatObservationsAPI
+    | undefined;
   renderObservations(data, appStore);
   updateAppUrl(window.location, appStore);
 }
@@ -211,13 +213,6 @@ export function filterObservationsBeta(
 }
 
 export function resetGraphCache(appStore: AppStoreType) {
-  let obsCache = appStore.cacheData && appStore.cacheData.observations;
-
-  if (obsCache) {
-    obsCache.graphsSpecies = { month_of_year: [], year: [], month: [] };
-    obsCache.graphs = { month_of_year: [], year: [], month: [] };
-    obsCache.graphsPlaces = { month_of_year: [], year: [], month: [] };
-    obsCache.popularFields = {};
-    appStore.viewMetadata.popularFieldsOptions = [];
-  }
+  appStore.viewMetadata.popularFieldsOptions = [];
+  appStore.viewMetadata.popularFieldsByTaxa = {};
 }

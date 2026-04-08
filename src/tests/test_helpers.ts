@@ -13,7 +13,6 @@ import type {
   NormalizediNatProjectType,
   NormalizediNatTaxonType,
   NormalizediNatUserType,
-  PopularFieldForGraph,
 } from "../types/app";
 import { mapStore } from "../lib/store.ts";
 import { allTaxaRecord } from "../data/inat_data.ts";
@@ -1118,17 +1117,3 @@ export function roundCounts(number: number) {
 
 export const perPage = 24;
 export const perPageUsers = 100;
-
-export function createPopularFieldCache(
-  taxon: NormalizediNatTaxonType,
-  termId: number,
-): PopularFieldForGraph {
-  return {
-    taxon_name: taxon.name || "",
-    taxon_id: taxon.id,
-    taxon_color: taxon.color || "",
-    controlled_attribute: { id: termId, label: "foo" },
-    annotations: [],
-    unannotated: { count: 50, month_of_year: { 1: 50 } },
-  };
-}

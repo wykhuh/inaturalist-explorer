@@ -13,6 +13,7 @@ import type {
   MultiPolygonJson,
   iNatObservationsAPI,
   iNatPopularFieldsAPI,
+  iNatObservationsHistogramResult,
 } from "./inat_api";
 import type { TerraDraw } from "terra-draw";
 
@@ -70,15 +71,8 @@ export interface AppStoreType {
     headerCountsIndex: string[];
   };
   currentView?: ObservationViewsType;
-  cacheData: {
-    observations: {
-      graphs: GraphData;
-      graphsSpecies: GraphData;
-      graphsPlaces: GraphData;
-      popularFields: PopularFieldsByTermId;
-    };
-  };
   viewMetadata: {
+    popularFieldsByTaxa: PopularFieldsByTaxa;
     popularFieldsOptions: PopularFieldOption[];
     observations_observations: ViewOptions;
     observations_species: ViewOptions;
@@ -93,6 +87,10 @@ export interface AppStoreType {
   };
   record_type: RecordTypes;
 }
+
+export type PopularFieldsByTaxa = {
+  [term_id: string]: { [taxon_id: string]: true };
+};
 
 export type PopularFieldsByTermId = {
   [term_id: number]: PopularFieldForGraph[];
@@ -120,6 +118,13 @@ interface NormalizedPopularFields extends iNatPopularFieldsAPI {
   taxon_name: string;
   taxon_color: string;
 }
+
+export type ObservationsGraphData = {
+  graphs: GraphData;
+  graphsSpecies: GraphData;
+  graphsPlaces: GraphData;
+  popularFields: PopularFieldsByTermId;
+};
 
 export type GraphData = {
   month_of_year: iNatObservationsHistogramResult[];

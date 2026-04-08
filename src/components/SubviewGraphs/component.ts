@@ -6,6 +6,7 @@ import type {
   AppStoreSelectedResourcesKeysType,
   AppStoreType,
   DataComponentType,
+  ObservationsGraphData,
   viewMetadataGraphs,
 } from "../../types/app";
 import {
@@ -26,6 +27,7 @@ import { resetGraphCache } from "../SubviewGrid/shared_utils";
 
 type PropType = {
   selectedResource?: AppStoreSelectedResourcesKeysType;
+  data?: ObservationsGraphData;
 };
 class SubviewObservationsGraphs extends HTMLElement {
   constructor() {
@@ -42,7 +44,7 @@ class SubviewObservationsGraphs extends HTMLElement {
     if (!this.graphForm) return;
 
     let data: PropType = (this as DataComponentType).data;
-    this.render(data.selectedResource, window.app.store);
+    this.render(data.data, data.selectedResource, window.app.store);
 
     window.addEventListener("selectedTaxaUpdate", this);
     window.addEventListener("selectedPlacesUpdate", this);
@@ -106,6 +108,7 @@ class SubviewObservationsGraphs extends HTMLElement {
   }
 
   async render(
+    data: ObservationsGraphData | undefined,
     selectedResource: AppStoreSelectedResourcesKeysType | undefined,
     appStore: AppStoreType,
   ) {
@@ -119,7 +122,7 @@ class SubviewObservationsGraphs extends HTMLElement {
     disableGroupByForSelectedResources(appStore, this);
     initGraphFilters(appStore);
 
-    renderGraphs(appStore, this, selectedResource);
+    renderGraphs(data, appStore, this, selectedResource);
   }
 
   async fetchAndRender(appStore: AppStoreType) {
@@ -132,7 +135,7 @@ class SubviewObservationsGraphs extends HTMLElement {
 
     updateInvalidGraphCategory(appStore, graphsMetadata);
     resetGraphCache(appStore);
-    await fetchGraphData(
+    let data = await fetchGraphData(
       appStore,
       getAPIHistogramData,
       getAPIPopularFieldsData,
@@ -150,7 +153,7 @@ class SubviewObservationsGraphs extends HTMLElement {
       selectedResource = "selectedPlaces";
     }
 
-    this.render(selectedResource, appStore);
+    this.render(data, selectedResource, appStore);
   }
 }
 

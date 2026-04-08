@@ -29,7 +29,6 @@ import {
   defaultQuery,
   defaultParams,
   monarchBasic,
-  createPopularFieldCache,
 } from "./test_helpers.ts";
 import type {
   AppStoreType,
@@ -50,10 +49,12 @@ import {
   selectedResourcesIdObservations,
   validIdentificationsSubviews,
   validIdentificationsViews,
+  histogramGraphCategory,
 } from "../data/app_data.ts";
 import { validObservationsSubviews, validViews } from "../data/app_data.ts";
 import { defaultColorScheme } from "../lib/map_colors_utils.ts";
 import { allTaxaRecord } from "../data/inat_data.ts";
+import { isPopularFieldCategory } from "../lib/data_utils.ts";
 
 describe("hexToRgb", () => {
   test("converts 6 character hex to rgb", () => {
@@ -541,7 +542,7 @@ describe("formatAppUrl", () => {
     expect(result).toBe(``);
   });
 
-  test.each(validGraphCategory)(
+  test.each(histogramGraphCategory)(
     "return params with graphs category and one selected places",
     (category) => {
       let store = structuredClone(mapStore);
@@ -564,7 +565,7 @@ describe("formatAppUrl", () => {
     },
   );
 
-  test.each(validGraphCategory)(
+  test.each(histogramGraphCategory)(
     "return params with graphs category and multiple selected places",
     (category) => {
       let store = structuredClone(mapStore);
@@ -587,7 +588,7 @@ describe("formatAppUrl", () => {
     },
   );
 
-  test.each(validGraphCategory)(
+  test.each(histogramGraphCategory)(
     "ignore group by places if graphs category and one selected places",
     (category) => {
       let store = structuredClone(mapStore);
@@ -611,7 +612,7 @@ describe("formatAppUrl", () => {
     },
   );
 
-  test.each(validGraphCategory)(
+  test.each(histogramGraphCategory)(
     "return params with graphs category, multiple selected places, and group by places",
     (category) => {
       let store = structuredClone(mapStore);
@@ -623,11 +624,11 @@ describe("formatAppUrl", () => {
 
       let result = formatAppUrl(store);
 
-      expect(result).toBe(
+      let expected =
         `place_id=${losangeles.id},${sandiego.id}&${defaultQuery}` +
-          `&graphs_category=${category}` +
-          `&graphs_group_by=places`,
-      );
+        `&graphs_category=${category}` +
+        `&graphs_group_by=places`;
+      expect(result).toBe(expected);
     },
   );
 
@@ -638,6 +639,11 @@ describe("formatAppUrl", () => {
       store.selectedTaxa = [redOak()];
       if (store.viewMetadata.observations_observations.graphs) {
         store.viewMetadata.observations_observations.graphs.category = category;
+      }
+      if (isPopularFieldCategory(store)) {
+        store.viewMetadata.popularFieldsByTaxa = {
+          [category]: { [redOak().id]: true },
+        };
       }
 
       let result = formatAppUrl(store);
@@ -661,6 +667,11 @@ describe("formatAppUrl", () => {
       store.selectedTaxa = [life(), redOak()];
       if (store.viewMetadata.observations_observations.graphs) {
         store.viewMetadata.observations_observations.graphs.category = category;
+      }
+      if (isPopularFieldCategory(store)) {
+        store.viewMetadata.popularFieldsByTaxa = {
+          [category]: { [redOak().id]: true, [life().id]: true },
+        };
       }
 
       let result = formatAppUrl(store);
@@ -686,6 +697,11 @@ describe("formatAppUrl", () => {
         store.viewMetadata.observations_observations.graphs.category = category;
         store.viewMetadata.observations_observations.graphs.groupBy = "species";
       }
+      if (isPopularFieldCategory(store)) {
+        store.viewMetadata.popularFieldsByTaxa = {
+          [category]: { [life().id]: true },
+        };
+      }
 
       let result = formatAppUrl(store);
 
@@ -710,6 +726,11 @@ describe("formatAppUrl", () => {
         store.viewMetadata.observations_observations.graphs.category = category;
         store.viewMetadata.observations_observations.graphs.groupBy = "species";
       }
+      if (isPopularFieldCategory(store)) {
+        store.viewMetadata.popularFieldsByTaxa = {
+          [category]: { [life().id]: true },
+        };
+      }
 
       let result = formatAppUrl(store);
 
@@ -733,14 +754,14 @@ describe("formatAppUrl", () => {
     expect(result).toBe(``);
   });
 
-  test("do not add graph category to url if selected taxa does not have popular field cache for selected category", () => {
+  test("do not add graph category to url if selected taxa does not have popularFieldsByTaxa for selected category", () => {
     let store = structuredClone(mapStore);
     store.viewMetadata.observations_observations.graphs = {
       category: "1",
     };
     store.selectedTaxa = [monarchBasic];
-    store.cacheData.observations.popularFields = {
-      10: [createPopularFieldCache(monarchBasic, 10)],
+    store.viewMetadata.popularFieldsByTaxa = {
+      10: { [monarchBasic.id]: true },
     };
 
     let result = formatAppUrl(store);
@@ -748,14 +769,14 @@ describe("formatAppUrl", () => {
     expect(result).toBe(`taxon_id=${monarchBasic.id}&${defaultQuery}`);
   });
 
-  test("add popular field id graph category to url if selected taxa does have popular field cache for selected category", () => {
+  test("add popular field id graph category to url if selected taxa does have popularFieldsByTaxa for selected category", () => {
     let store = structuredClone(mapStore);
     store.viewMetadata.observations_observations.graphs = {
       category: "1",
     };
     store.selectedTaxa = [monarchBasic];
-    store.cacheData.observations.popularFields = {
-      1: [createPopularFieldCache(monarchBasic, 1)],
+    store.viewMetadata.popularFieldsByTaxa = {
+      1: { [monarchBasic.id]: true },
     };
 
     let result = formatAppUrl(store);
@@ -765,18 +786,17 @@ describe("formatAppUrl", () => {
     );
   });
 
-  test("add popular field id graph category to url  if no popular field cache", () => {
+  test("add popular field id graph category to url  if no popularFieldsByTaxa", () => {
     let store = structuredClone(mapStore);
     store.viewMetadata.observations_observations.graphs = {
       category: "1",
     };
     store.selectedTaxa = [monarchBasic];
+    store.viewMetadata.popularFieldsByTaxa = {};
 
     let result = formatAppUrl(store);
 
-    expect(result).toBe(
-      `taxon_id=${monarchBasic.id}&${defaultQuery}&graphs_category=1`,
-    );
+    expect(result).toBe(`taxon_id=${monarchBasic.id}&${defaultQuery}`);
   });
 
   test.each(validGraphValueType)("add graph value to url", (valueType) => {

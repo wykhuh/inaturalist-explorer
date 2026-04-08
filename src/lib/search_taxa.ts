@@ -259,25 +259,16 @@ export function removePopularFieldsForTaxon(
   appStore: AppStoreType,
   taxonId: number,
 ) {
-  appStore.cacheData.observations.popularFields;
   for (let [id, values] of Object.entries(
-    appStore.cacheData.observations.popularFields,
+    appStore.viewMetadata.popularFieldsByTaxa,
   )) {
-    // remove popular fields for current taxon
-    let newValues = values.filter((value) => value.taxon_id !== taxonId);
+    delete values[taxonId];
 
     // update popular field if there are other taxon with this popular field
-    if (newValues.length > 0) {
-      appStore.cacheData.observations.popularFields[id as unknown as number] =
-        newValues;
-      // remove popular field from cache if no taxa has this popular field
-    } else {
-      delete appStore.cacheData.observations.popularFields[
-        id as unknown as number
-      ];
+    if (Object.keys(values).length === 0) {
+      delete appStore.viewMetadata.popularFieldsByTaxa[id as unknown as number];
     }
   }
-  appStore.cacheData.observations.popularFields;
 }
 
 export function removeOneTaxonFromMap(appStore: AppStoreType, taxonId: number) {

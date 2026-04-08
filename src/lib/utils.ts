@@ -229,8 +229,7 @@ export function formatAppUrl(
       params.graphs_category = "month_of_year";
     } else if (
       isPopularFieldCategory(appStore) &&
-      Object.keys(appStore.cacheData.observations.popularFields).length > 0 &&
-      appStore.cacheData.observations.popularFields[
+      appStore.viewMetadata.popularFieldsByTaxa[
         graphsMetadata.category as unknown as number
       ] === undefined
     ) {

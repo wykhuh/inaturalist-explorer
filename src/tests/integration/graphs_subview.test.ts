@@ -54,21 +54,14 @@ afterAll(() => {
   server.close();
 });
 
-// NOTE: update when adding selectedResource
 describe("initPopulateStore resources", () => {
   test("loads and renders taxa data based on url params 2", async () => {
     let store = structuredClone(mapStore);
-    let pageElement = document.createElement("page-observations");
-    const mainEl = document.querySelector<HTMLDivElement>("#app");
-    mainEl?.appendChild(pageElement);
-    const foo = document.querySelector<HTMLDivElement>("page-observations");
-    console.log(foo);
-    return;
+
     expectEmpytMap(store);
 
     let searchparams = `?view=observations_observations&subview=graph`;
     let urlData = decodeAppUrl(searchparams, "/");
-    // Router.init();
 
     await initPopulateStore(store, urlData);
 
@@ -84,11 +77,7 @@ describe("initPopulateStore resources", () => {
     expect(store.identificationsApiParams).toStrictEqual({});
     expect(store.viewMetadata.observations_observations.graphs).toStrictEqual({
       category: "month_of_year",
-    });
-    expect(store.cacheData.observations.graphs).toStrictEqual({
-      month: [],
-      month_of_year: [],
-      year: [],
+      valueType: "counts",
     });
   });
 
@@ -116,11 +105,6 @@ describe("initPopulateStore resources", () => {
       category: "month_of_year",
       valueType: "counts",
     });
-    expect(store.cacheData.observations.graphs).toStrictEqual({
-      month: [],
-      month_of_year: [],
-      year: [],
-    });
   });
 
   test("loads and renders taxa data based on url params 1", async () => {
@@ -147,11 +131,6 @@ describe("initPopulateStore resources", () => {
     expect(store.viewMetadata.observations_observations.graphs).toStrictEqual({
       category: "month_of_year",
       valueType: "counts",
-    });
-    expect(store.cacheData.observations.graphs).toStrictEqual({
-      month: [],
-      month_of_year: [],
-      year: [],
     });
   });
 });
