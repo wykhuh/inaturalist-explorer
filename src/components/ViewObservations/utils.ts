@@ -33,8 +33,8 @@ export async function fetchAndCacheData(
     obsCache.graphsSpecies = { month_of_year: [], year: [], month: [] };
     obsCache.graphs = { month_of_year: [], year: [], month: [] };
     obsCache.graphsPlaces = { month_of_year: [], year: [], month: [] };
-    obsCache.popularFieldsOptions = [];
     obsCache.popularFields = {};
+    appStore.viewMetadata.popularFieldsOptions = [];
   }
 
   // if no cached data, fetch data
@@ -47,7 +47,7 @@ export async function fetchAndCacheData(
   } else if (subview === "map") {
     // handle grid, media, table
   } else {
-    return await fetchAndCacheObservationsData(appStore);
+    return await fetchObservationsData(appStore);
   }
 }
 
@@ -63,7 +63,7 @@ async function fetchAndCacheGraphData(appStore: AppStoreType) {
     return;
   }
 
-  if (appStore.cacheData.observations.popularFieldsOptions.length == 0) {
+  if (appStore.viewMetadata.popularFieldsOptions.length == 0) {
     await fetchDataForGraphCategories(appStore);
   }
 
@@ -81,7 +81,7 @@ async function fetchAndCacheGraphData(appStore: AppStoreType) {
   spinner.stop();
 }
 
-async function fetchAndCacheObservationsData(appStore: AppStoreType) {
+async function fetchObservationsData(appStore: AppStoreType) {
   let spinner = createSpinner();
   spinner.start();
   let data = await getAPIData(appStore);
@@ -229,18 +229,7 @@ export async function updateSubviewState(
     updateSubviewLinkClass(componentContext, componentContext.mapLinkEl);
   }
 
-  // if no cached data, fetch data
-  // handle graphs
-  let data;
-  if (subview === "graph") {
-    data = await fetchAndCacheGraphData(appStore);
-    // handle map
-  } else if (subview === "map") {
-    // handle grid, media, table
-  } else {
-    data = await fetchAndCacheObservationsData(appStore);
-  }
-
+  let data = await fetchAndCacheData(appStore, false);
   renderSubview(data, appStore);
 
   // add subview to url

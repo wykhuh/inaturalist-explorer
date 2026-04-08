@@ -138,7 +138,7 @@ class SubviewObservationsGraphs extends HTMLElement {
       getAPIPopularFieldsData,
     );
 
-    if (appStore.cacheData.observations.popularFieldsOptions.length == 0) {
+    if (appStore.viewMetadata.popularFieldsOptions.length == 0) {
       await fetchDataForGraphCategories(appStore);
     }
 

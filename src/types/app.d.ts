@@ -75,11 +75,11 @@ export interface AppStoreType {
       graphs: GraphData;
       graphsSpecies: GraphData;
       graphsPlaces: GraphData;
-      popularFieldsOptions: PopularFieldOption[];
       popularFields: PopularFieldsByTermId;
     };
   };
   viewMetadata: {
+    popularFieldsOptions: PopularFieldOption[];
     observations_observations: ViewOptions;
     observations_species: ViewOptions;
     observations_identifiers: ViewOptions;

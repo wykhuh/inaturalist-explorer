@@ -217,7 +217,7 @@ export function resetGraphCache(appStore: AppStoreType) {
     obsCache.graphsSpecies = { month_of_year: [], year: [], month: [] };
     obsCache.graphs = { month_of_year: [], year: [], month: [] };
     obsCache.graphsPlaces = { month_of_year: [], year: [], month: [] };
-    obsCache.popularFieldsOptions = [];
     obsCache.popularFields = {};
+    appStore.viewMetadata.popularFieldsOptions = [];
   }
 }

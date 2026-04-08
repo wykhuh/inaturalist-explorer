@@ -271,7 +271,7 @@ export function renderGraphCategorySelect(
     <option value="month">Month</option>
   `;
 
-  appStore.cacheData.observations.popularFieldsOptions.forEach((field) => {
+  appStore.viewMetadata.popularFieldsOptions.forEach((field) => {
     let optionEl = document.createElement("option");
     optionEl.value = field.id.toString();
     optionEl.textContent = field.label;
@@ -505,7 +505,7 @@ function devCachedGraphData(
     popular_fields_basic_canyon_gooseberry,
     popular_fields_basic_hillside_gooseberry,
   ]);
-  appStore.cacheData.observations.popularFieldsOptions = popularFieldsOptions;
+  appStore.viewMetadata.popularFieldsOptions = popularFieldsOptions;
 
   appStore.selectedTaxa = [monarch, milkweed];
   appStore.observationsApiParams.taxon_id = "48662,56851";
@@ -664,7 +664,7 @@ export async function fetchDataForGraphCategories(appStore: AppStoreType) {
   }
 
   let popularFieldsOptions = formatPopularFieldsOptions(data);
-  appStore.cacheData.observations.popularFieldsOptions = popularFieldsOptions;
+  appStore.viewMetadata.popularFieldsOptions = popularFieldsOptions;
   window.dispatchEvent(new Event("popularFieldsOptionsChange"));
 }
 

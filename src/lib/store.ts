@@ -41,12 +41,12 @@ export const mapStore: AppStoreType = {
       graphs: { month_of_year: [], year: [], month: [] },
       graphsSpecies: { month_of_year: [], year: [], month: [] },
       graphsPlaces: { month_of_year: [], year: [], month: [] },
-      popularFieldsOptions: [],
       popularFields: {},
     },
   },
   currentView: "observations_observations",
   viewMetadata: {
+    popularFieldsOptions: [],
     observations_observations: {
       subview: "map",
       perPage: 24,
