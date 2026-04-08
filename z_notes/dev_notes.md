@@ -172,15 +172,12 @@ when connecting to API
 
 - use observationsApiParams or identificationsApiParams
 
-
 ==
 
 ```html
 <div class="tp-wrapper">
   <span class="tp-trigger" aria-describedby="tp-xxx">?</span>
-  <p id="tp-xxx" role="tooltip">
-  xxx
-  </p>
+  <p id="tp-xxx" role="tooltip">xxx</p>
 </div>
 ```
 
@@ -193,19 +190,19 @@ https://realfavicongenerator.net
 https://css-tricks.com/svg-favicons-in-action/
 
 ==
+Local First from Scratch - How to make a web app with local data
+https://www.youtube.com/watch?v=Qoqh9Mdmk80
+invoice app with svelte and indexeddb
 
 Local Data: Sqlite, LocalStorage, Session, Cookies and IndexDB
 https://www.youtube.com/watch?v=VzUHeLsJOrs
 dexie to interact with indexeddb
 
-
 IndexedDB - Progressive Web App Training
 https://www.youtube.com/watch?v=VNFDoawcmNc
 
-
 Local First from Scratch - How to make a web app with local data
 https://www.youtube.com/watch?v=Qoqh9Mdmk80
-
 
 SQLite as frontend storage - Delete localStorage and IndexedDB?
 https://www.youtube.com/watch?v=faSxK3hK2KI
@@ -225,3 +222,61 @@ https://blog.cogitactive.com/website/external-links-best-practices/
 
 External links best practices—cont’d
 https://blog.cogitactive.com/website/external-links-best-practices-contd/
+
+==
+
+offline maps
+
+Everything You Need to Know to Build Offline Maps: Tiles, Projections, and MBTiles
+
+https://medium.com/@rao_/a-guide-to-offline-maps-map-tiles-and-mbtiles-for-beginners-7d412b837d25
+
+MBTiles is a file format used to store map tiles for offline use.
+It stores many map tiles inside a single file, making maps easy to distribute and manage.
+
+==
+
+Why use MBTiles?
+
+https://www.mikegravel.org/why-use-mbtiles/
+
+==
+
+mbtiles/pmtiles for GEBCO gridded bathymetry data
+https://github.com/openwatersio/gebco-tiles
+
+Pyramids of map tiles in a single file on static storage
+https://github.com/protomaps/PMTiles
+
+Offline tiles in a webapp #588
+https://github.com/protomaps/PMTiles/discussions/588
+
+MapLibre GL JS Offline Tiles: Adding Realism with Terrain Visualization
+https://keimaps.com/articles/self-hosted-basemap-maplibre-terrain
+
+https://github.com/jtbaker/pmtiles-offline
+
+Creating a Maplibre application using a self hosted basemap
+https://www.keimaps.com/articles/self-hosted-basemap-maplibre
+
+From .osm data to a complete map viewer
+https://github.com/hemanth2004/offline-osm-viewer
+
+Creating a CesiumJS application using a self hosted basemap
+https://medium.com/@keimapsapp/creating-a-cesiumjs-application-using-a-self-hosted-basemap-f6fd482fde37
+
+OpenStreetMap Data Extracts
+http://download.geofabrik.de
+
+The BBBike extract service offers PMTiles for an area of your choosing.
+https://extract.bbbike.org/
+
+https://wiki.openstreetmap.org/wiki/PMTiles
+
+https://github.com/systemed/tilemaker
+tilemaker creates vector tiles (in Mapbox Vector Tile format) from an .osm.pbf planet extract, as typically downloaded from providers like Geofabrik. It aims to be 'stack-free': you need no database and there is only one executable to install.
+
+==
+
+Cant set up database, not owner of psql extension postgis?
+https://github.com/inaturalist/inaturalist/issues/4738

@@ -248,7 +248,6 @@ https://forum.inaturalist.org/t/ideas-for-a-revamped-explore-observations-search
 
 http://localhost:5173/?taxon_id=1,47126&place_id=962,829&user_id=2902070,81261&colors=%2366ccee,%23228833&locale=en&verifiable=true&spam=false&ident_user_id=150454&page=4
 
-
 ==
 
 https://api.inaturalist.org/v2/docs/
@@ -263,3 +262,23 @@ https://forum.inaturalist.org/t/what-fields-must-be-edited-through-api-to-alter-
 https://forum.inaturalist.org/t/usage-for-api-to-create-observations/4679/4
 
 https://github.com/inaturalist/inaturalistjs#creating-records
+
+==
+
+API return original filename when fetching photos or sounds
+https://forum.inaturalist.org/t/api-return-original-filename-when-fetching-photos-or-sounds/69322
+
+Cannot fetch photo pages programmatically, even with “Authorization” header
+https://forum.inaturalist.org/t/cannot-fetch-photo-pages-programmatically-even-with-authorization-header/77197/5
+
+==
+
+https://api.inaturalist.org/v1/taxa/lifelist_metadata?observed_by_user_id=plachuff&locale=en-US
+
+https://api.inaturalist.org/v1/observations/taxonomy?user_id=2564864
+
+https://api.inaturalist.org/v1/log?map-placement=observations-search&controller_action=ObservationsController%3A%3Aindex
+
+URL: https://api.inaturalist.org/v1/users/notification_counts
+
+==
