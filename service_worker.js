@@ -43,7 +43,7 @@ self.addEventListener("fetch", (ev) => {
   } else if (url.startsWith("https://api.inaturalist.org/v1/grid")) {
   } else if (url.includes("tile.openstreetmap.org")) {
   } else {
-    console.log("sw fetch ", url);
+    // console.log("sw fetch ", url);
   }
 });
 
@@ -59,7 +59,7 @@ async function cacheInatAPI(ev) {
   }
 
   // fetch
-  console.log("++ sw fetch", ev.request.url);
+  // console.log("++ sw fetch", ev.request.url);
   try {
     let response = await fetch(ev.request);
 
