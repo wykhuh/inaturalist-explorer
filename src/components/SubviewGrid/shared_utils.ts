@@ -95,8 +95,10 @@ export async function updateOrderForStore(
 
   resetPageNumber(appStore);
 
-  await fetchAndCacheData(appStore, false);
+  let newData = await fetchAndCacheData(appStore, false);
   updateAppUrl(window.location, appStore);
+
+  return newData;
 }
 
 export function addEventListenersObservations(componentContext: any) {
@@ -129,20 +131,20 @@ export async function eventHandlersObservations(
     "perPageChanged",
   ];
   if (resourceChanges.includes(event.type)) {
-    await fetchAndCacheData(window.app.store, false);
-    componentContext.render(appStore);
+    let data = await fetchAndCacheData(window.app.store, false);
+    componentContext.render(data, appStore);
   }
 
   let resourceChangesUseCache = ["nameOrderChanged"];
   if (resourceChangesUseCache.includes(event.type)) {
-    await fetchAndCacheData(window.app.store, true);
-    componentContext.render(appStore);
+    let data = await fetchAndCacheData(window.app.store, true);
+    componentContext.render(data, appStore);
   }
 
   if (target.id === "order_combo") {
     const formData = new FormData(componentContext.orderForm);
-    await updateOrderForStore(formData, appStore);
-    componentContext.render(appStore);
+    let data = await updateOrderForStore(formData, appStore);
+    componentContext.render(data, appStore);
   }
 }
 
