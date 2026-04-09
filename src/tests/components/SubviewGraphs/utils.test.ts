@@ -50,7 +50,6 @@ import type {
   HistogramCategory,
   NormalizedPopularFields,
   PopularFieldForGraph,
-  PopularFieldsByTermId,
 } from "../../../types/app";
 
 import * as exampleObject from "../../../components/SubviewGraphs/utils";

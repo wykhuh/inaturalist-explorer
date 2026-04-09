@@ -170,7 +170,7 @@ export let colorsFourDivergeGroup = [
 ];
 export let colorsFourDiverge = colorsFourDivergeGroup[0];
 
-const sixQualitative = [
+export const sixQualitative = [
   ["#7fc97f", "#beaed4", "#fdc086", "#ffff99", "#386cb0", "#f0027f"],
   ["#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02"],
   ["#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c"],
@@ -179,7 +179,7 @@ const sixQualitative = [
   ["#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462"],
 ];
 
-const viridis = [
+export const viridis = [
   "#440154",
   "#482878",
   "#3E4A89",
@@ -192,7 +192,7 @@ const viridis = [
   "#FDE724",
 ];
 
-const viridis2 = [
+export const viridis2 = [
   "#440154",
   "#B4DE2C",
   "#482878",
@@ -205,7 +205,7 @@ const viridis2 = [
 
 // https://developers.arcgis.com/javascript/latest/visualization/symbols-color-ramps/esri-color-ramps/
 // Esri color ramps - Falling Leaves
-const fallingLeaves = [
+export const fallingLeaves = [
   "#3e756d",
   "#d9d78c",
   "#b86b53",
@@ -215,7 +215,7 @@ const fallingLeaves = [
 ];
 
 // Esri color ramps - Circling Circus
-const circlingCircus = [
+export const circlingCircus = [
   "#d92b30",
   "#0095ba",
   "#3cccb4",
@@ -225,7 +225,7 @@ const circlingCircus = [
 ];
 
 // Esri color ramps - Chamois
-const chamois = [
+export const chamois = [
   "#7db3ab",
   "#dbe6d1",
   "#b5d6f2",
@@ -234,7 +234,7 @@ const chamois = [
   "#e3a3dd",
 ];
 // Esri color ramps - High Light
-const highLight = [
+export const highLight = [
   "#f22f00",
   "#26ffff",
   "#ffdd00",

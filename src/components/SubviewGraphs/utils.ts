@@ -25,7 +25,6 @@ import type {
   PopularFieldForGraph,
 } from "../../types/app";
 import { formatTaxonName, isPopularFieldCategory } from "../../lib/data_utils";
-
 import {
   createGraphs,
   createPopularFieldsGraphsGroupSpecies,
@@ -63,13 +62,13 @@ export async function renderGraphs(
     .graphs as viewMetadataGraphs;
 
   let category = graphsMetadata.category;
-  let data;
 
   if (
     category === "month_of_year" ||
     category === "year" ||
     category === "month"
   ) {
+    let data;
     if (graphsMetadata.groupBy === "species") {
       data = graphData.graphsSpecies[category];
     } else if (graphsMetadata.groupBy === "places") {
@@ -77,13 +76,24 @@ export async function renderGraphs(
     } else {
       data = graphData.graphs[category];
     }
-    let graph = createGraphs(data, appStore, selectedResource);
+
+    let legendEl = document.createElement("div");
+    legendEl.id = `legend-container`;
+    legendEl.className = "legend-container";
+    dataContainer.appendChild(legendEl);
+
+    let graph = createGraphs(
+      data,
+      "legend-container",
+      selectedResource,
+      appStore,
+    );
     if (graph) {
       dataContainer.appendChild(graph);
     }
     // popular fields
   } else if (category) {
-    data = graphData.popularFields[category];
+    let data = graphData.popularFields[category];
     if (data) {
       // group by species
       if (graphsMetadata.groupBy === "species") {
@@ -137,11 +147,19 @@ export async function renderGraphs(
           }
         });
 
-        console.log(category, data);
         // no group by
       } else {
-        data.forEach((datum) => {
-          let graph = createPopularFieldsGraphs(datum, appStore);
+        data.forEach((datum, i) => {
+          let legendEl = document.createElement("div");
+          legendEl.id = `legend-container-${i}`;
+          legendEl.className = "legend-container";
+          dataContainer.appendChild(legendEl);
+
+          let graph = createPopularFieldsGraphs(
+            datum,
+            `legend-container-${i}`,
+            appStore,
+          );
           if (graph) {
             dataContainer.appendChild(graph);
           }
@@ -389,7 +407,6 @@ export async function fetchGraphData(
 
       let popularFields = formatPopularFields(data);
       graphData.popularFields = popularFields;
-      console.log("popularFields places", popularFields);
 
       appStore.viewMetadata.popularFieldsByTaxa =
         formatPopularFieldsMenuByTaxa(data);
@@ -413,7 +430,6 @@ export async function fetchGraphData(
 
       let popularFields = formatPopularFields(data);
       graphData.popularFields = popularFields;
-      console.log("popularFields", popularFields);
 
       appStore.viewMetadata.popularFieldsByTaxa =
         formatPopularFieldsMenuByTaxa(data);
