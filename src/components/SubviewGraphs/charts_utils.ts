@@ -195,10 +195,6 @@ export function createGraphs(
 ) {
   if (results.length === 0) return;
 
-  let canvasEl = document.createElement("canvas");
-  let id = `graph-${Math.round(new Date().getTime() * Math.random())}`;
-  canvasEl.id = id;
-
   let xAxisLabels: string[] | Date[] = [];
   let data: ChartDataConfig[] = [];
   let chartTitle = "";
@@ -264,6 +260,10 @@ export function createGraphs(
     legendSelector,
     legendType: "default",
   };
+
+  let canvasEl = document.createElement("canvas");
+  let id = `graph-${Math.round(new Date().getTime() * Math.random())}`;
+  canvasEl.id = id;
   createLineGraph(options, canvasEl);
   return canvasEl;
 }
@@ -296,27 +296,31 @@ export function createPopularFieldsGraphs(
   });
 
   let { values } = formatMonthOfYearData(result.unannotated.month_of_year);
-  let data = formatData(
-    values,
-    0,
-    notAnnotated,
-    undefined,
-    undefined,
-    appStore,
-  );
-  combinedValues.push(data);
+  if (values.length > 0) {
+    let data = formatData(
+      values,
+      0,
+      notAnnotated,
+      undefined,
+      undefined,
+      appStore,
+    );
+    combinedValues.push(data);
+  }
 
-  let options: LineGraphOptions = {
-    data: combinedValues,
-    xAxisLabels,
-    chartTitle: `${result.taxon_name} - ${result.controlled_attribute.label}`,
-    timeUnit: null,
-    valueUnit: getValueUnits(appStore),
-    useCustomLegend: true,
-    legendSelector,
-    legendType: "default",
-  };
-  createLineGraph(options, containerEl);
+  if (combinedValues.length > 0) {
+    let options: LineGraphOptions = {
+      data: combinedValues,
+      xAxisLabels,
+      chartTitle: `${result.taxon_name} - ${result.controlled_attribute.label}`,
+      timeUnit: null,
+      valueUnit: getValueUnits(appStore),
+      useCustomLegend: true,
+      legendSelector,
+      legendType: "default",
+    };
+    createLineGraph(options, containerEl);
+  }
 
   return containerEl;
 }
@@ -348,28 +352,32 @@ export function createPopularFieldsGraphsGroupSpecies(
     });
 
     let { values } = formatMonthOfYearData(result.unannotated.month_of_year);
-    let data = formatData(
-      values,
-      0,
-      `${notAnnotated} - ${result.taxon_name}`,
-      result.taxon_color,
-      notAnnotatedBorderDash,
-      appStore,
-    );
-    combinedValues.push(data);
+    if (values.length > 0) {
+      let data = formatData(
+        values,
+        0,
+        `${notAnnotated} - ${result.taxon_name}`,
+        result.taxon_color,
+        notAnnotatedBorderDash,
+        appStore,
+      );
+      combinedValues.push(data);
+    }
   });
 
-  let options: LineGraphOptions = {
-    data: combinedValues,
-    xAxisLabels,
-    chartTitle: `${results[0].controlled_attribute.label}`,
-    timeUnit: null,
-    valueUnit: getValueUnits(appStore),
-    useCustomLegend: true,
-    legendSelector,
-    legendType: "popularGroupBySpecies",
-  };
-  createLineGraph(options, containerEl);
+  if (combinedValues.length > 0) {
+    let options: LineGraphOptions = {
+      data: combinedValues,
+      xAxisLabels,
+      chartTitle: `${results[0].controlled_attribute.label}`,
+      timeUnit: null,
+      valueUnit: getValueUnits(appStore),
+      useCustomLegend: true,
+      legendSelector,
+      legendType: "popularGroupBySpecies",
+    };
+    createLineGraph(options, containerEl);
+  }
 
   return containerEl;
 }
@@ -388,41 +396,47 @@ export function createPopularFieldsGraphsGroupPlaces(
   results.forEach((result) => {
     result.annotations.forEach((annotation, i) => {
       let { values, labels } = formatMonthOfYearData(annotation.month_of_year);
-      let data = formatData(
-        values,
-        i,
-        `${annotation.controlled_value.label} - ${result.place_name}`,
-        result.place_color,
-        defaultBorderDash(i),
-        appStore,
-      );
-      combinedValues.push(data);
-      xAxisLabels = labels;
+      if (values.length > 0) {
+        let data = formatData(
+          values,
+          i,
+          `${annotation.controlled_value.label} - ${result.place_name}`,
+          result.place_color,
+          defaultBorderDash(i),
+          appStore,
+        );
+        combinedValues.push(data);
+        xAxisLabels = labels;
+      }
     });
 
     let { values } = formatMonthOfYearData(result.unannotated.month_of_year);
-    let data = formatData(
-      values,
-      0,
-      `${notAnnotated} - ${result.place_name}`,
-      result.place_color,
-      notAnnotatedBorderDash,
-      appStore,
-    );
-    combinedValues.push(data);
+    if (values.length > 0) {
+      let data = formatData(
+        values,
+        0,
+        `${notAnnotated} - ${result.place_name}`,
+        result.place_color,
+        notAnnotatedBorderDash,
+        appStore,
+      );
+      combinedValues.push(data);
+    }
   });
 
-  let options: LineGraphOptions = {
-    data: combinedValues,
-    xAxisLabels,
-    chartTitle: `${results[0]?.taxon_name} - ${results[0]?.controlled_attribute.label}`,
-    timeUnit: null,
-    valueUnit: getValueUnits(appStore),
-    useCustomLegend: true,
-    legendSelector,
-    legendType: "popularGroupByPlaces",
-  };
-  createLineGraph(options, containerEl);
+  if (combinedValues.length > 0) {
+    let options: LineGraphOptions = {
+      data: combinedValues,
+      xAxisLabels,
+      chartTitle: `${results[0]?.taxon_name} - ${results[0]?.controlled_attribute.label}`,
+      timeUnit: null,
+      valueUnit: getValueUnits(appStore),
+      useCustomLegend: true,
+      legendSelector,
+      legendType: "popularGroupByPlaces",
+    };
+    createLineGraph(options, containerEl);
+  }
 
   return containerEl;
 }
@@ -636,6 +650,7 @@ function createDefaultLegend(items: LegendItem[], chart: Chart) {
   items.forEach((item) => {
     let index = item.datasetIndex;
     if (index === undefined) return;
+    if (item.text === undefined) return;
 
     const liEl = document.createElement("li");
     liEl.className = item.hidden ? "inactive" : "active";

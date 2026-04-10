@@ -19,6 +19,7 @@ import {
   fetchGraphData,
   getAPIHistogramData,
   getAPIPopularFieldsData,
+  checkIfNoData,
 } from "../../../components/SubviewGraphs/utils";
 import { histogramGraphCategory } from "../../../data/app_data";
 import { allTaxaRecord } from "../../../data/inat_data";
@@ -49,6 +50,7 @@ import type {
   GraphCategory,
   HistogramCategory,
   NormalizedPopularFields,
+  ObservationsGraphData,
   PopularFieldForGraph,
 } from "../../../types/app";
 
@@ -321,9 +323,7 @@ describe("fetchGraphData", () => {
       "spam=false&date_field=observed",
       "month_of_year",
     );
-    expect(result.graphs.month_of_year).toStrictEqual([
-      histograph_month_year.results,
-    ]);
+    expect(result.histogram).toStrictEqual([histograph_month_year.results]);
   });
 
   test("call getAPIPopularFieldsData with taxa and popular field category", async () => {
@@ -419,9 +419,7 @@ describe("fetchGraphData", () => {
       "spam=false&date_field=observed",
       "month_of_year",
     );
-    expect(result.graphs.month_of_year).toStrictEqual([
-      histograph_month_year.results,
-    ]);
+    expect(result.histogram).toStrictEqual([histograph_month_year.results]);
   });
 
   test("call getAPIHistogramData with taxa and invalid popular field category", async () => {
@@ -447,9 +445,7 @@ describe("fetchGraphData", () => {
       `taxon_id=${redOakBasic.id}&verifiable=true&spam=false&date_field=observed`,
       "month_of_year",
     );
-    expect(result.graphs.month_of_year).toStrictEqual([
-      histograph_month_year.results,
-    ]);
+    expect(result.histogram).toStrictEqual([histograph_month_year.results]);
   });
 
   test.each(histogramGraphCategory)(
@@ -483,7 +479,7 @@ describe("fetchGraphData", () => {
         expected,
         category,
       );
-      expect(result.graphs[category]).toStrictEqual([
+      expect(result.histogram).toStrictEqual([
         categoryApiData[category].results,
       ]);
     },
@@ -522,7 +518,7 @@ describe("fetchGraphData", () => {
         expected,
         category,
       );
-      expect(result.graphs[category]).toStrictEqual([
+      expect(result.histogram).toStrictEqual([
         categoryApiData[category].results,
       ]);
     },
@@ -560,7 +556,7 @@ describe("fetchGraphData", () => {
         expected,
         category,
       );
-      expect(result.graphsSpecies[category]).toStrictEqual([
+      expect(result.histogram).toStrictEqual([
         categoryApiData[category].results,
       ]);
     },
@@ -604,7 +600,7 @@ describe("fetchGraphData", () => {
         expected2,
         category,
       );
-      expect(result.graphsSpecies[category]).toStrictEqual([
+      expect(result.histogram).toStrictEqual([
         categoryApiData[category].results,
         categoryApiData[category].results,
       ]);
@@ -642,7 +638,7 @@ describe("fetchGraphData", () => {
         expected,
         category,
       );
-      expect(result.graphs[category]).toStrictEqual([
+      expect(result.histogram).toStrictEqual([
         categoryApiData[category].results,
       ]);
     },
@@ -685,7 +681,7 @@ describe("fetchGraphData", () => {
         expected,
         category,
       );
-      expect(result.graphs[category]).toStrictEqual([
+      expect(result.histogram).toStrictEqual([
         categoryApiData[category].results,
       ]);
     },
@@ -723,7 +719,7 @@ describe("fetchGraphData", () => {
         expected,
         category,
       );
-      expect(result.graphsPlaces[category]).toStrictEqual([
+      expect(result.histogram).toStrictEqual([
         categoryApiData[category].results,
       ]);
     },
@@ -767,7 +763,7 @@ describe("fetchGraphData", () => {
         expected2,
         category,
       );
-      expect(result.graphsPlaces[category]).toStrictEqual([
+      expect(result.histogram).toStrictEqual([
         categoryApiData[category].results,
         categoryApiData[category].results,
       ]);
@@ -812,9 +808,110 @@ describe("fetchGraphData", () => {
         expected,
         category,
       );
-      expect(result.graphs[category]).toStrictEqual([
+      expect(result.histogram).toStrictEqual([
         categoryApiData[category].results,
       ]);
     },
   );
+});
+
+describe("checkIfNoData", () => {
+  test("returns true if graphData is undefined", () => {
+    let category: GraphCategory = "year";
+    let graphData = undefined;
+
+    let results = checkIfNoData(category, graphData);
+
+    expect(results).toBe(true);
+  });
+
+  test("returns true if histogram and popularFields are empty", () => {
+    let category: GraphCategory = "year";
+    let graphData: ObservationsGraphData = {
+      histogram: [],
+      popularFields: {},
+    };
+
+    let results = checkIfNoData(category, graphData);
+
+    expect(results).toBe(true);
+  });
+
+  test("returns true if all years are empty object", () => {
+    let category: GraphCategory = "year";
+    let graphData: ObservationsGraphData = {
+      histogram: [{ year: {} }, { year: {} }],
+      popularFields: {},
+    };
+
+    let results = checkIfNoData(category, graphData);
+
+    expect(results).toBe(true);
+  });
+
+  test("returns false if some years has data", () => {
+    let category: GraphCategory = "year";
+    let graphData: ObservationsGraphData = {
+      histogram: [{ year: { "2000-01-01": 1 } }, { year: {} }],
+      popularFields: {},
+    };
+
+    let results = checkIfNoData(category, graphData);
+
+    expect(results).toBe(false);
+  });
+
+  test("returns true if all months are empty object", () => {
+    let category: GraphCategory = "month";
+    let graphData: ObservationsGraphData = {
+      histogram: [{ month: {} }, { month: {} }],
+      popularFields: {},
+    };
+
+    let results = checkIfNoData(category, graphData);
+
+    expect(results).toBe(true);
+  });
+
+  test("returns false if some months has data", () => {
+    let category: GraphCategory = "month";
+    let graphData: ObservationsGraphData = {
+      histogram: [{ month: { "2000-01-01": 1 } }, { month: {} }],
+      popularFields: {},
+    };
+
+    let results = checkIfNoData(category, graphData);
+
+    expect(results).toBe(false);
+  });
+
+  test("returns true if all month_of_year have zero values", () => {
+    let category: GraphCategory = "month_of_year";
+    let graphData: ObservationsGraphData = {
+      histogram: [
+        { month_of_year: { "1": 0, "2": 0 } },
+        { month_of_year: { "1": 0, "2": 0 } },
+      ],
+      popularFields: {},
+    };
+
+    let results = checkIfNoData(category, graphData);
+
+    expect(results).toBe(true);
+  });
+
+  test("returns false if some month_of_year has non-zero values", () => {
+    let category: GraphCategory = "month_of_year";
+    let graphData: ObservationsGraphData = {
+      histogram: [
+        { month_of_year: { "1": 13, "2": 13 } },
+        { month_of_year: { "1": 0, "2": 0 } },
+      ],
+      popularFields: {},
+    };
+
+    let results = checkIfNoData(category, graphData);
+
+    expect(results).toBe(false);
+  });
 });

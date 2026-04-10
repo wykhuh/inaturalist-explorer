@@ -45,6 +45,43 @@ import { devCachedGraphData } from "../../lib/dev_utils";
 // UI
 // ===============
 
+export function checkIfNoData(
+  category: GraphCategory | undefined,
+  graphData: ObservationsGraphData | undefined,
+) {
+  if (graphData === undefined) {
+    return true;
+  }
+  if (
+    graphData.histogram.length === 0 &&
+    Object.keys(graphData.popularFields).length === 0
+  ) {
+    return true;
+  }
+
+  let noData = false;
+
+  if (category === "month_of_year") {
+    noData = graphData.histogram.every((data) => {
+      if (data[category]) {
+        let temp = new Set(Object.values(data[category]));
+        return temp.size === 1 && temp.has(0);
+      }
+      return false;
+    });
+  } else if (category === "year" || category === "month") {
+    noData = graphData.histogram.every((data) => {
+      if (data[category]) {
+        return Object.keys(data[category]).length === 0;
+      }
+      return false;
+    });
+  } else {
+  }
+
+  return noData;
+}
+
 export async function renderGraphs(
   graphData: ObservationsGraphData | undefined,
   appStore: AppStoreType,
@@ -63,19 +100,17 @@ export async function renderGraphs(
 
   let category = graphsMetadata.category;
 
+  let noData = checkIfNoData(category, graphData);
+  if (noData) {
+    return (dataContainer.innerHTML = "No records found");
+  }
+
   if (
     category === "month_of_year" ||
     category === "year" ||
     category === "month"
   ) {
-    let data;
-    if (graphsMetadata.groupBy === "species") {
-      data = graphData.graphsSpecies[category];
-    } else if (graphsMetadata.groupBy === "places") {
-      data = graphData.graphsPlaces[category];
-    } else {
-      data = graphData.graphs[category];
-    }
+    let data = graphData.histogram;
 
     let legendEl = document.createElement("div");
     legendEl.id = `legend-container`;
@@ -348,22 +383,8 @@ export async function fetchGraphData(
   }
 
   let graphData = {
+    histogram: [],
     popularFields: {},
-    graphsSpecies: {
-      month_of_year: [],
-      month: [],
-      year: [],
-    },
-    graphsPlaces: {
-      month_of_year: [],
-      month: [],
-      year: [],
-    },
-    graphs: {
-      month_of_year: [],
-      month: [],
-      year: [],
-    },
   } as ObservationsGraphData;
 
   let graphsMetadata = appStore.viewMetadata.observations_observations
@@ -405,8 +426,7 @@ export async function fetchGraphData(
         count += 1;
       }
 
-      let popularFields = formatPopularFields(data);
-      graphData.popularFields = popularFields;
+      graphData.popularFields = formatPopularFields(data);
 
       appStore.viewMetadata.popularFieldsByTaxa =
         formatPopularFieldsMenuByTaxa(data);
@@ -428,8 +448,7 @@ export async function fetchGraphData(
         }
       }
 
-      let popularFields = formatPopularFields(data);
-      graphData.popularFields = popularFields;
+      graphData.popularFields = formatPopularFields(data);
 
       appStore.viewMetadata.popularFieldsByTaxa =
         formatPopularFieldsMenuByTaxa(data);
@@ -450,19 +469,19 @@ export async function fetchGraphData(
           "month_of_year",
         );
         if (monthYearData) {
-          graphData.graphsSpecies.month_of_year.push(monthYearData.results);
+          graphData.histogram.push(monthYearData.results);
         }
       } else if (graphsMetadata.category === "year") {
         setLastTenYears(params);
         let yearData = await getAPIHistogramDataFn(params.toString(), "year");
         if (yearData) {
-          graphData.graphsSpecies.year.push(yearData.results);
+          graphData.histogram.push(yearData.results);
         }
       } else if (graphsMetadata.category === "month") {
         setLastTenYears(params);
         let monthData = await getAPIHistogramDataFn(params.toString(), "month");
         if (monthData) {
-          graphData.graphsSpecies.month.push(monthData.results);
+          graphData.histogram.push(monthData.results);
         }
       }
     }
@@ -481,19 +500,19 @@ export async function fetchGraphData(
           "month_of_year",
         );
         if (monthYearData) {
-          graphData.graphsPlaces.month_of_year.push(monthYearData.results);
+          graphData.histogram.push(monthYearData.results);
         }
       } else if (graphsMetadata.category === "year") {
         setLastTenYears(params);
         let yearData = await getAPIHistogramDataFn(params.toString(), "year");
         if (yearData) {
-          graphData.graphsPlaces.year.push(yearData.results);
+          graphData.histogram.push(yearData.results);
         }
       } else if (graphsMetadata.category === "month") {
         setLastTenYears(params);
         let monthData = await getAPIHistogramDataFn(params.toString(), "month");
         if (monthData) {
-          graphData.graphsPlaces.month.push(monthData.results);
+          graphData.histogram.push(monthData.results);
         }
       }
     }
@@ -506,13 +525,13 @@ export async function fetchGraphData(
       setLastTenYears(params);
       let yearData = await getAPIHistogramDataFn(params.toString(), "year");
       if (yearData) {
-        graphData.graphs.year = [yearData.results];
+        graphData.histogram.push(yearData.results);
       }
     } else if (graphsMetadata.category === "month") {
       setLastTenYears(params);
       let monthData = await getAPIHistogramDataFn(params.toString(), "month");
       if (monthData) {
-        graphData.graphs.month = [monthData.results];
+        graphData.histogram.push(monthData.results);
       }
     } else {
       let monthYearData = await getAPIHistogramDataFn(
@@ -521,7 +540,7 @@ export async function fetchGraphData(
       );
 
       if (monthYearData) {
-        graphData.graphs.month_of_year = [monthYearData.results];
+        graphData.histogram.push(monthYearData.results);
       }
     }
   }

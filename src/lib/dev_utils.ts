@@ -58,21 +58,7 @@ export function displayGraphStatus() {
 export function devCachedGraphData(appStore: AppStoreType) {
   let cacheData = {
     popularFields: {},
-    graphsSpecies: {
-      month_of_year: [],
-      month: [],
-      year: [],
-    },
-    graphsPlaces: {
-      month_of_year: [],
-      month: [],
-      year: [],
-    },
-    graphs: {
-      month_of_year: [],
-      month: [],
-      year: [],
-    },
+    histogram: [],
   } as ObservationsGraphData;
 
   let graphsMetadata = appStore.viewMetadata.observations_observations
@@ -193,45 +179,45 @@ export function devCachedGraphData(appStore: AppStoreType) {
     }
   } else if (graphsMetadata.groupBy === "species") {
     if (graphsMetadata.category === "month_of_year") {
-      cacheData.graphsSpecies.month_of_year = [
+      cacheData.histogram = [
         histograph_month_year_monarch.results,
         histograph_month_year_milkweed.results,
       ];
     } else if (graphsMetadata.category === "year") {
-      cacheData.graphsSpecies.year = [
+      cacheData.histogram = [
         histograph_year_monarch.results,
         histograph_year_milkweed.results,
       ];
     } else if (graphsMetadata.category === "month") {
-      cacheData.graphsSpecies.month = [
+      cacheData.histogram = [
         histograph_month_monarch.results,
         histograph_month_milkweed.results,
       ];
     }
   } else if (graphsMetadata.groupBy === "places") {
     if (graphsMetadata.category === "month_of_year") {
-      cacheData.graphsPlaces.month_of_year = [
+      cacheData.histogram = [
         histograph_month_year_monarch_us.results,
         histograph_month_year_monarch_mexico.results,
       ];
     } else if (graphsMetadata.category === "year") {
-      cacheData.graphsPlaces.year = [
+      cacheData.histogram = [
         histograph_year_monarch_us.results,
         histograph_year_monarch_mexico.results,
       ];
     } else if (graphsMetadata.category === "month") {
-      cacheData.graphsPlaces.month = [
+      cacheData.histogram = [
         histograph_month_monarch_us.results,
         histograph_month_monarch_mexico.results,
       ];
     }
   } else {
     if (graphsMetadata.category === "month_of_year") {
-      cacheData.graphs.month_of_year = [histograph_month_year.results];
+      cacheData.histogram = [histograph_month_year.results];
     } else if (graphsMetadata.category === "year") {
-      cacheData.graphs.year = [histograph_year.results];
+      cacheData.histogram = [histograph_year.results];
     } else if (graphsMetadata.category === "month") {
-      cacheData.graphs.month = [histograph_month.results];
+      cacheData.histogram = [histograph_month.results];
     }
   }
 

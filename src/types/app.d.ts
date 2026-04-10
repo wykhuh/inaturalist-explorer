@@ -126,9 +126,7 @@ interface NormalizedPopularFields extends iNatPopularFieldsAPI {
 }
 
 export type ObservationsGraphData = {
-  graphs: GraphData;
-  graphsSpecies: GraphData;
-  graphsPlaces: GraphData;
+  histogram: iNatObservationsHistogramResult[];
   popularFields: PopularFieldsByTermId;
 };
 
