@@ -33,10 +33,10 @@ function formatSelectedPlaces(appStore: AppStoreType) {
 
         let coors;
         if (value.coordinates[0][0]) {
-          if (value.coordinates[0][0].length <= 5) {
+          if (value.coordinates[0].length <= 5) {
             coors = value.coordinates[0];
           } else {
-            coors = value.coordinates[0][0].length;
+            coors = value.coordinates[0].length;
           }
         } else if (value.coordinates[0]) {
           if (value.coordinates[0].length <= 5) {
