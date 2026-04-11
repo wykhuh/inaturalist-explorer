@@ -24,7 +24,6 @@ export function setCategory(formData: FormData, appStore: AppStoreType) {
   let category = formData.get("map-category") as MapCategory;
   if (!category) return;
   let mapMetadata = appStore.viewMetadata.observations_observations.map;
-  if (!mapMetadata) return;
   mapMetadata.category = category;
 }
 
@@ -32,8 +31,6 @@ export async function fetchAndRenderTimePeriods(
   appStore: AppStoreType,
   componentContext: SubviewObservationsMap,
 ) {
-  let mapMetadata = appStore.viewMetadata.observations_observations.map;
-  if (!mapMetadata) return;
   if (!componentContext.timeRangeEl) return;
   if (!componentContext.currentTimeperiodEl) return;
 
@@ -62,7 +59,6 @@ export function updateCurrentTimeText(
   appStore: AppStoreType,
 ) {
   let mapMetadata = appStore.viewMetadata.observations_observations.map;
-  if (!mapMetadata) return;
   if (!componentContext.currentTimeperiodEl) return;
 
   let timePeriods = appStore.viewMetadata.mapTimePeriods;
@@ -75,11 +71,11 @@ export function updateCurrentTimeText(
     }
   }
   componentContext.currentTimeperiodEl.innerText = text;
+  mapMetadata.currentIndex = index;
 }
 
 export async function fetchTimePeriods(appStore: AppStoreType) {
   let mapMetadata = appStore.viewMetadata.observations_observations.map;
-  if (!mapMetadata) return;
 
   let timeData = {
     timePeriods: [],
@@ -109,6 +105,7 @@ export async function fetchTimePeriods(appStore: AppStoreType) {
     setLastTenYears(params);
     let data = await getAPIHistogramData(params.toString(), "month_of_year");
     if (data && data.results.month_of_year) {
+      // check if there are all counts are zero
       if (
         Object.values(data.results.month_of_year).reduce((a, b) => a + b, 0) > 0
       ) {
@@ -121,6 +118,30 @@ export async function fetchTimePeriods(appStore: AppStoreType) {
   return timeData;
 }
 
+export function formatTimePeriodsParams(appStore: AppStoreType) {
+  let timePeriods = appStore.viewMetadata.mapTimePeriods;
+  let mapMetadata = appStore.viewMetadata.observations_observations.map;
+  let params: { [k: string]: string }[] = [];
+
+  timePeriods.forEach((timePeriod) => {
+    if (mapMetadata.category === "year") {
+      params.push({ year: timePeriod.toString() });
+    } else if (mapMetadata.category === "month_of_year") {
+      params.push({ month: timePeriod.toString() });
+    } else {
+      let [year, month] = timePeriod.toString().split("-");
+
+      params.push({
+        d1: timePeriod.toString(),
+        // @ts-ignore
+        d2: `${year}-${month}-${MONTH_LAST_DAY[Number(month)]}`,
+      });
+    }
+  });
+
+  return params;
+}
+
 export async function fetchAndRenderMapTiles(
   componentContext: SubviewObservationsMap,
   appStore: AppStoreType,
@@ -130,7 +151,6 @@ export async function fetchAndRenderMapTiles(
   let playButtonEl = componentContext.playButtonEl;
   if (!playButtonEl) return;
   let mapMetadata = appStore.viewMetadata.observations_observations.map;
-  if (!mapMetadata) return;
 
   // stop animation
   if (mapMetadata.mapAnimation === true) {
@@ -138,8 +158,7 @@ export async function fetchAndRenderMapTiles(
 
     // start animation
   } else {
-    let timePeriods = appStore.viewMetadata.mapTimePeriods;
-
+    // delete existin map layers
     clearMapLayers(appStore);
 
     // create separate store so that appStore.observationsApiParams aren't altered
@@ -152,34 +171,36 @@ export async function fetchAndRenderMapTiles(
       observationsApiParams: {},
     } as AppStoreType;
 
-    timePeriods.forEach(async (timePeriod, i) => {
+    let timePeriodsParams = formatTimePeriodsParams(appStore);
+    if (!timePeriodsParams) return;
+
+    let count = 0;
+    timePeriodsParams.forEach(async (timePeriod, i) => {
+      // skip timePeriod that were shown or skipped
+      if (mapMetadata.currentIndex && i < mapMetadata.currentIndex) return;
+
       let setTimeoutId = setTimeout(async () => {
         timeRangeEl.value = i.toString();
         updateCurrentTimeText(i, componentContext, appStore);
 
         let params = structuredClone(appStore.observationsApiParams);
-        if (mapMetadata.category === "year") {
-          params.year = timePeriod.toString();
-        } else if (mapMetadata.category === "month_of_year") {
-          params.month = timePeriod.toString();
-        } else {
-          params.d1 = timePeriod.toLocaleString();
-          let [year, month] = timePeriod.toString().split("-");
-          // @ts-ignore
-          params.d2 = `${year}-${month}-${MONTH_LAST_DAY[Number(month)]}`;
-        }
-        store.observationsApiParams = params;
 
+        store.observationsApiParams = { ...params, ...timePeriod };
         await updateTilesForSelectedTaxa(store);
+
         if (mapMetadata) {
+          // save map layers to store so app can remove them
           mapMetadata.mapLayers = store.taxaMapLayers;
+          mapMetadata.currentIndex = i;
         }
 
         // stop animation at end of loop
-        if (i === timePeriods.length - 1) {
+        if (i === timePeriodsParams.length - 1) {
           stopMapAnimation(componentContext, appStore);
+          mapMetadata.currentIndex = 0;
         }
-      }, i * 3000);
+      }, count * 3000);
+      count += 1;
 
       // save setTimeoutId to store so the app can stop the setTimeout
       if (mapMetadata.setTimeoutIds) {
@@ -194,7 +215,6 @@ export async function fetchAndRenderMapTiles(
 
 function clearMapLayers(appStore: AppStoreType) {
   let mapMetadata = appStore.viewMetadata.observations_observations.map;
-  if (!mapMetadata) return;
   let layerControl = appStore.map.layerControl;
   if (!layerControl) return;
 
@@ -214,7 +234,6 @@ export function stopMapAnimation(
   appStore: AppStoreType,
 ) {
   let mapMetadata = appStore.viewMetadata.observations_observations.map;
-  if (!mapMetadata) return;
   let playButtonEl = componentContext.playButtonEl;
   if (!playButtonEl) return;
 
@@ -233,8 +252,6 @@ export function toggleAnimationControls(
   if (!componentContext.animateControls) return;
 
   let mapMetadata = appStore.viewMetadata.observations_observations.map;
-  if (!mapMetadata) return;
-
   if (mapMetadata.category === "none") {
     componentContext.animateControls.classList.add("hidden");
   } else {
@@ -244,11 +261,9 @@ export function toggleAnimationControls(
 
 export function initFilters(appStore: AppStoreType) {
   let mapMetadata = appStore.viewMetadata.observations_observations.map;
-  if (mapMetadata) {
-    if (mapMetadata.category) {
-      setSelectedOption(
-        `#map-form select#map-category option[value='${mapMetadata.category}']`,
-      );
-    }
+  if (mapMetadata.category) {
+    setSelectedOption(
+      `#map-form select#map-category option[value='${mapMetadata.category}']`,
+    );
   }
 }

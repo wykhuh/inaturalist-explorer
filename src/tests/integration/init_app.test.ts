@@ -132,18 +132,8 @@ afterAll(() => {
   server.close();
 });
 
-let defaultViewMetadata = {
-  subview: "map",
-  perPage: 24,
-  displayFields: {},
-  graphs: { category: "month_of_year", valueType: "counts" },
-  map: {
-    category: "none",
-    mapAnimation: false,
-    setTimeoutIds: [],
-    mapLayers: {},
-  },
-};
+let defaultViewMetadata =
+  structuredClone(mapStore).viewMetadata.observations_observations;
 
 describe("initPopulateStore and initRenderMap options", () => {
   test("loads default taxa if no params", async () => {

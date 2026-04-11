@@ -241,18 +241,8 @@ test("add page when user changes view and page for each view", async () => {
     colors: iNatOrange,
     taxon_id: allTaxa.id.toString(),
   };
-  let defaultViewMetadata = {
-    subview: "map",
-    perPage: 24,
-    displayFields: {},
-    graphs: { category: "month_of_year", valueType: "counts" },
-    map: {
-      category: "none",
-      mapAnimation: false,
-      setTimeoutIds: [],
-      mapLayers: {},
-    },
-  };
+  let defaultViewMetadata =
+    structuredClone(mapStore).viewMetadata.observations_observations;
 
   let store = structuredClone(mapStore);
 

@@ -4,7 +4,6 @@ import type {
   NormalizediNatTaxonType,
   AppStoreType,
   ObservationsApiParamsKeysType,
-  ObservationViewsType,
   NormalizediNatProjectType,
   IdentificationsApiParamsKeysType,
   LngLatType,

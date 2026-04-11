@@ -14,6 +14,7 @@ import type {
   AppStoreType,
   NameOrderType,
   ObservationViewsType,
+  PerPageTypes,
 } from "../../types/app";
 
 export async function updateComonNamesByLanguage(appStore: AppStoreType) {
@@ -107,7 +108,7 @@ export function perPageHandler(
   target: HTMLInputElement,
   currentView: ObservationViewsType,
   appStore: AppStoreType,
-  type: "observations" | "identifications" | "species",
+  type: PerPageTypes,
 ) {
   let targetObservationView = `observations_${type}` as ObservationViewsType;
   let targetIdentificationView =
@@ -115,12 +116,14 @@ export function perPageHandler(
 
   // update viewMetadata
   if (validObservationsViews.includes(targetObservationView)) {
+    // @ts-ignore
     appStore.viewMetadata[targetObservationView] = {
       ...appStore.viewMetadata[targetObservationView],
       perPage: Number(target.value),
     };
   }
   if (validIdentificationsViews.includes(targetIdentificationView)) {
+    // @ts-ignore
     appStore.viewMetadata[targetIdentificationView] = {
       ...appStore.viewMetadata[targetIdentificationView],
       perPage: Number(target.value),

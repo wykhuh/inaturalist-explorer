@@ -51,6 +51,7 @@ export const mapStore: AppStoreType = {
         mapAnimation: false,
         setTimeoutIds: [],
         mapLayers: {},
+        currentIndex: 0,
       },
     },
     observations_species: { perPage: 24 },

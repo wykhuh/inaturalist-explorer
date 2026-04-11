@@ -114,7 +114,6 @@ function formatMonthData(records: { [k: string]: number }) {
 
 function getValueUnits(appStore: AppStoreType) {
   let graphMetadata = appStore.viewMetadata.observations_observations.graphs;
-  if (!graphMetadata) return null;
 
   return graphMetadata.valueType === "percents" ? "%" : null;
 }

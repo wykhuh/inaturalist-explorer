@@ -105,42 +105,31 @@ describe("pluralize", () => {
 
 describe("formatAppUrl", () => {
   test("format parameters for default store", () => {
-    let appStore: AppStoreType = {
-      ...mapStore,
-    };
+    let store = structuredClone(mapStore);
 
-    let result = formatAppUrl(appStore);
+    let result = formatAppUrl(store);
 
     expect(result).toBe(``);
   });
-  test("format parameters for one taxon", () => {
-    let appStore: AppStoreType = {
-      ...mapStore,
-      observationsApiParams: {
-        ...mapStore.observationsApiParams,
-        taxon_id: life().id.toString(),
-        colors: life().color,
-      },
-      selectedTaxa: [life()],
-    };
 
-    let result = formatAppUrl(appStore);
+  test("format parameters for one taxon", () => {
+    let store = structuredClone(mapStore);
+    store.observationsApiParams.taxon_id = life().id.toString();
+    store.observationsApiParams.colors = life().color;
+    store.selectedTaxa = [life()];
+
+    let result = formatAppUrl(store);
 
     expect(result).toBe(`taxon_id=${life().id}` + `&${defaultQuery}`);
   });
 
   test("format parameters for multiple taxa", () => {
-    let appStore: AppStoreType = {
-      ...mapStore,
-      observationsApiParams: {
-        ...mapStore.observationsApiParams,
-        taxon_id: redOak().id.toString(),
-        colors: redOak().color,
-      },
-      selectedTaxa: [life(), redOak()],
-    };
+    let store = structuredClone(mapStore);
+    store.observationsApiParams.taxon_id = `${life().id},${redOak().id}`;
+    store.observationsApiParams.colors = life().color;
+    store.selectedTaxa = [life(), redOak()];
 
-    let result = formatAppUrl(appStore);
+    let result = formatAppUrl(store);
 
     expect(result).toBe(
       `taxon_id=${life().id},${redOak().id}` + `&${defaultQuery}`,
@@ -148,33 +137,21 @@ describe("formatAppUrl", () => {
   });
 
   test("format parameters for one place", () => {
-    let appStore: AppStoreType = {
-      ...mapStore,
-      observationsApiParams: {
-        ...mapStore.observationsApiParams,
-        place_id: losangeles.id.toString(),
-      },
+    let store = structuredClone(mapStore);
+    store.observationsApiParams.place_id = `${losangeles.id}`;
+    store.selectedPlaces = [losangeles];
 
-      selectedPlaces: [losangeles],
-    };
-
-    let result = formatAppUrl(appStore);
+    let result = formatAppUrl(store);
 
     expect(result).toBe(`place_id=${losangeles.id}` + `&${defaultQuery}`);
   });
 
   test("format parameters for multiple places", () => {
-    let appStore: AppStoreType = {
-      ...mapStore,
-      observationsApiParams: {
-        ...mapStore.observationsApiParams,
-        place_id: `${losangeles.id},${sandiego.id}`,
-      },
+    let store = structuredClone(mapStore);
+    store.observationsApiParams.place_id = `${losangeles.id},${sandiego.id}`;
+    store.selectedPlaces = [losangeles, sandiego];
 
-      selectedPlaces: [losangeles, sandiego],
-    };
-
-    let result = formatAppUrl(appStore);
+    let result = formatAppUrl(store);
 
     expect(result).toBe(
       `place_id=${losangeles.id},${sandiego.id}` + `&${defaultQuery}`,
@@ -182,33 +159,21 @@ describe("formatAppUrl", () => {
   });
 
   test("format parameters for one project", () => {
-    let appStore: AppStoreType = {
-      ...mapStore,
-      observationsApiParams: {
-        ...mapStore.observationsApiParams,
-        project_id: project_cnc1.id.toString(),
-      },
+    let store = structuredClone(mapStore);
+    store.observationsApiParams.project_id = `${project_cnc1.id}`;
+    store.selectedProjects = [project_cnc1];
 
-      selectedProjects: [project_cnc1],
-    };
-
-    let result = formatAppUrl(appStore);
+    let result = formatAppUrl(store);
 
     expect(result).toBe(`project_id=${project_cnc1.id}` + `&${defaultQuery}`);
   });
 
   test("format parameters for multiple project", () => {
-    let appStore: AppStoreType = {
-      ...mapStore,
-      observationsApiParams: {
-        ...mapStore.observationsApiParams,
-        project_id: `${project_cnc1.id.toString()},${project_cnc2.id.toString()}`,
-      },
+    let store = structuredClone(mapStore);
+    store.observationsApiParams.project_id = `${project_cnc1.id},${project_cnc2.id}`;
+    store.selectedProjects = [project_cnc1, project_cnc2];
 
-      selectedProjects: [project_cnc1, project_cnc2],
-    };
-
-    let result = formatAppUrl(appStore);
+    let result = formatAppUrl(store);
 
     expect(result).toBe(
       `project_id=${project_cnc1.id},${project_cnc2.id}` + `&${defaultQuery}`,
@@ -216,98 +181,62 @@ describe("formatAppUrl", () => {
   });
 
   test("format parameters for one user", () => {
-    let appStore: AppStoreType = {
-      ...mapStore,
-      observationsApiParams: {
-        ...mapStore.observationsApiParams,
-        user_id: user1.id.toString(),
-      },
+    let store = structuredClone(mapStore);
+    store.observationsApiParams.user_id = `${user1.id}`;
+    store.selectedUsers = [user1];
 
-      selectedUsers: [user1],
-    };
-
-    let result = formatAppUrl(appStore);
+    let result = formatAppUrl(store);
 
     expect(result).toBe(`user_id=${user1.id}` + `&${defaultQuery}`);
   });
 
   test("format parameters for multiple users", () => {
-    let appStore: AppStoreType = {
-      ...mapStore,
-      observationsApiParams: {
-        ...mapStore.observationsApiParams,
-        user_id: `${user1.id},${user2.id}`,
-      },
+    let store = structuredClone(mapStore);
+    store.observationsApiParams.user_id = `${user1.id},${user2.id}`;
+    store.selectedUsers = [user1, user2];
 
-      selectedUsers: [user1, user2],
-    };
-
-    let result = formatAppUrl(appStore);
+    let result = formatAppUrl(store);
 
     expect(result).toBe(`user_id=${user1.id},${user2.id}` + `&${defaultQuery}`);
   });
 
   test("return params if no selected resources, and observationsApiParams has additional params", () => {
-    let appStore: AppStoreType = {
-      ...mapStore,
-      observationsApiParams: {
-        ...mapStore.observationsApiParams,
-        photos: true,
-      },
+    let store = structuredClone(mapStore);
+    store.observationsApiParams.photos = true;
 
-      selectedPlaces: [],
-    };
-
-    let result = formatAppUrl(appStore);
+    let result = formatAppUrl(store);
 
     expect(result).toBe(`${defaultQuery}&photos=true`);
   });
 
   test("ignore invalid params if no selected resources", () => {
-    let appStore = {
-      ...mapStore,
-      observationsApiParams: {
-        ...mapStore.observationsApiParams,
-        foo: "boo",
-      },
+    let store = structuredClone(mapStore);
+    // @ts-ignore
+    store.observationsApiParams.foo = "boo";
 
-      selectedPlaces: [],
-    };
-
-    let result = formatAppUrl(appStore);
+    let result = formatAppUrl(store);
 
     expect(result).toBe("");
   });
 
   test("ignore invalid params if selected resources", () => {
-    let appStore = {
-      ...mapStore,
-      observationsApiParams: {
-        ...mapStore.observationsApiParams,
-        foo: "boo",
-        place_id: "962",
-      },
+    let store = structuredClone(mapStore);
+    // @ts-ignore
+    store.observationsApiParams.foo = "boo";
+    store.observationsApiParams.place_id = `${losangeles.id}`;
+    store.selectedPlaces = [losangeles];
 
-      selectedPlaces: [losangeles],
-    };
-
-    let result = formatAppUrl(appStore);
+    let result = formatAppUrl(store);
 
     expect(result).toBe(`place_id=962&${defaultQuery}`);
   });
 
   test("return params if no selected resources, and spam and verifiable are not default", () => {
-    let appStore: AppStoreType = {
-      ...mapStore,
-      observationsApiParams: {
-        verifiable: false,
-        spam: true,
-      },
+    let store = structuredClone(mapStore);
+    store.observationsApiParams.verifiable = false;
+    store.observationsApiParams.spam = true;
 
-      selectedPlaces: [],
-    };
-
-    let result = formatAppUrl(appStore);
+    let result = formatAppUrl(store);
 
     expect(result).toBe("verifiable=false&spam=true");
   });
@@ -319,23 +248,18 @@ describe("formatAppUrl", () => {
         v !== "identifications_identifications",
     ),
   )("return parameters if view is not observations_observations", (view) => {
-    let appStore: AppStoreType = {
-      ...mapStore,
-      currentView: view as ObservationViewsType,
-    };
+    let store = structuredClone(mapStore);
+    store.currentView = view;
 
-    let result = formatAppUrl(appStore);
+    let result = formatAppUrl(store);
 
     expect(result).toBe(`${defaultQuery}&view=${view}`);
   });
 
   test("return empty string if view is observations_observations", () => {
-    let appStore: AppStoreType = {
-      ...mapStore,
-      currentView: "observations_observations",
-    };
+    let store = structuredClone(mapStore);
 
-    let result = formatAppUrl(appStore);
+    let result = formatAppUrl(store);
 
     expect(result).toBe(``);
   });
@@ -346,16 +270,11 @@ describe("formatAppUrl", () => {
   ] as ObservationViewsType[])(
     "return empty string if subview is map ",
     (view) => {
-      let appStore: AppStoreType = {
-        ...mapStore,
-        currentView: view as ObservationViewsType,
-        viewMetadata: {
-          ...mapStore.viewMetadata,
-          [view]: { subview: "map" },
-        },
-      };
+      let store = structuredClone(mapStore);
+      store.currentView = view;
+      store.viewMetadata.observations_observations.subview = "map";
 
-      let result = formatAppUrl(appStore);
+      let result = formatAppUrl(store);
 
       expect(result).toBe(``);
     },
@@ -364,16 +283,10 @@ describe("formatAppUrl", () => {
   test.each(validObservationsSubviews.filter((sv) => sv !== "map"))(
     "return view & subview if observations_observations and subview is not map",
     (subview) => {
-      let appStore: AppStoreType = {
-        ...mapStore,
-        currentView: "observations_observations",
-        viewMetadata: {
-          ...mapStore.viewMetadata,
-          observations_observations: { subview: subview },
-        },
-      };
+      let store = structuredClone(mapStore);
+      store.viewMetadata.observations_observations.subview = subview;
 
-      let result = formatAppUrl(appStore);
+      let result = formatAppUrl(store);
 
       expect(result).toBe(
         `${defaultQuery}&view=observations_observations&subview=${subview}`,
@@ -384,16 +297,11 @@ describe("formatAppUrl", () => {
   test.each(validIdentificationsSubviews.filter((sv) => sv !== "map"))(
     "return view & subview if identifications_identifications and subview is not map",
     (subview) => {
-      let appStore: AppStoreType = {
-        ...mapStore,
-        currentView: "identifications_identifications",
-        viewMetadata: {
-          ...mapStore.viewMetadata,
-          identifications_identifications: { subview: subview },
-        },
-      };
+      let store = structuredClone(mapStore);
+      store.currentView = "identifications_identifications";
+      store.viewMetadata.identifications_identifications.subview = subview;
 
-      let result = formatAppUrl(appStore);
+      let result = formatAppUrl(store);
 
       expect(result).toBe(
         `${defaultQuery}&view=identifications_identifications&subview=${subview}`,
@@ -404,100 +312,39 @@ describe("formatAppUrl", () => {
   test.each(["cs", "sc", "s"] as NameOrderType[])(
     "ignores name_order",
     (name_order) => {
-      let appStore: AppStoreType = {
-        ...mapStore,
-        currentView: "observations_observations",
-        viewMetadata: {
-          ...mapStore.viewMetadata,
-          name_order: name_order as NameOrderType,
-        },
-      };
+      let store = structuredClone(mapStore);
+      store.viewMetadata.name_order = name_order;
 
-      let result = formatAppUrl(appStore);
+      let result = formatAppUrl(store);
 
       expect(result).toBe(``);
     },
   );
 
-  test("return params for page, order, order_by if observation", () => {
-    let appStore: AppStoreType = {
-      ...mapStore,
-      observationsApiParams: {
-        verifiable: true,
-        spam: false,
-        page: 1,
-        order: "desc",
-        order_by: "id",
-      },
+  test.each(validViews)("return params for page, order, order_by", (view) => {
+    let store = structuredClone(mapStore);
+    store.observationsApiParams.page = 1;
+    store.observationsApiParams.order = "desc";
+    store.observationsApiParams.order_by = "id";
+    store.currentView = view;
 
-      selectedPlaces: [],
-      currentView: "observations_observations",
-      viewMetadata: {
-        ...mapStore.viewMetadata,
-        observations_observations: { page: 1, order: "desc", order_by: "id" },
-        observations_identifiers: { page: 2 },
-        observations_species: { page: 3 },
-        observations_observers: { page: 4 },
-        name_order: "cs",
-      },
-    };
+    let result = formatAppUrl(store);
 
-    let result = formatAppUrl(appStore);
-
-    expect(result).toBe(`${defaultQuery}&page=1&order=desc&order_by=id`);
-  });
-
-  test.each(
-    validViews.filter(
-      (v) =>
-        v !== "observations_observations" &&
-        v !== "identifications_identifications",
-    ),
-  )("return params for page, order, order_by if not observation", (name) => {
-    let appStore: AppStoreType = {
-      ...mapStore,
-      observationsApiParams: {
-        verifiable: true,
-        spam: false,
-        page: 1,
-        order: "desc",
-        order_by: "id",
-      },
-
-      selectedPlaces: [],
-      currentView: name as any,
-      viewMetadata: {
-        ...mapStore.viewMetadata,
-        observations_observations: {
-          page: 10,
-          order: "desc",
-          order_by: "id",
-        },
-        observations_identifiers: { page: 11, order: "desc", order_by: "id" },
-        observations_species: { page: 12, order: "desc", order_by: "id" },
-        observations_observers: { page: 13, order: "desc", order_by: "id" },
-        name_order: "cs",
-      },
-    };
-
-    let result = formatAppUrl(appStore);
-
-    expect(result).toBe(
-      `${defaultQuery}&page=1&order=desc&order_by=id&view=${name}`,
-    );
+    let expected = `${defaultQuery}&page=1&order=desc&order_by=id&view=${view}`;
+    if (
+      view === "observations_observations" ||
+      view === "identifications_identifications"
+    ) {
+      expected = `${defaultQuery}&page=1&order=desc&order_by=id`;
+    }
+    expect(result).toBe(expected);
   });
 
   test.each(["es", "fr"])("return params for locale that is not en", (lang) => {
-    let appStore: AppStoreType = {
-      ...mapStore,
-      observationsApiParams: {
-        verifiable: true,
-        spam: false,
-        locale: lang,
-      },
-    };
+    let store = structuredClone(mapStore);
+    store.observationsApiParams.locale = lang;
 
-    let result = formatAppUrl(appStore);
+    let result = formatAppUrl(store);
 
     expect(result).toBe(`${defaultQuery}&locale=${lang}`);
   });

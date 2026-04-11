@@ -72,10 +72,7 @@ export interface AppStoreType {
   };
   currentView?: ObservationViewsType;
   viewMetadata: {
-    mapTimePeriods: string[] | number[];
-    popularFieldsByTaxa: PopularFieldsByTaxa;
-    popularFieldsOptions: PopularFieldOption[];
-    observations_observations: ViewOptions;
+    observations_observations: ViewOptionsObservations;
     observations_species: ViewOptions;
     observations_identifiers: ViewOptions;
     observations_observers: ViewOptions;
@@ -85,6 +82,9 @@ export interface AppStoreType {
     identifications_identifications: ViewOptions;
     name_order: NameOrderType;
     side_menu: "show" | "hide";
+    popularFieldsByTaxa: PopularFieldsByTaxa;
+    popularFieldsOptions: PopularFieldOption[];
+    mapTimePeriods: string[] | number[];
   };
   record_type: RecordTypes;
 }
@@ -151,9 +151,12 @@ type ViewOptions = {
   subview?: ObservationSubviewsType | IdentificationSubviewsType;
   perPage?: number;
   displayFields?: { [k: string]: boolean };
-  graphs?: ViewMetadataGraphs;
-  map?: MapMetadataGraphs;
 };
+
+interface ViewOptionsObservations extends ViewOptions {
+  graphs: ViewMetadataGraphs;
+  map: ViewMetadataMap;
+}
 
 export type ViewMetadataGraphs = {
   groupBy?: GraphGroupBy;
@@ -161,11 +164,12 @@ export type ViewMetadataGraphs = {
   valueType?: GraphValueType;
 };
 
-export type MapMetadataGraphs = {
+export type ViewMetadataMap = {
   category?: MapCategory;
   setTimeoutIds?: any[];
   mapAnimation?: boolean;
   mapLayers?: { [k: string]: TileLayer[] };
+  currentIndex?: number;
 };
 
 export type GraphGroupBy = "species" | "places";
@@ -714,3 +718,5 @@ export type IdentificationsCSVRow = {
   observer_id: number;
   observer_login: string;
 };
+
+export type PerPageTypes = "observations" | "identifications" | "species";

@@ -96,7 +96,6 @@ describe("updateView", () => {
   test("uses viewMetadata to set page, order, order_by if viewMetadata is set", () => {
     const store = structuredClone(mapStore);
     store.currentView = "observations_observations";
-    store.viewMetadata.observations_observations = {};
     store.viewMetadata.observations_observers = {
       page: 10,
       order_by: "votes",
@@ -131,11 +130,11 @@ describe("updateView", () => {
     const store = structuredClone(mapStore);
     store.currentView = "observations_observations";
     store.viewMetadata.observations_observations = {
+      ...store.viewMetadata.observations_observations,
       page: 10,
       order_by: "votes",
       order: "asc",
     };
-    store.viewMetadata.observations_observers = {};
 
     let parentEl = document.querySelector("#view-container") as HTMLDivElement;
     let targetLI = document.querySelector("#observations_observers");
@@ -149,9 +148,12 @@ describe("updateView", () => {
     expect(targetLI?.className).toBe("currentView");
     expect(parentEl?.innerHTML).toBe("<view-observers></view-observers>");
     expect(store.currentView).toBe("observations_observers");
-    expect(store.observationsApiParams).toStrictEqual(defaultParams);
+    expect(store.observationsApiParams).toStrictEqual({
+      ...defaultParams,
+      per_page: 100,
+    });
     expect(window.location.search).toBe(
-      `?${defaultQuery}&view=observations_observers`,
+      `?${defaultQuery}&per_page=100&view=observations_observers`,
     );
   });
 });

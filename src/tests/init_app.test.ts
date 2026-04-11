@@ -85,6 +85,7 @@ describe("setViewMetadata", () => {
       mapAnimation: false,
       mapLayers: {},
       setTimeoutIds: [],
+      currentIndex: 0,
     });
 
     let urlData = decodeAppUrl("?map_category=year", "/");
@@ -95,6 +96,7 @@ describe("setViewMetadata", () => {
       mapAnimation: false,
       mapLayers: {},
       setTimeoutIds: [],
+      currentIndex: 0,
     });
   });
 });

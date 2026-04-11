@@ -16,7 +16,7 @@ export const mapTemplate = html`
 
       <div id="animate-map-controls">
         <button id="play" name="play">${playIcon}</button>
-        <input id="time-range" type="range" value="0" disabled />
+        <input id="time-range" type="range" value="0" />
         <p id="current-timeperiod"></p>
       </div>
     </form>

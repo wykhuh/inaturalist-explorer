@@ -10,6 +10,7 @@ import {
   fetchAndRenderTimePeriods,
   initFilters,
   setCategory,
+  updateCurrentTimeText,
 } from "./utils";
 import { initRenderMap } from "../../lib/init_app";
 import { removeMap } from "../../lib/map_utils";
@@ -68,6 +69,12 @@ export class SubviewObservationsMap extends HTMLElement {
       stopMapAnimation(this, window.app.store);
       toggleAnimationControls(this, window.app.store);
       fetchAndRenderTimePeriods(window.app.store, this);
+    }
+
+    if (target.id === "time-range") {
+      stopMapAnimation(this, window.app.store);
+
+      updateCurrentTimeText(Number(target.value), this, window.app.store);
     }
 
     if (event.type === "click") {
