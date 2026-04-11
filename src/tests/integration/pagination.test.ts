@@ -241,6 +241,18 @@ test("add page when user changes view and page for each view", async () => {
     colors: iNatOrange,
     taxon_id: allTaxa.id.toString(),
   };
+  let defaultViewMetadata = {
+    subview: "map",
+    perPage: 24,
+    displayFields: {},
+    graphs: { category: "month_of_year", valueType: "counts" },
+    map: {
+      category: "none",
+      mapAnimation: false,
+      setTimeoutIds: [],
+      mapLayers: {},
+    },
+  };
 
   let store = structuredClone(mapStore);
 
@@ -253,10 +265,9 @@ test("add page when user changes view and page for each view", async () => {
     ...testParams,
     per_page: perPage,
   });
+
   expect(store.viewMetadata.observations_observations).toStrictEqual({
-    displayFields: {},
-    graphs: { category: "month_of_year", valueType: "counts" },
-    subview: "map",
+    ...defaultViewMetadata,
     perPage: perPage,
   });
   expect(store.currentView).toBe("observations_observations");
@@ -264,9 +275,7 @@ test("add page when user changes view and page for each view", async () => {
   paginationCallbackObservations(5, store);
 
   expect(store.viewMetadata.observations_observations).toStrictEqual({
-    displayFields: {},
-    graphs: { category: "month_of_year", valueType: "counts" },
-    subview: "map",
+    ...defaultViewMetadata,
     perPage: perPage,
     page: 5,
   });

@@ -39,7 +39,7 @@ import type {
   NormalizediNatTaxonType,
   NormalizedPopularFields,
   ObservationsGraphData,
-  viewMetadataGraphs,
+  ViewMetadataGraphs,
 } from "../types/app";
 import { isPopularFieldCategory } from "./data_utils";
 
@@ -62,7 +62,7 @@ export function devCachedGraphData(appStore: AppStoreType) {
   } as ObservationsGraphData;
 
   let graphsMetadata = appStore.viewMetadata.observations_observations
-    .graphs as viewMetadataGraphs;
+    .graphs as ViewMetadataGraphs;
 
   let monarch = {
     id: 102,

@@ -52,6 +52,7 @@ import type {
   HistogramCategory,
   IdentificationsApiParamsKeysType,
   IdentificationSubviewsType,
+  MapCategory,
   ObservationsApiParamsKeysType,
   ObservationSubviewsType,
   ObservationViewsType,
@@ -607,3 +608,10 @@ export const validGraphCategory: GraphCategory[] = [
 export const validGraphGroupby: GraphGroupBy[] = ["places", "species"];
 
 export const validGraphValueType: GraphValueType[] = ["counts", "percents"];
+
+export const validMapCategory: MapCategory[] = [
+  "month",
+  "year",
+  "month_of_year",
+  "none",
+];

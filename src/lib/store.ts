@@ -38,6 +38,7 @@ export const mapStore: AppStoreType = {
   },
   currentView: "observations_observations",
   viewMetadata: {
+    mapTimePeriods: [],
     popularFieldsByTaxa: {},
     popularFieldsOptions: [],
     observations_observations: {
@@ -45,6 +46,12 @@ export const mapStore: AppStoreType = {
       perPage: 24,
       displayFields: {},
       graphs: { category: "month_of_year", valueType: "counts" },
+      map: {
+        category: "none",
+        mapAnimation: false,
+        setTimeoutIds: [],
+        mapLayers: {},
+      },
     },
     observations_species: { perPage: 24 },
     observations_identifiers: { perPage: 100 },

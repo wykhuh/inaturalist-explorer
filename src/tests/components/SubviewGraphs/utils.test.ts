@@ -510,8 +510,7 @@ describe("fetchGraphData", () => {
 
       let expected = `spam=false&date_field=observed`;
       if (category !== "month_of_year") {
-        expected =
-          "verifiable=true&spam=false&date_field=observed&d1=2015-01-01";
+        expected = "spam=false&date_field=observed&d1=2015-01-01";
       }
       expect(exampleObject.getAPIHistogramData).toHaveBeenCalledTimes(1);
       expect(exampleObject.getAPIHistogramData).toHaveBeenCalledWith(

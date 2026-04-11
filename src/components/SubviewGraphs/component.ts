@@ -7,7 +7,7 @@ import type {
   AppStoreType,
   DataComponentType,
   ObservationsGraphData,
-  viewMetadataGraphs,
+  ViewMetadataGraphs,
 } from "../../types/app";
 import {
   disableGroupByForSelectedResources,
@@ -79,7 +79,11 @@ class SubviewObservationsGraphs extends HTMLElement {
       disableGroupByForSelectedResources(window.app.store, this);
     }
     if ("popularFieldsOptionsChange" === event.type) {
-      renderGraphCategorySelect(window.app.store, this);
+      renderGraphCategorySelect(
+        window.app.store,
+        this,
+        "select#graphs-category",
+      );
     }
     if ("observationsChange" === event.type) {
       this.fetchAndRender(window.app.store);
@@ -114,7 +118,7 @@ class SubviewObservationsGraphs extends HTMLElement {
       return;
     }
 
-    renderGraphCategorySelect(appStore, this);
+    renderGraphCategorySelect(appStore, this, "select#graphs-category");
     disableGroupByForSelectedResources(appStore, this);
     initGraphFilters(appStore);
 
@@ -127,7 +131,7 @@ class SubviewObservationsGraphs extends HTMLElement {
     }
 
     let graphsMetadata = appStore.viewMetadata.observations_observations
-      .graphs as viewMetadataGraphs;
+      .graphs as ViewMetadataGraphs;
 
     updateInvalidGraphCategory(appStore, graphsMetadata);
     resetGraphCache(appStore);

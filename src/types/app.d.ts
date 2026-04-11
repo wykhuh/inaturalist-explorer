@@ -72,6 +72,7 @@ export interface AppStoreType {
   };
   currentView?: ObservationViewsType;
   viewMetadata: {
+    mapTimePeriods: string[] | number[];
     popularFieldsByTaxa: PopularFieldsByTaxa;
     popularFieldsOptions: PopularFieldOption[];
     observations_observations: ViewOptions;
@@ -130,6 +131,11 @@ export type ObservationsGraphData = {
   popularFields: PopularFieldsByTermId;
 };
 
+export type ObservationsMapData = {
+  timePeriods: number[] | string[];
+  type?: HistogramCategory;
+};
+
 export type GraphData = {
   month_of_year: iNatObservationsHistogramResult[];
   year: iNatObservationsHistogramResult[];
@@ -145,13 +151,21 @@ type ViewOptions = {
   subview?: ObservationSubviewsType | IdentificationSubviewsType;
   perPage?: number;
   displayFields?: { [k: string]: boolean };
-  graphs?: viewMetadataGraphs;
+  graphs?: ViewMetadataGraphs;
+  map?: MapMetadataGraphs;
 };
 
-export type viewMetadataGraphs = {
+export type ViewMetadataGraphs = {
   groupBy?: GraphGroupBy;
   category?: GraphCategory;
   valueType?: GraphValueType;
+};
+
+export type MapMetadataGraphs = {
+  category?: MapCategory;
+  setTimeoutIds?: any[];
+  mapAnimation?: boolean;
+  mapLayers?: { [k: string]: TileLayer[] };
 };
 
 export type GraphGroupBy = "species" | "places";
@@ -169,6 +183,8 @@ export type GraphCategory =
   | "36";
 
 export type HistogramCategory = "month_of_year" | "month" | "year";
+
+export type MapCategory = "month_of_year" | "month" | "year" | "none";
 
 export type AppStoreKeysType = keyof AppStoreType;
 
@@ -475,6 +491,7 @@ type AppCustomParamsType = {
   graphs_value?: GraphValueType;
   name_order?: NameOrderType;
   locale?: string;
+  map_category?: MapCategory;
 };
 
 export type AppParamsType = ObservationsApiParamsType &

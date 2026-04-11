@@ -50,6 +50,7 @@ import {
   validIdentificationsSubviews,
   validIdentificationsViews,
   histogramGraphCategory,
+  validMapCategory,
 } from "../data/app_data.ts";
 import { validObservationsSubviews, validViews } from "../data/app_data.ts";
 import { defaultColorScheme } from "../lib/map_colors_utils.ts";
@@ -519,6 +520,8 @@ describe("formatAppUrl", () => {
     "return params with graphs category",
     (category) => {
       let store = structuredClone(mapStore);
+      store.viewMetadata.observations_observations.subview = "graph";
+      store.viewMetadata.observations_observations.subview == "graph";
       if (store.viewMetadata.observations_observations.graphs) {
         store.viewMetadata.observations_observations.graphs.category =
           category as GraphCategory;
@@ -526,12 +529,17 @@ describe("formatAppUrl", () => {
 
       let result = formatAppUrl(store);
 
-      expect(result).toBe(`${defaultQuery}&graphs_category=${category}`);
+      expect(result).toBe(
+        `${defaultQuery}` +
+          `&view=observations_observations&subview=graph` +
+          `&graphs_category=${category}`,
+      );
     },
   );
 
   test("ignore graphs category if category is month_of_year and no group by", () => {
     let store = structuredClone(mapStore);
+    store.viewMetadata.observations_observations.subview = "graph";
     if (store.viewMetadata.observations_observations.graphs) {
       store.viewMetadata.observations_observations.graphs.category =
         "month_of_year";
@@ -539,13 +547,16 @@ describe("formatAppUrl", () => {
 
     let result = formatAppUrl(store);
 
-    expect(result).toBe(``);
+    expect(result).toBe(
+      `${defaultQuery}` + `&view=observations_observations&subview=graph`,
+    );
   });
 
   test.each(histogramGraphCategory)(
     "return params with graphs category and one selected places",
     (category) => {
       let store = structuredClone(mapStore);
+      store.viewMetadata.observations_observations.subview = "graph";
       store.selectedPlaces = [losangeles];
       if (store.viewMetadata.observations_observations.graphs) {
         store.viewMetadata.observations_observations.graphs.category = category;
@@ -555,10 +566,13 @@ describe("formatAppUrl", () => {
 
       let expected = "";
       if (category === "month_of_year") {
-        expected = `place_id=${losangeles.id}&${defaultQuery}`;
+        expected =
+          `place_id=${losangeles.id}&${defaultQuery}` +
+          `&view=observations_observations&subview=graph`;
       } else {
         expected =
           `place_id=${losangeles.id}&${defaultQuery}` +
+          `&view=observations_observations&subview=graph` +
           `&graphs_category=${category}`;
       }
       expect(result).toBe(expected);
@@ -569,6 +583,7 @@ describe("formatAppUrl", () => {
     "return params with graphs category and multiple selected places",
     (category) => {
       let store = structuredClone(mapStore);
+      store.viewMetadata.observations_observations.subview = "graph";
       store.selectedPlaces = [losangeles, sandiego];
       if (store.viewMetadata.observations_observations.graphs) {
         store.viewMetadata.observations_observations.graphs.category = category;
@@ -578,10 +593,13 @@ describe("formatAppUrl", () => {
 
       let expected = "";
       if (category === "month_of_year") {
-        expected = `place_id=${losangeles.id},${sandiego.id}&${defaultQuery}`;
+        expected =
+          `place_id=${losangeles.id},${sandiego.id}&${defaultQuery}` +
+          `&view=observations_observations&subview=graph`;
       } else {
         expected =
           `place_id=${losangeles.id},${sandiego.id}&${defaultQuery}` +
+          `&view=observations_observations&subview=graph` +
           `&graphs_category=${category}`;
       }
       expect(result).toBe(expected);
@@ -592,6 +610,7 @@ describe("formatAppUrl", () => {
     "ignore group by places if graphs category and one selected places",
     (category) => {
       let store = structuredClone(mapStore);
+      store.viewMetadata.observations_observations.subview = "graph";
       store.selectedPlaces = [losangeles];
       if (store.viewMetadata.observations_observations.graphs) {
         store.viewMetadata.observations_observations.graphs.category = category;
@@ -602,10 +621,13 @@ describe("formatAppUrl", () => {
 
       let expected = "";
       if (category === "month_of_year") {
-        expected = `place_id=${losangeles.id}&${defaultQuery}`;
+        expected =
+          `place_id=${losangeles.id}&${defaultQuery}` +
+          `&view=observations_observations&subview=graph`;
       } else {
         expected =
           `place_id=${losangeles.id}&${defaultQuery}` +
+          `&view=observations_observations&subview=graph` +
           `&graphs_category=${category}`;
       }
       expect(result).toBe(expected);
@@ -616,6 +638,7 @@ describe("formatAppUrl", () => {
     "return params with graphs category, multiple selected places, and group by places",
     (category) => {
       let store = structuredClone(mapStore);
+      store.viewMetadata.observations_observations.subview = "graph";
       store.selectedPlaces = [losangeles, sandiego];
       if (store.viewMetadata.observations_observations.graphs) {
         store.viewMetadata.observations_observations.graphs.category = category;
@@ -626,6 +649,7 @@ describe("formatAppUrl", () => {
 
       let expected =
         `place_id=${losangeles.id},${sandiego.id}&${defaultQuery}` +
+        `&view=observations_observations&subview=graph` +
         `&graphs_category=${category}` +
         `&graphs_group_by=places`;
       expect(result).toBe(expected);
@@ -636,6 +660,7 @@ describe("formatAppUrl", () => {
     "return params with graphs category and one selected taxa",
     (category) => {
       let store = structuredClone(mapStore);
+      store.viewMetadata.observations_observations.subview = "graph";
       store.selectedTaxa = [redOak()];
       if (store.viewMetadata.observations_observations.graphs) {
         store.viewMetadata.observations_observations.graphs.category = category;
@@ -650,10 +675,13 @@ describe("formatAppUrl", () => {
 
       let expected = "";
       if (category === "month_of_year") {
-        expected = `taxon_id=${redOak().id}&${defaultQuery}`;
+        expected =
+          `taxon_id=${redOak().id}&${defaultQuery}` +
+          `&view=observations_observations&subview=graph`;
       } else {
         expected =
           `taxon_id=${redOak().id}&${defaultQuery}` +
+          `&view=observations_observations&subview=graph` +
           `&graphs_category=${category}`;
       }
       expect(result).toBe(expected);
@@ -664,6 +692,7 @@ describe("formatAppUrl", () => {
     "return params with graphs category and multiple selected taxa",
     (category) => {
       let store = structuredClone(mapStore);
+      store.viewMetadata.observations_observations.subview = "graph";
       store.selectedTaxa = [life(), redOak()];
       if (store.viewMetadata.observations_observations.graphs) {
         store.viewMetadata.observations_observations.graphs.category = category;
@@ -678,10 +707,13 @@ describe("formatAppUrl", () => {
 
       let expected = "";
       if (category === "month_of_year") {
-        expected = `taxon_id=${life().id},${redOak().id}&${defaultQuery}`;
+        expected =
+          `taxon_id=${life().id},${redOak().id}&${defaultQuery}` +
+          `&view=observations_observations&subview=graph`;
       } else {
         expected =
           `taxon_id=${life().id},${redOak().id}&${defaultQuery}` +
+          `&view=observations_observations&subview=graph` +
           `&graphs_category=${category}`;
       }
       expect(result).toBe(expected);
@@ -692,6 +724,7 @@ describe("formatAppUrl", () => {
     "ignore group by species if graphs category and one selected taxa",
     (category) => {
       let store = structuredClone(mapStore);
+      store.viewMetadata.observations_observations.subview = "graph";
       store.selectedTaxa = [life()];
       if (store.viewMetadata.observations_observations.graphs) {
         store.viewMetadata.observations_observations.graphs.category = category;
@@ -707,10 +740,13 @@ describe("formatAppUrl", () => {
 
       let expected = "";
       if (category === "month_of_year") {
-        expected = `taxon_id=${life().id}&${defaultQuery}`;
+        expected =
+          `taxon_id=${life().id}&${defaultQuery}` +
+          `&view=observations_observations&subview=graph`;
       } else {
         expected =
           `taxon_id=${life().id}&${defaultQuery}` +
+          `&view=observations_observations&subview=graph` +
           `&graphs_category=${category}`;
       }
       expect(result).toBe(expected);
@@ -721,6 +757,7 @@ describe("formatAppUrl", () => {
     "return params with graphs category, multiple selected taxa, and group by species",
     (category) => {
       let store = structuredClone(mapStore);
+      store.viewMetadata.observations_observations.subview = "graph";
       store.selectedTaxa = [life(), redOak()];
       if (store.viewMetadata.observations_observations.graphs) {
         store.viewMetadata.observations_observations.graphs.category = category;
@@ -736,6 +773,7 @@ describe("formatAppUrl", () => {
 
       expect(result).toBe(
         `taxon_id=${life().id},${redOak().id}&${defaultQuery}` +
+          `&view=observations_observations&subview=graph` +
           `&graphs_category=${category}` +
           `&graphs_group_by=species`,
       );
@@ -744,6 +782,7 @@ describe("formatAppUrl", () => {
 
   test("do not add graph category to url if category is popular field id and selected taxa is default taxa", () => {
     let store = structuredClone(mapStore);
+    store.viewMetadata.observations_observations.subview = "graph";
     store.viewMetadata.observations_observations.graphs = {
       category: "1",
     };
@@ -751,11 +790,14 @@ describe("formatAppUrl", () => {
 
     let result = formatAppUrl(store);
 
-    expect(result).toBe(``);
+    expect(result).toBe(
+      `${defaultQuery}&view=observations_observations&subview=graph`,
+    );
   });
 
   test("do not add graph category to url if selected taxa does not have popularFieldsByTaxa for selected category", () => {
     let store = structuredClone(mapStore);
+    store.viewMetadata.observations_observations.subview = "graph";
     store.viewMetadata.observations_observations.graphs = {
       category: "1",
     };
@@ -766,11 +808,14 @@ describe("formatAppUrl", () => {
 
     let result = formatAppUrl(store);
 
-    expect(result).toBe(`taxon_id=${monarchBasic.id}&${defaultQuery}`);
+    expect(result).toBe(
+      `taxon_id=${monarchBasic.id}&${defaultQuery}&view=observations_observations&subview=graph`,
+    );
   });
 
   test("add popular field id graph category to url if selected taxa does have popularFieldsByTaxa for selected category", () => {
     let store = structuredClone(mapStore);
+    store.viewMetadata.observations_observations.subview = "graph";
     store.viewMetadata.observations_observations.graphs = {
       category: "1",
     };
@@ -782,7 +827,7 @@ describe("formatAppUrl", () => {
     let result = formatAppUrl(store);
 
     expect(result).toBe(
-      `taxon_id=${monarchBasic.id}&${defaultQuery}&graphs_category=1`,
+      `taxon_id=${monarchBasic.id}&${defaultQuery}&view=observations_observations&subview=graph&graphs_category=1`,
     );
   });
 
@@ -801,18 +846,100 @@ describe("formatAppUrl", () => {
 
   test.each(validGraphValueType)("add graph value to url", (valueType) => {
     let store = structuredClone(mapStore);
+    store.viewMetadata.observations_observations.subview = "graph";
     store.viewMetadata.observations_observations.graphs = {
       valueType: valueType,
     };
 
     let result = formatAppUrl(store);
 
-    let expected = "";
+    let expected =
+      "verifiable=true&spam=false&view=observations_observations&subview=graph";
     if (valueType === "percents") {
-      expected = `${defaultQuery}&graphs_value=${valueType}`;
+      expected = `${defaultQuery}&view=observations_observations&subview=graph&graphs_value=${valueType}`;
     }
     expect(result).toBe(expected);
   });
+
+  test("adds graph category, group by, value if graph subview", () => {
+    let store = structuredClone(mapStore);
+    store.viewMetadata.observations_observations.subview = "graph";
+    store.selectedTaxa = [life(), redOak()];
+    store.viewMetadata.observations_observations.graphs = {
+      valueType: "percents",
+      category: "year",
+      groupBy: "species",
+    };
+
+    let result = formatAppUrl(store);
+
+    let expected =
+      `taxon_id=${life().id},${redOak().id}&${defaultQuery}` +
+      `&view=observations_observations&subview=graph` +
+      `&graphs_category=year&graphs_group_by=species&graphs_value=percents`;
+    expect(result).toBe(expected);
+  });
+
+  test.each(validObservationsSubviews.filter((v) => v !== "graph"))(
+    "ignores graph category, group by, value if not graph subview",
+    (subview) => {
+      let store = structuredClone(mapStore);
+      store.viewMetadata.observations_observations.subview = subview;
+      store.selectedTaxa = [life(), redOak()];
+      store.viewMetadata.observations_observations.graphs = {
+        valueType: "percents",
+        category: "year",
+        groupBy: "species",
+      };
+
+      let result = formatAppUrl(store);
+
+      let expected =
+        `taxon_id=${life().id},${redOak().id}&${defaultQuery}` +
+        `&view=observations_observations&subview=${subview}`;
+      if (subview === "map") {
+        expected = `taxon_id=${life().id},${redOak().id}&${defaultQuery}`;
+      }
+      expect(result).toBe(expected);
+    },
+  );
+
+  test.each(validMapCategory)(
+    "return params with map category if map subview",
+    (category) => {
+      let store = structuredClone(mapStore);
+      store.viewMetadata.observations_observations.subview = "map";
+      if (store.viewMetadata.observations_observations.map) {
+        store.viewMetadata.observations_observations.map.category = category;
+      }
+
+      let result = formatAppUrl(store);
+
+      let expected = "";
+      if (category !== "none") {
+        expected = `${defaultQuery}` + `&map_category=${category}`;
+      }
+      expect(result).toBe(expected);
+    },
+  );
+
+  test.each(validObservationsSubviews.filter((v) => v !== "map"))(
+    "ignores  map category if not map subview",
+    (subview) => {
+      let store = structuredClone(mapStore);
+      store.viewMetadata.observations_observations.subview = subview;
+      if (store.viewMetadata.observations_observations.map) {
+        store.viewMetadata.observations_observations.map.category = "year";
+      }
+
+      let result = formatAppUrl(store);
+
+      let expected =
+        `${defaultQuery}` +
+        `&view=observations_observations&subview=${subview}`;
+      expect(result).toBe(expected);
+    },
+  );
 });
 
 describe("formatAppUrl with identifications", () => {
@@ -1668,6 +1795,39 @@ describe("decodeAppUrl options", () => {
 
   test("ignores invalid graph value type", () => {
     let searchParams = `?graphs_value=bad`;
+    let expected = {
+      ...structuredClone(defaultUrlStore),
+      currentView: "observations_observations",
+      record_type: "observations",
+    };
+
+    let result = decodeAppUrl(searchParams, "/");
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  test.each(validMapCategory)(
+    "adds map category to observation map metadata",
+    (category) => {
+      let searchParams = `?map_category=${category}`;
+      let expected = {
+        ...structuredClone(defaultUrlStore),
+        currentView: "observations_observations",
+        record_type: "observations",
+        viewMetadata: {
+          ...structuredClone(defaultUrlStore.viewMetadata),
+          observations_observations: { map: { category: category } },
+        },
+      };
+
+      let result = decodeAppUrl(searchParams, "/");
+
+      expect(result).toStrictEqual(expected);
+    },
+  );
+
+  test("ignore invalid map category", () => {
+    let searchParams = `?map_category=bad`;
     let expected = {
       ...structuredClone(defaultUrlStore),
       currentView: "observations_observations",

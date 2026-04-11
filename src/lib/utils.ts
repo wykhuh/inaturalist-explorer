@@ -11,6 +11,7 @@ import type {
   GraphCategory,
   GraphGroupBy,
   GraphValueType,
+  MapCategory,
 } from "../types/app";
 import {
   bboxPlaceRecord,
@@ -27,6 +28,7 @@ import {
   observationsApiNames,
   recordTypeToPathObj,
   validIdentificationsSubviews,
+  validMapCategory,
 } from "../data/app_data";
 import {
   defaultColorScheme,
@@ -217,7 +219,11 @@ export function formatAppUrl(
   }
 
   let graphsMetadata = appStore.viewMetadata.observations_observations.graphs;
-  if (graphsMetadata) {
+  if (
+    graphsMetadata &&
+    appStore.currentView === "observations_observations" &&
+    appStore.viewMetadata.observations_observations.subview == "graph"
+  ) {
     // manually set graphs_category for cases when graphs_category is set to
     // popular fields id but there are no selected taxa, such as when user
     // is viewing a popular field graph and deletes selected taxa
@@ -262,6 +268,17 @@ export function formatAppUrl(
       validGraphValueType.includes(graphsMetadata.valueType)
     ) {
       params.graphs_value = graphsMetadata.valueType;
+    }
+  }
+
+  let mapMetadata = appStore.viewMetadata.observations_observations.map;
+  if (
+    mapMetadata &&
+    appStore.currentView === "observations_observations" &&
+    appStore.viewMetadata.observations_observations.subview == "map"
+  ) {
+    if (mapMetadata.category !== "none") {
+      params.map_category = mapMetadata.category;
     }
   }
 
@@ -722,6 +739,18 @@ export function decodeAppUrl(searchParams: string, path = "/") {
     }
     store.viewMetadata.observations_observations.graphs.valueType =
       urlParams.graphs_value as GraphValueType;
+  }
+
+  if (
+    urlParams.map_category &&
+    validMapCategory.includes(urlParams.map_category as MapCategory) &&
+    isObservations
+  ) {
+    if (store.viewMetadata.observations_observations.map === undefined) {
+      store.viewMetadata.observations_observations.map = {
+        category: urlParams.map_category as MapCategory,
+      };
+    }
   }
 
   for (let [key, value] of new URLSearchParams(searchParams)) {

@@ -132,6 +132,19 @@ afterAll(() => {
   server.close();
 });
 
+let defaultViewMetadata = {
+  subview: "map",
+  perPage: 24,
+  displayFields: {},
+  graphs: { category: "month_of_year", valueType: "counts" },
+  map: {
+    category: "none",
+    mapAnimation: false,
+    setTimeoutIds: [],
+    mapLayers: {},
+  },
+};
+
 describe("initPopulateStore and initRenderMap options", () => {
   test("loads default taxa if no params", async () => {
     let store = structuredClone(mapStore);
@@ -1604,10 +1617,8 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       let subview =
         view === "observations_observations"
           ? {
-              subview: "map",
+              ...defaultViewMetadata,
               perPage: perpage,
-              displayFields: {},
-              graphs: { category: "month_of_year", valueType: "counts" },
             }
           : { perPage: perpage };
 
@@ -1687,9 +1698,7 @@ describe("initPopulateStore and initRenderMap populates views and subviews", () 
       expect(store.color).toBe(iNatOrange);
       expect(store.currentView).toBe("observations_observations");
       expect(store.viewMetadata.observations_observations).toStrictEqual({
-        displayFields: {},
-        graphs: { category: "month_of_year", valueType: "counts" },
-        perPage: 24,
+        ...defaultViewMetadata,
         subview: subview,
       });
     },

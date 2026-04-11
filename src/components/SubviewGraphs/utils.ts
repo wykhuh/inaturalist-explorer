@@ -12,7 +12,7 @@ import { createSpinner } from "../../lib/spinner";
 import type { iNatPopularFieldsBasicAPI } from "../../types/inat_api";
 import type {
   AppStoreType,
-  viewMetadataGraphs,
+  ViewMetadataGraphs,
   GraphCategory,
   NormalizedPopularFields,
   PopularFieldsByTermId,
@@ -96,7 +96,7 @@ export async function renderGraphs(
   dataContainer.innerHTML = "";
 
   let graphsMetadata = appStore.viewMetadata.observations_observations
-    .graphs as viewMetadataGraphs;
+    .graphs as ViewMetadataGraphs;
 
   let category = graphsMetadata.category;
 
@@ -211,7 +211,7 @@ export async function updateGraphs(
   componentContext: HTMLElement,
 ) {
   let graphsMetadata = appStore.viewMetadata.observations_observations
-    .graphs as viewMetadataGraphs;
+    .graphs as ViewMetadataGraphs;
 
   let groupBy = formData.get("graphs-group-by");
   if (groupBy === "species") {
@@ -305,8 +305,9 @@ export function graphMaxObservationMessage(
 export function renderGraphCategorySelect(
   appStore: AppStoreType,
   componentContext: HTMLElement,
+  selector: string,
 ) {
-  let selectEl = componentContext.querySelector("select#graphs-category");
+  let selectEl = componentContext.querySelector(selector);
   if (!selectEl) return;
 
   selectEl.innerHTML = `
@@ -373,6 +374,7 @@ export function graphHasMaxObservation(appStore: AppStoreType) {
   }
 }
 
+// NOTE: pass get functions as params to make  fetchGraphData testable
 export async function fetchGraphData(
   appStore: AppStoreType,
   getAPIHistogramDataFn: any,
@@ -388,7 +390,7 @@ export async function fetchGraphData(
   } as ObservationsGraphData;
 
   let graphsMetadata = appStore.viewMetadata.observations_observations
-    .graphs as viewMetadataGraphs;
+    .graphs as ViewMetadataGraphs;
 
   // fetch popular fields data for each species
   if (isPopularFieldCategory(appStore) && appStore.selectedTaxa[0].id !== 0) {
@@ -548,7 +550,7 @@ export async function fetchGraphData(
   return graphData;
 }
 
-function setLastTenYears(params: URLSearchParams) {
+export function setLastTenYears(params: URLSearchParams) {
   if (params.get("d1") === null) {
     let year = new Date().getFullYear() - 10;
     params.set("d1", `${year}-01-01`);
@@ -756,7 +758,7 @@ function createMissingChartData(id: number) {
 
 export function updateInvalidGraphCategory(
   appStore: AppStoreType,
-  graphsMetadata?: viewMetadataGraphs,
+  graphsMetadata?: ViewMetadataGraphs,
 ) {
   if (!graphsMetadata) return;
 

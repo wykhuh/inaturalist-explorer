@@ -800,6 +800,14 @@ export function isPopularFieldCategory(appStore: AppStoreType) {
   return false;
 }
 
+export function isPopularFieldCategoryMap(appStore: AppStoreType) {
+  let metadata = appStore.viewMetadata.observations_observations.map;
+  if (metadata && metadata.category) {
+    return Object.keys(annotationsTerms).includes(metadata.category);
+  }
+  return false;
+}
+
 export function getResourceApiParams(isObservations: boolean) {
   return (
     isObservations ? "observationsApiParams" : "identificationsApiParams"

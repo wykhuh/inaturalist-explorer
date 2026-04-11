@@ -30,7 +30,7 @@ import {
   getColorByIndex,
   secondaryColorScheme,
 } from "../../lib/map_colors_utils";
-import { MONTHS } from "./charts_data";
+import { MONTHS } from "../../data/constants";
 
 Chart.register(
   Colors,

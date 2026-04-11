@@ -7,7 +7,7 @@ import type {
   DataComponentType,
   AppStoreType,
   ObservationSubviewsType,
-  viewMetadataGraphs,
+  ViewMetadataGraphs,
   ObservationsGraphData,
 } from "../../types/app";
 import { observations_fields_annotations as observations } from "../../data/api/observations";
@@ -89,7 +89,7 @@ export function renderSubview(
   subcontainerEl.innerHTML = "";
 
   let graphsMetadata = appStore.viewMetadata.observations_observations
-    .graphs as viewMetadataGraphs;
+    .graphs as ViewMetadataGraphs;
   let subview = appStore.viewMetadata.observations_observations.subview;
 
   let component: DataComponentType;
