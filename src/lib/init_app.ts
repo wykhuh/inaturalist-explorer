@@ -72,7 +72,6 @@ export async function initPopulateStore(
   urlStore: AppStoreType,
 ) {
   loggerStore("++ initPopulateStore start");
-
   if (urlStore.record_type) {
     appStore.record_type = urlStore.record_type;
   }
@@ -89,17 +88,7 @@ export async function initPopulateStore(
   appStore.currentView = urlStore.currentView;
 
   // populate viewMetadata
-  for (let [k, value] of Object.entries(urlStore.viewMetadata)) {
-    let key = k as ObservationViewsType;
-    if (typeof value === "string") {
-      appStore.viewMetadata[key] = value as any;
-    } else {
-      appStore.viewMetadata[key] = {
-        ...appStore.viewMetadata[key],
-        ...value,
-      };
-    }
-  }
+  setViewMetadata(appStore, urlStore);
 
   setPerPage(appStore);
 
@@ -349,6 +338,43 @@ export async function initPopulateStore(
   loggerEvent("[initPopulateStored dispatchEvent] storePopulated");
   calculateObservationsCount(appStore);
   window.dispatchEvent(new Event("storePopulated"));
+}
+
+function nonObjectCheck(value: any) {
+  return (
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean"
+  );
+}
+export function setViewMetadata(
+  appStore: AppStoreType,
+  urlStore: AppStoreType,
+) {
+  for (let [key1, value1] of Object.entries(urlStore.viewMetadata)) {
+    if (nonObjectCheck(value1)) {
+      // @ts-ignore
+      appStore.viewMetadata[key1] = value1;
+    } else {
+      for (let [key2, value2] of Object.entries(value1)) {
+        if (nonObjectCheck(value2)) {
+          // @ts-ignore
+          appStore.viewMetadata[key1][key2] = value2;
+        } else {
+          for (let [key3, value3] of Object.entries(value2)) {
+            if (nonObjectCheck(value3)) {
+              // @ts-ignore
+              appStore.viewMetadata[key1][key2][key3] = value3;
+            } else {
+              throw new Error(
+                `need to add support for ${key3} ${typeof value3} in setViewMetadata`,
+              );
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 function populateObservationsApiParams(
