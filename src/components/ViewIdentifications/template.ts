@@ -4,26 +4,21 @@ export const template = html`
   <span class="loader"></span>
   <div class="identifications-list-container">
     <div id="view-controls" data-testid="identifications-controls">
-      <div>
-        <div id="subview-menu">
-          <button class="subview-map" data-subview="map">Map</button>
-          <button class="subview-grid" data-subview="grid">Grid</button>
-          <button class="subview-history" data-subview="history">
-            History
-          </button>
-        </div>
+      <div id="subview-menu">
+        <button class="subview-map" data-subview="map">Map</button>
+        <button class="subview-grid" data-subview="grid">Grid</button>
+        <button class="subview-history" data-subview="history">History</button>
       </div>
-
-      <form id="order-form">
-        <div class="form-group">
-          <label for="order_combo">Sort By</label>
-          <select id="order_combo" name="order_combo">
-            <option value="created_at:desc">Added Date, New to Old</option>
-            <option value="created_at:asc">Added Date, Old to New</option>
-          </select>
-        </div>
-      </form>
     </div>
+    <form id="order-form">
+      <div class="form-group">
+        <label for="order_combo">Sort By</label>
+        <select id="order_combo" name="order_combo">
+          <option value="created_at:desc">Added Date, New to Old</option>
+          <option value="created_at:asc">Added Date, Old to New</option>
+        </select>
+      </div>
+    </form>
     <div class="subview-container"></div>
   </div>
 `;

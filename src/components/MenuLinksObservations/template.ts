@@ -37,7 +37,7 @@ export const template = html`
       </li>
     </ul>
 
-    <h2>Notes</h2>
+    <h3>Notes</h3>
     <ol>
       <li>
         This site gets its data from the iNaturlist API. However, some queries

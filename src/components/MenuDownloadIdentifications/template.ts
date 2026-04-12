@@ -16,7 +16,7 @@ const instructions = html`<ol>
 export const template = html`
   <div id="settings-menu">
     <h2>Download</h2>
-    <h2>Download Identifications (Work in Progress)</h2>
+    <h3>Download Identifications (Work in Progress)</h3>
     <p>
       This site offers the ability to download identifications that matches your
       search query. There is a limit of downloading ${MAX_DOWNLOADS}

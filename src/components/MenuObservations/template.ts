@@ -2,6 +2,8 @@ import { html } from "../../lib/component_utils";
 
 export const template = html`
   <div id="observations-menu">
+    <h2>Search</h2>
+
     <div class="form-group">
       <label>
         Search for
@@ -34,48 +36,48 @@ export const template = html`
     </div>
 
     <!--  // NOTE: update when adding selectedResource -->
-    <h2 class="taxa-heading" hidden>Observed Species</h2>
+    <h3 class="taxa-heading" hidden>Observed Species</h3>
     <ul id="selected-species-list" class="selected-resource-list"></ul>
 
-    <h2 class="taxa-identified-heading" hidden>Identified Species</h2>
+    <h3 class="taxa-identified-heading" hidden>Identified Species</h3>
     <ul
       id="selected-species-identified-list"
       class="selected-resource-list"
     ></ul>
 
-    <h2 class="places-heading" hidden>Places</h2>
+    <h3 class="places-heading" hidden>Places</h3>
     <ul id="selected-places-list" class="selected-resource-list"></ul>
 
-    <h2 class="projects-heading" hidden>Projects</h2>
+    <h3 class="projects-heading" hidden>Projects</h3>
     <ul id="selected-projects-list" class="selected-resource-list"></ul>
 
-    <h2 class="users-heading" hidden>Observers</h2>
+    <h3 class="users-heading" hidden>Observers</h3>
     <ul id="selected-users-list" class="selected-resource-list"></ul>
 
-    <h2 class="users-identifiers-heading" hidden>Identifiers</h2>
+    <h3 class="users-identifiers-heading" hidden>Identifiers</h3>
     <ul
       id="selected-users-identifiers-list"
       class="selected-resource-list"
     ></ul>
 
-    <h2 class="users-annotators-heading" hidden>Annotators</h2>
+    <h3 class="users-annotators-heading" hidden>Annotators</h3>
     <ul id="selected-users-annotators-list" class="selected-resource-list"></ul>
 
-    <h2 class="without-taxa-heading" hidden>Exclude Species</h2>
+    <h3 class="without-taxa-heading" hidden>Exclude Species</h3>
     <ul id="selected-without-taxa-list" class="selected-resource-list"></ul>
 
-    <h2 class="without-places-heading" hidden>Exclude Places</h2>
+    <h3 class="without-places-heading" hidden>Exclude Places</h3>
     <ul id="selected-without-places-list" class="selected-resource-list"></ul>
 
-    <h2 class="without-projects-heading" hidden>Exclude Projects</h2>
+    <h3 class="without-projects-heading" hidden>Exclude Projects</h3>
     <ul id="selected-without-projects-list" class="selected-resource-list"></ul>
 
-    <h2 class="without-users-heading" hidden>Exclude Observers</h2>
+    <h3 class="without-users-heading" hidden>Exclude Observers</h3>
     <ul id="selected-without-users-list" class="selected-resource-list"></ul>
 
-    <h2 class="without-users-identifiers-heading" hidden>
+    <h3 class="without-users-identifiers-heading" hidden>
       Exclude Identifiers
-    </h2>
+    </h3>
     <ul
       id="selected-without-users-identifiers-list"
       class="selected-resource-list"

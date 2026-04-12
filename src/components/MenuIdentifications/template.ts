@@ -2,6 +2,8 @@ import { html } from "../../lib/component_utils";
 
 export const template = html`
   <div id="identifications-menu">
+    <h2>Search</h2>
+
     <div class="form-group">
       <label>
         Search for
@@ -29,36 +31,36 @@ export const template = html`
       <identifications-filters></identifications-filters>
     </div>
 
-    <h2 class="taxa-heading" hidden>Observed Species</h2>
+    <h3 class="taxa-heading" hidden>Observed Species</h3>
     <ul id="selected-species-list" class="selected-resource-list"></ul>
 
-    <h2 class="taxa-identified-heading" hidden>Identified Species</h2>
+    <h3 class="taxa-identified-heading" hidden>Identified Species</h3>
     <ul
       id="selected-species-identified-list"
       class="selected-resource-list"
     ></ul>
 
-    <h2 class="places-heading" hidden>Places</h2>
+    <h3 class="places-heading" hidden>Places</h3>
     <ul id="selected-places-list" class="selected-resource-list"></ul>
 
-    <h2 class="users-identifiers-heading" hidden>Identifier</h2>
+    <h3 class="users-identifiers-heading" hidden>Identifier</h3>
     <ul
       id="selected-users-identifiers-list"
       class="selected-resource-list"
     ></ul>
 
-    <h2 class="without-taxa-heading" hidden>Exclude Observed Species</h2>
+    <h3 class="without-taxa-heading" hidden>Exclude Observed Species</h3>
     <ul id="selected-without-taxa-list" class="selected-resource-list"></ul>
 
-    <h2 class="without-taxa-identified-heading" hidden>
+    <h3 class="without-taxa-identified-heading" hidden>
       Exclude Identified Species
-    </h2>
+    </h3>
     <ul
       id="selected-without-taxa-identified-list"
       class="selected-resource-list"
     ></ul>
 
-    <h2 class="without-places-heading" hidden>Exclude Places</h2>
+    <h3 class="without-places-heading" hidden>Exclude Places</h3>
     <ul id="selected-without-places-list" class="selected-resource-list"></ul>
   </div>
 `;

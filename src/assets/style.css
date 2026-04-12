@@ -661,19 +661,27 @@
   }
 
   #site-controls {
-    width: var(--side-menu-width);
-    border-bottom: var(--border-grey);
+    width: calc(var(--side-menu-width));
+    border-bottom: var(--border-dark-grey);
+    background-color: var(--clr-gray-300);
+    padding-right: 1rem;
 
     button {
       font-size: var(--font-size-lg);
       border: 0;
       width: var(--side-menu-closed-width);
       height: var(--side-menu-closed-width);
+      background-color: var(--clr-gray-300);
 
       svg {
         height: 16px;
         display: inline;
       }
+    }
+
+    button:hover,
+    button:focus-visible {
+      background-color: var(--clr-gray-500);
     }
 
     @media (max-width: 900px) {
@@ -933,7 +941,7 @@
 
 @layer views {
   #view-container {
-    --view-container-margins: 1.5rem 1rem 1.5rem 0;
+    --view-container-margins: 1rem;
 
     width: 100%;
 
@@ -969,7 +977,8 @@
   .identifiers-table-container,
   .observers-table-container,
   .species-list-container,
-  .observations-list-container {
+  .observations-list-container,
+  .identifications-list-container {
     margin: var(--view-container-margins);
   }
 
@@ -1641,7 +1650,9 @@
   }
 
   #sidebar-menu {
-    padding: 2rem 1rem 1rem 1rem;
+    padding: 2.5rem 1rem 1rem 1rem;
+    border-right: var(--border-grey);
+    /* margin-right: 1rem; */
 
     h2 {
       font-size: var(--font-size-md);

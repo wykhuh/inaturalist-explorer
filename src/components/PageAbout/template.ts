@@ -43,11 +43,7 @@ export const template = html`
     <h1>About</h1>
     <p>
       iNaturalist Explorer is a opensource website that lets people explore
-      iNaturalist data. This site adds some features that
-      <a href="https://www.inaturalist.org/observations"
-        >iNaturalist Explore Observations</a
-      >
-      page does not have. This site gets iNaturalist data from the iNaturalist
+      iNaturalist data. This site gets iNaturalist data from the iNaturalist
       API.
     </p>
     <h2>Features</h2>
