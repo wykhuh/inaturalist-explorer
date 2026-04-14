@@ -47,6 +47,7 @@ import {
   getResourceApiParams,
   isOtherCheck,
   setPerPage,
+  isAnimatedMapCategory,
 } from "./data_utils";
 import { loggerEvent, loggerRender, loggerStore } from "./logger.ts";
 import {
@@ -473,6 +474,7 @@ export async function initRenderMap(appStore: AppStoreType) {
 
   // load default or selected taxa map layer
   if (isOther) {
+  } else if (isAnimatedMapCategory(appStore)) {
     // do not load map tiles
   } else if (
     appStore.selectedTaxa.length === 1 &&

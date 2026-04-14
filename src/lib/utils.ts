@@ -37,7 +37,11 @@ import {
 } from "./map_colors_utils";
 import { convertiNatBBoxToLngLat } from "./map_utils";
 import { validObservationsSubviews, validViews } from "../data/app_data";
-import { getResourceApiParams, isPopularFieldCategory } from "./data_utils";
+import {
+  getResourceApiParams,
+  isAnimatedMapCategory,
+  isPopularFieldCategory,
+} from "./data_utils";
 import { loggerEvent } from "./logger";
 
 export function displayJson(json: any, el: HTMLElement | null) {
@@ -277,7 +281,7 @@ export function formatAppUrl(
     appStore.currentView === "observations_observations" &&
     appStore.viewMetadata.observations_observations.subview == "map"
   ) {
-    if (mapMetadata.category !== "none") {
+    if (isAnimatedMapCategory(appStore)) {
       params.map_category = mapMetadata.category;
     }
   }

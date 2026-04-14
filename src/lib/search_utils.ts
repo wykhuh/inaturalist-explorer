@@ -6,6 +6,7 @@ import type {
 } from "../types/app";
 import {
   fetchiNatMapDataForTaxon,
+  isAnimatedMapCategory,
   isIdentificationsCheck,
   isObservationsCheck,
 } from "./data_utils";
@@ -65,7 +66,12 @@ import {
   withoutUserIdentifierSelectedHandler,
 } from "./search_without_users_identifiers.ts";
 
-export async function updateTilesForSelectedTaxa(appStore: AppStoreType) {
+export async function updateTilesForSelectedTaxa(
+  appStore: AppStoreType,
+  loadMapAnimations = false,
+) {
+  if (loadMapAnimations === false && isAnimatedMapCategory(appStore)) return;
+
   for await (const taxon of appStore.selectedTaxa) {
     // remove existing taxon layers from map
     removeOneTaxonFromMap(appStore, taxon.id);

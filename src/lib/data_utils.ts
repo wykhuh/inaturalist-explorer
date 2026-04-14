@@ -808,6 +808,18 @@ export function isPopularFieldCategoryMap(appStore: AppStoreType) {
   return false;
 }
 
+export function isAnimatedMapCategory(appStore: AppStoreType) {
+  let category = appStore.viewMetadata.observations_observations.map.category;
+  if (category) {
+    return (
+      category === "year" ||
+      category === "month" ||
+      category === "month_of_year"
+    );
+  }
+  return false;
+}
+
 export function getResourceApiParams(isObservations: boolean) {
   return (
     isObservations ? "observationsApiParams" : "identificationsApiParams"

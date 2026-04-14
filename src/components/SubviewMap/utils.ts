@@ -1,6 +1,7 @@
 import { pauseIcon, playIcon } from "../../assets/icons";
 import { FULL_MONTHS, MONTH_LAST_DAY } from "../../data/constants";
 import { cleanupObervationsHistogramParams } from "../../lib/cleanup_params_utils";
+import { isAnimatedMapCategory } from "../../lib/data_utils";
 import { setSelectedOption } from "../../lib/form_utils";
 import { removeOneTaxonFromMap } from "../../lib/search_taxa";
 import { updateTilesForSelectedTaxa } from "../../lib/search_utils";
@@ -25,6 +26,17 @@ export function setCategory(formData: FormData, appStore: AppStoreType) {
   if (!category) return;
   let mapMetadata = appStore.viewMetadata.observations_observations.map;
   mapMetadata.category = category;
+  updateAppUrl(window.location, appStore);
+}
+
+export function switchToNormalMap(
+  appStore: AppStoreType,
+  componentContext: SubviewObservationsMap,
+) {
+  if (!componentContext.currentTimeperiodEl) return;
+
+  componentContext.currentTimeperiodEl.innerText = "";
+  updateTilesForSelectedTaxa(appStore);
 }
 
 export async function fetchAndRenderTimePeriods(
@@ -39,18 +51,18 @@ export async function fetchAndRenderTimePeriods(
 
   let timeData = await fetchTimePeriods(appStore);
   spinner.stop();
-
   if (!timeData) return;
 
   appStore.viewMetadata.mapTimePeriods = timeData.timePeriods;
-  componentContext.timeRangeEl.value = "0";
+  let index =
+    appStore.viewMetadata.observations_observations.map.currentIndex || 0;
+  componentContext.timeRangeEl.value = index.toString();
   componentContext.timeRangeEl.min = "0";
   componentContext.timeRangeEl.max = (
     timeData.timePeriods.length - 1
   ).toString();
 
-  updateCurrentTimeText(0, componentContext, appStore);
-  updateAppUrl(window.location, appStore);
+  updateCurrentTimeText(index, componentContext, appStore);
 }
 
 export function updateCurrentTimeText(
@@ -71,7 +83,11 @@ export function updateCurrentTimeText(
     }
   }
   componentContext.currentTimeperiodEl.innerText = text;
-  mapMetadata.currentIndex = index;
+  updateCurrentIndex(index, appStore);
+}
+
+export function updateCurrentIndex(index: number, appStore: AppStoreType) {
+  appStore.viewMetadata.observations_observations.map.currentIndex = index;
 }
 
 export async function fetchTimePeriods(appStore: AppStoreType) {
@@ -142,7 +158,7 @@ export function formatTimePeriodsParams(appStore: AppStoreType) {
   return params;
 }
 
-export async function fetchAndRenderMapTiles(
+export async function startMapAnimations(
   componentContext: SubviewObservationsMap,
   appStore: AppStoreType,
 ) {
@@ -152,81 +168,67 @@ export async function fetchAndRenderMapTiles(
   if (!playButtonEl) return;
   let mapMetadata = appStore.viewMetadata.observations_observations.map;
 
-  // stop animation
-  if (mapMetadata.mapAnimation === true) {
-    stopMapAnimation(componentContext, appStore);
+  let store = createTempStore(appStore);
 
-    // start animation
-  } else {
-    // delete existin map layers
-    clearMapLayers(appStore);
+  let timePeriodsParams = formatTimePeriodsParams(appStore);
+  if (!timePeriodsParams) return;
 
-    // create separate store so that appStore.observationsApiParams aren't altered
-    let store = {
-      map: appStore.map,
-      selectedTaxa: appStore.selectedTaxa,
-      currentView: appStore.currentView,
-      taxaMapLayers: {},
-      record_type: appStore.record_type,
-      observationsApiParams: {},
-    } as AppStoreType;
+  let count = 0;
+  timePeriodsParams.forEach(async (timePeriod, i) => {
+    // skip timePeriod that were shown or skipped
+    if (mapMetadata.currentIndex && i < mapMetadata.currentIndex) return;
 
-    let timePeriodsParams = formatTimePeriodsParams(appStore);
-    if (!timePeriodsParams) return;
+    let setTimeoutId = setTimeout(async () => {
+      timeRangeEl.value = i.toString();
+      updateCurrentTimeText(i, componentContext, appStore);
 
-    let count = 0;
-    timePeriodsParams.forEach(async (timePeriod, i) => {
-      // skip timePeriod that were shown or skipped
-      if (mapMetadata.currentIndex && i < mapMetadata.currentIndex) return;
+      let params = structuredClone(appStore.observationsApiParams);
+      store.observationsApiParams = { ...params, ...timePeriod };
+      await updateTilesForSelectedTaxa(store, true);
 
-      let setTimeoutId = setTimeout(async () => {
-        timeRangeEl.value = i.toString();
-        updateCurrentTimeText(i, componentContext, appStore);
-
-        let params = structuredClone(appStore.observationsApiParams);
-
-        store.observationsApiParams = { ...params, ...timePeriod };
-        await updateTilesForSelectedTaxa(store);
-
-        if (mapMetadata) {
-          // save map layers to store so app can remove them
-          mapMetadata.mapLayers = store.taxaMapLayers;
-          mapMetadata.currentIndex = i;
-        }
-
-        // stop animation at end of loop
-        if (i === timePeriodsParams.length - 1) {
-          stopMapAnimation(componentContext, appStore);
-          mapMetadata.currentIndex = 0;
-        }
-      }, count * 3000);
-      count += 1;
-
-      // save setTimeoutId to store so the app can stop the setTimeout
-      if (mapMetadata.setTimeoutIds) {
-        mapMetadata.setTimeoutIds.push(setTimeoutId);
+      if (mapMetadata) {
+        // save map layers to store so app can remove them
+        mapMetadata.mapLayers = store.taxaMapLayers;
+        updateCurrentIndex(i, appStore);
       }
-    });
 
-    mapMetadata.mapAnimation = true;
-    playButtonEl.innerHTML = pauseIcon;
-  }
+      // stop animation at end of loop
+      if (i === timePeriodsParams.length - 1) {
+        stopMapAnimation(componentContext, appStore);
+        updateCurrentIndex(0, appStore);
+      }
+    }, count * 5000);
+    count += 1;
+
+    // save setTimeoutId to store so the app can stop the setTimeout
+    if (mapMetadata.setTimeoutIds) {
+      mapMetadata.setTimeoutIds.push(setTimeoutId);
+    }
+  });
+
+  mapMetadata.mapAnimation = true;
+  playButtonEl.innerHTML = pauseIcon;
 }
 
-function clearMapLayers(appStore: AppStoreType) {
+export function clearMapLayers(appStore: AppStoreType) {
   let mapMetadata = appStore.viewMetadata.observations_observations.map;
   let layerControl = appStore.map.layerControl;
   if (!layerControl) return;
 
+  // remove selected taxa map layers
   appStore.selectedTaxa.forEach((taxon) => {
     removeOneTaxonFromMap(appStore, taxon.id);
-    if (mapMetadata.mapLayers && mapMetadata.mapLayers[taxon.id]) {
-      mapMetadata.mapLayers[taxon.id].forEach((layer) => {
+  });
+
+  // remove animated map layers
+  if (mapMetadata.mapLayers) {
+    Object.entries(mapMetadata.mapLayers).forEach(([_id, layers]) => {
+      layers.forEach((layer) => {
         layerControl.removeLayer(layer);
         layer.remove();
       });
-    }
-  });
+    });
+  }
 }
 
 export function stopMapAnimation(
@@ -251,11 +253,10 @@ export function toggleAnimationControls(
 ) {
   if (!componentContext.animateControls) return;
 
-  let mapMetadata = appStore.viewMetadata.observations_observations.map;
-  if (mapMetadata.category === "none") {
-    componentContext.animateControls.classList.add("hidden");
-  } else {
+  if (isAnimatedMapCategory(appStore)) {
     componentContext.animateControls.classList.remove("hidden");
+  } else {
+    componentContext.animateControls.classList.add("hidden");
   }
 }
 
@@ -266,4 +267,36 @@ export function initFilters(appStore: AppStoreType) {
       `#map-form select#map-category option[value='${mapMetadata.category}']`,
     );
   }
+}
+
+// when switching views to map, if there is an in-progress anomation, load
+// map layer for current index
+export async function createOneAnimatedMapLayer(appStore: AppStoreType) {
+  let mapMetadata = appStore.viewMetadata.observations_observations.map;
+  // if (mapMetadata.mapAnimation === false) return;
+  if (mapMetadata.currentIndex === undefined) return;
+  let timePeriodsParams = formatTimePeriodsParams(appStore);
+  if (!timePeriodsParams) return;
+
+  let store = createTempStore(appStore);
+  let params = structuredClone(appStore.observationsApiParams);
+  store.observationsApiParams = {
+    ...params,
+    ...timePeriodsParams[mapMetadata.currentIndex],
+  };
+  await updateTilesForSelectedTaxa(store, true);
+
+  mapMetadata.mapLayers = store.taxaMapLayers;
+}
+
+// create separate store so that appStore.observationsApiParams aren't altered
+function createTempStore(appStore: AppStoreType) {
+  return {
+    map: appStore.map,
+    selectedTaxa: appStore.selectedTaxa,
+    currentView: appStore.currentView,
+    taxaMapLayers: {},
+    record_type: appStore.record_type,
+    observationsApiParams: {},
+  } as AppStoreType;
 }
