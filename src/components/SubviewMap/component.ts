@@ -17,32 +17,15 @@ class SubviewObservationsMap extends HTMLElement {
     setupComponent(mapTemplate, this);
 
     this.render(window.app.store);
-
-    window.addEventListener("observationsChange", this);
-    window.addEventListener("localeChanged", this);
-    window.addEventListener("perPageChanged", this);
   }
 
   disconnectedCallback() {
     loggerRender("++ SubviewObservationsMap disconnectedCallback");
     removeMap(window.app.store);
-
-    window.removeEventListener("observationsChange", this);
-    window.removeEventListener("localeChanged", this);
-    window.removeEventListener("perPageChanged", this);
   }
 
   handleEvent(event: Event) {
     loggerEvent(`[SubviewObservationsMap event] ${event.type}`);
-
-    let resourceChanges = [
-      "observationsChange",
-      "localeChanged",
-      "perPageChanged",
-    ];
-    if (resourceChanges.includes(event.type)) {
-      fetchAndCacheData(window.app.store, false);
-    }
   }
 
   render(appStore: AppStoreType) {

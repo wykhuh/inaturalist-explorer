@@ -37,7 +37,6 @@ class ViewIdentifications extends HTMLElement {
 
     this.render(window.app.store);
 
-    window.addEventListener("identificationsChange", this);
     window.addEventListener("localeChanged", this);
     window.addEventListener("nameOrderChanged", this);
     window.addEventListener("perPageChanged", this);
@@ -53,7 +52,6 @@ class ViewIdentifications extends HTMLElement {
 
     removeMap(window.app.store);
 
-    window.removeEventListener("identificationsChange", this);
     window.removeEventListener("localeChanged", this);
     window.removeEventListener("nameOrderChanged", this);
     window.removeEventListener("perPageChanged", this);
@@ -70,7 +68,6 @@ class ViewIdentifications extends HTMLElement {
     loggerEvent(`[ViewIdentifications event] ${event.type}`);
 
     let resourceChanges = [
-      "identificationsChange",
       "localeChanged",
       "nameOrderChanged",
       "perPageChanged",
