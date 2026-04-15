@@ -87,6 +87,7 @@ export function displayAppstoreData(appStore: AppStoreType, _source: string) {
       data.map = {
         map: !!appStore.map.map,
         layerControl: !!appStore.map.layerControl,
+        activeBasemap: appStore.map.activeBasemap,
       };
       data.mapLayerDescriptions = leafletVisibleLayers(appStore);
     } else if (key === "selectedPlaces") {

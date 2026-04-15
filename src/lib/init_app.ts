@@ -7,6 +7,7 @@ import type {
   NormalizediNatProjectType,
   IdentificationsApiParamsKeysType,
   LngLatType,
+  CustomLayerOptionsType,
 } from "../types/app";
 import {
   addLayerToMap,
@@ -48,6 +49,7 @@ import {
   isOtherCheck,
   setPerPage,
   isAnimatedMapCategory,
+  isActiveBaseMap,
 } from "./data_utils";
 import { loggerEvent, loggerRender, loggerStore } from "./logger.ts";
 import {
@@ -421,9 +423,12 @@ function populateIdentificationsApiParams(
 }
 
 // create map.
+// need to create new map instance whenever div for map changes.
 // used on inital app load, changing views, changing pages.
 export async function initRenderMap(appStore: AppStoreType) {
   loggerRender("++ initRenderMap start");
+  appStore.map.creatingMap = true;
+
   if (!document.querySelector("#map")) return;
 
   let isObservations = isObservationsCheck(appStore);
@@ -435,6 +440,29 @@ export async function initRenderMap(appStore: AppStoreType) {
     zoom: 2,
     maxZoom: 19,
   });
+
+  map.on("layeradd", (event) => {
+    let options = event.layer.options as unknown as CustomLayerOptionsType;
+    let layerName = options.layer_description;
+    let layerType = options.layer_type;
+
+    if (layerType === "basemap" && !isActiveBaseMap(event.layer, appStore)) {
+      appStore.map.activeBasemap.add(layerName);
+    }
+  });
+
+  map.on("layerremove", (event) => {
+    let options = event.layer.options as unknown as CustomLayerOptionsType;
+    let layerName = options.layer_description;
+    let layerType = options.layer_type;
+
+    if (appStore.map.removingMap === false) {
+      if (layerType === "basemap" && isActiveBaseMap(event.layer, appStore)) {
+        appStore.map.activeBasemap.delete(layerName);
+      }
+    }
+  });
+
   var layerControl = L.control.layers().addTo(map);
 
   // setup library to draw rectangles
@@ -458,8 +486,22 @@ export async function initRenderMap(appStore: AppStoreType) {
 
   // add basemaps
   let { OpenStreetMap, OpenTopo } = getMapTiles();
-  addLayerToMap(OpenStreetMap, map, layerControl, true);
-  addLayerToMap(OpenTopo, map, layerControl);
+
+  // hardcode which basemap is displayed.
+  // used on app init.
+  if (appStore.map.activeBasemap.size === 0) {
+    addLayerToMap(OpenStreetMap, map, layerControl, true);
+    appStore.map.activeBasemap.add("basemap: Open Street Map");
+    addLayerToMap(OpenTopo, map, layerControl);
+
+    // use activeBasemap to determine which basemap is displayed.
+    // used when changing views and pages
+  } else {
+    let addToMap = isActiveBaseMap(OpenStreetMap, appStore) ? true : false;
+    addLayerToMap(OpenStreetMap, map, layerControl, addToMap);
+    addToMap = isActiveBaseMap(OpenTopo, appStore) ? true : false;
+    addLayerToMap(OpenTopo, map, layerControl, addToMap);
+  }
 
   // add places layers
   renderSelectedPlacesBoundaries(appStore);
@@ -498,6 +540,7 @@ export async function initRenderMap(appStore: AppStoreType) {
   } else {
     fitBoundsPlaces(appStore);
   }
+  appStore.map.creatingMap = false;
 }
 
 export function processPlaceData(

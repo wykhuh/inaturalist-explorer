@@ -1,4 +1,4 @@
-import type { Map, TileLayer } from "leaflet";
+import type { Layer, Map, TileLayer } from "leaflet";
 import L from "leaflet";
 
 import type {
@@ -17,6 +17,7 @@ import type {
   IdentificationsApiParamsType,
   IdentificationsApiParamsKeysType,
   MapTilesAPIParamsType,
+  ObservationTilesSettingType,
 } from "../types/app";
 import { addOverlayToMap } from "./map_utils.ts";
 import { getiNatMapTiles } from "./inat_api.ts";
@@ -818,6 +819,14 @@ export function isAnimatedMapCategory(appStore: AppStoreType) {
     );
   }
   return false;
+}
+
+export function isActiveBaseMap(
+  layer: ObservationTilesSettingType | Layer,
+  appStore: AppStoreType,
+) {
+  // @ts-ignore
+  return appStore.map.activeBasemap.has(layer.options.layer_description);
 }
 
 export function getResourceApiParams(isObservations: boolean) {

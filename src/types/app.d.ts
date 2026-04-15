@@ -60,6 +60,10 @@ export interface AppStoreType {
     layerControl: Control.Layers | null;
     bounds?: LatLngBoundsExpression;
     terraDraw: TerraDraw | null;
+    activeLayers: Set<string>;
+    activeBasemap: Set<string>;
+    creatingMap: boolean;
+    removingMap: boolean;
   };
 
   formFilters: {
@@ -534,6 +538,7 @@ export interface ObservationTilesSettingType {
     minZoom: number;
     maxZoom: number;
     layer_description: string;
+    layer_type: string;
     control_name?: string;
   };
 }
@@ -562,7 +567,8 @@ export interface CustomLayerType extends LayerOptions {
 }
 
 export interface CustomLayerOptionsType extends LayerOptions {
-  layer_description?: string;
+  layer_description: string;
+  layer_type: string;
 }
 
 export interface CustomPolygon extends Polygon {
@@ -579,6 +585,7 @@ type LeafletBoundsType = {
 
 export interface CustomPolygonOptions extends PolylineOptions {
   layer_description: string;
+  layer_type: string;
 }
 
 export interface CustomGeoJSONType extends GeoJSON {
@@ -587,6 +594,7 @@ export interface CustomGeoJSONType extends GeoJSON {
 
 export interface CustomGeoJSONTypeOptions extends GeoJSONOptions {
   layer_description: string;
+  layer_type: string;
 }
 
 interface ObservationsMapTilesAPIParamsType extends ObservationsApiParamsType {

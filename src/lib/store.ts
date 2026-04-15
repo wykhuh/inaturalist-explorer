@@ -30,7 +30,15 @@ export const mapStore: AppStoreType = {
   observationsApiParams: { verifiable: true, spam: false, locale: "en" },
   identificationsApiParams: {},
   color: "",
-  map: { map: null, layerControl: null, terraDraw: null },
+  map: {
+    map: null,
+    layerControl: null,
+    terraDraw: null,
+    activeLayers: new Set(),
+    activeBasemap: new Set(),
+    creatingMap: false,
+    removingMap: false,
+  },
   formFilters: { params: {}, string: "" },
   iNatStats: {
     headerCounts: new Map() as unknown as Record<string, number>,
