@@ -47,7 +47,7 @@ export function formatUserName(user: ObservationUser) {
   >`;
 }
 
-export function formatAvatar(user: ObservationUser) {
+export function formatAvatar(user: ObservationUser, addTooltip = false) {
   let imgUrl = user.icon || user.icon_url;
   let image = "";
   if (imgUrl) {
@@ -61,8 +61,12 @@ export function formatAvatar(user: ObservationUser) {
   }
 
   let link = `<a class="avatar" href="${iNatUsersUrl}/${user.login}">${image}</a>`;
-  let tooltip = formatTooltip("tp-avatar", link, user.login);
-  return tooltip;
+  if (addTooltip) {
+    let tooltip = formatTooltip("tp-avatar", link, user.login);
+    return tooltip;
+  } else {
+    return link;
+  }
 }
 
 export function renderTaxonNames(

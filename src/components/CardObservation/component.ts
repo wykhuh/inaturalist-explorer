@@ -1,7 +1,6 @@
 import type { ObservationsResult } from "../../types/inat_api";
 import type { DataComponentType, AppStoreType } from "../../types/app";
 import {
-  formatAvatar,
   renderAnnotations,
   renderDates,
   renderMedia,
@@ -11,6 +10,7 @@ import {
   renderPlace,
   renderQualityGrade,
   renderTaxonNames,
+  renderUser,
 } from "../../lib/render_utils";
 import { iNatObservationUrl } from "../../data/inat_data";
 import { setupComponent } from "../../lib/component_utils";
@@ -66,10 +66,6 @@ class CardObservation extends HTMLElement {
 
     let detailsContent = ``;
 
-    if (data.user && displayFields.observer !== false) {
-      detailsContent += formatAvatar(data.user);
-    }
-
     if (displayFields.species_name !== false) {
       if (data.taxon) {
         detailsContent += renderTaxonNames(
@@ -96,6 +92,10 @@ class CardObservation extends HTMLElement {
 
     if (displayFields.counts !== false) {
       detailsContent += renderObservationMetadataCounts(data);
+    }
+
+    if (data.user && displayFields.observer !== false) {
+      detailsContent += renderUser(data.user);
     }
 
     detailsContent += renderDates(data, displayFields);

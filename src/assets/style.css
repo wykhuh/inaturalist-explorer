@@ -454,6 +454,10 @@
   .liststyle-none {
     list-style: none;
   }
+
+  .hide {
+    display: none;
+  }
 }
 
 /*@import "bootstrap.css";*/
@@ -765,60 +769,6 @@
     }
   }
 
-  #view-controls {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-    align-items: center;
-
-    @media (max-width: 450px) {
-      display: block;
-
-      #order-form {
-        margin-top: 1rem;
-      }
-    }
-
-    #subview-menu {
-      display: flex;
-
-      button {
-        border-radius: 0;
-        border: var(--border-grey);
-      }
-      .current-subview {
-        background-color: var(--clr-gray-300);
-        font-weight: var(--fw-bold);
-      }
-    }
-
-    #order-form {
-      display: flex;
-      gap: 1rem;
-
-      .form-group {
-        margin: 0;
-      }
-    }
-
-    #order-form.hide {
-      display: none;
-    }
-  }
-
-  #graph-form {
-    display: flex;
-    gap: 1.5rem;
-
-    @media (max-width: 450px) {
-      display: block;
-    }
-  }
-
-  #graph-form.hide {
-    display: none;
-  }
-
   #display-json {
     margin-top: 1rem;
 
@@ -829,9 +779,6 @@
       padding: 1rem;
       background-color: var(--clr-overlay-dark-700);
       color: var(--clr-white);
-    }
-    .hide {
-      display: none;
     }
   }
 
@@ -917,12 +864,6 @@
       color: var(--clr-gray-900);
       font-size: 0.8rem;
       margin: 0 3px;
-    }
-
-    .tp-trigger:hover + [role="tooltip"].hide,
-    .tp-trigger:focus-visible + [role="tooltip"].hide,
-    [role="tooltip"].hide {
-      display: none;
     }
 
     .tp-trigger:hover + [role="tooltip"],
@@ -1358,15 +1299,6 @@
       display: flex;
       flex-direction: column;
       padding: 0.5rem 0.75rem;
-      /*height: 100%;*/
-      position: relative;
-    }
-
-    .avatar {
-      display: block;
-      position: absolute;
-      right: 15px;
-      top: -35px;
     }
 
     .person-icon,
@@ -1374,7 +1306,6 @@
       width: 45px;
       height: 45px;
       border-radius: 100%;
-      border: 2px solid white;
     }
 
     .dates {
@@ -1633,28 +1564,74 @@
     }
   }
 
+  #view-controls {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    align-items: center;
+
+    @media (max-width: 450px) {
+      display: block;
+
+      #order-form {
+        margin-top: 1rem;
+      }
+    }
+
+    #subview-menu {
+      display: flex;
+
+      button {
+        border-radius: 0;
+        border: var(--border-grey);
+      }
+      .current-subview {
+        background-color: var(--clr-gray-300);
+        font-weight: var(--fw-bold);
+      }
+    }
+
+    #order-form {
+      display: flex;
+      gap: 1rem;
+
+      .form-group {
+        margin: 0;
+      }
+    }
+  }
+
+  #graph-form,
   #map-form {
     display: flex;
     gap: 1.5rem;
+
+    @media (max-width: 450px) {
+      display: block;
+    }
   }
 
   #animate-map-controls {
     display: flex;
     align-items: center;
     gap: 1rem;
-    justify-content: center;
 
     .form-group {
       display: flex;
       margin: 0;
+      gap: 5px;
     }
 
-    button {
+    button#play {
       border: none;
       background-color: transparent;
       height: 40px;
       width: 40px;
       padding: 0.25rem;
+    }
+
+    @media (max-width: 450px) {
+      display: block;
     }
   }
 }

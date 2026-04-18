@@ -5,7 +5,6 @@ import type {
 } from "../../types/inat_api";
 import type { DataComponentType, AppStoreType } from "../../types/app";
 import {
-  formatAvatar,
   renderAnnotations,
   renderDates,
   renderMedia,
@@ -14,6 +13,7 @@ import {
   renderPlace,
   renderQualityGrade,
   renderTaxonNames,
+  renderUser,
 } from "../../lib/render_utils";
 import { iNatObservationUrl } from "../../data/inat_data";
 
@@ -55,14 +55,6 @@ export function renderCard(appStore: AppStoreType, componentCtx: any) {
 
   let detailsContent = ``;
 
-  if (
-    observation.user &&
-    displayFields.observer !== false &&
-    mediaIndex === 0
-  ) {
-    detailsContent += formatAvatar(observation.user);
-  }
-
   if (displayFields.species_name !== false) {
     if (observation.taxon) {
       detailsContent += renderTaxonNames(observation.taxon, appStore, obsUrl);
@@ -85,6 +77,14 @@ export function renderCard(appStore: AppStoreType, componentCtx: any) {
 
     if (displayFields.counts !== false) {
       detailsContent += renderObservationMetadataCounts(observation);
+    }
+
+    if (
+      observation.user &&
+      displayFields.observer !== false &&
+      mediaIndex === 0
+    ) {
+      detailsContent += renderUser(observation.user);
     }
 
     detailsContent += renderDates(observation, displayFields);
