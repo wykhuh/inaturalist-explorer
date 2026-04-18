@@ -277,6 +277,7 @@ export function removeOneTaxonFromMap(appStore: AppStoreType, taxonId: number) {
   if (!mapLayers) return;
   let layerControl = appStore.map.layerControl;
   if (!layerControl) return;
+
   mapLayers.forEach((layer) => {
     // remove layer from layer control
     layerControl.removeLayer(layer);

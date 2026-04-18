@@ -62,10 +62,8 @@ export interface AppStoreType {
     terraDraw: TerraDraw | null;
     activeLayers: Set<string>;
     activeBasemap: Set<string>;
-    creatingMap: boolean;
-    removingMap: boolean;
+    keepMapActiveLayers: boolean;
   };
-
   formFilters: {
     params: ObservationsApiParamsType;
     string: string;
@@ -88,7 +86,13 @@ export interface AppStoreType {
     side_menu: "show" | "hide";
     popularFieldsByTaxa: PopularFieldsByTaxa;
     popularFieldsOptions: PopularFieldOption[];
+  };
+  animatedMap: {
     mapTimePeriods: string[] | number[];
+    observationsApiParams: ObservationsApiParamsType;
+    setTimeoutIds: any[];
+    looping: boolean;
+    currentIndex: number;
   };
   record_type: RecordTypes;
 }
@@ -170,10 +174,6 @@ export type ViewMetadataGraphs = {
 
 export type ViewMetadataMap = {
   category?: MapCategory;
-  setTimeoutIds?: any[];
-  mapAnimation?: boolean;
-  mapLayers?: { [k: string]: TileLayer[] };
-  currentIndex?: number;
 };
 
 export type GraphGroupBy = "species" | "places";
@@ -569,6 +569,7 @@ export interface CustomLayerType extends LayerOptions {
 export interface CustomLayerOptionsType extends LayerOptions {
   layer_description: string;
   layer_type: string;
+  control_name: string;
 }
 
 export interface CustomPolygon extends Polygon {
@@ -728,3 +729,7 @@ export type IdentificationsCSVRow = {
 };
 
 export type PerPageTypes = "observations" | "identifications" | "species";
+
+interface LeafletControl extends L.Control.Layers {
+  _layers: Layer[];
+}

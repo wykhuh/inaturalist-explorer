@@ -9,7 +9,7 @@ describe("formatTimePeriodsParams", () => {
   test("takes array of months and returns array of month params", () => {
     let store = structuredClone(mapStore);
     store.viewMetadata.observations_observations.map.category = "month_of_year";
-    store.viewMetadata.mapTimePeriods = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    store.animatedMap.mapTimePeriods = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
     let results = formatTimePeriodsParams(store);
 
@@ -31,7 +31,7 @@ describe("formatTimePeriodsParams", () => {
 
   test("takes array of years and returns array of year params", () => {
     let store = structuredClone(mapStore);
-    store.viewMetadata.mapTimePeriods = [2000, 2001, 2002];
+    store.animatedMap.mapTimePeriods = [2000, 2001, 2002];
     store.viewMetadata.observations_observations.map.category = "year";
 
     let results = formatTimePeriodsParams(store);
@@ -46,7 +46,7 @@ describe("formatTimePeriodsParams", () => {
   test("takes array of month dates and returns array of d1 and d2 params", () => {
     let store = structuredClone(mapStore);
     store.viewMetadata.observations_observations.map.category = "month";
-    store.viewMetadata.mapTimePeriods = [
+    store.animatedMap.mapTimePeriods = [
       "2000-01-01",
       "2000-02-01",
       "2000-03-01",

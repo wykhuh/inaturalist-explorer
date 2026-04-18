@@ -78,9 +78,16 @@ export class SubviewObservationsMap extends HTMLElement {
     if (event.type === "observationsChange") {
       // animated map tiles
       if (isAnimatedMapCategory(appStore)) {
-        stopMapAnimation(this, appStore);
-        clearMapLayers(appStore);
-        startMapAnimations(this, appStore);
+        // restart animation
+        if (appStore.animatedMap.looping) {
+          stopMapAnimation(this, appStore);
+          clearMapLayers(appStore);
+          startMapAnimations(this, appStore);
+          // create first animation layer
+        } else {
+          updateCurrentTimeText(0, this, appStore);
+          createOneAnimatedMapLayer(appStore);
+        }
         // selected taxa map tiles
       } else {
         fetchAndCacheData(window.app.store, false);
@@ -90,7 +97,9 @@ export class SubviewObservationsMap extends HTMLElement {
     if (event.type === "change" && target.id === "map-category") {
       const data = new FormData(this.mapForm);
       // reset map
-      stopMapAnimation(this, appStore);
+      if (appStore.animatedMap.looping) {
+        stopMapAnimation(this, appStore);
+      }
       clearMapLayers(appStore);
       updateCurrentTimeText(0, this, appStore);
 
@@ -98,8 +107,8 @@ export class SubviewObservationsMap extends HTMLElement {
       setCategory(data, appStore);
       toggleAnimationControls(this, appStore);
       if (isAnimatedMapCategory(appStore)) {
-        fetchAndRenderTimePeriods(appStore, this).then(() => {
-          createOneAnimatedMapLayer(appStore);
+        fetchAndRenderTimePeriods(appStore, this).then(async () => {
+          await createOneAnimatedMapLayer(appStore);
         });
       } else {
         switchToNormalMap(appStore, this);
@@ -111,9 +120,7 @@ export class SubviewObservationsMap extends HTMLElement {
 
       if (target.closest("button")?.id === "play" || target.id === "play") {
         if (isAnimatedMapCategory(appStore)) {
-          if (
-            appStore.viewMetadata.observations_observations.map.mapAnimation
-          ) {
+          if (appStore.animatedMap.looping) {
             stopMapAnimation(this, appStore);
           } else {
             clearMapLayers(appStore);
@@ -130,7 +137,7 @@ export class SubviewObservationsMap extends HTMLElement {
     }
   }
 
-  timeRangeHandler(
+  async timeRangeHandler(
     target: HTMLInputElement,
     componentContext: any,
     appStore: AppStoreType,
@@ -141,7 +148,7 @@ export class SubviewObservationsMap extends HTMLElement {
 
     // load one map layer for given time period
     updateCurrentTimeText(Number(target.value), componentContext, appStore);
-    createOneAnimatedMapLayer(appStore);
+    await createOneAnimatedMapLayer(appStore);
   }
 
   timeRangeHandlerDebounced = debounce(this.timeRangeHandler);
@@ -165,8 +172,9 @@ export class SubviewObservationsMap extends HTMLElement {
 
     // add animated map layer if needed
     if (isAnimatedMapCategory(appStore)) {
-      createOneAnimatedMapLayer(appStore);
+      await createOneAnimatedMapLayer(appStore);
     }
+    appStore.animatedMap = appStore.animatedMap;
   }
 }
 

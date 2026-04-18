@@ -2,20 +2,11 @@ import type { AppStoreType, AppStoreKeysType } from "../../types/app";
 import type { PolygonJson } from "../../types/inat_api";
 import { leafletVisibleLayers } from "../../lib/data_utils";
 import { displayJson } from "../../lib/utils";
+import type { TileLayer } from "leaflet";
 
-function formatTaxaMapLayers(appStore: AppStoreType) {
+function formatTaxaMapLayers(taxaMapLayers: { [index: string]: TileLayer[] }) {
   let temp: any = {};
-  Object.entries(appStore.taxaMapLayers).forEach(([key, val]) => {
-    if (val === undefined || val === null) return;
-    temp[key] = val
-      .filter((v) => v)
-      .map((v: any) => v.options?.layer_description);
-  });
-  return temp;
-}
-function formatTaxaIdentifiedMapLayers(appStore: AppStoreType) {
-  let temp: any = {};
-  Object.entries(appStore.taxaIdentifiedMapLayers).forEach(([key, val]) => {
+  Object.entries(taxaMapLayers).forEach(([key, val]) => {
     if (val === undefined || val === null) return;
     temp[key] = val
       .filter((v) => v)
@@ -78,15 +69,18 @@ export function displayAppstoreData(appStore: AppStoreType, _source: string) {
   Object.keys(appStore).forEach((k) => {
     let key = k as AppStoreKeysType;
     if (key === "taxaMapLayers") {
-      data.taxaMapLayers = formatTaxaMapLayers(appStore);
+      data.taxaMapLayers = formatTaxaMapLayers(appStore.taxaMapLayers);
     } else if (key === "taxaIdentifiedMapLayers") {
-      data.taxaIdentifiedMapLayers = formatTaxaIdentifiedMapLayers(appStore);
+      data.taxaIdentifiedMapLayers = formatTaxaMapLayers(
+        appStore.taxaIdentifiedMapLayers,
+      );
     } else if (key === "placesMapLayers") {
       data.placesMapLayers = formatPlacesMapLayers(appStore);
     } else if (key === "map") {
       data.map = {
         map: !!appStore.map.map,
         layerControl: !!appStore.map.layerControl,
+        activeLayers: appStore.map.activeLayers,
         activeBasemap: appStore.map.activeBasemap,
       };
       data.mapLayerDescriptions = leafletVisibleLayers(appStore);
@@ -101,6 +95,34 @@ export function displayAppstoreData(appStore: AppStoreType, _source: string) {
       data[key] = appStore[key];
     }
   });
+
+  displayJson(data, displayJsonWrapperEl);
+}
+
+export function displayMapData(appStore: AppStoreType) {
+  const debug = import.meta.env?.VITE_DEBUG;
+  if (!debug || debug === "false") return;
+  let displayJsonWrapperEl = document.getElementById(
+    "display-map-json-wrapper",
+  );
+  if (!displayJsonWrapperEl) return;
+
+  // https://stackoverflow.com/questions/31190885/json-stringify-a-set
+  let data = {
+    animatedMap: {
+      observationsApiParams: appStore.animatedMap.observationsApiParams,
+      setTimeoutIds: appStore.animatedMap.setTimeoutIds,
+      looping: appStore.animatedMap.looping,
+      currentIndex: appStore.animatedMap.currentIndex,
+    },
+    map: {
+      taxaMapLayers: Object.keys(appStore.taxaMapLayers),
+      activeLayers: Array.from(appStore.map.activeLayers),
+      activeBasemap: Array.from(appStore.map.activeBasemap),
+      keepMapActiveLayers: appStore.map.keepMapActiveLayers,
+    },
+    category: appStore.viewMetadata.observations_observations.map.category,
+  };
 
   displayJson(data, displayJsonWrapperEl);
 }

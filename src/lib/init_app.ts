@@ -49,6 +49,7 @@ import {
   isOtherCheck,
   setPerPage,
   isAnimatedMapCategory,
+  isActiveLayer,
   isActiveBaseMap,
 } from "./data_utils";
 import { loggerEvent, loggerRender, loggerStore } from "./logger.ts";
@@ -427,7 +428,6 @@ function populateIdentificationsApiParams(
 // used on inital app load, changing views, changing pages.
 export async function initRenderMap(appStore: AppStoreType) {
   loggerRender("++ initRenderMap start");
-  appStore.map.creatingMap = true;
 
   if (!document.querySelector("#map")) return;
 
@@ -448,7 +448,14 @@ export async function initRenderMap(appStore: AppStoreType) {
 
     if (layerType === "basemap" && !isActiveBaseMap(event.layer, appStore)) {
       appStore.map.activeBasemap.add(layerName);
+    } else if (
+      layerType === "taxa overlay" &&
+      !isActiveLayer(event.layer, appStore)
+    ) {
+      appStore.map.activeLayers.add(layerName);
     }
+    // HACK: trigger proxy store
+    appStore.map = appStore.map;
   });
 
   map.on("layerremove", (event) => {
@@ -456,14 +463,23 @@ export async function initRenderMap(appStore: AppStoreType) {
     let layerName = options.layer_description;
     let layerType = options.layer_type;
 
-    if (appStore.map.removingMap === false) {
+    if (appStore.map.keepMapActiveLayers === false) {
       if (layerType === "basemap" && isActiveBaseMap(event.layer, appStore)) {
         appStore.map.activeBasemap.delete(layerName);
+      } else if (
+        layerType === "taxa overlay" &&
+        isActiveLayer(event.layer, appStore)
+      ) {
+        appStore.map.activeLayers.delete(layerName);
       }
     }
+    // HACK: trigger proxy store
+    appStore.map = appStore.map;
   });
 
-  var layerControl = L.control.layers().addTo(map);
+  const layerControl = L.control
+    .layers(undefined, undefined, { collapsed: true })
+    .addTo(map);
 
   // setup library to draw rectangles
   const terraDraw = setupTerraDraw(map);
@@ -540,7 +556,6 @@ export async function initRenderMap(appStore: AppStoreType) {
   } else {
     fitBoundsPlaces(appStore);
   }
-  appStore.map.creatingMap = false;
 }
 
 export function processPlaceData(

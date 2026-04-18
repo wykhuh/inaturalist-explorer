@@ -27,7 +27,6 @@ describe("setViewMetadata", () => {
       let store = structuredClone(mapStore);
 
       let urlData = decodeAppUrl(`?page=123&view=${view}`, "/");
-      console.log("??", urlData);
       setViewMetadata(store, urlData);
 
       let expected = structuredClone(mapStore);
@@ -82,7 +81,7 @@ describe("setViewMetadata", () => {
 
     expect(store.viewMetadata.observations_observations.map).toStrictEqual({
       category: "none",
-      mapAnimation: false,
+      looping: false,
       mapLayers: {},
       setTimeoutIds: [],
       currentIndex: 0,
@@ -93,7 +92,7 @@ describe("setViewMetadata", () => {
 
     expect(store.viewMetadata.observations_observations.map).toStrictEqual({
       category: "year",
-      mapAnimation: false,
+      looping: false,
       mapLayers: {},
       setTimeoutIds: [],
       currentIndex: 0,

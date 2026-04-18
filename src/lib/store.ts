@@ -36,8 +36,14 @@ export const mapStore: AppStoreType = {
     terraDraw: null,
     activeLayers: new Set(),
     activeBasemap: new Set(),
-    creatingMap: false,
-    removingMap: false,
+    keepMapActiveLayers: false,
+  },
+  animatedMap: {
+    mapTimePeriods: [],
+    observationsApiParams: {},
+    looping: false,
+    setTimeoutIds: [],
+    currentIndex: 0,
   },
   formFilters: { params: {}, string: "" },
   iNatStats: {
@@ -46,7 +52,6 @@ export const mapStore: AppStoreType = {
   },
   currentView: "observations_observations",
   viewMetadata: {
-    mapTimePeriods: [],
     popularFieldsByTaxa: {},
     popularFieldsOptions: [],
     observations_observations: {
@@ -56,10 +61,6 @@ export const mapStore: AppStoreType = {
       graphs: { category: "month_of_year", valueType: "counts" },
       map: {
         category: "none",
-        mapAnimation: false,
-        setTimeoutIds: [],
-        mapLayers: {},
-        currentIndex: 0,
       },
     },
     observations_species: { perPage: 24 },

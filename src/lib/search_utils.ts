@@ -71,6 +71,7 @@ export async function updateTilesForSelectedTaxa(
   loadMapAnimations = false,
 ) {
   if (loadMapAnimations === false && isAnimatedMapCategory(appStore)) return;
+  appStore.map.keepMapActiveLayers = true;
 
   for await (const taxon of appStore.selectedTaxa) {
     // remove existing taxon layers from map
@@ -85,6 +86,7 @@ export async function updateTilesForSelectedTaxa(
       };
     }
   }
+  appStore.map.keepMapActiveLayers = false;
 }
 
 export async function updateTilesForSelectedTaxaIdentified(

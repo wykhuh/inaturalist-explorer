@@ -106,12 +106,39 @@ export async function fetchiNatMapDataForTaxon(
   );
 
   // add layers to map and layer control
-  let iNatGridLayer = addOverlayToMap(iNatGrid, map, layerControl, true);
-  let iNatPointLayer = addOverlayToMap(iNatPoint, map, layerControl);
-  let iNatHeatmapLayer = addOverlayToMap(iNatHeatmap, map, layerControl);
+  let addToMap = true;
+  // use grid as default map layer for taxa not already on map
+  if (!isTaxonInActiveLayers(taxonObj, appStore)) {
+    addToMap = true;
+    // check active layers to determine layer should be added to map
+  } else {
+    addToMap = isActiveLayer(iNatGrid, appStore) ? true : false;
+  }
+  if (addToMap) {
+    appStore.map.activeLayers.add(iNatGrid.options.layer_description);
+  }
+  let iNatGridLayer = addOverlayToMap(iNatGrid, map, layerControl, addToMap);
+
+  let iNatPointLayer = addLayerToMapAndStore(
+    iNatPoint,
+    appStore,
+    map,
+    layerControl,
+  );
+  let iNatHeatmapLayer = addLayerToMapAndStore(
+    iNatHeatmap,
+    appStore,
+    map,
+    layerControl,
+  );
   let iNatTaxonRangeLayer;
   if (iNatTaxonRange) {
-    iNatTaxonRangeLayer = addOverlayToMap(iNatTaxonRange, map, layerControl);
+    iNatTaxonRangeLayer = addLayerToMapAndStore(
+      iNatTaxonRange,
+      appStore,
+      map,
+      layerControl,
+    );
   }
 
   let layers: (TileLayer | undefined)[] = [
@@ -124,6 +151,20 @@ export async function fetchiNatMapDataForTaxon(
   }
 
   return layers;
+}
+
+function addLayerToMapAndStore(
+  layer: ObservationTilesSettingType,
+  appStore: AppStoreType,
+  map: Map,
+  layerControl: L.Control.Layers,
+) {
+  // check active layers to determine if layer should be added to map
+  let addToMap = isActiveLayer(layer, appStore) ? true : false;
+  if (addToMap) {
+    appStore.map.activeLayers.add(layer.options.layer_description);
+  }
+  return addOverlayToMap(layer, map, layerControl, addToMap);
 }
 
 // ================
@@ -821,12 +862,41 @@ export function isAnimatedMapCategory(appStore: AppStoreType) {
   return false;
 }
 
+export function isActiveLayer(
+  layer: ObservationTilesSettingType | Layer,
+  appStore: AppStoreType,
+) {
+  // @ts-ignore
+  return appStore.map.activeLayers.has(layer.options.layer_description);
+}
+
 export function isActiveBaseMap(
   layer: ObservationTilesSettingType | Layer,
   appStore: AppStoreType,
 ) {
   // @ts-ignore
   return appStore.map.activeBasemap.has(layer.options.layer_description);
+}
+
+function isTaxonInActiveLayers(
+  taxonObj: NormalizediNatTaxonType,
+  appStore: AppStoreType,
+) {
+  if (appStore.map.activeLayers.size === 0) return false;
+
+  let isActive = false;
+  appStore.map.activeLayers.forEach((layername) => {
+    try {
+      let taxonId = layername.split(",")[1].trim().split(" ")[1];
+      if (Number(taxonId) === taxonObj.id) {
+        isActive = true;
+      }
+    } catch (err) {
+      console.log("invalid layer name");
+    }
+  });
+
+  return isActive;
 }
 
 export function getResourceApiParams(isObservations: boolean) {

@@ -597,13 +597,10 @@ export function setupMapAndStore() {
   let store: AppStoreType = {
     ...dup,
     map: {
+      ...structuredClone(mapStore.map),
       map: map,
       layerControl: layerControl,
       terraDraw: null,
-      activeLayers: new Set(),
-      activeBasemap: new Set(),
-      creatingMap: false,
-      removingMap: false,
     },
   };
 

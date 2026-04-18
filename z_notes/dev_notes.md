@@ -280,3 +280,112 @@ tilemaker creates vector tiles (in Mapbox Vector Tile format) from an .osm.pbf p
 
 Cant set up database, not owner of psql extension postgis?
 https://github.com/inaturalist/inaturalist/issues/4738
+
+==
+
+https://stackoverflow.com/questions/42729822/leaflet-add-layer-on-layeradd-event
+
+Info about added layer from map.on(layeradd) event in Leaflet
+https://gis.stackexchange.com/questions/404603/info-about-added-layer-from-map-onlayeradd-event-in-leaflet
+
+```js
+L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
+  attribution:
+    '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+  myLayerId: 1,
+}).addTo(map);
+
+map.on("layeradd", function (evt) {
+  console.log("Layer added: ", evt.layer.options.myLayerId);
+});
+```
+
+How to get selected layers in control.layers?
+https://stackoverflow.com/questions/44322326/how-to-get-selected-layers-in-control-layers
+
+```js
+
+// Add method to layer control class
+L.Control.Layers.include({
+    getActiveOverlays: function () {
+
+        // Create array for holding active layers
+        var active = [];
+
+        // Iterate all layers in control
+        this._layers.forEach(function (obj) {
+
+            // Check if it's an overlay and added to the map
+            if (obj.overlay && this._map.hasLayer(obj.layer)) {
+
+                // Push layer to active array
+                active.push(obj.layer);
+            }
+        });
+
+        // Return array
+        return active;
+    }
+});
+
+var control = new L.Control.Layers(...),
+    active = control.getActiveOverlays();
+```
+
+```js
+if (appStore.map.map === null) {
+  initRenderMap(appStore);
+} else {
+  appStore.map.map;
+  if (appStore.map.layerControl) {
+    if (obj.overlay && this._map.hasLayer(obj.layer)) {
+      // Push layer to active array
+      active.push(obj.layer);
+    }
+
+    appStore.map.layerControl._layers.forEach((layer) => {
+      if (layer.overlay && appStore.map.map.hasLayer(layer.layer)) {
+        // Push layer to active array
+        console.log(layer.layer);
+      }
+
+      // map.addLayer(layer.layer);
+      appStore.map.map.addLayer(layer.layer);
+    });
+  }
+}
+```
+
+========
+
+map - keep selected basemapm and layers when map is udated
+
+goal
+
+- know which taxa inat map layers should be displayed on the map when selected taxa changes, when switching to map view, when animating maps
+
+leaflet fires event
+
+- layer added
+- layer removed
+
+want to track
+
+- when user adds or removes layer by clicking map control
+- when user removes selected taxa
+- when user adds selected taxa
+
+ignore
+
+- when map is deleted, which deletes layers
+- when map is created, which adds layers
+- when map layer is deleted and replaced with updated layer
+
+click x
+
+- removeTaxon
+- removeOneTaxonFromMap
+- layerremove event
+- removeOneTaxonFromStore
+
+========

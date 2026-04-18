@@ -101,6 +101,7 @@ export const getMapTiles = (): {
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       options: {
         layer_description: "basemap: Open Street Map",
+        control_name: "Open Street Map",
         layer_type: "basemap",
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors.',
@@ -114,6 +115,7 @@ export const getMapTiles = (): {
       url: "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png",
       options: {
         layer_description: "basemap: Alidade Smooth",
+        control_name: "Alidade Smooth",
         layer_type: "basemap",
         attribution:
           '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -127,6 +129,7 @@ export const getMapTiles = (): {
       url: "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png",
       options: {
         layer_description: "basemap: Alidade Smooth Dark",
+        control_name: "Alidade Smooth Dark",
         layer_type: "basemap",
         attribution:
           '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -140,6 +143,7 @@ export const getMapTiles = (): {
       url: "https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png",
       options: {
         layer_description: "basemap: Stadia Outdoors",
+        control_name: "Stadia Outdoors",
         layer_type: "basemap",
         attribution:
           '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -153,6 +157,7 @@ export const getMapTiles = (): {
       url: "https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png",
       options: {
         layer_description: "basemap: Stamen Terrain",
+        control_name: "Stamen Terrain",
         layer_type: "basemap",
         attribution:
           '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://stamen.com/">Stamen Design</a> &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -166,6 +171,7 @@ export const getMapTiles = (): {
       url: "https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg",
       options: {
         layer_description: "basemap: Stamen Watercolor",
+        control_name: "Stamen Watercolor",
         layer_type: "basemap",
         attribution:
           '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://stamen.com/">Stamen Design</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -179,6 +185,7 @@ export const getMapTiles = (): {
       url: "https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}.jpg",
       options: {
         layer_description: "basemap: OSM Bright",
+        control_name: "OSM Bright",
         layer_type: "basemap",
         attribution:
           '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -193,6 +200,7 @@ export const getMapTiles = (): {
       url: "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}",
       options: {
         layer_description: "basemap: USGS Topo",
+        control_name: "USGS Topo",
         layer_type: "basemap",
         attribution:
           'Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>',
@@ -206,6 +214,7 @@ export const getMapTiles = (): {
       url: "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}",
       options: {
         layer_description: "basemap: USGS Imagery",
+        control_name: "USGS Imagery",
         layer_type: "basemap",
         attribution:
           'Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>',
@@ -219,6 +228,7 @@ export const getMapTiles = (): {
       url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
       options: {
         layer_description: "basemap: Open Topo",
+        control_name: "Open Topo",
         layer_type: "basemap",
         attribution:
           'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
@@ -232,6 +242,7 @@ export const getMapTiles = (): {
       url: "https://tile.gbif.org/3857/omt/{z}/{x}/{y}@1x.png?style=gbif-classic",
       options: {
         layer_description: "basemap: GBIF Classic",
+        control_name: "GBIF Classic",
         layer_type: "basemap",
         attribution:
           '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://www.openmaptiles.org/copyright">OpenMapTiles</a>.',
@@ -245,6 +256,7 @@ export const getMapTiles = (): {
       url: "https://tile.gbif.org/3857/omt/{z}/{x}/{y}@1x.png?style=gbif-light",
       options: {
         layer_description: "basemap: GBIF light",
+        control_name: "GBIF Light",
         layer_type: "basemap",
         attribution:
           '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://www.openmaptiles.org/copyright">OpenMapTiles</a>.',
@@ -258,6 +270,7 @@ export const getMapTiles = (): {
       url: "https://tile.gbif.org/3857/omt/{z}/{x}/{y}@1x.png?style=gbif-geyser",
       options: {
         layer_description: "basemap: GBIF Geyser",
+        control_name: "GBIF Geyser",
         layer_type: "basemap",
         attribution:
           '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://www.openmaptiles.org/copyright">OpenMapTiles</a>.',
@@ -271,6 +284,7 @@ export const getMapTiles = (): {
       url: "https://tile.gbif.org/3857/omt/{z}/{x}/{y}@1x.png?style=osm-bright",
       options: {
         layer_description: "basemap: GBIF Bright",
+        control_name: "GBIF Bright",
         layer_type: "basemap",
         attribution:
           '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://www.openmaptiles.org/copyright">OpenMapTiles</a>.',
@@ -284,6 +298,7 @@ export const getMapTiles = (): {
       url: "https://tile.gbif.org/3857/omt/{z}/{x}/{y}@1x.png?style=gbif-natural",
       options: {
         layer_description: "basemap: GBIF Natural",
+        control_name: "GBIF Natural",
         layer_type: "basemap",
         attribution:
           '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://www.openmaptiles.org/copyright">OpenMapTiles</a>.',
@@ -306,7 +321,7 @@ export function addLayerToMap(
   if (checked) {
     layer.addTo(map);
   }
-  layerControl.addBaseLayer(layer, tileObj.name);
+  layerControl.addBaseLayer(layer, tileObj.options.control_name);
 
   return layer;
 }
@@ -365,9 +380,7 @@ export function createDrawRectButton(
 
       return buttonEl;
     },
-    onRemove: function (_map: Map) {
-      console.info("button onRemove");
-    },
+    onRemove: function (_map: Map) {},
   });
 
   function drawRect(opts: any) {
@@ -389,6 +402,7 @@ export function renderBoundingBoxLayer(
     fillColor: "none",
     weight: 1,
     layer_description: "bounding box",
+    layer_type: "overlay",
   },
 ) {
   let latLngCoors = lngLatCoors.map(flipLatLng);
@@ -440,7 +454,8 @@ export function convertLnLatToiNatBBox(coordinates: LngLatType[]) {
 }
 
 export function removeMap(appStore: AppStoreType) {
-  appStore.map.removingMap = true;
+  appStore.map.keepMapActiveLayers = true;
+
   if (appStore.map.map) {
     // save map bounds before switching views so app can return to this map location
     appStore.map.bounds = appStore.map.map.getBounds();
@@ -458,7 +473,8 @@ export function removeMap(appStore: AppStoreType) {
   if (appStore.map.terraDraw) {
     appStore.map.terraDraw.stop();
   }
-  appStore.map.removingMap = false;
+
+  appStore.map.keepMapActiveLayers = false;
 }
 
 export function setupTerraDraw(map: Map) {
