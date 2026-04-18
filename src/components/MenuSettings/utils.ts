@@ -74,33 +74,28 @@ export function initSettings(appStore: AppStoreType) {
     );
   }
 
+  setDisplayField("media", appStore);
+  setDisplayField("species_name", appStore);
+  setDisplayField("observer", appStore);
+  setDisplayField("media_counts", appStore);
+  setDisplayField("quality_grade", appStore);
+  setDisplayField("counts", appStore);
+  setDisplayField("place_guess", appStore);
+  setDisplayField("created_at", appStore);
+  setDisplayField("updated_at", appStore);
+  setDisplayField("time_observed_at", appStore);
+  setDisplayField("annotations", appStore);
+  setDisplayField("ofvs", appStore);
+}
+
+function setDisplayField(field: string, appStore: AppStoreType) {
   let displayFields =
     appStore.viewMetadata.observations_observations.displayFields;
   if (!displayFields) return;
 
-  let display_place_guess = displayFields.place_guess;
-  if (display_place_guess !== undefined) {
-    setInputChecked("#display_place_guess", display_place_guess);
-  }
-  let display_time_observed_at = displayFields.time_observed_at;
-  if (display_time_observed_at !== undefined) {
-    setInputChecked("#display_time_observed_at", display_time_observed_at);
-  }
-  let display_created_at = displayFields.created_at;
-  if (display_created_at !== undefined) {
-    setInputChecked("#display_created_at", display_created_at);
-  }
-  let display_updated_at = displayFields.updated_at;
-  if (display_updated_at !== undefined) {
-    setInputChecked("#display_updated_at", display_updated_at);
-  }
-  let display_annotations = displayFields.annotations;
-  if (display_annotations !== undefined) {
-    setInputChecked("#display_annotations", display_annotations);
-  }
-  let display_ofvs = displayFields.ofvs;
-  if (display_ofvs !== undefined) {
-    setInputChecked("#display_ofvs", display_ofvs);
+  let value = displayFields[field];
+  if (value !== undefined) {
+    setInputChecked(`#display_${field}`, value);
   }
 }
 

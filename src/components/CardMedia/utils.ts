@@ -34,18 +34,20 @@ export function renderCard(appStore: AppStoreType, componentCtx: any) {
   let displayFields =
     appStore.viewMetadata.observations_observations.displayFields || {};
 
+  cardEl.innerHTML = "";
   let obsUrl = `${iNatObservationUrl}/${observation.id}`;
-
-  if (type === "photo") {
-    cardEl.innerHTML = renderMedia(
-      obsUrl,
-      observation.taxon,
-      [media],
-      [],
-      appStore,
-    );
-  } else {
-    cardEl.innerHTML = renderSound(media);
+  if (displayFields.media !== false) {
+    if (type === "photo") {
+      cardEl.innerHTML = renderMedia(
+        obsUrl,
+        observation.taxon,
+        [media],
+        [],
+        appStore,
+      );
+    } else {
+      cardEl.innerHTML = renderSound(media);
+    }
   }
 
   let detailsEl = document.createElement("div");
@@ -53,31 +55,47 @@ export function renderCard(appStore: AppStoreType, componentCtx: any) {
 
   let detailsContent = ``;
 
-  if (observation.user && mediaIndex === 0) {
+  if (
+    observation.user &&
+    displayFields.observer !== false &&
+    mediaIndex === 0
+  ) {
     detailsContent += formatAvatar(observation.user);
   }
 
-  if (observation.taxon) {
-    detailsContent += renderTaxonNames(observation.taxon, appStore, obsUrl);
-  } else {
-    // some obsevations do not have taxa info
-    detailsContent += `<span class="title">`;
-    detailsContent += `<a href="${obsUrl}">Unknown</a>`;
-    detailsContent += "</span>";
+  if (displayFields.species_name !== false) {
+    if (observation.taxon) {
+      detailsContent += renderTaxonNames(observation.taxon, appStore, obsUrl);
+    } else {
+      // some obsevations do not have taxa info
+      detailsContent += `<span class="title">`;
+      detailsContent += `<a href="${obsUrl}">Unknown</a>`;
+      detailsContent += "</span>";
+    }
   }
 
-  detailsContent += renderMediaCount(mediaIndex, observation);
+  if (displayFields.media_counts !== false) {
+    detailsContent += renderMediaCount(mediaIndex, observation);
+  }
 
   if (mediaIndex === 0) {
-    detailsContent += renderQualityGrade(observation.quality_grade);
-    detailsContent += renderObservationMetadataCounts(observation);
+    if (displayFields.quality_grade !== false) {
+      detailsContent += renderQualityGrade(observation.quality_grade);
+    }
+
+    if (displayFields.counts !== false) {
+      detailsContent += renderObservationMetadataCounts(observation);
+    }
+
     detailsContent += renderDates(observation, displayFields);
+
     if (observation.place_guess && displayFields.place_guess !== false) {
       detailsContent +=
         "<div>Place: " +
         renderPlace(observation.place_guess, observation.obscured) +
         "</div>";
     }
+
     if (
       observation.annotations &&
       observation.annotations.length > 0 &&
@@ -86,6 +104,7 @@ export function renderCard(appStore: AppStoreType, componentCtx: any) {
       detailsContent += "<h3>Annotations</h3>";
       detailsContent += renderAnnotations(observation.annotations);
     }
+
     if (
       observation.ofvs &&
       observation.ofvs.length > 0 &&
@@ -95,8 +114,11 @@ export function renderCard(appStore: AppStoreType, componentCtx: any) {
       detailsContent += renderObservationFields(observation.ofvs, appStore);
     }
   }
-  detailsEl.innerHTML = detailsContent;
-  cardEl.appendChild(detailsEl);
+
+  if (detailsContent !== "") {
+    detailsEl.innerHTML = detailsContent;
+    cardEl.appendChild(detailsEl);
+  }
 }
 
 function renderMediaCount(index: number, observation: ObservationsResult) {

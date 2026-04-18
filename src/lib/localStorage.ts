@@ -32,6 +32,12 @@ export const dbKeys = {
   display_updated_at: "display_updated_at",
   display_annotations: "display_annotations",
   display_ofvs: "display_ofvs",
+  display_media: "display_media",
+  display_species_name: "display_species_name",
+  display_observer: "display_observer",
+  display_media_counts: "display_media_counts",
+  display_quality_grade: "display_quality_grade",
+  display_counts: "display_counts",
 };
 
 export function populateStoreWithLocaleStorage(appStore: AppStoreType) {
@@ -93,6 +99,30 @@ export function populateStoreWithLocaleStorage(appStore: AppStoreType) {
   let display_ofvs = getItem(dbKeys.display_ofvs);
   if (display_ofvs !== undefined) {
     displayFields.ofvs = display_ofvs;
+  }
+  let display_media = getItem(dbKeys.display_media);
+  if (display_media !== undefined) {
+    displayFields.media = display_media;
+  }
+  let display_species_name = getItem(dbKeys.display_species_name);
+  if (display_species_name !== undefined) {
+    displayFields.species_name = display_species_name;
+  }
+  let display_observer = getItem(dbKeys.display_observer);
+  if (display_observer !== undefined) {
+    displayFields.observer = display_observer;
+  }
+  let display_media_counts = getItem(dbKeys.display_media_counts);
+  if (display_media_counts !== undefined) {
+    displayFields.media_counts = display_media_counts;
+  }
+  let display_quality_grade = getItem(dbKeys.display_quality_grade);
+  if (display_quality_grade !== undefined) {
+    displayFields.quality_grade = display_quality_grade;
+  }
+  let display_counts = getItem(dbKeys.display_counts);
+  if (display_counts !== undefined) {
+    displayFields.counts = display_counts;
   }
 
   // HACK: force proxy store to update

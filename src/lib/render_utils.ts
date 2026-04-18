@@ -346,7 +346,15 @@ export function renderDates(
 
   detailsContent += `</div>`;
 
-  return detailsContent;
+  if (
+    displayFields.time_observed_at ||
+    displayFields.created_at ||
+    displayFields.updated_at
+  ) {
+    return detailsContent;
+  } else {
+    return "";
+  }
 }
 
 export function renderPlace(place: string, obscured: boolean) {

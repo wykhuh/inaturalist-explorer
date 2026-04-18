@@ -62,8 +62,30 @@ export const template = html`
     <h3>Fields Displayed</h3>
     <p>Set the fields shown on Observations and Media cards</p>
     <div class="form-group">
-      <input type="checkbox" id="display_place_guess" checked />
-      <label for="display_place_guess">Place</label>
+      <input type="checkbox" id="display_media" checked />
+      <label for="display_media">Photos and Sounds</label>
+    </div>
+    <div class="form-group">
+      <input type="checkbox" id="display_species_name" checked />
+      <label for="display_species_name">Species Name</label>
+    </div>
+    <div class="form-group">
+      <input type="checkbox" id="display_observer" checked />
+      <label for="display_observer">Observer</label>
+    </div>
+    <div class="form-group">
+      <input type="checkbox" id="display_media_counts" checked />
+      <label for="display_media_counts">Photos and Sounds Count</label>
+    </div>
+    <div class="form-group">
+      <input type="checkbox" id="display_quality_grade" checked />
+      <label for="display_quality_grade">Quality Grade</label>
+    </div>
+    <div class="form-group">
+      <input type="checkbox" id="display_counts" checked />
+      <label for="display_counts"
+        >Idenitification, Favorites, Disagreements, and Comments Counts</label
+      >
     </div>
     <div class="form-group">
       <input type="checkbox" id="display_time_observed_at" checked />
@@ -76,6 +98,10 @@ export const template = html`
     <div class="form-group">
       <input type="checkbox" id="display_updated_at" checked />
       <label for="display_updated_at">Updated Date</label>
+    </div>
+    <div class="form-group">
+      <input type="checkbox" id="display_place_guess" checked />
+      <label for="display_place_guess">Place</label>
     </div>
     <div class="form-group">
       <input type="checkbox" id="display_annotations" checked />

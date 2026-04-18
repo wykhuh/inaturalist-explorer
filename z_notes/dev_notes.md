@@ -389,3 +389,19 @@ click x
 - removeOneTaxonFromStore
 
 ========
+
+leaflet button
+
+https://stackoverflow.com/questions/64046196/
+
+```js
+const customButton = L.control({ position: "topleft" });
+customButton.onAdd = () => {
+  const buttonDiv = L.DomUtil.create("div", "button-wrapper");
+
+  buttonDiv.innerHTML = `<button>Custom Button</button>`;
+  buttonDiv.addEventListener("click", () => console.log("click"));
+  return buttonDiv;
+};
+customButton.addTo(map);
+```
