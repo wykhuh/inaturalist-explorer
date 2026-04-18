@@ -93,6 +93,7 @@ export interface AppStoreType {
     setTimeoutIds: any[];
     looping: boolean;
     currentIndex: number;
+    speed: number;
   };
   record_type: RecordTypes;
 }

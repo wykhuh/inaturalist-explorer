@@ -44,6 +44,7 @@ export const mapStore: AppStoreType = {
     looping: false,
     setTimeoutIds: [],
     currentIndex: 0,
+    speed: 5,
   },
   formFilters: { params: {}, string: "" },
   iNatStats: {

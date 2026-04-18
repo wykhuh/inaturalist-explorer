@@ -176,24 +176,27 @@ export async function startMapAnimations(
     // skip timePeriod that were shown or skipped
     if (i < appStore.animatedMap.currentIndex) return;
 
-    let setTimeoutId = setTimeout(async () => {
-      timeRangeEl.value = i.toString();
-      updateCurrentTimeText(i, componentContext, appStore);
+    let setTimeoutId = setTimeout(
+      async () => {
+        timeRangeEl.value = i.toString();
+        updateCurrentTimeText(i, componentContext, appStore);
 
-      let params = structuredClone(appStore.observationsApiParams);
-      store.observationsApiParams = { ...params, ...timePeriod };
-      await updateTilesForSelectedTaxa(store, true);
+        let params = structuredClone(appStore.observationsApiParams);
+        store.observationsApiParams = { ...params, ...timePeriod };
+        await updateTilesForSelectedTaxa(store, true);
 
-      // save map layers to store so app can remove them
-      appStore.taxaMapLayers = store.taxaMapLayers;
-      updateCurrentIndex(i, appStore);
+        // save map layers to store so app can remove them
+        appStore.taxaMapLayers = store.taxaMapLayers;
+        updateCurrentIndex(i, appStore);
 
-      // stop animation at end of loop
-      if (i === timePeriodsParams.length - 1) {
-        stopMapAnimation(componentContext, appStore);
-        updateCurrentIndex(0, appStore);
-      }
-    }, count * 5000);
+        // stop animation at end of loop
+        if (i === timePeriodsParams.length - 1) {
+          stopMapAnimation(componentContext, appStore);
+          updateCurrentIndex(0, appStore);
+        }
+      },
+      count * appStore.animatedMap.speed * 1000,
+    );
     count += 1;
 
     // save setTimeoutId to store so the app can stop the setTimeout
@@ -253,6 +256,10 @@ export function initFilters(appStore: AppStoreType) {
       `#map-form select#map-category option[value='${mapMetadata.category}']`,
     );
   }
+
+  setSelectedOption(
+    `#map-form select#speed option[value='${appStore.animatedMap.speed}']`,
+  );
 }
 
 // when switching views to map, if there is an in-progress anomation, load

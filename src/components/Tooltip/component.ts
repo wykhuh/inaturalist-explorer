@@ -26,8 +26,12 @@ export class Tooltip extends HTMLElement {
 customElements.define("app-tooltip", Tooltip);
 
 export function formatTooltip(id: string, content: string, tooltip: string) {
+  let className = "btn-borderless tp-trigger";
+  if (content === "?") {
+    className += " icon";
+  }
   let html = '<span class="tp-wrapper">';
-  html += `<span class="btn-borderless tp-trigger" aria-describedby="${id}">${content}</span>`;
+  html += `<span class="${className}" aria-describedby="${id}">${content}</span>`;
   html += `<span id='${id}' role='tooltip'>${tooltip}</span>`;
   html += "</span>";
   return html;

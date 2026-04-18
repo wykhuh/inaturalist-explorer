@@ -31,6 +31,7 @@ export class SubviewObservationsMap extends HTMLElement {
   currentTimeperiodEl: null | HTMLInputElement = null;
   playButtonEl: null | HTMLButtonElement = null;
   animateControls: null | HTMLDivElement = null;
+  speedControls: null | HTMLDivElement = null;
 
   connectedCallback() {
     loggerRender("++ SubviewObservationsMap connectedCallback");
@@ -112,6 +113,16 @@ export class SubviewObservationsMap extends HTMLElement {
         });
       } else {
         switchToNormalMap(appStore, this);
+      }
+    }
+
+    if (event.type === "change" && target.id === "speed") {
+      if (appStore.animatedMap.looping) {
+        stopMapAnimation(this, appStore);
+        appStore.animatedMap.speed = Number(target.value);
+        startMapAnimations(this, appStore);
+      } else {
+        appStore.animatedMap.speed = Number(target.value);
       }
     }
 

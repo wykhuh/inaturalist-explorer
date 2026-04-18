@@ -906,6 +906,18 @@
       word-break: break-word;
     }
 
+    .tp-trigger.icon {
+      border-radius: 100%;
+      width: 0.9rem;
+      height: 0.9rem;
+      text-align: center;
+      border: 1px solid var(--clr-gray-900);
+      display: inline-block;
+      color: var(--clr-gray-900);
+      font-size: 0.8rem;
+      margin: 0 3px;
+    }
+
     .tp-trigger:hover + [role="tooltip"].hide,
     .tp-trigger:focus-visible + [role="tooltip"].hide,
     [role="tooltip"].hide {
@@ -1870,20 +1882,6 @@
 
       .form-group {
         margin: 0.2rem 0;
-      }
-    }
-
-    .tp-wrapper {
-      .tp-trigger {
-        border-radius: 100%;
-        width: 0.9rem;
-        height: 0.9rem;
-        text-align: center;
-        border: 1px solid var(--clr-gray-900);
-        display: inline-block;
-        color: var(--clr-gray-900);
-        margin-left: 5px;
-        font-size: 0.8rem;
       }
     }
   }
