@@ -1,5 +1,4 @@
 import { check, copy } from "../../assets/icons";
-import { html } from "../../lib/component_utils";
 
 export function copyToClipboard(text: string) {
   navigator.clipboard.writeText(text);
@@ -24,13 +23,4 @@ export function copyToClipboardHandler(button: HTMLButtonElement) {
       }
     }
   }
-}
-
-export function renderCopyToClipboardButton(id: string) {
-  return html` <span class="tp-wrapper">
-    <span class="btn-borderless tp-trigger" aria-describedby="${id}"
-      ><button class="copy-to-clipboard">${copy}</button></span
-    >
-    <span id="${id}" role="tooltip">Copy link to clipboard</span>
-  </span>`;
 }

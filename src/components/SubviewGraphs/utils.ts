@@ -311,9 +311,9 @@ export function renderGraphCategorySelect(
   if (!selectEl) return;
 
   selectEl.innerHTML = `
-    <option value="month_of_year">Month/Year</option>
+    <option value="month_of_year">Month</option>
     <option value="year">Year</option>
-    <option value="month">Month</option>
+    <option value="month">Month and Year</option>
   `;
 
   appStore.viewMetadata.popularFieldsOptions.forEach((field) => {

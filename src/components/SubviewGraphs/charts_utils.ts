@@ -624,6 +624,7 @@ function htmlLegendPlugin(lineGraphOptions: LineGraphOptions) {
       // Reuse the built-in legendItems generator
       let generateLabels =
         chart.options.plugins?.legend?.labels?.generateLabels;
+
       if (!generateLabels) return;
 
       const items = generateLabels(chart);

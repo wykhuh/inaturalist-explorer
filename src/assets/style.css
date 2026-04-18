@@ -808,7 +808,7 @@
 
   #graph-form {
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
 
     @media (max-width: 450px) {
       display: block;
@@ -898,12 +898,13 @@
     [role="tooltip"] {
       display: none;
       position: absolute;
-      padding: 0.25em 0.5em;
+      padding: 0.5em 0.75em;
       background-color: var(--clr-iNat-dark-gray);
       color: var(--clr-white);
       border-radius: 5px;
-      z-index: 2;
+      z-index: 1001;
       word-break: break-word;
+      line-height: 1.5;
     }
 
     .tp-trigger.icon {
@@ -1634,23 +1635,26 @@
 
   #map-form {
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
   }
 
   #animate-map-controls {
     display: flex;
-    /*background-color: lightpink;*/
     align-items: center;
-    /*justify-items: center;*/
+    gap: 1rem;
+    justify-content: center;
+
+    .form-group {
+      display: flex;
+      margin: 0;
+    }
 
     button {
       border: none;
       background-color: transparent;
       height: 40px;
       width: 40px;
-      /*height: 1.5rem;*/
       padding: 0.25rem;
-      /*margin: 0;*/
     }
   }
 }
