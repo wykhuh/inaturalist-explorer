@@ -446,6 +446,7 @@ export async function initRenderMap(appStore: AppStoreType) {
     let layerName = options.layer_description;
     let layerType = options.layer_type;
 
+    // handle cases when user adds layer with map controls
     if (layerType === "basemap" && !isActiveBaseMap(event.layer, appStore)) {
       appStore.map.activeBasemap.add(layerName);
     } else if (
@@ -454,6 +455,7 @@ export async function initRenderMap(appStore: AppStoreType) {
     ) {
       appStore.map.activeLayers.add(layerName);
     }
+
     // HACK: trigger proxy store
     appStore.map = appStore.map;
   });
@@ -463,6 +465,7 @@ export async function initRenderMap(appStore: AppStoreType) {
     let layerName = options.layer_description;
     let layerType = options.layer_type;
 
+    // handle cases when user removes layer with map controls
     if (appStore.map.keepMapActiveLayers === false) {
       if (layerType === "basemap" && isActiveBaseMap(event.layer, appStore)) {
         appStore.map.activeBasemap.delete(layerName);
@@ -473,6 +476,7 @@ export async function initRenderMap(appStore: AppStoreType) {
         appStore.map.activeLayers.delete(layerName);
       }
     }
+
     // HACK: trigger proxy store
     appStore.map = appStore.map;
   });

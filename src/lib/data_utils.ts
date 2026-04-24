@@ -6,7 +6,6 @@ import type {
   AppStoreType,
   ObservationsApiParamsType,
   CustomLayerOptionsType,
-  CustomLayerType,
   CustomGeoJSONType,
   ObservationsApiParamsKeysType,
   NormalizediNatPlaceType,
@@ -18,6 +17,7 @@ import type {
   IdentificationsApiParamsKeysType,
   MapTilesAPIParamsType,
   ObservationTilesSettingType,
+  LeafletControl,
 } from "../types/app";
 import { addOverlayToMap } from "./map_utils.ts";
 import { getiNatMapTiles } from "./inat_api.ts";
@@ -33,7 +33,7 @@ import {
   observationsApiNonFilterableNames,
 } from "../data/app_data.ts";
 import { iNatOrange } from "./map_colors_utils.ts";
-import { logger, loggerFilters } from "./logger.ts";
+import { loggerFilters } from "./logger.ts";
 import { mapStore } from "./store.ts";
 import type {
   IdentificationsResult,
@@ -72,6 +72,7 @@ export async function fetchiNatMapDataForTaxon(
 ) {
   let map = appStore.map.map;
   let layerControl = appStore.map.layerControl;
+
   if (map === null) return;
   if (layerControl === null) return;
 
@@ -105,28 +106,23 @@ export async function fetchiNatMapDataForTaxon(
     appStore.record_type,
   );
 
-  // add layers to map and layer control
-  let addToMap = true;
-  // use grid as default map layer for taxa not already on map
-  if (!isTaxonInActiveLayers(taxonObj, appStore)) {
-    addToMap = true;
-    // check active layers to determine layer should be added to map
-  } else {
-    addToMap = isActiveLayer(iNatGrid, appStore) ? true : false;
-  }
-  if (addToMap) {
-    appStore.map.activeLayers.add(iNatGrid.options.layer_description);
-  }
-  let iNatGridLayer = addOverlayToMap(iNatGrid, map, layerControl, addToMap);
-
+  let iNatGridLayer = addLayerToMapAndStore(
+    iNatGrid,
+    taxonObj,
+    appStore,
+    map,
+    layerControl,
+  );
   let iNatPointLayer = addLayerToMapAndStore(
     iNatPoint,
+    taxonObj,
     appStore,
     map,
     layerControl,
   );
   let iNatHeatmapLayer = addLayerToMapAndStore(
     iNatHeatmap,
+    taxonObj,
     appStore,
     map,
     layerControl,
@@ -135,6 +131,7 @@ export async function fetchiNatMapDataForTaxon(
   if (iNatTaxonRange) {
     iNatTaxonRangeLayer = addLayerToMapAndStore(
       iNatTaxonRange,
+      taxonObj,
       appStore,
       map,
       layerControl,
@@ -155,16 +152,48 @@ export async function fetchiNatMapDataForTaxon(
 
 function addLayerToMapAndStore(
   layer: ObservationTilesSettingType,
+  taxonObj: NormalizediNatTaxonType,
   appStore: AppStoreType,
   map: Map,
   layerControl: L.Control.Layers,
 ) {
-  // check active layers to determine if layer should be added to map
-  let addToMap = isActiveLayer(layer, appStore) ? true : false;
-  if (addToMap) {
+  // if no activeLayers, add layer to map
+  if (appStore.map.activeLayers.size === 0) {
     appStore.map.activeLayers.add(layer.options.layer_description);
+    return addOverlayToMap(layer, map, layerControl, true);
   }
-  return addOverlayToMap(layer, map, layerControl, addToMap);
+
+  // if layer is in activeLayers, add to map
+  let test1 = isActiveLayer(layer, appStore);
+  if (test1) {
+    appStore.map.activeLayers.add(layer.options.layer_description);
+    return addOverlayToMap(layer, map, layerControl, true);
+  }
+
+  // if taxon is not in activeLayers, add to map
+  let test2 = [...appStore.map.activeLayers].every((activeLayer) => {
+    let parts = activeLayer.split(",");
+    let taxonId = parts[1].trim().split(" ")[1];
+    return Number(taxonId) !== taxonObj.id;
+  });
+  if (test2) {
+    appStore.map.activeLayers.add(layer.options.layer_description);
+    return addOverlayToMap(layer, map, layerControl, true);
+  }
+
+  // if layer has partial match with one of the activeLayer, add to map
+  let relatedLayerName = [...appStore.map.activeLayers].find((activeLayer) => {
+    let layerTypeTaxon = activeLayer.split(",").slice(0, 2).join(",");
+    return layer.options.layer_description.startsWith(layerTypeTaxon);
+  });
+  if (relatedLayerName) {
+    appStore.map.activeLayers.delete(relatedLayerName);
+    appStore.map.activeLayers.add(layer.options.layer_description);
+    return addOverlayToMap(layer, map, layerControl, true);
+  }
+
+  // add inactive layer to map
+  return addOverlayToMap(layer, map, layerControl, false);
 }
 
 // ================
@@ -676,6 +705,13 @@ export function leafletMapLayers(
   return items;
 }
 
+export function leafletControlLayers(appStore: AppStoreType) {
+  let control = appStore.map.layerControl as LeafletControl;
+  if (control) {
+    return control._layers.map((l) => l.layer.options.control_name);
+  }
+}
+
 export function addValueToCommaSeparatedString(
   newValue?: number | string,
   currentValue?: string | number,
@@ -869,27 +905,6 @@ export function isActiveBaseMap(
 ) {
   // @ts-ignore
   return appStore.map.activeBasemap.has(layer.options.layer_description);
-}
-
-function isTaxonInActiveLayers(
-  taxonObj: NormalizediNatTaxonType,
-  appStore: AppStoreType,
-) {
-  if (appStore.map.activeLayers.size === 0) return false;
-
-  let isActive = false;
-  appStore.map.activeLayers.forEach((layername) => {
-    try {
-      let taxonId = layername.split(",")[1].trim().split(" ")[1];
-      if (Number(taxonId) === taxonObj.id) {
-        isActive = true;
-      }
-    } catch (err) {
-      console.log("invalid layer name");
-    }
-  });
-
-  return isActive;
 }
 
 export function getResourceApiParams(isObservations: boolean) {

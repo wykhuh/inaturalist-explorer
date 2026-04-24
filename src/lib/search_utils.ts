@@ -70,7 +70,10 @@ export async function updateTilesForSelectedTaxa(
   appStore: AppStoreType,
   loadMapAnimations = false,
 ) {
+  // Early return when selected resources are added/removed while on
+  // animated map tab. Let map component handle fetching animated map tiles
   if (loadMapAnimations === false && isAnimatedMapCategory(appStore)) return;
+
   appStore.map.keepMapActiveLayers = true;
 
   for await (const taxon of appStore.selectedTaxa) {
@@ -117,6 +120,9 @@ export function renderSelectedResources(
 
   if (doSideEffects) {
     updateAppUrl(window.location, appStore);
+
+    // dispatch event instead of using proxy store dispatch event because
+    // there are mutiple store events when selected resources change
     if (isIdentificationsCheck(appStore)) {
       loggerEvent(
         "[renderSelectedResources dispatchEvent] identificationsChange",

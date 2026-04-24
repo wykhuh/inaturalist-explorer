@@ -358,28 +358,27 @@ if (appStore.map.map === null) {
 
 ========
 
-map - keep selected basemapm and layers when map is udated
+map - keep previously user-selected basemap and layers when map is updated
 
 goal
 
-- know which taxa inat map layers should be displayed on the map when selected taxa changes, when switching to map view, when animating maps
+- know which taxa inat map layers should be displayed on the map when selected resources changes, when switching to map view, when animating maps
 
 leaflet fires event
 
 - layer added
 - layer removed
 
-want to track
+change active layers
 
 - when user adds or removes layer by clicking map control
-- when user removes selected taxa
-- when user adds selected taxa
+- when user removes selected resource
+- when user adds selected resource
 
-ignore
+do not change active layers
 
-- when map is deleted, which deletes layers
-- when map is created, which adds layers
-- when map layer is deleted and replaced with updated layer
+- when map is removed, all layers are deleted
+- when map layer animation replaces all map layers
 
 click x
 

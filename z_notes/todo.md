@@ -214,3 +214,13 @@ https://forum.inaturalist.org/t/all-rights-reserved-observations/20390/19
 https://forum.inaturalist.org/t/cannot-filter-for-observations-with-all-rights-reserved-photos/18160/9
 
 https://forum.inaturalist.org/t/can-someone-explain-licensing-to-me-please/2691/20
+
+==
+
+print maps
+
+https://stackoverflow.com/questions/25345934/saving-leaflet-js-maps-as-a-static-image
+
+https://leafletjs.com/plugins.html#printexport
+
+https://github.com/Igor-Vladyka/leaflet.browser.print

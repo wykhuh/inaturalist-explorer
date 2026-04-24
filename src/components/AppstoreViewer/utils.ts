@@ -102,9 +102,7 @@ export function displayAppstoreData(appStore: AppStoreType, _source: string) {
 export function displayMapData(appStore: AppStoreType) {
   const debug = import.meta.env?.VITE_DEBUG;
   if (!debug || debug === "false") return;
-  let displayJsonWrapperEl = document.getElementById(
-    "display-map-json-wrapper",
-  );
+  let displayJsonWrapperEl = document.getElementById("display-json-map");
   if (!displayJsonWrapperEl) return;
 
   // https://stackoverflow.com/questions/31190885/json-stringify-a-set

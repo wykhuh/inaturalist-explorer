@@ -81,10 +81,6 @@ describe("setViewMetadata", () => {
 
     expect(store.viewMetadata.observations_observations.map).toStrictEqual({
       category: "none",
-      looping: false,
-      mapLayers: {},
-      setTimeoutIds: [],
-      currentIndex: 0,
     });
 
     let urlData = decodeAppUrl("?map_category=year", "/");
@@ -92,10 +88,6 @@ describe("setViewMetadata", () => {
 
     expect(store.viewMetadata.observations_observations.map).toStrictEqual({
       category: "year",
-      looping: false,
-      mapLayers: {},
-      setTimeoutIds: [],
-      currentIndex: 0,
     });
   });
 });

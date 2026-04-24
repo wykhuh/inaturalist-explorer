@@ -102,6 +102,7 @@ export class SubviewObservationsMap extends HTMLElement {
         stopMapAnimation(this, appStore);
       }
       clearMapLayers(appStore);
+
       updateCurrentTimeText(0, this, appStore);
 
       // load new map
@@ -135,6 +136,7 @@ export class SubviewObservationsMap extends HTMLElement {
             stopMapAnimation(this, appStore);
           } else {
             clearMapLayers(appStore);
+
             startMapAnimations(this, appStore);
           }
         }

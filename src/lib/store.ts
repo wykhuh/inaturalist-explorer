@@ -1,4 +1,7 @@
-import { displayAppstoreData } from "../components/AppstoreViewer/utils.ts";
+import {
+  displayAppstoreData,
+  // displayMapData,
+} from "../components/AppstoreViewer/utils.ts";
 import { selectedResources } from "../data/app_data.ts";
 import type {
   AppStoreType,
@@ -84,6 +87,7 @@ const proxiedStore = new Proxy(structuredClone(mapStore), {
     loggerStore(`[proxiedStore] ${property} changed`);
 
     displayAppstoreData(proxiedStore, `proxiedStore ${property}`);
+    // displayMapData(proxiedStore);
 
     // NOTE: selectedResource changes multiple times one one resource
     // is added or removed.

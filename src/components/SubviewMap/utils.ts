@@ -208,8 +208,6 @@ export async function startMapAnimations(
 }
 
 export function clearMapLayers(appStore: AppStoreType) {
-  let layerControl = appStore.map.layerControl;
-  if (!layerControl) return;
   appStore.map.keepMapActiveLayers = true;
 
   // remove selected taxa map layers
@@ -288,5 +286,6 @@ function createTempStore(appStore: AppStoreType) {
     taxaMapLayers: appStore.taxaMapLayers,
     record_type: appStore.record_type,
     observationsApiParams: appStore.animatedMap.observationsApiParams,
+    viewMetadata: appStore.viewMetadata,
   } as AppStoreType;
 }
