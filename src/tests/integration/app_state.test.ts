@@ -10,7 +10,7 @@ import {
 } from "vitest";
 import jsdom from "jsdom";
 
-import { leafletVisibleLayers } from "../../lib/data_utils.ts";
+import { leafletMapLayers } from "../../lib/data_utils.ts";
 import { placeSelectedHandler, removePlace } from "../../lib/search_places.ts";
 import {
   projectSelectedHandler,
@@ -178,7 +178,7 @@ describe("placeSelectedHandler", () => {
     await placeSelectedHandler(LosAngeles, "los", store);
 
     let allTaxaCount = allTaxa.observations_count;
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
       placeLabel_la,
@@ -203,7 +203,7 @@ describe("placeSelectedHandler", () => {
 
     await placeSelectedHandler(SanDiego, "san", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
       placeLabel_la,
@@ -250,7 +250,7 @@ describe("withoutPlaceSelectedHandler", () => {
     await initRenderMap(store);
     await withoutPlaceSelectedHandler(losangeles1, "los", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
@@ -271,7 +271,7 @@ describe("withoutPlaceSelectedHandler", () => {
 
     await withoutPlaceSelectedHandler(sandiego1, "san", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
@@ -305,7 +305,7 @@ describe("saveBBoxToStore", () => {
     await saveBBoxToStore(bbox, store);
 
     let allTaxaCount = allTaxa.observations_count;
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       bBoxLabel,
       gridLabel_allTaxaRecord,
@@ -332,7 +332,7 @@ describe("saveBBoxToStore", () => {
 
     await saveBBoxToStore(coors2, store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       bBoxLabel,
       gridLabel_allTaxaRecord,
@@ -371,7 +371,7 @@ describe("projectSelectedHandler", () => {
     await projectSelectedHandler(project_cnc1, "city", store);
 
     let allTaxaCount = allTaxa.observations_count;
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_project1,
     ]);
@@ -392,7 +392,7 @@ describe("projectSelectedHandler", () => {
 
     await projectSelectedHandler(project_cnc2, "city", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_projects,
     ]);
@@ -435,7 +435,7 @@ describe("notInProjectSelectedHandler", () => {
     await notInProjectSelectedHandler(projectA, "city", store);
 
     let allTaxaCount = allTaxa.observations_count;
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_project1NotInProject,
     ]);
@@ -456,7 +456,7 @@ describe("notInProjectSelectedHandler", () => {
 
     await notInProjectSelectedHandler(projectB, "city", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_projectsNotInProject,
     ]);
@@ -492,7 +492,7 @@ describe("taxonSelectedHandler", () => {
 
     await taxonSelectedHandler(lifeBasic, "life", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_life,
     ]);
@@ -512,7 +512,7 @@ describe("taxonSelectedHandler", () => {
 
     await taxonSelectedHandler(redOakBasic, "red", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_life,
       gridLabel_oaks,
@@ -552,7 +552,7 @@ describe("withoutTaxonSelectedHandler", () => {
 
     await withoutTaxonSelectedHandler(lifeBasic, "life", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_withoutLife,
     ]);
@@ -575,7 +575,7 @@ describe("withoutTaxonSelectedHandler", () => {
 
     await withoutTaxonSelectedHandler(redOakBasic, "red", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_withoutTaxa,
     ]);
@@ -613,7 +613,7 @@ describe("taxonIdentifiedSelectedHandler", () => {
 
     await taxonIdentifiedSelectedHandler(lifeBasic, "life", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
       gridLabel_life,
@@ -646,7 +646,7 @@ describe("withoutTaxonIdentifiedSelectedHandler", () => {
 
     await withoutTaxonIdentifiedSelectedHandler(lifeBasic, "life", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
@@ -674,7 +674,7 @@ describe("userSelectedHandler", () => {
     await initRenderMap(store);
     await userSelectedHandler(user1, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_user1,
     ]);
@@ -695,7 +695,7 @@ describe("userSelectedHandler", () => {
 
     await userSelectedHandler(user2, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_users,
     ]);
@@ -735,7 +735,7 @@ describe("withoutUserSelectedHandler", () => {
 
     await withoutUserSelectedHandler(user1, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
@@ -756,7 +756,7 @@ describe("withoutUserSelectedHandler", () => {
 
     await withoutUserSelectedHandler(user2, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
@@ -790,7 +790,7 @@ describe("userIdentifierSelectedHandler", () => {
 
     await userIdentifierSelectedHandler(user1, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_user1Identifier,
     ]);
@@ -811,7 +811,7 @@ describe("userIdentifierSelectedHandler", () => {
 
     await userIdentifierSelectedHandler(user2, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_usersIdentifiers,
     ]);
@@ -849,7 +849,7 @@ describe("withoutUserIdentifierSelectedHandler", () => {
 
     await withoutUserIdentifierSelectedHandler(user1, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
@@ -873,7 +873,7 @@ describe("withoutUserIdentifierSelectedHandler", () => {
 
     await withoutUserIdentifierSelectedHandler(user2, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
@@ -913,7 +913,7 @@ describe("reviewerSelectedHandler", () => {
     await initRenderMap(store);
     await reviewerSelectedHandler(userA, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_user1Reviewer,
     ]);
@@ -934,7 +934,7 @@ describe("reviewerSelectedHandler", () => {
 
     await reviewerSelectedHandler(userB, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_user2Reviewer,
     ]);
@@ -973,7 +973,7 @@ describe("unobservedByUserSelectedHandler", () => {
 
     await unobservedByUserSelectedHandler(userA, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_user1Unobserved,
     ]);
@@ -994,7 +994,7 @@ describe("unobservedByUserSelectedHandler", () => {
 
     await unobservedByUserSelectedHandler(userB, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_user2Unobserved,
     ]);
@@ -1030,7 +1030,7 @@ describe("userAnnotatorsSelectedHandler", () => {
     await initRenderMap(store);
     await userAnnotatorsSelectedHandler(user1, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_user1Annotator,
     ]);
@@ -1051,7 +1051,7 @@ describe("userAnnotatorsSelectedHandler", () => {
 
     await userAnnotatorsSelectedHandler(user2, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_usersAnnotator,
     ]);
@@ -1092,7 +1092,7 @@ describe("combos", () => {
 
     await taxonSelectedHandler(redOakBasic, "red", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_oaks,
     ]);
@@ -1110,7 +1110,7 @@ describe("combos", () => {
 
     await saveBBoxToStore(bbox, store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       bBoxLabel,
       gridLabel_oaks,
@@ -1148,7 +1148,7 @@ describe("combos", () => {
 
     let allTaxaCount = allTaxa.observations_count;
     let allTaxaLACount = allTaxaCount * 0.6;
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
       placeLabel_la,
@@ -1172,7 +1172,7 @@ describe("combos", () => {
 
     await saveBBoxToStore(bbox, store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       bBoxLabel,
       gridLabel_allTaxaRecord,
@@ -1206,7 +1206,7 @@ describe("combos", () => {
     await projectSelectedHandler(project_cnc1, "city", store);
 
     let allTaxaProjectCount = allTaxa.observations_count * 0.7;
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_project1,
     ]);
@@ -1229,7 +1229,7 @@ describe("combos", () => {
 
     await saveBBoxToStore(bbox, store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       bBoxLabel,
       gridLabel_allTaxaRecord_project1,
@@ -1268,7 +1268,7 @@ describe("combos", () => {
     await initRenderMap(store);
     await userSelectedHandler(user1, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_user1,
     ]);
@@ -1288,7 +1288,7 @@ describe("combos", () => {
 
     await saveBBoxToStore(bbox, store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       bBoxLabel,
       gridLabel_allTaxaRecord_user1,
@@ -1332,7 +1332,7 @@ describe("combos", () => {
     await initRenderMap(store);
     await placeSelectedHandler(LosAngeles, "los", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
       placeLabel_la,
@@ -1356,7 +1356,7 @@ describe("combos", () => {
 
     await saveBBoxToStore(bbox, store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       bBoxLabel,
       gridLabel_allTaxaRecord,
@@ -1381,7 +1381,7 @@ describe("combos", () => {
 
     await placeSelectedHandler(SanDiego, "san", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_sd,
       placeLabel_sd,
@@ -1422,7 +1422,7 @@ describe("placeSelectedHandler with identifications", () => {
 
     await placeSelectedHandler(LosAngeles, "los", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
       placeLabel_la,
@@ -1445,7 +1445,7 @@ describe("placeSelectedHandler with identifications", () => {
 
     await placeSelectedHandler(SanDiego, "san", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
       placeLabel_la,
@@ -1482,7 +1482,7 @@ describe("projectSelectedHandler with identifications", () => {
 
     await projectSelectedHandler(project_cnc1, "city", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
     ]);
@@ -1510,7 +1510,7 @@ describe("taxonSelectedHandler with identifications", () => {
 
     await taxonSelectedHandler(lifeBasic, "life", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
       gridLabel_lifeIdent,
@@ -1532,7 +1532,7 @@ describe("taxonSelectedHandler with identifications", () => {
 
     await taxonSelectedHandler(redOakBasic, "red", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
       gridLabel_lifeIdent,
@@ -1573,7 +1573,7 @@ describe("withoutTaxonSelectedHandler with identifications", () => {
 
     await withoutTaxonSelectedHandler(lifeBasic, "life", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
     ]);
@@ -1597,7 +1597,7 @@ describe("withoutTaxonSelectedHandler with identifications", () => {
 
     await withoutTaxonSelectedHandler(redOakBasic, "red", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
     ]);
@@ -1635,7 +1635,7 @@ describe("taxonIdentifiedSelectedHandler with identifications", () => {
 
     await taxonIdentifiedSelectedHandler(lifeBasic, "life", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_lifeIdent,
     ]);
@@ -1654,7 +1654,7 @@ describe("taxonIdentifiedSelectedHandler with identifications", () => {
 
     await taxonIdentifiedSelectedHandler(redOakBasic, "red", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_lifeIdent,
       gridLabel_oakIdent,
@@ -1691,7 +1691,7 @@ describe("withoutTaxonIdentifiedSelectedHandler with identifications", () => {
 
     await withoutTaxonIdentifiedSelectedHandler(lifeBasic, "life", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
     ]);
@@ -1715,7 +1715,7 @@ describe("withoutTaxonIdentifiedSelectedHandler with identifications", () => {
 
     await withoutTaxonIdentifiedSelectedHandler(redOakBasic, "red", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
     ]);
@@ -1750,7 +1750,7 @@ describe("userSelectedHandler with identifications", () => {
     await initRenderMap(store);
     await userSelectedHandler(user1, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
     ]);
@@ -1780,7 +1780,7 @@ describe("userIdentifierSelectedHandler with identifications", () => {
 
     await userIdentifierSelectedHandler(user1, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
     ]);
@@ -1807,7 +1807,7 @@ describe("userIdentifierSelectedHandler with identifications", () => {
 
     await userIdentifierSelectedHandler(user2, "user", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
     ]);

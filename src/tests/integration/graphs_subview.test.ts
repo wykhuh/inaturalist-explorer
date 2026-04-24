@@ -10,7 +10,7 @@ import {
 } from "vitest";
 import jsdom from "jsdom";
 
-import { leafletVisibleLayers } from "../../lib/data_utils.ts";
+import { leafletMapLayers } from "../../lib/data_utils.ts";
 import { decodeAppUrl } from "../../lib/utils.ts";
 import {
   createMockServer,
@@ -66,7 +66,7 @@ describe("initPopulateStore resources", () => {
     await initPopulateStore(store, urlData);
 
     expectEmptyResources(store, ["selectedTaxa"]);
-    expect(leafletVisibleLayers(store)).toStrictEqual([]);
+    expect(leafletMapLayers(store)).toStrictEqual([]);
     let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
       colors: `${iNatOrange}`,
@@ -92,7 +92,7 @@ describe("initPopulateStore resources", () => {
     await initPopulateStore(store, urlData);
 
     expectEmptyResources(store, ["selectedTaxa"]);
-    expect(leafletVisibleLayers(store)).toStrictEqual([]);
+    expect(leafletMapLayers(store)).toStrictEqual([]);
     let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
       colors: `${iNatOrange}`,
@@ -119,7 +119,7 @@ describe("initPopulateStore resources", () => {
     await initPopulateStore(store, urlData);
 
     expectEmptyResources(store, ["selectedTaxa"]);
-    expect(leafletVisibleLayers(store)).toStrictEqual([]);
+    expect(leafletMapLayers(store)).toStrictEqual([]);
     let expectedParams: ObservationsApiParamsType = {
       ...defaultParams,
       colors: `${life().color}`,

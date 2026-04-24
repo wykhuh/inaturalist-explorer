@@ -659,28 +659,21 @@ export function formatTaxonName(
   };
 }
 
-export function leafletVisibleLayers(appStore: AppStoreType, strict = false) {
-  let layer_descriptions: any[] = [];
+export function leafletMapLayers(
+  appStore: AppStoreType,
+  field = "layer_description" as keyof CustomLayerOptionsType,
+) {
+  let items: any[] = [];
   if (appStore.map.map) {
-    appStore.map.map.eachLayer((lay) => {
-      let layer = lay as unknown as CustomLayerType;
+    appStore.map.map.eachLayer((layer) => {
       let options = layer.options as CustomLayerOptionsType;
-
-      if (options.layer_description) {
-        if (layer._path || layer._container || !strict) {
-          // logger(">>>", Object.keys(layer));
-
-          layer_descriptions.push(options.layer_description);
-        } else {
-          logger("?????", Object.keys(layer));
-        }
-      } else {
-        logger("???", Object.keys(layer));
+      if (options[field]) {
+        items.push(options[field]);
       }
     });
   }
 
-  return layer_descriptions;
+  return items;
 }
 
 export function addValueToCommaSeparatedString(

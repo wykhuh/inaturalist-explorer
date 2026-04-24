@@ -1,6 +1,6 @@
 import type { AppStoreType, AppStoreKeysType } from "../../types/app";
 import type { PolygonJson } from "../../types/inat_api";
-import { leafletVisibleLayers } from "../../lib/data_utils";
+import { leafletMapLayers } from "../../lib/data_utils";
 import { displayJson } from "../../lib/utils";
 import type { TileLayer } from "leaflet";
 
@@ -83,7 +83,7 @@ export function displayAppstoreData(appStore: AppStoreType, _source: string) {
         activeLayers: appStore.map.activeLayers,
         activeBasemap: appStore.map.activeBasemap,
       };
-      data.mapLayerDescriptions = leafletVisibleLayers(appStore);
+      data.mapLayerDescriptions = leafletMapLayers(appStore);
     } else if (key === "selectedPlaces") {
       data.selectedPlaces = formatSelectedPlaces(appStore);
     } else if (key === "iNatStats") {

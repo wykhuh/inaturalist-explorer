@@ -10,7 +10,7 @@ import {
 } from "vitest";
 import jsdom from "jsdom";
 
-import { leafletVisibleLayers } from "../../lib/data_utils";
+import { leafletMapLayers } from "../../lib/data_utils";
 import { decodeAppUrl } from "../../lib/utils";
 import {
   createMockServer,
@@ -149,7 +149,7 @@ describe("initPopulateStore and initRenderMap options", () => {
 
     expectEmptyResources(store, ["selectedTaxa"]);
     expectDefaultTaxaRecord(store);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
@@ -179,7 +179,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       await initPopulateStore(store, urlData);
       await initRenderMap(store);
 
-      expect(leafletVisibleLayers(store)).toStrictEqual([
+      expect(leafletMapLayers(store)).toStrictEqual([
         basemapLabel_osm,
         gridLabel_allTaxaRecord,
       ]);
@@ -209,7 +209,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
@@ -237,7 +237,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_life,
     ]);
@@ -267,7 +267,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_life,
     ]);
@@ -297,7 +297,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_life,
     ]);
@@ -327,7 +327,7 @@ describe("initPopulateStore and initRenderMap options", () => {
       await initPopulateStore(store, urlData);
       await initRenderMap(store);
 
-      expect(leafletVisibleLayers(store)).toStrictEqual([
+      expect(leafletMapLayers(store)).toStrictEqual([
         basemapLabel_osm,
         gridLabel_allTaxaRecord,
       ]);
@@ -359,7 +359,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
@@ -390,7 +390,7 @@ describe("initPopulateStore and initRenderMap options", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_life,
     ]);
@@ -555,7 +555,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
 
     expectEmptyResources(store, ["selectedTaxa"]);
     expectLifeOakTaxa(store);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_life,
       gridLabel_oaks,
@@ -590,7 +590,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
 
     expectEmptyResources(store, ["selectedTaxa", "selectedWithoutTaxa"]);
     expect(store.selectedWithoutTaxa).toStrictEqual([life1, oak]);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_withoutTaxa,
     ]);
@@ -621,7 +621,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectEmptyResources(store, ["selectedPlaces", "selectedTaxa"]);
     expect_LA_SD_Place(store, [allTaxaLACount * 0.6, allTaxaLACount * 0.4]);
     expectDefaultTaxaRecord(store, allTaxaLACount);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
       placeLabel_la,
@@ -662,7 +662,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectEmptyResources(store, ["selectedWithoutPlaces", "selectedTaxa"]);
     expect(store.selectedWithoutPlaces).toStrictEqual([losangeles1, sandiego1]);
     expectDefaultTaxaRecord(store, allTaxaLACount);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
@@ -692,7 +692,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectEmptyResources(store, ["selectedPlaces", "selectedTaxa"]);
     expectBboxPlace(store, allTaxa.observations_count);
     expectDefaultTaxaRecord(store);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeBBoxLabel,
       bBoxLabel,
@@ -731,7 +731,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       allTaxaProjectCount * 0.3,
     ]);
     expectDefaultTaxaRecord(store, allTaxaProjectCount);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       projectLabel_cnc2,
       projectLabel_cnc2,
@@ -770,7 +770,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectEmptyResources(store, ["selectedTaxa", "selectedWithoutProjects"]);
     expect(store.selectedWithoutProjects).toStrictEqual([project1, project2]);
     expectDefaultTaxaRecord(store, allTaxaProjectCount);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_projectsNotInProject,
     ]);
@@ -804,7 +804,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       { ...user1, observations_count: allTaxaCount * 0.45 },
       { ...user2, observations_count: Math.round(allTaxaCount * 0.55) },
     ]);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_users,
     ]);
@@ -835,7 +835,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectEmptyResources(store, ["selectedWithoutUsers", "selectedTaxa"]);
     expectDefaultTaxaRecord(store, allTaxaCount);
     expect(store.selectedWithoutUsers).toStrictEqual([user1, user2]);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
@@ -869,7 +869,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       { ...user1, observations_count: allTaxaCount * 0.75 },
       { ...user2, observations_count: allTaxaCount },
     ]);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_usersIdentifiers,
     ]);
@@ -902,7 +902,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     ]);
     expectDefaultTaxaRecord(store);
     expect(store.selectedWithoutUsersIdentifiers).toStrictEqual([user1, user2]);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
@@ -933,7 +933,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectEmptyResources(store, ["selectedTaxa", "selectedUnobservedByUser"]);
     expectDefaultTaxaRecord(store, allTaxaCount * 0.65);
     expectUser1UnobservedByUser(store);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_user1Unobserved,
     ]);
@@ -963,7 +963,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectEmptyResources(store, ["selectedTaxa", "selectedReviewer"]);
     expectDefaultTaxaRecord(store);
     expectUser1Reviewer(store);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_user1Reviewer,
     ]);
@@ -994,7 +994,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectEmptyResources(store, ["selectedUsersAnnotators", "selectedTaxa"]);
     expectDefaultTaxaRecord(store);
     expectUserAnnotators(store, [allTaxaCount, allTaxaCount]);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord_usersAnnotator,
     ]);
@@ -1039,7 +1039,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
       Math.round(count * 0.55 * 0.75),
     ]);
     expectUser1Identifier(store, count * 0.75);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
       placeLabel_la,
@@ -1088,7 +1088,7 @@ describe("initPopulateStore and initRenderMap resources", () => {
     expectProjects(store, [count * 0.7, count * 0.3]);
     expectLifeOakTaxa(store, [lifeCount, oakCount]);
     expectUsers(store, [count * 0.45, count * 0.55]);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeBBoxLabel,
       projectLabel_cnc2,
@@ -1130,7 +1130,7 @@ describe("initPopulateStore and initRenderMap options with identifications", () 
     expectEmptyResources(store, ["selectedTaxaIdentified"]);
     expect(store.selectedTaxa).toStrictEqual([]);
     expectDefaultTaxaRecordIdentification(store);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
     ]);
@@ -1191,7 +1191,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expectDefaultTaxaRecordIdentification(store, 22000);
     expect(store.selectedTaxa).toStrictEqual([life, oak]);
     expect(store.taxaMapLayers).toStrictEqual({});
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
     ]);
@@ -1231,7 +1231,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expect(store.selectedTaxa).toStrictEqual([]);
     expectDefaultTaxaRecordIdentification(store);
     expect(store.selectedWithoutTaxa).toStrictEqual([life, oak]);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent_withoutTaxa,
     ]);
@@ -1263,7 +1263,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expectEmptyResources(store, ["selectedTaxaIdentified"]);
     expect(store.selectedTaxa).toStrictEqual([]);
     expect(store.selectedTaxaIdentified).toStrictEqual([life, oak]);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_lifeIdent,
       gridLabel_oakIdent,
@@ -1302,7 +1302,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expect(store.selectedTaxa).toStrictEqual([]);
     expectDefaultTaxaRecordIdentification(store);
     expect(store.selectedWithoutTaxaIdentified).toStrictEqual([life, oak]);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
     ]);
@@ -1341,7 +1341,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
       store,
       allTaxaIdentification.identifications_count,
     );
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
       placeLabel_la,
@@ -1375,7 +1375,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expectEmptyResources(store, ["selectedTaxaIdentified"]);
     expect(store.selectedTaxa).toStrictEqual([]);
     expectDefaultTaxaRecordIdentification(store);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
     ]);
@@ -1402,7 +1402,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expectEmptyResources(store, ["selectedTaxaIdentified"]);
     expect(store.selectedTaxa).toStrictEqual([]);
     expectDefaultTaxaRecordIdentification(store);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
     ]);
@@ -1444,7 +1444,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
       allTaxaIdentification.identifications_count,
     );
     expect(store.selectedUsersIdentifiers).toStrictEqual([userA, userB]);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent_usersIdentifiers,
     ]);
@@ -1473,7 +1473,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expectEmptyResources(store, ["selectedTaxaIdentified"]);
     expect(store.selectedTaxa).toStrictEqual([]);
     expectDefaultTaxaRecordIdentification(store);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
     ]);
@@ -1500,7 +1500,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
     expectEmptyResources(store, ["selectedTaxaIdentified"]);
     expect(store.selectedTaxa).toStrictEqual([]);
     expectDefaultTaxaRecordIdentification(store);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
     ]);
@@ -1547,7 +1547,7 @@ describe("initPopulateStore and initRenderMap resources with identifications", (
       Math.round(count * 0.45),
       Math.round(count * 0.55),
     ]);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       placeLabel_la,
       placeLabel_la,

@@ -11,7 +11,7 @@ import {
 import jsdom from "jsdom";
 
 import { template as observationHeaderHTML } from "../../components/ObservationsHeader/template.ts";
-import { leafletVisibleLayers } from "../../lib/data_utils.ts";
+import { leafletMapLayers } from "../../lib/data_utils.ts";
 import {
   createMockServer,
   defaultParams,
@@ -108,7 +108,7 @@ describe("click on site header to change page", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
     ]);
@@ -125,7 +125,7 @@ describe("click on site header to change page", () => {
 
     await pageChangeHandler(observationsPageClick(), store, Router);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
@@ -170,7 +170,7 @@ describe("click on site header to change page", () => {
     await taxonSelectedHandler(lifeBasic, "", store);
     await taxonSelectedHandler(redOakBasic, "", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
       gridLabel_lifeIdent,
@@ -190,7 +190,7 @@ describe("click on site header to change page", () => {
 
     await pageChangeHandler(observationsPageClick(), store, Router);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_lifeIdent,
       gridLabel_oakIdent,
@@ -242,7 +242,7 @@ describe("click on site header to change page", () => {
 
     await taxonIdentifiedSelectedHandler(lifeBasic, "", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_lifeIdent,
     ]);
@@ -259,7 +259,7 @@ describe("click on site header to change page", () => {
 
     await pageChangeHandler(observationsPageClick(), store, Router);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_lifeIdent,
       gridLabel_allTaxaRecord,
@@ -289,7 +289,7 @@ describe("click on site header to change page", () => {
 
     await pageChangeHandler(identificationsPageClick(), store, Router);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_lifeIdent,
     ]);
@@ -328,7 +328,7 @@ describe("click on site header to change page", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
@@ -346,7 +346,7 @@ describe("click on site header to change page", () => {
 
     await pageChangeHandler(identificationsPageClick(), store, Router);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
     ]);
@@ -393,7 +393,7 @@ describe("click on site header to change page", () => {
     await taxonSelectedHandler(lifeBasic, "", store);
     await taxonSelectedHandler(redOakBasic, "", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_life,
       gridLabel_oaks,
@@ -412,7 +412,7 @@ describe("click on site header to change page", () => {
 
     await pageChangeHandler(identificationsPageClick(), store, Router);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_life,
       gridLabel_oaks,
@@ -462,7 +462,7 @@ describe("click on site header to change page", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
+    expect(leafletMapLayers(store)).toStrictEqual([basemapLabel_osm]);
     expect(store.selectedTaxa).toStrictEqual([]);
     expect(store.selectedTaxaIdentified).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("about");
@@ -470,7 +470,7 @@ describe("click on site header to change page", () => {
 
     await pageChangeHandler(observationsPageClick(), store, Router);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
@@ -505,7 +505,7 @@ describe("click on site header to change page", () => {
     await initPopulateStore(store, urlData);
     await initRenderMap(store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([basemapLabel_osm]);
+    expect(leafletMapLayers(store)).toStrictEqual([basemapLabel_osm]);
     expect(store.selectedTaxa).toStrictEqual([]);
     expect(store.selectedTaxaIdentified).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("about");
@@ -513,7 +513,7 @@ describe("click on site header to change page", () => {
 
     await pageChangeHandler(identificationsPageClick(), store, Router);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
     ]);
@@ -552,7 +552,7 @@ describe("click on site header to change page without maps", () => {
     let urlData = decodeAppUrl(searchparams, "/identifications/");
     await initPopulateStore(store, urlData);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([]);
+    expect(leafletMapLayers(store)).toStrictEqual([]);
     expect(store.selectedTaxa).toStrictEqual([]);
     expect(store.selectedTaxaIdentified).toStrictEqual([allTaxaIdentification]);
     expect(store.record_type).toStrictEqual("identifications");
@@ -566,7 +566,7 @@ describe("click on site header to change page without maps", () => {
 
     await pageChangeHandler(observationsPageClick(), store, Router);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([]);
+    expect(leafletMapLayers(store)).toStrictEqual([]);
     expect(store.selectedTaxa).toStrictEqual([allTaxa]);
     expect(store.selectedTaxaIdentified).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("observations");
@@ -608,7 +608,7 @@ describe("click on site header to change page without maps", () => {
     await taxonSelectedHandler(lifeBasic, "", store);
     await taxonSelectedHandler(redOakBasic, "", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([]);
+    expect(leafletMapLayers(store)).toStrictEqual([]);
     expect(store.selectedTaxa).toStrictEqual([life1, oak1]);
     expect(store.selectedTaxaIdentified).toStrictEqual([
       {
@@ -628,7 +628,7 @@ describe("click on site header to change page without maps", () => {
 
     await pageChangeHandler(observationsPageClick(), store, Router);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([]);
+    expect(leafletMapLayers(store)).toStrictEqual([]);
     expect(store.selectedTaxa).toStrictEqual([
       { ...life1, observations_count: life1Count },
       { ...oak1, observations_count: oak1Count },
@@ -673,7 +673,7 @@ describe("click on site header to change page without maps", () => {
 
     await taxonIdentifiedSelectedHandler(lifeBasic, "", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([]);
+    expect(leafletMapLayers(store)).toStrictEqual([]);
     expect(store.selectedTaxaIdentified).toStrictEqual([life1]);
     expect(store.selectedTaxa).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("identifications");
@@ -687,7 +687,7 @@ describe("click on site header to change page without maps", () => {
 
     await pageChangeHandler(observationsPageClick(), store, Router);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([]);
+    expect(leafletMapLayers(store)).toStrictEqual([]);
     expect(store.selectedTaxaIdentified).toStrictEqual([
       { ...life1, observations_count: allTaxa.observations_count },
     ]);
@@ -711,7 +711,7 @@ describe("click on site header to change page without maps", () => {
 
     await pageChangeHandler(identificationsPageClick(), store, Router);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([]);
+    expect(leafletMapLayers(store)).toStrictEqual([]);
     expect(store.selectedTaxaIdentified).toStrictEqual([
       { ...life1, observations_count: allTaxa.observations_count },
     ]);
@@ -744,7 +744,7 @@ describe("click on site header to change page without maps", () => {
     let urlData = decodeAppUrl(searchparams, "/");
     await initPopulateStore(store, urlData);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([]);
+    expect(leafletMapLayers(store)).toStrictEqual([]);
     expect(store.selectedTaxa).toStrictEqual([allTaxa]);
     expect(store.selectedTaxaIdentified).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("observations");
@@ -759,7 +759,7 @@ describe("click on site header to change page without maps", () => {
 
     await pageChangeHandler(identificationsPageClick(), store, Router);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([]);
+    expect(leafletMapLayers(store)).toStrictEqual([]);
     expect(store.selectedTaxa).toStrictEqual([]);
     expect(store.selectedTaxaIdentified).toStrictEqual([allTaxaIdentification]);
     expect(store.record_type).toStrictEqual("identifications");
@@ -800,7 +800,7 @@ describe("click on site header to change page without maps", () => {
     await taxonSelectedHandler(lifeBasic, "", store);
     await taxonSelectedHandler(redOakBasic, "", store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([]);
+    expect(leafletMapLayers(store)).toStrictEqual([]);
     expect(store.selectedTaxa).toStrictEqual([life1, oak1]);
     expect(store.selectedTaxaIdentified).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("observations");
@@ -815,7 +815,7 @@ describe("click on site header to change page without maps", () => {
 
     await pageChangeHandler(identificationsPageClick(), store, Router);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([]);
+    expect(leafletMapLayers(store)).toStrictEqual([]);
     expect(store.selectedTaxa).toStrictEqual([
       { ...life1, identifications_count: life1IdentCount },
       { ...oak1, identifications_count: oak1IdentCount },
@@ -859,7 +859,7 @@ describe("click on site header to change page without maps", () => {
     let urlData = decodeAppUrl(searchparams, "/about/");
     await initPopulateStore(store, urlData);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([]);
+    expect(leafletMapLayers(store)).toStrictEqual([]);
     expect(store.selectedTaxa).toStrictEqual([]);
     expect(store.selectedTaxaIdentified).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("about");
@@ -868,7 +868,7 @@ describe("click on site header to change page without maps", () => {
     await pageChangeHandler(observationsPageClick(), store, Router);
     await initRenderMap(store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
@@ -902,7 +902,7 @@ describe("click on site header to change page without maps", () => {
     let urlData = decodeAppUrl(searchparams, "/about/");
     await initPopulateStore(store, urlData);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([]);
+    expect(leafletMapLayers(store)).toStrictEqual([]);
     expect(store.selectedTaxa).toStrictEqual([]);
     expect(store.selectedTaxaIdentified).toStrictEqual([]);
     expect(store.record_type).toStrictEqual("about");
@@ -911,7 +911,7 @@ describe("click on site header to change page without maps", () => {
     await pageChangeHandler(identificationsPageClick(), store, Router);
     await initRenderMap(store);
 
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecordIdent,
     ]);
@@ -961,7 +961,7 @@ describe("click on headers to change view and page", () => {
     expect(store.record_type).toStrictEqual("observations");
     expect(store.currentView).toStrictEqual("observations_observations");
     expect(store.selectedTaxa).toStrictEqual([allTaxa]);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_allTaxaRecord,
     ]);
@@ -971,7 +971,7 @@ describe("click on headers to change view and page", () => {
     expect(store.record_type).toStrictEqual("observations");
     expect(store.currentView).toStrictEqual("observations_observations");
     expect(store.selectedTaxa).toStrictEqual([life()]);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_life,
     ]);
@@ -982,7 +982,7 @@ describe("click on headers to change view and page", () => {
     expect(store.record_type).toStrictEqual("observations");
     expect(store.currentView).toStrictEqual("observations_species");
     expect(store.selectedTaxa).toStrictEqual([life()]);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_life,
     ]);
@@ -995,7 +995,7 @@ describe("click on headers to change view and page", () => {
     expect(store.selectedTaxa).toStrictEqual([
       { ...life(), identifications_count: lifeIdentCount },
     ]);
-    expect(leafletVisibleLayers(store)).toStrictEqual([
+    expect(leafletMapLayers(store)).toStrictEqual([
       basemapLabel_osm,
       gridLabel_life,
       gridLabel_allTaxaRecordIdent,
