@@ -151,21 +151,7 @@ export async function renderGraphs(
           let dataForTaxon: PopularFieldForGraph[] = data.filter(
             (d) => d.taxon_id === taxon.id,
           );
-          if (dataForTaxon.length === 0) {
-            dataForTaxon = [
-              {
-                taxon_name: taxon.name || "",
-                taxon_id: taxon.id,
-                taxon_color: taxon.color || "",
-                annotations: [],
-                unannotated: { count: 0, month_of_year: {} },
-                controlled_attribute: {
-                  id: 0,
-                  label: data[0].controlled_attribute.label,
-                },
-              },
-            ];
-          }
+          if (dataForTaxon.length === 0) return;
 
           let legendEl = document.createElement("div");
           legendEl.id = `legend-container-${i}`;
