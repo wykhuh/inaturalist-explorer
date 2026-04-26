@@ -213,7 +213,7 @@ export function createGraphs(
         appStore,
       );
     });
-    chartTitle = "Observations by month/year";
+    chartTitle = "Observations by month";
     timeUnit = null;
   } else if (results[0].year) {
     xAxisLabels = formatYearData(results[0].year).labels;
@@ -245,7 +245,7 @@ export function createGraphs(
         appStore,
       );
     });
-    chartTitle = "Observations by month";
+    chartTitle = "Observations by month and year";
     timeUnit = "month";
   }
 

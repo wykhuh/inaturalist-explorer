@@ -1,11 +1,14 @@
 import { html } from "../../lib/component_utils";
 import observations from "../../assets/images/observations.jpg";
 import identifications from "../../assets/images/identifications.jpg";
+import map from "../../assets/images/observations_map.jpg";
+import animated_map from "../../assets/images/observations_animated_map.jpg";
+import annotations_observation_fields from "../../assets/images/observations_annotations_observation_fields.jpg";
 import grid from "../../assets/images/observations_grid.jpg";
 import table from "../../assets/images/observations_table.jpg";
 import media from "../../assets/images/observations_media.jpg";
 import graphs from "../../assets/images/observations_graphs.jpg";
-import graphs_year from "../../assets/images/graphs_year.jpg";
+import graphs_year from "../../assets/images/graphs_years.jpg";
 import graphs_categories_annotations from "../../assets/images/graphs_categories_annotations.jpg";
 import graphs_categories from "../../assets/images/graphs_categories.jpg";
 import graphs_deselect_option from "../../assets/images/graphs_deselect_option.jpg";
@@ -15,6 +18,11 @@ import graphs_group_by_species from "../../assets/images/graphs_group_by_species
 import graphs_life_stage from "../../assets/images/graphs_life_stage.jpg";
 import graphs_month_year from "../../assets/images/graphs_month_year.jpg";
 import graphs_months from "../../assets/images/graphs_months.jpg";
+import graphs_percents from "../../assets/images/graphs_percents.jpg";
+import graphs_annotations_group_places_all from "../../assets/images/graphs_annotations_group_places_all.jpg";
+import graphs_annotations_group_places_one from "../../assets/images/graphs_annotations_group_places_one.jpg";
+import graphs_annotations_group_species_all from "../../assets/images/graphs_annotations_group_species_all.jpg";
+import graphs_annotations_group_species_one from "../../assets/images/graphs_annotations_group_species_one.jpg";
 import grid_ident from "../../assets/images/identifications_grid.jpg";
 import history_ident from "../../assets/images/identifications_history.jpg";
 import settings from "../../assets/images/settings.jpg";
@@ -42,31 +50,36 @@ export const template = html`
 
     <h1>About</h1>
     <p>
-      iNaturalist Explorer is a opensource website that lets people explore
+      iNaturalist Explorer is a open-source website that lets people explore
       iNaturalist data. This site gets iNaturalist data from the iNaturalist
       API.
     </p>
-    <h2>Features</h2>
-    <ol>
-      <li id="search-options">
-        Search observations by Species, iNaturalist places, Projects, Observers
-        (people who add observations), Identifiers(people who add
-        identifications), and Annotators (people who add annotations). Also
-        exclude items from search.
-        <img
-          width="500"
-          height="650"
-          loading="lazy"
-          src="${searchTypes}"
-          alt="dropdown search menu has options to search by species, places, projects, observers, identifiers, and annotators"
-        />
+    <ol class="list-compact">
+    <li><a href="#features">Features</a>
+        <ol>
+          <li><a href="#observations">Observations</a>
+            <ol>
+              <li><a href="#observations-maps-options">Maps Options</a></li>
+              <li><a href="#observations-graphs-options">Graphs Options</a></li>
+            </ol>
+          </li>
+          <li><a href="#observations-filters">Observations Filters</a></li>
+          <li><a href="#identifications">Identifications</a></li>
+          <li><a href="#inaturalist-links">iNaturalist Links</a></li>
+          <li><a href="#downloads">Downloads</a></li>
+          <li><a href="#settings">Settings</a></li>
+        </ol>
       </li>
+      <li><a href="#technical-details">Technical Details</a></li>
+    </ol>
 
+    <h2 id="features">Features</h2>
+    <ol>
       <li id="multi-search">
         Search for multiple species, places, projects, and people. Here's a
         search for
         <a
-          href="/?taxon_id=48662,56851&place_id=962,829&colors=%234477aa,%2366ccee&verifiable=true&spam=false"
+          href="/?taxon_id=48662,56851&place_id=962,829&verifiable=true&spam=false"
           >monarchs and narrowleaf milkweed</a
         >
         in Los Angeles and San Diego.
@@ -79,148 +92,248 @@ export const template = html`
             <li>Change 'Search for' to 'iNaturalist Places'</li>
             <li>Type 'Los Angeles' and select item</li>
             <li>Type 'San Diego' and select item</li>
-            <li>If you want to delete any of the selected item, click the 'X'</li>
+            <li>To delete any of the selected item, click the 'X'</li>
           </ol>"
           data-id="multiple-records"
         ></app-accordion>
         <img
           width="1000"
-          height="600"
+          height="700"
           loading="lazy"
           src="${observations}"
           alt="Monarch and narrowleaf milkweed observations in Los Angeles and San Diego."
         />
       </li>
 
-      <li id="view-identifications">
-        View both observations and
-        <a
-          href="/identifications/?observation_taxon_id=48662,56851&place_id=962,829&colors=%234477aa,%2366ccee&verifiable=true&spam=false"
-          >identifications</a
-        >
-        <app-accordion
-          data-title="Instructions"
-          data-content="<ol>
-            <li>Click 'Identifications' in the top menu</li>
-          </ol>"
-          data-id="view-identifications"
-        ></app-accordion>
+      <li id="search-options">
+        Search observations by Species, iNaturalist places, Projects, Observers
+        (people who add observations), Identifiers (people who add
+        identifications), and Annotators (people who add annotations). Also
+        exclude items from search.
         <img
-          width="1000"
-          height="619"
+          width="500"
+          height="830"
           loading="lazy"
-          src="${identifications}"
-          alt="Monarch and narrowleaf milkweed identifications in Los Angeles and San Diego."
+          src="${searchTypes}"
+          alt="dropdown search menu has options to search by species, places, projects, observers, identifiers, and annotators"
         />
       </li>
 
+      <li>Over 50 ways to filter observations</li>
+
+      <li>
+        View dates, place, annotations and observations fields for each observation
+        <img
+          width="750"
+          height="770"
+          loading="lazy"
+          src="${annotations_observation_fields}"
+          alt="Monarch observations"
+        />
+      </li>
+
+      <li>Mobile friendly layout</li>
+
+      <li>Pagination for observations, species, identifiers, and observers</li>
+    </ol>
+
+    <h3 id="observations">Observations</h3>
+    <p>
+      View observations as Map, Graphs, Grid, Media, or Table. Here are <a
+        href="/?year=2025&taxon_id=48662&place_id=962&verifiable=true&spam=false"
+        >monarch observations in Los Angeles in 2025.</a>
+    </p>
+
+    <figure>
+      <figcaption><h4 id="observations-map">
+        <h4 id="observations-maps">Map</h4></</figcaption>
+      <img
+        width="1000"
+        height="680"
+        loading="lazy"
+        src="${map}"
+        alt="Map view of monarchs observations in Los Angeles"
+      />
+    </figure>
+
+    <figure>
+      <figcaption><h4 id="observations-graphs">Graphs</h4></figcaption>
+      <img
+        width="1000"
+        height="700"
+        loading="lazy"
+        src="${graphs}"
+        alt="Graphs view of monarchs observations in Los Angeles"
+      />
+    </figure>
+
+    <figure>
+      <figcaption>
+        <h4 id="observations-grid">Grid</h4>
+        <p>One photo or sound is displayed for each observation</p>
+      </figcaption>
+      <img
+        width="1000"
+        height="790"
+        loading="lazy"
+        src="${grid}"
+        alt="Grid view of monarchs observations in Los Angeles"
+      />
+    </figure>
+
+    <figure>
+      <figcaption>
+        <h4 id="observations-media">Media</h4>
+        <p>All photos and sounds are displayed for each observation</p>
+      </figcaption>
+      <img
+        width="1000"
+        height="780"
+        loading="lazy"
+        src="${media}"
+        alt="Media view of monarchs observations in Los Angeles"
+      />
+    </figure>
+
+    <figure>
+      <figcaption>
+        <h4 id="observations-table">Table</h4>
+      </figcaption>
+      <img
+        width="1000"
+        height="580"
+        loading="lazy"
+        src="${table}"
+        alt="Table view of monarchs observations in Los Angeles"
+      />
+    </figure>
+
+    <h3 id="observations-maps-options">Maps Options</h3>
+    <ol>
       <li id="map-layers">
-        Show iNaturalist maps as grid, points, heatmap and taxon range
+        When users search for multiple species, each species are shown in a
+        different color. The observations can be shown as grid, points, heatmap, and
+        taxon range. The map can show zero, one, or multiple layers for each species.
+        Here's a map for
+        <a
+          href="/?taxon_id=48662,56851&place_id=962,829&verifiable=true&spam=false"
+          >monarchs and narrowleaf milkweed observations</a
+        >
+        in Los Angeles and San Diego.
         <app-accordion
           data-title="Instructions"
           data-content="<ol>
             <li>Click on layers button in the upper right of the map</li>
-            <li>Click on the checkbox to turn on / turn off map layers.</li>
+            <li>Click on the checkbox to turn on / turn off grid, points, heatmap,
+            and taxon range layers.</li>
           </ol>"
           data-id="map-layers"
         ></app-accordion>
         <img
           width="1000"
-          height="650"
+          height="910"
           loading="lazy"
           src="${map_layers}"
           alt="Map of monarch and narrowleaf milkweed observations in Los Angeles and San Diego. Map  allows user to select grid, points, heatmap, and taxon range. "
         />
       </li>
 
-      <li id="observations-subview">
-        <a
-          href="/?taxon_id=48662&place_id=962&verifiable=true&spam=false&year=2025&order_by=votes&order=desc&view=observations_observations&subview=grid"
-          >View observations</a
-        >
-        as map, grid (one photo is displayed), media (all photos and audio are
-        displayed), table, or graphs.
+      <li id="animated-maps">
+        <figure>
+          <figcaption>Users can choose to view a normal map or animated maps.
+            Animated maps shows a series of maps over time. The animate map options
+            are 'Month', 'Year', and 'Month and Year'.</figcaption>
+          <app-accordion
+            data-title="Instructions"
+            data-content="<ol>
+              <li>Select 'Month', 'Year', or 'Month and Year'</li>
+              <li>Select the number of seconds to show each map. Default value is 5 seconds.</li>
+              <li>Click the 'Play' button to start the animation.</li>
+              <li>Click the 'Pause' button to pause the animation.</li>
+            </ol>"
+            data-id="bounding-box"
+          ></app-accordion>
+          <img
+            width="1000"
+            height="910"
+            loading="lazy"
+            src="${animated_map}"
+            alt="Animated map shows a series of maps of monarchs observations in Los Angeles, one map for each month."
+          />
+        </figure>
+      </li>
+
+      <li id="custom-bounding-box">
+        Draw a rectangle to select observations within the rectangle
         <app-accordion
           data-title="Instructions"
           data-content="<ol>
-            <li>Click on 'Map', 'Grid', 'Media', 'Table', or 'Graphs' button.</li>
+            <li>Click square button on the left side of the map</li>
+            <li>Click on the map to set one corner the rectangle.</li>
+            <li>Drag and click to select the second corner of the rectangle</li>
+            <li>'Custom Boundary' will be shown in 'Places'. </li>
           </ol>"
-          data-id="change-subview"
+          data-id="bounding-box"
         ></app-accordion>
+        <img
+          width="1000"
+          height="550"
+          loading="lazy"
+          src="${custom_boundaries}"
+          alt="Map of monarch and narrowleaf milkweed observations in a rectangular area in Los Angeles."
+        />
       </li>
+    </ol>
 
-      <li>
-        View annotations and observations fields on grid and media
-
-        <figure>
-          <figcaption>Grid view</figcaption>
-          <img
-            width="1000"
-            height="920"
-            loading="lazy"
-            src="${grid}"
-            alt="Grid view of monarchs observations in Los Angeles"
-          />
-        </figure>
-        <figure>
-          <figcaption>Media view</figcaption>
-          <img
-            width="1000"
-            height="830"
-            loading="lazy"
-            src="${media}"
-            alt="Media view of monarchs observations in Los Angeles"
-          />
-        </figure>
-        <figure>
-          <figcaption>Table view</figcaption>
-          <img
-            width="1000"
-            height="700"
-            loading="lazy"
-            src="${table}"
-            alt="Table view of monarchs observations in Los Angeles"
-          />
-        </figure>
-        <figure>
-          <figcaption>Graphs view</figcaption>
-          <img
-            width="1000"
-            height="700"
-            loading="lazy"
-            src="${graphs}"
-            alt="Graphs view of monarchs observations in Los Angeles"
-          />
-        </figure>
-      </li>
+    <h3 id="observations-graphs-options">Graphs Options</h3>
+    <ol>
       <li id="graphs-details">
-        The interactive graphs have many options
+        Graphs have many options.
+        Here are <a href="/?place_id=962,829&verifiable=true&spam=false&per_page=24&view=observations_observations&subview=graph">
+        all observations</a> in Los Angeles and San Diego.
         <figure>
-          <figcaption>Graphs have different categories - Month/Year, Year, Month.</figcaption>
+          <figcaption>Graphs have different categories - 'Month', 'Year', and
+            'Month and Year'. The values can be shown as observations counts
+            or percents.</figcaption>
           <img
             width="1000"
-            height="495"
+            height="489"
             loading="lazy"
             src="${graphs_categories}"
-            alt="Graph view showing the graphs categories menu options. "
+            alt="Graph view showing the graphs categories menu options."
           />
         </figure>
 
         <figure>
-          <figcaption> Default category option is Month/Year. This graphs shows the number of oberservations for the 12 months. </figcaption>
+          <figcaption> Default category option is Month. This graphs shows the
+            number of observations for the 12 months. </figcaption>
           <img
             width="1000"
-            height="480"
+            height="490"
             loading="lazy"
             src="${graphs_month_year}"
-            alt="Graph of monarchs and narrowleaf milkweed in Los Angeles and San Diego grouped by the 12 months. "
+            alt="Graph of monarchs and narrowleaf milkweed in Los Angeles and San Diego grouped by the 12 months, with observation counts along the y axis. "
           />
         </figure>
 
         <figure>
-          <figcaption>Graph category Year. This graphs shows the number of oberservations by year. By default, the graph shows the last
-            ten years. You can use the "Date Observed" > "Start Date", "End Date"
-            filters to adjust the dates. </figcaption>
+          <figcaption>This graphs shows observations for the 12 months as
+            percents. Percent is number of observations per time period divided
+            by total number of observations.</figcaption>
+          <img
+            width="1000"
+            height="490"
+            loading="lazy"
+            src="${graphs_percents}"
+            alt="Graph of monarchs and narrowleaf milkweed in Los Angeles and San Diego grouped by the 12 months, with percents as the y axis. "
+          />
+        </figure>
+
+        <figure>
+          <figcaption>This graphs shows the number of
+            observations by year. By default, the graph shows the last
+            ten years. Use the "Filters" > "Date Observed" > "Start Date" and "End Date"
+             to adjust the dates. </figcaption>
           <img
             width="1000"
             height="490"
@@ -231,9 +344,10 @@ export const template = html`
         </figure>
 
         <figure>
-          <figcaption>Graph category Month. This graphs shows the number of oberservations by month and year.  By default, the graph shows the
-            every month for the  last ten years. You can use the
-            "Date Observed" > "Start Date", "End Date"  filters to adjust the dates. </figcaption>
+          <figcaption>This graphs shows the
+            number of observations by month and year.  By default, the graph
+            shows every month for the last ten years. Use "Filters" >
+            "Date Observed" > "Start Date" and "End Date" to adjust the dates. </figcaption>
           <img
             width="1000"
             height="480"
@@ -242,13 +356,32 @@ export const template = html`
             alt="Graph of monarchs and narrowleaf milkweed in Los Angeles and San Diego grouped by every month for the last ten years. "
           />
         </figure>
-
+      </li>
+      <li>
         <figure>
-          <figcaption>If you searched for two or more places, you have the
-            option to group the graphs by places.</figcaption>
+          <figcaption>If users search for two or more species, they have the
+            option to group the graphs by species. This graph shows the <a
+          href="/?taxon_id=48662,56851&place_id=962,829&verifiable=true&spam=false"
+          >Monarchs and narrowleaf milkweed observations</a
+        >
+        in Los Angeles and San Diego. </figcaption>
           <img
             width="1000"
-            height="480"
+            height="540"
+            loading="lazy"
+            src="${graphs_group_by_species}"
+            alt="Graph of monarchs and narrowleaf milkweed in Los Angeles and San Diego grouped by species. One line represents monarchs, one line represents milkweed."
+          />
+        </figure>
+      </li>
+      <li>
+        <figure>
+          <figcaption>If users search for two or more places, they have the
+            option to group the graphs by places. This graph shows the
+            observations in Los Angeles and San Diego.</figcaption>
+          <img
+            width="1000"
+            height="520"
             loading="lazy"
             src="${graphs_group_by_places}"
             alt="Graph of monarchs and narrowleaf milkweed in Los Angeles and San Diego grouped by places. One line represents Los Angeles, one line represents San Diego."
@@ -256,38 +389,27 @@ export const template = html`
         </figure>
 
         <figure>
-          <figcaption>If you click on the labels for the legend, the line for
-            option will be hidden or shown. This graph has hidden the Los Angeles line.</figcaption>
+          <figcaption>If users click on the labels in the legend, the line
+             will be hidden or shown. This graph only shows the observations in San Diego.</figcaption>
           <img
             width="1000"
-            height="475"
+            height="510"
             loading="lazy"
             src="${graphs_deselect_option}"
             alt="Graph of monarchs and narrowleaf milkweed in Los Angeles and San Diego grouped by places.  One line represents San Diego. Line for Los Angeles is hidden."
           />
         </figure>
+      </li>
 
+      <li>
         <figure>
-          <figcaption>If you searched for two or more species, you have the
-            option to group the graphs by species.</figcaption>
-          <img
-            width="1000"
-            height="480"
-            loading="lazy"
-            src="${graphs_group_by_species}"
-            alt="Graph of monarchs and narrowleaf milkweed in Los Angeles and San Diego grouped by species. One line represents monarchs, one line represents milkweed."
-          />
-        </figure>
-
-        <figure>
-          <figcaption>When you search by species, selected annotations will appear
+          <figcaption>When users search for species, selected annotations will appear
             in graph category menu. Animals have 'Life Stage',
             'Evidence of Presence', 'Alive or Dead', and 'Sex'. Plants
-            have 'Sex', 'Leaves', and 'Flowers and Fruits'. Group by must be
-            set to 'None' to see the annotations. </figcaption>
+            have 'Sex', 'Leaves', and 'Flowers and Fruits'. </figcaption>
           <img
             width="1000"
-            height="480"
+            height="520"
             loading="lazy"
             src="${graphs_categories_annotations}"
             alt="Graph of monarchs and narrowleaf milkweed in Los Angeles and San Diego  showing the annotations categories."
@@ -295,67 +417,89 @@ export const template = html`
         </figure>
 
         <figure>
-          <figcaption>Graph annotation category Life Stage.</figcaption>
+          <figcaption>Here's a graph of monarch observations with Life Stage
+            annotations.</figcaption>
           <img
             width="1000"
-            height="475"
+            height="530"
             loading="lazy"
             src="${graphs_life_stage}"
-            alt="Graph of monarchs in Los Angeles and San Diego that is grouped by life stage. There are separate lines for adult, larva, pupa, egg, and unannotated "
+            alt="Graph of life stages annotations for monarchs in Los Angeles and San Diego. There are separate lines for adult, larva, pupa, egg, and not annotated "
           />
         </figure>
 
         <figure>
-          <figcaption>Graph annotation category Fruits and Flowers.</figcaption>
+          <figcaption>Here's a graph of narrowleaf milkweed observations with
+            Flowers and Fruits annotations.</figcaption>
           <img
             width="1000"
-            height="490"
+            height="530"
             loading="lazy"
             src="${graphs_fruits_or_flowers}"
-            alt="Graph of narrowleaf milkweed in Los Angeles and San Diego that is grouped by Fruits and Flowers. There are separate lines for flowers, flower buds, fruits or seeds, no fruits or flowes, and unannotated "
+            alt="Graph of Fruits and Flowers annotations for narrowleaf milkweed in Los Angeles and San Diego. There are separate lines for flowers, flower buds, fruits or seeds, no fruits or flowers, and unannotated "
           />
         </figure>
       </li>
-
-      <li id="identifications-subviews">
-        <a
-          href="/identifications/?taxon_id=48662&place_id=962&colors=%234477aa&verifiable=true&spam=false&year=2025"
-          >View identifications</a
-        >
-        as map, grid (one identification per observation), or history (all
-        identifications per observation)
-        <app-accordion
-          data-title="Instructions"
-          data-content="<ol>
-            <li>Click 'Identifications' in the top menu</li>
-            <li>Click on 'Map', 'Grid', or 'History' button.</li>
-          </ol>"
-          data-id="identifications-subviews"
-        ></app-accordion>
+      <li>Users can compare annotations for multiple species and multiple places.
+        Here are <a href="/?taxon_id=75602,56851&place_id=829,962&verifiable=true&spam=false&per_page=24">
+          observations of Narrowleaf Milkweed and Tropical Milkweed</a> in Los Angeles and San Diego.
         <figure>
-          <figcaption>Grid view</figcaption>
+          <figcaption>Here's a graph of all Fruits and Flowers annotations,
+            grouped by Species. The color represent species, the different line
+            types represent annotation values.</figcaption>
           <img
             width="1000"
-            height="400"
+            height="560"
             loading="lazy"
-            src="${grid_ident}"
-            alt="Grid view of monarchs identifications in Los Angeles"
+            src="${graphs_annotations_group_species_all}"
+            alt="Graph of all Fruits and Flowers annotations for narrowleaf milkweed and tropical milkweed in Los Angeles and San Diego. There are separate lines for flowers, flower buds, fruits or seeds, no fruits or flowers, and not annotated for both Narrowleaf Milkweed and Tropical Milkweed. "
           />
         </figure>
         <figure>
-          <figcaption>History view</figcaption>
+          <figcaption>Users can hide lines by clicking on the values in the legend.
+            Here's a graph of only Flowers annotations for narrowleaf milkweed
+            and tropical milkweed .</figcaption>
           <img
             width="1000"
-            height="600"
+            height="550"
             loading="lazy"
-            src="${history_ident}"
-            alt="History view of monarchs identifications in Los Angeles"
+            src="${graphs_annotations_group_species_one}"
+            alt="Graph of only Flowers annotations for narrowleaf milkweed and tropical milkweed in Los Angeles and San Diego. There are separate lines for flowers  for both Narrowleaf Milkweed and Tropical Milkweed. "
+          />
+        </figure>
+
+        <figure>
+          <figcaption>Here are graphs of all Fruits and Flowers annotations for
+            narrowleaf milkweed and tropical milkweed, grouped by Places.
+            There are separate graphs for each species. The colors represent places,
+            the different line types represent annotation values.</figcaption>
+          <img
+            width="1000"
+            height="1030"
+            loading="lazy"
+            src="${graphs_annotations_group_places_all}"
+            alt="Graph of all Fruits and Flowers annotations for narrowleaf milkweed and tropical milkweed in Los Angeles and San Diego. There are separate graphs for each species. Each graph has separate lines for flowers, flower buds, fruits or seeds, no fruits or flowers, and not annotated for both Los Angeles and San Diego. "
+          />
+        </figure>
+        <figure>
+          <figcaption> Here are graphs of only Flowers annotations, grouped by
+            places for narrowleaf milkweed and tropical milkweed.</figcaption>
+          <img
+            width="1000"
+            height="1030"
+            loading="lazy"
+            src="${graphs_annotations_group_places_one}"
+            alt="Graphs of only Flowers annotations for narrowleaf milkweed and tropical milkweed in Los Angeles and San Diego. There are separate graphs for each species. There are separate lines for flowers  for both Los Angeles and San Diego. "
           />
         </figure>
       </li>
+    </ol>
 
+    <h3 id="observations-filters">Observations Filters</h3>
+    <ol>
       <li id="filters">
-        Add over 50 options to filter the observations
+        There are over 50 options to filter the observations. The filters are
+        grouped by categories.
         <app-accordion
           data-title="Instructions"
           data-content="<ol>
@@ -364,24 +508,21 @@ export const template = html`
             'Species', etc to change tabs.</li>
             <li>Click or select the filters you want. Hover over the circled
             question mark to learn about each filter. </li>
-            <li>You can select one or more items from  rectanglar menus that
+            <li>Select one or more items from  rectangular menus that
             show multiple items such as 'Quality Grade' and 'License'. To select
-            multiple items you command click (Mac) or ctrl click (Windows), and
-            select one item at a item. You can also click and drag to select
-            multiple items.</li>
-            <li>When you select a filter, the counts on at the top of the modal
-            will be updated.</li>
+            multiple items, command click (Mac) or ctrl click (Windows), and
+            select one item at a item. Another option is
+            to click and drag the cursor over multiple items.</li>
+            <li>The counts on at the top of the modal will be updated as filters
+            are added or removed.</li>
             <li>The selected filters will be shown at the top of modal as green
             rounded rectangles. </li>
-            <li> Click on 'X' to delete one filter. If you want to delete all
+            <li> Click on 'X' to delete one filter. To delete all
             filters, scroll to bottom of modal and click 'Reset' </li>
           </ol>"
           data-id="map-layers"
         ></app-accordion>
-      </li>
 
-      <li>
-        Group the filters by categories
         <img
           width="1000"
           height="500"
@@ -468,8 +609,8 @@ export const template = html`
         <figure>
           <figcaption>Observation field popup menu for 'eating'</figcaption>
           <img
-            width="900"
-            height="400"
+            width="500"
+            height="220"
             loading="lazy"
             src="${observation_fields_eating}"
             alt="pop menu showing a list of observations fields that match the term 'eating'"
@@ -477,12 +618,12 @@ export const template = html`
         </figure>
         <figure>
           <figcaption>
-            Observation field 'eating' has species for the value. Type in
+            Observation field value for 'eating' are species. Type in
             species name, and a popup menu will show list of matching species.
           </figcaption>
           <img
-            width="900"
-            height="400"
+            width="500"
+            height="220"
             loading="lazy"
             src="${observation_fields_taxon}"
             alt="pop menu showing a list of species that match 'ray'"
@@ -490,56 +631,14 @@ export const template = html`
         </figure>
       </li>
 
-      <li id="beta-filters">
-        <p>Beta Features for features not supported by the iNaturalist API.</p>
-        <p>Hide obervations with annotations or observation fields</p>
-          <app-accordion
-            data-title="Instructions"
-            data-content="<ol>
-            <li>Click on 'Hide observations with annotations' to hide observations with annotations</li>
-            <li>Click on 'Hide observations with observation fields' to hide observations with observation fields.</li>
-            <li>Click both to hide observations with annotations or observation fields</li>
-          </ol>"
-            data-id="bounding-box"
-          ></app-accordion>
-          <img
-            width="1000"
-            height="480"
-            loading="lazy"
-            src="${filters_beta}"
-            alt=""
-          />
-        </p>
-      </li>
-
-      <li id="custom-bounding-box">
-        Draw a rectangle to select observations within the rectangle
-        <app-accordion
-          data-title="Instructions"
-          data-content="<ol>
-            <li>Click square button on the upper left of the map</li>
-            <li>Click on the map to set one corner the rectangle.</li>
-            <li>Drag and click to select the second corner of the rectangle</li>
-            <li>'Custom Boundary' will be shown in 'Places'. </li>
-          </ol>"
-          data-id="bounding-box"
-        ></app-accordion>
-        <img
-          width="1000"
-          height="550"
-          loading="lazy"
-          src="${custom_boundaries}"
-          alt=""
-        />
-      </li>
-
       <li id="subspecies-list">
-        Display list of taxa with rank lower than species such as subspecies and
-        variety. In this example, we use to 'Rank' filter to select
+        Use rank filters to display list of taxa with rank lower than species
+        such as subspecies and variety. In this example, we use to 'Rank'
+        filter to select
         <a
           href="/?taxon_id=55412&colors=%234477aa&verifiable=true&spam=false&rank=infrahybrid,subspecies,variety&per_page=24&view=observations_species"
         >
-          infrahybrid,subspecies, and variety ranks</a
+          infrahybrid, subspecies, and variety ranks</a
         >
         for Radishes (Genus Raphanus).
         <app-accordion
@@ -567,82 +666,95 @@ export const template = html`
           height="420"
           loading="lazy"
           src="${subspecies_results}"
-          alt="Supspecies shown in species tab"
+          alt="Subspecies shown in species tab"
         />
       </li>
 
-      <li>Mobile friendly layout</li>
+      <li id="beta-filters">
+        <p>Beta Features for features not supported by the iNaturalist API.</p>
+        <p>Hide observations with annotations or observation fields</p>
+          <app-accordion
+            data-title="Instructions"
+            data-content="<ol>
+            <li>Click on 'Hide observations with annotations' to hide observations with annotations</li>
+            <li>Click on 'Hide observations with observation fields' to hide observations with observation fields.</li>
+            <li>Click both to hide observations with annotations or observation fields</li>
+          </ol>"
+            data-id="bounding-box"
+          ></app-accordion>
+          <img
+            width="1000"
+            height="480"
+            loading="lazy"
+            src="${filters_beta}"
+            alt=""
+          />
+        </p>
+      </li>
+    </ol>
 
-      <li>Pagination for observations, species, identifiers, and observers</li>
-
-      <li id="name-order">
-        Set the order for species common names and Latin scientific names
+    <h3 id="identifications">Identifications</h3>
+    <ol>
+      <li id="identifications-subviews">
+        View identifications as map, grid, or history. Here are the identifications for <a
+          href="/identifications/?taxon_id=75602,56851&place_id=829,962"
+          >monarchs and narrowleaf milkweed</a> in Los Angeles and San Diego.
         <app-accordion
           data-title="Instructions"
           data-content="<ol>
-            <li>Click on the gear icon to show the 'Settings' menu</li>
-            <li>Use the dropdown for 'Common / Scientific Name Display Order' to set
-            the order of the common and scientific taxa names.</li>
+            <li>Click 'Identifications' in the top menu</li>
+            <li>Select 'Identified Species', and enter 'Monarch'.</li>
+            <li>Select 'Identified Species', and enter 'Narrowleaf Milkweed'.</li>
+            <li>Select 'iNaturalist Places', and enter 'Los Angeles'.</li>
+            <li>Select 'iNaturalist Places', and enter 'San Diego'.</li>
           </ol>"
-          data-id="name-order"
+          data-id="identifications-subviews"
         ></app-accordion>
-        <img
-          width="500"
-          height="850"
-          loading="lazy"
-          src="${settings}"
-          alt="Settings menu with common names/scientific names order, common names language, and records per page"
-        />
-      </li>
 
-      <li id="name-language">
-        Set the language for the species common names
-        <app-accordion
-          data-title="Instructions"
-          data-content="<ol>
-            <li>Click on the gear icon to show the 'Settings' menu</li>
-            <li>Use the dropdown for 'Common Name Language' to set
-            the language for the species common names.</li>
-          </ol>"
-          data-id="name-order"
-        ></app-accordion>
-      </li>
+        <figure>
+          <figcaption><h4>Map</h4></figcaption>
+          <img
+            width="1000"
+            height="550"
+            loading="lazy"
+            src="${identifications}"
+            alt="Monarch and narrowleaf milkweed identifications in Los Angeles and San Diego."
+          />
+        </figure>
 
-      <li id="per-page">
-        Set the number of records show per page
-        <app-accordion
-          data-title="Instructions"
-          data-content="<ol>
-            <li>Click on the gear icon to show the 'Settings' menu</li>
-            <li>Use the dropdown for 'Records per Page' to set
-            the number of items to show.</li>
-          </ol>"
-          data-id="per-page"
-        ></app-accordion>
+        <figure>
+          <figcaption>
+            <h4>Grid</h4>
+            <p>Show one identification per observation</p>
+          </figcaption>
+          <img
+            width="1000"
+            height="400"
+            loading="lazy"
+            src="${grid_ident}"
+            alt="Grid view of monarchs identifications in Los Angeles"
+          />
+        </figure>
+        <figure>
+          <figcaption>
+            <h4>History</h4>
+            <p>Show all identifications per observation</p>
+          </figcaption>
+          <img
+            width="1000"
+            height="600"
+            loading="lazy"
+            src="${history_ident}"
+            alt="History view of monarchs identifications in Los Angeles"
+          />
+        </figure>
       </li>
+    </ol>
 
-      <li id="display-fields">
-        Set the fields that are displayed for the observations grid and media.
-        <app-accordion
-          data-title="Instructions"
-          data-content="<ol>
-            <li>Click on the gear icon to show the 'Settings' menu</li>
-            <li>Click the checkboxes for  'Fields Display' to set
-            which fields are displayed.</li>
-          </ol>"
-          data-id="display-fields"
-        ></app-accordion>
-        <img
-          width="1000"
-          height="750"
-          loading="lazy"
-          src="${fields_displayed}"
-          alt="click checkbox to set  which fields are displayed"
-        />
-      </li>
-
+    <h3 id="inaturalist-links">iNaturalist Links</h3>
+    <ol>
       <li id="inat-links-observations">
-        Users can use the search queries created on this site for the iNaturlist
+        Users can use the search queries created on this site for the iNaturalist
         Explore, Identify, and Export pages by clicking on the links in the
         iNaturalist Links menu. Users can also get the link for the iNaturalist Observations API.
         <app-accordion
@@ -685,6 +797,9 @@ export const template = html`
           alt="Links in the identifications iNaturalist Links menu"
         />
       </li>
+    </ol>
+    <h3 id="downloads">Download</h3>
+    <ol>
       <li id="download-annotations">
         Users can download annotations. This is a work in progress.
         <app-accordion
@@ -719,15 +834,85 @@ export const template = html`
         ></app-accordion>
         <img
           width="500"
-          height="830"
+          height="850"
           loading="lazy"
           src="${download_identifications}"
           alt="Download identifications menu"
         />
       </li>
     </ol>
+    <h3 id="settings">Settings</h3>
+    <ol>
+      <li>Users can customize the appearance of the website.
+        <img
+        width="500"
+        height="820"
+        loading="lazy"
+        src="${settings}"
+        alt="Settings menu with common names/scientific names order, common names language, and records per page"
+      />
+      </li>
+      <li id="name-order">
+        Set the order for species common names and Latin scientific names
+        <app-accordion
+          data-title="Instructions"
+          data-content="<ol>
+            <li>Click on the gear icon to show the 'Settings' menu</li>
+            <li>Use the dropdown for 'Common / Scientific Name Display Order' to set
+            the order of the common and scientific taxa names.</li>
+          </ol>"
+          data-id="name-order"
+        ></app-accordion>
+      </li>
 
-    <h2>Technical Details</h2>
+      <li id="name-language">
+        Set the language for the species common names
+        <app-accordion
+          data-title="Instructions"
+          data-content="<ol>
+            <li>Click on the gear icon to show the 'Settings' menu</li>
+            <li>Use the dropdown for 'Common Name Language' to set
+            the language for the species common names.</li>
+          </ol>"
+          data-id="name-order"
+        ></app-accordion>
+      </li>
+
+      <li id="per-page">
+        Set the number of records show per page
+        <app-accordion
+          data-title="Instructions"
+          data-content="<ol>
+            <li>Click on the gear icon to show the 'Settings' menu</li>
+            <li>Use the dropdown for 'Records per Page' to set
+            the number of items to show.</li>
+          </ol>"
+          data-id="per-page"
+        ></app-accordion>
+      </li>
+
+      <li id="display-fields">
+        Set the fields that are displayed for the observations grid and media.
+        <app-accordion
+          data-title="Instructions"
+          data-content="<ol>
+            <li>Click on the gear icon to show the 'Settings' menu</li>
+            <li>Click the checkboxes for  'Fields Display' to set
+            which fields are displayed.</li>
+          </ol>"
+          data-id="display-fields"
+        ></app-accordion>
+        <img
+          width="1000"
+          height="500"
+          loading="lazy"
+          src="${fields_displayed}"
+          alt="click checkbox to set  which fields are displayed"
+        />
+      </li>
+    </ol>
+
+    <h2 id="technical-details">Technical Details</h2>
     <p>
       This site grabs data from the iNaturalist API. I used a combination of
       <a href="https://api.inaturalist.org/v1/docs/">v1</a>
