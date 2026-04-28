@@ -1,13 +1,12 @@
 import { html } from "../../lib/component_utils";
 import observations from "../../assets/images/observations.jpg";
-import identifications from "../../assets/images/identifications.jpg";
-import map from "../../assets/images/observations_map.jpg";
-import animated_map from "../../assets/images/observations_animated_map.jpg";
-import annotations_observation_fields from "../../assets/images/observations_annotations_observation_fields.jpg";
-import grid from "../../assets/images/observations_grid.jpg";
-import table from "../../assets/images/observations_table.jpg";
-import media from "../../assets/images/observations_media.jpg";
-import graphs from "../../assets/images/observations_graphs.jpg";
+import observations_map from "../../assets/images/observations_map.jpg";
+import observations_animated_map from "../../assets/images/observations_animated_map.jpg";
+import observations_annotations_observation_fields from "../../assets/images/observations_annotations_observation_fields.jpg";
+import observations_grid from "../../assets/images/observations_grid.jpg";
+import observations_table from "../../assets/images/observations_table.jpg";
+import observations_media from "../../assets/images/observations_media.jpg";
+import observations_graphs from "../../assets/images/observations_graphs.jpg";
 import graphs_year from "../../assets/images/graphs_years.jpg";
 import graphs_categories_annotations from "../../assets/images/graphs_categories_annotations.jpg";
 import graphs_categories from "../../assets/images/graphs_categories.jpg";
@@ -23,8 +22,9 @@ import graphs_annotations_group_places_all from "../../assets/images/graphs_anno
 import graphs_annotations_group_places_one from "../../assets/images/graphs_annotations_group_places_one.jpg";
 import graphs_annotations_group_species_all from "../../assets/images/graphs_annotations_group_species_all.jpg";
 import graphs_annotations_group_species_one from "../../assets/images/graphs_annotations_group_species_one.jpg";
-import grid_ident from "../../assets/images/identifications_grid.jpg";
-import history_ident from "../../assets/images/identifications_history.jpg";
+import identifications from "../../assets/images/identifications.jpg";
+import identifications_grid from "../../assets/images/identifications_grid.jpg";
+import identifications_history from "../../assets/images/identifications_history.jpg";
 import settings from "../../assets/images/settings.jpg";
 import custom_boundaries from "../../assets/images/custom_boundaries.jpg";
 import inat_links_observations from "../../assets/images/inat_links_observations.jpg";
@@ -55,15 +55,16 @@ export const template = html`
       API.
     </p>
     <ol class="list-compact">
-    <li><a href="#features">Features</a>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#instructions">Instructions</a>
         <ol>
           <li><a href="#observations">Observations</a>
             <ol>
               <li><a href="#observations-maps-options">Maps Options</a></li>
               <li><a href="#observations-graphs-options">Graphs Options</a></li>
+              <li><a href="#observations-filters">Observations Filters</a></li>
             </ol>
           </li>
-          <li><a href="#observations-filters">Observations Filters</a></li>
           <li><a href="#identifications">Identifications</a></li>
           <li><a href="#inaturalist-links">iNaturalist Links</a></li>
           <li><a href="#downloads">Downloads</a></li>
@@ -74,6 +75,15 @@ export const template = html`
     </ol>
 
     <h2 id="features">Features</h2>
+    <p>Thirteen minute demo of the major features of this site.</p>
+    <iframe width="560" height="315"
+      src="https://www.youtube-nocookie.com/embed/cSqhd4jIDJU?si=UTXTzNKdnOd8-JWl"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen></iframe>
+
     <ol>
       <li id="multi-search">
         Search for multiple species, places, projects, and people. Here's a
@@ -83,19 +93,6 @@ export const template = html`
           >monarchs and narrowleaf milkweed</a
         >
         in Los Angeles and San Diego.
-        <app-accordion
-          data-title="Instructions"
-          data-content="<ol>
-            <li>'Search for' should be 'Observed Species'</li>
-            <li>Type 'monarch' and select item in the popup menu</li>
-            <li>Type 'narrowleaf milkweed' and select item</li>
-            <li>Change 'Search for' to 'iNaturalist Places'</li>
-            <li>Type 'Los Angeles' and select item</li>
-            <li>Type 'San Diego' and select item</li>
-            <li>To delete any of the selected item, click the 'X'</li>
-          </ol>"
-          data-id="multiple-records"
-        ></app-accordion>
         <img
           width="1000"
           height="700"
@@ -104,6 +101,10 @@ export const template = html`
           alt="Monarch and narrowleaf milkweed observations in Los Angeles and San Diego."
         />
       </li>
+
+      <li>View changes over space and time using animated maps and interactive charts</li>
+
+      <li>Over 50 ways to filter observations</li>
 
       <li id="search-options">
         Search observations by Species, iNaturalist places, Projects, Observers
@@ -119,15 +120,13 @@ export const template = html`
         />
       </li>
 
-      <li>Over 50 ways to filter observations</li>
-
       <li>
         View dates, place, annotations and observations fields for each observation
         <img
           width="750"
           height="770"
           loading="lazy"
-          src="${annotations_observation_fields}"
+          src="${observations_annotations_observation_fields}"
           alt="Monarch observations"
         />
       </li>
@@ -137,6 +136,10 @@ export const template = html`
       <li>Pagination for observations, species, identifiers, and observers</li>
     </ol>
 
+
+    <h2 id="instructions">Instructions</h2>
+
+
     <h3 id="observations">Observations</h3>
     <p>
       View observations as Map, Graphs, Grid, Media, or Table. Here are <a
@@ -144,14 +147,26 @@ export const template = html`
         >monarch observations in Los Angeles in 2025.</a>
     </p>
 
+    <app-accordion
+      data-title="Instructions"
+      data-content="<ol>
+        <li>'Search for' should be 'Observed Species'</li>
+        <li>Type 'monarch' and select item in the popup menu</li>
+        <li>Change 'Search for' to 'iNaturalist Places'</li>
+        <li>Type 'Los Angeles' and select item</li>
+        <li>To delete any of the selected item, click the 'X'</li>
+      </ol>"
+      data-id="multiple-records"
+    ></app-accordion>
+
     <figure>
       <figcaption><h4 id="observations-map">
         <h4 id="observations-maps">Map</h4></</figcaption>
       <img
         width="1000"
-        height="680"
+        height="560"
         loading="lazy"
-        src="${map}"
+        src="${observations_map}"
         alt="Map view of monarchs observations in Los Angeles"
       />
     </figure>
@@ -162,7 +177,7 @@ export const template = html`
         width="1000"
         height="700"
         loading="lazy"
-        src="${graphs}"
+        src="${observations_graphs}"
         alt="Graphs view of monarchs observations in Los Angeles"
       />
     </figure>
@@ -176,7 +191,7 @@ export const template = html`
         width="1000"
         height="790"
         loading="lazy"
-        src="${grid}"
+        src="${observations_grid}"
         alt="Grid view of monarchs observations in Los Angeles"
       />
     </figure>
@@ -190,7 +205,7 @@ export const template = html`
         width="1000"
         height="780"
         loading="lazy"
-        src="${media}"
+        src="${observations_media}"
         alt="Media view of monarchs observations in Los Angeles"
       />
     </figure>
@@ -203,12 +218,12 @@ export const template = html`
         width="1000"
         height="580"
         loading="lazy"
-        src="${table}"
+        src="${observations_table}"
         alt="Table view of monarchs observations in Los Angeles"
       />
     </figure>
 
-    <h3 id="observations-maps-options">Maps Options</h3>
+    <h4 id="observations-maps-options">Maps Options</h4>
     <ol>
       <li id="map-layers">
         When users search for multiple species, each species are shown in a
@@ -257,7 +272,7 @@ export const template = html`
             width="1000"
             height="910"
             loading="lazy"
-            src="${animated_map}"
+            src="${observations_animated_map}"
             alt="Animated map shows a series of maps of monarchs observations in Los Angeles, one map for each month."
           />
         </figure>
@@ -285,7 +300,7 @@ export const template = html`
       </li>
     </ol>
 
-    <h3 id="observations-graphs-options">Graphs Options</h3>
+    <h4 id="observations-graphs-options">Graphs Options</h4>
     <ol>
       <li id="graphs-details">
         Graphs have many options.
@@ -495,7 +510,7 @@ export const template = html`
       </li>
     </ol>
 
-    <h3 id="observations-filters">Observations Filters</h3>
+    <h4 id="observations-filters">Observations Filters</h4>
     <ol>
       <li id="filters">
         There are over 50 options to filter the observations. The filters are
@@ -731,7 +746,7 @@ export const template = html`
             width="1000"
             height="400"
             loading="lazy"
-            src="${grid_ident}"
+            src="${identifications_grid}"
             alt="Grid view of monarchs identifications in Los Angeles"
           />
         </figure>
@@ -744,7 +759,7 @@ export const template = html`
             width="1000"
             height="600"
             loading="lazy"
-            src="${history_ident}"
+            src="${identifications_history}"
             alt="History view of monarchs identifications in Los Angeles"
           />
         </figure>
@@ -798,7 +813,7 @@ export const template = html`
         />
       </li>
     </ol>
-    <h3 id="downloads">Download</h3>
+    <h3 id="downloads">Downloads</h3>
     <ol>
       <li id="download-annotations">
         Users can download annotations. This is a work in progress.
