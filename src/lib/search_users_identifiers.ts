@@ -107,9 +107,11 @@ export function renderUsersIdentifiersList(appStore: AppStoreType) {
     let users = appStore.selectedUsersIdentifiers;
     let user = users[users.length - 1];
     if (user) {
-      let templateEl = document.createElement("users-list-item");
-      templateEl.dataset.user = JSON.stringify(user);
-      templateEl.dataset.type = "identifier";
+      let templateEl = document.createElement(
+        "users-list-item",
+      ) as DataComponentType;
+      templateEl.data = user;
+      templateEl.type = "identifier";
       listEl.appendChild(templateEl);
     }
   }
