@@ -272,10 +272,17 @@ export function formatObservationsApiUrl(appParams: string) {
     "faves_count:!t," +
     "geoprivacy:!t," +
     "id:!t," +
-    "identifications:(current:!t)," +
+    "identifications:(" +
+    "created_at:!t," +
+    "current:!t," +
+    "category:!t," +
+    "vision:!t," +
+    "user:(icon_url:!t,id:!t,login:!t,name:!t)," +
+    "taxon:(id:!t,preferred_common_name:!t,name:!t))," +
     "annotations:(controlled_attribute_id:!t,controlled_value_id:!t,user:(id:!t,login:!t))," +
     // "annotations:(controlled_attribute_id:!t,controlled_value_id:!t,user:(icon_url:!t,icon:!t,id:!t,login:!t))," +
     // "identifications_count:!t," +
+
     // "location:!t," +
     // "mappable:!t," +
     "obscured:!t," +

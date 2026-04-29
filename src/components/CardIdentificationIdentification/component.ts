@@ -24,16 +24,6 @@ class CardIdentificationIdentification extends HTMLElement {
     this.render(window.app.store);
   }
 
-  categoryClass(category?: string) {
-    if (category === "maverick") {
-      return "error";
-    } else if (category === "improving") {
-      return "success";
-    } else if (category === "leading") {
-    } else if (category === "support") {
-    }
-  }
-
   render(appStore: AppStoreType) {
     let cardEl = this.querySelector(".card") as HTMLDivElement;
     if (!cardEl) return;

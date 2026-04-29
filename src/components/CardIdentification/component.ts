@@ -14,16 +14,6 @@ class CardIdentification extends HTMLElement {
     this.render();
   }
 
-  categoryClass(category?: string) {
-    if (category === "maverick") {
-      return "error";
-    } else if (category === "improving") {
-      return "success";
-    } else if (category === "leading") {
-    } else if (category === "support") {
-    }
-  }
-
   render() {
     let cardEl = this.querySelector(".card");
     if (!cardEl) return;

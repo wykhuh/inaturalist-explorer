@@ -1332,6 +1332,22 @@
       }
     }
 
+    .identifications-list {
+      border: var(--border-grey);
+
+      div {
+        padding: 0.25rem 0.25rem;
+      }
+
+      div:nth-child(even) {
+        background-color: var(--clr-gray-300);
+      }
+
+      dt .title {
+        font-weight: 500;
+      }
+    }
+
     .details .observation-fields-list {
       border: var(--border-grey);
 
@@ -1489,20 +1505,30 @@
         padding-top: 0.5rem;
       }
 
-      .category.maverick {
-        color: #d9534f;
-      }
-
-      .category.improving,
-      .category.leading {
-        color: var(--clr-iNat-green);
-      }
-
       .status {
         display: flex;
         gap: 0.75rem;
       }
     }
+  }
+
+  .withdrawn {
+    .user-action,
+    .title,
+    .subtitle,
+    .disagreement {
+      color: var(--clr-gray-700);
+      text-decoration: line-through;
+    }
+  }
+
+  .category.maverick {
+    color: #d9534f;
+  }
+
+  .category.improving,
+  .category.leading {
+    color: var(--clr-iNat-green);
   }
 
   .legend-container:nth-child(1) {

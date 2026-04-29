@@ -104,6 +104,10 @@ export const template = html`
       <label for="display_place_guess">Place</label>
     </div>
     <div class="form-group">
+      <input type="checkbox" id="display_identifications" checked />
+      <label for="display_identifications">Identifications</label>
+    </div>
+    <div class="form-group">
       <input type="checkbox" id="display_annotations" checked />
       <label for="display_annotations">Annotations</label>
     </div>

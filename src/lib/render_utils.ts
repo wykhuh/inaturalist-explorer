@@ -8,6 +8,7 @@ import {
 import type {
   Annotation,
   DefaultPhoto,
+  Identification,
   IdentificationObservation,
   ObservationField,
   ObservationPhoto,
@@ -31,7 +32,7 @@ import {
 } from "../assets/icons.ts";
 import { capitalizeFirstLetter, formatTaxonName } from "./data_utils.ts";
 import { logger } from "./logger.ts";
-import { pluralize, truncateText } from "./utils.ts";
+import { pluralize, sortArrayOfObjectsByDate, truncateText } from "./utils.ts";
 import { html } from "./component_utils.ts";
 import { formatTooltip } from "../components/Tooltip/component.ts";
 
@@ -270,6 +271,51 @@ export function renderObservationFields(
     content += `</div>`;
   });
   content += `</dl>`;
+  return content;
+}
+
+export function renderObservationCardIdentifications(
+  identifications: Identification[],
+  appStore: AppStoreType,
+) {
+  let content = '<dl class="identifications-list">';
+  let identificationsSorted = sortArrayOfObjectsByDate(
+    identifications,
+    "created_at",
+  );
+  identificationsSorted.forEach((ident) => {
+    if (!ident.current) {
+      content += `<div class="withdrawn">`;
+    } else {
+      content += `<div>`;
+    }
+    if (ident.taxon) {
+      content += `<dt>${renderTaxonNames(ident.taxon, appStore)}</dt>`;
+    } else {
+      content += "Unknown";
+    }
+
+    content += `<dd class="user-action">`;
+    if (ident.user) {
+      content += `${ident.user?.login}`;
+      if (ident.created_at) {
+        content += `, ${formatDate(ident.created_at)}`;
+      }
+    }
+    content += `</dd>`;
+
+    if (ident.category) {
+      if (ident.current) {
+        content += `<dd class="category ${ident.category}">${capitalizeFirstLetter(ident.category)}</dd>`;
+      } else {
+        content += `<dd class="category">ID Withdrawn </dd>`;
+      }
+    }
+
+    content += `</div>`;
+  });
+  content += `</dl>`;
+
   return content;
 }
 

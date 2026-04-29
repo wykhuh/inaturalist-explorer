@@ -85,6 +85,7 @@ export function initSettings(appStore: AppStoreType) {
   setDisplayField("updated_at", appStore);
   setDisplayField("time_observed_at", appStore);
   setDisplayField("annotations", appStore);
+  setDisplayField("identifications", appStore);
   setDisplayField("ofvs", appStore);
 }
 

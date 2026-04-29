@@ -5,6 +5,7 @@ import {
   renderDates,
   renderMedia,
   renderMediaCounts,
+  renderObservationCardIdentifications,
   renderObservationFields,
   renderObservationMetadataCounts,
   renderPlace,
@@ -105,6 +106,18 @@ class CardObservation extends HTMLElement {
         "<div>Place: " +
         renderPlace(data.place_guess, data.obscured) +
         "</div>";
+    }
+
+    if (
+      data.identifications &&
+      data.identifications.length > 0 &&
+      displayFields.identifications !== false
+    ) {
+      detailsContent += "<h3>Identifications</h3>";
+      detailsContent += renderObservationCardIdentifications(
+        data.identifications,
+        appStore,
+      );
     }
 
     if (

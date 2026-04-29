@@ -30,6 +30,7 @@ export const dbKeys = {
   display_time_observed_at: "display_time_observed_at",
   display_created_at: "display_created_at",
   display_updated_at: "display_updated_at",
+  display_identifications: "display_identifications",
   display_annotations: "display_annotations",
   display_ofvs: "display_ofvs",
   display_media: "display_media",
@@ -91,6 +92,10 @@ export function populateStoreWithLocaleStorage(appStore: AppStoreType) {
   let display_updated_at = getItem(dbKeys.display_updated_at);
   if (display_updated_at !== undefined) {
     displayFields.updated_at = display_updated_at;
+  }
+  let display_identifications = getItem(dbKeys.display_identifications);
+  if (display_identifications !== undefined) {
+    displayFields.display_identifications = display_identifications;
   }
   let display_annotations = getItem(dbKeys.display_annotations);
   if (display_annotations !== undefined) {
