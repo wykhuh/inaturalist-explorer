@@ -492,6 +492,26 @@ export function formatInatIdentifyParams(appStore: AppStoreType) {
   return params.toString();
 }
 
+export function formatInatIdentificationsParams(appStore: AppStoreType) {
+  let params = formatAppUrl(
+    appStore,
+    "identifications",
+    "object",
+  ) as URLSearchParams;
+
+  cleaniNatSiteParams(params);
+  deleteParams(["spam"], params);
+
+  if (params.get("verifiable") === "true") {
+    params.delete("verifiable");
+  }
+
+  params.delete("view");
+  params.delete("subview");
+
+  return params.toString();
+}
+
 export function formatInatApiParams(appStore: AppStoreType) {
   let params;
   if (isObservationsCheck(appStore)) {

@@ -2,7 +2,10 @@ import type { AppStoreType } from "../../types/app";
 import { setupComponent } from "../../lib/component_utils";
 import { template } from "./template";
 import { loggerEvent, loggerRender } from "../../lib/logger";
-import { formatInatApiParams } from "../../lib/cleanup_params_utils";
+import {
+  formatInatApiParams,
+  formatInatIdentificationsParams,
+} from "../../lib/cleanup_params_utils";
 import { formatIdentificationsApiUrl } from "../../lib/inat_api";
 
 class LinksMenu extends HTMLElement {
@@ -49,6 +52,14 @@ class LinksMenu extends HTMLElement {
   }
 
   async render(appStore: AppStoreType) {
+    let identLink = this.querySelector<HTMLLinkElement>(
+      ".identifications-link",
+    );
+    if (!identLink) return;
+
+    let identParams = formatInatIdentificationsParams(appStore);
+    identLink.href = `https://www.inaturalist.org/identifications/?${identParams}`;
+
     if (this.copyToClipboardEl) {
       let params = formatInatApiParams(appStore);
       this.copyToClipboardEl.setAttribute(
